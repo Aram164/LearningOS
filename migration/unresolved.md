@@ -37,8 +37,13 @@
   `Teil 02.pdf` (101 MB) exceed GitHub's 100 MB per-file limit — if a remote is
   added, they need splitting or a size exception (LFS was already rejected);
   "when possible" covers exactly this case.
-- **`concept-classification-metrics` granularity** — one concept currently covers
-  confusion matrix/precision/recall/F1; split if retrieval needs finer grain.
+- ✅ **`concept-classification-metrics` granularity** — resolved by Aram's
+  guidance (2026-07-17 review): note annotation stays flexible — a note may be
+  about one concept or about many and how they connect (the Master Wiring note
+  links 37; the L02 exercise bank links 2). Concepts are retrieval identities,
+  not per-note containers, so the single metrics concept stays; split a concept
+  only when a genuinely distinct retrieval identity emerges, never to make notes
+  map one-to-one onto concepts.
 - Legacy validators (`tools/check_links.py`, `check_system.py`, lychee routine)
   are replaced by `tools/validate.py` for the v3 tree — retirement happens at
   cutover (Phase 8), not in the pilot.
