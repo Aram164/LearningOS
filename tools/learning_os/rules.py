@@ -301,7 +301,10 @@ class Validator:
                 if f.suffix.lower() not in (".md", ".yaml", ".yml") or not f.is_file():
                     continue
                 text = f.read_text(encoding="utf-8", errors="replace")
-                if "generated/" in text:
+                # Only the repository's own generated/ tree counts — 'generated/'
+                # inside URLs or longer paths (e.g. sklearn.org/modules/generated/)
+                # must not be preceded by a slash or word character.
+                if re.search(r"(?<![\w/])generated/", text):
                     self.err("GEN-INPUT",
                              "canonical file references 'generated/' — generated files are never inputs",
                              self._rel(f))
