@@ -13,3 +13,45 @@ Plans/Math/sad/SaD_Source-Crosswalk_L01-L15.md,knowledge/notes/mathematics/note-
 Plans/ML/foundations/AML/my notes/AML_Book-Concept-Crosswalk_L02-L10.md,sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2),crosswalk-decomposition(partial),pilot
 Plans/Math/sad/SaD/notes/Teil 03.pdf,knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-01..11.jpg (120dpi renders; original preserved in legacy),handwritten-attachment,pilot
 SEMESTER-STATUS.md (exam facts §0.5/§8) + Pruefungsplan session 2026-07-03,records/modules.yaml,module-facts,pilot
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l02-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l02-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_BonusSheet01_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt01-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l03-linear-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l03-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l03-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_BonusSheet02_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt02-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l04-nonlinear-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l04-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l04-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l05-logistic-regression.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l05-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l05-mock-exam.md,note(mock-exam),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_BonusSheet03_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt03-solutions.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l06-gradient-descent.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l06-exercise-bank.md,note(exercise-bank),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l06-mock-exam.md,note(mock-exam),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l01-introduction.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l01-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l03-correlation-regression.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l03-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l04-probability-bayes.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l04-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l05-combinatorics.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l05-exercise-bank.md,note(exercise-bank),stage2
+Plans/Math/sad/SaD/notes/lect11 instance-based/SaD_L11_Reference.md,knowledge/notes/mathematics/note-sad-l11-instance-based.md,note(reference),stage2
+Plans/Math/sad/SaD/notes/SaD_06-10_Probability-Inference_DeepPlan.md,knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md,note(reference),stage2
+Plans/ML/foundations/AML/my notes/lect02 KNN-classifier/AML_L02_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L02_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect03 linear regression/AML_L03_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L03_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect04 non-linear regression/AML_L04_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L04_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect05 logistic regression/AML_L05_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L05_Mini_Plan.md,operational-plan(copy),stage2
+Plans/ML/foundations/AML/my notes/lect06 gradient descent/AML_L06_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L06_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect01 introduction/SaD_L01_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L01_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect03 correlation-regression/SaD_L03_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L03_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect04 probability/SaD_L04_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L04_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Math/sad/SaD/notes/lect05 combinatorics/SaD_L05_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L05_Mini_Plan.md,operational-plan(copy),stage2
+Plans/Libraries/sklearn/Sklearn-mlprov-Object-Map.md,knowledge/notes/programming/note-sklearn-mlprov-object-map.md,note(reference),stage2
+Plans/Libraries/skrub/skrub-DataOp-DAG-Reference.md,knowledge/notes/data-systems/note-skrub-dataop-dag.md,note(reference),stage2
+Plans/Libraries/skrub/skrub-Evaluation-Engine-Reference.md,knowledge/notes/data-systems/note-skrub-evaluation-engine.md,note(reference),stage2
+Plans/Programming/Git/Git-GitHub-Reference-by-Block.md,knowledge/notes/programming/note-git-github-reference.md,note(reference),stage2
+Plans/Programming/python/Python-Intermediate-Roadmap.md,knowledge/notes/programming/note-python-intermediate-roadmap.md,note(reference),stage2

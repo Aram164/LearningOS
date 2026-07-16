@@ -106,6 +106,15 @@ concepts:
   - id: concept-bias-variance-tradeoff
     label: Bias-variance tradeoff
     aliases: [Bias-Varianz-Dilemma, overfitting, underfitting, generalization]
+  - id: concept-curse-of-dimensionality
+    label: Curse of dimensionality
+    aliases: [Fluch der Dimensionalität]
+  - id: concept-correlation
+    label: Correlation
+    aliases: [Korrelation, covariance, Kovarianz, Pearson r]
+  - id: concept-basis-functions
+    label: Basis functions
+    aliases: [basis expansion, polynomial features, Polynomregression, feature engineering]
   - id: concept-cross-validation
     label: Cross-validation
     aliases: [Kreuzvalidierung, k-fold CV]
@@ -154,3 +163,25 @@ concepts:
   - id: concept-early-stopping
     label: Early stopping
     aliases: [frühes Stoppen]
+
+  # ------------------------------------------- programming & data systems
+  - id: concept-python
+    label: Python
+    aliases: [Fluent Python, Python data model]
+    domain_hints: [programming]
+  - id: concept-git
+    label: Git
+    aliases: [GitHub, version control, Versionsverwaltung]
+    domain_hints: [programming]
+  - id: concept-scikit-learn
+    label: scikit-learn
+    aliases: [sklearn, estimator API, fit-transform]
+    domain_hints: [programming, machine-learning]
+  - id: concept-skrub
+    label: skrub DataOps
+    aliases: [skrub, DataOp, lazy computation graph]
+    domain_hints: [data-systems]
+  - id: concept-data-provenance
+    label: Data provenance
+    aliases: [Provenienz, lineage, provenance tracking]
+    domain_hints: [data-systems]

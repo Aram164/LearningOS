@@ -633,3 +633,16 @@ sources:
           - "The AML video spine; lecture titles schedule-verified (L2 LMS→L03/L06, L3 logistic→L05, L5–L6 GDA/NB→SaD 04/14, L7 kernels→L07 kernel half, L8–L9 NN→L08/L09, L10 bias-var/regularization)"
         weaknesses:
           - "Taught by Ma & Ré, NOT Ng (the Ng run is the 2018 mirror) — corrected KW 27; skip the SVM half of L7"
+
+  - id: source-fluent-python
+    title: Fluent Python (2nd ed.)
+    type: book
+    authors: [Luciano Ramalho]
+    year: 2022
+    material: material://source-fluent-python/fluent-python.pdf
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The skeleton of the Python roadmap; reading order (legacy): 1→6→2→3→7→17→11→14→5→9→13→8→15→18; done so far: Ch 1, 5, 6, 11, 14"
