@@ -216,6 +216,34 @@ sources:
         useful_sections:
           - "§10.1–10.2, §10.7": "single/multi-layer networks; the only ISLP GD appearance"
 
+      - concepts: [concept-k-nearest-neighbors, concept-bias-variance-tradeoff,
+                   concept-cross-validation]
+        roles: [first-learning]
+        level: introductory
+        useful_sections:
+          - "§2.2.2–2.2.3, §3.5, §5.1 (incl. §5.1.4)": "the gentle entry: U-shaped test error, k-NN vs linear regression (the L02↔L03 link), the CV machinery for choosing k"
+      - concepts: [concept-neural-network, concept-backpropagation, concept-weight-decay,
+                   concept-dropout, concept-early-stopping]
+        roles: [first-learning, review]
+        strengths:
+          - "§10.8 is one of only TWO book treatments of double descent (with the interpolation-threshold picture) — direct match to AML L09"
+        useful_sections:
+          - "§10.1–10.2, §10.7–10.8": "forward pass with explicit parameter counting (an AML+SaD exam target); backprop, regularization+SGD, dropout; double descent"
+      - concepts: [concept-convolutional-networks]
+        roles: [first-learning]
+        strengths:
+          - "§10.3.4 Data Augmentation is the theory behind AMLS Project Task 1.3 — one stone, two exams"
+        useful_sections:
+          - "§10.3 (p.406): §10.3.1 conv layers, §10.3.2 pooling, §10.3.3 architecture, §10.3.4 augmentation": "the gentle full CNN match"
+      - concepts: [concept-recurrent-networks]
+        roles: [first-learning]
+        useful_sections:
+          - "§10.5 (p.416)": "gentle RNN pass; LSTM only mentioned"
+      - concepts: [concept-basis-functions]
+        roles: [first-learning]
+        useful_sections:
+          - "§7.1 Polynomial Regression (p.290), §6.2.1–6.2.2 Ridge/Lasso": "basis expansion THIS SECTION ONLY (no splines/subset selection — beyond AML L04); the diamond-vs-circle geometry"
+
   - id: source-esl
     title: The Elements of Statistical Learning
     type: book
@@ -243,6 +271,25 @@ sources:
         roles: [review]
         strengths:
           - "§2.3.3 'From Least Squares to Nearest Neighbors' — a hidden gem: frames the two as ends of one flexibility spectrum (best single tie between AML L02 and L03)"
+
+      - concepts: [concept-k-nearest-neighbors, concept-bias-variance-tradeoff]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "§2.9 derives the k-NN variance term σ²/k; §7.2–7.3 is the rigorous MSE = Bias² + Var + σ² decomposition, done explicitly for k-NN AND linear regression — the deep dive"
+        useful_sections:
+          - "§2.3.2–2.3.3, §2.9, §7.2–7.3 (+§7.3.1 worked example), §13.3, §7.10": "nearest neighbors, the LS↔NN flexibility spectrum, the decomposition, applied k-NN, rigorous CV"
+      - concepts: [concept-regularization]
+        roles: [derivation]
+        level: advanced
+        useful_sections:
+          - "§3.4.1–3.4.3": "the rigorous Ridge/Lasso treatment (SVD view of ridge, why lasso gives sparsity) — best depth source for AML L04"
+      - concepts: [concept-convolutional-networks]
+        roles: [review]
+        strengths:
+          - "§11.7 historical gem: LeCun's 1989 ZIP-code nets — weight sharing invented before your eyes, the ancestor of LeNet-5; 20 fun minutes, zero exam obligation"
+        weaknesses:
+          - "No modern CNN treatment"
 
   - id: source-murphy-pml1
     title: "Probabilistic Machine Learning: An Introduction"
@@ -272,6 +319,38 @@ sources:
         strengths:
           - "§10.2.5: the perceptron as 'logistic regression with a hard threshold' — the cleanest link back to L05"
 
+      - concepts: [concept-k-nearest-neighbors, concept-curse-of-dimensionality]
+        roles: [review]
+        useful_sections:
+          - "§16.1 (p.547), §4.7.6 (p.159)": "k-NN under exemplar-based methods incl. curse of dimensionality; the bias-variance decomposition with the ridge '100 datasets' figure + the caveat that it does not decompose for 0-1 loss"
+      - concepts: [concept-neural-network, concept-xor-problem]
+        roles: [first-learning, review]
+        useful_sections:
+          - "§13.2 MLPs (p.426): §13.2.1 XOR, §13.2.3 activations": "tells the lecture's XOR-solved-by-stacking story; the definitive activation-function reference (saturation, why ReLU)"
+      - concepts: [concept-backpropagation, concept-weight-decay, concept-dropout,
+                   concept-early-stopping]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "The ONLY book that teaches backprop the way AML L09 does — as reverse-mode autodiff on a computation graph (§13.3.4); §13.5 covers all three of the lecture's regularizers under one roof"
+        useful_sections:
+          - "§13.3 (p.438), §13.4.2 vanishing/exploding, §13.5 regularization": "beyond-deck: §13.4.3–13.4.4 fixes, §13.3.3 vector-Jacobian products"
+      - concepts: [concept-convolutional-networks]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "§14.3.1–14.3.4 is the lecture's famous-architecture list ONE-TO-ONE: LeNet, AlexNet, GoogLeNet, ResNet; §14.2.1 has the full convolution arithmetic incl. the (n+2p−f)/s+1 formula"
+        weaknesses:
+          - "§14.2.4 batch norm is NOT in the 2026 deck (optional depth); §14.4+ (detection/segmentation) is beyond scope"
+        useful_sections:
+          - "§14.1–14.3 (p.467–479)": "the deep CNN source; opens with the lecture's exact motivation"
+      - concepts: [concept-recurrent-networks]
+        roles: [derivation]
+        strengths:
+          - "§15.2.7 (p.512) is the only local source that does the GRU + LSTM gate equations"
+        useful_sections:
+          - "§15.2 RNNs (p.503)": "for the L11 deck once posted"
+
   - id: source-cs229-notes
     title: CS229 Lecture Notes (Stanford)
     type: documentation
@@ -300,6 +379,31 @@ sources:
         useful_sections:
           - "§4.1–4.2 GDA/NB (p.42), §4.2.1 Laplace (p.45), §4.2.2 event models": "the exact SaD-14 menu, including multinomial NB"
 
+      - concepts: [concept-linear-regression, concept-mean-squared-error, concept-normal-equation]
+        roles: [derivation, first-learning]
+        useful_sections:
+          - "§1.1 LMS (p.9), §1.2 normal equations (p.13), §1.3 probabilistic interpretation (p.15)": "GD derived, the normal equation via matrix calculus, and WHY squared error = MLE under Gaussian noise — same notation as the lecture videos"
+      - concepts: [concept-basis-functions, concept-regularization, concept-weight-decay]
+        roles: [derivation]
+        strengths:
+          - "§9.1 is the cleanest regularizer treatment for AML L04: Jλ = J + λR(θ); the θ ← (1−λη)θ − η∇J derivation IS the L09 weight-decay update; L1 = lasso/sparsity"
+        useful_sections:
+          - "§5.1–5.2 (p.49), §9.1 (p.125)": "basis expansion as feature maps φ(x)"
+      - concepts: [concept-neural-network, concept-backpropagation]
+        roles: [derivation]
+        strengths:
+          - "§7.3 is the closest WRITTEN derivation to the lecture's four per-layer backprop rules (one neuron → two-layer → vectorized); §8.2 is the other double-descent source (model-wise + sample-wise)"
+        useful_sections:
+          - "§7.1–7.2, §7.4 (vectorization over examples), §7.3, §8.2 (p.111)": "builds 1 neuron → multi-layer ReLU-first, exactly like AML L08"
+      - concepts: [concept-bias-variance-tradeoff, concept-cross-validation]
+        roles: [derivation, review]
+        strengths:
+          - "Bias defined as 'test error even with infinite training data'; the Bias²+Var+σ² decomposition (§8.1.1)"
+        weaknesses:
+          - "No k-NN anywhere in the notes"
+        useful_sections:
+          - "§8.1 (p.105), §9.3 (p.129)": "decomposition; model selection via CV"
+
   - id: source-mml
     title: Mathematics for Machine Learning
     type: book
@@ -314,6 +418,17 @@ sources:
           - "Ch 7 Continuous Optimization: the rigorous MATH of GD — descent direction, step size/momentum, convexity, why it converges"
         weaknesses:
           - "No k-NN and no logistic regression (classification via SVM, Ch 12) — do not go here for AML L02/L05"
+
+      - concepts: [concept-linear-regression, concept-normal-equation, concept-maximum-likelihood]
+        roles: [derivation]
+        level: advanced
+        useful_sections:
+          - "Ch 9 Linear Regression": "regression done as MLE with the full matrix calculus — the math under the normal equation; the MAP part = Ridge as a Gaussian prior"
+      - concepts: [concept-backpropagation, concept-chain-rule]
+        roles: [derivation]
+        level: advanced
+        strengths:
+          - "§5.6 is the chain-rule/matrix-calculus math UNDER the four layer rules — best for 'I can apply the rules but don't see why they're true'"
 
   - id: source-kroese-dsml
     title: Data Science and Machine Learning
@@ -338,6 +453,15 @@ sources:
         useful_sections:
           - "§7.2 (p.253)": "metrics half of SaD 01/11"
 
+      - concepts: [concept-neural-network, concept-backpropagation]
+        roles: [derivation, review]
+        useful_sections:
+          - "§9.2 (p.326), §9.3 (p.331)": "forward pass + backprop's four rules in rigorous matrix notation — closest to the lecture's layer recipe. §9.4 training methods are beyond the lecture (§9.4.4 Adam belongs with L06)"
+      - concepts: [concept-k-nearest-neighbors, concept-cross-validation]
+        roles: [review]
+        useful_sections:
+          - "§7.6 (p.268), §2.5.2 (p.38)": "statistical phrasing of k-NN and CV"
+
   - id: source-csc411-notes
     title: Machine Learning and Data Mining — CSC 411 notes (Toronto)
     type: documentation
@@ -349,6 +473,19 @@ sources:
         level: intermediate
         strengths:
           - "Concise second telling; §8.6 shows WHY you don't just use linear regression for classification"
+
+      - concepts: [concept-basis-functions, concept-regularization]
+        roles: [first-learning, review]
+        strengths:
+          - "§3 + §3.2 is the single most on-scope book match for AML L04's exact arc (nonlinear regression → overfitting → regularization)"
+      - concepts: [concept-k-nearest-neighbors]
+        roles: [review]
+        useful_sections:
+          - "§3.4, §8.4": "compact notes version"
+      - concepts: [concept-linear-regression, concept-gradient-descent]
+        roles: [review]
+        useful_sections:
+          - "§2 (p.5)": "concise; derives gradient descent for linear regression inline — useful pre-L06"
 
   - id: source-kelleher-fmlpda
     title: Fundamentals of Machine Learning for Predictive Data Analytics
@@ -603,6 +740,15 @@ sources:
         level: introductory
         strengths:
           - "Short, surgical intuition videos; the MLE video is worth a SECOND watch with Bernoulli in mind (cross-wire #5: MLE → cross-entropy)"
+
+      - concepts: [concept-regularization]
+        roles: [intuition, first-learning]
+        strengths:
+          - "The regularization trilogy (Ridge → Lasso → Elastic Net) — the best video entry for AML L04's shrinkage half"
+      - concepts: [concept-kernel-trick, concept-neural-network, concept-backpropagation]
+        roles: [intuition]
+        strengths:
+          - "The Kernel Trick; Neural Networks Pt. 1; Backpropagation Main Ideas; Stochastic Gradient Descent — per-topic surgical intuition"
 
   - id: source-3b1b-neural-networks
     title: 3Blue1Brown — Neural Networks playlist (4 videos)

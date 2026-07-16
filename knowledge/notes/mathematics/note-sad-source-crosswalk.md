@@ -24,8 +24,14 @@ contexts: [workspace-m2-exam-prep]
 > sequencing rationale only**. The per-lecture 📒/🎥/🧪 judgment tables live
 > canonically as evaluations on the source records; the per-lecture selector is
 > rendered by the source index (rebuild with `python tools/generate.py`).
-> The KW-29 difficulty ladder (`SaD_Book-Difficulty-Map_L01-L15.md`) and the five
-> KW-29 probability books are **not yet migrated** (Stage 2).
+> **Stage-2 update (2026-07-17):** the KW-29 difficulty ladder
+> (`SaD_Book-Difficulty-Map_L01-L15.md`) is now decomposed too — the four
+> probability-ladder books (Pitman 🟡, Ross 🔴, Tijms 🟢, Schaum's 🧮) are source
+> records with their difficulty roles; `The Principles of Probability.pdf` is
+> off-topic (math logic) and stays excluded. Ladder rule: the 5 probability
+> books only help L04–L08; descriptive/inference/ML stay on
+> Dekking/OpenIntro/Fahrmeir/Kelleher. The gentle escape hatch from Blitzstein
+> is usually Tijms or OpenIntro, Pitman as the middle rung, Schaum's for drill.
 
 # SaD L01–L15 — Source Crosswalk (narrative)
 
