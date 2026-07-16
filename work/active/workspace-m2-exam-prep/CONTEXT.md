@@ -45,12 +45,10 @@ are stale now that the sitting moved; reuse its block ordering, not its calendar
 
 ## Open Questions
 
-- Was the M2 Rücktritt actually executed in AGNES (decision was 2026-07-16,
-  deadline 2026-07-20)? And was the 1.-Termin registration itself ever confirmed
-  (legacy Open Loop #1b)? → verify both, correct records/modules.yaml if needed.
 - 2.-PZ Anmeldung (31.08–10.09): calendar reminder set?
-- Where do the Analysis blocks slot around the AMLS sitting (Aug 06/27) and AML
-  2. Termin — sequencing decision pending (legacy Open Loop #2).
+- Where do the Analysis blocks slot around the AMLS sitting (last slot,
+  confirmed) and the AML 2. Termin — sequencing decision pending (legacy Open
+  Loop #2). With AMLS in late August, the M2 deep-prep window is September.
 
 ## Next Action
 

@@ -96,13 +96,13 @@ exists in source records or relations, not only in the crosswalk note.
 
 ## 5. Facts that need YOUR confirmation (recorded, flagged, reversible)
 
-1. **AML Rücktritt** — recorded as `withdrawn` per the plan of record, but AGNES
-   execution by the Jul-15 deadline was never confirmed anywhere. **If it was
-   missed, the record must be corrected before Jul 22** and the exam plan
-   re-thought.
-2. **M2** — deferral decision (Jul 16) is recorded; AGNES execution (deadline
-   Jul 20) + the original 1.-Termin registration are unconfirmed.
-3. **AMLS sitting** — Aug 06 vs Aug 27 still unchosen; no attempt recorded.
+> **Resolved 2026-07-17 (post-pilot, Aram):** see §9 addendum — all three items
+> confirmed and recorded; nothing open here anymore.
+
+1. ~~**AML Rücktritt** — unconfirmed~~ → executed, confirmed.
+2. ~~**M2** — Rücktritt/registration unconfirmed~~ → executed, confirmed.
+3. ~~**AMLS sitting** — unchosen~~ → last course-run slot, registered attempt
+   recorded.
 
 ## 6. Decisions taken (flag if you disagree)
 
@@ -139,3 +139,16 @@ matching the hand-crafted crosswalks — held for the hardest document.
 **Awaiting your review.** On approval: Stage 2 (Phases 4–8 — full migration,
 material separation, regeneration, cutover). Commands:
 `python tools/validate.py` · `python tools/generate.py` · `python -m pytest`.
+
+## 9. Addendum (2026-07-17, post-pilot facts from Aram)
+
+- **Both Rücktritte confirmed executed** ("2 exams were stepped back"): AML
+  attempt 1 and M2 attempt 1 stand as `withdrawn` — verification hedges removed
+  from modules.yaml, COORDINATION, workspaces and unresolved.md.
+- **AMLS sitting decided: the last course-run slot.** Recorded as a `registered`
+  attempt (termin 3) in modules.yaml; it now heads the generated exam spine.
+- **Attachment policy decided: commit the whole original PDF when possible.**
+  Applied to the pilot: `teil-03.pdf` (67 MB, md5-identical to the legacy
+  original) replaces the interim 120-dpi page renders. Stage-2 caveat: Teil 01
+  (109 MB) and Teil 02 (101 MB) exceed GitHub's 100 MB per-file limit — needs a
+  split-or-exception decision if a remote is added (LFS already rejected).
