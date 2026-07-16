@@ -28,10 +28,8 @@ modules:
         date: "2026-07-27"
         result: withdrawn
         notes: >-
-          Deferral to the 2. Termin decided 2026-07-16 (recorded in
-          work/COORDINATION.md); Ruecktritt deadline was 2026-07-20 —
-          AGNES execution to verify. 1.-PZ registration itself was never
-          confirmed (Anmeldung closed 2026-07-02, legacy Open Loop #1b).
+          Ruecktritt executed (confirmed by Aram 2026-07-17). Deferral to
+          the 2. Termin decided 2026-07-16 (recorded in work/COORDINATION.md).
 
   - id: module-hu-aml
     institution: HU Berlin
@@ -50,10 +48,8 @@ modules:
         date: "2026-07-22"
         result: withdrawn
         notes: >-
-          Ruecktritt via AGNES was due by 2026-07-15 (plan of record,
-          legacy Open Loop #1c) — execution NOT yet confirmed; verify in
-          AGNES. If the Ruecktritt was missed, this record must be
-          corrected before 2026-07-22.
+          Ruecktritt executed (confirmed by Aram 2026-07-17); plan of
+          record since KW 24 — write the 2. Termin instead.
 
   - id: module-hu-amls
     institution: HU Berlin
@@ -66,8 +62,15 @@ modules:
         Written exam, 100% of the grade; the team project (submitted
         2026-07-15) is a prerequisite and adds up to 5 bonus points
         (course page, verified 2026-07-02). Course-run sittings at 16:00:
-        2026-07-23 / 2026-08-06 / 2026-08-27. Plan: take Aug 06 or
-        Aug 27 — sitting not yet chosen, no registration recorded.
+        2026-07-23 / 2026-08-06 / 2026-08-27.
+    attempts:
+      - termin: 3
+        date: "2026-08-27"
+        result: registered
+        notes: >-
+          Sitting chosen 2026-07-17 (Aram): the LAST course-run slot.
+          Course-run registration formality to complete closer to the date
+          if required.
 
   - id: module-hu-algo2
     institution: HU Berlin

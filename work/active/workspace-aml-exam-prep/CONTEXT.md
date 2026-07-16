@@ -40,17 +40,16 @@ chapters.
 
 ## Open Questions
 
-- Was the AGNES Rücktritt for the 1. Termin executed by the 2026-07-15 deadline?
-  UNCONFIRMED — verify in AGNES; if missed, records/modules.yaml must be corrected
-  and this workspace re-planned immediately.
 - 2.-PZ Anmeldung (31.08–10.09) for the 2. Termin — set the reminder.
-- Sequencing vs AMLS sitting (Aug 06 vs 27) — decide once the AMLS date is picked.
+- Fine-grained sequencing: AMLS sits in the last August slot (confirmed
+  2026-07-17), so serious AML hours start right after it — how do they interleave
+  with M2 prep through September?
 
 ## Next Action
 
-Nothing until the AGNES verification above; then, when hours open (post-AMLS
-sitting): run the L07 Mini Plan (`inputs/AML_L07_Mini_Plan.md`), self-test with
-`note-aml-l07-mock-exam` (75 min, closed book).
+Parked until after the AMLS sitting (last August slot). Then: run the L07 Mini
+Plan (`inputs/AML_L07_Mini_Plan.md`), self-test with `note-aml-l07-mock-exam`
+(75 min, closed book).
 
 ## Durable Notes
 

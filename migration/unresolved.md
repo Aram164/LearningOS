@@ -5,15 +5,12 @@
 
 ## Facts needing Aram's confirmation (module records)
 
-1. **AML Rücktritt execution** — `records/modules.yaml` records attempt 1
-   (2026-07-22) as `withdrawn` per the plan of record, but the AGNES execution by
-   the 2026-07-15 deadline was never confirmed in any legacy document. **Verify in
-   AGNES; correct the record before 2026-07-22 if the Rücktritt was missed.**
-2. **M2 Rücktritt execution + original registration** — deferral decided
-   2026-07-16 (COORDINATION), Rücktritt deadline 2026-07-20; AGNES execution
-   unconfirmed. The 1.-Termin registration itself was also never verified
-   (legacy Open Loop #1b).
-3. **AMLS sitting choice** (Aug 06 vs Aug 27) — no attempt recorded until chosen.
+1. ✅ **AML Rücktritt execution** — confirmed by Aram 2026-07-17 ("2 exams were
+   stepped back"); attempt 1 recorded `withdrawn` in records/modules.yaml.
+2. ✅ **M2 Rücktritt execution** — confirmed by Aram 2026-07-17; attempt 1
+   recorded `withdrawn`.
+3. ✅ **AMLS sitting choice** — the LAST course-run slot, decided 2026-07-17;
+   recorded as a `registered` attempt (termin 3) in records/modules.yaml.
 
 ## Deferred to Stage 2 (known destination, not yet migrated)
 
@@ -33,10 +30,13 @@
 
 ## Open decisions for the pilot review
 
-- **Attachment policy for handwritten scans:** pilot used 120-dpi JPEG page
-  renders (16 MB for 11 pages) with the original PDF preserved in the legacy
-  tree. Alternative: commit original PDFs wholesale (67–109 MB each) into
-  `knowledge/attachments/`. Decide before Stage 2 mass-migration.
+- ✅ **Attachment policy for handwritten scans** — DECIDED by Aram 2026-07-17:
+  **commit the whole original PDF when possible.** Applied: `Teil 03.pdf`
+  (67 MB) committed as the canonical attachment; the interim 120-dpi page
+  renders retired. Caveat recorded for Stage 2: `Teil 01.pdf` (109 MB) and
+  `Teil 02.pdf` (101 MB) exceed GitHub's 100 MB per-file limit — if a remote is
+  added, they need splitting or a size exception (LFS was already rejected);
+  "when possible" covers exactly this case.
 - **`concept-classification-metrics` granularity** — one concept currently covers
   confusion matrix/precision/recall/F1; split if retrieval needs finer grain.
 - Legacy validators (`tools/check_links.py`, `check_system.py`, lychee routine)
