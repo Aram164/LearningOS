@@ -1,1 +1,83 @@
-modules: []
+# Module records — the single canonical owner of administrative module facts.
+# Exam dates, registrations, withdrawals, sittings and grades live HERE and
+# nowhere else. Dashboards over this registry are generated views.
+#
+# Pilot scope: the four SoSe-2026 exam-bearing modules. Facts verified from the
+# Prüfungsplan screenshot session of 2026-07-03 (legacy SESSION-LOG) and the
+# deferral decisions recorded 2026-07-16. Items marked "to verify" need an
+# AGNES check by Aram — flagged in migration/pilot-report.md.
+modules:
+  - id: module-hu-m2-statistik-analysis
+    institution: HU Berlin
+    code: M2
+    title: Statistik & Datenanalyse + Analysis (Kombimodul)
+    semester: sose-2026
+    status: enrolled
+    components:
+      - Statistik und Datenanalyse (SaD, Leser/Akbik)
+      - Analysis (Leser-run Klausur half)
+    examination:
+      type: klausur
+      notes: >-
+        ONE combined 3h Klausur for both components, one grade.
+        1. Termin was Mo 2026-07-27 12:00-15:00 (ESZ 110/115/307);
+        2. Termin Fr 2026-10-09 13:00-16:00. 2.-PZ Anmeldung window
+        2026-08-31 to 2026-09-10.
+    attempts:
+      - termin: 1
+        date: "2026-07-27"
+        result: withdrawn
+        notes: >-
+          Deferral to the 2. Termin decided 2026-07-16 (recorded in
+          work/COORDINATION.md); Ruecktritt deadline was 2026-07-20 —
+          AGNES execution to verify. 1.-PZ registration itself was never
+          confirmed (Anmeldung closed 2026-07-02, legacy Open Loop #1b).
+
+  - id: module-hu-aml
+    institution: HU Berlin
+    title: Angewandtes Maschinelles Lernen (AML)
+    semester: sose-2026
+    status: enrolled
+    examination:
+      type: klausur
+      notes: >-
+        1. Termin was Mi 2026-07-22 15:00-18:00 (ESZ 115); 2. Termin
+        Mi 2026-09-30 09:00-12:00 (ESZ 110). Plan of record since KW 24:
+        skip the 1. Termin, write the 2. Termin. 2.-PZ Anmeldung window
+        2026-08-31 to 2026-09-10.
+    attempts:
+      - termin: 1
+        date: "2026-07-22"
+        result: withdrawn
+        notes: >-
+          Ruecktritt via AGNES was due by 2026-07-15 (plan of record,
+          legacy Open Loop #1c) — execution NOT yet confirmed; verify in
+          AGNES. If the Ruecktritt was missed, this record must be
+          corrected before 2026-07-22.
+
+  - id: module-hu-amls
+    institution: HU Berlin
+    title: Advanced Machine Learning Systems (AMLS)
+    semester: sose-2026
+    status: enrolled
+    examination:
+      type: klausur
+      notes: >-
+        Written exam, 100% of the grade; the team project (submitted
+        2026-07-15) is a prerequisite and adds up to 5 bonus points
+        (course page, verified 2026-07-02). Course-run sittings at 16:00:
+        2026-07-23 / 2026-08-06 / 2026-08-27. Plan: take Aug 06 or
+        Aug 27 — sitting not yet chosen, no registration recorded.
+
+  - id: module-hu-algo2
+    institution: HU Berlin
+    title: Algorithmen und Datenstrukturen II (Algo 2)
+    semester: sose-2026
+    status: enrolled
+    examination:
+      type: muendlich
+      notes: >-
+        30-minute oral exam (Zoom), 2. Pruefungszeitraum, window
+        2026-10-05 to 2026-10-08 nach Vereinbarung — slot must be booked
+        via AGNES + Pruefungs-Moodle; Anmeldung window 2026-08-31 to
+        2026-09-10. Uebungen ungraded.

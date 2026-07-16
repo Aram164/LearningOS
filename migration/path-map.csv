@@ -1,1 +1,15 @@
 old_path,new_path,type,decided_in_phase
+Plans/ML/foundations/reference/AML-SaD_Master_Wiring.md,knowledge/notes/cross-domain/note-aml-sad-master-wiring.md,note(crosswalk)+relations+source-evaluations,pilot
+Plans/ML/foundations/reference/Regression_SaD-AML-ISLP_Bridge.md,knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md,note(synthesis),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Ultimate_Reference.md,knowledge/notes/machine-learning/note-aml-l07-linear-classifiers.md,note(reference),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Exercise_Bank.md,knowledge/notes/machine-learning/note-aml-l07-exercise-bank.md,note(exercise-bank),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Mock_Exam.md,knowledge/notes/machine-learning/note-aml-l07-mock-exam.md,note(mock-exam),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_BonusSheet04_Solution.md,knowledge/notes/machine-learning/note-aml-bonusblatt04-solutions.md,note(exercise-bank),pilot
+Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Mini_Plan.md,work/active/workspace-aml-exam-prep/inputs/AML_L07_Mini_Plan.md,operational-plan(copy),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Ultimate_Reference.md,knowledge/notes/mathematics/note-sad-l02-descriptive-basics.md,note(reference),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Exercise_Bank.md,knowledge/notes/mathematics/note-sad-l02-exercise-bank.md,note(exercise-bank),pilot
+Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Mini_Plan.md,work/active/workspace-m2-exam-prep/inputs/SaD_L02_Mini_Plan.md,operational-plan(copy),pilot
+Plans/Math/sad/SaD_Source-Crosswalk_L01-L15.md,knowledge/notes/mathematics/note-sad-source-crosswalk.md + sources/sources.yaml evaluations,crosswalk-decomposition,pilot
+Plans/ML/foundations/AML/my notes/AML_Book-Concept-Crosswalk_L02-L10.md,sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2),crosswalk-decomposition(partial),pilot
+Plans/Math/sad/SaD/notes/Teil 03.pdf,knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-01..11.jpg (120dpi renders; original preserved in legacy),handwritten-attachment,pilot
+SEMESTER-STATUS.md (exam facts §0.5/§8) + Pruefungsplan session 2026-07-03,records/modules.yaml,module-facts,pilot

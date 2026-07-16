@@ -1,1 +1,252 @@
-relations: []
+# Concept-to-concept semantic edges only (eight types; no related-to).
+# Extracted from the AML-SaD Master Wiring and the Regression Bridge during the
+# Stage-1 pilot — durable semantics only, module-to-module edges NOT copied.
+relations:
+  # ---- the MLE engine (cross-wires #4 and #5 — the deepest wires of the semester)
+  - from: concept-maximum-likelihood
+    type: derives
+    to: concept-mean-squared-error
+    context: "Gaussian noise + MLE ⟹ MSE (SaD 08 sl. 29–36)"
+    source: note-aml-sad-master-wiring
+  - from: concept-maximum-likelihood
+    type: derives
+    to: concept-cross-entropy
+    context: "Bernoulli labels + MLE ⟹ cross-entropy (AML L05 sl. 40–62); same engine as MLE→MSE"
+    source: note-aml-sad-master-wiring
+  - from: concept-maximum-likelihood
+    type: requires
+    to: concept-random-variable
+    context: "MLE maximizes the likelihood of a parametric probability model of the data"
+    source: note-aml-sad-master-wiring
+
+  # ---- classification pipeline (Pipeline C)
+  - from: concept-logistic-regression
+    type: requires
+    to: concept-sigmoid
+    source: note-aml-sad-master-wiring
+  - from: concept-logistic-regression
+    type: requires
+    to: concept-conditional-probability
+    context: "σ(w·x) is interpreted as P(y=1|x) — the object itself is defined in SaD 04"
+    source: note-aml-sad-master-wiring
+  - from: concept-logistic-regression
+    type: builds-on
+    to: concept-linear-regression
+    context: "logistic regression is linear regression on the log-odds; same gradient skeleton with σ inserted"
+    source: note-aml-sad-master-wiring
+  - from: concept-logistic-regression
+    type: motivates
+    to: concept-gradient-descent
+    context: "no closed form for the cross-entropy minimum — GD becomes necessary, not optional"
+    source: note-aml-sad-master-wiring
+  - from: concept-cross-entropy
+    type: applies-in
+    to: concept-logistic-regression
+    source: note-aml-sad-master-wiring
+  - from: concept-cross-entropy
+    type: builds-on
+    to: concept-entropy
+    context: "one formula H: trees minimize it by splitting, classifiers by gradient (cross-wire #16)"
+    source: note-aml-sad-master-wiring
+  - from: concept-naive-bayes
+    type: contrasts-with
+    to: concept-logistic-regression
+    context: "generative vs discriminative — both compute P(class|x); model the data vs model the boundary"
+    source: note-aml-sad-master-wiring
+  - from: concept-naive-bayes
+    type: requires
+    to: concept-bayes-theorem
+    source: note-aml-sad-master-wiring
+  - from: concept-bayes-theorem
+    type: builds-on
+    to: concept-conditional-probability
+    source: note-aml-sad-master-wiring
+  - from: concept-gaussian-naive-bayes
+    type: builds-on
+    to: concept-naive-bayes
+    source: note-aml-sad-master-wiring
+  - from: concept-gaussian-naive-bayes
+    type: requires
+    to: concept-normal-distribution
+    context: "per-class N(μ_c, σ_c²) as the likelihood — SaD 08's density doing classification work (cross-wire #8)"
+    source: note-aml-sad-master-wiring
+  - from: concept-laplace-smoothing
+    type: applies-in
+    to: concept-naive-bayes
+    context: "unseen feature/class combos give P=0 and kill the product; add pseudocount k"
+    source: note-aml-sad-master-wiring
+  - from: concept-softmax
+    type: generalizes
+    to: concept-sigmoid
+    source: note-aml-sad-master-wiring
+
+  # ---- neural-network pipeline (Pipeline D)
+  - from: concept-kernel-trick
+    type: builds-on
+    to: concept-perceptron
+    context: "the dual form w = Σ αᵢyᵢxᵢ turns predictions into dot-products — that is what makes it kernelizable"
+    source: note-aml-l07-linear-classifiers
+  - from: concept-xor-problem
+    type: motivates
+    to: concept-kernel-trick
+    context: "fix 1: non-linear feature x₁x₂, stay one layer — the kernel philosophy"
+    source: note-aml-sad-master-wiring
+  - from: concept-xor-problem
+    type: motivates
+    to: concept-neural-network
+    context: "fix 2: stack — XOR = AND(OR, NAND); learn the features — the deep-learning philosophy"
+    source: note-aml-sad-master-wiring
+  - from: concept-neural-network
+    type: builds-on
+    to: concept-perceptron
+    context: "the perceptron is the single neuron of the MLP"
+    source: note-aml-sad-master-wiring
+  - from: concept-neural-network
+    type: builds-on
+    to: concept-linear-regression
+    context: "the 'drop φ' slide: a 1-layer ANN with identity activation IS multivariate linear regression"
+    source: note-aml-sad-master-wiring
+  - from: concept-backpropagation
+    type: requires
+    to: concept-chain-rule
+    context: "backprop is the chain rule, cached on a computation graph"
+    source: note-aml-sad-master-wiring
+  - from: concept-backpropagation
+    type: applies-in
+    to: concept-neural-network
+    source: note-aml-sad-master-wiring
+  - from: concept-weight-decay
+    type: builds-on
+    to: concept-regularization
+    context: "L2/Frobenius weight decay = Ridge on weight matrices"
+    source: note-aml-sad-master-wiring
+  - from: concept-weight-decay
+    type: applies-in
+    to: concept-neural-network
+    source: note-aml-sad-master-wiring
+  - from: concept-dropout
+    type: applies-in
+    to: concept-neural-network
+    source: note-aml-sad-master-wiring
+  - from: concept-early-stopping
+    type: applies-in
+    to: concept-neural-network
+    source: note-aml-sad-master-wiring
+  - from: concept-bias-variance-tradeoff
+    type: motivates
+    to: concept-dropout
+    context: "dropout as a variance-reduction move on the Block-D U-curve"
+    source: note-aml-sad-master-wiring
+  - from: concept-bias-variance-tradeoff
+    type: motivates
+    to: concept-early-stopping
+    source: note-aml-sad-master-wiring
+
+  # ---- regression pipeline (Pipeline A)
+  - from: concept-normal-equation
+    type: applies-in
+    to: concept-linear-regression
+    context: "identical formula in both modules: SaD 03 k=(AᵀA)⁻¹Aᵀy = AML L04 w=(XᵀX)⁻¹Xᵀy"
+    source: note-regression-sad-aml-islp-bridge
+  - from: concept-mean-squared-error
+    type: applies-in
+    to: concept-linear-regression
+    source: note-regression-sad-aml-islp-bridge
+  - from: concept-regularization
+    type: applies-in
+    to: concept-linear-regression
+    context: "Ridge (L2) and Lasso (L1) on the least-squares loss (AML L04)"
+    source: note-regression-sad-aml-islp-bridge
+  - from: concept-convexity
+    type: applies-in
+    to: concept-gradient-descent
+    context: "∇²L = (1/m)XᵀX is PSD ⟹ MSE convex; logistic loss convex — GD cannot get trapped (cross-wire #11)"
+    source: note-aml-sad-master-wiring
+  - from: concept-adam-optimizer
+    type: builds-on
+    to: concept-gradient-descent
+    context: "momentum = EMA of gradients; RMSProp = per-weight learning rates"
+    source: note-aml-sad-master-wiring
+  - from: concept-feature-scaling
+    type: applies-in
+    to: concept-gradient-descent
+    context: "mean-normalization/scaling for GD convergence speed (cross-wire #10)"
+    source: note-aml-sad-master-wiring
+  - from: concept-feature-scaling
+    type: applies-in
+    to: concept-k-nearest-neighbors
+    context: "distance fairness — same μ,σ transform as the stats tool (cross-wire #10)"
+    source: note-aml-sad-master-wiring
+
+  # ---- probability → inference pipeline (Pipeline B, SaD 04→10 study order)
+  - from: concept-random-variable
+    type: builds-on
+    to: concept-probability
+    source: note-aml-sad-master-wiring
+  - from: concept-combinatorics
+    type: applies-in
+    to: concept-probability
+    context: "counting for Laplace probabilities"
+    source: note-sad-source-crosswalk
+  - from: concept-expected-value
+    type: requires
+    to: concept-random-variable
+    source: note-aml-sad-master-wiring
+  - from: concept-variance
+    type: builds-on
+    to: concept-expected-value
+    source: note-aml-sad-master-wiring
+  - from: concept-discrete-distributions
+    type: builds-on
+    to: concept-random-variable
+    source: note-aml-sad-master-wiring
+  - from: concept-normal-distribution
+    type: builds-on
+    to: concept-random-variable
+    source: note-aml-sad-master-wiring
+  - from: concept-central-limit-theorem
+    type: requires
+    to: concept-normal-distribution
+    source: note-aml-sad-master-wiring
+  - from: concept-statistical-estimation
+    type: builds-on
+    to: concept-central-limit-theorem
+    source: note-aml-sad-master-wiring
+  - from: concept-maximum-likelihood
+    type: applies-in
+    to: concept-statistical-estimation
+    source: note-aml-sad-master-wiring
+  - from: concept-hypothesis-testing
+    type: builds-on
+    to: concept-statistical-estimation
+    source: note-aml-sad-master-wiring
+  - from: concept-hypothesis-testing
+    type: contrasts-with
+    to: concept-classification-metrics
+    context: "Type I/II ↔ FP/FN — the same 2×2 table, inferential vs predictive reading (cross-wire #15)"
+    source: note-aml-sad-master-wiring
+  - from: concept-descriptive-statistics
+    type: contrasts-with
+    to: concept-expected-value
+    context: "x̄ ↔ E[X], s² ↔ Var(X): sample vs population view (cross-wire #1)"
+    source: note-aml-sad-master-wiring
+
+  # ---- trees (SaD-only side quest, exam-required)
+  - from: concept-information-gain
+    type: requires
+    to: concept-entropy
+    source: note-sad-source-crosswalk
+  - from: concept-decision-trees
+    type: requires
+    to: concept-information-gain
+    context: "ID3 splits on maximum information gain"
+    source: note-sad-source-crosswalk
+  - from: concept-random-forest
+    type: builds-on
+    to: concept-decision-trees
+    source: note-aml-sad-master-wiring
+  - from: concept-random-forest
+    type: requires
+    to: concept-bootstrap
+    context: "bootstrap → bagging → RF: variance reduction by averaging (cross-wire #17)"
+    source: note-aml-sad-master-wiring

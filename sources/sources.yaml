@@ -1,1 +1,635 @@
-sources: []
+# Source registry — evaluated teaching objects. Contextual evaluations here are
+# the CANONICAL home of pedagogical judgments (crosswalk notes narrate, never own).
+# Pilot scope: sources needed by the migrated pilot set (Master Wiring, SaD
+# crosswalk, AML L07 unit, SaD L02 unit, Regression Bridge). Full registry: Stage 2.
+# material:// URIs point at LearningOS/materials/<source-id>/ — materials move in
+# Stage 2 (Step 8); unresolved URIs are reported as warnings by design until then.
+sources:
+  # ================================================== lecture-series sources
+  - id: source-aml-ss26-lectures
+    title: AML — Angewandtes Maschinelles Lernen, lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Patrick Schäfer]
+    organization: HU Berlin
+    year: 2026
+    material: material://source-aml-ss26-lectures/lecture-slides
+    evaluations:
+      - concepts: [concept-k-nearest-neighbors, concept-bias-variance-tradeoff,
+                   concept-cross-validation, concept-classification-metrics]
+        roles: [first-learning]
+        useful_sections:
+          - "L02 — k-NN, bias-variance, CV, generalization": "SaD 13 gives the algorithm + metrics, AML gives the theory (strong wire)"
+      - concepts: [concept-linear-regression, concept-mean-squared-error]
+        roles: [first-learning]
+        useful_sections:
+          - "L03 — Linear regression": "MSE, derivative=0; the strongest cross-module wire of the semester (same minimization as SaD 03, scalar vs matrix)"
+      - concepts: [concept-normal-equation, concept-regularization]
+        roles: [first-learning]
+        useful_sections:
+          - "L04 — Design matrix, normal equation, Ridge/Lasso": "SaD 03's k=(AᵀA)⁻¹Aᵀy IS this lecture's w=(XᵀX)⁻¹Xᵀy"
+      - concepts: [concept-logistic-regression, concept-sigmoid, concept-decision-boundary,
+                   concept-cross-entropy, concept-maximum-likelihood]
+        roles: [first-learning, derivation]
+        strengths:
+          - "Full MLE → cross-entropy derivation on slides 40–62: product → log → sum → ×(−1/m); combined/vectorized loss; gradient dL/dw = (1/m)Xᵀ(σ(Xw)−y); no-closed-form result"
+          - "The 3-step construction (sl. 5–9): linear regression + threshold fails → separator w·x=0 → squash with σ; boundary geometry + basis expansion (fit a circle, sl. 33–34)"
+          - "Heavier than most plans assume — the derivation is the semester's deepest cross-wire (MLE engine, Bernoulli output)"
+        useful_sections:
+          - "L05 — Logistic regression (sl. 5–35 construction, 39–62 loss)": "sigmoid, decision boundary, MLE→cross-entropy full derivation; MSE forbidden (non-convex for σ)"
+      - concepts: [concept-gradient-descent, concept-adam-optimizer, concept-convexity,
+                   concept-feature-scaling]
+        roles: [first-learning, derivation]
+        strengths:
+          - "Goes far past plain SGD: momentum, RMSProp, Adam, Newton/Hessian, convexity via PSD Hessian, feature scaling — Adam double-pays for the AMLS project"
+        useful_sections:
+          - "L06 — GD, SGD, mini-batch, Adam, Newton, convexity": "sl. 19 shows linear and logistic gradients in one frame; sl. 35–45 feature scaling"
+      - concepts: [concept-perceptron, concept-kernel-trick, concept-xor-problem]
+        roles: [first-learning, derivation]
+        strengths:
+          - "Perceptron primal AND dual form, convergence, XOR non-separability, kernel trick with 2d worked example, RBF kernel, One-vs-Rest + multiclass perceptron"
+        weaknesses:
+          - "Contains NO SVM — no maximum margin, no support vectors (slide-verified Jun 10, 2026). External 'kernel' problem sets are dominated by SVM: take only the kernel-computation parts"
+        useful_sections:
+          - "L07 — Linear classifiers, perceptron, kernel trick, multi-class (94 slides)": "the hinge between classic ML (L02–L06) and the NN arc (L08–L10)"
+      - concepts: [concept-neural-network, concept-softmax, concept-classification-metrics,
+                   concept-xor-problem]
+        roles: [first-learning]
+        strengths:
+          - "Forward-pass worked example shares its numbers with L09's backprop example (W⁽¹⁾=[[1,2],[1,2]], x=[1,0] → ŷ=0.94) — do it by hand once, reuse"
+          - "Metrics block (accuracy/precision/recall/F1 + micro/macro/weighted) is a literal repeat of SaD 11 — plus the multi-class averaging that is new and exam-relevant"
+        useful_sections:
+          - "L08 — MLP, forward pass, XOR solved, activations, softmax, metrics": "2 linear layers collapse to 1 (proven sl. 41); output layers by task (sl. 43–51); metrics sl. 60–80"
+      - concepts: [concept-backpropagation, concept-chain-rule, concept-weight-decay,
+                   concept-dropout, concept-early-stopping]
+        roles: [first-learning, derivation]
+        strengths:
+          - "OWNS NN regularization: L2/Frobenius weight decay, dropout, early stopping, double descent — these live HERE, not in L04 (slide-verified correction)"
+          - "Computation graphs + the four per-layer backprop rules + full worked example (same numbers as L08), closing with the identical example in PyTorch"
+        weaknesses:
+          - "No batch normalization — out of scope for this course's exam (slide-verified)"
+        useful_sections:
+          - "L09 — Backprop, computation graphs, regularization, double descent": "vanishing/exploding gradients (λ⁷ argument, sl. 71–74)"
+
+  - id: source-sad-ss26-lectures
+    title: SaD — Statistik und Datenanalyse, lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Ulf Leser, Alan Akbik]
+    organization: HU Berlin
+    year: 2026
+    material: material://source-sad-ss26-lectures/lecture-slides
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-classification-metrics]
+        roles: [first-learning]
+        useful_sections:
+          - "L01–L02 — Introduction, basic concepts": "mean/median/mode, histograms, TP/FP/FN/TN via contingency tables (L01); population/sample, scale types, x̄, s², quantiles, boxplots, Simpson (L02)"
+      - concepts: [concept-linear-regression, concept-normal-equation, concept-gradient-descent]
+        roles: [first-learning]
+        strengths:
+          - "The normal equation appears HERE first (k=(AᵀA)⁻¹Aᵀy, sl. 17–37) — AML L04 renames it; GD introduced as an 'alternative' (sl. 29–37) before AML L06 makes it everything"
+        useful_sections:
+          - "L03 — Correlation & regression": "covariance, Pearson r, k = r·s_y/s_x, MLR, GD intro"
+      - concepts: [concept-probability, concept-conditional-probability, concept-bayes-theorem,
+                   concept-naive-bayes]
+        roles: [first-learning]
+        weaknesses:
+          - "Slide 47 Bayes example misprint: the correct answer is 0.91, not 0.99 (verified during the L04 unit build, KW 28)"
+        useful_sections:
+          - "L04 — Probability, Bayes, Naive Bayes": "axioms, conditional P, Bayes' theorem, independence, NB spam example (~sl. 40+)"
+      - concepts: [concept-combinatorics]
+        roles: [first-learning]
+        useful_sections:
+          - "L05 — Combinatorics": "permutations, variations, combinations — 6 cases + hypergeometric"
+      - concepts: [concept-random-variable, concept-expected-value, concept-variance]
+        roles: [first-learning]
+        useful_sections:
+          - "L06 — Random variables": "RV, CDF/PDF, E[X], Var, rules, Tschebyscheff, IID, LLN"
+      - concepts: [concept-discrete-distributions]
+        roles: [first-learning]
+        useful_sections:
+          - "L07 — Discrete distributions": "Binomial, hypergeometric, Poisson"
+      - concepts: [concept-normal-distribution, concept-central-limit-theorem,
+                   concept-maximum-likelihood, concept-feature-scaling]
+        roles: [first-learning, derivation]
+        strengths:
+          - "The MLE→MSE derivation (sl. 29–36) — Gaussian noise + MLE ⟹ MSE; the engine AML L05 re-runs with Bernoulli for cross-entropy; a mock-exam staple"
+        useful_sections:
+          - "L08 — Normal distribution, CLT, MLE→MSE": "N(μ,σ²), z-scores/z-normalization, CLT"
+      - concepts: [concept-statistical-estimation]
+        roles: [first-learning]
+        useful_sections:
+          - "L09 — Estimation": "unbiased/consistent/efficient point estimators, CIs, t-distribution"
+      - concepts: [concept-hypothesis-testing]
+        roles: [first-learning]
+        useful_sections:
+          - "L10 — Testing": "H₀/H₁, p-values, Type I/II, z/t-tests, non-parametric"
+      - concepts: [concept-bias-variance-tradeoff, concept-bootstrap, concept-classification-metrics]
+        roles: [first-learning, review]
+        useful_sections:
+          - "L11 — Data science intro (126 slides)": "losses, train/test, eval metrics (sl. 23–38), pipelines, inductive bias, bias-variance, bootstrapping"
+      - concepts: [concept-entropy, concept-information-gain, concept-decision-trees,
+                   concept-random-forest, concept-bootstrap]
+        roles: [first-learning]
+        strengths:
+          - "Includes regression trees (variance as split criterion), stacking and boosting beyond ID3/RF — UE7-relevant, easy to miss"
+        useful_sections:
+          - "L12 — Tree-based learning": "entropy → information gain → ID3 → pruning → bagging/boosting/stacking → Random Forests"
+      - concepts: [concept-k-nearest-neighbors, concept-feature-scaling]
+        roles: [first-learning]
+        strengths:
+          - "Includes indexing structures (kd-trees, LSH) and the metric axioms (symmetry, non-negativity, identity, triangle inequality) — Leser-flavored, plausibly exam-relevant"
+        useful_sections:
+          - "L13 — Similarity-based learning": "k-NN, distance measures, Voronoi, scaling, indexing"
+      - concepts: [concept-naive-bayes, concept-laplace-smoothing, concept-gaussian-naive-bayes]
+        roles: [first-learning, derivation]
+        useful_sections:
+          - "L14 — Probability-based learning": "Laplace smoothing (sl. 8–10), Gaussian NB (sl. 14–18), multinomial NB + log-space trick (sl. 19–23), Bayes-net outlook"
+      - concepts: [concept-neural-network, concept-perceptron, concept-softmax,
+                   concept-backpropagation]
+        roles: [first-learning]
+        strengths:
+          - "The 'Remember MLR?' / drop-φ slide — per the Master Wiring the most important slide in SaD: a 1-layer ANN with identity activation IS multivariate linear regression"
+          - "Softmax introduced as the differentiable argmax — the NB decision rule living on inside every classifier net"
+          - "Parameter-counting formula n·l + (k−1)·l² + l·m — a SaD exam target"
+        useful_sections:
+          - "L15 — Neural networks": "perceptron as 1-neuron ANN (sl. 1–12), MLP, backprop overview (read BEFORE AML L09's full machinery)"
+
+  - id: source-sad-2025-recordings
+    title: SaD 2025 lecture recordings (WiSe 2025 run)
+    type: video
+    organization: HU Berlin
+    year: 2025
+    material: material://source-sad-2025-recordings
+    evaluations:
+      - roles: [review, first-learning]
+        strengths:
+          - "Same course, one year older — always the FIRST video pick when 2026 slides alone don't click; recordings exist for lectures 01–13"
+        weaknesses:
+          - "Numbering differs from 2026 (stats core 04–10 nearly identical; ML lectures reorganized)"
+      - concepts: [concept-expected-value, concept-random-variable]
+        roles: [first-learning]
+        strengths:
+          - "2025 splits E[X] over two lectures (L05+L06) — more depth than 2026's single L06"
+      - concepts: [concept-neural-network, concept-backpropagation]
+        roles: [first-learning]
+        strengths:
+          - "2025 L14+L15: two full NN lectures vs one in 2026 — the best local depth for SaD 15, significantly more on backprop"
+
+  # ============================================================== books (ML)
+  - id: source-islp
+    title: "An Introduction to Statistical Learning (Python edition)"
+    type: book
+    authors: [Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani, Jonathan Taylor]
+    year: 2023
+    material: material://source-islp/islp.pdf
+    evaluations:
+      - roles: [first-learning, review]
+        level: introductory
+        strengths: ["The AML spine — read first; matches the lecture framing"]
+        weaknesses: ["No standalone gradient-descent treatment (only §10.7, deep learning)"]
+      - concepts: [concept-logistic-regression, concept-sigmoid]
+        roles: [first-learning, review]
+        level: introductory
+        strengths:
+          - "§4.3 (p.138): the model, odds/logit, MLE coefficient estimation — the core L05 read; log-odds view: logistic regression is linear regression on the log-odds"
+        useful_sections:
+          - "§4.3.1 The Logistic Model (p.139), §4.3.4 Multiple LR (p.142)": "in-scope for AML L05"
+      - concepts: [concept-linear-regression, concept-regularization]
+        roles: [first-learning, review]
+        level: introductory
+        useful_sections:
+          - "Ch 3 + §6.2": "regression with inference (SE, CI, t-tests on β̂ — the SaD 09/10 layer) + shrinkage geometry"
+      - concepts: [concept-decision-trees, concept-random-forest]
+        roles: [first-learning, review]
+        useful_sections:
+          - "§8.1 (p.331), §8.2 (p.343)": "trees; bagging/RF/boosting — page-verified against the local PDF"
+      - concepts: [concept-naive-bayes]
+        roles: [review]
+        useful_sections:
+          - "§4.4.4 NB (p.158), lab §4.7.5 (p.182)": "optional depth for SaD 14"
+      - concepts: [concept-kernel-trick]
+        roles: [review]
+        level: intermediate
+        weaknesses:
+          - "Ch 9 reaches kernels only through the SVM, which AML L07 does NOT teach — optional enrichment only; §9.3.2 is the closest section"
+      - concepts: [concept-neural-network, concept-backpropagation]
+        roles: [first-learning]
+        useful_sections:
+          - "§10.1–10.2, §10.7": "single/multi-layer networks; the only ISLP GD appearance"
+
+  - id: source-esl
+    title: The Elements of Statistical Learning
+    type: book
+    authors: [Trevor Hastie, Robert Tibshirani, Jerome Friedman]
+    year: 2009
+    material: material://source-esl/esl.pdf
+    evaluations:
+      - roles: [review, derivation]
+        level: advanced
+        strengths: ["The proof + depth layer; same authors as ISLP"]
+        weaknesses: ["Graduate-level throughout; no GD chapter (fits via Newton/IRLS)"]
+      - concepts: [concept-logistic-regression]
+        roles: [derivation]
+        level: advanced
+        weaknesses:
+          - "§4.4 fits via Newton–Raphson/IRLS, NOT the gradient descent AML L06 uses"
+        useful_sections:
+          - "§4.4 (p.119), §4.4.1 (p.120), §4.4.4 L1-regularized (p.125)": "MLE/log-likelihood fit; LR-vs-LDA contrast in §4.4.5"
+      - concepts: [concept-perceptron]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "§4.5.1 Rosenblatt perceptron WITH the convergence result — one of only two book homes of the actual algorithm"
+      - concepts: [concept-k-nearest-neighbors, concept-linear-regression]
+        roles: [review]
+        strengths:
+          - "§2.3.3 'From Least Squares to Nearest Neighbors' — a hidden gem: frames the two as ends of one flexibility spectrum (best single tie between AML L02 and L03)"
+
+  - id: source-murphy-pml1
+    title: "Probabilistic Machine Learning: An Introduction"
+    type: book
+    authors: [Kevin P. Murphy]
+    year: 2022
+    material: material://source-murphy-pml1/pml1.pdf
+    evaluations:
+      - roles: [review, derivation]
+        level: advanced
+        strengths: ["The only local AML book that does gradient descent properly (Ch 8)"]
+      - concepts: [concept-logistic-regression, concept-cross-entropy, concept-maximum-likelihood,
+                   concept-gradient-descent]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "Ch 10 (§10.2.3 MLE, §10.2.4 SGD): the cleanest 'cross-entropy from MLE → gradient → SGD' arc in print — maps to AML L05 AND L06 together"
+        useful_sections:
+          - "Ch 10 (p.339)": "logistic regression end-to-end"
+      - concepts: [concept-gradient-descent, concept-convexity]
+        roles: [derivation, review]
+        level: advanced
+        useful_sections:
+          - "Ch 8 (p.275), §8.4 SGD (p.292)": "local/global optima, convexity, smoothness, step size — the on-scope book reference for AML L06"
+      - concepts: [concept-perceptron]
+        roles: [review]
+        strengths:
+          - "§10.2.5: the perceptron as 'logistic regression with a hard threshold' — the cleanest link back to L05"
+
+  - id: source-cs229-notes
+    title: CS229 Lecture Notes (Stanford)
+    type: documentation
+    authors: [Andrew Ng, Tengyu Ma]
+    material: material://source-cs229-notes/cs229-notes.pdf
+    evaluations:
+      - roles: [derivation, review]
+        level: intermediate
+        strengths:
+          - "Concise, derivation-first; the written companion to the CS229 video spine — the single best bridge across AML L03→L09 in one short document (216 pp)"
+        weaknesses: ["No k-NN, no CNN"]
+      - concepts: [concept-gradient-descent]
+        roles: [derivation, first-learning]
+        strengths:
+          - "§1.1 LMS (p.9): batch GD + SGD derived from scratch in the lectures' own notation — the best-aligned written GD source for AML L06"
+      - concepts: [concept-logistic-regression, concept-sigmoid]
+        roles: [derivation]
+        useful_sections:
+          - "§2.1 (p.20), §2.3 Newton (p.24), §3.2.2 GLM (p.30)": "log-likelihood gradient (y−h)·x; the GLM derivation of WHY the sigmoid"
+      - concepts: [concept-kernel-trick, concept-perceptron]
+        roles: [derivation, first-learning]
+        strengths:
+          - "Ch 5 + §2.2: the ONLY book source that develops feature maps → kernel trick → kernel properties WITHOUT the SVM — exactly AML L07's route"
+      - concepts: [concept-naive-bayes, concept-laplace-smoothing, concept-gaussian-naive-bayes]
+        roles: [derivation, review]
+        useful_sections:
+          - "§4.1–4.2 GDA/NB (p.42), §4.2.1 Laplace (p.45), §4.2.2 event models": "the exact SaD-14 menu, including multinomial NB"
+
+  - id: source-mml
+    title: Mathematics for Machine Learning
+    type: book
+    authors: [Marc Peter Deisenroth, A. Aldo Faisal, Cheng Soon Ong]
+    year: 2020
+    url: https://mml-book.github.io/
+    evaluations:
+      - concepts: [concept-gradient-descent, concept-convexity]
+        roles: [derivation]
+        level: advanced
+        strengths:
+          - "Ch 7 Continuous Optimization: the rigorous MATH of GD — descent direction, step size/momentum, convexity, why it converges"
+        weaknesses:
+          - "No k-NN and no logistic regression (classification via SVM, Ch 12) — do not go here for AML L02/L05"
+
+  - id: source-kroese-dsml
+    title: Data Science and Machine Learning
+    type: book
+    authors: [Dirk P. Kroese, Zdravko Botev, Thomas Taimre, Radislav Vaisman]
+    year: 2019
+    material: material://source-kroese-dsml/kroese.pdf
+    evaluations:
+      - roles: [review]
+        level: advanced
+        strengths: ["Dense statistical cross-check between the stats and ML halves"]
+      - concepts: [concept-logistic-regression, concept-softmax]
+        roles: [review]
+        useful_sections:
+          - "§7.5 (p.266)": "logistic + its softmax multiclass generalization"
+      - concepts: [concept-decision-trees, concept-random-forest]
+        roles: [review, derivation]
+        useful_sections:
+          - "Ch 8: §8.2 top-down construction (p.289), §8.5 bagging (p.305), §8.6 RF (p.309), §8.7 boosting": "the rigor tier for SaD 12"
+      - concepts: [concept-classification-metrics]
+        roles: [review]
+        useful_sections:
+          - "§7.2 (p.253)": "metrics half of SaD 01/11"
+
+  - id: source-csc411-notes
+    title: Machine Learning and Data Mining — CSC 411 notes (Toronto)
+    type: documentation
+    organization: University of Toronto
+    material: material://source-csc411-notes/csc411.pdf
+    evaluations:
+      - concepts: [concept-logistic-regression]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "Concise second telling; §8.6 shows WHY you don't just use linear regression for classification"
+
+  - id: source-kelleher-fmlpda
+    title: Fundamentals of Machine Learning for Predictive Data Analytics
+    type: book
+    authors: [John D. Kelleher, Brian Mac Namee, Aoife D'Arcy]
+    year: 2015
+    material: material://source-kelleher-fmlpda/kelleher.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        level: introductory
+        strengths:
+          - "The SaD ML-half source text — its four learning families map 1:1 onto SaD 12–15 (TOC-verified Jul 2, 2026)"
+          - "Worked toy examples in exam style"
+      - concepts: [concept-decision-trees, concept-information-gain, concept-entropy]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 4 Information-based Learning (§4.2.3 information gain)": "SaD 12's native text"
+      - concepts: [concept-k-nearest-neighbors]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 5 Similarity-based Learning (§5.2.2 distance metrics)": "SaD 13"
+      - concepts: [concept-naive-bayes, concept-gaussian-naive-bayes]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 6 Probability-based Learning (§6.4.2 continuous features/PDFs)": "SaD 14, incl. Gaussian NB"
+      - concepts: [concept-neural-network, concept-gradient-descent, concept-linear-regression]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 7 Error-based Learning": "error surfaces, learning rates, weight decay — SaD 15/03 framing; the rent worked example pairs with SaD L03"
+
+  # ============================================================ books (stats)
+  - id: source-teschl-mathe-informatiker
+    title: Mathematik für Informatiker (Band 2)
+    type: book
+    authors: [Gerald Teschl, Susanne Teschl]
+    year: 2007
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability]
+        roles: [first-learning]
+        level: introductory
+        strengths:
+          - "The OFFICIALLY-NAMED primary stats text of the SaD course (L01 slide 40) — correction of the earlier Fahrmeir assumption (KW 28)"
+
+  - id: source-fahrmeir-statistik
+    title: "Statistik: Der Weg zur Datenanalyse (9. Aufl.)"
+    type: book
+    authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
+    material: material://source-fahrmeir-statistik/statistik.pdf
+    evaluations:
+      - roles: [review, first-learning]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "Same notation as the lectures — the exam-layer text; the rigor home for every stats lecture"
+        weaknesses:
+          - "NOT the officially-named course text (that is Teschl & Teschl, per L01 slide 40) — a strong notation-matched alternative"
+          - "TOC is image-based (no pdftotext) — verify section numbers on first use for Ch 2–3"
+        useful_sections:
+          - "Chapter map (verified in the deep plan)": "Ch 2 deskriptiv → L01–02; Ch 3 multivariat → L03; Ch 4 Wahrscheinlichkeit/Kombinatorik → L04–05; Ch 5–7 → L06–08; Ch 9 → L09; Ch 10/11 → L10"
+      - concepts: [concept-descriptive-statistics]
+        roles: [first-learning, review]
+        useful_sections:
+          - "Ch 2 (univariat deskriptiv)": "SaD L01–L02"
+      - concepts: [concept-probability, concept-conditional-probability, concept-combinatorics]
+        roles: [review]
+        useful_sections:
+          - "Ch 4": "probability + Kombinatorik; the 04/05 prerequisite layer"
+      - concepts: [concept-random-variable, concept-discrete-distributions,
+                   concept-normal-distribution, concept-central-limit-theorem]
+        roles: [review]
+        useful_sections:
+          - "Ch 5–7": "RVs, distributions, Normal/CLT (mapped per-lecture in the deep plan)"
+      - concepts: [concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [review]
+        useful_sections:
+          - "Ch 9 (estimation), Ch 10/11 (testing)": "SaD L09–L10"
+
+  - id: source-blitzstein-hwang
+    title: Introduction to Probability (2nd ed.)
+    type: book
+    authors: [Joseph K. Blitzstein, Jessica Hwang]
+    year: 2019
+    material: material://source-blitzstein-hwang/blitzstein.pdf
+    evaluations:
+      - roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "Rigorous but story-driven — the written companion to the Stat 110 videos; famous for intuition ('story proofs'): the WHY behind Fahrmeir's WHAT"
+        weaknesses:
+          - "Goes past SaD in places (moment generating functions, story proofs galore) — pull the named chapters only"
+      - concepts: [concept-probability, concept-conditional-probability, concept-bayes-theorem]
+        roles: [first-learning]
+        strengths: ["Ch 1–2: the best conditioning/Bayes intuition in print"]
+      - concepts: [concept-combinatorics]
+        roles: [first-learning]
+        strengths: ["Ch 1 counting — the clearest treatment, with story proofs"]
+      - concepts: [concept-random-variable, concept-expected-value, concept-discrete-distributions]
+        roles: [review]
+        useful_sections:
+          - "Ch 3–4": "RVs + discrete distributions + expectation (depth layer for SaD 06–07)"
+      - concepts: [concept-normal-distribution, concept-central-limit-theorem]
+        roles: [review]
+        useful_sections:
+          - "Ch 5 + Ch 10": "continuous/Normal; Chebyshev, LLN, CLT"
+
+  - id: source-openintro-statistics
+    title: OpenIntro Statistics (4th ed.)
+    type: book
+    authors: [David Diez, Mine Çetinkaya-Rundel, Christopher Barr]
+    year: 2019
+    material: material://source-openintro-statistics/openintro.pdf
+    url: https://www.openintro.org/book/os/
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "The gentle first-pass layer — clean one-evening reads, free, with slides/videos per section"
+      - concepts: [concept-descriptive-statistics]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 1–2": "data + descriptive → SaD 01–02"
+      - concepts: [concept-probability]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 3": "SaD 04"
+      - concepts: [concept-normal-distribution]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 4": "gentle z-tables → SaD 07–08"
+      - concepts: [concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 5–7": "foundations for inference, CIs, tests → SaD 09–10"
+
+  - id: source-dekking-mips
+    title: A Modern Introduction to Probability and Statistics
+    type: book
+    authors: [Frederik Dekking, Cornelis Kraaikamp, Hendrik Lopuhaä, Ludolf Meester]
+    year: 2005
+    material: material://source-dekking-mips/dekking.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-random-variable, concept-central-limit-theorem,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [review, exercise]
+        level: intermediate
+        strengths:
+          - "ONE book = the whole SaD stats arc (probability → RVs → LLN/CLT → estimation → testing → regression) + ~300 exercises WITH short answers — book AND testing source in one"
+
+  # ===================================================== exercise / exam tier
+  - id: source-fau-klausur-ws1415
+    title: FAU Erlangen Statistik-Klausur WS14/15 (mit Lösungen)
+    type: other
+    organization: FAU Erlangen-Nürnberg
+    material: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+    url: https://www.statistik.rw.fau.de/files/2019/10/WS_14_15.pdf
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-conditional-probability,
+                   concept-bayes-theorem, concept-discrete-distributions,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [mock-exam]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "TWO complete German Klausuren with FULL solutions in one PDF — the top Klausur-tier pick for the SaD half of M2"
+          - "Content-verified: descriptive + independence/4-Feldertafel/Bayes + Binomial + proportion-CI + t-tests + p-values + correlation test = exam-prep clusters N1–N4 in German exam format"
+
+  - id: source-fahrmeir-arbeitsbuch
+    title: Arbeitsbuch Statistik (Fahrmeir et al.)
+    type: book
+    authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
+    material: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-statistical-estimation,
+                   concept-hypothesis-testing]
+        roles: [exercise]
+        audience: [German readers]
+        strengths:
+          - "Chapter-matched drill for the course-notation text: Ch 2 → SaD L02, Ch 3 → L03, Ch 9 → L09, Ch 10–11 → L10"
+
+  - id: source-sad-uebungen
+    title: SaD exercise sheets UE1–UE7 (SoSe 2026)
+    type: other
+    organization: HU Berlin
+    material: material://source-sad-ss26-lectures/exercise-slides
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-linear-regression,
+                   concept-probability, concept-combinatorics, concept-random-variable,
+                   concept-normal-distribution, concept-statistical-estimation,
+                   concept-hypothesis-testing, concept-naive-bayes, concept-decision-trees]
+        roles: [exercise]
+        strengths:
+          - "The course's own exercise sheets — solutions are walked through in the Übung (collect them there; no official solution PDFs)"
+          - "Map: UE2 → L03, UE3 → L04/05, UE4 → L06/07, UE5 → L08/09, UE6 → L10+L14, UE7 → L12/13 + k-means"
+
+  - id: source-mit-1805
+    title: MIT 18.05 Introduction to Probability and Statistics (OCW)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/
+    evaluations:
+      - concepts: [concept-probability, concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [exercise, mock-exam]
+        strengths:
+          - "Solved psets + exams with per-topic class notes — the practice-nearest source for SaD 04–10 (z/CLT problems, CI construction, full test setups)"
+
+  - id: source-cs4780-homeworks
+    title: Cornell CS4780 homework sets (local copies)
+    type: other
+    organization: Cornell
+    material: material://source-cs4780-homeworks
+    evaluations:
+      - concepts: [concept-logistic-regression, concept-cross-entropy]
+        roles: [exercise]
+        strengths:
+          - "2018Fall HW4 P3: gradient of the logistic log-likelihood — the exact AML L05 derivation drill"
+
+  - id: source-mit-6036
+    title: MIT 6.036 Introduction to Machine Learning (Open Learning Library)
+    type: course
+    organization: MIT
+    url: https://openlearninglibrary.mit.edu/courses/course-v1:MITx+6.036+1T2019/about
+    evaluations:
+      - concepts: [concept-perceptron, concept-logistic-regression, concept-neural-network]
+        roles: [exercise, review]
+        strengths:
+          - "Autograded exercises + the Fall-2021 final — the second video/practice spine next to CS229"
+        weaknesses:
+          - "Unit names cited from documentation, not yet click-verified on first login (legacy Open Loop #7)"
+
+  - id: source-mit-6034-quizzes
+    title: MIT 6.034 Artificial Intelligence quizzes
+    type: other
+    organization: MIT
+    url: https://ocw.mit.edu/courses/6-034-artificial-intelligence-fall-2010/
+    evaluations:
+      - concepts: [concept-decision-trees, concept-neural-network, concept-k-nearest-neighbors]
+        roles: [exercise, mock-exam]
+        strengths:
+          - "Build-ID3-by-hand and NN-tracing problems — exactly the written-exam format for SaD 12/15; Quiz 3 has the k-NN drills"
+
+  # ============================================================ video sources
+  - id: source-statquest
+    title: StatQuest with Josh Starmer (YouTube)
+    type: video
+    authors: [Josh Starmer]
+    url: https://www.youtube.com/@statquest
+    evaluations:
+      - concepts: [concept-logistic-regression, concept-maximum-likelihood, concept-naive-bayes,
+                   concept-gaussian-naive-bayes, concept-decision-trees, concept-random-forest,
+                   concept-gradient-descent, concept-classification-metrics]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "Short, surgical intuition videos; the MLE video is worth a SECOND watch with Bernoulli in mind (cross-wire #5: MLE → cross-entropy)"
+
+  - id: source-3b1b-neural-networks
+    title: 3Blue1Brown — Neural Networks playlist (4 videos)
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+    evaluations:
+      - concepts: [concept-neural-network, concept-gradient-descent, concept-backpropagation,
+                   concept-chain-rule]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "What is a NN → GD → backprop → backprop calculus: the single best preparation for AML L08–L09"
+
+  - id: source-cs229-2022-videos
+    title: Stanford CS229 Machine Learning (Spring 2022 lectures)
+    type: video
+    authors: [Tengyu Ma, Christopher Ré]
+    year: 2022
+    url: https://www.youtube.com/playlist?list=PLoROMvodv4rNyWOpJg_Yh4NSqI4Z4vOYy
+    evaluations:
+      - concepts: [concept-logistic-regression, concept-gradient-descent, concept-naive-bayes,
+                   concept-laplace-smoothing, concept-kernel-trick, concept-neural-network,
+                   concept-backpropagation, concept-bias-variance-tradeoff]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The AML video spine; lecture titles schedule-verified (L2 LMS→L03/L06, L3 logistic→L05, L5–L6 GDA/NB→SaD 04/14, L7 kernels→L07 kernel half, L8–L9 NN→L08/L09, L10 bias-var/regularization)"
+        weaknesses:
+          - "Taught by Ma & Ré, NOT Ng (the Ng run is the 2018 mirror) — corrected KW 27; skip the SVM half of L7"

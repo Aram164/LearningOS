@@ -1,1 +1,156 @@
-concepts: []
+concepts:
+  # ------------------------------------------------------------ statistics
+  - id: concept-descriptive-statistics
+    label: Descriptive statistics
+    aliases: [deskriptive Statistik, Lagemasse, Streuungsmasse, scale types, Skalenniveaus]
+    description: Population/sample, scale types, location and dispersion measures, quantiles, boxplots.
+  - id: concept-variance
+    label: Variance
+    aliases: [Varianz, Standardabweichung, standard deviation]
+  - id: concept-expected-value
+    label: Expected value
+    aliases: [Erwartungswert, expectation]
+  - id: concept-probability
+    label: Probability
+    aliases: [Wahrscheinlichkeit, probability axioms, Wahrscheinlichkeitsaxiome]
+  - id: concept-conditional-probability
+    label: Conditional probability
+    aliases: [bedingte Wahrscheinlichkeit]
+  - id: concept-bayes-theorem
+    label: Bayes' theorem
+    aliases: [Satz von Bayes, Bayes rule]
+  - id: concept-combinatorics
+    label: Combinatorics
+    aliases: [Kombinatorik, counting, Abzählverfahren]
+  - id: concept-random-variable
+    label: Random variable
+    aliases: [Zufallsvariable, CDF, PDF]
+  - id: concept-discrete-distributions
+    label: Discrete distributions
+    aliases: [Binomialverteilung, binomial distribution, Poisson distribution, Poissonverteilung, hypergeometric distribution]
+  - id: concept-normal-distribution
+    label: Normal distribution
+    aliases: [Normalverteilung, Gaussian distribution, Gauss-Verteilung, z-score]
+  - id: concept-central-limit-theorem
+    label: Central limit theorem
+    aliases: [Zentraler Grenzwertsatz, CLT]
+  - id: concept-maximum-likelihood
+    label: Maximum likelihood estimation
+    aliases: [MLE, Maximum-Likelihood-Schätzung, likelihood]
+  - id: concept-statistical-estimation
+    label: Statistical estimation
+    aliases: [Parameterschätzung, point estimation, confidence interval, Konfidenzintervall, t-distribution]
+    description: Point estimators (unbiased/consistent/efficient) and interval estimation.
+  - id: concept-hypothesis-testing
+    label: Hypothesis testing
+    aliases: [Hypothesentest, Testtheorie, p-value, p-Wert, z-test, t-test, Signifikanzniveau]
+  - id: concept-bootstrap
+    label: Bootstrap resampling
+    aliases: [Bootstrapping, resampling]
+
+  # ------------------------------------------------------- regression & GD
+  - id: concept-linear-regression
+    label: Linear regression
+    aliases: [lineare Regression, least squares, MLR, multivariate linear regression, Regressionsgerade]
+  - id: concept-mean-squared-error
+    label: Mean squared error
+    aliases: [MSE, quadratischer Fehler, squared loss]
+  - id: concept-normal-equation
+    label: Normal equation
+    aliases: [Normalgleichung, closed-form least squares]
+    description: "w = (XᵀX)⁻¹Xᵀy — appears in SaD 03 first as k = (AᵀA)⁻¹Aᵀy."
+  - id: concept-regularization
+    label: Regularization
+    aliases: [Regularisierung, Ridge, Lasso, L2 penalty, L1 penalty]
+  - id: concept-gradient-descent
+    label: Gradient descent
+    aliases: [Gradientenverfahren, Gradientenabstieg, SGD, stochastic gradient descent, mini-batch gradient descent]
+  - id: concept-adam-optimizer
+    label: Adam optimizer
+    aliases: [Adam, momentum, RMSProp]
+  - id: concept-convexity
+    label: Convexity
+    aliases: [Konvexität, convex optimization, PSD Hessian]
+  - id: concept-feature-scaling
+    label: Feature scaling
+    aliases: [z-normalization, z-Normalisierung, min-max scaling, standardization, Standardisierung]
+
+  # ----------------------------------------------------------- classification
+  - id: concept-logistic-regression
+    label: Logistic regression
+    aliases: [logistische Regression]
+  - id: concept-sigmoid
+    label: Sigmoid function
+    aliases: [Sigmoidfunktion, logistic function]
+  - id: concept-decision-boundary
+    label: Decision boundary
+    aliases: [Entscheidungsgrenze, separating hyperplane, Hyperebene]
+  - id: concept-cross-entropy
+    label: Cross-entropy loss
+    aliases: [Kreuzentropie, binary cross-entropy, negative log-likelihood]
+  - id: concept-naive-bayes
+    label: Naive Bayes
+    aliases: [Naïve Bayes, NB classifier, multinomial naive Bayes]
+  - id: concept-laplace-smoothing
+    label: Laplace smoothing
+    aliases: [Laplace-Glättung, additive smoothing, pseudocount]
+  - id: concept-gaussian-naive-bayes
+    label: Gaussian naive Bayes
+    aliases: [GNB]
+  - id: concept-k-nearest-neighbors
+    label: k-nearest neighbors
+    aliases: [k-NN, kNN, nächste Nachbarn, similarity-based learning]
+  - id: concept-classification-metrics
+    label: Classification evaluation metrics
+    aliases: [confusion matrix, Konfusionsmatrix, precision, recall, F1 score, Wahrheitsmatrix, micro/macro averaging]
+  - id: concept-bias-variance-tradeoff
+    label: Bias-variance tradeoff
+    aliases: [Bias-Varianz-Dilemma, overfitting, underfitting, generalization]
+  - id: concept-cross-validation
+    label: Cross-validation
+    aliases: [Kreuzvalidierung, k-fold CV]
+
+  # ------------------------------------------------------------------ trees
+  - id: concept-entropy
+    label: Entropy
+    aliases: [Entropie, Shannon entropy]
+  - id: concept-information-gain
+    label: Information gain
+    aliases: [Informationsgewinn]
+  - id: concept-decision-trees
+    label: Decision trees
+    aliases: [Entscheidungsbaum, Entscheidungsbäume, ID3, pruning]
+  - id: concept-random-forest
+    label: Random forest
+    aliases: [Random Forests, bagging, boosting]
+
+  # ------------------------------------------------------- neural networks
+  - id: concept-perceptron
+    label: Perceptron
+    aliases: [Perzeptron, dual perceptron, multiclass perceptron]
+  - id: concept-kernel-trick
+    label: Kernel trick
+    aliases: [Kernel-Trick, RBF kernel, polynomial kernel, feature map]
+  - id: concept-xor-problem
+    label: XOR problem
+    aliases: [XOR-Problem, linear separability, lineare Separierbarkeit]
+  - id: concept-neural-network
+    label: Neural network
+    aliases: [neuronales Netz, MLP, multilayer perceptron, mehrschichtiges Perzeptron, forward pass, ANN]
+  - id: concept-softmax
+    label: Softmax
+    aliases: [Softmax-Funktion, differentiable argmax]
+  - id: concept-backpropagation
+    label: Backpropagation
+    aliases: [Backprop, Fehlerrückführung, computation graph, Berechnungsgraph]
+  - id: concept-chain-rule
+    label: Chain rule
+    aliases: [Kettenregel]
+  - id: concept-weight-decay
+    label: Weight decay
+    aliases: [L2 weight decay, Frobenius-norm regularization]
+  - id: concept-dropout
+    label: Dropout
+  - id: concept-early-stopping
+    label: Early stopping
+    aliases: [frühes Stoppen]

@@ -1,0 +1,49 @@
+---
+id: note-sad-hypothesis-testing-handwritten
+type: note
+title: "Hypothesis testing — handwritten working notes (p-value, Z-test vs t-test)"
+created: "2025-10-04"
+role: synthesis
+state: rough
+authorship: user
+transcription: none
+semantic_review: unreviewed
+concepts: [concept-hypothesis-testing, concept-normal-distribution]
+attachments:
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-01.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-02.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-03.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-04.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-05.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-06.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-07.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-08.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-09.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-10.jpg
+  - knowledge/attachments/note-sad-hypothesis-testing-handwritten/page-11.jpg
+contexts: [workspace-m2-exam-prep]
+---
+
+# Hypothesis testing — handwritten working notes
+
+**What this is:** Aram's own handwritten notebook pages (spiral pad, German),
+scanned Oct 2025 on iOS. Eleven pages working through hypothesis testing:
+significance levels and Type-I/Type-II errors, what a p-value is (own wording,
+two formulations), when H₀ can be rejected (p-value vs α decision rule), then
+"Kapitel 09 — Z- & T-Tests bei normalverteilten Daten": Z-test vs t-test
+(known vs unknown population SD), single- vs double-sided hypotheses, the
+z = (x̄ − μ₀)/(σ/√n) statistic, and a worked Prüfungsaufgabe (drug A vs B
+recovery times, n = 36, x̄ = 9.4, μ₀ = 10, σ = 2).
+
+**Provenance:** the original is `Plans/Math/sad/SaD/notes/Teil 03.pdf` in the
+legacy tree (67 MB iOS scan, preserved untouched there). Two sibling scans
+(`Teil 01.pdf`, `Teil 02.pdf`, Oct 2025) cover earlier chapters and are not yet
+migrated — recorded in `migration/unresolved.md`. The chapter numbering
+("Kapitel 09") suggests these follow the SaD 2025 course materials.
+
+**Transcription status:** not transcribed yet (`transcription: none`). Faithful
+transcription per the handwritten-ingestion workflow is deferred — do it when
+this cluster (N4: estimation/testing) comes up in M2 prep, so the transcription
+pass doubles as review. The page images in `attachments` are the working copies;
+reasoning, wrong turns and notation are Aram's own and must be preserved as
+written when transcribing.
