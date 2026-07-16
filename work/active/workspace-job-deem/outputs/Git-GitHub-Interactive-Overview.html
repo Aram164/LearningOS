@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git ↔ GitHub — Interactive Reference</title>
+<style>
+  :root{
+    --bg:#0f1419; --panel:#161b22; --panel2:#1c2330; --line:#2b3340;
+    --txt:#e6edf3; --muted:#9aa7b4; --dim:#6b7785;
+    --A:#5ec8f8; --B:#f6c453; --C:#7ee787; --D:#d2a8ff;
+    --accent:#58a6ff; --warn:#f78166; --danger:#ff7b72; --code:#0b0f14;
+    --chipbg:#21262d; --chiph:#30363d;
+    --mod:#f6c453; --stg:#7ee787; --del:#ff7b72; --unt:#5ec8f8; --cln:#6b7785; --stash:#d2a8ff;
+    --r:12px; --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.55;}
+  .wrap{max-width:1180px;margin:0 auto;padding:26px 20px 90px;}
+  h1{font-size:1.5rem;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{color:var(--muted);margin:0 0 16px;font-size:.95rem}
+  .keyidea{background:linear-gradient(90deg,rgba(88,166,255,.10),rgba(126,231,135,.06));border:1px solid var(--line);border-radius:var(--r);padding:12px 16px;margin:0 0 18px;font-size:.92rem}
+  .keyidea b{color:var(--accent)}
+  code{font-family:var(--mono)}
+  a{color:var(--accent)}
+
+  .tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 18px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .tab{background:var(--chipbg);border:1px solid var(--line);color:var(--muted);padding:8px 14px;border-radius:999px;cursor:pointer;font-size:.85rem;font-weight:600;transition:.15s}
+  .tab:hover{background:var(--chiph);color:var(--txt)}
+  .tab.active{background:var(--accent);color:#06121f;border-color:var(--accent)}
+  .view{display:none}.view.active{display:block}
+
+  /* MAP */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 14px;font-size:.78rem;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .stack{display:flex;flex-direction:column;gap:0;max-width:760px}
+  .zone{border:2px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--panel);position:relative}
+  .zone .ztag{position:absolute;top:-11px;left:14px;font-size:.7rem;font-weight:700;letter-spacing:.08em;padding:2px 8px;border-radius:6px;background:var(--bg);text-transform:uppercase}
+  .zone h3{margin:4px 0 2px;font-size:1.02rem}
+  .zone p{margin:0;color:var(--muted);font-size:.82rem}
+  .zone.za{border-color:var(--A)} .za .ztag{color:var(--A);border:1px solid var(--A)}
+  .zone.zb{border-color:var(--B)} .zb .ztag{color:var(--B);border:1px solid var(--B)}
+  .zone.zc{border-color:var(--C)} .zc .ztag{color:var(--C);border:1px solid var(--C)}
+  .zone.zd{border-color:var(--D)} .zd .ztag{color:var(--D);border:1px solid var(--D)}
+  .lane{display:flex;justify-content:space-between;gap:14px;padding:12px 8px;position:relative}
+  .lane .side{display:flex;flex-direction:column;gap:6px;flex:1}
+  .lane .side.up{align-items:flex-end}
+  .lane .arrow{position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--line);transform:translateX(-50%)}
+  .lanehdr{font-size:.66rem;color:var(--dim);text-transform:uppercase;letter-spacing:.07em;margin-bottom:2px}
+  .chip{font-family:var(--mono);font-size:.76rem;background:var(--chipbg);border:1px solid var(--line);color:var(--txt);padding:5px 9px;border-radius:7px;cursor:pointer;transition:.13s;white-space:nowrap}
+  .chip:hover{background:var(--chiph);border-color:var(--accent);transform:translateY(-1px)}
+  .chip .dir{opacity:.55;font-family:var(--sans);font-size:.7rem;margin:0 3px}
+
+  /* INDEX */
+  .cat{margin:0 0 22px}
+  .cat h3{font-size:.95rem;margin:0 0 4px;display:flex;align-items:center;gap:8px}
+  .cat .cdot{width:11px;height:11px;border-radius:3px}
+  .cat .cdesc{color:var(--dim);font-size:.8rem;margin:0 0 10px}
+  .cmdgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px}
+  .cmdcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 13px;cursor:pointer;transition:.13s}
+  .cmdcard:hover{border-color:var(--accent);background:var(--panel2);transform:translateY(-2px)}
+  .cmdcard .cn{font-family:var(--mono);font-size:.84rem;color:var(--accent);font-weight:600}
+  .cmdcard .cs{font-size:.78rem;color:var(--muted);margin-top:3px}
+  .searchbar{width:100%;max-width:340px;background:var(--panel);border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:9px 12px;font-size:.88rem;margin:0 0 18px}
+  .searchbar::placeholder{color:var(--dim)}
+
+  /* OVERLAY DETAIL PAGE */
+  .overlay{position:fixed;inset:0;background:rgba(6,10,16,.72);backdrop-filter:blur(3px);z-index:50;display:none;overflow-y:auto;padding:28px 16px}
+  .overlay.open{display:block}
+  .page{max-width:920px;margin:0 auto;background:var(--bg);border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 70px rgba(0,0,0,.55);overflow:hidden}
+  .pghead{position:sticky;top:0;background:linear-gradient(180deg,#11161d,#0f141a);border-bottom:1px solid var(--line);padding:16px 22px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;z-index:2}
+  .pghead .ptitle{font-family:var(--mono);font-size:1.3rem;font-weight:700;color:var(--txt)}
+  .pghead .pareas{font-size:.74rem;color:var(--accent);font-family:var(--mono);margin-top:3px}
+  .closebtn{background:var(--chipbg);border:1px solid var(--line);color:var(--muted);border-radius:8px;width:34px;height:34px;font-size:1.1rem;cursor:pointer;flex-shrink:0}
+  .closebtn:hover{background:var(--chiph);color:var(--txt)}
+  .pgbody{padding:20px 24px 30px}
+  .pgbody h4{margin:24px 0 8px;font-size:.78rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:5px}
+  .pgbody h4:first-child{margin-top:4px}
+  .pgbody .summary{font-size:1rem;color:var(--txt)}
+  .pgbody .detail{font-size:.9rem;color:var(--muted)}
+  .pgbody .detail b{color:var(--txt)}
+  pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:11px 13px;overflow-x:auto;margin:8px 0;font-family:var(--mono);font-size:.8rem;color:#c9d6e3;line-height:1.5}
+  pre .pr{color:#7ee787}
+  .opt{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:4px}
+  .opt td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .opt td.flag{font-family:var(--mono);color:var(--B);white-space:nowrap;width:1%}
+  .opt td.od{color:var(--muted)}
+  .warnbox{background:rgba(255,123,114,.09);border-left:3px solid var(--danger);padding:9px 13px;border-radius:0 8px 8px 0;font-size:.85rem;color:#f3c9c5;margin:10px 0}
+  .ghnote{background:rgba(210,168,255,.08);border-left:3px solid var(--D);padding:9px 13px;border-radius:0 8px 8px 0;font-size:.85rem;color:var(--muted);margin:10px 0}
+  .ghnote b{color:var(--D)}
+  .tipbox{background:rgba(126,231,135,.07);border-left:3px solid var(--C);padding:9px 13px;border-radius:0 8px 8px 0;font-size:.85rem;color:var(--muted);margin:10px 0}
+
+  /* EXAMPLE */
+  .ex{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin:12px 0}
+  .ex .extitle{font-weight:600;font-size:.92rem;margin-bottom:2px}
+  .ex .exdesc{font-size:.83rem;color:var(--muted);margin-bottom:8px}
+  .ex .exnote{font-size:.82rem;color:var(--dim);margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+  .ex .exnote b{color:var(--C)}
+
+  /* commit graph */
+  .graphwrap{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
+  .gpanel{flex:1;min-width:240px;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:6px 4px 4px}
+  .gpanel .glabel{font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;font-weight:700;padding:3px 8px;color:var(--dim)}
+  .gpanel.before .glabel{color:var(--muted)}
+  .gpanel.after .glabel{color:var(--C)}
+  .gmid{display:flex;align-items:center;color:var(--dim);font-size:1.4rem;padding:0 2px}
+  svg.cg{width:100%;height:auto;display:block}
+  .cg .ge{stroke:#3a4452;stroke-width:2;fill:none}
+  .cg .ge.ghost{stroke:#39424f;stroke-dasharray:4 4}
+  .cg text{font-family:var(--mono)}
+
+  /* file states */
+  .states{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+  .scard{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;padding:8px;background:var(--panel2)}
+  .smid{display:flex;align-items:center;color:var(--dim);font-size:1.4rem}
+  .sbadge{font-size:.66rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;padding-left:2px}
+  .sbadge.after{color:var(--C)}
+  .scols{display:flex;gap:6px}
+  .scol{flex:1;background:var(--code);border:1px solid var(--line);border-radius:8px;padding:6px;min-height:60px}
+  .scol .sh{font-size:.6rem;text-transform:uppercase;letter-spacing:.05em;color:var(--dim);margin-bottom:6px;text-align:center}
+  .fpill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.68rem;background:#11161d;border:1px solid var(--line);border-radius:5px;padding:3px 5px;margin-bottom:4px;color:var(--txt)}
+  .fpill .fd{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .scol .empty{font-size:.62rem;color:var(--dim);text-align:center;padding-top:8px;font-style:italic}
+  .stashrow{margin-top:6px;font-family:var(--mono);font-size:.68rem;color:var(--stash);background:rgba(210,168,255,.07);border:1px solid rgba(210,168,255,.25);border-radius:6px;padding:5px 7px}
+  .statuskey{display:flex;gap:12px;flex-wrap:wrap;font-size:.72rem;color:var(--muted);margin-top:8px}
+  .statuskey span{display:inline-flex;align-items:center;gap:5px}
+
+  /* flow + table reuse */
+  .flow{counter-reset:step}
+  .step{display:grid;grid-template-columns:42px 1fr;gap:14px}
+  .step .num{counter-increment:step;width:34px;height:34px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
+  .step .num::before{content:counter(step)}
+  .step .col{display:flex;flex-direction:column;align-items:center}
+  .step .rail{flex:1;width:2px;background:var(--line);margin:2px 0}
+  .step .body{padding-bottom:18px}
+  .step h4{margin:6px 0 4px;font-size:.96rem;border:none;text-transform:none;letter-spacing:0;padding:0;color:var(--txt)}
+  .step .where{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+  .step p{margin:5px 0 0;font-size:.85rem;color:var(--muted)}
+  .badge{display:inline-block;font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.05em;margin-left:6px}
+  .badge.gh{background:rgba(210,168,255,.15);color:var(--D)}
+  .badge.once{background:rgba(246,196,83,.14);color:var(--B)}
+  .badge.local{background:rgba(126,231,135,.13);color:var(--C)}
+  table.tr{width:100%;border-collapse:collapse;font-size:.88rem}
+  table.tr th,table.tr td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.tr th{color:var(--muted);font-size:.74rem;text-transform:uppercase;letter-spacing:.06em}
+  td.gl{color:var(--warn);font-family:var(--mono);font-size:.82rem}
+  td.gh2{color:var(--D);font-family:var(--mono);font-size:.82rem}
+  .footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);color:var(--dim);font-size:.78rem}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Git ↔ GitHub — Interactive Reference</h1>
+  <p class="sub">Click any command to open its full page: what it does, key options, and worked before→after examples. Built for fork-based contribution.</p>
+  <div class="keyidea">💡 <b>The mental model:</b> almost every command either <b>moves</b> a snapshot between the four areas (Working&nbsp;Dir → Staging → Local&nbsp;Repo → GitHub) or <b>compares / rewrites</b> them. The graph diagrams show the commit graph <b>before</b> and <b>after</b>; the file panels show your three local areas.</div>
+
+  <div class="tabs">
+    <div class="tab active" data-view="map">🗺️ The Map</div>
+    <div class="tab" data-view="concepts">🧠 Concepts</div>
+    <div class="tab" data-view="index">📚 All Commands</div>
+    <div class="tab" data-view="flow">🔀 Fork Workflow</div>
+    <div class="tab" data-view="trans">🔁 GitLab → GitHub</div>
+  </div>
+
+  <div class="view active" id="map">
+    <div class="legend">
+      <span><span class="dot" style="background:var(--A)"></span>A · Working Directory</span>
+      <span><span class="dot" style="background:var(--B)"></span>B · Staging</span>
+      <span><span class="dot" style="background:var(--C)"></span>C · Local Repo</span>
+      <span><span class="dot" style="background:var(--D)"></span>D · GitHub</span>
+    </div>
+    <div class="stack">
+      <div class="zone za"><span class="ztag">A</span><h3>My Working Space</h3><p>The files you edit. Changes are "modified" or "untracked" until staged.</p></div>
+      <div class="lane">
+        <div class="arrow"></div>
+        <div class="side"><div class="lanehdr">▼ stage</div>
+          <div class="chip" data-cmd="add"><span class="dir">▼</span>git add</div></div>
+        <div class="side up"><div class="lanehdr">▲ unstage / discard</div>
+          <div class="chip" data-cmd="restore">git restore<span class="dir">↺</span></div></div>
+      </div>
+      <div class="zone zb"><span class="ztag">B</span><h3>My Staging Area</h3><p>The index — a hand-picked draft of your next commit.</p></div>
+      <div class="lane">
+        <div class="arrow"></div>
+        <div class="side"><div class="lanehdr">▼ commit</div>
+          <div class="chip" data-cmd="commit"><span class="dir">▼</span>git commit</div></div>
+        <div class="side up"><div class="lanehdr">▲ move pointer / undo</div>
+          <div class="chip" data-cmd="reset">git reset<span class="dir">▲</span></div></div>
+      </div>
+      <div class="zone zc"><span class="ztag">C</span><h3>My Commit Graph (local repo)</h3><p>The <code>.git</code> directory: full history + branches, all offline.</p>
+        <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:5px">
+          <div class="chip" data-cmd="branch">git branch</div>
+          <div class="chip" data-cmd="switch">git switch</div>
+          <div class="chip" data-cmd="merge">git merge</div>
+          <div class="chip" data-cmd="rebase">git rebase</div>
+          <div class="chip" data-cmd="cherrypick">git cherry-pick</div>
+          <div class="chip" data-cmd="log">git log</div>
+        </div>
+      </div>
+      <div class="lane">
+        <div class="arrow"></div>
+        <div class="side"><div class="lanehdr">▼ publish (to your fork)</div>
+          <div class="chip" data-cmd="push"><span class="dir">▼</span>git push</div></div>
+        <div class="side up"><div class="lanehdr">▲ retrieve</div>
+          <div class="chip" data-cmd="fetch">git fetch<span class="dir">▲</span></div>
+          <div class="chip" data-cmd="pull">git pull<span class="dir">▲</span></div>
+          <div class="chip" data-cmd="clone">git clone<span class="dir">▲</span></div></div>
+      </div>
+      <div class="zone zd"><span class="ztag">D</span><h3>GitHub — Shared Commit Graph</h3><p><code>origin</code> = your fork (you push here); <code>upstream</code> = the real project (PR target).</p></div>
+    </div>
+    <p class="cdesc" style="margin-top:14px">This map shows the most-used flow. Open <b>📚 All Commands</b> for the complete toolkit (reset modes, stash, revert, cherry-pick, reflog, tags…).</p>
+  </div>
+
+  <div class="view" id="concepts">
+    <p class="sub">The mental model the commands rest on. Start here if HEAD, upstream, or "what's actually moving in the graph" feel fuzzy — the commands become obvious once these click.</p>
+    <div class="cmdgrid" id="conceptGrid"></div>
+  </div>
+
+  <div class="view" id="index">
+    <input class="searchbar" id="search" placeholder="🔍 Filter commands… (e.g. rebase, undo, stash)">
+    <div id="catContainer"></div>
+  </div>
+
+  <div class="view" id="flow">
+    <p class="sub">Contributing to a repo you <b>don't</b> have write access to. Two remotes: <code style="color:var(--D)">origin</code> = your fork, <code style="color:var(--D)">upstream</code> = the original.</p>
+    <div class="flow" id="flowSteps"></div>
+  </div>
+
+  <div class="view" id="trans">
+    <p class="sub">Your HU course taught GitLab. The Git commands are <b>100% identical</b> — only these platform words differ.</p>
+    <table class="tr"><thead><tr><th>GitLab</th><th>GitHub</th><th>Notes</th></tr></thead><tbody id="transBody"></tbody></table>
+  </div>
+
+  <div class="footer">Self-contained reference in <code>Plans/Programming/Git/</code> · grounded in Pro Git + the HU intro · fork-based contribution for BIFOLD/DEEM.</div>
+</div>
+
+<div class="overlay" id="overlay"><div class="page"><div class="pghead" id="pghead"></div><div class="pgbody" id="pgbody"></div></div></div>
+
+<script id="data">
+/* ---- category meta ---- */
+const CATS = {
+  setup:   {name:"Setup & Config",       color:"#8b949e", desc:"Get a repo onto your machine and identify yourself."},
+  snap:    {name:"Snapshotting",         color:"#5ec8f8", desc:"Move changes through Working Dir → Staging → Repo."},
+  history: {name:"Inspecting History",   color:"#79c0ff", desc:"Read state and look back — these change nothing."},
+  branch:  {name:"Branching & Merging",  color:"#7ee787", desc:"Parallel lines of work and how to combine them."},
+  undo:    {name:"Undoing & Rewriting",  color:"#f6c453", desc:"Fix mistakes — from safe (revert) to destructive (reset --hard)."},
+  remote:  {name:"Remotes & Collaboration", color:"#d2a8ff", desc:"Sync with GitHub: your fork (origin) and upstream."}
+};
+
+/* status pill colors */
+const ST = {modified:"var(--mod)",staged:"var(--stg)",new:"var(--stg)",deleted:"var(--del)",untracked:"var(--unt)",clean:"var(--cln)"};
+
+/* ================= COMMANDS ================= */
+const COMMANDS = {
+
+/* ---------- SETUP ---------- */
+config:{cat:"setup",name:"git config",areas:"settings",summary:"Set your identity and preferences. Do this once before your first commit.",
+ detail:"Git stamps every commit with a name and email. Configure them globally so all repos use them. Three levels exist: <b>--system</b> (all users), <b>--global</b> (your user — what you normally use), and repo-local (default, no flag — overrides global for one project).",
+ options:[["--global","apply to your user, every repo"],["--list","show all active settings"],["user.name / user.email","identity stamped on commits"],["init.defaultBranch main","name new repos' first branch 'main'"]],
+ examples:[{title:"One-time identity setup",type:"shell",cmds:['git config --global user.name "Aljanadi, Aram"','git config --global user.email "aram@example.com"','git config --global init.defaultBranch main'],out:"# nothing printed = success\ngit config --global --list\nuser.name=Aljanadi, Aram\nuser.email=aram@example.com",note:"Use the <b>same</b> email as your GitHub account so commits link to your profile."}]},
+
+init:{cat:"setup",name:"git init",areas:"creates C",summary:"Turn the current folder into a brand-new Git repository.",
+ detail:"Creates a hidden <code>.git</code> directory holding all history and metadata. You rarely need this when contributing — you'll <b>clone</b> instead. Delete <code>.git</code> and the whole history is gone.",
+ options:[["-b main","set the initial branch name"],["(no args)","initialise the current directory"]],
+ examples:[{title:"Start a fresh repo",type:"shell",cmds:["mkdir planets && cd planets","git init -b main","git status"],out:"Initialized empty Git repository in .../planets/.git/\nOn branch main\nNo commits yet\nnothing to commit",note:"<b>.git</b> is the entire repository. Back it up; never edit its contents by hand."}]},
+
+clone:{cat:"setup",name:"git clone",areas:"D → C+A",summary:"Copy a remote repo (and its full history) to your machine.",
+ detail:"Downloads everything, sets the source URL as the remote <b>origin</b>, checks out the default branch, and creates the working files. In the fork workflow you clone <b>your fork</b>, then add the original project as a second remote called <b>upstream</b>.",
+ options:[["&lt;url&gt; &lt;dir&gt;","clone into a named folder"],["--depth 1","shallow clone, latest commit only (faster)"],["-b &lt;branch&gt;","check out a specific branch"]],
+ examples:[{title:"Clone your fork, then link upstream",type:"shell",cmds:["git clone https://github.com/aram/stratum.git","cd stratum","git remote add upstream https://github.com/bifold/stratum.git","git remote -v"],out:"origin    https://github.com/aram/stratum.git (fetch)\norigin    https://github.com/aram/stratum.git (push)\nupstream  https://github.com/bifold/stratum.git (fetch)\nupstream  https://github.com/bifold/stratum.git (push)",note:"<b>origin</b> = your fork (push here). <b>upstream</b> = the real project (pull updates, open PRs against it)."}]},
+
+/* ---------- SNAPSHOTTING ---------- */
+status:{cat:"snap",name:"git status",areas:"reads A + B",summary:"Your dashboard: what changed, what's staged, where you are.",
+ detail:"Shows your current branch, how far ahead/behind the remote, which files are staged (green), which are modified-but-unstaged (red), and which are untracked. Run it constantly — it also suggests the command for whatever you might want next.",
+ options:[["-s","short format (XY filename)"],["-b","include branch info in short mode"],["--ignored","also list ignored files"]],
+ examples:[{title:"A typical mid-work status",type:"shell",cmds:["git status"],out:"On branch fix-loader\nChanges to be committed:\n  modified:   loader.py\nChanges not staged for commit:\n  modified:   utils.py\nUntracked files:\n  scratch.txt",note:"Three groups = your three areas: <b>staged</b> (in B), <b>not staged</b> (in A), <b>untracked</b> (in A, unknown to Git)."}]},
+
+add:{cat:"snap",name:"git add",areas:"A → B",summary:"Stage changes — pick exactly what goes into the next commit.",
+ detail:"Copies the file's <b>current</b> content into the staging area. If you edit again after adding, you must <code>git add</code> again to capture the newer version. Staging selectively is how you build small, focused commits that review well.",
+ options:[["&lt;file&gt;","stage one file"],[". / -A","stage everything (-A includes deletions)"],["-p","interactively choose individual hunks"],["-u","stage modified & deleted, not new files"]],
+ examples:[{title:"Stage a modified file",type:"state",cmds:["git add mars.txt"],
+   before:{wd:[["mars.txt","modified"]],idx:[],repo:[["mars.txt","clean"]]},
+   after:{wd:[],idx:[["mars.txt","staged"]],repo:[["mars.txt","clean"]]},
+   note:"The change moved A → B. The committed version in C is untouched until you commit."},
+  {title:"Hand-pick changes with -p",type:"shell",cmds:["git add -p loader.py"],out:"@@ -12,6 +12,9 @@ def load(path):\n+    # validate input\n+    assert path.exists()\nStage this hunk [y,n,q,a,d,s,e,?]? y",note:"Split a messy edit into clean commits. <code>s</code> splits a hunk further, <code>e</code> edits it by hand."}]},
+
+diff:{cat:"snap",name:"git diff",areas:"compares areas",summary:"Show line-by-line changes between two areas or commits.",
+ detail:"With no arguments it compares the <b>Working Dir vs Staging</b> (what add would pick up). The flags below re-point it at other pairs. This is pure inspection — nothing moves.",
+ options:[["(no args)","A vs B — unstaged changes"],["--staged","B vs C — what your next commit holds (--cached = same)"],["HEAD","A+B vs C — all uncommitted changes"],["main upstream/main","compare two branches (after a fetch)"],["--stat","summary: files + ± line counts"]],
+ examples:[{title:"The three diffs, mapped to areas",type:"shell",cmds:["git diff            # A vs B","git diff --staged   # B vs C","git diff HEAD       # A+B vs C"],out:"diff --git a/utils.py b/utils.py\n@@ -3,1 +3,1 @@\n-def helper(x): return x\n+def helper(x): return x * 2",note:"Memorise these three. They answer: 'what's unstaged?', 'what will I commit?', 'what's changed since my last commit?'"}]},
+
+restore:{cat:"snap",name:"git restore",areas:"B → A · C → A",summary:"Discard working changes, or unstage — the modern undo for files.",
+ detail:"Splits the old overloaded <code>git checkout</code> into a clear job: put files back. <b>Plain</b> restore overwrites your working file with the staged/committed version (destroys edits). <b>--staged</b> just unstages, keeping your edits.",
+ options:[["&lt;file&gt;","discard unstaged edits ⚠ (A ← B/C)"],["--staged &lt;file&gt;","unstage, keep working edits (B → A)"],["--source=&lt;commit&gt;","restore the version from a past commit"],["(legacy)","old Git used 'git checkout -- file' / 'git reset file'"]],
+ examples:[{title:"Unstage without losing work",type:"state",cmds:["git restore --staged mars.txt"],
+   before:{wd:[["mars.txt","modified"]],idx:[["mars.txt","staged"]],repo:[["mars.txt","clean"]]},
+   after:{wd:[["mars.txt","modified"]],idx:[],repo:[["mars.txt","clean"]]},
+   note:"Only B was cleared. Your edits in A survive — this just undoes <code>git add</code>."},
+  {title:"Throw away working edits",type:"state",cmds:["git restore mars.txt"],
+   before:{wd:[["mars.txt","modified"]],idx:[],repo:[["mars.txt","clean"]]},
+   after:{wd:[["mars.txt","clean"]],idx:[],repo:[["mars.txt","clean"]]},
+   note:"⚠ Destructive — the modified content is gone with no undo. Be certain first."}]},
+
+rm:{cat:"snap",name:"git rm / git mv",areas:"A → B",summary:"Delete or rename a tracked file and stage that change in one step.",
+ detail:"<code>git rm</code> removes the file from disk <b>and</b> stages the deletion. <code>git mv</code> renames (Git records it as delete+add, detected as a rename). Plain OS <code>rm</code>/<code>mv</code> also work — you'd just stage the result with <code>git add</code> afterward.",
+ options:[["git rm &lt;file&gt;","delete file + stage deletion"],["git rm --cached &lt;file&gt;","stop tracking, keep file on disk"],["git mv old new","rename + stage"]],
+ examples:[{title:"Stop tracking a file (keep it locally)",type:"state",cmds:["git rm --cached secrets.env"],
+   before:{wd:[["secrets.env","clean"]],idx:[],repo:[["secrets.env","clean"]]},
+   after:{wd:[["secrets.env","untracked"]],idx:[["secrets.env","deleted"]],repo:[["secrets.env","clean"]]},
+   note:"Common fix after accidentally committing a file that belongs in <code>.gitignore</code>."}]},
+
+commit:{cat:"snap",name:"git commit",areas:"B → C",summary:"Record everything staged as one permanent snapshot in history.",
+ detail:"Takes the current staging area and writes it as an immutable commit (a SHA-1 hash) with author, timestamp, and message. Nothing leaves your machine — commits are local until you push. Good messages are a contributor skill: a short imperative summary line, blank line, then why.",
+ options:[["-m \"msg\"","inline message"],["--amend","replace the last commit (fix message or add staged changes)"],["-a","auto-stage tracked modified files first (skips add)"],["--no-verify","skip pre-commit hooks"]],
+ examples:[{title:"Commit the staged snapshot",type:"state",cmds:['git commit -m "Validate loader input"'],
+   before:{wd:[],idx:[["loader.py","staged"]],repo:[["loader.py","clean"]]},
+   after:{wd:[],idx:[],repo:[["loader.py","new"]]},
+   note:"Staging emptied; a new commit now holds that version in C. Output shows the short hash + files changed."},
+  {title:"Fix the commit you just made",type:"shell",cmds:["git add forgotten.py",'git commit --amend -m "Validate loader input + tests"'],out:"[fix-loader 9a3f1c2] Validate loader input + tests\n 2 files changed, 18 insertions(+)",note:"⚠ --amend rewrites the last commit (new hash). Safe before pushing; avoid on commits already shared."}]},
+
+/* ---------- HISTORY ---------- */
+log:{cat:"history",name:"git log",areas:"reads C",summary:"Browse commit history — flat or as a visual branch graph.",
+ detail:"Lists commits newest-first with hash, author, date, message. The real power is the graph view, which draws branches and merges as ASCII art — the same picture as GitHub's network graph.",
+ options:[["--oneline","one compact line per commit"],["--graph --all --decorate","visual graph of every branch"],["--grep=\"x\"","search commit messages"],["-p","show the diff each commit introduced"],["--author / --since","filter by who / when"]],
+ examples:[{title:"The graph alias from your HU course",type:"shell",cmds:['git config --global alias.graph "log --oneline --graph --all --decorate"',"git graph"],out:"* 9a3f1c2 (HEAD -> fix-loader) Validate input\n| * 4b2e8a1 (main) Update README\n|/\n* 7c1d0f5 Initial import",note:"<code>git graph</code> becomes your everyday history view. The <code>*</code> column shows branch structure."}]},
+
+show:{cat:"history",name:"git show",areas:"reads one commit",summary:"Inspect a single commit: metadata plus its exact diff.",
+ detail:"Give it a commit reference and it prints the full message and the patch that commit introduced. References can be a hash, <code>HEAD</code>, <code>HEAD~2</code> (2 before HEAD), a branch name, or a tag.",
+ options:[["&lt;commit&gt;","show that commit's diff"],["&lt;commit&gt;:&lt;file&gt;","show a file as it was at that commit"],["HEAD^2","second parent of a merge (see Concepts → HEAD)"],["--stat","just the file/line summary"]],
+ examples:[{title:"What did this commit change?",type:"shell",cmds:["git show HEAD~1"],out:"commit 4b2e8a1...\nAuthor: Aram <aram@example.com>\nDate:   ...\n\n    Update README\n\n@@ -1 +1,2 @@\n+# Stratum\n README content",note:"<code>HEAD~1</code> = the commit before the current one. <code>HEAD~2</code>, <code>HEAD~3</code>… walk further back."}]},
+
+blame:{cat:"history",name:"git blame",areas:"reads C per line",summary:"See which commit and author last touched each line of a file.",
+ detail:"Indispensable for unfamiliar code in a work repo: find out <b>when</b> a line appeared and <b>why</b> (via its commit message). Pair it with <code>git show</code> on the revealed hash.",
+ options:[["&lt;file&gt;","annotate every line"],["-L 20,40 &lt;file&gt;","only lines 20–40"],["-w","ignore whitespace-only changes"]],
+ examples:[{title:"Who wrote this line and why?",type:"shell",cmds:["git blame -L 12,14 loader.py"],out:"9a3f1c2 (Aram   2026-06-10 12) def load(path):\n9a3f1c2 (Aram   2026-06-10 13)     assert path.exists()\n7c1d0f5 (Sara   2026-05-02 14)     return open(path)",note:"Then <code>git show 9a3f1c2</code> tells you the full story behind that change."}]},
+
+reflog:{cat:"history",name:"git reflog",areas:"safety net for C",summary:"A log of everywhere HEAD has been — your undo for 'lost' commits.",
+ detail:"Git records every move of HEAD (commits, checkouts, resets, rebases) locally. So even after a <code>reset --hard</code> or a bad rebase, the old commits aren't gone — reflog shows their hashes so you can recover them. This is why Git mistakes are almost always reversible.",
+ options:[["(no args)","list recent HEAD positions"],["git reset --hard HEAD@{2}","jump back to a prior state"],["git checkout HEAD@{1}","inspect where you were"]],
+ examples:[{title:"Recover after a bad reset",type:"shell",cmds:["git reflog","git reset --hard HEAD@{1}"],out:"9a3f1c2 HEAD@{0}: reset: moving to HEAD~2   <- the mistake\n4b2e8a1 HEAD@{1}: commit: Important work       <- recover this\n...\nHEAD is now at 4b2e8a1 Important work",note:"<b>Your safety net.</b> As long as you committed, reflog can almost always bring it back."}]},
+
+/* ---------- BRANCHING ---------- */
+branch:{cat:"branch",name:"git branch",areas:"within C",summary:"List, create, or delete branches — movable labels on commits.",
+ detail:"A branch is just a lightweight pointer to a commit; making one is instant. Creating a branch does <b>not</b> switch to it (use <code>switch</code> for that). Always do new work on its own branch, keeping <code>main</code> clean for syncing.",
+ options:[["(no args)","list local branches"],["&lt;name&gt;","create a branch (stay where you are)"],["-d &lt;name&gt;","delete a merged branch (safe)"],["-D &lt;name&gt;","force-delete (unmerged) ⚠"],["--all","include remote-tracking branches"]],
+ examples:[{title:"Create a branch (pointer appears, HEAD stays)",type:"graph",cmds:["git branch fix-loader"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["fix-loader","c3","branch"],["HEAD","c3","head"]]},
+   note:"A new label appears at the same commit. HEAD still points at main — you haven't moved yet."}]},
+
+switch:{cat:"branch",name:"git switch",areas:"within C",summary:"Move HEAD to another branch (optionally creating it).",
+ detail:"The modern, clearer replacement for <code>git checkout &lt;branch&gt;</code>. Moving HEAD updates your working files to match that branch. <code>-c</code> creates and switches in one step — the usual way to start a feature.",
+ options:[["&lt;branch&gt;","switch to an existing branch"],["-c &lt;name&gt;","create + switch (the common case)"],["-","switch back to the previous branch"],["(legacy)","old Git used 'git checkout -b'"]],
+ examples:[{title:"Start a feature branch",type:"graph",cmds:["git switch -c fix-loader"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["fix-loader","c3","branch"],["HEAD","c3","head"]]},
+   note:"HEAD now rides fix-loader. New commits extend this branch, leaving main where it is."},
+  {title:"Detached HEAD: inspect an old commit",type:"shell",cmds:["git switch --detach HEAD~2   # or: git checkout <hash>","# ...look around, run an old build...","git switch -                 # reattach to your branch"],out:"HEAD is now at 7c1d0f5 (detached)\n...\nSwitched to branch 'fix-loader'",note:"Commits made while detached belong to no branch. Keep them with <code>git switch -c name</code>. Full picture in <b>Concepts → HEAD & Detached HEAD</b>."}]},
+
+merge:{cat:"branch",name:"git merge",areas:"within C",summary:"Combine another branch into your current one, preserving both histories.",
+ detail:"You stand on the <b>target</b> branch (e.g. main) and merge the feature in. If the histories diverged, Git creates a <b>merge commit</b> with two parents, keeping the branch shape visible. If they edited the same lines, you get a conflict to resolve, then <code>git add</code> + <code>git commit</code>.",
+ options:[["&lt;branch&gt;","merge that branch into HEAD"],["--no-ff","force a merge commit even if fast-forward possible"],["--abort","bail out and restore pre-merge state"],["--squash","combine all changes into one commit, no merge node"]],
+ examples:[{title:"Merge a feature into main",type:"graph",cmds:["git switch main","git merge fix-loader"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,3,"m"],["f1",1,2,"f"],["f2",1,3,"f"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["f1","f2"]],refs:[["main","c3","branch"],["HEAD","c3","head"],["fix-loader","f2","branch"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,3,"m"],["f1",1,2,"f"],["f2",1,3,"f"],["mg",0,4,"m"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["f1","f2"],["c3","mg"],["f2","mg"]],refs:[["main","mg","branch"],["HEAD","mg","head"],["fix-loader","f2","branch"]]},
+   note:"The <b>merge commit</b> (two parents) joins the lines. History shows the branch happened — non-destructive."}]},
+
+rebase:{cat:"branch",name:"git rebase",areas:"rewrites C",summary:"Replay your commits on top of another branch — a clean, linear history.",
+ detail:"Instead of a merge commit, rebase <b>moves</b> your branch's commits so they start from the tip of the target. The result is a straight line, as if you'd branched today. The catch: it creates <b>new commits</b> (new hashes) — never rebase commits you've already shared, or you'll diverge from teammates. <b>Interactive</b> rebase (<code>-i</code>) also lets you reorder, squash, edit, or drop commits before a PR.",
+ options:[["&lt;branch&gt;","replay current branch onto &lt;branch&gt;"],["-i HEAD~3","interactively edit the last 3 commits"],["--onto","advanced: move a slice of commits"],["--abort","cancel and return to the start"],["--continue","resume after resolving a conflict"]],
+ examples:[{title:"Rebase your feature onto updated main",type:"graph",cmds:["git switch fix-loader","git rebase main"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,3,"m"],["f1",1,2,"f"],["f2",1,3,"f"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["f1","f2"]],refs:[["main","c3","branch"],["fix-loader","f2","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["f1g",1,3,"g"],["f2g",1,4,"g"],["f1n",0,3,"f"],["f2n",0,4,"f"]],edges:[["c1","c2"],["c2","c3"],["c3","f1n"],["f1n","f2n"],["c2","f1g"],["f1g","f2g"]],refs:[["main","c3","branch"],["fix-loader","f2n","head"]]},
+   note:"<b>Linear history, no merge commit.</b> The faded commits are the originals — your commits are now copies (new hashes) stacked on main's tip. Maintainers often prefer this for clean PRs."},
+  {title:"Polish commits before a PR (interactive)",type:"shell",cmds:["git rebase -i HEAD~3"],out:"pick 7c1d0f5 Add loader\nsquash 4b2e8a1 fix typo\nsquash 9a3f1c2 oops forgot import\n# -> combines 3 messy commits into 1 clean one",note:"<code>pick / squash / reword / edit / drop</code> per line. Turns work-in-progress noise into reviewable commits."}]},
+
+cherrypick:{cat:"branch",name:"git cherry-pick",areas:"copies into C",summary:"Copy one specific commit from anywhere onto your current branch.",
+ detail:"Applies the changes from a single commit as a <b>new</b> commit on HEAD (new hash). Useful to grab one bug-fix from another branch without merging everything, or to move a commit you made on the wrong branch.",
+ options:[["&lt;commit&gt;","apply that commit here"],["A..B","apply a range of commits"],["-n","apply changes but don't commit yet"],["--abort / --continue","handle a conflict"]],
+ examples:[{title:"Grab one fix from a feature branch",type:"graph",cmds:["git switch main","git cherry-pick f1"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["f1",1,2,"f"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"]],refs:[["main","c3","head"],["feature","f1","branch"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["f1",1,2,"f"],["f1n",0,3,"m"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["c3","f1n"]],refs:[["main","f1n","head"],["feature","f1","branch"]]},
+   note:"f1's <i>changes</i> are copied onto main as a new commit. The original f1 stays on feature."}]},
+
+tag:{cat:"branch",name:"git tag",areas:"labels in C",summary:"Mark a specific commit permanently — usually a release version.",
+ detail:"Unlike a branch, a tag never moves. Annotated tags (<code>-a</code>) store author/date/message and are the standard for releases. Tags aren't pushed automatically — push them explicitly.",
+ options:[["(no args)","list tags"],["-a v1.0 -m \"msg\"","create an annotated tag"],["&lt;name&gt; &lt;commit&gt;","tag a past commit"],["git push origin v1.0","publish a tag"],["git push --tags","publish all tags"]],
+ examples:[{title:"Tag a release",type:"shell",cmds:['git tag -a v1.0 -m "First release"',"git push origin v1.0"],out:"To github.com:aram/stratum.git\n * [new tag]  v1.0 -> v1.0",note:"On GitHub a pushed tag can become a <b>Release</b> with notes and downloadable assets."}]},
+
+/* ---------- UNDOING ---------- */
+reset:{cat:"undo",name:"git reset",areas:"moves C → B → A",summary:"Move the branch pointer back — three modes for three blast radii.",
+ detail:"Reset moves your current branch (and HEAD) to an earlier commit. <b>What happens to the undone changes</b> depends on the mode: <b>--soft</b> keeps them staged, <b>--mixed</b> (default) keeps them in your working dir unstaged, <b>--hard</b> deletes them entirely. The graph effect is the same in all three; only your A/B areas differ.",
+ options:[["--soft &lt;c&gt;","move pointer; changes stay STAGED (B)"],["--mixed &lt;c&gt;","default: changes go to WORKING DIR (A), unstaged"],["--hard &lt;c&gt;","⚠ discard changes entirely (no undo via Git status)"],["HEAD~1","the typical target: 'one commit back'"]],
+ examples:[{title:"Undo the last commit (pointer moves back)",type:"graph",cmds:["git reset --soft HEAD~1"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3g",0,2,"g"]],edges:[["c1","c2"],["c2","c3g"]],refs:[["main","c2","branch"],["HEAD","c2","head"]]},
+   note:"main/HEAD moved to c2; c3 is now dangling (recoverable via reflog). <b>--soft</b>: c3's changes are staged, ready to re-commit. <b>--mixed</b>: unstaged in working dir. <b>--hard</b>: gone."}]},
+
+revert:{cat:"undo",name:"git revert",areas:"adds to C",summary:"Undo a commit by adding a new commit that reverses it — safe for shared history.",
+ detail:"Where <code>reset</code> rewrites history (dangerous once pushed), <code>revert</code> creates a <b>new</b> commit that applies the inverse changes. History is preserved, so it's the correct way to undo something already on a shared branch or merged PR.",
+ options:[["&lt;commit&gt;","revert that commit"],["-n","stage the reversal without committing"],["HEAD","revert the most recent commit"]],
+ examples:[{title:"Safely undo a pushed commit",type:"graph",cmds:["git revert HEAD"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["c4",0,3,"m"]],edges:[["c1","c2"],["c2","c3"],["c3","c4"]],refs:[["main","c4","branch"],["HEAD","c4","head"]]},
+   note:"A new commit c4 cancels c3's changes. Nothing is rewritten — teammates' clones stay consistent."}]},
+
+clean:{cat:"undo",name:"git clean",areas:"clears A",summary:"Delete untracked files from the working directory.",
+ detail:"Reset and restore don't touch <b>untracked</b> files (build artifacts, scratch files). <code>git clean</code> removes them. Always dry-run first with <code>-n</code> — this deletes files Git isn't tracking, with no undo.",
+ options:[["-n","dry run: list what WOULD be deleted (do this first)"],["-f","actually delete (force, required)"],["-d","include untracked directories"],["-x","also remove ignored files"]],
+ examples:[{title:"Preview, then remove junk",type:"shell",cmds:["git clean -n","git clean -fd"],out:"Would remove scratch.txt\nWould remove build/\n# after -fd:\nRemoving scratch.txt\nRemoving build/",note:"⚠ No Git undo — these files were never tracked. The <code>-n</code> dry run is your seatbelt."}]},
+
+stash:{cat:"undo",name:"git stash",areas:"A+B → stash",summary:"Shelve uncommitted changes to get a clean working dir, restore them later.",
+ detail:"Saves your modified and staged changes onto a stack and reverts your working dir to clean — perfect when you need to switch branches quickly or pull, but aren't ready to commit. Pop them back afterwards.",
+ options:[["push -m \"msg\"","stash with a label"],["list","show the stash stack"],["pop","re-apply newest stash and remove it"],["apply","re-apply but keep it in the stack"],["-u","include untracked files"],["drop / clear","delete one / all stashes"]],
+ examples:[{title:"Shelve work to switch branches",type:"state",cmds:["git stash push -m \"wip loader\""],
+   before:{wd:[["loader.py","modified"]],idx:[["test.py","staged"]],repo:[["loader.py","clean"],["test.py","clean"]]},
+   after:{wd:[],idx:[],repo:[["loader.py","clean"],["test.py","clean"]],stash:"stash@{0}: wip loader  →  loader.py, test.py"},
+   note:"Working dir + staging are clean now. <code>git stash pop</code> brings everything back when you return."}]},
+
+/* ---------- REMOTE ---------- */
+remote:{cat:"remote",name:"git remote",areas:"manages D links",summary:"Manage the named URLs your repo syncs with.",
+ detail:"A remote is just a nickname for a repo URL. In the fork workflow you keep two: <b>origin</b> (your fork — you push here) and <b>upstream</b> (the real project — you fetch updates from here and open PRs against it).",
+ options:[["-v","list remotes with their URLs"],["add &lt;name&gt; &lt;url&gt;","add a remote (e.g. upstream)"],["remove &lt;name&gt;","delete a remote"],["set-url &lt;name&gt; &lt;url&gt;","change a remote's URL"]],
+ examples:[{title:"The two-remote fork setup",type:"shell",cmds:["git remote add upstream https://github.com/bifold/stratum.git","git remote -v"],out:"origin    https://github.com/aram/stratum.git (push)\nupstream  https://github.com/bifold/stratum.git (fetch)",note:"Push → origin. Sync → upstream. This split is the heart of contributing via fork."}]},
+
+fetch:{cat:"remote",name:"git fetch",areas:"D → C",summary:"Download remote commits without changing your files — look before you leap.",
+ detail:"Updates your remote-tracking refs (<code>origin/main</code>, <code>upstream/main</code>) with new commits from GitHub, but does <b>not</b> merge them into your branch or touch your working dir. You can then inspect with <code>git log</code>/<code>diff</code> and decide whether to merge.",
+ options:[["origin","fetch from your fork"],["upstream","fetch the project's latest"],["--all","fetch from every remote"],["--prune","delete stale remote-tracking branches"]],
+ examples:[{title:"Fetch upstream, then preview",type:"shell",cmds:["git fetch upstream","git log --oneline main..upstream/main"],out:"a91f2  Fix race condition\nb33c1  Update deps\n# 2 commits upstream that you don't have yet",note:"Safe and read-only. <code>git pull</code> = this fetch + an automatic merge."}]},
+
+pull:{cat:"remote",name:"git pull",areas:"D → C → A",summary:"Fetch + merge in one step — bring your branch up to date.",
+ detail:"Equivalent to <code>git fetch</code> followed by <code>git merge</code> into your current branch. If your branch hasn't diverged, it <b>fast-forwards</b> (just moves the pointer, no merge commit). If both sides have new commits, it makes a merge commit (or rebases, with <code>--rebase</code>).",
+ options:[["(no args)","pull current branch's upstream"],["upstream main","sync your branch from the project"],["--rebase","replay your commits on top instead of merging"],["--ff-only","refuse if a merge commit would be needed"]],
+ examples:[{title:"Fast-forward to the latest",type:"graph",cmds:["git pull"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c2","branch"],["HEAD","c2","head"],["origin/main","c3","remote"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"],["origin/main","c3","remote"]]},
+   note:"Local main was behind; with no local commits to reconcile, Git just slides the pointer forward — a <b>fast-forward</b>, no merge commit."}]},
+
+push:{cat:"remote",name:"git push",areas:"C → D",summary:"Upload your commits to GitHub — the step that makes a PR updatable.",
+ detail:"Sends your branch's commits to a remote (your fork, <b>origin</b>). The first push of a new branch needs <code>-u</code> to link local↔remote; after that, plain <code>git push</code>. You push to <b>your fork</b>, never to upstream — that's what the Pull Request is for.",
+ options:[["-u origin &lt;branch&gt;","first push: set upstream link"],["(no args)","push the tracked branch"],["--force-with-lease","safely overwrite after a rebase ⚠"],["origin --delete &lt;branch&gt;","remove a branch on the remote"]],
+ examples:[{title:"Publish your feature branch",type:"graph",cmds:["git push -u origin fix-loader"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["f1",0,2,"f"]],edges:[["c1","c2"],["c2","f1"]],refs:[["fix-loader","f1","branch"],["HEAD","f1","head"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["f1",0,2,"f"]],edges:[["c1","c2"],["c2","f1"]],refs:[["fix-loader","f1","branch"],["HEAD","f1","head"],["origin/fix-loader","f1","remote"]]},
+   note:"The branch now exists on your fork (origin/fix-loader). GitHub shows a 'Compare & pull request' button. After a rebase, use <code>--force-with-lease</code> to update it safely."},
+  {title:"Force-push after a rebase",type:"graph",cmds:["git push --force-with-lease"],
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["old",1,2,"g"],["new",0,2,"f"]],edges:[["c2","old"],["c2","new"]],refs:[["fix-loader","new","head"],["origin/fix-loader","old","remote"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["new",0,2,"f"]],edges:[["c2","new"]],refs:[["fix-loader","new","head"],["origin/fix-loader","new","remote"]]},
+   note:"Rebasing rewrote your commit (new hash), so the remote's old copy no longer matches and a plain push is rejected. <code>--force-with-lease</code> overwrites it — but only if no one else pushed meanwhile (safer than bare <code>--force</code>)."}]}
+};
+
+/* ---- fork workflow ---- */
+const FLOW=[
+ {w:"GitHub UI",badge:"once",h:"Fork the project",p:"On the upstream repo, click <b>Fork</b> — creates your own copy (your 'origin'). One-time per project."},
+ {w:"git · local",badge:"once",h:"Clone your fork",p:"<code>git clone https://github.com/&lt;you&gt;/stratum.git</code> downloads it and sets <code>origin</code>."},
+ {w:"git · local",badge:"once",h:"Add the upstream remote",p:"<code>git remote add upstream https://github.com/&lt;org&gt;/stratum.git</code> so you can pull the project's updates."},
+ {w:"git · local",h:"Branch off an up-to-date main",p:"<code>git switch main</code> → <code>git pull upstream main</code> → <code>git switch -c fix-loader</code>. Never work on main."},
+ {w:"git · local",badge:"local",h:"Edit → stage → commit",p:"<code>git add -p</code> then <code>git commit -m \"…\"</code>. Small, focused commits. Consider <code>rebase -i</code> to tidy them."},
+ {w:"git → GitHub",badge:"gh",h:"Push to your fork",p:"<code>git push -u origin fix-loader</code>. Commits land on your fork; the project is untouched."},
+ {w:"GitHub UI",badge:"gh",h:"Open a Pull Request",p:"PR goes from your-fork:fix-loader → upstream:main. Describe the change, link the issue."},
+ {w:"GitHub + git",badge:"gh",h:"Address review feedback",p:"Make commits, <code>git push</code> again — the PR updates automatically. Iterate until approved."},
+ {w:"GitHub UI",badge:"gh",h:"Maintainer merges your PR",p:"Someone with write access merges it into upstream:main. 🎉"},
+ {w:"git · local",h:"Sync your fork",p:"<code>git switch main</code> → <code>git fetch upstream</code> → <code>git merge upstream/main</code> → <code>git push origin main</code>."},
+ {w:"git + GitHub",h:"Delete the branch",p:"<code>git branch -d fix-loader</code> and <code>git push origin --delete fix-loader</code>. <code>git fetch --prune</code> tidies refs."}
+];
+
+const TRANS=[
+ ["Merge Request (MR)","Pull Request (PR)","Same concept, different name."],
+ ["Fork","Fork","Identical — your server-side copy."],
+ ["Project","Repository (repo)","GitHub says repo; GitLab says project."],
+ ["Group / Sub-group","Organization / Team","How repos are grouped."],
+ [".gitlab-ci.yml",".github/workflows/*.yml","CI/CD. Concept same, syntax differs (GitHub Actions)."],
+ ["Personal Access Token","PAT / SSH key / gh CLI","GitHub dropped HTTPS password push (2021). Use a PAT, SSH key, or the gh CLI."],
+ ["Web IDE","github.dev","Press '.' on any repo to edit in-browser."],
+ ["Repository → Graph","Insights → Network","Visual graph in the UI; locally it's git log --graph either way."],
+ ["Issues, Labels, Milestones","Issues, Labels, Milestones","Identical features."]
+];
+</script>
+
+<script id="logic">
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const COL={m:"#58a6ff",f:"#7ee787",p:"#d2a8ff",g:"#5b6673"};
+
+/* ----- commit graph SVG ----- */
+function graphSVG(g){
+  const COLW=70,ROWH=46,PADX=26,PADY=22,R=11;
+  const X=c=>PADX+c*COLW, Y=r=>PADY+r*ROWH;
+  const maxRow=Math.max(...g.nodes.map(n=>n[2]));
+  const maxCol=Math.max(...g.nodes.map(n=>n[1]));
+  const W=X(maxCol)+220, H=Y(maxRow)+PADY;
+  const byId={}; g.nodes.forEach(n=>byId[n[0]]={id:n[0],col:n[1],row:n[2],c:n[3]});
+  let s=`<svg class="cg" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  // edges (parent -> child)
+  (g.edges||[]).forEach(([a,b])=>{
+    const na=byId[a],nb=byId[b]; if(!na||!nb)return;
+    const ghost=(na.c==="g"||nb.c==="g");
+    const x1=X(na.col),y1=Y(na.row),x2=X(nb.col),y2=Y(nb.row);
+    if(na.col===nb.col) s+=`<line class="ge${ghost?' ghost':''}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    else{const my=(y1+y2)/2; s+=`<path class="ge${ghost?' ghost':''}" d="M${x1} ${y1} C ${x1} ${my}, ${x2} ${my}, ${x2} ${y2}"/>`;}
+  });
+  // nodes
+  g.nodes.forEach(n=>{
+    const cx=X(n[1]),cy=Y(n[2]),col=COL[n[3]]||"#888",ghost=n[3]==="g";
+    s+=`<circle cx="${cx}" cy="${cy}" r="${R}" fill="${ghost?'#11161d':col}" stroke="${col}" stroke-width="2"${ghost?' stroke-dasharray="3 3"':''}/>`;
+  });
+  // refs grouped by node
+  const groups={}; (g.refs||[]).forEach(rf=>{(groups[rf[1]]=groups[rf[1]]||[]).push(rf);});
+  Object.entries(groups).forEach(([nid,refs])=>{
+    const nd=byId[nid]; if(!nd)return; let lx=X(nd.col)+R+9; const ly=Y(nd.row);
+    refs.forEach(rf=>{
+      const name=rf[0],kind=rf[2]; const w=name.length*6.6+16;
+      let fill="#161b22",stroke="#3a4452",txt="#c9d6e3";
+      if(kind==="head"){fill="#1f6feb";stroke="#1f6feb";txt="#fff";}
+      else if(kind==="remote"){fill="rgba(210,168,255,.12)";stroke="#d2a8ff";txt="#d2a8ff";}
+      else if(kind==="tag"){fill="rgba(246,196,83,.12)";stroke="#f6c453";txt="#f6c453";}
+      else if(kind==="branch"){fill="rgba(126,231,135,.10)";stroke="#7ee787";txt="#7ee787";}
+      s+=`<g><rect x="${lx}" y="${ly-10}" width="${w}" height="20" rx="5" fill="${fill}" stroke="${stroke}"/><text x="${lx+w/2}" y="${ly+4}" font-size="11" text-anchor="middle" fill="${txt}">${esc(name)}</text></g>`;
+      lx+=w+6;
+    });
+  });
+  s+=`</svg>`; return s;
+}
+
+/* ----- file-state HTML ----- */
+function fpill(f){const[name,st]=f;return `<div class="fpill"><span class="fd" style="background:${ST[st]||'#888'}"></span>${esc(name)}<span style="color:var(--dim);margin-left:auto;font-size:.62rem">${st}</span></div>`;}
+function scol(title,items){return `<div class="scol"><div class="sh">${title}</div>${(items&&items.length)?items.map(fpill).join(''):'<div class="empty">clean</div>'}</div>`;}
+function stateCard(label,st,after){
+  let extra = st.stash?`<div class="stashrow">📦 ${esc(st.stash)}</div>`:'';
+  return `<div class="scard"><div class="sbadge${after?' after':''}">${label}</div><div class="scols">${scol("Working",st.wd)}${scol("Staging",st.idx)}${scol("Repo (HEAD)",st.repo)}</div>${extra}</div>`;
+}
+function statesHTML(ex){
+  return `<div class="states">${stateCard("Before",ex.before,false)}<div class="smid">→</div>${stateCard("After",ex.after,true)}</div>
+  <div class="statuskey">
+    <span><span class="fd" style="width:9px;height:9px;border-radius:50%;background:var(--mod)"></span>modified</span>
+    <span><span class="fd" style="width:9px;height:9px;border-radius:50%;background:var(--stg)"></span>staged/new</span>
+    <span><span class="fd" style="width:9px;height:9px;border-radius:50%;background:var(--del)"></span>deleted</span>
+    <span><span class="fd" style="width:9px;height:9px;border-radius:50%;background:var(--unt)"></span>untracked</span>
+    <span><span class="fd" style="width:9px;height:9px;border-radius:50%;background:var(--cln)"></span>clean</span>
+  </div>`;
+}
+
+/* ----- render one example ----- */
+function exampleHTML(ex){
+  let body='';
+  if(ex.type==="graph") body=`<div class="graphwrap"><div class="gpanel before"><div class="glabel">Before</div>${graphSVG(ex.before)}</div><div class="gmid">→</div><div class="gpanel after"><div class="glabel">After</div>${graphSVG(ex.after)}</div></div>`;
+  else if(ex.type==="state") body=statesHTML(ex);
+  let cmds = ex.cmds?`<pre>${ex.cmds.map(esc).join('\n')}</pre>`:'';
+  let out = ex.out?`<pre class="pr">${esc(ex.out)}</pre>`:'';
+  return `<div class="ex"><div class="extitle">${esc(ex.title)}</div>${ex.desc?`<div class="exdesc">${ex.desc}</div>`:''}${cmds}${body}${out}${ex.note?`<div class="exnote">💡 ${ex.note}</div>`:''}</div>`;
+}
+
+/* ----- open a command page ----- */
+function openCmd(key){
+  const c=COMMANDS[key]; if(!c)return;
+  document.getElementById('pghead').innerHTML=`<div><div class="ptitle">${esc(c.name)}</div><div class="pareas">${esc(c.areas)}</div></div><button class="closebtn" onclick="closeOverlay()">✕</button>`;
+  let h=`<div class="summary">${c.summary}</div>`;
+  h+=`<h4>What it does</h4><div class="detail">${c.detail}</div>`;
+  if(c.options&&c.options.length){h+=`<h4>Key options</h4><table class="opt">${c.options.map(o=>`<tr><td class="flag">${o[0]}</td><td class="od">${o[1]}</td></tr>`).join('')}</table>`;}
+  if(c.examples&&c.examples.length){h+=`<h4>Examples — before → after</h4>${c.examples.map(exampleHTML).join('')}`;}
+  document.getElementById('pgbody').innerHTML=h;
+  document.getElementById('pgbody').scrollTop=0;
+  const ov=document.getElementById('overlay'); ov.classList.add('open'); ov.scrollTop=0;
+}
+function closeOverlay(){document.getElementById('overlay').classList.remove('open');}
+document.getElementById('overlay').addEventListener('click',e=>{if(e.target.id==='overlay')closeOverlay();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeOverlay();});
+
+/* ----- build index ----- */
+function buildIndex(filter){
+  filter=(filter||'').toLowerCase();
+  const cont=document.getElementById('catContainer'); cont.innerHTML='';
+  Object.entries(CATS).forEach(([ck,cv])=>{
+    const cmds=Object.entries(COMMANDS).filter(([k,c])=>c.cat===ck &&
+      (!filter || c.name.toLowerCase().includes(filter) || c.summary.toLowerCase().includes(filter) || c.detail.toLowerCase().includes(filter)));
+    if(!cmds.length)return;
+    const div=document.createElement('div'); div.className='cat';
+    div.innerHTML=`<h3><span class="cdot" style="background:${cv.color}"></span>${cv.name}</h3><div class="cdesc">${cv.desc}</div>
+      <div class="cmdgrid">${cmds.map(([k,c])=>`<div class="cmdcard" data-cmd="${k}"><div class="cn">${esc(c.name)}</div><div class="cs">${esc(c.summary)}</div></div>`).join('')}</div>`;
+    cont.appendChild(div);
+  });
+  cont.querySelectorAll('[data-cmd]').forEach(el=>el.addEventListener('click',()=>openCmd(el.dataset.cmd)));
+}
+
+/* ----- static sections ----- */
+function buildStatic(){
+  document.getElementById('flowSteps').innerHTML=FLOW.map((s,i)=>`<div class="step"><div class="col"><div class="num"></div>${i<FLOW.length-1?'<div class="rail"></div>':''}</div><div class="body"><div class="where">${s.w}</div><h4>${s.h}${s.badge?`<span class="badge ${s.badge}">${s.badge==='gh'?'GitHub':s.badge==='once'?'one-time':'local'}</span>`:''}</h4><p>${s.p}</p></div></div>`).join('');
+  document.getElementById('transBody').innerHTML=TRANS.map(r=>`<tr><td class="gl">${esc(r[0])}</td><td class="gh2">${esc(r[1])}</td><td style="color:var(--muted)">${r[2]}</td></tr>`).join('');
+}
+
+/* ===================== CONCEPTS ===================== */
+const CONCEPTS = {
+
+graphmodel:{name:"The Commit Graph & Refs",sub:"Everything else is built on this one idea",blocks:[
+ {t:'p',html:`Git stores your project as a chain of <b>commits</b>. Each commit is an <b>immutable snapshot</b> of all your files plus a pointer to its <b>parent</b> (the commit before it). Follow the parents backward and you have your whole history — a graph. (A merge commit simply has <i>two</i> parents; that's the only wrinkle.)`},
+ {t:'p',h:"A 'ref' is just a movable pointer",html:`A <b>branch</b> is not a copy of your files — it's a tiny label pointing at <i>one</i> commit. <b>HEAD</b> is a special pointer meaning "where I am right now." A <b>tag</b> is a pointer that never moves. Branch, HEAD, tag: that's the entire vocabulary of the graph.`},
+ {t:'graph1',title:"One graph, three kinds of ref",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["v1.0","c1","tag"],["main","c3","branch"],["HEAD","c3","head"]]},note:`<code>main</code> and <code>HEAD</code> point at the newest commit; the tag <code>v1.0</code> stays pinned to c1 forever. None of these are files — they're pointers into the same graph.`},
+ {t:'p',h:"Why this reframes everything",html:`Watch the <b>pointers</b>, not the files. <code>commit</code> adds a node and moves your branch + HEAD onto it. <code>switch</code> moves HEAD. <code>merge</code>, <code>rebase</code>, and <code>reset</code> rearrange which commit a pointer aims at. Almost nothing "edits your files" directly — Git moves a pointer, then updates your working tree to match. Every diagram in this reference is just pointers moving.`}
+]},
+
+head:{name:"HEAD & Detached HEAD",sub:"Where you are, and how to navigate the graph",blocks:[
+ {t:'p',html:`<b>HEAD</b> answers "where am I?". Normally it's a <i>symbolic</i> pointer with one level of indirection: <b>HEAD → your current branch → a commit</b>. When you <code>commit</code>, the branch label advances to the new commit and HEAD rides along with it.`},
+ {t:'graph1',title:"Attached HEAD (the normal state)",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c3","head"]]},note:`HEAD points at <code>main</code>, which points at c3. A new commit moves <i>both</i> forward. This is why your branch "follows you" as you work.`},
+ {t:'p',h:"Detached HEAD",html:`If you check out a <b>commit</b>, a <b>tag</b>, or a remote-tracking branch <i>directly</i> (e.g. <code>git checkout 7c1d0f5</code>, <code>git checkout v1.0</code>, <code>git checkout origin/main</code>), HEAD points <b>straight at a commit with no branch in between</b>. That's a detached HEAD. You can look around and even commit — but those commits belong to no branch and become unreachable once you leave. The HU PDF warned about exactly this.`},
+ {t:'graph1',title:"Detached HEAD",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"]],edges:[["c1","c2"],["c2","c3"]],refs:[["main","c3","branch"],["HEAD","c2","head"]]},note:`HEAD sits directly on c2 with <b>no branch attached</b>. Commit here and the new commit dangles — leave, and only <code>reflog</code> can find it again.`},
+ {t:'shell',title:"Getting out safely",cmds:["git switch -c rescue   # keep the work: turn detached commits into a branch","# — or —","git switch -           # go back to where you were (abandon them)"],note:`<code>switch -c</code> promotes detached commits into a real branch. <code>switch main</code> / <code>switch -</code> walks away (reflog can still recover for a while).`},
+ {t:'p',h:"Navigating ancestors: HEAD~ vs HEAD^",html:`Two ways to name earlier commits. <code>HEAD~n</code> walks back <i>n</i> steps along the <b>first parent</b>. <code>HEAD^n</code> selects the <b>n-th parent</b> of a commit — only interesting at a merge, which has two parents.`},
+ {t:'graph1',title:"At a merge commit M",g:{nodes:[["a0",0,0,"m"],["a1",0,1,"m"],["b1",1,1,"f"],["M",0,2,"m"]],edges:[["a0","a1"],["a0","b1"],["a1","M"],["b1","M"]],refs:[["main","M","branch"],["HEAD","M","head"]]},note:`HEAD = M. <code>HEAD^1</code> = <code>HEAD~1</code> = a1 (came via main, the first parent). <code>HEAD^2</code> = b1 (the merged-in feature tip). <code>HEAD~2</code> = a0 (first-parent, twice).`},
+ {t:'table',headers:["Reference","Means"],rows:[
+   ["HEAD","the current commit — you are here"],
+   ["HEAD~1 &nbsp;(= HEAD^)","one back, along the first parent"],
+   ["HEAD~2","two back, following first parents"],
+   ["HEAD^2","the <b>second</b> parent — only exists at a merge"],
+   ["&lt;hash&gt; / branch / tag","any commit, named directly"]]}
+]},
+
+upstream:{name:"Branches, Remote-Tracking & Upstream",sub:"Untangling the word 'upstream' (your flagged gap)",blocks:[
+ {t:'p',h:"'upstream' means TWO different things",html:`This trips up everyone. <b>(1) The upstream <i>remote</i></b> — in the fork workflow, the name you give the original project's repo (as opposed to <code>origin</code>, your fork). <b>(2) A branch's <i>upstream / tracking branch</i></b> — the specific remote branch your local branch is linked to (e.g. local <code>main</code> tracks <code>origin/main</code>). Same word, unrelated concepts. The fork tab uses meaning (1); this page is mostly about meaning (2).`},
+ {t:'p',h:"Three things, not one",html:`After you clone there's your local <code>main</code>, <b>and</b> a <b>remote-tracking branch</b> called <code>origin/main</code> — a local, <i>read-only</i> bookmark of "where origin's main was the last time I synced." The real branch lives on GitHub. <code>git fetch</code> updates <code>origin/main</code>; it does <b>not</b> touch your <code>main</code>. That gap is the whole point — it lets you look before you merge.`},
+ {t:'graph1',title:"Local main is behind origin/main",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["c4",0,3,"p"]],edges:[["c1","c2"],["c2","c3"],["c3","c4"]],refs:[["main","c3","branch"],["HEAD","c3","head"],["origin/main","c4","remote"]]},note:`You're <b>1 behind</b>: origin/main has c4, your main doesn't. This is the state right after <code>git fetch</code>. A <code>git pull</code> would fast-forward your main up to c4.`},
+ {t:'graph1',title:"Diverged: ahead AND behind",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,2,"m"],["r3",1,2,"p"]],edges:[["c1","c2"],["c2","c3"],["c2","r3"]],refs:[["main","c3","branch"],["HEAD","c3","head"],["origin/main","r3","remote"]]},note:`You have c3 they don't (<b>ahead 1</b>); they have r3 you don't (<b>behind 1</b>). <code>git status</code> reports exactly this. A plain <code>pull</code> here creates a merge commit — or use <code>pull --rebase</code> to stay linear.`},
+ {t:'p',h:"The tracking link (the -u flag)",html:`<code>git push -u origin main</code> — the <code>-u</code> — sets main's upstream to <code>origin/main</code> <b>once</b>. After that, bare <code>git push</code> / <code>git pull</code> know where to go, and <code>git status</code> can say "ahead 2, behind 1." <code>@{u}</code> (or <code>@{upstream}</code>) is shorthand for "my upstream," so <code>git log @{u}..</code> means "my commits not yet pushed."`},
+ {t:'shell',title:"Inspect and set the links",cmds:["git branch -vv          # each branch + its upstream + ahead/behind","git push -u origin main  # set upstream on first push","git log @{u}..           # what I have that my upstream doesn't"],out:"* main 9a3f1c2 [origin/main: ahead 2] Validate input\n  fix  4b2e8a1 [origin/fix-loader] Add tests",note:`<code>git branch -vv</code> is the fastest way to see what tracks what and whether you're ahead/behind.`}
+]},
+
+ff:{name:"Fast-Forward vs Merge Commit",sub:"Why some merges add a commit and some don't",blocks:[
+ {t:'p',html:`When you merge B into A, Git asks: has A moved since B branched off? If <b>no</b>, A's pointer can just slide forward onto B — a <b>fast-forward</b>, no new commit. If <b>yes</b> (both advanced), Git builds a <b>merge commit</b> with two parents, computed from their last common ancestor — the <b>merge base</b> — in a three-way merge.`},
+ {t:'graph',title:"Fast-forward — no divergence",
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["f1",0,2,"f"],["f2",0,3,"f"]],edges:[["c1","c2"],["c2","f1"],["f1","f2"]],refs:[["main","c2","head"],["feature","f2","branch"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["f1",0,2,"f"],["f2",0,3,"f"]],edges:[["c1","c2"],["c2","f1"],["f1","f2"]],refs:[["main","f2","head"],["feature","f2","branch"]]},
+   note:`main had no commits past c2, so merging just slides its pointer to f2. History stays linear — no merge commit.`},
+ {t:'graph',title:"Three-way merge — diverged",
+   before:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,3,"m"],["f1",1,2,"f"],["f2",1,3,"f"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["f1","f2"]],refs:[["main","c3","head"],["feature","f2","branch"]]},
+   after:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["c3",0,3,"m"],["f1",1,2,"f"],["f2",1,3,"f"],["M",0,4,"m"]],edges:[["c1","c2"],["c2","c3"],["c2","f1"],["f1","f2"],["c3","M"],["f2","M"]],refs:[["main","M","head"],["feature","f2","branch"]]},
+   note:`Both sides advanced past the merge base (c2), so Git creates merge commit M with two parents. The branch shape is preserved in history.`},
+ {t:'p',h:"On a Pull Request",html:`Maintainers pick the strategy: <b>Create a merge commit</b> (preserves shape), <b>Squash and merge</b> (one tidy commit), or <b>Rebase and merge</b> (linear). Locally, <code>git merge --no-ff</code> forces a merge commit even when a fast-forward was possible — useful to keep a feature branch visible in history.`}
+]},
+
+ranges:{name:"Ranges & Ancestry",sub:"What A..B and A...B actually select",blocks:[
+ {t:'p',html:`Many commands take a <b>range</b> of commits. <code>A..B</code> = commits reachable from <b>B but not A</b> ("what does B have that A doesn't"). <code>A...B</code> = commits in <b>either but not both</b> (the symmetric difference). These power <code>log</code>, <code>diff</code>, and <code>cherry-pick</code>.`},
+ {t:'graph1',title:"main and feature",g:{nodes:[["c1",0,0,"m"],["c2",0,1,"m"],["m3",0,2,"m"],["f1",1,2,"f"],["f2",1,3,"f"]],edges:[["c1","c2"],["c2","m3"],["c2","f1"],["f1","f2"]],refs:[["main","m3","branch"],["feature","f2","branch"]]},note:`<code>main..feature</code> = {f1, f2}. &nbsp; <code>feature..main</code> = {m3}. &nbsp; <code>main...feature</code> = {m3, f1, f2}. The shared base (c1, c2) is in none of them.`},
+ {t:'table',headers:["Command","Means"],rows:[
+   ["git log main..feature","commits on feature not yet in main — perfect before opening a PR"],
+   ["git log @{u}..","your local commits not yet pushed"],
+   ["git diff main..feature","the change feature introduces over main"],
+   ["git log A...B --left-right","both-sides difference, each marked &lt; or &gt;"]]},
+ {t:'p',h:"Ancestry shorthand",html:`A leading <code>^</code> means "exclude everything reachable from this ref," so <code>git log feature ^main</code> is identical to <code>git log main..feature</code>.`}
+]},
+
+conflicts:{name:"Conflict Resolution",sub:"When Git can't merge automatically",blocks:[
+ {t:'p',html:`A conflict happens when two branches changed the <b>same lines</b>. Git pauses the merge or rebase and marks the file — nothing is broken, you just decide which version wins, then continue. <code>git status</code> always tells you the next command.`},
+ {t:'shell',title:"1 · What you see",cmds:["git merge fix-loader"],out:"Auto-merging loader.py\nCONFLICT (content): Merge conflict in loader.py\nAutomatic merge failed; fix conflicts and then commit the result."},
+ {t:'shell',title:"2 · The markers Git writes into the file",cmds:["<<<<<<< HEAD","timeout = 30        # your version (current branch)","=======","timeout = 60        # their version (fix-loader)",">>>>>>> fix-loader"],note:`Edit the file down to the version you want and <b>delete all three marker lines</b> (<code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code>).`},
+ {t:'shell',title:"3 · Mark resolved and finish",cmds:["git add loader.py      # tell Git this file is resolved","git commit             # completes the merge","","git merge --abort      # ...or bail out entirely, back to before"],note:`During a <b>rebase</b> it's the same markers, but you finish with <code>git add</code> then <code>git rebase --continue</code> (per commit), or <code>git rebase --abort</code> to undo the whole thing.`}
+]},
+
+undotable:{name:"Which Undo Do I Use?",sub:"reset vs revert vs restore vs amend",blocks:[
+ {t:'p',html:`Four overlapping commands. Choose by <b>what you want to undo</b> and — crucially — <b>whether it's already been pushed/shared</b>.`},
+ {t:'table',headers:["Command","Undoes","Touches","Safe once pushed?"],rows:[
+   ["git restore &lt;file&gt;","working-dir edits","Working dir","⚠ destroys local edits (local only)"],
+   ["git restore --staged &lt;file&gt;","a <code>git add</code>","Staging","yes"],
+   ["git reset --soft/mixed/hard","recent commit(s)","Branch pointer (+ staging/working)","<b>NO</b> — rewrites history"],
+   ["git revert &lt;commit&gt;","a commit's changes","Adds a <b>new</b> commit","<b>YES</b> — the safe choice"],
+   ["git commit --amend","the last commit","Replaces last commit","only before pushing"],
+   ["git switch &lt;branch&gt;","\"wrong branch\"","Moves HEAD","yes"]]},
+ {t:'p',h:"Rule of thumb",html:`<b>Not pushed yet?</b> Use <code>reset</code> / <code>amend</code> freely. <b>Already pushed or shared?</b> Use <code>revert</code> — it adds a commit instead of rewriting history, so teammates' clones don't diverge from yours.`}
+]}
+};
+
+function graphPanel(g,label){return `<div class="gpanel"><div class="glabel">${label||'Now'}</div>${graphSVG(g)}</div>`;}
+function blockHTML(b){
+  if(b.t==='p') return `${b.h?`<h4>${b.h}</h4>`:''}<div class="detail">${b.html}</div>`;
+  if(b.t==='graph') return `<div class="ex">${b.title?`<div class="extitle">${b.title}</div>`:''}<div class="graphwrap"><div class="gpanel before"><div class="glabel">Before</div>${graphSVG(b.before)}</div><div class="gmid">→</div><div class="gpanel after"><div class="glabel">After</div>${graphSVG(b.after)}</div></div>${b.note?`<div class="exnote">💡 ${b.note}</div>`:''}</div>`;
+  if(b.t==='graph1') return `<div class="ex">${b.title?`<div class="extitle">${b.title}</div>`:''}<div style="max-width:470px;margin:4px auto">${graphPanel(b.g,b.label)}</div>${b.note?`<div class="exnote">💡 ${b.note}</div>`:''}</div>`;
+  if(b.t==='state') return `<div class="ex">${b.title?`<div class="extitle">${b.title}</div>`:''}${statesHTML(b)}${b.note?`<div class="exnote">💡 ${b.note}</div>`:''}</div>`;
+  if(b.t==='shell') return `<div class="ex">${b.title?`<div class="extitle">${b.title}</div>`:''}<pre>${b.cmds.map(esc).join('\n')}</pre>${b.out?`<pre class="pr">${esc(b.out)}</pre>`:''}${b.note?`<div class="exnote">💡 ${b.note}</div>`:''}</div>`;
+  if(b.t==='table') return `<div class="ex">${b.title?`<div class="extitle">${b.title}</div>`:''}<table class="opt">${b.headers?`<tr>${b.headers.map(h=>`<th style="text-align:left;color:var(--muted);font-size:.71rem;text-transform:uppercase;letter-spacing:.05em;padding:7px 10px;border-bottom:1px solid var(--line)">${h}</th>`).join('')}</tr>`:''}${b.rows.map(r=>`<tr>${r.map((c,i)=>`<td class="${i===0?'flag':'od'}">${c}</td>`).join('')}</tr>`).join('')}</table>${b.note?`<div class="exnote">💡 ${b.note}</div>`:''}</div>`;
+  return '';
+}
+function openConcept(key){
+  const c=CONCEPTS[key]; if(!c)return;
+  document.getElementById('pghead').innerHTML=`<div><div class="ptitle" style="font-family:var(--sans)">${esc(c.name)}</div><div class="pareas">${esc(c.sub||'')}</div></div><button class="closebtn" onclick="closeOverlay()">✕</button>`;
+  document.getElementById('pgbody').innerHTML=c.blocks.map(blockHTML).join('');
+  const ov=document.getElementById('overlay'); ov.classList.add('open'); ov.scrollTop=0; document.getElementById('pgbody').scrollTop=0;
+}
+function buildConcepts(){
+  const grid=document.getElementById('conceptGrid');
+  grid.innerHTML=Object.entries(CONCEPTS).map(([k,c])=>`<div class="cmdcard" data-concept="${k}"><div class="cn" style="font-family:var(--sans);color:var(--C)">${esc(c.name)}</div><div class="cs">${esc(c.sub||'')}</div></div>`).join('');
+  grid.querySelectorAll('[data-concept]').forEach(el=>el.addEventListener('click',()=>openConcept(el.dataset.concept)));
+}
+
+/* ----- wire up ----- */
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active'); document.getElementById(t.dataset.view).classList.add('active');
+}));
+document.querySelectorAll('#map .chip[data-cmd]').forEach(ch=>ch.addEventListener('click',()=>openCmd(ch.dataset.cmd)));
+document.getElementById('search').addEventListener('input',e=>buildIndex(e.target.value));
+buildIndex(''); buildStatic(); buildConcepts();
+</script>
+</body>
+</html>

@@ -250,3 +250,87 @@ relations:
     to: concept-bootstrap
     context: "bootstrap → bagging → RF: variance reduction by averaging (cross-wire #17)"
     source: note-aml-sad-master-wiring
+
+  # ---- deep architectures (Stage 2)
+  - from: concept-convolutional-networks
+    type: builds-on
+    to: concept-neural-network
+    source: note-aml-book-crosswalk
+  - from: concept-recurrent-networks
+    type: builds-on
+    to: concept-neural-network
+    source: note-aml-book-crosswalk
+
+  # ---- analysis pipeline (Stage 2, from the AN crosswalk block order)
+  - from: concept-sequences-convergence
+    type: requires
+    to: concept-real-numbers
+    context: "completeness/Archimedean property underlie every convergence argument"
+    source: note-an-source-crosswalk
+  - from: concept-series
+    type: builds-on
+    to: concept-sequences-convergence
+    source: note-an-source-crosswalk
+  - from: concept-limits-continuity
+    type: builds-on
+    to: concept-sequences-convergence
+    context: "sequential characterization of limits and continuity"
+    source: note-an-source-crosswalk
+  - from: concept-uniform-convergence
+    type: builds-on
+    to: concept-sequences-convergence
+    context: "pointwise vs uniform; the xⁿ-on-[0,1] counterexample is the exam's favorite trap"
+    source: note-an-source-crosswalk
+  - from: concept-differentiation
+    type: builds-on
+    to: concept-limits-continuity
+    source: note-an-source-crosswalk
+  - from: concept-taylor-series
+    type: builds-on
+    to: concept-differentiation
+    context: "higher derivatives + Lagrange error bound"
+    source: note-an-source-crosswalk
+  - from: concept-riemann-integral
+    type: builds-on
+    to: concept-limits-continuity
+    context: "integrability of continuous functions; FTC links back to differentiation"
+    source: note-an-source-crosswalk
+
+  # ---- ML systems pipeline (Stage 2, from the AMLS crosswalk + legacy dependency map)
+  - from: concept-operator-fusion
+    type: builds-on
+    to: concept-program-rewrites
+    source: note-amls-source-crosswalk
+  - from: concept-program-rewrites
+    type: requires
+    to: concept-normal-equation
+    context: "legacy hard prerequisite F.E→S.B: know what w=(XᵀX)⁻¹Xᵀy IS before studying how to compile it"
+    source: note-amls-source-crosswalk
+  - from: concept-program-rewrites
+    type: builds-on
+    to: concept-backpropagation
+    context: "compilation and autodiff share the computation-graph abstraction (10-414 synergy)"
+    source: note-amls-source-crosswalk
+  - from: concept-data-parallelism
+    type: requires
+    to: concept-gradient-descent
+    context: "legacy hard prerequisite F.J→S.C: data-parallel SGD needs the SGD concept first"
+    source: note-amls-source-crosswalk
+  - from: concept-parameter-servers
+    type: builds-on
+    to: concept-data-parallelism
+    source: note-amls-source-crosswalk
+  - from: concept-llm-systems
+    type: builds-on
+    to: concept-data-parallelism
+    source: note-amls-source-crosswalk
+  - from: concept-llm-systems
+    type: requires
+    to: concept-hardware-accelerators
+    context: "FLOP accounting / roofline reasoning is the language of LLM training+inference"
+    source: note-amls-source-crosswalk
+  - from: concept-data-provenance
+    type: applies-in
+    to: concept-ml-lifecycle
+    context: "mlprov instruments the data-preparation half of the lifecycle (AMLS L10 synergy)"
+    source: note-amls-source-crosswalk

@@ -1,0 +1,591 @@
+# Stage-2 source partition — AMLS, Analysis, SaD probability ladder, Algo 2,
+# and the video/practice sources cited by the migrated crosswalk decompositions.
+# Partitioning does not change semantics (same registry as sources/sources.yaml).
+sources:
+  # ==================================================================== AMLS
+  - id: source-amls-ss26-lectures
+    title: AMLS — Advanced Machine Learning Systems, slides + recordings (SS26)
+    type: lecture
+    authors: [Matthias Boehm]
+    year: 2026
+    url: https://mboehm7.github.io/teaching/ss26_amls/index.htm
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "THE course: the SS26 page links slides AND mp4 recordings for every held lecture (01–11 verified Jul 2) — watch the matching mp4 → slides → self-test; replaces the old SS23-archive workaround"
+        weaknesses:
+          - "Lectures 12–13 slides/mp4 were still pending as of Jul 9/16 — check the course page (legacy Open Loop #6)"
+      - concepts: [concept-ml-systems]
+        roles: [first-learning]
+        useful_sections:
+          - "01–02 — Introduction; Languages, Architectures, System Landscape": "ML-in-DB vs DB-inspired vs lifecycle systems"
+      - concepts: [concept-program-rewrites]
+        roles: [first-learning]
+        useful_sections:
+          - "03 — Size Inference, Rewrites, Operator Selection": "10-414 autodiff/computation-graph lectures are the depth twin (AML-L09 synergy)"
+      - concepts: [concept-operator-fusion]
+        roles: [first-learning]
+        useful_sections:
+          - "04 — Operator Fusion and Runtime Adaptation": "MLC fusion notebooks as the do-it twin"
+      - concepts: [concept-data-parallelism]
+        roles: [first-learning]
+        useful_sections:
+          - "05 — Data- and Task-Parallel Execution": "CS149 parallel abstractions + 6.172 Cilk supplement; 6.172 parallelism/races quizzes are the written-drill anchor"
+      - concepts: [concept-parameter-servers]
+        roles: [first-learning]
+        useful_sections:
+          - "06 — Parameter Servers": "V2 Collective Communication + USP ZeRO as the book layer"
+      - concepts: [concept-llm-systems]
+        roles: [first-learning]
+        useful_sections:
+          - "07 — LLM Training and Inference": "USP is 'the whole book is this lecture'; HTSYM for FLOP accounting"
+      - concepts: [concept-hardware-accelerators]
+        roles: [first-learning]
+        useful_sections:
+          - "08 — Hybrid Execution and HW Accelerators": "10-414 GPU lecture; 6.172 caching/HW quiz items"
+      - concepts: [concept-data-access-optimization]
+        roles: [first-learning]
+        useful_sections:
+          - "09 — Caching, Partitioning, Indexing, Compression": "6.172 locality/caching is BOTH the supplement and the testing anchor"
+      - concepts: [concept-ml-lifecycle, concept-data-provenance]
+        roles: [first-learning]
+        useful_sections:
+          - "10–11 — Data Sourcing/Cleaning/Prep; Model Selection & Management": "wire lecture 10 to Aram's own mlprov code (M + JK synergy); 11 cross-wires AML Block D CV"
+      - concepts: [concept-ml-fairness-explainability]
+        roles: [first-learning]
+        useful_sections:
+          - "12 — Model Debugging, Fairness, Explainability": "own project code is the lab: fairlearn (mlprov M.4.x) + Captum/saliency (AMLS Task 1.4)"
+      - concepts: [concept-model-serving]
+        roles: [first-learning]
+        useful_sections:
+          - "13 — Model Serving Systems": "MLSysBook serving chapters + Huyen"
+
+  - id: source-dmmls-boehm
+    title: Data Management in Machine Learning Systems
+    type: book
+    authors: [Matthias Boehm, Arun Kumar, Jun Yang]
+    year: 2019
+    evaluations:
+      - concepts: [concept-program-rewrites, concept-operator-fusion, concept-data-parallelism,
+                   concept-parameter-servers, concept-data-access-optimization, concept-ml-lifecycle]
+        roles: [review]
+        level: advanced
+        strengths:
+          - "THE LECTURER'S OWN BOOK (~173 pp Synthesis Lectures survey) — exactly the A-part: rewrites, operator selection/fusion, parallel execution, parameter servers, compression, lifecycle systems; expect exam phrasing to echo it; read by section, never linearly"
+        weaknesses:
+          - "Not yet downloaded — pull via the Springer campus license (same route as Forster/Abbott); chapter names cited by theme, verify against the PDF TOC on first open"
+
+  - id: source-mlsysbook-vol1
+    title: "MLSysBook Vol 1 — Introduction to Machine Learning Systems"
+    type: book
+    authors: [Vijay Janapa Reddi]
+    year: 2026
+    url: https://mlsysbook.ai/vol1/
+    material: material://source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf
+    evaluations:
+      - concepts: [concept-ml-systems, concept-hardware-accelerators, concept-ml-lifecycle,
+                   concept-ml-fairness-explainability]
+        roles: [review, exercise]
+        level: intermediate
+        strengths:
+          - "Foundations → building → optimization → deployment (1036 pp, Jun-2026 build); built-in SocratiQ quizzes double as written drill for rows without 6.172/10-414 material"
+        weaknesses:
+          - "Volume discipline: chapter-pick per the lecture map, never read linearly; Vol 1 chapter names verify-on-first-open"
+
+  - id: source-mlsysbook-vol2
+    title: "MLSysBook Vol 2 — Machine Learning Systems at Scale"
+    type: book
+    authors: [Vijay Janapa Reddi]
+    year: 2026
+    url: https://mlsysbook.ai/vol2/
+    material: material://source-mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf
+    evaluations:
+      - concepts: [concept-data-parallelism, concept-parameter-servers, concept-llm-systems,
+                   concept-hardware-accelerators, concept-data-access-optimization,
+                   concept-model-serving]
+        roles: [review]
+        level: advanced
+        strengths:
+          - "The written twin for the parallelism/LLM half (1170 pp, TOC verified Jul 4): Distributed Training, Collective Communication, Compute Infrastructure, Data Storage, Inference at Scale = the previously bookless lectures 05–08 + 13"
+
+  - id: source-ultrascale-playbook
+    title: HF Ultra-Scale Playbook
+    type: website
+    organization: Hugging Face (nanotron)
+    year: 2025
+    url: https://huggingface.co/spaces/nanotron/ultrascale-playbook
+    evaluations:
+      - concepts: [concept-data-parallelism, concept-parameter-servers, concept-llm-systems]
+        roles: [review, first-learning]
+        strengths:
+          - "5D parallelism (DP/TP/PP/EP/CP), ZeRO, GPU kernels from 4000+ real scaling runs — the best single read for the L05–L07 written drill; for L07 'the whole book is this lecture'"
+
+  - id: source-htsym-scaling-book
+    title: How to Scale Your Model
+    type: website
+    organization: Google DeepMind
+    year: 2025
+    url: https://jax-ml.github.io/scaling-book/
+    evaluations:
+      - concepts: [concept-llm-systems, concept-hardware-accelerators]
+        roles: [review, derivation]
+        strengths:
+          - "Roofline/arithmetic-intensity math, accelerator internals, transformer training+inference FLOP accounting — pairs with 6.172-style quiz questions"
+
+  - id: source-mlc-book
+    title: "MLC — Machine Learning Compilation"
+    type: website
+    authors: [Tianqi Chen]
+    url: https://mlc.ai/
+    evaluations:
+      - concepts: [concept-program-rewrites, concept-operator-fusion]
+        roles: [implementation, first-learning]
+        strengths:
+          - "Compilation as DO: executable Jupyter chapters (TVM) — tensor program abstraction, graph rewrites, operator fusion, automatic optimization; the 10-414 companion for lectures 03–04"
+
+  - id: source-huyen-dmls
+    title: Designing Machine Learning Systems
+    type: book
+    authors: [Chip Huyen]
+    year: 2022
+    material: material://source-huyen-dmls/designing-ml-systems.pdf
+    evaluations:
+      - concepts: [concept-ml-lifecycle, concept-model-serving]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "Lifecycle prose: Ch 3 data engineering, Ch 4 training data, Ch 6 model dev/offline eval, Ch 7 deployment/prediction service, Ch 8 shifts/monitoring — lectures 10–13"
+        weaknesses:
+          - "MLOps framing is job-relevant, not exam-critical"
+
+  - id: source-cmu-10414
+    title: CMU 10-414/714 — Deep Learning Systems
+    type: course
+    organization: CMU
+    url: https://dlsyscourse.org/
+    evaluations:
+      - concepts: [concept-program-rewrites, concept-operator-fusion, concept-data-parallelism,
+                   concept-hardware-accelerators, concept-backpropagation]
+        roles: [implementation, exercise]
+        level: advanced
+        strengths:
+          - "The same stack taught build-first (Needle): autodiff/graphs → AMLS 03/04 (and AML L09 synergy), parallel → 05/06, GPU → 08; HW1 autodiff parts are testing material"
+
+  - id: source-mit-6172
+    title: MIT 6.172 — Performance Engineering of Software Systems
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/
+    evaluations:
+      - concepts: [concept-data-access-optimization, concept-data-parallelism,
+                   concept-hardware-accelerators]
+        roles: [exercise, mock-exam]
+        strengths:
+          - "The written-drill anchor for the AMLS A-part: quizzes on caching/locality (L09), parallelism+races (L05), vectorization/ILP (L04) — closest external match to written-exam format"
+
+  - id: source-stanford-cs149
+    title: Stanford CS149 — Parallel Computing
+    type: course
+    organization: Stanford
+    url: https://gfxcourses.stanford.edu/cs149/
+    evaluations:
+      - concepts: [concept-data-parallelism, concept-hardware-accelerators]
+        roles: [review, exercise]
+        strengths:
+          - "Parallel abstractions (L05 supplement) + GPU assignment (L08); written assignments as drill"
+
+  # ================================================================ Analysis
+  - id: source-analysis-skript
+    title: "Analysis Skript (M2.1, HU — 'unser skript', 258 pp) + kleine_beweise"
+    type: documentation
+    organization: HU Berlin
+    material: material://source-analysis-skript
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-uniform-convergence, concept-differentiation,
+                   concept-taylor-series, concept-riemann-integral]
+        roles: [first-learning, review, derivation]
+        level: intermediate
+        strengths:
+          - "THE exam-defining source: definitions, theorem statements, notation — the Klausur comes from here; page map per study block lives in the legacy Chat8 plan"
+          - "kleine_beweise.pdf = the HU tutors' own exam-prep proof list — EVERY proof in it is AN.X material"
+      - concepts: [concept-proof-technique]
+        roles: [mock-exam]
+        strengths:
+          - "kleine_beweise + ana_inf_serieWV: state-and-prove drill in exactly the exam's format"
+
+  - id: source-abbott-understanding-analysis
+    title: Understanding Analysis
+    type: book
+    authors: [Stephen Abbott]
+    material: material://source-abbott-understanding-analysis/abbott.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-uniform-convergence, concept-riemann-integral]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The most readable EN rigor text: Ch 2 → Folgen/Reihen, Ch 4 → Stetigkeit, Ch 5 → Ableitung, Ch 6 → glm. Konvergenz, Ch 7 → Integral; pick ONE book per stuck proof"
+
+  - id: source-grieser-analysis1
+    title: "Grieser — Analysis I: Eine Einführung in die Mathematik des Kontinuums"
+    type: book
+    authors: [Daniel Grieser]
+    material: material://source-grieser-analysis1/grieser.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-limits-continuity, concept-differentiation,
+                   concept-riemann-integral]
+        roles: [review]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "The DE Abbott (353 pp, triaged Jul 4): heavy motivation, exercises with Hinweise+Lösungen — the German second voice in Klausur vocabulary when a skript proof needs one"
+
+  - id: source-lebl-basic-analysis
+    title: Lebl — Basic Analysis I + II
+    type: book
+    authors: [Jiří Lebl]
+    url: https://www.jirka.org/ra/
+    material: material://source-lebl-basic-analysis
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-differentiation, concept-taylor-series,
+                   concept-riemann-integral, concept-uniform-convergence]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "The free EN text-twin of the skript: Ch 0–1 → AN.0, Ch 2 → Folgen (§2.5–2.6 Reihen), Ch 3 → Stetigkeit, Ch 4 → Ableitung (§4.3 Taylor), Ch 5 → Integral, §6.1–6.2 → glm. Konvergenz"
+
+  - id: source-forster-wessoly
+    title: Forster/Wessoly — Übungsbuch zur Analysis 1
+    type: book
+    authors: [Otto Forster, Rüdiger Wessoly]
+    material: material://source-forster-wessoly/forster-wessoly.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-riemann-integral]
+        roles: [exercise]
+        audience: [German readers]
+        strengths: ["The German solved-exercise standard — terse but complete solutions; the exam points live here"]
+
+  - id: source-fritzsche-trainingsbuch
+    title: Fritzsche — Trainingsbuch zur Analysis 1
+    type: book
+    authors: [Klaus Fritzsche]
+    year: 2013
+    material: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-uniform-convergence, concept-differentiation,
+                   concept-taylor-series, concept-riemann-integral]
+        roles: [exercise, first-learning]
+        level: introductory
+        audience: [German readers]
+        strengths:
+          - "Tutorial-style drill WITH explained solutions (342 pp, triaged Jul 4) — the gentlest drill tier, between Forster (terse) and Leonard (video). Kap 1 → AN.0, Kap 2 → Folgen/Reihen/Grenzwerte, Kap 3 → Diff/MWS/Integration, Kap 4 → glm. Konvergenz/Taylor/uneigentliche Integrale"
+
+  - id: source-deitmar-uebungsbuch
+    title: Deitmar — Übungsbuch zur Analysis
+    type: book
+    authors: [Anton Deitmar]
+    year: 2021
+    material: material://source-deitmar-uebungsbuch/deitmar.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series]
+        roles: [exercise]
+        audience: [German readers]
+        strengths:
+          - "Second solved-problem bank (257 pp, standard Analysis-1 order: Kap 1–2 → AN.0, Kap 3.1 → Konvergenz, Kap 3.2 → Reihen) — for FRESH problems once Forster/Fritzsche sets are exhausted; verify later chapters' sections on first use"
+
+  - id: source-ableitinger-musterloesungen
+    title: Ableitinger/Herrmann — Lernen aus Musterlösungen zur Analysis und Linearen Algebra
+    type: book
+    authors: [Christoph Ableitinger, Angela Herrmann]
+    material: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    evaluations:
+      - concepts: [concept-proof-technique]
+        roles: [review, exercise]
+        audience: [German readers]
+        strengths:
+          - "Proof-WRITING technique: how to read/dissect/reproduce Musterlösungen — exactly the kleine_beweise skill for AN.X; pull the Analysis half only (the book is half LA); not a first-pass drill source"
+
+  - id: source-mit-18100a
+    title: MIT 18.100A — Real Analysis (Rodriguez, Fall 2020)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-100a-real-analysis-fall-2020/
+    material: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-differentiation, concept-taylor-series,
+                   concept-riemann-integral, concept-uniform-convergence]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "The rigor/proof-technique video layer, lecture-mapped (watch mapped lectures ONLY): L1 sets/induction, L4–L5 ℝ/Archimedean/|x|, L7–L9 sequences (squeeze, limsup, Bolzano-Weierstrass), L10–L12 series (completeness, comparison, ratio/root/alternating), L13–L14+L16 limits/continuity (Min/Max+IVT), L17+L19 derivative (rules+Rolle+MVT), L20–L22 Taylor+Riemann+FTC, L23–L24 pointwise vs uniform + M-test (the xⁿ-on-[0,1] counterexample is the exam's favorite trap). Skip L2/L3/L6/L18/L25"
+          - "Full lecture notes PDF local, same numbering; the MIT 18.100C exam set (Final+Solutions, practice mids/final) is in the external Klausur bank"
+
+  - id: source-professor-leonard
+    title: Professor Leonard — Calculus 1 + 2 (YouTube)
+    type: video
+    authors: [Professor Leonard]
+    url: https://www.youtube.com/@ProfessorLeonard
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-taylor-series, concept-riemann-integral]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "The intuition/calc-fluency layer — watch BEFORE the skript when a topic is new, never as a substitute. Key picks: Intro to Sequences (~50 min), Intro to Series + Geometric Series, Intro to Limits + Continuity, Definition of Derivative + MVT (one of his best), Taylor Polynomials + Lagrange Error Bound, FTC (non-negotiable before the skript's integral section)"
+
+  - id: source-3b1b-essence-of-calculus
+    title: 3Blue1Brown — Essence of Calculus
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr
+    evaluations:
+      - concepts: [concept-differentiation, concept-chain-rule, concept-taylor-series,
+                   concept-riemann-integral, concept-limits-continuity]
+        roles: [intuition]
+        level: introductory
+        strengths: ["Derivative/chain-rule/Taylor/integral PICTURES before the ε-δ versions"]
+
+  - id: source-analysis-klausuren-extern
+    title: Analysis external Klausur bank (local)
+    type: other
+    material: material://source-analysis-klausuren-extern
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-taylor-series, concept-riemann-integral,
+                   concept-proof-technique]
+        roles: [mock-exam]
+        audience: [German readers]
+        strengths:
+          - "All local since Jul 2: Marburg 3× (ε-N + rekursive Folgen archetypes; Reihen classification; Stetigkeitsparameter/ZWS), Regensburg (IVT proof, MVT contradiction task, Hauptsatz state-and-prove + partielle Integration), Darmstadt (solved), Paderborn 2023 (Lösungsvorschlag), Leipzig, Ulm (Aufgaben only — the timed mock), TUM Ferienkurs-Skriptum, MIT 18.100C set (Final+Solutions, practice mids/final)"
+
+  - id: source-strang-calculus
+    title: Strang — Calculus (MIT OCW)
+    type: book
+    authors: [Gilbert Strang]
+    url: https://ocw.mit.edu/courses/res-18-001-calculus-fall-2023/
+    material: material://source-strang-calculus
+    evaluations:
+      - concepts: [concept-riemann-integral, concept-taylor-series]
+        roles: [intuition]
+        level: introductory
+        strengths: ["Per-chapter PDFs local (downloaded OCW site); Riemann-sum intuition (Ch 5) and series chapter as the gentle layer"]
+
+  # ================================================= SaD probability ladder
+  - id: source-pitman-probability
+    title: Pitman — Probability
+    type: book
+    authors: [Jim Pitman]
+    material: material://source-pitman-probability/pitman.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-random-variable,
+                   concept-discrete-distributions, concept-normal-distribution, concept-correlation]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The MIDDLE rung (🟡) of the SaD probability ladder for L04–L08: clearer/more visual than Ross, less terse than Blitzstein; Ch 1 prob/Bayes, Ch 2 Binomial/Normal-approx/Poisson, Ch 3 RVs/E[X]/SD, Ch 4–5 continuous/joint, Ch 6 covariance/correlation"
+        weaknesses: ["No inference (L09–L10), no descriptive (L01–L02), no ML (L11–L15)"]
+
+  - id: source-ross-first-course
+    title: Ross — A First Course in Probability
+    type: book
+    authors: [Sheldon Ross]
+    material: material://source-ross-first-course/ross.pdf
+    evaluations:
+      - concepts: [concept-combinatorics, concept-probability, concept-bayes-theorem,
+                   concept-random-variable, concept-discrete-distributions,
+                   concept-normal-distribution, concept-central-limit-theorem, concept-entropy]
+        roles: [review, derivation]
+        level: advanced
+        strengths:
+          - "The RIGOROUS rung (🔴, 🟡 for counting) for L04–L08: Ch 1 counting, Ch 2 axioms, Ch 3 Bayes/independence, Ch 4–5 RVs/distributions, Ch 8 Chebyshev/LLN/CLT, Ch 9 entropy"
+        weaknesses: ["Formula-heavy; no inference, descriptive or ML coverage"]
+
+  - id: source-tijms-understanding-probability
+    title: Tijms — Understanding Probability (2e)
+    type: book
+    authors: [Henk Tijms]
+    material: material://source-tijms-understanding-probability/tijms.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-expected-value,
+                   concept-normal-distribution, concept-central-limit-theorem]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "The GENTLE escape hatch (🟢 Part 1) when Blitzstein stalls: everyday-life, simulation-first; the best LLN/CLT intuition on the shelf (Ch 5 CLT, Ch 6 Bayes trees)"
+        weaknesses: ["No inference, descriptive or ML coverage"]
+
+  - id: source-schaums-probability
+    title: Schaum's Outline of Probability
+    type: book
+    material: material://source-schaums-probability/schaums-probability.pdf
+    evaluations:
+      - concepts: [concept-combinatorics, concept-probability, concept-conditional-probability,
+                   concept-random-variable, concept-discrete-distributions, concept-central-limit-theorem]
+        roles: [exercise]
+        strengths:
+          - "The DRILL rung (🧮) for L04–L08: terse theory, many worked problems — problem practice once a concept clicks, not a first teacher"
+
+  # ================================================================== Algo 2
+  - id: source-clrs
+    title: "Cormen/Leiserson/Rivest/Stein — Algorithmen (4. Aufl. DE = EN 3rd ed)"
+    type: book
+    authors: [Thomas Cormen, Charles Leiserson, Ronald Rivest, Clifford Stein]
+    material: material://source-clrs/clrs-de.pdf
+    evaluations:
+      - concepts: [concept-amortized-analysis, concept-b-trees, concept-fibonacci-heaps,
+                   concept-shortest-paths, concept-max-flow, concept-fft,
+                   concept-computational-geometry]
+        roles: [first-learning, review]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "'Das Buch' of the Moodle-verified Algo-2 literature: Kap 17 amortisierte Analyse, 18 B-Bäume, 19 Fibonacci-Heaps, 24–25 kürzeste Wege, 26.1–26.2 max flow; Kap 30 FFT + 33 Geometrie expected for the unposted topics"
+
+  - id: source-dms-grundwerkzeuge
+    title: "Dietzfelbinger/Mehlhorn/Sanders — Algorithmen und Datenstrukturen: Die Grundwerkzeuge"
+    type: book
+    authors: [Martin Dietzfelbinger, Kurt Mehlhorn, Peter Sanders]
+    material: material://source-dms-grundwerkzeuge/dms.pdf
+    evaluations:
+      - concepts: [concept-fast-multiplication]
+        roles: [first-learning]
+        audience: [German readers]
+        strengths: ["Kap 1 = schnellere Multiplikation (Karatsuba) — the course's chosen source for topic A, NOT CLRS"]
+
+  - id: source-ottmann-widmayer
+    title: Ottmann/Widmayer — Algorithmen und Datenstrukturen
+    type: book
+    authors: [Thomas Ottmann, Peter Widmayer]
+    material: material://source-ottmann-widmayer/ow.pdf
+    evaluations:
+      - concepts: [concept-splay-trees, concept-bipartite-matching]
+        roles: [first-learning]
+        audience: [German readers]
+        strengths: ["§5.4 Splay-Bäume (with the Sleator/Tarjan paper as depth), §9.8 bipartites Matching — the course's sources for the starred topics"]
+
+  # ============================================== video / practice additions
+  - id: source-eecs498
+    title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson, FA2020)
+    type: course
+    organization: University of Michigan
+    url: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
+    evaluations:
+      - concepts: [concept-gradient-descent, concept-adam-optimizer, concept-neural-network,
+                   concept-backpropagation, concept-convolutional-networks,
+                   concept-recurrent-networks, concept-dropout]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "Schedule-verified picks: L4 Optimization (SGD→momentum→AdaGrad→Adam→second-order = exactly AML L06's outlook incl. Newton), L5 NNs, L6 Backprop (computational graphs — teaches it exactly the lecture's way), L7 Conv + L8 CNN Architectures (AlexNet/VGG/ResNet), L10 Training I (init/dropout/augmentation), L12 Recurrent Networks"
+        weaknesses:
+          - "L7's batch-norm part is beyond the 2026 AML deck"
+
+  - id: source-karpathy-micrograd
+    title: Karpathy — micrograd (spelled-out backpropagation)
+    type: video
+    authors: [Andrej Karpathy]
+    url: https://www.youtube.com/watch?v=VMj-3S1tku0
+    evaluations:
+      - concepts: [concept-backpropagation, concept-chain-rule]
+        roles: [implementation]
+        strengths:
+          - "~2.5h: builds computation graphs + loss.backward() from scratch — the deepest self-checking backprop test; doubles as AMLS compilation-lecture synergy (autodiff)"
+
+  - id: source-rohrer-e2eml
+    title: Brandon Rohrer — End-to-End Machine Learning blog/courses
+    type: website
+    authors: [Brandon Rohrer]
+    url: https://e2eml.school/blog.html
+    evaluations:
+      - concepts: [concept-convolutional-networks, concept-recurrent-networks,
+                   concept-neural-network, concept-softmax, concept-bayes-theorem]
+        roles: [intuition]
+        level: introductory
+        strengths:
+          - "Calm long-form intuition: Ch 14 convolution 1D/2D arithmetic warm-up, Ch 22–23 CNNs in depth, Ch 24 RNN/LSTM, Ch 17/19 NN+softmax, Ch 16 Bayesian inference, 'How Optimization Works' 1–4"
+
+  - id: source-geron-handson
+    title: Géron — Hands-On Machine Learning (local)
+    type: book
+    authors: [Aurélien Géron]
+    material: material://source-geron-handson/geron.pdf
+    evaluations:
+      - concepts: [concept-logistic-regression, concept-gradient-descent, concept-regularization]
+        roles: [exercise, implementation]
+        level: introductory
+        strengths:
+          - "Ch 4 exercises (linear/logistic/softmax, Ridge/Lasso, batch/SGD/mini-batch) with Appendix-A solutions — the practice layer for AML L03–L06"
+        weaknesses:
+          - "NOT a systems book — project/AML support only; don't keyword-match it into AMLS prep"
+
+  - id: source-caltech-lfd
+    title: Caltech Learning From Data (Abu-Mostafa) — homework sets
+    type: course
+    organization: Caltech
+    url: https://work.caltech.edu/homeworks.html
+    evaluations:
+      - concepts: [concept-linear-regression, concept-logistic-regression,
+                   concept-gradient-descent, concept-regularization, concept-bias-variance-tradeoff]
+        roles: [exercise]
+        strengths:
+          - "Solved sets: HW2 linear regression, HW4/HW6 overfitting/regularization/validation, HW5 logistic + the classic SGD experiment"
+        weaknesses: ["The SVM sets are out of AML scope — skip"]
+
+  - id: source-ng-coursera
+    title: Ng — Machine Learning (Coursera)
+    type: course
+    authors: [Andrew Ng]
+    url: https://www.coursera.org/specializations/machine-learning-introduction
+    evaluations:
+      - concepts: [concept-linear-regression, concept-gradient-descent, concept-logistic-regression,
+                   concept-regularization, concept-kernel-trick]
+        roles: [first-learning, intuition]
+        level: introductory
+        strengths:
+          - "The gentler Ng-taught twin: Wk 1–2 regression, Wk 3 logistic + regularization, GD-in-Practice I/II (feature scaling + learning rate — matches the AML slides exactly), Wk 7 Kernels I/II (the landmark/similarity construction of AML L07 sl. 68–73 IS Ng's)"
+
+  - id: source-jbstatistics
+    title: jbstatistics (YouTube)
+    type: video
+    authors: [Jeremy Balka]
+    url: https://www.youtube.com/@jbstatistics
+    evaluations:
+      - concepts: [concept-discrete-distributions, concept-normal-distribution,
+                   concept-central-limit-theorem, concept-statistical-estimation,
+                   concept-hypothesis-testing]
+        roles: [first-learning, review]
+        level: introductory
+        strengths:
+          - "Short, calm, calculation-exact — closest to SaD exam tasks: Binomial/Poisson, Normal/z-score/CLT, confidence intervals/t-distribution, the hypothesis-testing set"
+
+  - id: source-kurzes-tutorium-statistik
+    title: Kurzes Tutorium Statistik (Bärtl, YouTube)
+    type: video
+    authors: [Marco Bärtl]
+    url: https://www.youtube.com/@KurzesTutoriumStatistik
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [first-learning, intuition]
+        level: introductory
+        audience: [German readers]
+        strengths:
+          - "GERMAN — same vocabulary as the Klausur; everyday-problem style; the DE default before any EN channel (SaD 01–02, 04–05, 09, 10)"
+
+  - id: source-stat110
+    title: Harvard Stat 110 — Probability (Blitzstein)
+    type: course
+    organization: Harvard
+    url: https://projects.iq.harvard.edu/stat110
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-combinatorics,
+                   concept-random-variable, concept-discrete-distributions, concept-normal-distribution]
+        roles: [review, derivation]
+        level: advanced
+        strengths:
+          - "The rigorous-course video tier for SaD 04–08 (pick ONE from this tier, per the legacy rule); strategic-practice problem sets; the written companion is Blitzstein & Hwang"

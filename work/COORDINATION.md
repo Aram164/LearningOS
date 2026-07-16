@@ -15,7 +15,8 @@ type: coordination
 
 ## Dependencies
 
-(none yet)
+- workspace-aml-exam-prep waits on workspace-amls-exam-prep (AML study hours open only after the AMLS sitting is written)
+- workspace-algo2-exam-prep waits on workspace-amls-exam-prep (dormant by design until the AMLS sitting; then ~8–10h/wk interleaved)
 
 ## Deferrals
 

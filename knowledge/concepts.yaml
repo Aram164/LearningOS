@@ -185,3 +185,132 @@ concepts:
     label: Data provenance
     aliases: [Provenienz, lineage, provenance tracking]
     domain_hints: [data-systems]
+
+  # ------------------------------------------------------ analysis (M2 half)
+  - id: concept-real-numbers
+    label: Real numbers
+    aliases: [reelle Zahlen, completeness, Vollständigkeit, Archimedean property, Supremum]
+  - id: concept-sequences-convergence
+    label: Sequences and convergence
+    aliases: [Folgen, Konvergenz, epsilon-N, limsup, Bolzano-Weierstrass, Teilfolgen]
+  - id: concept-series
+    label: Series
+    aliases: [Reihen, Konvergenzkriterien, ratio test, Quotientenkriterium, geometric series, alternating series]
+  - id: concept-limits-continuity
+    label: Limits and continuity
+    aliases: [Grenzwerte, Stetigkeit, intermediate value theorem, Zwischenwertsatz, epsilon-delta]
+  - id: concept-uniform-convergence
+    label: Uniform convergence
+    aliases: [gleichmäßige Konvergenz, pointwise convergence, M-test]
+  - id: concept-differentiation
+    label: Differentiation
+    aliases: [Ableitung, mean value theorem, Mittelwertsatz, Rolle, l'Hospital, derivative]
+  - id: concept-taylor-series
+    label: Taylor series
+    aliases: [Taylor, Taylorpolynom, Lagrange error bound, Restglied]
+  - id: concept-riemann-integral
+    label: Riemann integral
+    aliases: [Integralrechnung, fundamental theorem of calculus, Hauptsatz, partielle Integration, Substitution]
+  - id: concept-proof-technique
+    label: Proof technique
+    aliases: [Beweistechnik, mathematische Beweise, Musterlösungen, Induktion]
+
+  # -------------------------------------------------------- ML systems (AMLS)
+  - id: concept-ml-systems
+    label: ML systems
+    aliases: [ML system landscape, ML frameworks, ML-in-DB]
+    domain_hints: [systems]
+  - id: concept-program-rewrites
+    label: Program rewrites and operator selection
+    aliases: [size inference, rewrites, operator selection, query compilation]
+    domain_hints: [systems]
+  - id: concept-operator-fusion
+    label: Operator fusion
+    aliases: [fusion, codegen, runtime adaptation]
+    domain_hints: [systems]
+  - id: concept-data-parallelism
+    label: Data- and task-parallel execution
+    aliases: [data parallelism, task parallelism, distributed training, tensor parallelism, pipeline parallelism]
+    domain_hints: [systems]
+  - id: concept-parameter-servers
+    label: Parameter servers
+    aliases: [collective communication, ZeRO, all-reduce, async SGD]
+    domain_hints: [systems]
+  - id: concept-llm-systems
+    label: LLM training and inference systems
+    aliases: [LLM inference, transformer training, KV cache]
+    domain_hints: [systems]
+  - id: concept-hardware-accelerators
+    label: Hardware accelerators
+    aliases: [GPU, TPU, roofline model, arithmetic intensity, hybrid execution]
+    domain_hints: [systems]
+  - id: concept-data-access-optimization
+    label: Data access optimization
+    aliases: [caching, partitioning, indexing, compression, locality]
+    domain_hints: [systems]
+  - id: concept-ml-lifecycle
+    label: ML lifecycle
+    aliases: [data acquisition, data cleaning, data preparation, model selection, model management, MLOps]
+    domain_hints: [systems]
+  - id: concept-ml-fairness-explainability
+    label: ML debugging, fairness and explainability
+    aliases: [fairness metrics, explainability, saliency, occlusion, LIME, model debugging]
+    domain_hints: [systems, machine-learning]
+  - id: concept-model-serving
+    label: Model serving
+    aliases: [serving systems, inference serving, prediction service]
+    domain_hints: [systems]
+
+  # -------------------------------------------------- deep architectures
+  - id: concept-convolutional-networks
+    label: Convolutional neural networks
+    aliases: [CNN, convolution, pooling, AlexNet, ResNet, Faltungsnetz]
+  - id: concept-recurrent-networks
+    label: Recurrent neural networks
+    aliases: [RNN, LSTM, GRU, BPTT, sequence models]
+
+  # ------------------------------------------------------------ algorithms
+  - id: concept-fast-multiplication
+    label: Fast multiplication
+    aliases: [Karatsuba, schnellere Multiplikation]
+    domain_hints: [algorithms]
+  - id: concept-amortized-analysis
+    label: Amortized analysis
+    aliases: [amortisierte Analyse, potential method, Bankkonto-Methode]
+    domain_hints: [algorithms]
+  - id: concept-b-trees
+    label: B-trees
+    aliases: [B-Bäume, B-Baum]
+    domain_hints: [algorithms]
+  - id: concept-fibonacci-heaps
+    label: Fibonacci heaps
+    aliases: [Fibonacci-Heaps]
+    domain_hints: [algorithms]
+  - id: concept-splay-trees
+    label: Splay trees
+    aliases: [Splay-Bäume, self-adjusting trees]
+    domain_hints: [algorithms]
+  - id: concept-cuckoo-hashing
+    label: Cuckoo hashing
+    aliases: [Cuckoo-Hashing]
+    domain_hints: [algorithms]
+  - id: concept-shortest-paths
+    label: Shortest paths
+    aliases: [kürzeste Wege, Dijkstra, Bellman-Ford, all-pairs shortest paths]
+    domain_hints: [algorithms]
+  - id: concept-max-flow
+    label: Maximum flow
+    aliases: [maximaler Fluss, Ford-Fulkerson, min cut]
+    domain_hints: [algorithms]
+  - id: concept-bipartite-matching
+    label: Bipartite matching
+    aliases: [bipartites Matching, stable matching, Heiratsproblem]
+    domain_hints: [algorithms]
+  - id: concept-computational-geometry
+    label: Computational geometry
+    aliases: [algorithmische Geometrie, convex hull, sweep line]
+    domain_hints: [algorithms]
+  - id: concept-fft
+    label: Fast Fourier transform
+    aliases: [FFT, schnelle Fourier-Transformation, polynomial multiplication]
+    domain_hints: [algorithms]

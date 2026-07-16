@@ -62,7 +62,9 @@ modules:
         Written exam, 100% of the grade; the team project (submitted
         2026-07-15) is a prerequisite and adds up to 5 bonus points
         (course page, verified 2026-07-02). Course-run sittings at 16:00:
-        2026-07-23 / 2026-08-06 / 2026-08-27.
+        2026-07-23 / 2026-08-06 / 2026-08-27. NOTE: taken as Bachelor-UEWP
+        — LP-gesperrt im Master (Doppelanrechnungsverbot); knowledge fully
+        reusable (module card, Masters-Planning).
     attempts:
       - termin: 3
         date: "2026-08-27"
@@ -71,6 +73,33 @@ modules:
           Sitting chosen 2026-07-17 (Aram): the LAST course-run slot.
           Course-run registration formality to complete closer to the date
           if required.
+
+  - id: module-hu-ppds
+    institution: HU Berlin
+    title: PPDS — Praktische Projektarbeit Datenbanksysteme (mlprov)
+    semester: sose-2026
+    status: enrolled
+    examination:
+      type: project
+      notes: >-
+        Project module: the mlprov provenance library (team project),
+        submitted 2026-07-15. Taken as Bachelor-UEWP — LP-gesperrt im
+        Master (Doppelanrechnungsverbot); knowledge/code fully reusable.
+        Grade pending.
+
+  - id: module-hu-seminar-iug
+    institution: HU Berlin
+    title: Seminar Informatik und Gesellschaft (Plattformregulierung)
+    semester: sose-2026
+    status: enrolled
+    examination:
+      type: portfolio
+      notes: >-
+        Three graded deliverables: presentation held 2026-06-18
+        (Plattformregulierung — DSA/DMA, Big Tech), oral peer review
+        held 2026-07-02 (Linus Kurth, Desinformation/Bots), written peer
+        review was due 2026-07-16 (2-4 pages — submission to confirm).
+        Prof. Vladova. Grade pending.
 
   - id: module-hu-algo2
     institution: HU Berlin
