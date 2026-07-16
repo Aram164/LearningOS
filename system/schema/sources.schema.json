@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/sources.schema.json",
+  "title": "Source registry",
+  "description": "Validates sources/sources.yaml (or partitioned sources/registry/*.yaml — partitioning must not change semantics). A source is an evaluated teaching object. Contextual evaluations recorded here are the canonical home of pedagogical judgments, including those narrated in crosswalk notes. No universal scalar ratings.",
+  "type": "object",
+  "required": ["sources"],
+  "additionalProperties": false,
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "type"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "type": { "enum": ["book", "paper", "lecture", "course", "video", "website", "documentation", "software", "conversation", "other"] },
+          "authors": { "type": "array", "items": { "type": "string" } },
+          "organization": { "type": "string" },
+          "year": { "type": "integer", "minimum": 1800, "maximum": 2100 },
+          "url": { "type": "string", "format": "uri" },
+          "material": { "type": "string", "pattern": "^material://.+" },
+          "identifiers": { "type": "object", "additionalProperties": { "type": "string" } },
+          "evaluations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true, "description": "Omit for a global evaluation." },
+                "audience": { "type": "array", "items": { "type": "string" } },
+                "roles": { "type": "array", "items": { "type": "string" }, "description": "e.g. first-learning, review, derivation, implementation, intuition" },
+                "level": { "enum": ["introductory", "intermediate", "advanced", "reference"] },
+                "prerequisites": { "type": "array", "items": { "type": "string" } },
+                "strengths": { "type": "array", "items": { "type": "string" } },
+                "weaknesses": { "type": "array", "items": { "type": "string" } },
+                "useful_sections": { "type": "array", "items": { "type": "object", "additionalProperties": { "type": "string" } } },
+                "reviewed": { "type": "string", "format": "date" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

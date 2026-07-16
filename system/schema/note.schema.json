@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/note.schema.json",
+  "title": "Note frontmatter",
+  "description": "Validates the YAML frontmatter of files under knowledge/notes/**/*.md. Note prose is canonical user meaning and is not schema-validated. Path must not determine identity.",
+  "type": "object",
+  "required": ["id", "type", "title", "created"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "note" },
+    "title": { "type": "string", "minLength": 1 },
+    "created": { "type": "string", "format": "date" },
+    "reviewed": { "type": "string", "format": "date" },
+    "role": {
+      "enum": ["synthesis", "reference", "derivation", "exercise-bank", "mock-exam", "implementation", "question", "crosswalk"],
+      "default": "synthesis"
+    },
+    "state": { "enum": ["rough", "evolving", "mature", "deprecated"] },
+    "authorship": { "enum": ["user", "mixed", "external"] },
+    "transcription": { "enum": ["none", "manual", "ai-assisted"] },
+    "semantic_review": { "enum": ["unreviewed", "user-reviewed"] },
+    "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "sources": { "type": "array", "items": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "attachments": { "type": "array", "items": { "type": "string" } },
+    "contexts": { "type": "array", "items": { "type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type", "ref"],
+        "additionalProperties": false,
+        "properties": {
+          "type": { "enum": ["derivation", "implementation", "exercise", "exam", "external"] },
+          "ref": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "supersedes": { "type": "array", "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true }
+  }
+}

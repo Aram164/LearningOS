@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/modules.schema.json",
+  "title": "Module records",
+  "description": "Validates records/modules.yaml — the single canonical owner of administrative module facts: identity, credits, examination attempts (registrations, withdrawals/Rücktritte, sittings), and grades. Exam dates must not appear canonically anywhere else. Dashboards over this registry are generated.",
+  "type": "object",
+  "required": ["modules"],
+  "additionalProperties": false,
+  "properties": {
+    "modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "institution", "title", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "institution": { "type": "string", "minLength": 1 },
+          "code": { "type": "string", "description": "Official module code, e.g. M2.1" },
+          "title": { "type": "string", "minLength": 1 },
+          "credits": { "type": "number", "minimum": 0 },
+          "semester": { "type": "string", "pattern": "^(sose|wise)-[0-9]{4}$", "description": "e.g. sose-2026" },
+          "status": { "enum": ["planned", "enrolled", "completed", "dropped"] },
+          "examination": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "type": { "enum": ["klausur", "muendlich", "portfolio", "project", "hausarbeit", "other"] },
+              "notes": { "type": "string" }
+            }
+          },
+          "components": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Course components of a combined module (Kombimodul) sharing one grade."
+          },
+          "attempts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["termin", "result"],
+              "additionalProperties": false,
+              "properties": {
+                "termin": { "type": "integer", "minimum": 1, "maximum": 3 },
+                "date": { "type": "string", "format": "date" },
+                "result": { "enum": ["registered", "withdrawn", "passed", "failed"] },
+                "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0 },
+                "notes": { "type": "string" }
+              }
+            }
+          },
+          "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0, "description": "Final module grade." }
+        }
+      }
+    }
+  }
+}

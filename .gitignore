@@ -1,0 +1,4 @@
+generated/*
+!generated/.gitkeep
+.DS_Store
+**/__pycache__/

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/concepts.schema.json",
+  "title": "Concept registry",
+  "description": "Validates knowledge/concepts.yaml (or partitioned knowledge/concepts/*.yaml — partitioning must not change semantics). Labels are English; other-language terms are aliases. Records never contain full explanations; concept content lives in notes; backlinks are generated.",
+  "type": "object",
+  "required": ["concepts"],
+  "additionalProperties": false,
+  "properties": {
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "label": { "type": "string", "minLength": 1 },
+          "aliases": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+          "description": { "type": "string", "maxLength": 300, "description": "Short disambiguation only — never an explanation." },
+          "domain_hints": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "deprecated": { "type": "boolean" },
+          "replaced_by": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        }
+      }
+    }
+  }
+}

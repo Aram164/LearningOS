@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/workspace.schema.json",
+  "title": "Workspace CONTEXT.md frontmatter",
+  "description": "Validates work/active/<workspace-id>/CONTEXT.md frontmatter. Required body sections (Objective, Current Scope, Open Questions, Next Action) are checked by the validator, not this schema. The deadline field is for non-exam operational deadlines only; exam dates live in records/modules.yaml.",
+  "type": "object",
+  "required": ["id", "type", "title", "created", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "workspace" },
+    "title": { "type": "string", "minLength": 1 },
+    "created": { "type": "string", "format": "date" },
+    "status": { "enum": ["active", "blocked", "complete"] },
+    "standing": { "type": "boolean", "default": false },
+    "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "notes": { "type": "array", "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "sources": { "type": "array", "items": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "deadline": { "type": "string", "format": "date" }
+  }
+}

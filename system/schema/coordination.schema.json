@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/coordination.schema.json",
+  "title": "COORDINATION.md frontmatter",
+  "description": "Validates work/COORDINATION.md frontmatter. The body holds only: Commitments, Priorities, Dependencies, Deferrals (validator-checked). It must never contain exam dates (owned by records/modules.yaml), workspace statuses or lists (owned by workspace frontmatter / generated views), or computed recommendations (disposable).",
+  "type": "object",
+  "required": ["id", "type"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "const": "coordination" },
+    "type": { "const": "coordination" }
+  }
+}
