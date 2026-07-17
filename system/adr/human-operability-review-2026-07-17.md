@@ -152,3 +152,20 @@ backup) · **#6** Cowork project-instruction update. Deliberately not done:
 
 Verification after implementation: `validate.py` 0 errors / 0 warnings,
 32/32 tests, full regeneration clean.
+
+---
+
+## Addendum — 2026-07-17 (later same day): #9 superseded by a symlink
+
+The #9 `CLAUDE-SYNC` warn-check guarded a *hand-maintained duplication* — two
+committed copies of the contract kept identical by discipline, with only a
+warning (never a commit block) if they drifted. That trap is now removed at the
+source: `system/CLAUDE.md` is the **single canonical contract** (full §13 folded
+in), and root `CLAUDE.md` plus a new `LearningOS/` project-root entry are
+**symlinks** to it. One physical file → drift is impossible by construction, so
+the warn-check (`rules.py`) and its `VALIDATION.md` row are retired. This also
+closes recommended-improvement **#15** ("replace duplicated CLAUDE.md contracts
+with one canonical or generated source"), and pairs with **#6**: the Cowork
+project re-roots at `LearningOS/`, where the contract now auto-loads through the
+symlink. Symlinks are already the repository's idiom (`Plans/`, the project
+folders).

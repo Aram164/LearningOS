@@ -12,9 +12,15 @@
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
 
-PY="$(command -v python3 || command -v python)"
+# Prefer the project venv (created by `make setup`) so validation runs against
+# the same interpreter and pinned deps everywhere; fall back to a system Python.
+if [ -x ".venv/bin/python" ]; then
+    PY=".venv/bin/python"
+else
+    PY="$(command -v python3 || command -v python)"
+fi
 if [ -z "$PY" ]; then
-    echo "pre-commit: no python found — commit blocked (install Python 3.10+ or use --no-verify)." >&2
+    echo "pre-commit: no python found — commit blocked (run 'make setup', or install Python 3.10+, or use --no-verify)." >&2
     exit 1
 fi
 

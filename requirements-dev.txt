@@ -1,0 +1,6 @@
+# Development dependencies for the Learning OS tooling (validator, generator,
+# tests). Installed into a project-local .venv by `make setup` — see README.
+# Pinned loosely; jsonschema must be >= 4 for the Draft 2020-12 validator.
+pyyaml
+jsonschema>=4
+pytest

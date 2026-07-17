@@ -10,7 +10,12 @@
 
 cd "$(git rev-parse --show-toplevel)" || exit 0
 
-PY="$(command -v python3 || command -v python)"
+# Prefer the project venv (created by `make setup`); fall back to system Python.
+if [ -x ".venv/bin/python" ]; then
+    PY=".venv/bin/python"
+else
+    PY="$(command -v python3 || command -v python)"
+fi
 [ -z "$PY" ] && exit 0
 
 if ! "$PY" tools/generate.py >/dev/null 2>&1; then
