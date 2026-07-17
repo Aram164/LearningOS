@@ -159,3 +159,23 @@ External materials live under `LearningOS/materials/`; code repositories under `
 ## 12. Migration protection
 
 During migration Claude must: create a complete inventory; preserve original paths in a migration map; retain originals until acceptance tests pass; avoid semantic rewriting; preserve attachments; record unresolved items; migrate the representative pilot (including the AML–SaD Master Wiring) before full conversion; make all phases independently reviewable and reversible.
+
+---
+
+## 13. Job quarantine (Aram's standing instruction, 2026-07-17)
+
+The folder **`Job/`** (sibling of `LearningOS/` at the semestercontext root —
+or wherever it lives after a folder move; it carries its own README marker)
+is **outside the default search space**. It holds the BIFOLD/DEEM job:
+the stratum repository, the job workspace, skrub notes, papers, onboarding
+plans.
+
+- Do **not** read, scan, index, cite or route anything into or out of `Job/`
+  during normal operation — not for retrieval, not for generation, not for
+  validation sweeps.
+- Access it **only** when Aram explicitly commands it in the conversation
+  ("scan the job folder", "look at stratum", "work on the job workspace").
+  The permission lasts for that task only.
+- Job knowledge deliberately does not appear in the registries or generated
+  views while quarantined. If job-relevant durable knowledge should enter the
+  canon, Aram says so explicitly.

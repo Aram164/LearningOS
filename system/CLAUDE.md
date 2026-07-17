@@ -159,3 +159,10 @@ External materials live under `LearningOS/materials/`; code repositories under `
 ## 12. Migration protection
 
 During migration Claude must: create a complete inventory; preserve original paths in a migration map; retain originals until acceptance tests pass; avoid semantic rewriting; preserve attachments; record unresolved items; migrate the representative pilot (including the AML–SaD Master Wiring) before full conversion; make all phases independently reviewable and reversible.
+
+---
+
+## 13. Job quarantine (Aram's standing instruction, 2026-07-17)
+
+See root `CLAUDE.md` §13 — the `Job/` folder (semestercontext root) is outside
+the default search space; access only on Aram's explicit command.
