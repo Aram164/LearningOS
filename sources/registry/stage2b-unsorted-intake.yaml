@@ -1,0 +1,148 @@
+# Stage-2b source partition — registration of the former materials/_unsorted/
+# dump (intake of Jul 17 2026). Partitioning does not change semantics (same
+# registry as sources/sources.yaml). Records are deliberately minimal: factual
+# identity + material URI only. Contextual evaluations are added later through
+# the normal review path (CLAUDE.md §4) — none are invented here.
+sources:
+  # ===================================================================== AML
+  - id: source-sutton-barto-rl
+    title: "Reinforcement Learning: An Introduction (2nd ed.)"
+    type: book
+    authors: [Richard S. Sutton, Andrew G. Barto]
+    year: 2018
+    url: http://incompleteideas.net/book/the-book.html
+    material: material://source-sutton-barto-rl
+
+  - id: source-zacharski-data-mining
+    title: A Programmer's Guide to Data Mining
+    type: book
+    authors: [Ron Zacharski]
+    url: http://guidetodatamining.com/
+    material: material://source-zacharski-data-mining
+
+  # =================================================================== Algo 2
+  - id: source-kleinberg-tardos
+    title: Algorithm Design
+    type: book
+    authors: [Jon Kleinberg, Éva Tardos]
+    year: 2006
+    material: material://source-kleinberg-tardos
+
+  # ================================================== Analysis — books
+  - id: source-rudin-principles
+    title: Principles of Mathematical Analysis (3rd ed.)
+    type: book
+    authors: [Walter Rudin]
+    year: 1976
+    material: material://source-rudin-principles
+
+  - id: source-ross-elementary-analysis
+    title: "Elementary Analysis: The Theory of Calculus (2nd ed.)"
+    type: book
+    authors: [Kenneth A. Ross]
+    year: 2013
+    material: material://source-ross-elementary-analysis
+
+  - id: source-thomas-calculus
+    title: "Thomas' Calculus: Early Transcendentals"
+    type: book
+    authors: [George B. Thomas, Joel Hass, Christopher Heil, Maurice D. Weir]
+    material: material://source-thomas-calculus
+
+  - id: source-labs-schreyer-mathe-informatiker
+    title: Mathematik für Informatiker (Teil 1–3)
+    type: book
+    authors: [Oliver Labs, Frank-Olaf Schreyer]
+    material: material://source-labs-schreyer-mathe-informatiker
+
+  - id: source-mfnf-analysis1
+    title: Mathe für Nicht-Freaks — Analysis 1 (Wikibook PDF)
+    type: book
+    organization: Mathe für Nicht-Freaks / Serlo
+    url: https://de.wikibooks.org/wiki/Mathe_für_Nicht-Freaks:_Analysis_1
+    material: material://source-mfnf-analysis1
+
+  # ================================================== Analysis — proof craft
+  - id: source-velleman-how-to-prove-it
+    title: How To Prove It — A Structured Approach
+    type: book
+    authors: [Daniel J. Velleman]
+    material: material://source-velleman-how-to-prove-it
+
+  - id: source-ohlbach-eisinger-beweise
+    title: Design Patterns für mathematische Beweise — Ein Leitfaden insbesondere für Informatiker
+    type: book
+    authors: [Hans Jürgen Ohlbach, Norbert Eisinger]
+    material: material://source-ohlbach-eisinger-beweise
+
+  # ============================================ Analysis — sheet collections
+  - id: source-analysis-grundlagen-handouts
+    title: Analysis-Grundlagen — gemischte Handouts (Mengen/Abbildungen, Relationen, Maths220 Proofs)
+    type: other
+    material: material://source-analysis-grundlagen-handouts
+
+  - id: source-analysis-drill-blaetter-extern
+    title: Analysis-Drillblätter mit Lösungen — externe Sammlung (KIT, IngMath, Tutorien u.a.)
+    type: other
+    material: material://source-analysis-drill-blaetter-extern
+
+  # ====================================================================== SaD
+  - id: source-swanson-principles-probability
+    title: The Principles of Probability — From Formal Logic to Measure Theory (Springer LNM 2384)
+    type: book
+    authors: [Jason Swanson]
+    material: material://source-swanson-principles-probability
+
+  # ============================================================== Programming
+  - id: source-progit
+    title: Pro Git (2nd ed.)
+    type: book
+    authors: [Scott Chacon, Ben Straub]
+    url: https://git-scm.com/book
+    material: material://source-progit
+
+  - id: source-hu-git-intro
+    title: HU Berlin — Intro to Git (course handout)
+    type: lecture
+    organization: HU Berlin
+    material: material://source-hu-git-intro
+
+  - id: source-automate-boring-stuff
+    title: Automate the Boring Stuff with Python
+    type: book
+    authors: [Al Sweigart]
+    url: https://automatetheboringstuff.com/
+    material: material://source-automate-boring-stuff
+
+  - id: source-pydata-handbook
+    title: Python Data Science Handbook (notebook edition)
+    type: book
+    authors: [Jake VanderPlas]
+    url: https://github.com/jakevdp/PythonDataScienceHandbook
+    material: material://source-pydata-handbook
+
+  - id: source-python-cheatsheets
+    title: Python/DS cheatsheet bundle (NumPy, Pandas, Scikit-Learn, Keras, DataCamp)
+    type: documentation
+    material: material://source-python-cheatsheets
+
+  - id: source-rust-book
+    title: The Rust Programming Language ("the book")
+    type: book
+    authors: [Steve Klabnik, Carol Nichols]
+    url: https://doc.rust-lang.org/book/
+    material: material://source-rust-book
+
+  - id: source-comprehensive-rust
+    title: Comprehensive Rust (Google Android team course)
+    type: course
+    organization: Google
+    url: https://google.github.io/comprehensive-rust/
+    material: material://source-comprehensive-rust
+
+  # ============================================================= Degree admin
+  - id: source-stupo-2015
+    title: StuPO 2015 MSc Computer Science (TU Berlin) + Modullisten SoSe 2026
+    type: documentation
+    organization: TU Berlin
+    material: material://source-stupo-2015
