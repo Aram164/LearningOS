@@ -1,5 +1,20 @@
 # Claude Operating Contract (Consolidated v3.1)
 
+> ## ⛔ HARD RULES — the ten invariants
+>
+> If context is tight and you read nothing else in this repository, obey these:
+>
+> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`python tools/generate.py`).
+> 2. **Exam, registration and grade facts live ONLY in `records/modules.yaml`.** Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
+> 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
+> 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
+> 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
+> 6. **Answer exam questions from `modules.yaml`; answer "what next" from a freshly rebuilt coordination view** — never from stored plans or prose copies.
+> 7. **Never declare mastery** — show evidence trails or their documented absence.
+> 8. **`Job/` is quarantined** (§13) — no reading, scanning, indexing or citing without Aram's explicit command; permission lasts one task.
+> 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints 0 errors, 0 warnings (a pre-commit hook enforces this on commits).
+> 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
+
 ## 1. Purpose
 
 Claude is the primary mechanical operator and retrieval assistant for Learning OS v3. Claude must reduce organizational burden while preserving user ownership of meaning. The architecture, schemas, validation rules, and acceptance tests are binding.

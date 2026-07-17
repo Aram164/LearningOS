@@ -1,0 +1,29 @@
+#!/bin/sh
+# Learning OS v3 — pre-commit gate (canonical copy: tools/hooks/pre-commit).
+#
+# Blocks the commit if the offline validator reports errors. Warnings are
+# printed but never block (mirrors validate.py semantics: FAIL = errors only).
+#
+# Install (once per clone):
+#   cp tools/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+#
+# Bypass (emergencies only, say why in the commit message):
+#   git commit --no-verify
+
+cd "$(git rev-parse --show-toplevel)" || exit 1
+
+PY="$(command -v python3 || command -v python)"
+if [ -z "$PY" ]; then
+    echo "pre-commit: no python found — commit blocked (install Python 3.10+ or use --no-verify)." >&2
+    exit 1
+fi
+
+"$PY" tools/validate.py --no-report
+STATUS=$?
+if [ $STATUS -ne 0 ]; then
+    echo "" >&2
+    echo "COMMIT BLOCKED: tools/validate.py reported errors (see above)." >&2
+    echo "Fix the canonical data, re-run python tools/validate.py, then commit again." >&2
+    exit $STATUS
+fi
+exit 0
