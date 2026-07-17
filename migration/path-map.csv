@@ -110,3 +110,8 @@ Masters-Planning/templates,archive/workspaces/2026/workspace-masters-planning-v2
 "Plans/Math/sad/SaD/notes/Teil 01.pdf",knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1+2.pdf (lossless qpdf split; original preserved in legacy),handwritten-attachment,stage2-closeout
 "Plans/Math/sad/SaD/notes/Teil 02.pdf",knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1+2.pdf (lossless qpdf split; original preserved in legacy),handwritten-attachment,stage2-closeout
 Plans/ML/mlprov/zitfCqCT,DELETED (identified 2026-07-17: truncated zip duplicate of the intact PPDS folder),corrupt-duplicate,stage2-closeout
+LearningOS/projects/ppds-mlprov (code),DELETED 2026-07-17 per Aram (GitHub Aram164/2026-ppds-mlprov-students-Aram-private @ dfb97c0 verified pushed; kept exercise PDF + submission zip),purge,post-cutover
+LearningOS/projects/amls-project (code),DELETED 2026-07-17 per Aram (GitHub Abdalla1423/amls-project @ a2ffc7f verified pushed; kept exercise PDF + uncommitted-changes patch),purge,post-cutover
+"legacy/Plans/crosscutting/seminar + archive/workspaces/2026/workspace-seminar-iug + materials/_unsorted/Seminar-reference",DELETED 2026-07-17 per Aram (module record module-hu-seminar-iug kept — grade pending; md deliverables recoverable from legacy git history; pptx/pdf gone),purge,post-cutover
+"legacy/Plans/ML/mlprov + archive/workspaces/2026/workspace-mlprov",DELETED 2026-07-17 per Aram,purge,post-cutover
+"workspace-job-deem + knowledge/notes/data-systems/note-skrub-* + materials/_unsorted/Job-papers + projects/stratum + legacy/Plans/crosscutting/job",Job/ (QUARANTINED — CLAUDE.md §13: scan only on explicit command),job-quarantine,post-cutover
