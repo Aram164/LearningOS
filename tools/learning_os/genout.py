@@ -29,9 +29,10 @@ def _md_header(title: str, generated_at: str) -> list[str]:
     return [
         f"# {title}",
         "",
-        "> ⚠️ GENERATED file — do not edit; edit canonical inputs instead. "
-        f"Rebuilt by `python tools/generate.py` (learning_os v{__version__}) from "
-        "canonical inputs: knowledge/, sources/, records/, work/.",
+        "> ⚠️ GENERATED file — a disposable VIEW over the canonical records, not "
+        "part of the canonical architecture. Never edit; edit canonical inputs "
+        f"instead. Rebuilt by `python tools/generate.py` (learning_os v{__version__}) "
+        "from: knowledge/, sources/, records/, work/.",
         f"> Generated: {generated_at}",
         "",
     ]
@@ -56,6 +57,11 @@ def _git_last_commit(root: Path, rel: str) -> str:
 
 # --------------------------------------------------------------------- build
 def build_manifest(repo: Repo, generated_at: str) -> dict:
+    """The COMPLETE machine-readable projection of the repository (ADR-001):
+    every canonical record (notes incl. attachments/evidence/contexts, concepts,
+    sources, modules incl. attempts, workspaces, coordination) plus all
+    relations. A consumer needing repository state should read this file, not
+    parse the tree."""
     records = []
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
         records.append({
@@ -64,8 +70,13 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "path": str(note.path.relative_to(repo.root)),
             "role": note.meta.get("role", "synthesis"),
             "state": note.meta.get("state"),
+            "authorship": note.meta.get("authorship"),
             "concepts": sorted(note.meta.get("concepts", []) or []),
             "sources": sorted(note.meta.get("sources", []) or []),
+            "contexts": sorted(note.meta.get("contexts", []) or []),
+            "attachments": list(note.meta.get("attachments", []) or []),
+            "evidence": list(note.meta.get("evidence", []) or []),
+            "supersedes": sorted(note.meta.get("supersedes", []) or []),
             "reviewed": note.meta.get("reviewed"),
         })
     for cid in sorted(repo.concepts):
@@ -90,12 +101,29 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
         records.append({
             "id": mid, "type": "module", "title": m.get("title", ""),
             "path": "records/modules.yaml", "status": m.get("status", ""),
+            "institution": m.get("institution"), "code": m.get("code"),
+            "credits": m.get("credits"), "semester": m.get("semester"),
+            "components": list(m.get("components", []) or []),
+            "examination": m.get("examination"),
+            "attempts": list(m.get("attempts", []) or []),
+            "grade": m.get("grade"),
         })
     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
         records.append({
             "id": ws.id, "type": "workspace", "title": ws.meta.get("title", ""),
             "path": str(ws.path.relative_to(repo.root)),
             "status": ws.status, "standing": ws.standing, "archived": ws.archived,
+            "deadline": ws.meta.get("deadline"),
+            "concepts": sorted(ws.meta.get("concepts", []) or []),
+            "notes": sorted(ws.meta.get("notes", []) or []),
+            "sources": sorted(ws.meta.get("sources", []) or []),
+        })
+    if repo.coordination is not None:
+        records.append({
+            "id": "coordination", "type": "coordination",
+            "path": "work/COORDINATION.md",
+            "sections": {h: (repo.coordination.section(h) or "")
+                         for h in ("Commitments", "Priorities", "Dependencies", "Deferrals")},
         })
     relations = [
         {"from": r.get("from"), "type": r.get("type"), "to": r.get("to"),
@@ -544,6 +572,99 @@ def build_coordination_view(repo: Repo, generated_at: str) -> str:
     return "\n".join(lines)
 
 
+PREREQ_TYPES = ("requires", "builds-on")
+
+
+def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> str:
+    """Concept/module dependency view (ADR-001): direct + transitive
+    prerequisites per concept, a layered study order over the prerequisite
+    subgraph, and the module -> workspace -> concept graph."""
+    prereqs: dict[str, set] = {}
+    for rel in repo.relations:
+        if rel.get("type") in PREREQ_TYPES:
+            prereqs.setdefault(str(rel["from"]), set()).add(str(rel["to"]))
+
+    def closure(cid: str) -> list[str]:
+        seen, stack = set(), sorted(prereqs.get(cid, ()))
+        while stack:
+            c = stack.pop()
+            if c in seen or c == cid:
+                continue
+            seen.add(c)
+            stack.extend(sorted(prereqs.get(c, ())))
+        return sorted(seen)
+
+    lines = _md_header("Dependency report", generated_at)
+    lines.append("*Prerequisite semantics = `requires` + `builds-on` edges from "
+                 "the relation registry. `motivates`/`applies-in`/`contrasts-with` "
+                 "edges are context, not prerequisites, and are excluded.*")
+    lines.append("")
+
+    lines.append("## Prerequisites per concept (direct → transitive)")
+    lines.append("")
+    for cid in sorted(repo.concepts):
+        direct = sorted(prereqs.get(cid, ()))
+        if not direct:
+            continue
+        label = repo.concepts[cid].get("label", cid)
+        lines.append(f"- **{label}** (`{cid}`)")
+        lines.append(f"  - direct: " + ", ".join(f"`{c}`" for c in direct))
+        trans = [c for c in closure(cid) if c not in direct]
+        if trans:
+            lines.append(f"  - transitive: " + ", ".join(f"`{c}`" for c in trans))
+    lines.append("")
+
+    # Layered study order (Kahn levels over the prerequisite subgraph)
+    lines.append("## Layered study order")
+    lines.append("")
+    lines.append("Concepts in the same layer are independent; every concept's "
+                 "prerequisites live in earlier layers. Concepts with no "
+                 "prerequisite edges in the registry are omitted unless someone "
+                 "depends on them.")
+    lines.append("")
+    involved = set(prereqs)
+    for deps in prereqs.values():
+        involved |= deps
+    remaining = dict((c, set(d for d in prereqs.get(c, ()) if d in involved))
+                     for c in involved)
+    layer_no = 0
+    while remaining:
+        ready = sorted(c for c, deps in remaining.items() if not deps)
+        if not ready:  # cycle guard — report and stop
+            lines.append(f"- ⚠️ cycle detected among: "
+                         + ", ".join(f"`{c}`" for c in sorted(remaining)))
+            break
+        layer_no += 1
+        labels = [f"`{c}`" for c in ready]
+        lines.append(f"- **Layer {layer_no}:** " + " · ".join(labels))
+        for c in ready:
+            remaining.pop(c)
+        for deps in remaining.values():
+            deps.difference_update(ready)
+    lines.append("")
+
+    lines.append("## Modules → workspaces → concepts")
+    lines.append("")
+    m2w = backlinks.get("module_to_workspaces", {})
+    for mid in sorted(repo.modules):
+        module = repo.modules[mid]
+        lines.append(f"- **{module.get('title', mid)}** (`{mid}`)")
+        wids = m2w.get(mid, [])
+        if not wids:
+            lines.append("  - (no workspace references it)")
+            continue
+        for wid in wids:
+            ws = repo.workspaces.get(wid)
+            if ws is None:
+                continue
+            cids = sorted(ws.meta.get("concepts", []) or [])
+            tail = (": " + ", ".join(f"`{c}`" for c in cids)) if cids else ""
+            state = "archived" if ws.archived else ws.status
+            lines.append(f"  - `{wid}` ({state}){tail}")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def build_health(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Health report", generated_at)
     lines.append("## Counts")
@@ -594,6 +715,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "source-index.md": build_source_index(repo, generated_at) + "\n",
         "module-view.md": build_module_view(repo, generated_at) + "\n",
         "coordination-view.md": build_coordination_view(repo, generated_at) + "\n",
+        "dependency-report.md": build_dependency_report(repo, backlinks, generated_at) + "\n",
         "reports/health.md": build_health(repo, generated_at) + "\n",
     }
 
