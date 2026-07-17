@@ -4,7 +4,7 @@ Plain-file knowledge repository for deep technical learning. Fresh Git repositor
 
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
 - **How the operator behaves:** `system/CLAUDE.md` (copied to root `CLAUDE.md`)
-- **Migration state:** `migration/` — currently: **Stage-1 pilot migrated (2026-07-17), awaiting user review** (`migration/pilot-report.md`; frozen gate: `system/PILOT-CRITERIA.md`). Stage 2 must not begin before approval.
+- **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed same day (`migration/final-report.md`). This repository is the operational root; the legacy `semestercontext/` tree is frozen history (banners point here).
 - **Legacy:** the frozen pre-v3 tree is `semestercontext/` (tag `pre-v3-baseline`); this folder is designed to be moved beside it after cutover.
 - **Roots:** materials → `../materials/` (`material://<source-id>/…` resolves there), code projects → `../projects/` — both outside the authored tree by design (materials move in Stage 2, Step 8).
 

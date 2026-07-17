@@ -1,0 +1,1494 @@
+Architecture of ML Systems (AMLS)
+01 Introduction and Overview
+Prof. Dr. Matthias Boehm
+
+Technische Universität Berlin
+Berlin Institute for the Foundations of Learning and Data
+Big Data Engineering (DAMS Lab)
+Last update: Apr 16, 2026
+
+Announcements / Org
+ #1 Hybrid & Video Recording
+
+ Hybrid lectures (in-person, zoom) with optional attendance
+https://tu-berlin.zoom.us/j/9529634787?pwd=R1ZsN1M3SC9BOU1OcFdmem9zT202UT09
+ Zoom video recordings, links from website
+https://mboehm7.github.io/teaching/ss26_amls/index.htm
+
+ #2 Course Registrations
+
+ TU Berlin ISIS registrations as of Apr 16
+ Bachelor/Master/PhD ratio? CS/others ratio?
+
+2
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+~315
+
+#3 Faculty IV - Team Awareness and Antidiscrimination
+https://www.tu.berlin/eecs/awan
+ Goal
+
+ Low-barrier approachability for spectrum of awareness and antidiscrimination issues
+
+ Team
+
+ Irene Hube-Achter (MTSV)
+ Matthias Boehm (professors)
+ Ceenu George (professors)
+ Nadine Karsten (scientific staff)
+ Tom Hersperger (students)
+
+ Mission Statement
+
+Contact: private email,
+eecs-TB-awareness@win.tu-berlin.de,
+or AwAn@dams.tu-berlin.de
+
+ Account for heterogeneity and complexity of modern societies at TU Berlin
+ #1 Treat all persons with fairness and respect
+ #2 Ensure a safe environment for all
+ #3 Comply with our duty of care towards others
+ #4 Actively support the implementation of the above guidelines and contribute
+
+3
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Agenda
+ FG Big Data Engineering (DAMS Lab)
+ Motivation and Goals
+ Course Organization and Logistics
+ Course Outline, and Projects
+ Apache SystemDS and DAPHNE
+
+4
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+FG Big Data Engineering (DAMS Lab)
+https://www.tu.berlin/dams
+
+5
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+About Me
+ Since 09/2022 TU Berlin, Germany
+
+ University professor for Big Data Engineering (DAMS)
+
+ 2018-2022 TU Graz, Austria
+
+ BMK endowed chair for data management + research area manager
+ Data management for data science (DAMS), SystemDS & DAPHNE
+
+ 2012-2018 IBM Research – Almaden, CA, USA
+ Declarative large-scale machine learning
+ Optimizer and runtime of Apache SystemML
+
+ 2007-2011 PhD TU Dresden, Germany
+
+ Cost-based optimization of integration flows
+ Time series forecasting / in-memory indexing & query processing
+
+6
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+DB group
+
+FG Big Data Engineering (DAMS Lab) – Teaching
+Architecture of
+Database Systems
+(ADBS, WS)
+
+Master
+Bachelor
+Intro to Scientific
+Methods (WS)
+
+7
+
+DB system
+internals
++ prog. project
+
+Successfully Established TUB
+Teaching Portfolio (modules, slides)
+
+Architecture of
+ML Systems
+(AMLS,
+(AMLS,SoSe)
+SS)
+
+ML system internals,
+data science lifecycle
++ prog. project
+
+Data Integration and
+Large-Scale Analysis
+(DIA,WiSe)
+WS)
+(DIA,
+
+Distributed
+Data Management
+
+Data Management /
+Databases
+(DM, SS+WS)
+
+Data management from
+user/application perspective
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+PR Project
+ML Systems
+(PMLS, WiSe)
+
+SE Joint ML and DM
+(MLDM, SoSe+WiSe)
+SE/PR Large-scale
+Data Engineering
+(LDE, SoSe+WiSe)
+PP Prog.-Practicals
+Data Systems
+(PPDS, SoSe+WiSe)
+
+Motivation and Goals
+
+8
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Example ML Applications (Past/Present)
+ Transportation / Space
+
+ Lemon car detection and reacquisition (classification, seq. mining)
+ Airport passenger flows from WiFi data (time series forecasting)
+ Data analysis for driving assistance (blind spot detection, emergency braking, lane centering)
+ Automotive vehicle development (ML-assisted simulations, hyper-parameter tuning, ejector optimization)
+ Earth observation and local climate zone classification and monitoring, reproducibility, compression
+
+ Finance
+
+ Insurance claim cost per customer (model selection, regression)
+ Financial analysts survey correlation (bivariate stats w/ new tests)
+
+ Health Care
+
+ Breast / lunch / stomach cancer from histopathology images (classification)
+ Glucose trends and warnings (clustering, classification)
+ Emergency room diagnosis / patient similarity (classification, clustering)
+ Patient survival analysis and prediction (Cox regression, Kaplan-Meier)
+
+9
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+A Car Reacquisition Scenario
+Features
+Warranty
+Claims
+
+Repair
+History
+
+Diagnostic
+Readouts
+
+10
+
+Labels
+
+Machine
+Learning
+Algorithm
+
+• Class skew
+• Low precision
+
+Algorithm
+
+Predictive
+Models
+
+ 25x
+improved precision
+
+Algorithm
+
+Algorithm
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
++ custom loss functions
++ hyper-parameter tuning
+
+Example ML Applications
+ Production/Manufacturing
+
+ Paper and fertilizer production (regression/classification, anomalies)
+ Semiconductor manufacturing (ion beam tuning, process families), and material degradation (survival analysis)
+ Mixed waste stream sorting and recycling (composition, alignment, quality)
+
+ Other Domains
+
+ Machine data: errors and correlation (bivariate stats, seq. mining)
+ Smart grid: energy demand/RES supply, weather models (forecasting)
+
+ Information Extraction
+
+ NLP contracts  rights/obligations (classification, error analysis)
+ PDF table recognition and extraction, OCR (NMF clustering, custom)
+ Learning explainable linguistic expressions (learned FOL rules, classification)
+
+ Algorithm Research (+ various state-of-the art algorithms)
+
+ User/product recommendations via various forms of NMF; word-embeddings via orthogonalized skip-gram
+ Localized, supervised metric learning (dim reduction and classification)
+
+11
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+What is an ML System?
+
+ML Applications
+(entire KDD/DS
+lifecycle)
+
+Statistics
+
+Runtime Techniques
+(Execution, Data Access)
+
+Data
+Mining
+
+Machine
+Learning
+(ML)
+
+Rapidly Evolving
+ML System
+
+Distributed
+Systems
+Data
+Management
+Operating
+Systems
+12
+
+Classification
+Regression
+Recommenders
+Clustering
+Dim Reduction
+Neural Networks
+
+Accelerators
+HW
+Architecture
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Compilation
+Techniques
+HPC
+Prog.
+Language
+Compilers
+
+What is an ML System?, cont.
+ ML System
+
+ Narrow focus: SW system that executes ML applications
+ Broad focus: Entire system (HW, compiler/runtime, ML application)
+Trade-off runtime/resources vs accuracy
+Early days: no standardizations (except some exchange formats), lots of different languages and system
+architectures, but many shared concepts
+
+ Course Objectives
+
+ Architecture and internals of modern (large-scale) ML systems
+ Microscopic view of ML system internals
+ Macroscopic view of ML pipelines and data science lifecycle
+ #1 Understanding of characteristics  better evaluation / usage
+ #2 Understanding of effective techniques  build/extend ML systems
+
+13
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Course Organization and Logistics
+
+14
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Basic Course Organization
+ Staff
+
+ Lecturer: Prof. Dr. Matthias Boehm
+ Teaching Assistants: M.Sc. Jannik Lindemann (projects/exercises)
+
+ Language
+
+ Lectures and slides: English
+ Communication and examination: English/German
+
+ Course Format
+
+ TU Berlin: VL+UE 3+2 SWS, 6 ECTS (3x 1 ECTS + 2x 1.5 ECTS), master / TU Graz: VU 3 SWS, 5 ECTS
+ Weekly lectures (start 4.15pm sharp, including Q&A), attendance optional
+ Mandatory programming project or exercises (~3 ECTS)
+ Recommended papers for additional reading on your own
+
+ Prerequisites (preferred)
+
+ Basic courses: data management/databases, distributed systems, applied ML
+ Completed bachelor (not mandatory)
+
+15
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Course Logistics
+ Website
+
+ https://mboehm7.github.io/teaching/ss26_amls/index.htm
+ All course material (lecture slides) and dates
+
+ Video Recording / Live Streaming Lectures (zoom)
+ Communication
+
+ Informal language (first name is fine)
+ Please, immediate feedback (unclear content, missing background)
+ ISIS forum for offline questions, after lecture, and via email/PR discussions
+ Office hours: Tue 3pm-4.30pm (Jannik in FR 772) or after lecture
+
+ Exam
+
+ Completed project / exercise (checked by me/staff, no plagiarism incl *-GPT)
+ Final exam (written exam, if >70 students take the exam)
+ Grading (project/exercises completion, 100% exam)  +5 exam points if exercises >=90 points
+
+16
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Course Logistics, cont.
+ Course Applicability TU Berlin
+
+ Master programs computer engineering, computer science, electrical engineering,
+information systems management
+ Area Data and Software Engineering
+ Area Cognitive Systems
+ Area Distributed Systems
+
+ Course Applicability TU Graz (remote – offered in exceptions)
+
+ Master programs computer science (CS), as well as software engineering and management (SEM)
+ Catalog Data Science (compulsory course in major, and elective)
+ Catalog Machine Learning (elective course)
+ Catalog Interactive and Visual Information Systems (elective course)
+ Catalog Software Technology (elective course)
+ PhD CS doctoral school list of courses
+
+ Free subject course in any other study program
+17
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Outline and Projects
+Created SoSe 2019, partially based on
+[Matthias Boehm, Arun Kumar, Jun Yang: Data Management
+in Machine Learning Systems. Synthesis Lectures on Data
+Management, Morgan & Claypool Publishers 2019]
+
+18
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Major updates in
+SoSe 2020 – SoSe 2025
+
+Part A: Overview and ML System Internals
+ 01 Introduction and Overview [Apr 16]
+
+B
+A
+
+T-shaped
+course
+layout
+
+ 02 Languages, Architectures, and System Landscape [Apr 23]
+ 03 Size Inference, Rewrites, and Operator Selection [Apr 30]
+ 04 Operator Fusion and Runtime Adaptation [May 07]
+ 05 Data- and Task-Parallel Execution [May 21]
+ 06 Parameter Servers [May 28]
+ 07 LLM Training and Inference [Jun 04]
+ 08 Hybrid Execution and HW Accelerators [Jun 11]
+ 09 Caching, Partitioning, Indexing, and Compression [Jun 18]
+
+19
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Ascension Day
+May 14
+
+Part B: ML Lifecycle Systems
+ 10 Data Acquisition, Cleaning, and Preparation [Jun 25]
+ 11 Model Selection and Management [Jul 02]
+ 12 Model Debugging, Fairness, and Explainability [Jul 09]
+ 13 Model Serving Systems and Techniques [Jul 16]
+ Incl Q&A and Exam Preparation
+
+ Planned Written Exams
+
+ Thu Jul 23, 4pm (in ???)
+ Thu Aug 06, 4pm (in ???)
+ Thu Aug 27, 4pm (in ???)
+
+20
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+B
+A
+
+T-shaped
+course
+layout
+
+Programming Projects
+ Open-Source Projects
+
+ Programming project in context of open-source projects
+ Apache SystemDS: https://github.com/apache/systemds
+ DAPHNE: https://github.com/daphne-eu/daphne
+ TerseTS: https://github.com/cmcuza/TerseTS
+ Other OSS projects possible, but harder to merge PRs
+ Commitment to open source and open communication (PRs, mailing list)
+ Remark: Don’t be afraid to ask questions / develop code in public
+
+ Objectives
+
+ Non-trivial feature in an ML system (3 ECTS  75-90 hours)
+ OSS processes: Break down into subtasks, code/tests/docs,
+1+ pull-requests per project, code review, incorporate comments, etc
+
+ Team
+
+ Individuals or up to three-person teams (w/ separated responsibilities)
+
+21
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Lists of projects
+available on website
+
+Project/Exercise Selection
+by Apr 30 EOD:
+https://forms.gle/acG4KZ1uk
+GofesYu8
+
+Alternative Exercise (published: Apr 15, submission: Jul 15)
+ Task: AI Image Detection
+
+ Task Description: https://mboehm7.github.io/
+teaching/ss26_amls/AMLS_2026_Exercise.pdf
+ Data Exploration (15): data acquisition,
+data characteristics, basic data cleaning
+ Modeling (35): train models under time budget,
+while ensuring that the FPR is <=20%
+ Data Augmentation and Feature Engineering (30)
+ Explainability (20): reasons for predictions and errors
+
+[derived from the Defactify and MS COCO datasets]
+
+ Objectives
+
+ End-to-end development of an ML pipeline for AI image detection
+ Handle data exploration, modeling and tuning, data augmentation, and explanations
+
+ Team
+
+ Individuals or up to three-person teams (w/ separated responsibilities)
+
+22
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Apache SystemDS and DAPHNE
+
+https://github.com/apache/systemds
+
+23
+
+https://github.com/daphne-eu/daphne
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Apache SystemDS: A Declarative ML System
+for the End-to-End Data Science Lifecycle
+https://github.com/apache/systemds
+
+24
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Landscape of ML Systems
+ Existing ML Systems
+
+ #1 Numerical computing frameworks
+ #2 ML Algorithm libraries (local, large-scale)
+ #3 Linear algebra ML systems (large-scale)
+ #4 Deep neural network (DNN) frameworks
+ #5 Model management, and deployment
+
+ Exploratory Data-Science Lifecycle
+
+ Open-ended problems w/ underspecified objectives
+ Hypotheses, data integration, run analytics
+ Unknown value  lack of system infrastructure
+ Redundancy of manual efforts and computation
+
+ Data Preparation Problem
+
+“Take these datasets
+and show value or
+competitive advantage”
+
+ 80% Argument: 80-90% time for finding, integrating, cleaning data
+ Diversity of tools  boundary crossing, lack of optimization
+
+25
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+[NIPS 2015]
+[DEBull 2018]
+
+The Data Science Lifecycle
+(aka KDD Process, aka CRISP-DM)
+Data extraction, schema alignment, entity
+resolution, data validation, data cleaning, outlier
+detection, missing value imputation, semantic type
+detection, data augmentation, feature selection,
+feature engineering, feature transformations
+
+Data Integration
+Data Cleaning
+Data Preparation
+
+Data
+Scientist
+
+Model Selection
+Training
+Hyper-parameters
+
+Key observation: SotA data
+integration/cleaning based on ML
+
+Validate & Debug
+Deployment
+Scoring & Feedback
+
+Exploratory Process
+(experimentation, refinements, ML pipelines)
+Data/SW
+Engineer
+26
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+DevOps
+Engineer
+
+Apache SystemDS [https://github.com/apache/systemds]
+APIs: Command line, JMLC, Python
+Spark MLContext, Spark ML,
+(Scalable Algorithms + Primitives)
+
+DML Scripts
+Language
+
+Compiler
+[SIGMOD’15,’17,’19,’21abc,’23abc,’24ab]
+[PVLDB’14,’16ab,’18,’22]
+[ICDE’11,’12,’15]
+Runtime
+[EDBT’25][BTW’25ab]
+[CIDR’17,’20]
+Write Once,
+[VLDBJ’18]
+Run Anywhere
+[CIKM’22]
+In-Memory Single Node
+[DEBull’14]
+[PPoPP’15]
+(scale-up)
+
+07/2020 Renamed to Apache SystemDS
+05/2017 Apache Top-Level Project
+11/2015 Apache Incubator Project
+08/2015 Open-Source Release
+
+Hadoop or Spark Cluster
+(scale-out)
+
+Federated
+(LA progs, PS)
+
+In-Progress:
+Others:
+Netezza
+Apache Flink
+27
+
+GPU
+
+Matthias
+Boehm
+| FG DAMS | AMLS
+SoSe
+2026 – 01 Introduction and since
+Overview
+2010/11
+since
+2014/16
+since
+2012
+
+since 2019
+
+since 2015
+
+Language Abstractions and APIs
+ Example:
+Stepwise
+Linear
+Regression
+
+User Script
+
+Built-in Functions
+
+X = read(‘features.csv’)
+Y = read(‘labels.csv’)
+[B,S] = steplm(X, Y,
+icpt=0, reg=0.001)
+write(B, ‘model.txt’)
+
+m_lmCG = function(...) {
+m_steplm = function(...) {
+while( i<maxi&nr2>tgt ) {
+while( continue ) {
+q = (t(X) %*% (X %*% p))
+parfor( i in 1:n ) {
++ lambda * p
+if( !fixed[1,i] ) {
+beta
+= ... }
+Xi = cbind(Xg, X[,i])
+}
+B[,i] = lm(Xi, y, ...)
+} }
+# add best to Xg
+m_lm = function(...) {
+# (AIC)
+if( ncol(X) > 1024 )
+Linear
+} }
+B = lmCG(X, y, ...)
+Algebra
+else
+Feature
+B = lmDS(X, y, ...)
+Programs
+}
+Selection
+
+Facilitates optimization
+across data science
+lifecycle tasks
+
+28
+
+Data Independence + Impl-Agnostic Ops
+ “Separation of Concerns”
+
+ML
+Algorithms
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+m_lmDS = function(...) {
+l = matrix(reg,ncol(X),1)
+A = t(X) %*% X + diag(l)
+b = t(X) %*% y
+beta = solve(A, b) ...}
+
+Basic HOP and LOP DAG Compilation
+LinregDS (Direct Solve)
+X = read($1);
+Scenario:
+y = read($2);
+X: 108 x 103, 1011
+intercept = $3;
+y: 108 x 1, 108
+lambda = 0.001;
+...
+if( intercept == 1 ) {
+ones = matrix(1, nrow(X), 1);
+X = append(X, ones);
+}
+I = matrix(1, ncol(X), 1);
+A = t(X) %*% X + diag(I)*lambda;
+b = t(X) %*% y;
+beta = solve(A, b);
+...
+write(beta, $4);
+
+ Hybrid Runtime Plans:
+• Size propagation / memory estimates
+• Integrated CP / Spark runtime
+• Dynamic recompilation during runtime
+
+29
+
+HOP DAG
+
+(after rewrites)
+16MB
+CP b(+)
+
+172KB
+CP r(diag)
+
+Cluster Config:
+• driver mem: 20 GB
+• exec mem: 60 GB
+
+8KB
+CP write
+8MB
+CP b(solve)
+1.6TB
+ba(+*) SP
+
+ba(+*) 800GB
+
+1.6TB
+SP r(t)
+
+8KB
+CP dg(rand)
+
+(103x1,103)
+
+SP
+
+y 800MB
+X 800GB
+(108x103,1011) (108x1,108)
+
+16KB
+
+LOP DAG
+
+r’(CP)
+
+(after rewrites)
+800MB
+1.6GB
+
+r’(CP)
+y
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+mapmm(SP)
+
+tsmm(SP)
+
+ Distributed Matrices
+• Fixed-size matrix blocks
+• Data-parallel operations
+X1,1
+
+X
+
+X2,1
+
+(persisted in
+MEM_DISK)
+
+Xm,1
+
+Static and Dynamic Rewrites
+ Example Static Rewrites (size-independent)
+ Common Subexpression Elimination
+ Constant Folding / Branch Removal /
+Block Sequence Merge
+ Static Simplification Rewrites
+ Right/Left Indexing Vectorization
+ For Loop Vectorization
+ Spark checkpoint/repartition injection
+
+ Example Dynamic Rewrites (size-dependent)
+ Dynamic Simplification Rewrites
+ Matrix Mult Chain Optimization
+
+Sparsity Estimation
+& Sparse DP Enum
+[SIGMOD’19]
+
+30
+
+trace(X%*%Y)  sum(X*t(Y))
+
+O(n3)
+
+Y
+
+O(n2)
+
+X
+
+X
+
+
+
+* Y
+
+┬
+
+sum(λ*X)  λ*sum(X)
+sum(X+Y)  sum(X)+sum(Y)
+rowSums(X)  X, iff ncol(X)=1
+sum(X^2)  X%*%t(X), iff ncol(X)=1
+
+t(X)
+X
+1kx1k 1kx1k
+2,002 MFLOPs
+
+Z
+1
+
+
+
+t(X)
+1kx1k
+
+X
+1kx1k
+4 MFLOPs
+
+Size propagation and sparsity estimation
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+p
+1
+
+> 500K tests
+> 10K DSL tests
+
+Apache SystemDS Architecture [CIDR’20]
+1 APIs
+
+Command
+Line
+
+2 Compiler
+
+JMLC
+
+Python, R, and Java
+Language Bindings
+
+ML Context
+
+Parser/Language (syntactic/semantic)
+High-Level Operators (HOPs)
+
+Built-in
+Functions for
+entire Lifecycle
+
+Low-Level Operators (LOPs)
+
+3 Control Program
+Recompiler
+
+4
+
+Runtime
+Program
+
+Lineage & Reuse Cache
+
+Optimizations
+(e.g., IPA, rewrites,
+operator ordering,
+operator selection,
+codegen)
+
+ParFor
+Optimizer/Runtime
+CP
+Inst.
+
+GPU
+Inst.
+
+Parameter
+Server
+
+Spark
+Inst.
+
+Federated
+Inst.
+
+Buffer Pool
+Mem/FS
+I/O
+
+31
+
+Codegen
+I/O
+
+DFS
+I/O
+
+TensorBlock Library
+(single/multi-threaded, different value types,
+homogeneous/heterogeneous tensors)
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Data Cleaning Pipelines [SIGMOD’24, TODS’26]
+ Automatic Generation of Cleaning Pipelines
+
+ Library of robust, parameterized data cleaning primitives
+ Enumeration of DAGs of primitives & hyper-parameter optimization (evolutionary, HB)
+Data
+Samples
+
+Logical
+Physical
+
+Target
+App
+
+PP1
+
+Rules/Objectives
+
+O
+
+PPn
+
+PP1
+
+32
+
+…
+
+Top-k
+Pipelines
+
+LPn
+PP1
+
+PPn
+
+…
+
+PPn
+
+Outlier Detection  MVI  Deduplication  Resolve Mislabels
+P1: gmm  imputeFD  mergeDup  delML
+
+University
+TU Graz
+TU Graz
+TU Graz
+IIT
+IIT
+IIT
+IIT
+SIBA
+SIBA
+SIBA
+
+…
+
+LP2
+
+LP1
+…
+
+Data- and Task-parallel
+Computation
+
+Country
+Austria
+Austria
+Germany
+India
+IIT
+Pakistan
+India
+Pakistan
+null
+null
+
+University
+TU Graz
+TU Graz
+TU Graz
+IIT
+IIT
+IIT
+IIT
+SIBA
+SIBA
+SIBA
+
+Country
+Austria
+Austria
+Austria
+India
+India
+India
+India
+Pakistan
+Pakistan
+Pakistan
+
+Debugging
+
+Pn: outlierBySd mice  delDup  voting
+A
+0.77
+0.96
+0.66
+0.23
+0.91
+0.21
+0.31
+0.75
+null
+0.19
+0.64
+
+B
+0.80
+0.12
+0.09
+0.04
+0.02
+0.38
+null
+0.21
+null
+0.61
+0.31
+
+C
+1
+1
+null
+17
+17
+17
+17
+20
+20
+20
+20
+
+D
+1
+1
+1
+1
+null
+1
+1
+1
+1
+1
+1
+
+Matthias Boehm | FG
+DAMS
+| AMLS SoSeAfter
+2026 imputeFD(0.5)
+– 01 Introduction and Overview
+Dirty Data
+Dirty
+Data
+
+A
+0.77
+0.96
+0.66
+0.23
+0.91
+0.21
+0.31
+0.75
+0.41
+0.19
+0.64
+
+B
+0.80
+0.12
+0.09
+0.04
+0.02
+0.38
+0.29
+0.21
+0.24
+0.61
+0.31
+
+C
+1
+1
+17
+17
+17
+17
+17
+20
+20
+20
+20
+
+After MICE
+
+D
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+
+SliceLine for Model Debugging [SIGMOD’21b, BTW’25b]
+ Problem Formulation
+
+ Intuitive slice scoring function
+ Exact top-k slice finding
+ 𝑆𝑆 ≥ 𝜎𝜎 ∧ 𝑠𝑠𝑠𝑠 𝑆𝑆 > 0, 𝛼𝛼 ∈ (0,1]
+
+ Properties & Pruning
+
+[Credit: sliceline,
+Silicon Valley, HBO]
+
+𝑠𝑠𝑐𝑐
+
+=
+
+=
+
+𝛼𝛼
+
+𝛼𝛼
+
+𝑒𝑒(𝑆𝑆)
+̅
+− 1 − 1 − 𝛼𝛼
+𝑒𝑒(𝑋𝑋)
+̅
+
+𝑋𝑋
+−1
+𝑆𝑆
+
+|𝑆𝑆|
+𝑋𝑋 ∑𝑖𝑖=1 𝑒𝑒𝑠𝑠𝑖𝑖
+− 1 − 1 − 𝛼𝛼
+⋅
+𝑆𝑆 ∑|𝑋𝑋| 𝑒𝑒𝑖𝑖
+𝑖𝑖=1
+
+slice error
+
+ Monotonicity of slice sizes, errors
+ Upper bound sizes/errors/scores
+ pruning & termination
+
+ Linear-Algebra-based Slice Finding
+
+𝑋𝑋
+−1
+𝑆𝑆
+
+slice size
+
+𝑙𝑙
+
+𝑂𝑂(2 − �
+
+ Recoded/binned matrix X, error vector e
+ Vectorized implementation in linear algebra (join & eval via sparse-sparse matmult)
+ Local and distributed task/data-parallel execution
+
+33
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+𝑚𝑚
+
+2𝑑𝑑𝑗𝑗 + 𝑙𝑙 + 𝑚𝑚)
+
+𝑗𝑗=1
+
+Multi-level Lineage Tracing & Reuse [CIDR’20, SIGMOD’21a,
+EDBT’25]
+
+ Lineage as Key Enabling Technique
+
+ Trace lineage of ops (incl. non-determinism), dedup for loops/funcs
+ Model versioning, data reuse, incr. maintenance, autodiff, debugging
+
+ Full Reuse of Intermediates
+
+ Before executing instruction, probe output lineage in cache
+Map<Lineage, MatrixBlock>
+ Cost-based/heuristic caching and eviction decisions
+(compiler-assisted)
+
+for( i in 1:numModels )
+R[,i] = lm(X, y, lambda[i,], ...)
+m_lmDS = function(...) {
+l = matrix(reg,ncol(X),1)
+A = t(X) %*% X + diag(l)
+b = t(X) %*% y
+beta = solve(A, b) ...}
+
+ Partial Reuse of Intermediates
+
+ Problem: Often partial result overlap
+ Reuse partial results via dedicated rewrites (compensation plans)
+ Example: steplm
+
+ Extensions: multi-backend (Local, GPU, Spark),
+unified memory management
+34
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+X
+m>>n
+t(X)
+
+m_steplm = function(...) {
+while( continue ) {
+parfor( i in 1:n ) {
+if( !fixed[1,i] ) {
+Xi = cbind(Xg, X[,i])
+B[,i] = lm(Xi, y, ...)
+} }
+# add best to Xg (AIC)
+} }
+
+Compressed Linear Algebra Extended [PVLDB’16a, VLDBJ’18, SIGMOD’23a,
+PVLDB’26a]
+
+ Lossless Matrix Compression
+
+ Improved general applicability (adaptive compression time,
+new compression schemes, new kernels, intermediates, workload-aware)
+ Sparsity  Redundancy exploitation
+(data redundancy, structural redundancy)
+
+ Workload-aware Compression
+ Workload summary
+ compression
+ Compressed Representation
+ execution planning
+
+ BWARE: Compressed Feature Engineering
+ Frame compression, compressed I/O
+ Compressed feature transformations
+ Morphing of compressed data
+
+35
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Federated Learning [SIGMOD’21c, CIKM’22]
+ Federated Backend
+
+ Federated data (matrices/frames) as meta data objects
+ Federated linear algebra, (and federated parameter server)
+
+X = federated(addresses=list(node1, node2, node3),
+ranges=list(list(0,0), list(40K,70), ..., list(80K,0), list(100K,70)));
+
+Federated Requests:
+READ, PUT, GET, EXEC_INST,
+EXEC_UDF, CLEAR
+ Design Simplicity:
+(1) reuse instructions
+(2) federation hierarchies
+
+36
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+DAPHNE: An Open and Extensible System Infrastructure
+for Integrated Data Analysis Pipelines
+https://github.com/daphne-eu/daphne
+
+37
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Motivation
+
+ DAPHNE Overall Objective:
+Open and extensible system infrastructure
+
+ Integrated Data Analysis Pipelines
+
+ Open data formats, query processing
+ Data preprocessing and cleaning
+ ML model training and scoring
+ HPC, custom codes, and simulations
+
+ Hardware Challenges
+
+ DM+ML+HPC share compilation
+and runtime techniques /
+converging cluster hardware
+ End of Dennard scaling:
+P = α CFV2 (power density 1)
+ End of Moore’s law
+ Amdahl’s law: sp = 1/s
+ Increasing Specialization
+
+38
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+DAPHNE Use Cases
+ DLR Earth Observation
+
+[Xiao Xiang Zhu et al: So2Sat LCZ42: A Benchmark
+Dataset for the Classification of Global Local Climate
+Zones. GRSM 8(3) 2020]
+[So2Sat LC42: https://mediatum.ub.tum.de/1454690]
+
+ ESA Sentinel-1/2 datasets  4PB/year
+ Training of local climate zone classifiers on So2Sat LCZ42
+(15 experts, 400K instances, 10 labels each, 85% confidence, ~55GB H5)
+ ML pipeline: preprocessing, ResNet20,
+climate models
+
+ IFAT Semiconductor Ion Beam Tuning
+ KAI Semiconductor Material Degradation
+ AVL Vehicle Development Process (ejector geometries, KPIs)
+ ML-assisted simulations, data cleaning, augmentation
+39
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+DAPHNE System Architecture [CIDR’22]
+
+Python API w/ lazy evaluation
+
+LLVM
+
+40
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+AH
+AK
+
+MLIR Dialects,
+Extension Catalog
+(new data types,
+kernels,
+scheduling algs)
+Sideways Entry,
+DSL-level
+constraints
+(e.g., data/op
+placement)
+
+Vectorized (Tiled) Execution
+
+41
+
+Default Parallelization
+Frame & Matrix Ops
+
+Locality-aware,
+Multi-device Scheduling
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+Fused Operator Pipelines
+on Tiles/Scalars + Codegen
+
+Summary & QA
+ FG Big Data Engineering (DAMS Lab)
+
+Thanks
+
+ Motivation and Goals
+ Course Organization and Logistics
+ Course Outline, and Projects
+ Apache SystemDS and DAPHNE
+
+Programming Projects in
+SystemDS/DAPHNE, or Alternative Exercise
+Project/Exercise Selection by Apr 30 EOD:
+
+https://forms.gle/acG4KZ1ukGofesYu8
+
+ Next Lectures (Part A)
+
+ 02 Languages, Architectures, and System Landscape [Apr 23]
+ 03 Size Inference, Rewrites, and Operator Selection [Apr 30]
+ 04 Operator Fusion and Runtime Adaptation [May 07]
+ 05 Data- and Task-Parallel Execution [May 21]
+ 06 Parameter Servers [May 28]
+ 07 LLM Training and Inference [Jun 04]
+
+42
+
+Matthias Boehm | FG DAMS | AMLS SoSe 2026 – 01 Introduction and Overview
+
+
