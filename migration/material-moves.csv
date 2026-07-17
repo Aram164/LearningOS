@@ -1,0 +1,90 @@
+old_path,new_path
+Plans/ML/foundations/AML/SoSe 2026/lecture slides,LearningOS/materials/source-aml-ss26-lectures/lecture-slides
+Plans/ML/foundations/AML/SoSe 2026/Exercise slides,LearningOS/materials/source-aml-ss26-lectures/exercise-slides
+Plans/ML/foundations/AML/SoSe 2026/Bonus-exercises,LearningOS/materials/source-aml-ss26-lectures/bonus-exercises
+Plans/ML/foundations/AML/SoSe 2026/Primer_Linear_Algebra.pdf,LearningOS/materials/source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
+Plans/ML/foundations/AML/older lecture slides,LearningOS/materials/source-aml-ss26-lectures/older-lecture-slides
+Plans/ML/foundations/AML/CS4780-homeworks,LearningOS/materials/source-cs4780-homeworks
+Plans/ML/foundations/AML/Bücher/Introduction to Statistical Learning .pdf,LearningOS/materials/source-islp/islp.pdf
+Plans/ML/foundations/AML/Bücher/the elements of statistical learning .pdf,LearningOS/materials/source-esl/esl.pdf
+Plans/ML/foundations/AML/Bücher/probabilistic ML.pdf,LearningOS/materials/source-murphy-pml1/pml1.pdf
+Plans/ML/foundations/AML/Bücher/Probabilistic-ML-solutions-public.pdf,LearningOS/materials/source-murphy-pml1/solutions-public.pdf
+Plans/ML/foundations/AML/Bücher/CS229 Lecture Notes.pdf,LearningOS/materials/source-cs229-notes/cs229-notes.pdf
+Plans/ML/foundations/AML/Bücher/Data Science and Machine Learning.pdf,LearningOS/materials/source-kroese-dsml/kroese.pdf
+Plans/ML/foundations/AML/Bücher/Machine Learning and Data Mining Lecture Notes CSC 411:D11 Computer Science Department University of Toronto.pdf,LearningOS/materials/source-csc411-notes/csc411.pdf
+Plans/ML/foundations/AML/Bücher/Sutton-Barto_Reinforcement-Learning_2ed.pdf,LearningOS/materials/_unsorted/AML-Buecher/Sutton-Barto_Reinforcement-Learning_2ed.pdf
+Plans/ML/foundations/AML/Bücher/Zacharski_Programmers-Guide-to-Data-Mining.pdf,LearningOS/materials/_unsorted/AML-Buecher/Zacharski_Programmers-Guide-to-Data-Mining.pdf
+Plans/ML/systems/AMLS/learningcontent/Lecture-slides,LearningOS/materials/source-amls-ss26-lectures/lecture-slides
+Plans/ML/systems/AMLS/learningcontent/Buecher/MLSysBook-Vol1-2026.pdf,LearningOS/materials/source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf
+Plans/ML/systems/AMLS/learningcontent/Buecher/MLSysBook-Vol2-AtScale-2026.pdf,LearningOS/materials/source-mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf
+Plans/ML/systems/AMLS/learningcontent/Buecher/Designing Machine Learning Systems.pdf,LearningOS/materials/source-huyen-dmls/designing-ml-systems.pdf
+Plans/ML/systems/AMLS/learningcontent/Buecher/Hands-on-Machine-Learning.pdf,LearningOS/materials/source-geron-handson/geron.pdf
+Plans/ML/systems/AMLS/learningcontent/Buecher/Intro-Machine-Learning-Systems.pdf,LearningOS/materials/_unsorted/AMLS-Buecher/Intro-Machine-Learning-Systems.pdf
+Plans/ML/systems/AMLS/learningcontent/notes/arch.txt,LearningOS/repository/work/active/workspace-amls-exam-prep/scratch/arch.txt (copy)
+Plans/ML/systems/AMLS/learningcontent/notes/intro.txt,LearningOS/repository/work/active/workspace-amls-exam-prep/scratch/intro.txt (copy)
+Plans/ML/systems/AMLS/papers,LearningOS/materials/_unsorted/AMLS-papers
+Plans/Math/sad/SaD/Lecture-slides,LearningOS/materials/source-sad-ss26-lectures/lecture-slides
+Plans/Math/sad/SaD/Exercise-slides,LearningOS/materials/source-sad-ss26-lectures/exercise-slides
+Plans/Math/sad/SaD/SaD-2025,LearningOS/materials/source-sad-2025-recordings
+Plans/Math/sad/SaD/Books/Statistik.pdf,LearningOS/materials/source-fahrmeir-statistik/statistik.pdf
+Plans/Math/sad/SaD/Books/Arbeitsbuch Statistik.pdf,LearningOS/materials/source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+"Plans/Math/sad/SaD/Books/Introduction to Probability by Joseph K. Blitzstein, Jessica Hwang (z-lib.org).pdf",LearningOS/materials/source-blitzstein-hwang/blitzstein.pdf
+Plans/Math/sad/SaD/Books/2019.openintro.statistics.pdf,LearningOS/materials/source-openintro-statistics/openintro.pdf
+Plans/Math/sad/SaD/Books/Modern_intro_probability_statistics_Dekking05.pdf,LearningOS/materials/source-dekking-mips/dekking.pdf
+"Plans/Math/sad/SaD/Books/Fundamentals of Machine Learning for Predictive Data Analytics - John D. Kelleher, Brian Mac Namee, Aoife D’Arcy - The MIT Press (2015).pdf",LearningOS/materials/source-kelleher-fmlpda/kelleher.pdf
+Plans/Math/sad/SaD/Books/Probability-jim-pitman.pdf,LearningOS/materials/source-pitman-probability/pitman.pdf
+Plans/Math/sad/SaD/Books/a_first_course_in_probability.pdf,LearningOS/materials/source-ross-first-course/ross.pdf
+"Plans/Math/sad/SaD/Books/Tijms - Understanding Probability - Chance Rules in Everyday Life 2e (Cambridge, 2007).pdf",LearningOS/materials/source-tijms-understanding-probability/tijms.pdf
+Plans/Math/sad/SaD/Books/schaums-probability.pdf,LearningOS/materials/source-schaums-probability/schaums-probability.pdf
+Plans/Math/sad/SaD/Books/The Principles of Probability.pdf,LearningOS/materials/_unsorted/SaD-Buecher/The Principles of Probability.pdf
+Plans/Math/sad/SaD/Klausuren-extern/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf,LearningOS/materials/source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+Plans/Math/sad/SaD/Klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf,LearningOS/materials/source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
+Plans/Math/sad/SaD/Klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf,LearningOS/materials/source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+Plans/Math/sad/SaD/Klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf,LearningOS/materials/source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+Plans/Math/sad/SaD/Klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf,LearningOS/materials/source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+Plans/Math/analysis/Analysis/Skript+HU,LearningOS/materials/source-analysis-skript
+Plans/Math/analysis/Analysis/Buecher/Abbott_Understanding-Analysis_2ed.pdf,LearningOS/materials/source-abbott-understanding-analysis/abbott.pdf
+Plans/Math/analysis/Analysis/Buecher/understanding-analysis.pdf,LearningOS/materials/source-abbott-understanding-analysis/abbott-copy2.pdf
+Plans/Math/analysis/Analysis/Buecher/Analysis(1)sehrgut.pdf,LearningOS/materials/source-grieser-analysis1/grieser.pdf
+Plans/Math/analysis/Analysis/Buecher/Trainingsbuch zur Analysis 1.pdf,LearningOS/materials/source-fritzsche-trainingsbuch/fritzsche.pdf
+Plans/Math/analysis/Analysis/Buecher/Übungsbuch zur Analysis.pdf,LearningOS/materials/source-deitmar-uebungsbuch/deitmar.pdf
+Plans/Math/analysis/Analysis/Buecher/Forster-Wessoly_Uebungsbuch-zur-Analysis-1.pdf,LearningOS/materials/source-forster-wessoly/forster-wessoly.pdf
+Plans/Math/analysis/Analysis/Buecher/realanal.pdf,LearningOS/materials/source-lebl-basic-analysis/realanal.pdf
+Plans/Math/analysis/Analysis/Buecher/realanal2.pdf,LearningOS/materials/source-lebl-basic-analysis/realanal2.pdf
+Plans/Math/analysis/Analysis/Buecher/mit18_100af20_lec_full2.pdf,LearningOS/materials/source-mit-18100a/mit18_100af20_lec_full2.pdf
+Plans/Math/analysis/Analysis/Buecher/Proofs in calculus.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Proofs in calculus.pdf
+Plans/Math/analysis/Analysis/Buecher/THoMaS’ CalCUlUS Early TraNSCENDENTalS.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/THoMaS’ CalCUlUS Early TraNSCENDENTalS.pdf
+Plans/Math/analysis/Analysis/Buecher/Principles_of_Mathematical_Analysis-Rudin.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Principles_of_Mathematical_Analysis-Rudin.pdf
+Plans/Math/analysis/Analysis/Buecher/analysis1_martheFürNichtFreaks.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/analysis1_martheFürNichtFreaks.pdf
+Plans/Math/analysis/Analysis/Buecher/books about proofs.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/books about proofs.pdf
+Plans/Math/analysis/Analysis/Buecher/Nathe für informatiker .pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Nathe für informatiker .pdf
+Plans/Math/analysis/Analysis/Buecher/Mengen und Abbildungen ( sehr hilfreich !).pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Mengen und Abbildungen ( sehr hilfreich !).pdf
+Plans/Math/analysis/Analysis/Buecher/Relationen .pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Relationen .pdf
+Plans/Math/analysis/Analysis/Buecher/mathematische beweise.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/mathematische beweise.pdf
+Plans/Math/analysis/Analysis/Buecher/mathe für nicht freaks HM.pdf,LearningOS/materials/_unsorted/Analysis-Buecher/mathe für nicht freaks HM.pdf
+Plans/Math/analysis/Analysis/Buecher/Elementary Analysis The Theory of Calculus(seems good).pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Elementary Analysis The Theory of Calculus(seems good).pdf
+Plans/Math/analysis/Analysis/Buecher/Analysis Kapitel 2 .pdf,LearningOS/materials/_unsorted/Analysis-Buecher/Analysis Kapitel 2 .pdf
+Plans/Math/analysis/Analysis/Drill-Loesungen/AnalysisAufgabenMItLösungen.pdf,LearningOS/materials/source-ableitinger-musterloesungen/ableitinger.pdf
+Plans/Math/analysis/Analysis/Drill-Loesungen,LearningOS/materials/_unsorted/Analysis-Drill-Loesungen
+Plans/Math/analysis/Analysis/Klausuren-extern,LearningOS/materials/source-analysis-klausuren-extern
+Plans/Math/analysis/Analysis/Strang-Calculus,LearningOS/materials/source-strang-calculus
+Plans/CS-Theory/algo2/Algo2/Buecher/Algo-Buch.pdf,LearningOS/materials/source-clrs/clrs-de.pdf
+Plans/CS-Theory/algo2/Algo2/Buecher/Introduction_to_algorithms-3rd Edition ( 3 tes Buch).pdf,LearningOS/materials/source-clrs/clrs-en3.pdf
+Plans/CS-Theory/algo2/Algo2/Buecher/Algorithmen und Datenstrukturen.pdf,LearningOS/materials/source-ottmann-widmayer/ow.pdf
+Plans/CS-Theory/algo2/Algo2/Buecher/AlgoBuch 2.pdf,LearningOS/materials/source-dms-grundwerkzeuge/dms.pdf
+Plans/CS-Theory/algo2/Algo2/Buecher/Kleinberg-Tardos_Algorithm-Design.pdf,LearningOS/materials/_unsorted/Algo2-Buecher/Kleinberg-Tardos_Algorithm-Design.pdf
+Plans/CS-Theory/algo2/Algo2/Frankfurt-Klausuren,LearningOS/materials/source-algo2-frankfurt-klausuren
+Plans/Programming/python/Python/Fluent Python.pdf,LearningOS/materials/source-fluent-python/fluent-python.pdf
+Plans/Programming/python/Python/Geron_Hands-On-ML_Scikit-Learn-Keras-TensorFlow.pdf,LearningOS/materials/source-geron-handson/geron-copy2.pdf
+Plans/Programming/python/Python/Automate the Boring Stuff with Python.pdf,LearningOS/materials/_unsorted/Python/Automate the Boring Stuff with Python.pdf
+Plans/Programming/python/Python/ProGit.pdf,LearningOS/materials/_unsorted/Python/ProGit.pdf
+Plans/Programming/python/Python/PythonDataScienceHandbook,LearningOS/materials/_unsorted/Python/PythonDataScienceHandbook
+Plans/Programming/python/Python/cheatsheets,LearningOS/materials/_unsorted/Python/cheatsheets
+Plans/Programming/rust/Rust/books,LearningOS/materials/_unsorted/Rust-books
+Plans/Programming/Git/GIT.pdf,LearningOS/materials/_unsorted/Git/GIT.pdf
+Plans/Programming/Git/HU-intro-to-git.pdf,LearningOS/materials/_unsorted/Git/HU-intro-to-git.pdf
+Plans/crosscutting/job/Job/papers,LearningOS/materials/_unsorted/Job-papers
+Plans/crosscutting/seminar/Seminar/reference,LearningOS/materials/_unsorted/Seminar-reference
+Masters-Planning/StuPO2015_Modulliste_SoSe2026_Studiengangsaufbau.pdf,LearningOS/materials/_unsorted/StuPO/StuPO2015_Modulliste_SoSe2026_Studiengangsaufbau.pdf
+Masters-Planning/StuPO2015_Modulliste_SoSe2026_mit_Modulkatalog.pdf,LearningOS/materials/_unsorted/StuPO/StuPO2015_Modulliste_SoSe2026_mit_Modulkatalog.pdf
+Masters-Planning/StuPO2015_MSc_ComputerScience_AMBl.pdf,LearningOS/materials/_unsorted/StuPO/StuPO2015_MSc_ComputerScience_AMBl.pdf

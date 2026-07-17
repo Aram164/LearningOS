@@ -589,3 +589,27 @@ sources:
         level: advanced
         strengths:
           - "The rigorous-course video tier for SaD 04–08 (pick ONE from this tier, per the legacy rule); strategic-practice problem sets; the written companion is Blitzstein & Hwang"
+
+  - id: source-sad-klausuren-extern
+    title: SaD external German Klausur bank (local)
+    type: other
+    material: material://source-sad-klausuren-extern
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [mock-exam]
+        audience: [German readers]
+        strengths:
+          - "The non-FAU German solved-Klausur tier (all local since Jul 2): Köln (Musterlösung), Regensburg-Löh (W-Theorie+Statistik mit Lösungen), HS-Harz (Probeklausur mit Lösungen), Leuphana-Merz (Übungsbuch mit Klausur). FAU WS14/15 is the ⭐ pick and has its own record"
+
+  - id: source-algo2-frankfurt-klausuren
+    title: Frankfurt Algo-2 Klausuren with solutions (2021-2024, local)
+    type: other
+    material: material://source-algo2-frankfurt-klausuren
+    evaluations:
+      - concepts: [concept-amortized-analysis, concept-shortest-paths, concept-max-flow,
+                   concept-fibonacci-heaps, concept-b-trees]
+        roles: [mock-exam, exercise]
+        audience: [German readers]
+        strengths:
+          - "Eight solved Frankfurt ALGO2 exams (2021-2024, two sittings/year) — written format, but the worked solutions double as explain-aloud drill for the oral exam"
