@@ -185,10 +185,12 @@ Standing workspaces (`standing: true`) are exempt from this workflow.
 One documented command produces, from canonical inputs only:
 
 - `manifest.json`;
-- `concept-index.md`;
-- `source-index.md` — including per-lecture and per-concept selector views with first-learning / review / implementation recommendations;
+- `concept-index.md` — with a letter-grouped table of contents;
+- `source-index.md` — with a letter-grouped table of contents, including per-lecture and per-concept selector views with first-learning / review / implementation recommendations;
 - `module-view.md`;
-- `coordination-view.md` — exam spine (from modules.yaml) + workspace statuses/deadlines/next actions (from frontmatter) + coordination facts + Git-derived neglect signals;
+- `coordination-view.md` — exam spine (from modules.yaml) + workspace statuses/deadlines/next actions (from frontmatter) + coordination facts + materials-queue counts (`materials/_unsorted/`, `materials/_duplicates-for-review/`) + Git-derived neglect signals;
+- `dependency-report.md`;
+- `concept-map.md` — Mermaid rendering of the prerequisite graph (`requires` + `builds-on`), the visual twin of the dependency report;
 - `backlinks.json`;
 - validation report.
 

@@ -126,3 +126,29 @@ auto-running `pytest` in the pre-commit hook (slow hooks train humans to
 2 (remote — also the backup) → 1, 6 (documentation, minutes) → 3, 4, 5
 (automation trio) → 9, 10 (validator additions) → 7, 8 (view polish) →
 11–13 as appetite allows.
+
+---
+
+## Implementation record (2026-07-17, same day — approved "fix all the issues")
+
+Implemented: **#1** README "Without the operator" section · **#3** post-commit
+hook (`tools/hooks/post-commit`, installed) rebuilds `generated/` after every
+commit · **#4** `Makefile` (`check` / `views` / `test` / `all` / `setup`) ·
+**#5** fail-fast dependency check in `tools/learning_os/__init__.py` (friendly
+pip instruction instead of a traceback) · **#7** `generated/concept-map.md`
+(Mermaid prerequisite graph; whitelisted in `GENERATED_ALLOWED`, listed in
+WORKFLOWS §12) · **#8** letter-grouped TOCs atop concept-index and
+source-index · **#9** `CLAUDE-SYNC` W-check in the validator (documented in
+VALIDATION.md, "Operating contract") · **#10** implemented as a **"Materials
+queues" section in the coordination view** rather than a validator warning —
+a permanent W would desensitize the 0-warnings habit; the dashboard is where
+humans look. First run confirmed `_unsorted/` is empty (stage2b registration
+cleared it) and 7 files sit in `_duplicates-for-review/`.
+
+Still open (need Aram): **#2** private GitHub remote (also the only offsite
+backup) · **#6** Cowork project-instruction update. Deliberately not done:
+**#11** countdown column (determinism-rule strain), **#12** weekly digest
+(offer stands), **#13** Obsidian (recommended against).
+
+Verification after implementation: `validate.py` 0 errors / 0 warnings,
+32/32 tests, full regeneration clean.

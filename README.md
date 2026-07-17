@@ -42,18 +42,42 @@ never in prose copies.
 (session-end habit). Never edit anything under the generated output tree —
 it's a disposable view; delete it freely.
 
+## Without the operator (human fallback — no Claude needed)
+
+Everything is plain text; nothing requires any tool to read. The four questions:
+
+- **Exam dates, registrations, grades?** Open `records/modules.yaml` — it is
+  commented and readable raw. This file is the only truth for those facts.
+- **What should I do next?** Run `make views` (or `python tools/generate.py`),
+  then open `generated/coordination-view.md` — exam spine, every workspace's
+  next action, neglect signals. Check its `Generated:` timestamp; if views feel
+  stale, rebuild (the post-commit hook does this automatically after commits).
+- **Where is my knowledge on X?** Browse `knowledge/notes/<domain>/` —
+  filenames say what they are — or ctrl-F `generated/concept-index.md`
+  (German terms work; aliases are indexed). The prerequisite graph is drawn in
+  `generated/concept-map.md`.
+- **Where do I put this?** `work/inbox/` — no naming, no filing, ever.
+
+If something looks broken: `make check` names every problem; `git log` is the
+history; `generated/` can always be deleted and rebuilt. No proprietary
+anything — a text editor and Git are enough to operate this repository forever.
+
 ## Commands
 
 ```bash
-python tools/validate.py            # full offline validation (schemas + VALIDATION.md rules)
-python tools/validate.py --online   # + external URL audit
-python tools/generate.py            # rebuild everything under the gitignored output tree
-python -m pytest                    # test suite
+make            # list the one-word commands
+make check      # validate (schemas + VALIDATION.md rules)
+make views      # rebuild everything under the gitignored output tree
+make test       # test suite
+make setup      # once per clone/move: install deps + both Git hooks
 ```
 
-Requires Python 3.10+, `pyyaml`, `jsonschema>=4`, `pytest`.
+(Equivalent direct calls: `python tools/validate.py` [`--online` adds the URL
+audit], `python tools/generate.py`, `python -m pytest`.)
+Requires Python 3.10+, `pyyaml`, `jsonschema>=4`, `pytest` — the tools
+fail fast with the exact install command if a dependency is missing or too old.
 
-A pre-commit hook (canonical copy `tools/hooks/pre-commit`, installed in
-`.git/hooks/`) blocks any commit while the validator reports errors; warnings
-print but never block. After a fresh clone/move, reinstall with
-`cp tools/hooks/pre-commit .git/hooks/ && chmod +x .git/hooks/pre-commit`.
+Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
+**pre-commit** blocks any commit while the validator reports errors (warnings
+print but never block); **post-commit** rebuilds `generated/` so the local
+dashboards are never stale.

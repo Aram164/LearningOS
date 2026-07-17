@@ -46,6 +46,32 @@ def _json_header(generated_at: str) -> dict:
     }
 
 
+def _slug(heading: str) -> str:
+    """GitHub-style anchor for a Markdown heading."""
+    s = heading.lower()
+    s = "".join(ch for ch in s if ch.isalnum() or ch in " -")
+    return s.replace(" ", "-")
+
+
+def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
+    """Compact letter-grouped table of contents.
+
+    entries: (display text, heading text used for the anchor), pre-sorted.
+    Returns one line per starting letter: 'A: [x](#x) · [y](#y)'.
+    """
+    lines: list[str] = []
+    by_letter: dict[str, list[str]] = {}
+    for display, heading in entries:
+        letter = display[:1].upper() if display else "#"
+        if not letter.isalpha():
+            letter = "#"
+        by_letter.setdefault(letter, []).append(f"[{display}](#{_slug(heading)})")
+    for letter in sorted(by_letter):
+        lines.append(f"**{letter}:** " + " · ".join(by_letter[letter]))
+        lines.append("")
+    return lines
+
+
 def _git_last_commit(root: Path, rel: str) -> str:
     try:
         out = subprocess.run(["git", "log", "-1", "--format=%cs", "--", rel],
@@ -234,6 +260,16 @@ def _eval_line(sid: str, source: dict, ev: dict) -> str:
 
 def build_concept_index(repo: Repo, backlinks: dict, generated_at: str) -> str:
     lines = _md_header("Concept index", generated_at)
+    toc_entries = []
+    for cid in sorted(repo.concepts):
+        c = repo.concepts[cid]
+        label = c.get("label", cid)
+        heading = label + (" *(deprecated)*" if c.get("deprecated") else "")
+        toc_entries.append((label, heading))
+    toc_entries.sort(key=lambda e: e[0].lower())
+    lines.append("## Contents")
+    lines.append("")
+    lines.extend(_letter_toc(toc_entries))
     for cid in sorted(repo.concepts):
         c = repo.concepts[cid]
         label = c.get("label", cid)
@@ -356,6 +392,11 @@ def build_source_index(repo: Repo, generated_at: str) -> str:
 
     lines.append("## Registry")
     lines.append("")
+    toc_entries = sorted(
+        ((str(repo.sources[sid].get("title", sid)), str(repo.sources[sid].get("title", sid)))
+         for sid in repo.sources),
+        key=lambda e: e[0].lower())
+    lines.extend(_letter_toc(toc_entries))
     for sid in sorted(repo.sources):
         s = repo.sources[sid]
         lines.append(f"### {s.get('title', sid)}")
@@ -610,6 +651,28 @@ def build_coordination_view(repo: Repo, generated_at: str) -> str:
         lines.append("(work/COORDINATION.md missing)")
         lines.append("")
 
+    lines.append("## Materials queues (pending human decisions)")
+    lines.append("")
+    queue_rows = []
+    materials = repo.root.parent / "materials"
+    for qname in ("_unsorted", "_duplicates-for-review"):
+        qdir = materials / qname
+        if qdir.is_dir():
+            n = sum(1 for f in qdir.rglob("*")
+                    if f.is_file() and f.name != ".DS_Store")
+            if n:
+                queue_rows.append(f"- `materials/{qname}/` — **{n} files** "
+                                  "awaiting a register-or-discard decision")
+    if queue_rows:
+        lines.extend(queue_rows)
+        lines.append("")
+        lines.append("*Same failure mode as an unread inbox — these piles are "
+                     "invisible unless surfaced. Register on first canonical "
+                     "citation (WORKFLOWS §6a) or discard deliberately.*")
+    else:
+        lines.append("(empty — nothing awaits a decision)")
+    lines.append("")
+
     lines.append("## Neglect signals (Git)")
     lines.append("")
     rows = []
@@ -726,6 +789,45 @@ def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> s
     return "\n".join(lines)
 
 
+def build_concept_map(repo: Repo, generated_at: str) -> str:
+    """Mermaid rendering of the prerequisite graph (requires + builds-on).
+
+    Human-facing counterpart of the dependency report: GitHub and VS Code
+    render the diagram natively. Context edges (motivates/applies-in/
+    contrasts-with) are excluded, same as the dependency report.
+    """
+    lines = _md_header("Concept map (prerequisite graph)", generated_at)
+    lines.append("*Arrows point from prerequisite to dependent — follow the "
+                 "arrows to get a study order. Solid = `requires`, "
+                 "dotted = `builds-on`. Textual version: "
+                 "`dependency-report.md`.*")
+    lines.append("")
+
+    edges = sorted(
+        (str(r["to"]), str(r["from"]), str(r["type"]))
+        for r in repo.relations if r.get("type") in PREREQ_TYPES)
+    if not edges:
+        lines.append("(no prerequisite edges in the relation registry)")
+        lines.append("")
+        return "\n".join(lines)
+
+    def node(cid: str) -> str:
+        return cid.replace("-", "_")
+
+    involved = sorted({c for e in edges for c in e[:2]})
+    lines.append("```mermaid")
+    lines.append("graph LR")
+    for cid in involved:
+        label = str(repo.concepts.get(cid, {}).get("label", cid)).replace('"', "'")
+        lines.append(f'    {node(cid)}["{label}"]')
+    for pre, dep, rtype in edges:
+        arrow = "-->" if rtype == "requires" else "-.->"
+        lines.append(f"    {node(pre)} {arrow} {node(dep)}")
+    lines.append("```")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def build_health(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Health report", generated_at)
     lines.append("## Counts")
@@ -777,6 +879,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "module-view.md": build_module_view(repo, generated_at) + "\n",
         "coordination-view.md": build_coordination_view(repo, generated_at) + "\n",
         "dependency-report.md": build_dependency_report(repo, backlinks, generated_at) + "\n",
+        "concept-map.md": build_concept_map(repo, generated_at) + "\n",
         "reports/health.md": build_health(repo, generated_at) + "\n",
     }
     for name in sorted(repo.collections):
