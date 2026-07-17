@@ -1,0 +1,19 @@
+#!/bin/sh
+# Learning OS v3 — post-commit refresh (canonical copy: tools/hooks/post-commit).
+#
+# Rebuilds generated/ after every commit so the local dashboards
+# (coordination-view, indexes, concept map) are never stale. Never blocks:
+# post-commit hooks cannot fail a commit, and this one only prints on trouble.
+#
+# Install (once per clone):
+#   cp tools/hooks/post-commit .git/hooks/post-commit && chmod +x .git/hooks/post-commit
+
+cd "$(git rev-parse --show-toplevel)" || exit 0
+
+PY="$(command -v python3 || command -v python)"
+[ -z "$PY" ] && exit 0
+
+if ! "$PY" tools/generate.py >/dev/null 2>&1; then
+    echo "post-commit: view rebuild failed — run 'python tools/generate.py' to see why." >&2
+fi
+exit 0

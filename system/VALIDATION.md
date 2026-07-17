@@ -37,6 +37,10 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **W** A `role: crosswalk` note contains Markdown tables whose headers match evaluation vocabulary (strengths/weaknesses/level/best-for) — judgments belong in source records.
 - **E** Module attempt dates are chronologically ordered per module; `grade` only on `passed` attempts or completed modules; `result: registered` only on the latest attempt.
 
+## Operating contract
+
+- **W** `CLAUDE.md` and `system/CLAUDE.md` differ before the `## 13.` heading (the copies are identical by construction except §13 — divergence is drift; code `CLAUDE-SYNC`).
+
 ## Files
 
 - **E** A note's filename equals `<id>.md`; a mismatch between filename and frontmatter ID is an error.
