@@ -29,6 +29,35 @@ RELATION_TYPES = {
     "contrasts-with", "equivalent-to", "applies-in", "motivates",
 }
 
+# Direction and meaning of every relation type. Each edge is read "from <TYPE>
+# to": `from` is the subject, `to` is the object. This is the single canonical
+# statement of relation semantics (mirrored in the concept-relations schema
+# description); tools that reason over the graph must follow it.
+#   requires        from needs to as a hard prerequisite (learn `to` first)
+#   builds-on       from extends/depends on to (softer prerequisite than requires)
+#   derives         from is derived/obtained from to
+#   generalizes     from is the more general case; to is the special case
+#   contrasts-with  symmetric: from and to are usefully compared/opposed
+#   equivalent-to   symmetric: from and to denote the same idea in different guises
+#   applies-in      from is applied within the context/domain to
+#   motivates       from provides the motivation for to
+# `requires` and `builds-on` are the only prerequisite edges (they define study
+# order — see tools/learning_os/genout.py PREREQ_TYPES). The remaining six are
+# context, never prerequisites. `contrasts-with` and `equivalent-to` are
+# symmetric in meaning; the others are directional.
+RELATION_SEMANTICS = {
+    "requires": "from needs to as a hard prerequisite",
+    "builds-on": "from extends/depends on to (soft prerequisite)",
+    "derives": "from is derived from to",
+    "generalizes": "from is the general case, to the special case",
+    "contrasts-with": "symmetric: usefully compared/opposed",
+    "equivalent-to": "symmetric: same idea, different guise",
+    "applies-in": "from is applied within the context/domain to",
+    "motivates": "from provides the motivation for to",
+}
+PREREQUISITE_RELATIONS = ("requires", "builds-on")
+SYMMETRIC_RELATIONS = ("contrasts-with", "equivalent-to")
+
 NOTE_ROLES = {
     "synthesis", "reference", "derivation", "exercise-bank",
     "mock-exam", "implementation", "question", "crosswalk",
@@ -83,24 +112,66 @@ def _load_yaml(path: Path) -> dict:
     return _normalize(data)
 
 
-def _load_registry(consolidated: Path, partition_dir: Path, key: str) -> tuple[list, list[Path]]:
-    """Load a registry from its consolidated file and/or partition directory."""
+def _load_registry(
+    consolidated: Path, partition_dir: Path, key: str
+) -> tuple[list, list[Path], list[tuple[Path, str]]]:
+    """Load a registry from its consolidated file and/or partition directory.
+
+    Defensive (never assumes document shape): a malformed file or item is
+    reported as a failure and skipped instead of crashing the load or letting
+    non-mapping records into the model.
+    """
     records: list = []
     origins: list[Path] = []
+    failures: list[tuple[Path, str]] = []
     candidates: list[Path] = []
     if consolidated.exists():
         candidates.append(consolidated)
     if partition_dir.is_dir():
         candidates.extend(sorted(partition_dir.glob("*.yaml")))
     for f in candidates:
-        data = _load_yaml(f)
+        try:
+            data = _load_yaml(f)
+        except LoaderError as exc:
+            failures.append((f, str(exc)))
+            continue
         items = data.get(key, [])
+        if items is None:
+            items = []
         if not isinstance(items, list):
-            raise LoaderError(f"{f}: '{key}' must be a list")
-        for item in items:
+            failures.append((f, f"{f}: '{key}' must be a list"))
+            continue
+        for i, item in enumerate(items):
+            if not isinstance(item, dict):
+                failures.append((f, f"{f}: {key}[{i}] is not a mapping — skipped"))
+                continue
             records.append(item)
             origins.append(f)
-    return records, origins
+    return records, origins, failures
+
+
+def _record_id(rec: dict) -> str | None:
+    """The record's id if it is a non-empty string, else None (reject empties)."""
+    rid = rec.get("id")
+    if isinstance(rid, str) and rid.strip():
+        return rid
+    return None
+
+
+def md_section(body: str, heading: str) -> str | None:
+    """Return the text of a `## <heading>` body section, if present.
+
+    Single implementation of Markdown ``## heading`` section extraction, shared
+    by Workspace, Coordination, and the validator (previously duplicated in
+    three places). A section runs from its heading to the next `## ` heading or
+    end of document.
+    """
+    pattern = re.compile(
+        rf"^##\s+{re.escape(heading)}\s*$(.*?)(?=^##\s|\Z)",
+        re.MULTILINE | re.DOTALL,
+    )
+    m = pattern.search(body)
+    return m.group(1).strip() if m else None
 
 
 @dataclass
@@ -129,12 +200,7 @@ class Workspace:
 
     def section(self, heading: str) -> str | None:
         """Return the text of a `## <heading>` body section, if present."""
-        pattern = re.compile(
-            rf"^##\s+{re.escape(heading)}\s*$(.*?)(?=^##\s|\Z)",
-            re.MULTILINE | re.DOTALL,
-        )
-        m = pattern.search(self.body)
-        return m.group(1).strip() if m else None
+        return md_section(self.body, heading)
 
 
 @dataclass
@@ -144,12 +210,7 @@ class Coordination:
     body: str
 
     def section(self, heading: str) -> str | None:
-        pattern = re.compile(
-            rf"^##\s+{re.escape(heading)}\s*$(.*?)(?=^##\s|\Z)",
-            re.MULTILINE | re.DOTALL,
-        )
-        m = pattern.search(self.body)
-        return m.group(1).strip() if m else None
+        return md_section(self.body, heading)
 
 
 @dataclass
@@ -208,28 +269,39 @@ def load_repo(root: Path | str) -> Repo:
     repo = Repo(root=root)
 
     # Concepts (consolidated or partitioned)
-    records, origins = _load_registry(
+    records, origins, failures = _load_registry(
         root / "knowledge" / "concepts.yaml", root / "knowledge" / "concepts", "concepts"
     )
+    repo.parse_failures.extend(failures)
     for rec, origin in zip(records, origins):
-        cid = str(rec.get("id", ""))
+        cid = _record_id(rec)
+        if cid is None:
+            repo.parse_failures.append(
+                (origin, f"{origin}: concept record with missing or empty id — skipped"))
+            continue
         _register(repo, repo.concepts, cid, rec, origin, "concept")
         repo.concept_origins.setdefault(cid, origin)
 
     # Relations (consolidated or partitioned)
-    records, _ = _load_registry(
+    records, _, failures = _load_registry(
         root / "knowledge" / "concept-relations.yaml",
         root / "knowledge" / "concept-relations",
         "relations",
     )
+    repo.parse_failures.extend(failures)
     repo.relations = records
 
     # Sources (consolidated or partitioned)
-    records, origins = _load_registry(
+    records, origins, failures = _load_registry(
         root / "sources" / "sources.yaml", root / "sources" / "registry", "sources"
     )
+    repo.parse_failures.extend(failures)
     for rec, origin in zip(records, origins):
-        sid = str(rec.get("id", ""))
+        sid = _record_id(rec)
+        if sid is None:
+            repo.parse_failures.append(
+                (origin, f"{origin}: source record with missing or empty id — skipped"))
+            continue
         _register(repo, repo.sources, sid, rec, origin, "source")
         repo.source_origins.setdefault(sid, origin)
 
@@ -243,15 +315,40 @@ def load_repo(root: Path | str) -> Repo:
             except LoaderError as exc:
                 repo.parse_failures.append((f, str(exc)))
                 continue
+            entries = doc.get("entries")
+            if entries is not None and not isinstance(entries, list):
+                repo.parse_failures.append(
+                    (f, f"{f}: 'entries' must be a list — collection skipped"))
+                continue
             repo.collections[f.stem] = doc
             repo.collection_origins[f.stem] = f
 
     # Modules
     modules_file = root / "records" / "modules.yaml"
     if modules_file.exists():
-        data = _load_yaml(modules_file)
-        for rec in data.get("modules", []) or []:
-            mid = str(rec.get("id", ""))
+        try:
+            data = _load_yaml(modules_file)
+        except LoaderError as exc:
+            repo.parse_failures.append((modules_file, str(exc)))
+            data = {}
+        items = data.get("modules", [])
+        if items is None:
+            items = []
+        if not isinstance(items, list):
+            repo.parse_failures.append(
+                (modules_file, f"{modules_file}: 'modules' must be a list"))
+            items = []
+        for i, rec in enumerate(items):
+            if not isinstance(rec, dict):
+                repo.parse_failures.append(
+                    (modules_file, f"{modules_file}: modules[{i}] is not a mapping — skipped"))
+                continue
+            mid = _record_id(rec)
+            if mid is None:
+                repo.parse_failures.append(
+                    (modules_file,
+                     f"{modules_file}: module record with missing or empty id — skipped"))
+                continue
             _register(repo, repo.modules, mid, rec, modules_file, "module")
 
     # Notes
@@ -263,21 +360,33 @@ def load_repo(root: Path | str) -> Repo:
             except LoaderError as exc:
                 repo.parse_failures.append((f, str(exc)))
                 continue
+            if "id" in meta and _record_id(meta) is None:
+                repo.parse_failures.append(
+                    (f, f"{f}: note frontmatter id is empty or not a string — skipped"))
+                continue
             nid = str(meta.get("id", f.stem))
             note = Note(id=nid, path=f, meta=meta, body=body)
             _register(repo, repo.notes, nid, note, f, "note")
 
-    # Workspaces: active + archived
+    # Workspaces: active + archived. Active workspaces sit exactly one level
+    # under work/active/ (a workspace is a single directory). Archived
+    # workspaces may be filed under an arbitrary bucketing (by year, by
+    # year/quarter, …), so their CONTEXT.md is discovered at any depth rather
+    # than assuming a fixed archive/workspaces/<year>/<ws>/ layout.
     for base, archived in ((root / "work" / "active", False),
                            (root / "archive" / "workspaces", True)):
         if not base.is_dir():
             continue
-        pattern = "*/CONTEXT.md" if not archived else "*/*/CONTEXT.md"
-        for f in sorted(base.glob(pattern)):
+        found = base.rglob("CONTEXT.md") if archived else base.glob("*/CONTEXT.md")
+        for f in sorted(found):
             try:
                 meta, body = parse_frontmatter(f.read_text(encoding="utf-8"), f)
             except LoaderError as exc:
                 repo.parse_failures.append((f, str(exc)))
+                continue
+            if "id" in meta and _record_id(meta) is None:
+                repo.parse_failures.append(
+                    (f, f"{f}: workspace frontmatter id is empty or not a string — skipped"))
                 continue
             wid = str(meta.get("id", f.parent.name))
             ws = Workspace(id=wid, path=f, meta=meta, body=body, archived=archived)

@@ -52,7 +52,10 @@ GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 
 CANONICAL_TREES = ("knowledge", "sources", "records", "work")
 
-IMAGE_OK = {".md", ".yaml", ".yml"}
+# File extensions that are legitimately authored text under knowledge/ (notes and
+# registries). Anything else there (PDFs, slides, images) is a misplaced binary
+# — see BINARY-IN-KNOWLEDGE. (Formerly the misleadingly named IMAGE_OK.)
+KNOWLEDGE_TEXT_SUFFIXES = {".md", ".yaml", ".yml"}
 
 
 @dataclass
@@ -103,6 +106,33 @@ class Validator:
             return str(p.relative_to(self.repo.root))
         except ValueError:
             return str(p)
+
+    def _origin_for(self, family: str, rec_id: str) -> str:
+        """Best-known originating file for a record.
+
+        Registries may be partitioned (knowledge/concepts/*.yaml,
+        sources/registry/*.yaml); the loader remembers which file each record
+        came from. Diagnostics use this so they name the actual partition file
+        instead of the consolidated default — otherwise an error about a concept
+        defined in knowledge/concepts/ml.yaml would misleadingly point at
+        knowledge/concepts.yaml.
+        """
+        r = self.repo
+        if family == "concept":
+            o = r.concept_origins.get(rec_id)
+            return self._rel(o) if o else "knowledge/concepts.yaml"
+        if family == "source":
+            o = r.source_origins.get(rec_id)
+            return self._rel(o) if o else "sources/sources.yaml"
+        if family == "module":
+            return "records/modules.yaml"
+        if family == "note":
+            n = r.notes.get(rec_id)
+            return self._rel(n.path) if n else ""
+        if family == "workspace":
+            w = r.workspaces.get(rec_id)
+            return self._rel(w.path) if w else ""
+        return ""
 
     # ------------------------------------------------------------------ run
     def run(self) -> list[Issue]:
@@ -182,15 +212,19 @@ class Validator:
         }
         for family, records in families.items():
             for rec_id in records:
+                where = self._origin_for(family, rec_id)
                 if not ID_RE.match(rec_id):
-                    self.err("ID-PATTERN", f"{family} id '{rec_id}' does not match the ID pattern")
+                    self.err("ID-PATTERN", f"{family} id '{rec_id}' does not match the ID pattern",
+                             where)
                 elif not rec_id.startswith(family + "-"):
-                    self.err("ID-FAMILY", f"{family} id '{rec_id}' lacks family prefix '{family}-'")
+                    self.err("ID-FAMILY", f"{family} id '{rec_id}' lacks family prefix '{family}-'",
+                             where)
                 m = SUFFIX_RE.match(rec_id)
                 if m and m.group("base") not in records:
                     self.warn("ID-SUFFIX",
                               f"{family} id '{rec_id}' carries a numeric suffix without a "
-                              f"collision counterpart '{m.group('base')}' (suffixes are collision-only)")
+                              f"collision counterpart '{m.group('base')}' (suffixes are collision-only)",
+                              where)
 
     def check_references(self):
         r = self.repo
@@ -294,17 +328,26 @@ class Validator:
             if edge in seen_edges:
                 self.err("REL-DUP", f"duplicate relation edge {edge}", "knowledge/concept-relations.yaml")
             seen_edges.add(edge)
-        # Alias collisions
+        # Alias collisions. Normalize with strip().casefold() so that stray
+        # whitespace or case ('Erwartungswert', ' erwartungswert ') still
+        # collides; empty keys are ignored rather than colliding vacuously.
         alias_map: dict[str, list[str]] = {}
         for concept in r.concepts.values():
+            cid = str(concept.get("id"))
             for alias in concept.get("aliases", []) or []:
-                alias_map.setdefault(alias.casefold(), []).append(str(concept.get("id")))
-            label = str(concept.get("label", "")).casefold()
-            alias_map.setdefault(label, []).append(str(concept.get("id")))
-        for alias, owners in sorted(alias_map.items()):
-            if len(set(owners)) > 1:
+                key = str(alias).strip().casefold()
+                if key:
+                    alias_map.setdefault(key, []).append(cid)
+            label = str(concept.get("label", "")).strip().casefold()
+            if label:
+                alias_map.setdefault(label, []).append(cid)
+        for key, owners in sorted(alias_map.items()):
+            distinct = sorted(set(owners))
+            if len(distinct) > 1:
+                located = ", ".join(f"{oid} ({self._origin_for('concept', oid)})"
+                                    for oid in distinct)
                 self.warn("ALIAS-COLLISION",
-                          f"alias/label '{alias}' maps to multiple concepts: {sorted(set(owners))}")
+                          f"alias/label '{key}' maps to multiple concepts: {located}")
         # Duplicate sources
         seen_ident: dict[tuple, str] = {}
         seen_url: dict[str, str] = {}
@@ -410,7 +453,11 @@ class Validator:
         for module in self.repo.modules.values():
             mid = module.get("id")
             attempts = module.get("attempts", []) or []
-            dates = [a.get("date") for a in attempts if a.get("date")]
+            # Coerce to str before comparing: the loader normalizes YAML dates to
+            # ISO strings, but a bare-year int (date: 2026) would stay an int and
+            # `sorted()` on mixed str/int raises TypeError. ISO-8601 strings sort
+            # chronologically, so a uniform str view is a correct comparison key.
+            dates = [str(a.get("date")) for a in attempts if a.get("date")]
             if dates != sorted(dates):
                 self.err("MOD-ORDER", f"module '{mid}' attempt dates are not chronologically ordered",
                          "records/modules.yaml")
@@ -438,17 +485,23 @@ class Validator:
         attach_root = r.root / "knowledge" / "attachments"
         referenced_dirs = set()
         for note in r.notes.values():
+            note_attach_dir = (attach_root / note.id).resolve()
             for entry in note.meta.get("attachments", []) or []:
-                p = r.root / entry
-                expected_prefix = f"knowledge/attachments/{note.id}/"
-                if not str(entry).startswith(expected_prefix):
+                referenced_dirs.add(note.id)
+                p = (r.root / str(entry)).resolve()
+                # Containment is decided on the RESOLVED filesystem path so that
+                # '..' segments (or symlinks) cannot escape the note's own
+                # attachment directory. A plain string-prefix check would accept
+                # e.g. knowledge/attachments/<id>/../<other>/secret.pdf.
+                if p != note_attach_dir and note_attach_dir not in p.parents:
                     self.err("ATTACH-PATH",
-                             f"attachment '{entry}' of note '{note.id}' is not under {expected_prefix}",
+                             f"attachment '{entry}' of note '{note.id}' resolves outside its "
+                             f"attachment directory knowledge/attachments/{note.id}/",
                              self._rel(note.path))
+                    continue  # not owned by this note — do not run the existence check
                 if not p.exists():
                     self.err("ATTACH-MISSING", f"attachment '{entry}' does not resolve",
                              self._rel(note.path))
-                referenced_dirs.add(note.id)
         if attach_root.is_dir():
             for d in sorted(attach_root.iterdir()):
                 if d.is_dir() and d.name not in referenced_dirs:
@@ -463,7 +516,7 @@ class Validator:
                     continue
                 if attach_root in f.parents:
                     continue
-                if f.suffix.lower() not in IMAGE_OK:
+                if f.suffix.lower() not in KNOWLEDGE_TEXT_SUFFIXES:
                     self.warn("BINARY-IN-KNOWLEDGE",
                               f"non-Markdown/YAML file under knowledge/: {self._rel(f)} "
                               "(books/slides belong in materials)")

@@ -5,17 +5,18 @@ Outputs (all under generated/, gitignored, rebuildable, never canonical):
   per-concept selector views), module-view.md, coordination-view.md,
   backlinks.json, reports/health.md.
 
-Deterministic except the generation timestamp: all collections sorted by ID;
-Git-derived neglect signals depend only on repository state.
+Fully deterministic for a given committed tree: all collections sorted by ID;
+Git-derived neglect signals depend only on repository state; the generation
+timestamp is the last-commit timestamp, so regeneration without new commits
+is byte-for-byte reproducible.
 """
 
 from __future__ import annotations
 
-import datetime as _dt
 import json
 import re
 import subprocess
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from . import __version__
 from .loader import Repo
@@ -23,6 +24,32 @@ from .loader import Repo
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
 SELECTOR_ROLES = ("first-learning", "review", "implementation")
+
+
+def mermaid_node_ids(ids) -> dict[str, str]:
+    """Map concept IDs to unique, Mermaid-safe node identifiers.
+
+    Sanitizing an ID to Mermaid's allowed character set can map distinct IDs to
+    the same token (e.g. 'concept-a-b' and 'concept-a.b' both collapse to
+    'concept_a_b'). Emitting two nodes with an identical identifier silently
+    merges them in the rendered graph. Assigning a disambiguating suffix on
+    collision guarantees every input ID gets its own node. Deterministic:
+    inputs are processed in sorted order.
+    """
+    mapping: dict[str, str] = {}
+    used: set[str] = set()
+    for cid in sorted(ids):
+        base = re.sub(r"[^0-9A-Za-z_]", "_", cid)
+        if not base or not (base[0].isalpha() or base[0] == "_"):
+            base = "n_" + base
+        name = base
+        i = 2
+        while name in used:
+            name = f"{base}__{i}"
+            i += 1
+        used.add(name)
+        mapping[cid] = name
+    return mapping
 
 
 def _md_header(title: str, generated_at: str) -> list[str]:
@@ -79,6 +106,24 @@ def _git_last_commit(root: Path, rel: str) -> str:
         return out.stdout.strip()
     except Exception:  # noqa: BLE001
         return ""
+
+
+def stable_generated_at(root: Path) -> str:
+    """Reproducible generation timestamp: the repository's last-commit time.
+
+    Regenerating without new commits yields byte-for-byte identical output
+    (improvement: no wall-clock noise in generated files). Falls back to a
+    fixed marker when Git is unavailable (e.g. synthetic test repos).
+    """
+    try:
+        out = subprocess.run(["git", "log", "-1", "--format=%cI"],
+                             cwd=root, capture_output=True, text=True, timeout=30)
+        ts = out.stdout.strip()
+        if out.returncode == 0 and ts:
+            return f"{ts} (last commit)"
+    except Exception:  # noqa: BLE001
+        pass
+    return "(no Git history available)"
 
 
 # --------------------------------------------------------------------- build
@@ -811,18 +856,16 @@ def build_concept_map(repo: Repo, generated_at: str) -> str:
         lines.append("")
         return "\n".join(lines)
 
-    def node(cid: str) -> str:
-        return cid.replace("-", "_")
-
     involved = sorted({c for e in edges for c in e[:2]})
+    nodes = mermaid_node_ids(involved)
     lines.append("```mermaid")
     lines.append("graph LR")
     for cid in involved:
         label = str(repo.concepts.get(cid, {}).get("label", cid)).replace('"', "'")
-        lines.append(f'    {node(cid)}["{label}"]')
+        lines.append(f'    {nodes[cid]}["{label}"]')
     for pre, dep, rtype in edges:
         arrow = "-->" if rtype == "requires" else "-.->"
-        lines.append(f"    {node(pre)} {arrow} {node(dep)}")
+        lines.append(f"    {nodes[pre]} {arrow} {nodes[dep]}")
     lines.append("```")
     lines.append("")
     return "\n".join(lines)
@@ -867,8 +910,12 @@ def build_health(repo: Repo, generated_at: str) -> str:
 
 
 def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
-    """Build all outputs; returns {relative path: content}."""
-    generated_at = generated_at or _dt.datetime.now().astimezone().isoformat(timespec="seconds")
+    """Build all outputs; returns {relative path: content}.
+
+    The default timestamp is the last-commit time (stable_generated_at), so
+    repeated generation over the same committed tree is byte-for-byte identical.
+    """
+    generated_at = generated_at or stable_generated_at(repo.root)
     manifest = build_manifest(repo, generated_at)
     backlinks = build_backlinks(repo, generated_at)
     outputs = {
@@ -888,10 +935,46 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     return outputs
 
 
+# Files under generated/ that write_outputs must never delete: repo scaffolding,
+# OS noise, and the validator's own report (written by tools/validate.py).
+_KEEP_NAMES = {".gitkeep", ".DS_Store"}
+_KEEP_REPORT_PREFIX = "validation-report"
+
+
 def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
+    """Write all outputs AND delete stale generated files, so that generated/
+    exactly reflects the canonical data (e.g. views of deleted collections
+    do not linger)."""
     gen = repo.root / "generated"
     (gen / "reports").mkdir(parents=True, exist_ok=True)
     for rel, content in outputs.items():
         target = gen / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
+    _remove_stale(gen, outputs)
+
+
+def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
+    expected = {PurePosixPath(rel) for rel in outputs}
+    stale_dirs: list[Path] = []
+    for f in sorted(gen.rglob("*")):
+        if f.is_dir():
+            stale_dirs.append(f)
+            continue
+        if f.name in _KEEP_NAMES:
+            continue
+        rel = PurePosixPath(f.relative_to(gen).as_posix())
+        if rel.parts and rel.parts[0] == "reports" \
+                and f.name.startswith(_KEEP_REPORT_PREFIX):
+            continue
+        if rel not in expected:
+            f.unlink()
+    # Prune directories left empty by the deletions (deepest first);
+    # rmdir refuses non-empty directories, so this is safe.
+    for d in sorted(stale_dirs, reverse=True):
+        if d.name == "reports":
+            continue
+        try:
+            d.rmdir()
+        except OSError:
+            pass
