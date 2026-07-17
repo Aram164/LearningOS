@@ -2,6 +2,26 @@
 
 Plain-file knowledge repository for deep technical learning. Fresh Git repository, scaffolded 2026-07-16 (Stage 1, Phase 2 of the migration).
 
+## Quick start
+
+The **operator** is whoever drives this repository through its rules — normally
+Claude reading `CLAUDE.md`, but a person with a text editor and Git can operate
+it by hand. The repository is the source of truth; the operator only files,
+links, and rebuilds views. Everything under `generated/` is a disposable view —
+never edit it.
+
+1. **With Claude:** open this folder in a chat and say what you're working on.
+   The operator reads `CLAUDE.md`, then `work/COORDINATION.md` +
+   `records/modules.yaml`, then your active workspace. That's the whole interface.
+2. **By hand:** exam facts live in `records/modules.yaml`; "what should I do
+   next?" is `generated/coordination-view.md` (run `make views` to refresh);
+   your knowledge is under `knowledge/notes/`; capture anything into `work/inbox/`.
+3. **After editing:** run `make check`. The pre-commit hook blocks commits while
+   the validator reports errors.
+
+The rest of this file is the full manual; the four commands are under
+[Commands](#commands).
+
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
 - **How the operator behaves:** `system/CLAUDE.md` (copied to root `CLAUDE.md`)
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed same day (`migration/final-report.md`). This repository is the operational root; the legacy `semestercontext/` tree is frozen history (banners point here).

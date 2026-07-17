@@ -2,3 +2,6 @@ generated/*
 !generated/.gitkeep
 .DS_Store
 **/__pycache__/
+# Project-local virtual environment (created by `make setup`); never committed —
+# it is platform-specific and each contributor builds their own.
+.venv/
