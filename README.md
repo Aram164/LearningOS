@@ -52,3 +52,8 @@ python -m pytest                    # test suite
 ```
 
 Requires Python 3.10+, `pyyaml`, `jsonschema>=4`, `pytest`.
+
+A pre-commit hook (canonical copy `tools/hooks/pre-commit`, installed in
+`.git/hooks/`) blocks any commit while the validator reports errors; warnings
+print but never block. After a fresh clone/move, reinstall with
+`cp tools/hooks/pre-commit .git/hooks/ && chmod +x .git/hooks/pre-commit`.
