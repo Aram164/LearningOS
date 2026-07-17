@@ -1,0 +1,55 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
+title: Math — lecture series & video courses (statistics + analysis)
+description: >-
+  Statistics rule: pick ONE rigorous-probability course (STAT110x / 18.650 /
+  6.041SC), don't stack. Analysis rule: layer 1 (Leonard/3B1B) BEFORE the
+  skript's ε-δ version of the same idea.
+entries:
+  - source: source-sad-2025-recordings
+    group: statistics
+    why: "Local video walkthroughs when the 2026 slides don't click; best runs: 2025 L05+L06 (E[X]), L09+L10 (inference), L14+L15 (NNs ×2)."
+  - source: source-stat110
+    group: statistics
+    why: "Rigorous twin of SaD 04–08; high-ROI Units 3–6, grab the distribution cheat-sheet early."
+  - source: source-mit-18650
+    group: statistics
+    why: "Rigorous twin of SaD 09–10; pulls: L4–5 MLE, L7–10 testing, L13–16 regression-as-inference."
+  - source: source-mit-6041sc
+    group: statistics
+    why: "Third rigorous-probability option — full OCW recitations + problem solutions. Pick ONE of the three."
+  - source: source-mit-1805
+    group: statistics
+    why: "OCW problem-set layer for the SaD probability ladder (already wired into the deep plan)."
+  - source: source-jbstatistics
+    group: statistics
+    why: "Short (~8 min), calm, calculation-focused — closest in spirit to actual SaD exam tasks; UE5/UE6 companion."
+  - source: source-kurzes-tutorium-statistik
+    group: statistics
+    why: "⭐ The German-language SaD twin — same exam vocabulary as the Klausur (Merkmalstypen, Lagemaße, Prüfgröße…)."
+  - source: source-brandon-foltz
+    group: statistics
+    why: "The 'slow twin' of jbstatistics — use when a jb video is too fast."
+  - source: source-zedstatistics
+    group: statistics
+    why: "Test-framework-first (what H₀ means) — the conceptual complement to jb/Foltz."
+  - source: source-statquest
+    group: statistics
+    why: "Probability/estimation/testing set embedded in the probability-inference deep plan."
+  - source: source-mit-18100a
+    group: analysis
+    why: "⭐ Rigor layer for the Kombimodul — same arc as the HU skript; pull mapped lectures only (skip L2/3/6/18/25)."
+  - source: source-professor-leonard
+    group: analysis
+    why: "Layer-1 intuition/calculation fluency; watch BEFORE the skript when a topic is brand-new."
+  - source: source-strang-calculus
+    group: analysis
+    why: "Written layer-1 alternative to Leonard; Ch 5 for Riemann-sum intuition (AN.G1)."
+  - source: source-3b1b-essence-of-calculus
+    group: analysis
+    why: "The pictures under AN.A/E/F/G — watch before the skript's ε-δ version of the same idea."
+  - source: source-daniel-jung
+    group: analysis
+    why: "5-min German unblocks in Klausur vocabulary; not systematic study."
+  - source: source-mathepeter
+    group: analysis
+    why: "German single-topic explainers alongside Daniel Jung."

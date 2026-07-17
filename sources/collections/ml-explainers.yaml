@@ -1,0 +1,28 @@
+# Migrated from legacy LEARNING-RESOURCES.md §1 (KW 24–29 curation).
+title: ML — blogs, essays & interactive explainers
+description: >-
+  Written and interactive supplements for the AML/SaD arc — the video-adjacent
+  layer under the lecture-series collections. Point-of-use StatQuest sets stay
+  embedded in the Regression Bridge, the probability-inference deep plan, and
+  the Master Wiring notes.
+entries:
+  - source: source-rohrer-e2eml
+    why: "⭐ Visual from-scratch ML explainers; the 'Under the Hood' series mirrors the AML lecture sequence almost 1:1 — chapter→lecture map in the source record."
+  - source: source-cs231n-notes
+    why: "The standard written CNN reference + the k-NN/CV and SGD notes for L02/L06."
+  - source: source-statquest
+    why: "~25 curated per-topic singles, embedded at point-of-use in the bridge/deep-plan/wiring notes."
+  - source: source-bendersky-normal-equation
+    why: "Fills the normal-equation proof AML L04 states without proving."
+  - source: source-sklearn-user-guide
+    why: "The degree 1/4/15 overfitting demo for L04 + the authoritative free Ridge/Lasso reference."
+  - source: source-domingos-useful-things
+    why: "⭐ One read covers L02–L04's conceptual layer."
+  - source: source-fortmann-roe-bias-variance
+    why: "⭐ The canonical bias–variance essay, worked through k-NN — exact fit for L02 §8."
+  - source: source-distill-momentum
+    why: "Optional depth: the L06 outlook beyond the examinable core."
+  - source: source-setosa-ols
+    why: "Draggable least-squares line — L03 intuition for minimizing MSE."
+  - source: source-asimov-nn-zoo
+    why: "Quick 'which net is which' map for L08–L11 and the AMLS/DL1 zoo."

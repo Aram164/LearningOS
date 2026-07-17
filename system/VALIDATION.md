@@ -26,6 +26,8 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **W** Alias collision: one alias maps to multiple concepts.
 - **W** Two source records share title+author or identical URL/identifier (duplicate candidates).
 - **E** Concept records contain no body/explanation fields beyond short description.
+- **E** Every `sources/collections/*.yaml` file validates against `collections.schema.json`; filename is kebab-case; every entry's `source` resolves to a registered source.
+- **W** A source is listed more than once within the same collection.
 
 ## Ownership boundaries
 

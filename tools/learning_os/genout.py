@@ -108,6 +108,15 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "attempts": list(m.get("attempts", []) or []),
             "grade": m.get("grade"),
         })
+    for name in sorted(repo.collections):
+        doc = repo.collections[name]
+        records.append({
+            "id": name, "type": "collection",
+            "title": doc.get("title", name),
+            "path": f"sources/collections/{name}.yaml",
+            "sources": [str(e.get("source", "")) for e in doc.get("entries", []) or []
+                        if isinstance(e, dict)],
+        })
     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
         records.append({
             "id": ws.id, "type": "workspace", "title": ws.meta.get("title", ""),
@@ -137,7 +146,8 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
         "relations": relations,
         "counts": {
             "notes": len(repo.notes), "concepts": len(repo.concepts),
-            "sources": len(repo.sources), "modules": len(repo.modules),
+            "sources": len(repo.sources), "collections": len(repo.collections),
+            "modules": len(repo.modules),
             "workspaces_active": len(repo.active_workspaces()),
             "workspaces_archived": len(repo.archived_workspaces()),
             "relations": len(repo.relations),
@@ -290,8 +300,59 @@ def _lecture_entries(repo: Repo) -> list[tuple[str, str, str, dict]]:
     return entries
 
 
+def build_collection_view(repo: Repo, name: str, doc: dict, generated_at: str) -> str:
+    """Render one curated collection (sources/collections/<name>.yaml) as a
+    readable list, grouped by first appearance of `group`."""
+    lines = _md_header(doc.get("title", name), generated_at)
+    if doc.get("description"):
+        lines.append(str(doc["description"]).strip())
+        lines.append("")
+    current_group = object()  # sentinel: first entry always opens its section
+    for entry in doc.get("entries", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        group = entry.get("group")
+        if group != current_group:
+            current_group = group
+            if group:
+                lines.append(f"## {group}")
+                lines.append("")
+        sid = str(entry.get("source", ""))
+        s = repo.sources.get(sid, {})
+        title = s.get("title", sid)
+        url = s.get("url")
+        head = f"**[{title}]({url})**" if url else f"**{title}**"
+        ident = [s.get("type", ""),
+                 ", ".join(s.get("authors", []) or []) or s.get("organization", ""),
+                 str(s.get("year", "") or "")]
+        ident_str = " · ".join(x for x in ident if x)
+        lines.append(f"- {head}" + (f" ({ident_str})" if ident_str else "") + f" — `{sid}`")
+        if entry.get("why"):
+            lines.append(f"  - {entry['why']}")
+        if s.get("material"):
+            lines.append(f"  - local: `{s['material']}`")
+        for key, val in (s.get("identifiers") or {}).items():
+            lines.append(f"  - {key}: {val}")
+        lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append(f"Canonical input: `sources/collections/{name}.yaml` — source judgments "
+                 "live in the source records (see source-index.md), not here.")
+    return "\n".join(lines)
+
+
 def build_source_index(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Source index", generated_at)
+
+    if repo.collections:
+        lines.append("## Collections (curated lists)")
+        lines.append("")
+        for name in sorted(repo.collections):
+            doc = repo.collections[name]
+            n = len(doc.get("entries", []) or [])
+            lines.append(f"- [{doc.get('title', name)}](collections/{name}.md) — "
+                         f"{n} entries (`sources/collections/{name}.yaml`)")
+        lines.append("")
 
     lines.append("## Registry")
     lines.append("")
@@ -708,7 +769,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     generated_at = generated_at or _dt.datetime.now().astimezone().isoformat(timespec="seconds")
     manifest = build_manifest(repo, generated_at)
     backlinks = build_backlinks(repo, generated_at)
-    return {
+    outputs = {
         "manifest.json": json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         "concept-index.md": build_concept_index(repo, backlinks, generated_at) + "\n",
@@ -718,10 +779,16 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "dependency-report.md": build_dependency_report(repo, backlinks, generated_at) + "\n",
         "reports/health.md": build_health(repo, generated_at) + "\n",
     }
+    for name in sorted(repo.collections):
+        outputs[f"collections/{name}.md"] = build_collection_view(
+            repo, name, repo.collections[name], generated_at) + "\n"
+    return outputs
 
 
 def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
     gen = repo.root / "generated"
     (gen / "reports").mkdir(parents=True, exist_ok=True)
     for rel, content in outputs.items():
-        (gen / rel).write_text(content, encoding="utf-8")
+        target = gen / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")

@@ -1,0 +1,123 @@
+# Migrated from the six legacy MASTERS-*-RESOURCES axis files (KW 24–25 +
+# mega-sweep 2026-06-11). Full per-module menus with Einsatz timing live in
+# work/active/workspace-degree-planning/inputs/MASTERS-*-RESOURCES.md.
+title: Degree anchors — the cross-module carrier tier (TU masters planning)
+description: >-
+  Only the resources the axis files name as carrying MULTIPLE future modules
+  ("ein Buch, vier Module") or as the examiner's own text. Prospective picks —
+  nothing here is used-and-verified yet. When a module is actually chosen, its
+  full menu is promoted from the degree-planning workspace inputs into the
+  registry (WORKFLOWS §6a). Also anchored elsewhere: Bishop PRML (carries
+  ML 2-X + MI I/II + FoSIDE), ESL/MML/ISLP/Sutton-Barto (ml-bookshelf),
+  Karpathy/6.S191/NYU-DL (ml-lecture-series), 10-414/MLSysBook/USP/HTSYM
+  (ml-systems shelves), Kleinberg-Tardos (algorithms-bookshelf),
+  Caltech-LFD/6.036 (practice banks), Huyen books (ml-systems-bookshelf).
+entries:
+  - source: source-prince-udl
+    group: ml
+    why: "One book carries DL1 AND DL2 — the designated Hauptbuch for both."
+  - source: source-d2l
+    group: ml
+    why: "The PyTorch rail for DL1 (module requires PyTorch explicitly)."
+  - source: source-mueller-kernel-tutorial
+    group: ml
+    why: "The Müller-school thread: read before ML 2-X — lecture notation and exam idioms come from this tutorial."
+  - source: source-schoelkopf-smola-lwk
+    group: ml
+    why: "The structured-kernels depth behind ML 2-X that standard books lack."
+  - source: source-berkeley-cs189
+    group: ml
+    why: "Best free written-exam training for the ML-2-X/MI cluster."
+  - source: source-ssbd-understanding-ml
+    group: math
+    why: "MathML's TOC is this book's TOC; also carries MI I's learning theory."
+  - source: source-mohri-foundations-ml
+    group: math
+    why: "The Rademacher second perspective for MathML."
+  - source: source-vershynin-hdp
+    group: math
+    why: "Concentration + compressive sensing — two MathML blocks, one free book."
+  - source: source-mit-18657
+    group: math
+    why: "Name-identical MIT course — its psets are MathML's Übungsblätter."
+  - source: source-boyd-convex-optimization
+    group: math
+    why: "One investment carries OptAlgos (KKT/duality) AND ML 2-X's SVM duality."
+  - source: source-toussaint-optimization-script
+    group: math
+    why: "OptAlgos is fully pre-studyable: the lecturer's complete script + exercises."
+  - source: source-nocedal-wright
+    group: math
+    why: "The written-out derivations where Toussaint's slides are telegraphic (library copy)."
+  - source: source-papoulis-pillai
+    group: math
+    why: "FoSP Hauptreferenz — MMSE/orthogonality/spectral representation are its heartland (library copy)."
+  - source: source-gallager-stochastic-processes
+    group: math
+    why: "FoSP's Markov/large-deviations block + the 6.262 OCW video/pset track."
+  - source: source-bertsimas-tsitsiklis-lp
+    group: math
+    why: "ADM II first half (simplex → interior point) with oral-exam-grade geometric intuition (library copy)."
+  - source: source-korte-vygen
+    group: math
+    why: "ADM II second half; its approximation chapters clamp ADM II and III together (library copy)."
+  - source: source-schrijver-combinatorial-notes
+    group: math
+    why: "Free 250-page compression — the pre-oral-exam review layer for ADM II."
+  - source: source-williamson-shmoys
+    group: math
+    why: "ADM III Hauptbuch — nearly congruent with the module profile, free."
+  - source: source-arora-barak
+    group: algo
+    why: "Carries Computational Complexity + ADM III's PCP block + Randomized's RP/BPP/ZPP."
+  - source: source-mitzenmacher-upfal
+    group: algo
+    why: "The Randomized Algorithmics standard (library copy)."
+  - source: source-cygan-parameterized
+    group: algo
+    why: "The free FPT text of the Berlin school — Nichterlein examines all AKT modules; exercises double as drill."
+  - source: source-kleppmann-ddia
+    group: dataeng
+    why: "The shared knowledge base for LDE, MDS, CSB, ScalEng and Cloud Native — read once, harvest five times."
+  - source: source-cmu-15445
+    group: dataeng
+    why: "THE DBT reference lecture; its exam archives match the DBT Klausur format."
+  - source: source-mit-6824
+    group: dataeng
+    why: "The infrastructure foundations under LDE + the practical counterpart to MTDA."
+  - source: source-abedjan-data-profiling
+    group: dataeng
+    why: "The examiner's own book — carries DI:AS and the Abedjan Forschungsseminar."
+  - source: source-hogan-knowledge-graphs
+    group: dataeng
+    why: "Carries KG&AI and Research Data Infrastructures — free survey-book."
+  - source: source-pierce-tapl
+    group: runtime
+    why: "TPS carries the book's title; also carries Lambda-Kalkül — two oral modules, one book (library copy)."
+  - source: source-software-foundations
+    group: runtime
+    why: "TAPL as machine-checked Coq exercises — self-grading problem sheets for TPS/Lambda."
+  - source: source-cornell-cs6120
+    group: runtime
+    why: "Carries Compiling Techniques AND Compiler Design — free self-guided with implementation tasks."
+  - source: source-kirk-hwu-pmpp
+    group: runtime
+    why: "Carries GPU Computing + the frontier-lab self-study path (library copy)."
+  - source: source-gpu-mode-lectures
+    group: runtime
+    why: "The kernel-engineering practice track for GPU Computing + frontier profiling methodology."
+  - source: source-bermbach-csb
+    group: benchmarking
+    why: "The CSB lecturer's own book; Bermbach measurement rules = the thesis-evaluation quality bar."
+  - source: source-jain-performance-analysis
+    group: benchmarking
+    why: "The methodology bible named in the canon for CSB, ROC, AE II and the thesis (library copy)."
+  - source: source-mcgeoch-experimental-algorithmics
+    group: benchmarking
+    why: "Carries AE II and ROC's reproducibility block (library copy)."
+  - source: source-google-sre-book
+    group: benchmarking
+    why: "The free operations perspective for Scalability Engineering."
+  - source: source-redbook
+    group: benchmarking
+    why: "The free reading spine for ROC's paper cycles."

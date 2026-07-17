@@ -1,0 +1,362 @@
+# Degree-anchors partition — the cross-module carrier tier of the six
+# MASTERS-*-RESOURCES axis files (KW 24–25 curation, mega-sweep 2026-06-11).
+# The FULL per-module menus live verbatim in
+# work/active/workspace-degree-planning/inputs/MASTERS-*-RESOURCES.md;
+# registered here are only the anchors each axis names as carrying MULTIPLE
+# future modules ("ein Buch, vier Module"). The rest of a module's menu is
+# promoted into the registry when the module is actually chosen
+# (WORKFLOWS §6a). All evaluations are prospective degree-planning picks, not
+# used-and-verified judgments — treat level/fit claims accordingly.
+sources:
+  # ================================================= ML axis (🤖) anchors
+  - id: source-prince-udl
+    title: Prince — Understanding Deep Learning
+    type: book
+    authors: [Simon Prince]
+    url: https://udlbook.github.io/udlbook/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Free, modern, didactically outstanding; first half = DL1, second half (transformers, GANs, flows, diffusion) = DL2 — one book carries both modules; free notebooks replace paid exercise material"
+
+  - id: source-d2l
+    title: Zhang et al. — Dive into Deep Learning (D2L)
+    type: book
+    url: https://d2l.ai/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Interactive, every concept with runnable PyTorch code — the PyTorch companion rail for DL1 (module requires PyTorch explicitly)"
+
+  - id: source-mueller-kernel-tutorial
+    title: Müller, Mika, Rätsch, Tsuda, Schölkopf — An Introduction to Kernel-Based Learning Algorithms (IEEE TNN)
+    type: paper
+    year: 2001
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "By the ML 2-X examiner himself — the canonical kernel tutorial of his group; the TU lecture notation and exam idioms come directly from this school. Read before ML 2-X"
+
+  - id: source-schoelkopf-smola-lwk
+    title: Schölkopf & Smola — Learning with Kernels (MIT Press)
+    type: book
+    authors: [Bernhard Schölkopf, Alexander Smola]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The full kernel theory (RKHS, representer theorem, kernels for strings/graphs) — exactly the 'structured data' lecture material standard books lack (ML 2-X)"
+
+  - id: source-berkeley-cs189
+    title: Berkeley CS189/289A — Intro ML (past exams with solutions)
+    type: course
+    organization: UC Berkeley
+    url: https://eecs189.org/
+    evaluations:
+      - roles: [exercise]
+        strengths:
+          - "Midterms/finals incl. solutions — the best free written-exam training for ML-2-X/MI material (SVM duality, bias-variance, EM steps)"
+
+  # ============================================= Math axis (🧮) anchors
+  - id: source-ssbd-understanding-ml
+    title: "Shalev-Shwartz & Ben-David — Understanding Machine Learning: From Theory to Algorithms"
+    type: book
+    authors: [Shai Shalev-Shwartz, Shai Ben-David]
+    url: https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "The MathML module's topic list reads like this book's TOC (uniform convergence, bias-complexity, nonuniform learnability, runtime of learning are literally chapter titles); also carries MI I's learning-theory half. Free from the authors"
+
+  - id: source-mohri-foundations-ml
+    title: Mohri, Rostamizadeh & Talwalkar — Foundations of Machine Learning (2nd ed.)
+    type: book
+    authors: [Mehryar Mohri, Afshin Rostamizadeh, Ameet Talwalkar]
+    url: https://cs.nyu.edu/~mohri/mlbook/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The Rademacher-complexity perspective SSBD treats briefly; cleanest generalization bounds for kernel methods. Free PDF"
+
+  - id: source-vershynin-hdp
+    title: "Vershynin — High-Dimensional Probability: An Introduction with Applications in Data Science"
+    type: book
+    authors: [Roman Vershynin]
+    url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
+    evaluations:
+      - roles: [derivation]
+        level: advanced
+        strengths:
+          - "THE text for concentration inequalities + suprema of empirical processes; Ch 10 covers compressive sensing — two MathML blocks from one free source"
+
+  - id: source-mit-18657
+    title: MIT 18.657 — Mathematics of Machine Learning (Rigollet, OCW F2015)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-657-mathematics-of-machine-learning-fall-2015/
+    evaluations:
+      - roles: [exercise]
+        strengths:
+          - "Name-identical to the TU MathML module: full lecture notes + problem sets on VC, uniform convergence, concentration — no closer external material exists"
+
+  - id: source-boyd-convex-optimization
+    title: Boyd & Vandenberghe — Convex Optimization
+    type: book
+    authors: [Stephen Boyd, Lieven Vandenberghe]
+    url: https://web.stanford.edu/~boyd/cvxbook/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "Free book + EE364a videos + published psets/finals with solutions; Ch 5 duality/KKT is the tool the SVM derivation stands on — one investment carries OptAlgos AND ML 2-X"
+
+  - id: source-toussaint-optimization-script
+    title: Toussaint — Optimization Algorithms (complete TU lecture script + exercises)
+    type: lecture
+    authors: [Marc Toussaint]
+    organization: TU Berlin
+    url: https://www.user.tu-berlin.de/mtoussai/teaching/Lecture-Optimization.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "The module IS fully studyable in advance: the lecturer's own indexed script incl. all exercises ('to help prepare for exams') — the included exercises ARE the Klausur training"
+
+  - id: source-nocedal-wright
+    title: Nocedal & Wright — Numerical Optimization (2nd ed.)
+    type: book
+    authors: [Jorge Nocedal, Stephen Wright]
+    evaluations:
+      - roles: [reference, derivation]
+        strengths:
+          - "The standard work whose chapters (Wolfe line search, Newton, BFGS, KKT, augmented Lagrangian, interior point) cover OptAlgos parts 1+2 one-to-one — the written-out derivations where Toussaint's slides are telegraphic"
+
+  - id: source-papoulis-pillai
+    title: Papoulis & Pillai — Probability, Random Variables and Stochastic Processes (4th ed.)
+    type: book
+    authors: [Athanasios Papoulis, S. Unnikrishna Pillai]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The EE classic whose chapter order matches FoSP's module outline; MMSE + orthogonality principle + spectral representation are Papoulis heartland (Caire school)"
+
+  - id: source-gallager-stochastic-processes
+    title: "Gallager — Stochastic Processes: Theory for Applications (+ MIT 6.262 OCW)"
+    type: book
+    authors: [Robert Gallager]
+    identifiers:
+      mit-6262: https://ocw.mit.edu/courses/6-262-discrete-stochastic-processes-spring-2011/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Markov chains, large deviations, convergence notions with exactly the rigor/intuition mix oral exams reward; the 6.262 OCW run has videos + psets/quizzes WITH solutions — the best free lecture track for FoSP"
+
+  - id: source-bertsimas-tsitsiklis-lp
+    title: Bertsimas & Tsitsiklis — Introduction to Linear Optimization
+    type: book
+    authors: [Dimitris Bertsimas, John Tsitsiklis]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The standard for ADM II's first half: simplex variants, polyhedral geometry, duality, ellipsoid, interior point — with the geometric intuition that earns points in oral exams"
+
+  - id: source-korte-vygen
+    title: "Korte & Vygen — Combinatorial Optimization: Theory and Algorithms"
+    type: book
+    authors: [Bernhard Korte, Jens Vygen]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The 'Bonn bible': matchings, matroids, flows, integer programs — covers ADM II's second half completely, and its approximation chapters are the bridge to ADM III"
+
+  - id: source-schrijver-combinatorial-notes
+    title: Schrijver — A Course in Combinatorial Optimization (lecture notes)
+    type: book
+    authors: [Alexander Schrijver]
+    url: https://homepages.cwi.nl/~lex/files/dict.pdf
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "~250 pages of condensed notes from the grandmaster (LP duality, matchings, matroids, TU matrices) — ideal pre-oral-exam compression for ADM II"
+
+  - id: source-williamson-shmoys
+    title: Williamson & Shmoys — The Design of Approximation Algorithms
+    type: book
+    authors: [David Williamson, David Shmoys]
+    url: https://www.designofapproxalgs.com/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Nearly congruent with the ADM III module profile (LP rounding in all variants, primal-dual, local ratio, SDP/MAX CUT — Williamson co-authored Goemans-Williamson); completely free"
+
+  # ============================================ Algo axis (⚙️) anchors
+  - id: source-arora-barak
+    title: "Arora & Barak — Computational Complexity: A Modern Approach"
+    type: book
+    authors: [Sanjeev Arora, Boaz Barak]
+    url: https://theory.cs.princeton.edu/complexity/
+    evaluations:
+      - roles: [first-learning, reference]
+        strengths:
+          - "Free draft PDF; carries the Computational Complexity module AND ADM III's PCP/hardness block AND the RP/BPP/ZPP material in Randomized Algorithmics"
+
+  - id: source-mitzenmacher-upfal
+    title: Mitzenmacher & Upfal — Probability and Computing (2nd ed.)
+    type: book
+    authors: [Michael Mitzenmacher, Eli Upfal]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The modern standard for Randomized Algorithmics: Chernoff, balls-into-bins, Markov chains, martingales"
+
+  - id: source-cygan-parameterized
+    title: Cygan et al. — Parameterized Algorithms
+    type: book
+    authors: [Marek Cygan, Fedor Fomin, Łukasz Kowalik, Daniel Lokshtanov, Dániel Marx, Marcin Pilipczuk, Michał Pilipczuk, Saket Saurabh]
+    url: https://www.mimuw.edu.pl/~malcin/book/parameterized-algorithms.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "The free FPT standard text (Berlin school territory — Nichterlein examines all AKT modules); per-chapter exercises with difficulty grades and hints double as the drill bank"
+
+  # ========================================= DataEng axis (🛢) anchors
+  - id: source-kleppmann-ddia
+    title: Kleppmann — Designing Data-Intensive Applications (DDIA)
+    type: book
+    authors: [Martin Kleppmann]
+    url: https://dataintensive.net/
+    evaluations:
+      - roles: [first-learning, reference]
+        strengths:
+          - "THE one book for distributed data systems (replication, partitioning, consistency, batch, streams) — named as the shared knowledge base for LDE, MDS, CSB, Scalability Engineering and Cloud Native"
+
+  - id: source-cmu-15445
+    title: CMU 15-445/645 — Intro to Database Systems (Pavlo)
+    type: course
+    authors: [Andy Pavlo]
+    organization: CMU
+    url: https://15445.courses.cs.cmu.edu/
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "THE reference lecture for exactly the DBT material (storage, buffer pool, indexing, query execution, transactions, recovery), all on YouTube; past midterm/final archives match the DBT Klausur format"
+
+  - id: source-mit-6824
+    title: MIT 6.824/6.5840 — Distributed Systems
+    type: course
+    organization: MIT
+    url: https://pdos.csail.mit.edu/6.824/
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "Notes, papers, videos + Go labs (MapReduce, Raft, sharded KV) — the infrastructure foundations under every large-scale pipeline (LDE) and the practical counterpart to MTDA's theory"
+
+  - id: source-abedjan-data-profiling
+    title: Abedjan, Golab, Naumann & Papenbrock — Data Profiling (Synthesis Lectures)
+    type: book
+    authors: [Ziawasch Abedjan, Lukasz Golab, Felix Naumann, Thorsten Papenbrock]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "By the DI:AS module owner himself (UCCs, FDs/INDs, discovery algorithms incl. TANE) — carries both DI:AS and Abedjan's Forschungsseminar; knowing the examiner's book leads the oral exam"
+
+  - id: source-hogan-knowledge-graphs
+    title: Hogan et al. — Knowledge Graphs (ACM Computing Surveys / Synthesis Lectures)
+    type: book
+    url: https://aidanhogan.com/docs/knowledge-graphs-computing-surveys.pdf
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Free survey-book covering the KG&AI blocks almost one-to-one (models, query, embeddings) — doubly usable for Research Data Infrastructures"
+
+  # ========================================= Runtime axis (🚀) anchors
+  - id: source-pierce-tapl
+    title: Pierce — Types and Programming Languages (TAPL)
+    type: book
+    authors: [Benjamin Pierce]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The TPS module carries the book's title (operational semantics, STLC, System F); also carries Lambda-Kalkül und Typsysteme — one investment, two oral-exam modules"
+
+  - id: source-software-foundations
+    title: Pierce et al. — Software Foundations (Vol. 1–2, Coq)
+    type: book
+    url: https://softwarefoundations.cis.upenn.edu/
+    evaluations:
+      - roles: [exercise, implementation]
+        strengths:
+          - "TAPL material as machine-checked Coq exercises with automatic verification — effectively self-grading problem sheets for TPS/Lambda; free"
+
+  - id: source-cornell-cs6120
+    title: Cornell CS 6120 — Advanced Compilers (Sampson, self-guided)
+    type: course
+    authors: [Adrian Sampson]
+    organization: Cornell
+    url: https://www.cs.cornell.edu/courses/cs6120/2020fa/self-guided/
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "Free self-guided course with videos + Bril-IR implementation tasks (community solutions) — carries both Compiling Techniques (Steuwer) and Compiler Design (Juurlink)"
+
+  - id: source-kirk-hwu-pmpp
+    title: Kirk & Hwu — Programming Massively Parallel Processors (4th ed.)
+    type: book
+    authors: [David Kirk, Wen-mei Hwu]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The standard CUDA/GPU text (tiling, memory coalescing, occupancy) — carries the GPU Computing module AND the frontier-lab self-study path toward ML-systems engineering"
+
+  - id: source-gpu-mode-lectures
+    title: GPU MODE lecture series (ex CUDA MODE)
+    type: course
+    url: https://github.com/gpu-mode/lectures
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Modern kernel-engineering lecture series (YouTube + repo) — the practice track for GPU Computing and the frontier-lab profiling methodology"
+
+  # ==================================== Benchmarking axis (📊) anchors
+  - id: source-bermbach-csb
+    title: "Bermbach, Wittern & Tai — Cloud Service Benchmarking: Measuring Quality of Cloud Services from a Client Perspective"
+    type: book
+    authors: [David Bermbach, Erik Wittern, Stefan Tai]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The CSB module's own book by the lecturer — the module as prose; the Bermbach measurement rules are also the quality bar for thesis evaluations"
+
+  - id: source-jain-performance-analysis
+    title: Jain — The Art of Computer Systems Performance Analysis
+    type: book
+    authors: [Raj Jain]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The timeless methodology bible (metric choice, workload design, experiment design, common pitfalls) — named as part of the methodological canon for CSB, ROC, AE II and the thesis evaluation"
+
+  - id: source-mcgeoch-experimental-algorithmics
+    title: McGeoch — A Guide to Experimental Algorithmics
+    type: book
+    authors: [Catherine McGeoch]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "THE methodology reference for clean algorithm experiments (instance selection, measurement, statistics) — carries Algorithm Engineering II and ROC's reproducibility block"
+
+  - id: source-google-sre-book
+    title: Google SRE Book (Site Reliability Engineering)
+    type: book
+    organization: Google
+    url: https://sre.google/books/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Free; load balancing, overload handling, cascading failures — the operations perspective for Scalability Engineering"
+
+  - id: source-redbook
+    title: Bailis, Hellerstein & Stonebraker (eds.) — Readings in Database Systems (Red Book, 5th ed.)
+    type: book
+    url: http://www.redbook.io/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Completely free curated commentary on the DB canon — the reading spine for ROC's paper cycles"

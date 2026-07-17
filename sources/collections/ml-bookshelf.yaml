@@ -1,0 +1,47 @@
+# Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29 curation).
+title: ML — bookshelf (AML + deep learning)
+description: >-
+  Reading order and per-concept scoping live in the AML book-crosswalk note
+  (every L02–L10 concept mapped to exact sections with in-scope/optional/beyond
+  flags) — this shelf is the what-and-why. Depth references are read by
+  section, never linearly.
+entries:
+  - source: source-islp
+    group: spine
+    why: "The textbook spine; chapter map in the Master Wiring + the L02–L10 crosswalk. Also SaD 12 (trees §8.1–8.2) + SaD 14 (NB §4.4.4)."
+  - source: source-cs229-notes
+    group: spine
+    why: "⭐ Written companion to the CS229 video spine — derivation-first, same notation; notably a REAL gradient-descent source (most books aren't). No k-NN."
+  - source: source-esl
+    group: depth-references
+    why: "Graduate depth/proof layer behind ISLP (same authors); mapped on-scope sections only. No GD chapter — skip it for L06."
+  - source: source-murphy-pml1
+    group: depth-references
+    why: "Free modern successor to MLaPP (CS4780's cited text) — probabilistic/Bayesian depth reference, not a read-through; CS4780's section numbers are the 2012 edition, use the TOC."
+  - source: source-kroese-dsml
+    group: depth-references
+    why: "Rigorous math/stats ML text — a denser cross-check than ISLP; free official PDF."
+  - source: source-mml
+    group: depth-references
+    why: "Recommended at the end of AML L09 itself; lin-alg/calculus/probability for ML in one place — masters-grade backfill."
+  - source: source-csc411-notes
+    group: easy-second-telling
+    why: "Concise Toronto notes on k-NN, linear/logistic regression, NNs — compact second telling of the L02–L09 arc."
+  - source: source-zacharski-data-mining
+    group: easy-second-telling
+    why: "Gentle, code-first tour — below your level; keep only as an easy second telling of L02/NB."
+  - source: source-nielsen-nndl
+    group: deep-learning
+    why: "Ch 2 = backprop rigor for L09; Ch 1–3 + 6 phased in the DL-AMLS plan."
+  - source: source-goodfellow-dl
+    group: deep-learning
+    why: "⭐ The canonical DL reference — the main gap this fills; Part II = theory layer under L08–L11 and the AMLS project."
+  - source: source-bishop-prml
+    group: deep-learning
+    why: "Listed so nobody buys it by accident — legal free PDF from Microsoft; Murphy/ESL already cover the ground."
+  - source: source-sutton-barto-rl
+    group: deep-learning
+    why: "The RL bible — outside the current exam curriculum; pure DL1/for-later foundation, local so it's on hand."
+  - source: source-geron-handson
+    group: practical
+    why: "Best practical bridge across three tracks: sklearn chapters deepen mlprov, CNN chapters back the AMLS project, doubles as DL1 prep. Ch 4 exercises are in the practice bank."

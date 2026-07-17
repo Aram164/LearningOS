@@ -1,0 +1,27 @@
+# Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29) + registered job-track texts.
+title: Programming — bookshelf
+description: >-
+  The Python track spine + practical companions; deeper OOP/interpreter
+  material lives in the python-internals-shelf collection.
+entries:
+  - source: source-fluent-python
+    group: python
+    why: "The PY track spine — reading order lives with the Python plans."
+  - source: source-automate-boring-stuff
+    group: python
+    why: "Beginner practical-Python companion to Fluent Python's depth (local)."
+  - source: source-pydata-handbook
+    group: python
+    why: "NumPy → pandas → matplotlib → sklearn, worked and runnable (67 local notebooks) — the practical bridge for pandas internals + report figures."
+  - source: source-python-cheatsheets
+    group: python
+    why: "One-page API references for the daily Python-ML stack; the graphic-design sheet is for clean report figures."
+  - source: source-rust-book
+    group: job-track
+    why: "The Rust book — Phase-1 spine of the Rust learning plan (BIFOLD/DEEM job)."
+  - source: source-progit
+    group: job-track
+    why: "Git depth behind the fork-based contribution workflow."
+  - source: source-hu-git-intro
+    group: job-track
+    why: "The HU Git intro deck (local) — course-local first telling."

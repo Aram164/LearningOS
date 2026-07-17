@@ -1,0 +1,15 @@
+# Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24 curation).
+title: Algorithms — bookshelf (Algo 2)
+description: >-
+  The HU course texts + the narrative upgrade for the flows/matching half.
+  Erickson's free book sits in the algorithms-lecture-series collection as the
+  proof companion.
+entries:
+  - source: source-clrs
+    why: "The HU AlgoDat II base text (local: DE 4. Aufl. = EN 3rd ed.)."
+  - source: source-dms-grundwerkzeuge
+    why: "Named in the course literature for Kap. 1 — Sanders (KIT lectures) is a co-author, so vocabulary matches."
+  - source: source-ottmann-widmayer
+    why: "The other German course companion (local)."
+  - source: source-kleinberg-tardos
+    why: "⭐ THE book for the flows/matching/stable-matching half (Kap. 7–10 ≈ AL.G–I3) — better narrative proofs than CLRS for exactly these topics; the Wayne decks are its official slides."

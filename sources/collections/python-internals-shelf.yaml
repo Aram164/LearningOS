@@ -1,0 +1,38 @@
+# Migrated from legacy LEARNING-RESOURCES.md §8 (KW 24; links verified live then).
+title: Python — OOP, scope & interpreter internals
+description: >-
+  Requested KW 24 when inheritance/scope/interpreter felt vague during mlprov
+  subclassing work. Complements — doesn't replace — Fluent Python: FP Ch 6
+  (references) ↔ Batchelder; FP Ch 14 (inheritance) ↔ Hettinger. Tier 3 is
+  post-sprint depth by design.
+entries:
+  - source: source-hettinger-super
+    group: tier-1-now
+    why: "⭐ ~45 min. THE inheritance/MRO mental model — structurally identical to the ProvDataFrame delegation pattern."
+  - source: source-batchelder-names
+    group: tier-1-now
+    why: "⭐ ~40 min. Names/values/mutation — why one provenance DataFrame gets shared across objects."
+  - source: source-realpython-legb
+    group: tier-1-now
+    why: "~40 min, skim the second half. The missing scope piece (LEGB, global/nonlocal, the C++ intuition trap)."
+  - source: source-python-tutor
+    group: tier-1-now
+    why: "Use WHILE reading the two above — paste mlprov-style snippets and watch frames/arrows/mutation live."
+  - source: source-corey-schafer-oop
+    group: tier-2-optional
+    why: "Calm video fallback if Hettinger moves too fast (#4 inheritance, #5 dunders; skip #1–2)."
+  - source: source-numpy-subclassing-docs
+    group: tier-2-optional
+    why: "__array_finalize__ — read AFTER Hettinger; the skeleton's comments already cite it."
+  - source: source-pandas-subclassing-docs
+    group: tier-2-optional
+    why: "_metadata/_constructor — how provenance survives pandas ops; read AFTER Hettinger."
+  - source: source-python-docs-classes-mro
+    group: tier-2-optional
+    why: "Canonical inheritance + C3 linearization reference — the formal version of Hettinger's rules."
+  - source: source-kaptur-byterun
+    group: tier-3-post-sprint
+    why: "⭐ ~1.5h essay. The single best 'how the interpreter works' piece for this level — scope IS the frame structure."
+  - source: source-guo-cpython-internals
+    group: tier-3-post-sprint
+    why: "10h line-by-line C walkthrough — cherry-pick L1/L3/L8; watch Kaptur first (Guo's own advice)."

@@ -1,0 +1,16 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24 curation).
+title: Programming — tool & library video courses
+description: >-
+  sklearn/PyTorch/Python courses serving mlprov, the AMLS project, and the
+  BIFOLD/DEEM job.
+entries:
+  - source: source-tu-python-ml-course
+    why: "Exercise sheets mapped per target: Sheet 2 → mlprov/job, Sheet 3 → Task 1.1, Sheet 4 → Block E lin-alg, Sheet 5 → autograd/Numba/Cython."
+  - source: source-data-school-sklearn
+    why: "11-video sklearn API course; only the fit/predict-contract videos needed for mlprov (embedded in the sklearn crash plan)."
+  - source: source-calmcode-sklearn
+    why: "Micro-videos #3–5 = fastest visual intro to estimator + Pipeline mechanics."
+  - source: source-patrick-loeber-pytorch-cnn
+    why: "Same task structure as the AMLS project CNN."
+  - source: source-comprehensive-rust
+    why: "Rust course layer for the job track (Rust learning plan Phase 1)."

@@ -1,0 +1,24 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
+title: ML systems — lecture series & video courses (AMLS)
+description: >-
+  The SS26 course page is THE spine (slides + tubcloud mp4 for every held
+  lecture); everything else is depth or fallback.
+entries:
+  - source: source-amls-ss26-lectures
+    group: spine
+    why: "⭐⭐ THE course — watch the matching mp4 → slides → self-test; per-lecture map in the AMLS crosswalk note."
+  - source: source-amls-prior-archives
+    group: fallback
+    why: "Same professor, same course, prior years (SS23 links mp4s for all 12 lectures) — fallback/extra pass only; superseded for lecture processing."
+  - source: source-cmu-10414
+    group: depth
+    why: "⭐ The AMLS exam's closest free sibling — same systems stack; also the best place to understand what mlprov-style instrumentation sits on top of."
+  - source: source-mit-6172
+    group: depth
+    why: "Parallelism/races, caching/locality — both the supplement and the written-drill anchor for S.C/S.E blocks."
+  - source: source-stanford-cs149
+    group: depth
+    why: "Parallel abstractions supplement for data-/task-parallel execution (lecture 05)."
+  - source: source-mit-6s191
+    group: depth
+    why: "L8 (parallel training) only, optional."
