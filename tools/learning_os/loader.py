@@ -5,6 +5,7 @@ depend on registry partitioning):
   - concepts:  knowledge/concepts.yaml            or knowledge/concepts/*.yaml
   - relations: knowledge/concept-relations.yaml   or knowledge/concept-relations/*.yaml
   - sources:   sources/sources.yaml               or sources/registry/*.yaml
+  - collections: sources/collections/*.yaml       (one curated list per file)
   - modules:   records/modules.yaml
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
@@ -159,6 +160,8 @@ class Repo:
     relations: list[dict] = field(default_factory=list)
     sources: dict[str, dict] = field(default_factory=dict)
     source_origins: dict[str, Path] = field(default_factory=dict)
+    collections: dict[str, dict] = field(default_factory=dict)
+    collection_origins: dict[str, Path] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
     notes: dict[str, Note] = field(default_factory=dict)
     workspaces: dict[str, Workspace] = field(default_factory=dict)
@@ -174,7 +177,13 @@ class Repo:
 
     @property
     def materials_root(self) -> Path:
-        return self.learningos_root / "materials"
+        # materials/.flat/ holds one source-<id> symlink per source folder,
+        # maintained by tools/build_materials_tree.py; when present it is the
+        # resolution root so material:// URIs stay id-based while the physical
+        # layout is the human topic tree (amendment of Jul 17 2026).
+        materials = self.learningos_root / "materials"
+        flat = materials / ".flat"
+        return flat if flat.is_dir() else materials
 
     @property
     def projects_root(self) -> Path:
@@ -223,6 +232,19 @@ def load_repo(root: Path | str) -> Repo:
         sid = str(rec.get("id", ""))
         _register(repo, repo.sources, sid, rec, origin, "source")
         repo.source_origins.setdefault(sid, origin)
+
+    # Source collections (curated reading lists): one collection per file,
+    # identity = kebab-case filename stem (ARCHITECTURE §3.3)
+    collections_dir = root / "sources" / "collections"
+    if collections_dir.is_dir():
+        for f in sorted(collections_dir.glob("*.yaml")):
+            try:
+                doc = _load_yaml(f)
+            except LoaderError as exc:
+                repo.parse_failures.append((f, str(exc)))
+                continue
+            repo.collections[f.stem] = doc
+            repo.collection_origins[f.stem] = f
 
     # Modules
     modules_file = root / "records" / "modules.yaml"

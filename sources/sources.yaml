@@ -707,6 +707,11 @@ sources:
     type: course
     organization: MIT
     url: https://openlearninglibrary.mit.edu/courses/course-v1:MITx+6.036+1T2019/about
+    identifiers:
+      # practice channels, migrated from legacy LEARNING-RESOURCES §6 (KW 25)
+      ocw-f2020: https://ocw.mit.edu/courses/6-036-introduction-to-machine-learning-fall-2020/
+      community-solutions: https://github.com/stevenbooke/MIT-OCW-6.036
+      f2021-final-solutions: https://introml.mit.edu/_static/spring23/final/review/6_036_Final_Fall_2021___Exam_solutions.pdf
     evaluations:
       - concepts: [concept-perceptron, concept-logistic-regression, concept-neural-network]
         roles: [exercise, review]

@@ -1,0 +1,52 @@
+# Migrated from legacy LEARNING-RESOURCES.md §4 (KW 24–29 curation).
+# The legacy skrub + Stratum rows are quarantined with Job/ (CLAUDE.md §13).
+title: Project toolbox — tools, docs & data
+description: >-
+  Implementation references for the AMLS project and mlprov, plus dataset
+  indexes and meta-lists. Read at point of use, not ahead of it.
+entries:
+  - source: source-torchvision-transforms-docs
+    group: amls-project
+    why: "Task 1.3 augmentation implementation reference."
+  - source: source-captum
+    group: amls-project
+    why: "Saliency + occlusion ready-made for Task 1.4."
+  - source: source-albumentations-docs
+    group: amls-project
+    why: "Alternative augmentation library."
+  - source: source-timm
+    group: amls-project
+    why: "Reference model zoo for image classification."
+  - source: source-pytorch-tutorials
+    group: amls-project
+    why: "Grad-CAM via hooks; general training loops."
+  - source: source-docker-get-started
+    group: amls-project
+    why: "Submission requirement."
+  - source: source-google-colab
+    group: amls-project
+    why: "Free hosted GPU notebooks — experiments without local CUDA."
+  - source: source-sklearn-user-guide
+    group: mlprov
+    why: "The mlprov doc set (getting started / estimator contract / compose + CT example) sequenced in the sklearn crash plan; full guide as whole-library index."
+  - source: source-fairlearn-docs
+    group: mlprov
+    why: "For sprint step M.4.x (fairness — graded, has a test); read when reaching it."
+  - source: source-duckdb-python-docs
+    group: mlprov
+    why: "Phase 5 (DuckDB optimization) — CUT KW 24, stretch only."
+  - source: source-google-dataset-search
+    group: datasets
+    why: "Cross-web dataset index."
+  - source: source-kaggle-datasets
+    group: datasets
+    why: "Largest public dataset + notebook hub — project data + baselines."
+  - source: source-data-gov
+    group: datasets
+    why: "US public data (raw + visualized)."
+  - source: source-cs229-project-archive
+    group: meta
+    why: "Hundreds of short project reports — idea/scoping bank."
+  - source: source-awesome-ml-books
+    group: meta
+    why: "Community meta-index of ML books for prereq gaps beyond the registry."

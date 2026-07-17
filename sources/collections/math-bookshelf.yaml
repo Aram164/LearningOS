@@ -1,0 +1,78 @@
+# Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29 curation).
+title: Math — bookshelf (statistics + analysis)
+description: >-
+  SaD reading books by role: Fahrmeir = exam notation, Blitzstein = the why,
+  OpenIntro = gentle first pass, then the softer-probability ladder
+  (Pitman/Tijms/Ross/Grinstead) when a specific blocker appears. Drill volumes
+  live in the exam-practice-banks collection. Per-lecture selection: the SaD
+  source-crosswalk note.
+entries:
+  - source: source-fahrmeir-statistik
+    group: sad-statistics
+    why: "⭐ THE SaD course book — same notation as the lectures; German rigor layer under SaD 06–10. TOC is image-based — verify sections by opening."
+  - source: source-blitzstein-hwang
+    group: sad-statistics
+    why: "Written companion to Stat 110 — the best 'why' layer in print, story proofs; chapter-level cites, verify sections on first use."
+  - source: source-openintro-statistics
+    group: sad-statistics
+    why: "Gentle first-pass layer with per-section slides + videos."
+  - source: source-dekking-mips
+    group: sad-statistics
+    why: "⭐ The full SaD-stats arc in ONE book, Informatiker-friendly, ~300 exercises with short answers — doubles as a testing source. Likely free via HU Springer license."
+  - source: source-henze-stochastik
+    group: sad-statistics
+    why: "German rigor alternative for SaD 04–08 with Lösungen — use if Fahrmeir's probability chapters feel thin. Springer-license pull pending."
+  - source: source-fpp-statistics
+    group: sad-statistics
+    why: "The picture layer: where Fahrmeir gives the formula and Blitzstein the proof, FPP gives the intuition. 💰 buy decision pending."
+  - source: source-baertl-statistik-buch
+    group: sad-statistics
+    why: "Written twin of the Kurzes Tutorium DE video layer — Klausur vocabulary. 💰 buy decision pending."
+  - source: source-pitman-probability
+    group: probability-ladder
+    why: "⭐ The gentlest real probability text — intuition- and picture-first; reach for it when Blitzstein's proof-density is the blocker."
+  - source: source-tijms-understanding-probability
+    group: probability-ladder
+    why: "The most narrative of the set — everyday-chance stories before machinery; pure 'why it clicks', not exam notation."
+  - source: source-ross-first-course
+    group: probability-ladder
+    why: "The methodical workhorse — use when the gap is 'too few solved examples', not 'needs more intuition'; doubles as a drill source."
+  - source: source-schaums-probability
+    group: probability-ladder
+    why: "Not a textbook — a large bank of fully solved problems across SaD 04–08; pair with any reading book."
+  - source: source-grinstead-snell
+    group: probability-ladder
+    why: "The gentle computation-flavored free book (AMS open access). ❌ Still an open pull — download never landed."
+  - source: source-kelleher-fmlpda
+    group: sad-ml-half
+    why: "TOC-confirmed: Ch 4–7 = SaD 12–15 one-to-one — anchors the SaD crosswalk ML-half rows; worked toy examples in exactly the SaD exam style."
+  - source: source-lebl-basic-analysis
+    group: analysis
+    why: "Free rigorous text in almost the HU skript's exact order — the EN reading twin of the course."
+  - source: source-abbott-understanding-analysis
+    group: analysis
+    why: "The most readable real-analysis book in English — best 'why is this true' layer if 18.100A feels too fast; perfect Informatiker fit."
+  - source: source-rudin-principles
+    group: analysis
+    why: "Classic rigor reference behind MIT 18.100 — use sparingly for the hardest proofs."
+  - source: source-ross-elementary-analysis
+    group: analysis
+    why: "Surfaced from a nested folder KW 27 — additional rigorous EN option."
+  - source: source-thomas-calculus
+    group: analysis
+    why: "Computation-first calculus reference (layer 1, like Leonard/Strang)."
+  - source: source-labs-schreyer-mathe-informatiker
+    group: analysis
+    why: "Mathematik für Informatiker — audience-matched German text."
+  - source: source-teschl-mathe-informatiker
+    group: analysis
+    why: "The other Mathematik-für-Informatiker standard — German audience-matched option."
+  - source: source-mfnf-analysis1
+    group: analysis
+    why: "Mathe für Nicht-Freaks Analysis 1 — the free German motivating layer (Wikibook)."
+  - source: source-velleman-how-to-prove-it
+    group: proof-craft
+    why: "Structured proof-writing — the systematic layer under kleine_beweise-style tasks."
+  - source: source-ohlbach-eisinger-beweise
+    group: proof-craft
+    why: "Design patterns for proofs, written for Informatiker — German companion to Velleman."

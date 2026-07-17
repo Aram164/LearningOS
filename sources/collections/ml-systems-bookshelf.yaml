@@ -1,0 +1,30 @@
+# Migrated from legacy LEARNING-RESOURCES.md §3 (KW 27 curation).
+title: ML systems — bookshelf (AMLS)
+description: >-
+  Chapter-pick via the AMLS crosswalk note's book layer, never linear. The
+  2025/26 free web books closed the parallelism/LLM gap no print book covered.
+entries:
+  - source: source-dmmls-boehm
+    group: exam-nearest
+    why: "⭐ The AMLS lecturer's OWN book — lectures 02–06/09–11 in his own vocabulary; the exam-nearest AMLS prose that exists. 🏛️ Springer campus-license pull pending."
+  - source: source-mlsysbook-vol1
+    group: core
+    why: "⭐ Vol 1 (local, 1036pp) — the broad ML-systems textbook with built-in SocratiQ self-check quizzes."
+  - source: source-mlsysbook-vol2
+    group: core
+    why: "⭐ Vol 2 'At Scale' (local, 1170pp) — distributed training, collective communication, inference at scale = AMLS 05–08/13, the gap no book filled before."
+  - source: source-ultrascale-playbook
+    group: llm-pair
+    why: "USP: 5D parallelism/ZeRO/kernels (AMLS 05–07) — 'the whole book is lecture 07'; best written drill for the parallelism lectures."
+  - source: source-htsym-scaling-book
+    group: llm-pair
+    why: "HTSYM (DeepMind): roofline + FLOP-accounting math (AMLS 07–08)."
+  - source: source-mlc-book
+    group: do-companion
+    why: "Compilation lectures (AMLS 03–04) as runnable TVM notebooks — the 'do' companion to 10-414."
+  - source: source-huyen-dmls
+    group: job-context
+    why: "Production-MLOps thinking — partial AMLS overlap only (AMLS = internals, Huyen = MLOps); read for the job context more than the exam."
+  - source: source-huyen-ai-engineering
+    group: job-context
+    why: "LLM inference-optimization + serving chapters only (AMLS 07/13) — optional depth, job-relevant. 💰/🏛️ access pending."

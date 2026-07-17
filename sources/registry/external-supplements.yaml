@@ -1,0 +1,487 @@
+# External-supplements partition — migration of legacy LEARNING-RESOURCES.md
+# §1 (blogs & interactive explainers) + §2 (courses & lecture series), the
+# video/course/web sources not already registered by the pilot or Stage 2
+# (intake of Jul 17 2026). Partitioning does not change semantics (same
+# registry as sources/sources.yaml). Evaluations preserve the legacy file's
+# recorded one-line judgments (Aram's curation, KW 24–29) — nothing invented.
+# Curated per-domain orderings live in sources/collections/*.yaml.
+sources:
+  # ============================== ML — explainers & interactive (legacy §1)
+  - id: source-3b1b-linear-algebra
+    title: 3Blue1Brown — Essence of Linear Algebra (playlist)
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab
+    evaluations:
+      - roles: [intuition]
+        level: introductory
+        strengths:
+          - "Matrix multiplication as composition, dot products — the visuals behind the normal equation (AML L03–L04)"
+
+  - id: source-cs231n-notes
+    title: Stanford CS231n — course notes (classification, optimization, ConvNets, visualization)
+    type: website
+    organization: Stanford
+    url: https://cs231n.github.io/
+    evaluations:
+      - roles: [review, intuition]
+        strengths:
+          - "The standard written CNN reference; course-quality notes with exam-style parameter counting"
+        useful_sections:
+          - "Image Classification (k-NN + cross-validation)": "mirrors AML L02 Übungsblatt 1 Tasks 9–10"
+          - "Optimization / SGD": "the 'walking downhill' framing for AML L06 gradient descent"
+          - "Convolutional Networks + Understanding/Visualizing CNNs": "AML L10 + AMLS-project Task 1.4 methods (saliency, occlusion)"
+
+  - id: source-bendersky-normal-equation
+    title: Eli Bendersky — Derivation of the Normal Equation for Linear Regression
+    type: website
+    authors: [Eli Bendersky]
+    url: https://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression/
+    evaluations:
+      - roles: [derivation]
+        strengths:
+          - "Clean matrix-calculus derivation of w = (XᵀX)⁻¹Xᵀy in Ng's exact notation — fills the proof AML L04 states without proving"
+
+  - id: source-sklearn-user-guide
+    title: scikit-learn documentation — user guide & examples
+    type: documentation
+    organization: scikit-learn
+    url: https://scikit-learn.org/stable/user_guide.html
+    identifiers:
+      examples-gallery: https://scikit-learn.org/stable/auto_examples/index.html
+      docs-pdf: https://scikit-learn.org/stable/_downloads/scikit-learn-docs.pdf
+    evaluations:
+      - roles: [review, implementation]
+        useful_sections:
+          - "Underfitting vs. Overfitting example": "the degree 1/4/15 polynomial demo (train vs test, with code) for AML L04 — previews Übungsblatt 2"
+          - "Linear Models user guide": "the authoritative free Ridge/Lasso reference"
+      # the mlprov doc set, migrated from legacy LEARNING-RESOURCES §4 (KW 24/29)
+      - roles: [implementation]
+        strengths:
+          - "The complete reference set — the targeted mlprov subset below is sequenced with exercises in the sklearn crash-plan note; the full guide/gallery is the whole-library index for anything not covered"
+        useful_sections:
+          - "Getting Started + Developing estimators": "the mlprov-relevant contract pages (fit/predict, estimator API)"
+          - "compose guide + ColumnTransformer mixed-types example": "near line-for-line the adult_complex test pipeline"
+          - "Choosing the right estimator (cheat-sheet flowchart)": "quick model-selection reference for mlprov + AML"
+
+  - id: source-domingos-useful-things
+    title: A Few Useful Things to Know About Machine Learning (CACM)
+    type: paper
+    authors: [Pedro Domingos]
+    year: 2012
+    url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+    evaluations:
+      - roles: [intuition, review]
+        strengths:
+          - "The famous CACM 2012 overview essay — overfitting, bias–variance, curse of dimensionality, feature engineering, 'more data beats a cleverer algorithm'; one read covers AML L02–L04"
+
+  - id: source-fortmann-roe-bias-variance
+    title: Understanding the Bias-Variance Tradeoff
+    type: website
+    authors: [Scott Fortmann-Roe]
+    url: https://scott.fortmann-roe.com/docs/BiasVariance.html
+    evaluations:
+      - roles: [intuition, derivation]
+        strengths:
+          - "The canonical bias–variance essay; works the decomposition through k-NN → exact fit for AML L02 §8"
+
+  - id: source-distill-momentum
+    title: distill.pub — Why Momentum Really Works
+    type: website
+    year: 2017
+    url: https://distill.pub/2017/momentum/
+    evaluations:
+      - roles: [intuition]
+        level: advanced
+        strengths:
+          - "Optional depth: the interactive momentum demo = the AML L06 outlook (beyond the examinable core)"
+
+  - id: source-setosa-ols
+    title: Setosa — Ordinary Least Squares Regression (visual explainer)
+    type: website
+    url: https://setosa.io/ev/ordinary-least-squares-regression/
+    evaluations:
+      - roles: [intuition]
+        level: introductory
+        strengths:
+          - "Draggable least-squares line — AML L03 intuition for minimizing MSE"
+
+  - id: source-asimov-nn-zoo
+    title: Asimov Institute — The Neural Network Zoo
+    type: website
+    url: https://www.asimovinstitute.org/neural-network-zoo/
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "One-page visual chart of every NN architecture (perceptron → CNN → RNN/LSTM → autoencoder → GAN → transformer) with node legend — quick 'which net is which' map for AML L08–L11 and the AMLS/DL1 zoo"
+
+  # ============================== ML — courses & lecture series (legacy §2)
+  - id: source-mit-6s191
+    title: MIT 6.S191 — Introduction to Deep Learning
+    type: course
+    organization: MIT
+    url: https://introtodeeplearning.com/
+    identifiers:
+      playlist: https://www.youtube.com/playlist?list=PLtBw6njQRU-rwp5__7C0oIVt26ZgjG9NI
+      labs: https://github.com/MITDeepLearning/introtodeeplearning
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "Cherry-picked per the DL-AMLS plan: L1 (intro), L3 (computer vision), Lab 1, Lab 2; L8 (parallel training) optional for AMLS"
+
+  - id: source-cs4780
+    title: Cornell CS4780 — Machine Learning for Intelligent Systems (Weinberger)
+    type: course
+    authors: [Kilian Weinberger]
+    organization: Cornell
+    url: https://www.youtube.com/playlist?list=PLl8OlHZGYOQ7bkVbuRthEsaLr7bONzbXS
+    identifiers:
+      notes: https://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/index.html
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "Self-contained written notes as targeted refs: note 02 k-NN/Bayes-optimal, note 07 GD, note 12 bias-variance — the best derivation anywhere, kernel notes"
+        weaknesses:
+          - "General ML / for-later, NOT the AML spine (re-scoped KW 26): a probability-first course (k-NN → MLE/MAP → NB → logistic → GD → regression-as-MLE → SVM/kernels/GPs/trees/boosting) — a different angle from AML's loss-first order, so don't cherry-pick the videos out of sequence; watch whole later for depth/the job"
+
+  - id: source-hinton-nnml
+    title: Geoffrey Hinton — Neural Networks for Machine Learning (Coursera 2012, YouTube mirror)
+    type: course
+    authors: [Geoffrey Hinton]
+    year: 2012
+    url: https://www.youtube.com/playlist?list=PLLssT5z_DsK_gyrQ_biidwvPYCRNGI3iv
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The historical deep-learning course (backprop, RBMs, dropout from the source)"
+        weaknesses:
+          - "Dated but foundational — DL1/for-later depth, not AML-exam-critical"
+
+  - id: source-google-ml-crash-course
+    title: Google — Machine Learning Crash Course
+    type: course
+    organization: Google
+    url: https://developers.google.com/machine-learning/crash-course/ml-intro
+    evaluations:
+      - roles: [review]
+        level: introductory
+        strengths:
+          - "Free interactive intro (problem framing, loss, generalization, feature crosses, regularization) with in-browser exercises — gentle applied first-pass over the AML L03–L06 arc"
+        weaknesses:
+          - "Below exam level — use as a fast refresher only"
+
+  - id: source-cs231n-2017-videos
+    title: Stanford CS231n — CNNs for Visual Recognition (2017 lectures, Karpathy-era)
+    type: video
+    organization: Stanford
+    year: 2017
+    url: https://www.youtube.com/playlist?list=PL3FW7Lu3i5JvHM8ljYj-zLfQRF3EO8sYv
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "CNN architectures, training, visualization → AML L10 + AMLS-project Task 1.4; alternative to EECS 498 if you prefer the original — matching written notes in source-cs231n-notes"
+
+  - id: source-nyu-dl
+    title: NYU Deep Learning (LeCun & Canziani)
+    type: course
+    authors: [Yann LeCun, Alfredo Canziani]
+    organization: NYU
+    year: 2021
+    url: https://atcold.github.io/NYU-DLSP21/
+    evaluations:
+      - roles: [first-learning]
+        level: advanced
+        strengths:
+          - "Energy-based view, modern architectures — the conceptual layer above everything; AML L06 borrows its optimizer-convergence figure from this course's site"
+        weaknesses:
+          - "Post-July only (DL1 prep)"
+
+  - id: source-mit-ocw-nn-training
+    title: MIT OCW — Intro to Neural Networks / Training Deep NNs (Aram's playlist #11)
+    type: video
+    organization: MIT
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Training dynamics depth (initialization, vanishing gradients, batch norm) — DL plan Phase 2D; kept as Aram's saved YouTube playlist #11 (no canonical URL in the legacy record)"
+
+  - id: source-mit-1806
+    title: MIT 18.06 — Linear Algebra (Strang, OCW)
+    type: course
+    authors: [Gilbert Strang]
+    organization: MIT
+    year: 2010
+    url: https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/
+    evaluations:
+      - roles: [review, derivation]
+        strengths:
+          - "Single pulls only, as targeted backfill if 3B1B intuition isn't enough: projections/least squares → AML Block E; positive-definite matrices → AML L06 Hessian bonus"
+
+  # ==================== Math — statistics lecture series (legacy §2)
+  - id: source-mit-18650
+    title: MIT 18.650 — Statistics for Applications (Rigollet, OCW)
+    type: course
+    authors: [Philippe Rigollet]
+    organization: MIT
+    year: 2016
+    url: https://ocw.mit.edu/courses/18-650-statistics-for-applications-fall-2016/
+    evaluations:
+      - roles: [first-learning, derivation]
+        level: advanced
+        strengths:
+          - "Rigorous twin of SaD 09–10; high-ROI pulls: L4–5 MLE, L7–10 testing, L13–16 regression-as-inference (full mapping in the probability-inference deep plan)"
+        weaknesses:
+          - "A SaD fit, NOT an AML fit"
+
+  - id: source-mit-6041sc
+    title: MIT 6.041SC — Probabilistic Systems Analysis and Applied Probability (Tsitsiklis, OCW)
+    type: course
+    authors: [John Tsitsiklis]
+    organization: MIT
+    year: 2013
+    url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Probability axioms, conditioning, Bayes → SaD Block F; RVs, expectation → C+G; limit theorems → G; full OCW recitations + problem solutions"
+        weaknesses:
+          - "Third rigorous-probability option besides STAT110x/18.650 — pick ONE, don't stack"
+
+  - id: source-brandon-foltz
+    title: Brandon Foltz — Statistics 101 (YouTube channel)
+    type: video
+    authors: [Brandon Foltz]
+    url: https://www.youtube.com/@BrandonFoltz
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Long-form calm walkthroughs with every step written out (20–40 min per topic): descriptive → SaD 01–02; CIs/tests → 09–10; simple regression → 03 — the 'slow twin' of jbstatistics, use when a jb video is too fast"
+
+  - id: source-zedstatistics
+    title: zedstatistics (Justin Zeltzer, YouTube channel)
+    type: video
+    authors: [Justin Zeltzer]
+    url: https://www.youtube.com/@zedstatistics
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "Test-framework-first explanations (what H₀ *means*): p-values, hypothesis-test framework, distributions → SaD 08–10 — the conceptual complement to jb/Foltz's calculations"
+
+  # ==================== Math — analysis quick explainers (legacy §2)
+  - id: source-daniel-jung
+    title: Daniel Jung — Mathe-Lernvideos (YouTube channel, DE)
+    type: video
+    authors: [Daniel Jung]
+    evaluations:
+      - roles: [review]
+        level: introductory
+        strengths:
+          - "5-min German single-topic explainers (ε-N, Konvergenzkriterien, l'Hospital, partielle Integration) — quick unblocks in Klausur vocabulary, not systematic study"
+
+  - id: source-mathepeter
+    title: MathePeter (YouTube channel, DE)
+    type: video
+    authors: [Peter Mathematiker]
+    evaluations:
+      - roles: [review]
+        level: introductory
+        strengths:
+          - "German single-topic explainers alongside Daniel Jung — quick unblocks in Klausur vocabulary, not systematic study"
+
+  # ==================== ML systems — prior-year AMLS archives (legacy §2)
+  - id: source-amls-prior-archives
+    title: AMLS prior-year archives — SS2023 (TU Berlin) + SS2021 (TU Graz), Boehm
+    type: website
+    authors: [Matthias Boehm]
+    url: https://mboehm7.github.io/teaching/ss23_amls/index.htm
+    identifiers:
+      ss21: https://mboehm7.github.io/teaching/ss21_amls/index.htm
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Same professor, same course, one year prior; the SS23 page DOES link mp4 recordings for all 12 lectures (tubcloud links next to each deck — verified Jun 13). SS23 grading was oral exam 100% with project prerequisite"
+        weaknesses:
+          - "Superseded by the SS26 course page (source-amls-ss26-lectures) for lecture processing — keep as fallback/extra pass"
+
+  # ==================== Algorithms — Algo 2 supplements (legacy §2)
+  - id: source-mit-6046j
+    title: MIT 6.046J — Design and Analysis of Algorithms (OCW, Spring 2015)
+    type: course
+    organization: MIT
+    year: 2015
+    url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/
+    identifiers:
+      exams: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/pages/exams/
+      assignments: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/pages/assignments/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "Algo-2 rigor/intuition layer — mapped pulls only: L3 FFT → AL.K; L5 Amortization → AL.B; L11 APSP (incl. Johnson) → AL.G; L13 Max-Flow/Min-Cut → AL.H; L14 Matching → AL.I"
+      # practice tier, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
+      - roles: [exercise]
+        strengths:
+          - "Quiz 1+2, Final and 10 psets ALL with solutions — EN, slightly harder than needed; good 'explain why' training for the oral (AL.A/B/G/H/I/K)"
+
+  - id: source-jeff-erickson-algorithms
+    title: Jeff Erickson — Algorithms (free book + extended notes)
+    type: book
+    authors: [Jeff Erickson]
+    url: https://jeffe.cs.illinois.edu/teaching/algorithms/
+    evaluations:
+      - roles: [derivation, review]
+        strengths:
+          - "Cleaner second telling of proofs before the mündliche Prüfung: Ch 8 SSSP → AL.G; Ch 9 APSP → AL.G; Ch 10 Flows → AL.H; Ch 11 Flow applications/matching → AL.I; extended notes on amortization → AL.B, scapegoat/splay → AL.E"
+
+  - id: source-fiset-graph-theory
+    title: William Fiset — Graph Theory playlist
+    type: video
+    authors: [William Fiset]
+    url: https://www.youtube.com/playlist?list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P
+    evaluations:
+      - roles: [intuition]
+        level: introductory
+        strengths:
+          - "Layer-1 visual walkthroughs: Bellman-Ford → AL.G; Ford-Fulkerson/max-flow → AL.H; bipartite matching → AL.I"
+
+  - id: source-reducible-fft
+    title: Reducible — The Fast Fourier Transform (video)
+    type: video
+    url: https://www.youtube.com/watch?v=h7apO7q16V0
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "The best single intuition video for the FFT recursion + point-value representation → AL.K1 before any text"
+
+  - id: source-pagh-cuckoo-hashing
+    title: Cuckoo Hashing for Undergraduates
+    type: paper
+    authors: [Rasmus Pagh]
+    year: 2006
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "THE primary text for AL.F per the course itself — short, readable original (on Algo2-Moodle, also public)"
+
+  - id: source-sleator-tarjan-splay
+    title: Self-Adjusting Binary Search Trees (splay trees)
+    type: paper
+    authors: [Daniel Sleator, Robert Tarjan]
+    year: 1985
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "THE primary text for AL.E2 per the course itself — short, readable original (on Algo2-Moodle, also public)"
+
+  # ==================== Programming — tool & library video courses (legacy §2)
+  - id: source-tu-python-ml-course
+    title: TU Python-for-ML course (exercise sheets)
+    type: course
+    organization: TU Berlin
+    url: https://github.com/mahmutoezmen/Python-for-ML-Course
+    evaluations:
+      - roles: [exercise, implementation]
+        useful_sections:
+          - "Sheet 2": "mlprov / job"
+          - "Sheet 3": "AMLS-project Task 1.1"
+          - "Sheet 4": "AML Block E lin-alg"
+          - "Sheet 5": "autograd/Numba/Cython (Block L, job)"
+
+  - id: source-patrick-loeber-pytorch-cnn
+    title: Patrick Loeber — PyTorch CNN tutorial (CIFAR-10)
+    type: video
+    authors: [Patrick Loeber]
+    url: https://www.youtube.com/watch?v=pDdP0TFzsoQ
+    identifiers:
+      code: https://github.com/patrickloeber/pytorchTutorial
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Same task structure as the AMLS project CNN"
+
+  - id: source-data-school-sklearn
+    title: Data School — Machine Learning in Python with scikit-learn (playlist)
+    type: video
+    authors: [Kevin Markham]
+    url: https://www.youtube.com/playlist?list=PL5-da3qGB5ICeMbQuqbbCOQWcS6OYBr5A
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "11-video sklearn API course; only the fit/predict-contract videos needed for mlprov (embedded in the sklearn crash plan)"
+
+  - id: source-calmcode-sklearn
+    title: calmcode — scikit-learn (micro-video course)
+    type: course
+    url: https://calmcode.io/course/scikit-learn/introduction
+    evaluations:
+      - roles: [intuition, implementation]
+        strengths:
+          - "10 micro-videos; #3–5 (models/scale/pipeline) = fastest visual intro to estimator + Pipeline mechanics"
+
+  # ============== Degree — broaden-later MIT set (legacy §2, KW 26 save)
+  # From MIT Open Learning's "7 free online MIT courses to grasp machine
+  # learning" — for-later / general ML depth & the job, NOT AML-exam-critical.
+  - id: source-mitx-686x
+    title: MITx 6.86x — Machine Learning with Python, From Linear Models to Deep Learning
+    type: course
+    organization: MIT
+    url: https://learn.mit.edu/search?resource=3155
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "MicroMasters course: linear models → deep learning → RL, hands-on Python; the natural step after 6.036 — strong DL1 + job prep (⭐ in the legacy list)"
+
+  - id: source-mit-18s096-matrix-calculus
+    title: MIT 18.S096 — Matrix Calculus for Machine Learning and Beyond (Edelman & Johnson)
+    type: course
+    authors: [Alan Edelman, Steven Johnson]
+    organization: MIT
+    url: https://learn.mit.edu/search?q=Matrix+Calculus+for+Machine+Learning+and+Beyond&resource=5706
+    evaluations:
+      - roles: [derivation]
+        level: advanced
+        strengths:
+          - "Derivatives of matrix expressions/factorizations + large-scale optimization — the math under the normal equation (AML L03/L04) and backprop (L09) (⭐ in the legacy list)"
+
+  - id: source-mit-d4m-big-data
+    title: MIT — Mathematics of Big Data and Machine Learning (D4M)
+    type: course
+    organization: MIT
+    url: https://learn.mit.edu/search?resource=4752
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The D4M model (graph theory + linear algebra + databases), signal-processing approach; systems-flavoured — loose AMLS/job tie"
+
+  - id: source-mit-understanding-world-data
+    title: MIT — Understanding the World Through Data
+    type: course
+    organization: MIT
+    url: https://learn.mit.edu/search?resource=17105
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Gentle 'data + basic ML algorithms' explorer course — the lightest of the broaden-later set"
+
+  - id: source-mit-machine-vision
+    title: MIT — Machine Vision (Berthold Horn)
+    type: course
+    authors: [Berthold Horn]
+    organization: MIT
+    url: https://learn.mit.edu/search?q=Machine+Vision&resource=5245
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Image formation, image analysis, binary image processing, filtering — background for AML L10 CNNs + the AMLS CV project + the job"
+
+  - id: source-mit-visual-navigation
+    title: MIT — Visual Navigation for Autonomous Vehicles
+    type: course
+    organization: MIT
+    url: https://learn.mit.edu/search?q=Visual+Navigation+for+Autonomous+Vehicles&resource=4268
+    evaluations:
+      - roles: [first-learning]
+        level: advanced
+        strengths:
+          - "Vision-based navigation — two-/multi-view geometry, real-time motion estimation, SLAM; specialized, only if the autonomy/robotics angle interests you"

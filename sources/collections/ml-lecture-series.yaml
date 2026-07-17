@@ -1,0 +1,46 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
+title: ML — lecture series & video courses
+description: >-
+  The AML video/course spine (Aram's pick, KW 26) is CS229 2022 + MIT 6.036 —
+  everything else is supplementary. Rule for supplements: pull the matching
+  lecture only when a block feels mechanical; don't watch linearly.
+entries:
+  - source: source-cs229-2022-videos
+    group: spine
+    why: "Chosen primary course (KW 26). Verified lecture⇄AML map lives in the AML crosswalk's 🎥 section; the 2022 run is Ma & Ré — Ng's recorded run is the 2018 playlist (same notes/notation)."
+  - source: source-cs229-notes
+    group: spine
+    why: "The written notes shared by both CS229 runs; if a lecture runs too fast, drop to Ng's gentler Coursera 2011 version for that topic."
+  - source: source-mit-6036
+    group: spine
+    why: "Chosen primary structured course (KW 26) — closest free analog to AML's applied menu; the auto-grader gives instant self-check practice, and it is the L02 k-NN source."
+  - source: source-ng-coursera
+    group: supplements
+    why: "The gentler twin of CS229 — closest level-match for the regression/regularization lectures (Schäfer reuses his housing/tumor examples). No k-NN."
+  - source: source-google-ml-crash-course
+    group: supplements
+    why: "Fast applied refresher over the L03–L06 arc; below exam level."
+  - source: source-3b1b-linear-algebra
+    group: supplements
+    why: "The visuals behind the normal equation, before the L04 matrix work."
+  - source: source-mit-1806
+    group: supplements
+    why: "Targeted backfill only, if 3B1B intuition isn't enough for the normal-equation/PSD proofs."
+  - source: source-3b1b-neural-networks
+    group: deep-learning
+    why: "4 videos — the single best prep for AML L08–L09."
+  - source: source-karpathy-micrograd
+    group: deep-learning
+    why: "Build autograd from scratch; loss.backward() stops being magic. DL plan Phase 2B."
+  - source: source-mit-6s191
+    group: deep-learning
+    why: "Cherry-picked per the DL-AMLS plan: L1, L3, Labs 1–2; L8 optional for AMLS."
+  - source: source-eecs498
+    group: deep-learning
+    why: "The modernized CS231n by its co-creator — clearest backprop + convolution lectures on YouTube; pairs with the CS231n written notes."
+  - source: source-cs231n-2017-videos
+    group: deep-learning
+    why: "Alternative to EECS 498 if you prefer the original Karpathy-era run."
+  - source: source-mit-ocw-nn-training
+    group: deep-learning
+    why: "Training dynamics depth (init, vanishing gradients, batch norm). DL plan Phase 2D."

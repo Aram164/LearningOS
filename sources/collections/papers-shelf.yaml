@@ -1,0 +1,28 @@
+# Migrated from legacy LEARNING-RESOURCES.md §5 (KW 24–29 curation).
+title: Papers shelf
+description: >-
+  Course-cited and project-grounding papers. The Algo-2 primary texts
+  (Pagh cuckoo hashing, Sleator/Tarjan splay trees) sit in the
+  algorithms-lecture-series collection; Domingos' CACM essay in ml-explainers.
+entries:
+  - source: source-zeiler-fergus-occlusion
+    group: amls-project
+    why: "Origin of occlusion analysis — skim figures; one good figure for the report."
+  - source: source-grad-cam
+    group: amls-project
+    why: "Explainability upgrade path beyond saliency/occlusion."
+  - source: source-augmix
+    group: amls-project
+    why: "Augmentation robustness — Task 1.3 report ammunition."
+  - source: source-belkin-double-descent
+    group: aml
+    why: "Cited in AML L09 — the modern correction to the bias-variance U-curve."
+  - source: source-buneman-why-where
+    group: mlprov
+    why: "Foundational why/where-provenance paper — the conceptual base of the library."
+  - source: source-mlinspect-debugging
+    group: mlprov
+    why: "The project's problem statement — motivation for instrumenting ML pipelines."
+  - source: source-pouyanfar-dl-survey
+    group: dl1
+    why: "Single-read DL landscape map (CNNs, RNNs, autoencoders, GANs, DRL)."

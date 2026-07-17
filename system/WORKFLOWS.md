@@ -83,6 +83,52 @@ Do not require polish or completeness.
 
 Source evaluations are the canonical home of pedagogical judgments — including those narrated in crosswalk notes.
 
+### 6a. Intake of new external learning material (formalized 2026-07-17)
+
+The single path for EVERY new find — course, video, book, blog, paper, tool.
+This replaces the legacy LEARNING-RESOURCES intake protocol; there is no other
+list to also update.
+
+1. **Register** the source (steps 1–5 above) in `sources/sources.yaml` or a
+   `sources/registry/*.yaml` partition. One record per teaching object; the
+   one-line "why it earns its place" goes into the evaluation, never into a
+   note or plan file.
+2. **Place the material:**
+   - web-native (ALL videos, courses, blogs, interactive): `url` on the record
+     — videos are never downloaded;
+   - free downloadable file that is exam- or thesis-critical: pull into the
+     materials topic tree via the PLACEMENT map + `tools/build_materials_tree.py`,
+     record `material://<source-id>/…`;
+   - campus-license or paid: leave URL-only until Aram pulls/decides.
+3. **List it (optional):** if it belongs in a curated per-domain list, add an
+   entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
+4. **Verify:** `python tools/validate.py` then `python tools/generate.py`.
+
+**Degree-planning menus:** the per-module resource menus for FUTURE TU modules
+live in `work/active/workspace-degree-planning/inputs/MASTERS-*-RESOURCES.md`
+(prospective picks, not registry material). Only their cross-module anchor
+tier is registered (`registry/degree-anchors.yaml` + the degree-module-anchors
+collection). **When a module is actually chosen, promote its full menu**: walk
+that module's section, register each resource per the steps above, and start a
+module collection.
+
+### 6b. Maintain a source collection (curated reading list)
+
+Collections live at `sources/collections/<name>.yaml` (kebab-case filename =
+identity; schema: `system/schema/collections.schema.json`) and are rendered to
+`generated/collections/<name>.md`.
+
+1. a collection is an ordered, optionally grouped list of `source:` references
+   plus a one-line `why` — the entry's role *in this list* (spine vs
+   supplement, when to reach for it);
+2. judgments about the source itself stay in the source record's evaluations —
+   collections reference, never re-own (same rule as crosswalk notes);
+3. a source may appear in several collections;
+4. create a new collection only for a durable curated list (per-domain
+   lecture-series, explainers, for-later shelves) — never for operational
+   to-watch queues, which belong to workspaces;
+5. the validator enforces that every entry resolves to a registered source.
+
 ## 7. Handle questions
 
 Temporary → workspace `Open Questions`; durable local → section in a note; durable cross-cutting → standalone note (`role: question`) only if it merits independent retrieval. No question registry.

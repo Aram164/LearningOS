@@ -110,6 +110,7 @@ class Validator:
         self.check_identity()
         self.check_references()
         self.check_registries()
+        self.check_collections()
         self.check_ownership()
         self.check_modules()
         self.check_files()
@@ -143,6 +144,8 @@ class Validator:
             self._schema_check("workspace", ws.meta, self._rel(ws.path))
         if r.coordination is not None:
             self._schema_check("coordination", r.coordination.meta, "work/COORDINATION.md")
+        for name, doc in r.collections.items():
+            self._schema_check("collections", doc, f"sources/collections/{name}.yaml")
 
     def check_identity(self):
         families = {
@@ -290,6 +293,28 @@ class Validator:
                 if url in seen_url:
                     self.warn("SOURCE-DUP", f"sources '{seen_url[url]}' and '{sid}' share URL {url}")
                 seen_url.setdefault(url, sid)
+
+    def check_collections(self):
+        """Collections (sources/collections/*.yaml) are curated lists OVER the
+        registry: filename kebab-case, every entry resolves, no duplicates."""
+        name_re = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+        for name, doc in self.repo.collections.items():
+            where = f"sources/collections/{name}.yaml"
+            if not name_re.match(name):
+                self.err("COLLECTION-NAME",
+                         f"collection filename '{name}' is not kebab-case", where)
+            seen: set[str] = set()
+            for i, entry in enumerate(doc.get("entries", []) or []):
+                if not isinstance(entry, dict):
+                    continue  # schema check reports the shape error
+                sid = str(entry.get("source", ""))
+                if sid and sid not in self.repo.sources:
+                    self.err("COLLECTION-REF",
+                             f"entries[{i}] references unknown source '{sid}'", where)
+                if sid in seen:
+                    self.warn("COLLECTION-DUP",
+                              f"source '{sid}' listed more than once", where)
+                seen.add(sid)
 
     def check_ownership(self):
         r = self.repo

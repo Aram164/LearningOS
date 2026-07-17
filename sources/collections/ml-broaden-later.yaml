@@ -1,0 +1,27 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 "General ML foundations —
+# broaden later" (KW 26 save from MIT Open Learning's "7 free online MIT
+# courses to grasp machine learning") + the other for-later courses.
+title: ML — broaden later (general depth, DL1 & job prep)
+description: >-
+  NOT tied to the AML exam — general ML depth for after July: DL1 prep and the
+  BIFOLD/DEEM job. The 6.036 catalog entry from the MIT list is omitted here
+  because 6.036 already sits in the ML lecture-series spine.
+entries:
+  - source: source-mitx-686x
+    why: "⭐ The natural step after 6.036 — linear models → deep learning → RL, hands-on Python (MicroMasters)."
+  - source: source-mit-18s096-matrix-calculus
+    why: "⭐ The math under the normal equation and backprop."
+  - source: source-cs4780
+    why: "Probability-first full course — watch in order later for depth/the job; its written notes double as targeted refs now."
+  - source: source-hinton-nnml
+    why: "The historical DL course — dated but foundational."
+  - source: source-nyu-dl
+    why: "Post-July: the conceptual layer above everything (energy-based view)."
+  - source: source-mit-d4m-big-data
+    why: "Systems-flavoured D4M model — loose AMLS/job tie."
+  - source: source-mit-understanding-world-data
+    why: "The lightest of the set — gentle data + basic ML explorer."
+  - source: source-mit-machine-vision
+    why: "Horn's CV course — background for L10 CNNs, the AMLS CV project, the job."
+  - source: source-mit-visual-navigation
+    why: "Specialized (SLAM, multi-view geometry) — only if the autonomy angle interests you."

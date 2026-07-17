@@ -163,6 +163,10 @@ sources:
     type: course
     organization: CMU
     url: https://dlsyscourse.org/
+    identifiers:
+      # practice channels, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
+      assignments: https://dlsyscourse.org/assignments/
+      community-solutions: https://github.com/YuanchengFang/dlsys_solution
     evaluations:
       - concepts: [concept-program-rewrites, concept-operator-fusion, concept-data-parallelism,
                    concept-hardware-accelerators, concept-backpropagation]
@@ -188,6 +192,10 @@ sources:
     type: course
     organization: Stanford
     url: https://gfxcourses.stanford.edu/cs149/
+    identifiers:
+      # practice channels, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
+      written-asst1: https://gfxcourses.stanford.edu/cs149/fall22content/static/pdfs/written_asst1.pdf
+      solutions-2020: https://github.com/PKUFlyingPig/CS149-parallel-computing
     evaluations:
       - concepts: [concept-data-parallelism, concept-hardware-accelerators]
         roles: [review, exercise]
@@ -508,6 +516,23 @@ sources:
         level: introductory
         strengths:
           - "Calm long-form intuition: Ch 14 convolution 1D/2D arithmetic warm-up, Ch 22–23 CNNs in depth, Ch 24 RNN/LSTM, Ch 17/19 NN+softmax, Ch 16 Bayesian inference, 'How Optimization Works' 1–4"
+          - "The 'Under the Hood of ML' series mirrors the AML lecture sequence almost 1:1; also Python performance guides (job-relevant) and curated resource lists"
+        useful_sections:
+          # High-ROI chapter → module map, migrated from legacy LEARNING-RESOURCES §1 (KW 24 curation)
+          - "Ch 3–4 (loss function, splitting data)": "AML Block D (loss, train/val/test)"
+          - "Ch 6–9 (optimization, 4 parts)": "SaD 03 GD → AML L06"
+          - "Ch 10 (backpropagation)": "AML L09 / Block L"
+          - "Ch 11 (decision trees)": "SaD 12 / Block K"
+          - "Ch 16 (Bayesian inference)": "SaD 04/14 / Blocks F+I"
+          - "Ch 17 (fully connected NNs)": "AML L08 / SaD 15 / Block L"
+          - "Ch 18 (regularization)": "AML L04 (Ridge/Lasso) + L09 / Blocks H+L"
+          - "Ch 19 (softmax)": "SaD 15 'differentiable argmax' / Block L (Wiring cross-wire #6)"
+          - "Ch 20 (batch normalization)": "AML L09 outlook / CNN training (NOT AML-examinable — L09 has no batch norm)"
+          - "Ch 22–23 (CNNs + in-depth video)": "AML L10 / Block M / Task 1.3–1.4 — the video is DL.P1.A2 in the DL plan"
+          - "Ch 24 (RNNs and LSTM)": "AML L11 / Block M"
+          - "Ch 25 (transformers from scratch)": "AMLS L07 (LLM systems) background + DL1"
+          - "Ch 14 (1D/2D convolution)": "convolution arithmetic before AML L10"
+          - "Ch 31 (CIFAR-10 case study)": "same task family as the AMLS project CNN"
 
   - id: source-geron-handson
     title: Géron — Hands-On Machine Learning (local)
@@ -541,6 +566,10 @@ sources:
     type: course
     authors: [Andrew Ng]
     url: https://www.coursera.org/specializations/machine-learning-introduction
+    identifiers:
+      # 2011-course materials + checkable exercises (legacy §2/§6, KW 25):
+      # ex1 linear regression + GD → L03/L06; ex2 logistic → L05; ex2/ex3 regularization → L04
+      materials-repo: https://github.com/blitz70/ML
     evaluations:
       - concepts: [concept-linear-regression, concept-gradient-descent, concept-logistic-regression,
                    concept-regularization, concept-kernel-trick]

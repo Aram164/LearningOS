@@ -1,0 +1,526 @@
+# External-shelf partition — migration of legacy LEARNING-RESOURCES.md
+# §3 (books & texts) + §4 (tools, docs & repos) + §5 (papers) + §6 (solved
+# practice, web tier — the local Klausur banks already have records) + §7
+# (seminar) + §8 (Python OOP/scope/interpreter internals). Intake of Jul 17
+# 2026. Partitioning does not change semantics (same registry as
+# sources/sources.yaml). Evaluations preserve the legacy file's recorded
+# judgments (Aram's curation, KW 24–29) — nothing invented.
+# NOTE: the legacy §4 skrub + Stratum rows are deliberately NOT registered —
+# Job/ quarantine, CLAUDE.md §13 (job knowledge stays out of the registries).
+sources:
+  # ==================================================== §3 books — SaD gaps
+  - id: source-henze-stochastik
+    title: Henze — Stochastik für Einsteiger (Springer, DE)
+    type: book
+    authors: [Norbert Henze]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "German rigor alternative for the probability half (SaD 04–08) with exercises + Lösungen; use if Fahrmeir's probability chapters feel thin. Springer campus-license route — pull pending"
+
+  - id: source-grinstead-snell
+    title: Grinstead & Snell — Introduction to Probability (AMS, open access)
+    type: book
+    authors: [Charles Grinstead, J. Laurie Snell]
+    url: https://www.math.dartmouth.edu/~prob/prob/prob.pdf
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The gentle, computation-flavored free book — lots of worked examples + simulation; completes the softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still an open pull"
+
+  - id: source-fpp-statistics
+    title: Freedman, Pisani & Purves — Statistics (Norton, 4th ed.)
+    type: book
+    authors: [David Freedman, Robert Pisani, Roger Purves]
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "The classic intuition-first statistics book — box models, chance errors, tests in words before formulas. Where Fahrmeir gives the formula and Blitzstein the proof, FPP gives the picture; read a chapter when a concept computes but doesn't click. 💰 ~€60 / used cheap — buy decision pending"
+
+  - id: source-baertl-statistik-buch
+    title: Bärtl — Statistik Schritt für Schritt
+    type: book
+    authors: [Mathias Bärtl]
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Companion book to the Kurzes Tutorium Statistik channel — cheap (~€20) German written twin of the DE video layer, same everyday-problem style and Klausur vocabulary. 💰 buy decision pending"
+
+  # ==================================================== §3 books — ML / DL
+  - id: source-nielsen-nndl
+    title: Nielsen — Neural Networks and Deep Learning (free web book)
+    type: book
+    authors: [Michael Nielsen]
+    url: http://neuralnetworksanddeeplearning.com/
+    evaluations:
+      - roles: [first-learning, derivation]
+        useful_sections:
+          - "Ch 1–3 + 6": "phased in the DL-AMLS learning plan"
+          - "Ch 2": "backprop rigor for AML L09"
+
+  - id: source-goodfellow-dl
+    title: Goodfellow, Bengio & Courville — Deep Learning (MIT Press, free web book)
+    type: book
+    authors: [Ian Goodfellow, Yoshua Bengio, Aaron Courville]
+    year: 2016
+    url: https://www.deeplearningbook.org/
+    evaluations:
+      - roles: [reference]
+        level: advanced
+        strengths:
+          - "⭐ The canonical DL reference — the main gap this fills; depth reference, not a read-through"
+        useful_sections:
+          - "Part I (lin-alg/prob/numerical)": "backs AML L06/L09"
+          - "Part II (MLPs, regularization, optimization, CNNs, RNNs)": "the theory layer under AML L08–L11 and the AMLS project"
+
+  - id: source-bishop-prml
+    title: Bishop — Pattern Recognition and Machine Learning (PRML)
+    type: book
+    authors: [Christopher Bishop]
+    year: 2006
+    url: https://www.microsoft.com/en-us/research/publication/pattern-recognition-machine-learning/
+    identifiers:
+      exercise-solutions: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/05/prml-web-sol-2009-09-08.pdf
+    evaluations:
+      - roles: [reference]
+        level: advanced
+        strengths:
+          - "Listed so nobody buys it by accident: this classic has a legal free PDF (Microsoft). Murphy & ESL cover the same ground in the current stack"
+          - "Degree-planning anchor (KW 25 axis files): 'the most Bishop-shaped catalog' — Ch 8 PGM + 7 SVM + 14 ensembles carry ML 2-X; Ch 3–5/6.4/9/12 carry MI I + ML 1-X gaps; Ch 9/12/13 (EM, PCA, HMM) nearly cover MI II; official exercise solutions free"
+
+  # =============================================== §3 books — AMLS / job
+  - id: source-huyen-ai-engineering
+    title: Huyen — AI Engineering (O'Reilly, 2025)
+    type: book
+    authors: [Chip Huyen]
+    year: 2025
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "LLM inference-optimization + serving chapters only (AMLS 07/13) — optional depth, job-relevant, not exam-critical. 💰/🏛️ O'Reilly — access decision pending"
+
+  # ================================= §4 tools & docs — AMLS project (P)
+  - id: source-torchvision-transforms-docs
+    title: torchvision.transforms v2 documentation
+    type: documentation
+    organization: PyTorch
+    url: https://pytorch.org/vision/stable/transforms.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Task 1.3 augmentation implementation reference (AMLS project)"
+
+  - id: source-captum
+    title: Captum — model interpretability for PyTorch (tutorials)
+    type: documentation
+    organization: PyTorch
+    url: https://captum.ai/tutorials/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Saliency + occlusion ready-made for AMLS-project Task 1.4"
+
+  - id: source-albumentations-docs
+    title: Albumentations documentation
+    type: documentation
+    url: https://albumentations.ai/docs/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Alternative augmentation library (salvaged from the deleted April master plan)"
+
+  - id: source-timm
+    title: timm — pytorch-image-models (Hugging Face)
+    type: software
+    organization: Hugging Face
+    url: https://github.com/huggingface/pytorch-image-models
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Reference model zoo for image classification"
+
+  - id: source-pytorch-tutorials
+    title: PyTorch official tutorials
+    type: documentation
+    organization: PyTorch
+    url: https://pytorch.org/tutorials/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Grad-CAM via hooks; general training loops"
+
+  - id: source-docker-get-started
+    title: Docker — Get Started guide
+    type: documentation
+    organization: Docker
+    url: https://docs.docker.com/get-started/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "AMLS project submission requirement"
+
+  - id: source-google-colab
+    title: Google Colab
+    type: software
+    organization: Google
+    url: https://colab.research.google.com/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Free hosted GPU notebooks — for AMLS/DL experiments without local CUDA"
+
+  # ======================================= §4 tools & docs — mlprov (M)
+  - id: source-duckdb-python-docs
+    title: DuckDB Python API documentation
+    type: documentation
+    organization: DuckDB
+    url: https://duckdb.org/docs/api/python/overview
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "mlprov Phase 5 (DuckDB optimization — CUT KW 24, stretch only)"
+
+  - id: source-fairlearn-docs
+    title: fairlearn — MetricFrame assessment guide
+    type: documentation
+    url: https://fairlearn.org/main/user_guide/assessment/index.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "For mlprov sprint step M.4.x (Fairness — graded, has a test). Read when reaching it, not before"
+
+  # ============================== §4 — meta-indexes & project idea banks
+  - id: source-cs229-project-archive
+    title: Stanford CS229 project archive (+ CS230 past projects)
+    type: website
+    organization: Stanford
+    url: https://cs229.stanford.edu/projects.html
+    identifiers:
+      cs230: https://cs230.stanford.edu/past-projects/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing"
+
+  - id: source-awesome-ml-books
+    title: awesome-machine-learning — community books list
+    type: website
+    url: https://github.com/josephmisiti/awesome-machine-learning/blob/master/books.md
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Community meta-index of ML books, for filling prereq gaps beyond the registered bank"
+
+  # ==================================================== §4 — datasets
+  - id: source-google-dataset-search
+    title: Google Dataset Search
+    type: website
+    organization: Google
+    url: https://datasetsearch.research.google.com/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Cross-web dataset index (URL modernized from the old toolbox.google.com link)"
+
+  - id: source-kaggle-datasets
+    title: Kaggle Datasets
+    type: website
+    organization: Kaggle
+    url: https://www.kaggle.com/datasets
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The largest public dataset + notebook hub — project data + baselines"
+
+  - id: source-data-gov
+    title: data.gov + DataUSA — US public data
+    type: website
+    url: https://www.data.gov/
+    identifiers:
+      datausa: https://datausa.io/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "US public data (raw + visualized) — extra project data sources"
+
+  # ======================================================== §5 papers
+  - id: source-zeiler-fergus-occlusion
+    title: Visualizing and Understanding Convolutional Networks (occlusion)
+    type: paper
+    authors: [Matthew Zeiler, Rob Fergus]
+    year: 2014
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Origin of occlusion analysis — skim figures; one good figure for the AMLS-project report"
+
+  - id: source-grad-cam
+    title: "Grad-CAM: Visual Explanations from Deep Networks"
+    type: paper
+    year: 2016
+    url: https://arxiv.org/abs/1610.02391
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Explainability upgrade path beyond saliency/occlusion (AMLS project + DL1)"
+
+  - id: source-augmix
+    title: "AugMix: A Simple Data Processing Method to Improve Robustness"
+    type: paper
+    year: 2019
+    url: https://arxiv.org/abs/1912.02781
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Augmentation robustness — Task 1.3 report ammunition"
+
+  - id: source-belkin-double-descent
+    title: Reconciling modern machine-learning practice and the bias-variance trade-off (double descent)
+    type: paper
+    authors: [Mikhail Belkin, Daniel Hsu, Siyuan Ma, Soumik Mandal]
+    year: 2019
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Cited in AML L09 — the modern correction to the bias-variance U-curve (PNAS)"
+
+  - id: source-buneman-why-where
+    title: "Why and Where: A Characterization of Data Provenance"
+    type: paper
+    authors: [Peter Buneman, Sanjeev Khanna, Wang-Chiew Tan]
+    year: 2001
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Foundational why/where-provenance paper — the conceptual base for the mlprov library (PDF kept with the ppds-mlprov project)"
+
+  - id: source-mlinspect-debugging
+    title: Data Distribution Debugging in Machine Learning Pipelines (mlinspect family)
+    type: paper
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Motivation paper for instrumenting ML pipelines — directly the mlprov project's problem statement (PDF kept with the ppds-mlprov project)"
+
+  - id: source-pouyanfar-dl-survey
+    title: "A Survey on Deep Learning: Algorithms, Techniques, and Applications (ACM CSUR)"
+    type: paper
+    year: 2019
+    url: https://dl.acm.org/doi/10.1145/3234150
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Broad DL survey (CNNs, RNNs, autoencoders, GANs, DRL + applications) — a single-read landscape map for DL1"
+
+  # ==================== §6 solved practice — web tier (local banks have records)
+  - id: source-cs229-problem-sets
+    title: Stanford CS229 — problem sets & practice midterms
+    type: other
+    organization: Stanford
+    url: https://cs229.stanford.edu/
+    identifiers:
+      community-solutions: https://github.com/maxim5/cs229-2018-autumn
+    evaluations:
+      - roles: [exercise, derivation]
+        level: advanced
+        strengths:
+          - "Derivation-style problems with solutions: normal equation, logistic/MLE, GDA vs logistic, bias-variance, kernels — harder than the AML exam; use for the proofs you must reproduce (β̂, cross-entropy gradient)"
+
+  - id: source-islp-community-solutions
+    title: ISLP community exercise solutions (botlnec / a-martyn / applied-only)
+    type: website
+    url: https://botlnec.github.io/islp/
+    identifiers:
+      a-martyn: https://github.com/a-martyn/ISL-python
+      applied-only: https://github.com/KarimABOUSSELHAM/ISLP-applied-solutions
+    evaluations:
+      - roles: [exercise]
+        strengths:
+          - "Community-solved conceptual + applied exercises for every ISLP chapter in the plan — turns each ISLP reading into checked practice"
+        weaknesses:
+          - "Quality varies — cross-check derivations against the book"
+
+  - id: source-mit-6006
+    title: MIT 6.006 — Introduction to Algorithms (OCW, exams + psets with solutions)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/
+    identifiers:
+      f2011: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/
+    evaluations:
+      - roles: [exercise]
+        level: introductory
+        strengths:
+          - "Easier tier: shortest-paths (Bellman-Ford/Dijkstra) and DS problems with solutions — warm-up volume before the 6.046 tier (AL.G)"
+
+  - id: source-frankfurt-algo2-course
+    title: Goethe Frankfurt ALGO2 — course page (weekly videos + Übungsblätter)
+    type: course
+    organization: Goethe-Universität Frankfurt
+    url: https://tcs.uni-frankfurt.de/algo2/
+    evaluations:
+      - roles: [first-learning, exercise]
+        audience: [German readers]
+        strengths:
+          - "Short German flipped-classroom topic videos (8–25 min) — the splay-tree video + the 4-part flow series are the highest-value pulls; Übungsblätter (APSP, Netzwerkfluss I+II, Amortisiert+Splay) add German exam-language drill (unsolved; the weekly videos walk solutions). Pairs with the solved Frankfurt Klausuren record"
+
+  - id: source-kit-algorithmen2
+    title: KIT Algorithmen 2 — Sanders, WS17/18 (YouTube, German)
+    type: course
+    authors: [Peter Sanders]
+    organization: KIT
+    url: https://www.youtube.com/playlist?list=PLfk0Dfh13pBNyD4E0lUbTe3o4nvRwexRv
+    evaluations:
+      - roles: [first-learning]
+        audience: [German readers]
+        strengths:
+          - "⭐ Full recorded semester by the co-author of the DMS book the HU course uses for Kap. 1 — vocabulary matches the exam language; flows & matchings → AL.H/I, computational geometry → AL.J"
+
+  - id: source-cmu-15451-splay-notes
+    title: CMU 15-451 — splay tree lecture notes (Sleator's course)
+    type: documentation
+    organization: CMU
+    url: https://www.cs.cmu.edu/~15451-f23/lectures/lecture08-splay-trees.pdf
+    evaluations:
+      - roles: [derivation]
+        strengths:
+          - "The inventor's home-course telling of the access-lemma potential argument — cleaner than Ottmann/Widmayer for the proof part of AL.E2"
+
+  - id: source-wayne-kt-slides
+    title: Kevin Wayne (Princeton) — Kleinberg-Tardos slide decks
+    type: website
+    authors: [Kevin Wayne]
+    organization: Princeton
+    url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Polished official KT decks — stable matching (Gale-Shapley) for the AL.I3 gap (HU Kap. 10 not posted at the time), network-flow decks for AL.H"
+
+  - id: source-tuwien-ad2-fibonacci
+    title: TU Wien AD2 — Fibonacci-Heaps & Amortisierte Analyse (chapter text)
+    type: documentation
+    organization: TU Wien
+    url: https://www.ac.tuwien.ac.at/files/teaching/ss12/AD2/kapitel_fibonacci.pdf
+    evaluations:
+      - roles: [review]
+        audience: [German readers]
+        strengths:
+          - "German chapter with worked Fib-heap operation examples — second telling of AL.B→AL.D with figures to hand-run against"
+
+  # ======================================================== §7 seminar
+  - id: source-prisma-method
+    title: PRISMA — systematic review reporting method
+    type: website
+    url: https://www.prisma-statement.org/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Structured literature-review method — used for the IuG seminar; reusable for any future lit review/thesis"
+
+  # ==================== §8 Python OOP, scope & interpreter internals
+  - id: source-hettinger-super
+    title: Hettinger — Python's super() considered super!
+    type: website
+    authors: [Raymond Hettinger]
+    year: 2011
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ THE inheritance/MRO mental model (~45 min): the LoggingDict example is structurally identical to ProvDataFrame.__getitem__; MRO linearization, cooperative classes, kwargs-stripping __init__ chains, adapter classes for non-cooperative parents (the sklearn-skeleton pattern)"
+
+  - id: source-batchelder-names
+    title: Ned Batchelder — Facts and myths about Python names and values
+    type: website
+    authors: [Ned Batchelder]
+    url: https://nedbatchelder.com/text/names.html
+    identifiers:
+      pycon-talk: https://nedbatchelder.com/text/names1.html
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ Names are references; assignment never copies; mutation vs rebinding (~40 min). The written twin of Fluent Python Ch 6 — explains why a shared provenance DataFrame bites"
+
+  - id: source-realpython-legb
+    title: Real Python — Python Scope & the LEGB Rule
+    type: website
+    organization: Real Python
+    url: https://realpython.com/python-scope-legb-rule/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The missing scope piece: Local→Enclosing→Global→Builtin, global/nonlocal, why assignment inside a function creates a local name (the C++ intuition trap). Read §LEGB + §functions, skim the rest"
+
+  - id: source-python-tutor
+    title: Python Tutor (visualization tool)
+    type: software
+    url: https://pythontutor.com
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "Visualizes frames, names→object arrows, and mutation step-by-step — Ned's diagrams, live, on your own code; paste mlprov-style snippets and watch"
+
+  - id: source-corey-schafer-oop
+    title: Corey Schafer — Python OOP playlist
+    type: video
+    authors: [Corey Schafer]
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Calm video walk of classes/inheritance/dunders if Hettinger's post moves too fast (#4 inheritance, #5 dunder methods; skip #1–2)"
+
+  - id: source-numpy-subclassing-docs
+    title: NumPy — subclassing ndarray (official guide)
+    type: documentation
+    organization: NumPy
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "__array_finalize__ — why ndarray needs it instead of __init__. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-pandas-subclassing-docs
+    title: pandas — subclassing pandas data structures (official guide)
+    type: documentation
+    organization: pandas
+    url: https://pandas.pydata.org/docs/development/extending.html#subclassing-pandas-data-structures
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "_metadata/_constructor — how provenance survives pandas ops. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-python-docs-classes-mro
+    title: Python docs — Classes tutorial §9.5–9.8 + the official MRO write-up
+    type: documentation
+    organization: Python Software Foundation
+    url: https://docs.python.org/3/tutorial/classes.html#inheritance
+    identifiers:
+      mro-howto: https://docs.python.org/3/howto/mro.html
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Canonical reference for inheritance + C3 linearization — the MRO howto is the formal version of Hettinger's 'children precede parents' rules"
+
+  - id: source-kaptur-byterun
+    title: Allison Kaptur — A Python Interpreter Written in Python (Byterun, 500 Lines essay)
+    type: website
+    authors: [Allison Kaptur]
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "⭐ A working bytecode VM in 500 lines (~1.5h) — frames, value stack, dispatch, why scope IS the frame structure; C++ background is an asset. Appetizer: dis.dis() and watch LOAD_FAST vs LOAD_GLOBAL"
+
+  - id: source-guo-cpython-internals
+    title: Philip Guo — CPython internals (10-hour lecture series)
+    type: video
+    authors: [Philip Guo]
+    url: https://pgbovine.net/cpython-internals.htm
+    evaluations:
+      - roles: [first-learning]
+        level: advanced
+        strengths:
+          - "Line-by-line C walkthrough of CPython — cherry-pick L1 overview, L3 frames/calls/scope, L8 user-defined classes. Old (Py 2.7) but the architecture stands; Guo says watch Kaptur first"

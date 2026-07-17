@@ -1,0 +1,108 @@
+# Migrated from legacy LEARNING-RESOURCES.md §6 (KW 24–29 curation).
+title: Exam-practice banks — solved material per module
+description: >-
+  No HU-internal Altklausuren are public for any module — this bank is solved
+  material matched to each course's blocks. The real Altklausur channels
+  (Moodle Probeklausuren, Fachschaft Gedächtnisprotokolle, last-year students)
+  are workspace action items, not sources. AMLS caveat: if the exam is oral,
+  drill explain-aloud (AL.X-style), not Altklausur hunting.
+entries:
+  - source: source-fahrmeir-arbeitsbuch
+    group: sad
+    why: "⭐ The single best SaD practice source — official workbook to the course text: worked solutions + extra problems from real exams, same notation (Blocks A–J, N1–N4)."
+  - source: source-fau-klausur-ws1415
+    group: sad
+    why: "⭐ Two complete solved exams in one PDF — N1–N4 in German exam format; the chair's site pattern suggests sibling years."
+  - source: source-sad-klausuren-extern
+    group: sad
+    why: "The non-FAU German solved-Klausur tier (Köln, Regensburg-Löh, HS-Harz warm-up, Leuphana volume)."
+  - source: source-stat110
+    group: sad
+    why: "Strategic Practice + homework with full solutions, topic-organized (SaD 04–08)."
+  - source: source-mit-1805
+    group: sad
+    why: "Psets, exams AND practice exams with full solutions — exactly SaD's level, gentler than 18.650."
+  - source: source-mit-6034-quizzes
+    group: sad
+    why: "Hand-computation quizzes (build ID3, run k-NN, trace NNs) — the 'apply on a toy dataset' format; ⚠️ question-only, no answer key on OCW. Also AML L02."
+  - source: source-dekking-mips
+    group: sad
+    why: "Also testing-bearing: ~300 exercises with short answers in the back."
+  - source: source-schaums-probability
+    group: sad
+    why: "Also testing-bearing: the solved-problem bank for SaD 04–08."
+  - source: source-ross-first-course
+    group: sad
+    why: "Also testing-bearing: worked-example heavy — drill volume."
+  - source: source-cs4780-homeworks
+    group: aml
+    why: "⭐ 3 semesters of homework, EVERY set with a solution — mapped HW→L02–L06 in the folder's README."
+  - source: source-caltech-lfd
+    group: aml
+    why: "⭐ 8 HW + Final, every set with a full answer key — closest solution-bearing match to the regression→logistic→GD arc."
+  - source: source-mit-6036
+    group: aml
+    why: "Auto-graded exercises (instant feedback — best self-check format) + the F2021 final with solutions (identifiers on the record)."
+  - source: source-cs229-problem-sets
+    group: aml
+    why: "Derivation-style with solutions — harder than the exam; for the proofs you must reproduce (β̂, cross-entropy gradient)."
+  - source: source-islp-community-solutions
+    group: aml
+    why: "Turns every planned ISLP reading into checked practice; cross-check against the book."
+  - source: source-geron-handson
+    group: aml
+    why: "Ch 4 'Training Models' exercises with full Appendix-A solutions — L03–L06 in one solved set."
+  - source: source-ng-coursera
+    group: aml
+    why: "The 2011 course's checkable programming exercises + quizzes (materials repo on the record)."
+  - source: source-analysis-klausuren-extern
+    group: analysis
+    why: "⭐ The local solved-Klausur bank: Marburg 3× (first-half archetypes) + Regensburg with examiner commentary (second-half twin + mock model) + Darmstadt/Paderborn/Leipzig/Ulm/TUM + MIT 18.100C set."
+  - source: source-analysis-drill-blaetter-extern
+    group: analysis
+    why: "Extra German drill-sheet volume."
+  - source: source-forster-wessoly
+    group: analysis
+    why: "⭐ The German-standard solved-exercise companion — hundreds of fully worked problems in exactly the skript's arc and notation."
+  - source: source-deitmar-uebungsbuch
+    group: analysis
+    why: "Solved-exercise volume (local)."
+  - source: source-fritzsche-trainingsbuch
+    group: analysis
+    why: "Training volume (local)."
+  - source: source-ableitinger-musterloesungen
+    group: analysis
+    why: "Musterlösungen with method commentary (local)."
+  - source: source-mit-18100a
+    group: analysis
+    why: "F20 assignments matching the mapped lectures — solutions not posted; check via the 18.100C set."
+  - source: source-algo2-frankfurt-klausuren
+    group: algo2
+    why: "⭐ 8 complete solved exams (2021–2024, DE/EN) — the AL.X written-drill source: solve, then explain aloud for the oral. Skip the NP/LP problems (not HU topics)."
+  - source: source-mit-6046j
+    group: algo2
+    why: "Quizzes + final + 10 psets, all with solutions — EN depth tier, 'explain why' training."
+  - source: source-mit-6006
+    group: algo2
+    why: "Easier tier — shortest-paths/DS warm-up volume before 6.046."
+  - source: source-frankfurt-algo2-course
+    group: algo2
+    why: "Übungsblätter in German exam language (videos walk the solutions)."
+  - source: source-mit-6172
+    group: amls
+    why: "⭐ 4 practice quizzes WITH solutions — the only true solved-written-exam material in this space (caching/ILP/Cilk/races → lectures 03–05, 07–08)."
+  - source: source-cmu-10414
+    group: amls
+    why: "HW0–HW4 build mini-PyTorch — self-checking via autograder, community solutions as fallback; prioritize HW1/HW2 autodiff if time allows."
+  - source: source-stanford-cs149
+    group: amls
+    why: "Pen-and-paper written assignments in exam-question format; 2020 set has solutions."
+  - source: source-mlsysbook-vol1
+    group: amls
+    why: "Built-in SocratiQ per-chapter quizzes + spaced repetition (lectures 09–13)."
+  - source: source-mlsysbook-vol2
+    group: amls
+    why: "Vol 2 extends quiz coverage to the parallelism/LLM lectures (05–08)."
+  - source: source-amls-prior-archives
+    group: amls
+    why: "SS23 recordings enable the strongest S.X drill: watch a section → pause → re-explain aloud → compare."

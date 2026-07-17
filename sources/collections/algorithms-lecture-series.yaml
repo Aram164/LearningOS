@@ -1,0 +1,39 @@
+# Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24 curation).
+title: Algorithms — lecture series & primary texts (Algo 2)
+description: >-
+  Mapped pulls only — dormant until post-Jul 23 (mündliche Prüfung prep,
+  2. PZ). Written companions are the proof layer before the oral exam.
+entries:
+  - source: source-mit-6046j
+    group: video
+    why: "⭐ Rigor/intuition layer — mapped pulls: L3 FFT→AL.K, L5 Amortization→AL.B, L11 APSP→AL.G, L13 Max-Flow→AL.H, L14 Matching→AL.I."
+  - source: source-fiset-graph-theory
+    group: video
+    why: "Layer-1 visual walkthroughs: Bellman-Ford, Ford-Fulkerson, bipartite matching."
+  - source: source-reducible-fft
+    group: video
+    why: "The best single FFT intuition video — before any text."
+  - source: source-kit-algorithmen2
+    group: video
+    why: "⭐ German full-semester alternative to Fiset — by the DMS co-author, so the vocabulary matches the exam language (flows/matchings, geometry)."
+  - source: source-frankfurt-algo2-course
+    group: video
+    why: "Short German flipped-classroom videos — the splay-tree video + 4-part flow series are the highest-value pulls."
+  - source: source-jeff-erickson-algorithms
+    group: written-companions
+    why: "⭐ Cleaner second telling of the proofs before the mündliche Prüfung (Ch 8–11 + amortization/splay notes)."
+  - source: source-pagh-cuckoo-hashing
+    group: written-companions
+    why: "THE primary text for AL.F per the course itself."
+  - source: source-sleator-tarjan-splay
+    group: written-companions
+    why: "THE primary text for AL.E2 per the course itself."
+  - source: source-cmu-15451-splay-notes
+    group: written-companions
+    why: "The inventor's home-course telling of the access-lemma potential argument — cleaner than OW for AL.E2's proof part."
+  - source: source-tuwien-ad2-fibonacci
+    group: written-companions
+    why: "German second telling of AL.B→AL.D with hand-runnable Fib-heap figures."
+  - source: source-wayne-kt-slides
+    group: written-companions
+    why: "Official KT decks — the AL.I3 stable-matching stopgap + standard flow treatment."

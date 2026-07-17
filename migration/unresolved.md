@@ -22,7 +22,27 @@
 - AML units L02–L06 → notes; AML book crosswalk rows L02–L04, L08–L10 → source
   evaluations (+ narrative note). L05/L06/L07 rows already decomposed in the pilot.
 - AMLS source crosswalk, AN source crosswalk, LEARNING-RESOURCES.md → source
-  registry + collections.
+  registry + collections. **✅ LEARNING-RESOURCES.md FULLY MIGRATED
+  2026-07-17** (two passes, same day):
+  - §1+§2 → 40 records in `registry/external-supplements.yaml`, Rohrer
+    chapter→module map onto `source-rohrer-e2eml`; collections mechanism built
+    (schema + validator rules + generated views; intake formalized in
+    WORKFLOWS §6a/6b).
+  - §3–§8 → 48 records in `registry/external-shelf.yaml` (+ identifier/
+    evaluation extensions on sklearn-user-guide, mit-6036, mit-6046j,
+    ng-coursera, cmu-10414, stanford-cs149, bishop-prml). ⛔ Legacy §4 skrub +
+    Stratum rows NOT registered — Job quarantine (CLAUDE.md §13).
+  - 17 collections total under `sources/collections/` (lecture-series ×4,
+    bookshelves ×5, explainers, python-internals, project-toolbox,
+    papers-shelf, exam-practice-banks, broaden-later, degree-module-anchors).
+- **✅ MASTERS-*-RESOURCES (6 axis files) MIGRATED 2026-07-17:** files copied
+  verbatim into `work/active/workspace-degree-planning/inputs/` (prospective
+  per-module menus = workspace planning material, joining MODULE-MENU/-PLAN
+  there); the cross-module anchor tier (36 records) registered in
+  `registry/degree-anchors.yaml` + `collections/degree-module-anchors.yaml`.
+  Full menus promote into the registry when a module is chosen (rule recorded
+  in WORKFLOWS §6a). Deliberately NOT registered wholesale: ~200 remaining
+  prospective rows — they stay in the workspace inputs by design.
 - ✅ Handwritten scans `Teil 01.pdf`, `Teil 02.pdf` — RESOLVED 2026-07-17:
   content inventoried (Teil 01 = Kapitel 02–04 Grundbegriffe/Wahrscheinlichkeit;
   Teil 02 = Kapitel 05–08 Verteilungen/Normal, "Blatt 04 … 2025" confirms SaD-2025
