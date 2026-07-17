@@ -28,11 +28,12 @@ recovery times, n = 36, x̄ = 9.4, μ₀ = 10, σ = 2).
 **Provenance:** the attachment `teil-03.pdf` is a byte-identical copy
 (md5-verified) of `Plans/Math/sad/SaD/notes/Teil 03.pdf` from the legacy tree —
 committed whole per Aram's attachment policy (2026-07-17: "commit the whole PDF
-when possible"). Two sibling scans (`Teil 01.pdf` 109 MB, `Teil 02.pdf` 101 MB,
-Oct 2025) cover earlier chapters and are not yet migrated — recorded in
-`migration/unresolved.md` (both exceed GitHub's 100 MB per-file limit, so "when
-possible" needs a decision there). The chapter numbering ("Kapitel 09") suggests
-these follow the SaD 2025 course materials.
+when possible"). The two sibling volumes are migrated too:
+`note-sad-descriptive-probability-handwritten` (Teil 01, Kapitel 02–04) and
+`note-sad-distributions-handwritten` (Teil 02, Kapitel 05–08; its "Blatt 04 …
+2025" reference confirms the series follows the SaD 2025 run) — those two are
+lossless page-splits because their originals exceed GitHub's 100 MB per-file
+limit; all three originals remain untouched in the legacy tree.
 
 **Transcription status:** not transcribed yet (`transcription: none`). Faithful
 transcription per the handwritten-ingestion workflow is deferred — do it when

@@ -23,8 +23,13 @@
   evaluations (+ narrative note). L05/L06/L07 rows already decomposed in the pilot.
 - AMLS source crosswalk, AN source crosswalk, LEARNING-RESOURCES.md → source
   registry + collections.
-- Handwritten scans `Teil 01.pdf`, `Teil 02.pdf` (Oct 2025, earlier chapters) →
-  attachment + owning note(s) once their content is inventoried.
+- ✅ Handwritten scans `Teil 01.pdf`, `Teil 02.pdf` — RESOLVED 2026-07-17:
+  content inventoried (Teil 01 = Kapitel 02–04 Grundbegriffe/Wahrscheinlichkeit;
+  Teil 02 = Kapitel 05–08 Verteilungen/Normal, "Blatt 04 … 2025" confirms SaD-2025
+  provenance) → `note-sad-descriptive-probability-handwritten` +
+  `note-sad-distributions-handwritten`, attachments as LOSSLESS qpdf page-splits
+  (49–60 MB parts — the >100 MB originals would block a future GitHub remote;
+  originals untouched in legacy). The GitHub-limit caveat is hereby CLOSED.
 - All operational files (SEMESTER-STATUS, SESSION-LOG, HANDOFF, CHAT-DIVISION,
   chat plans) → workspaces / archive / COORDINATION routing per MIGRATION §Phase 4.
 
@@ -47,3 +52,7 @@
 - Legacy validators (`tools/check_links.py`, `check_system.py`, lychee routine)
   are replaced by `tools/validate.py` for the v3 tree — retirement happens at
   cutover (Phase 8), not in the pilot.
+- ✅ `Plans/ML/mlprov/zitfCqCT` (stray 300 MB file) — RESOLVED 2026-07-17:
+  identified as a TRUNCATED zip export of the "PPDS ML Data Provenance" folder
+  (no end-of-central-directory record, unreadable; contents duplicate the intact
+  sibling folder). Corrupt duplicate → deleted; 300 MB freed.
