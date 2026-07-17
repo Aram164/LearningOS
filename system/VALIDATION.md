@@ -39,7 +39,7 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 
 ## Operating contract
 
-- **W** `CLAUDE.md` and `system/CLAUDE.md` differ before the `## 13.` heading (the copies are identical by construction except §13 — divergence is drift; code `CLAUDE-SYNC`).
+- The operating contract is a single canonical file, `system/CLAUDE.md`. Root `CLAUDE.md` and the `LearningOS/` project-root entry are symlinks to it, so the copies cannot drift — the former hand-maintained `CLAUDE-SYNC` warning is retired (2026-07-17).
 
 ## Files
 

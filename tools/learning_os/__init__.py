@@ -25,7 +25,8 @@ def _check_deps() -> None:
     if problems:
         _sys.stderr.write(
             "learning_os: cannot run — " + "; ".join(problems) + ".\n"
-            "Fix with:  python3 -m pip install --upgrade pyyaml \"jsonschema>=4\"\n"
+            "Fix with:  make setup   (creates .venv and installs requirements-dev.txt)\n"
+            "Or directly:  python3 -m pip install --upgrade pyyaml \"jsonschema>=4\" pytest\n"
             "(add --break-system-packages if pip refuses on a system Python)\n")
         raise SystemExit(2)
 

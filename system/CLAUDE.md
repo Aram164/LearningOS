@@ -179,5 +179,18 @@ During migration Claude must: create a complete inventory; preserve original pat
 
 ## 13. Job quarantine (Aram's standing instruction, 2026-07-17)
 
-See root `CLAUDE.md` §13 — the `Job/` folder (semestercontext root) is outside
-the default search space; access only on Aram's explicit command.
+The folder **`Job/`** (sibling of `LearningOS/` — at the semestercontext root,
+or wherever it lives after a folder move; it carries its own README marker)
+is **outside the default search space**. It holds the BIFOLD/DEEM job:
+the stratum repository, the job workspace, skrub notes, papers, onboarding
+plans.
+
+- Do **not** read, scan, index, cite or route anything into or out of `Job/`
+  during normal operation — not for retrieval, not for generation, not for
+  validation sweeps.
+- Access it **only** when Aram explicitly commands it in the conversation
+  ("scan the job folder", "look at stratum", "work on the job workspace").
+  The permission lasts for that task only.
+- Job knowledge deliberately does not appear in the registries or generated
+  views while quarantined. If job-relevant durable knowledge should enter the
+  canon, Aram says so explicitly.

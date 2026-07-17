@@ -23,7 +23,7 @@ The rest of this file is the full manual; the four commands are under
 [Commands](#commands).
 
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
-- **How the operator behaves:** `system/CLAUDE.md` (copied to root `CLAUDE.md`)
+- **How the operator behaves:** `system/CLAUDE.md` — the single canonical contract; root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to it
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed same day (`migration/final-report.md`). This repository is the operational root; the legacy `semestercontext/` tree is frozen history (banners point here).
 - **Legacy:** the frozen pre-v3 tree is `semestercontext/` (tag `pre-v3-baseline`); this folder is designed to be moved beside it after cutover.
 - **Roots:** materials → `../materials/` (`material://<source-id>/…` resolves there), code projects → `../projects/` — both outside the authored tree by design (materials move in Stage 2, Step 8).
@@ -85,17 +85,26 @@ anything — a text editor and Git are enough to operate this repository forever
 ## Commands
 
 ```bash
-make            # list the one-word commands
+make setup      # once per clone/move: create .venv, install deps, install both Git hooks
 make check      # validate (schemas + VALIDATION.md rules)
 make views      # rebuild everything under the gitignored output tree
 make test       # test suite
-make setup      # once per clone/move: install deps + both Git hooks
+make            # list the one-word commands
 ```
 
-(Equivalent direct calls: `python tools/validate.py` [`--online` adds the URL
-audit], `python tools/generate.py`, `python -m pytest`.)
-Requires Python 3.10+, `pyyaml`, `jsonschema>=4`, `pytest` — the tools
-fail fast with the exact install command if a dependency is missing or too old.
+`make setup` creates a project-local virtual environment at `.venv/` (gitignored)
+from `requirements-dev.txt`, so the tooling never touches your system Python —
+this sidesteps the PEP 668 / Homebrew "externally-managed-environment" error you
+hit on a clean macOS install. Every later `make` target and both Git hooks use
+`.venv/bin/python` automatically when it exists, and fall back to the system
+`python3` otherwise. Build with a specific interpreter via
+`make setup PYTHON=python3.12`.
+
+(Equivalent direct calls once the venv exists: `.venv/bin/python tools/validate.py`
+[`--online` adds the URL audit], `.venv/bin/python tools/generate.py`,
+`.venv/bin/python -m pytest`.) Requires Python 3.10+, `pyyaml`, `jsonschema>=4`,
+`pytest` — the tools fail fast with the exact fix if a dependency is missing or
+too old.
 
 Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings

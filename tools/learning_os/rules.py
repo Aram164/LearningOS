@@ -148,35 +148,9 @@ class Validator:
         self.check_workspaces()
         self.check_links()
         self.check_generated()
-        self.check_claude_contract_sync()
         if self.online:
             self.check_external_urls()
         return self.issues
-
-    def check_claude_contract_sync(self):
-        """W: root CLAUDE.md and system/CLAUDE.md must match except §13.
-
-        The two copies are a hand-maintained invariant (root = the loaded
-        contract, system/ = the spec's copy; §13 is a pointer in one and the
-        full quarantine text in the other). Divergence anywhere before §13
-        is drift.
-        """
-        root_f = self.repo.root / "CLAUDE.md"
-        sys_f = self.repo.root / "system" / "CLAUDE.md"
-        if not (root_f.is_file() and sys_f.is_file()):
-            return  # test fixtures / partial repos: nothing to compare
-        marker = "## 13."
-
-        def before_13(p: Path) -> str:
-            text = p.read_text(encoding="utf-8", errors="replace")
-            idx = text.find(marker)
-            return text[:idx] if idx != -1 else text
-
-        if before_13(root_f) != before_13(sys_f):
-            self.warn("CLAUDE-SYNC",
-                      "CLAUDE.md and system/CLAUDE.md differ outside §13 — "
-                      "the copies have drifted; re-sync them (they must be "
-                      "identical up to the §13 heading)")
 
     # ------------------------------------------------------------- sections
     def check_parse_failures(self):
