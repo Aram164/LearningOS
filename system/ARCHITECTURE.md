@@ -173,7 +173,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
 | Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | moved whole, unchanged |
-| External material with a registered source | `LearningOS/materials/<source-id>/…` | `material://<source-id>/…` resolves here |
+| External material with a registered source | `LearningOS/materials/<area>/…/<slug>/` (topic tree) | `material://<source-id>/…` resolves via `materials/.flat/source-<id>` symlinks |
 | External material not yet registered | `LearningOS/materials/_unsorted/` | temporary; registered then moved |
 | Code repositories | `LearningOS/projects/<name>/` | untouched internally |
 | Generated outputs | `generated/` | fixed names, gitignored |
@@ -183,7 +183,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 1. **A note's filename is always `<note-id>.md`.** IDs never change, so filenames never change; only the bucket folder may change on a move. Identity still lives in frontmatter — the filename is a derived convenience the validator enforces, never the identity itself.
 2. **Buckets are the seven listed** (decision 2026-07-16: `algorithms/` added for CS-theory content — CLRS-style material fits neither mathematics nor programming). A new bucket requires an ADR; buckets are routing neighborhoods, never taxonomy.
 3. **Attachments are canonical user artifacts**, not materials: handwritten scans and photos live *inside* the authored repository under `knowledge/attachments/<note-id>/`, are Git-tracked, and are referenced from the owning note's `attachments` frontmatter as repo-relative paths. Books, slide packs, and videos are never attachments — they are materials. The user may periodically prune old scans to reclaim space once transcriptions are reviewed; the operator never deletes originals on its own initiative.
-4. **Materials are organized by source identity.** Every registered source with local files owns `materials/<source-id>/`; this makes every `material://` URI trivially resolvable and ties the registry to the disk. Unregistered dumps land in `materials/_unsorted/` until registered.
+4. **Materials are identified by source, placed by topic** (amended 2026-07-17, user decision). Every registered source with local files owns exactly one folder, physically located in the human topic tree (`ML/`, `Math/`, `CS-Theory/`, `Books/` shared library, `Programming/`, `Degree/`). Identity remains id-based: `materials/.flat/` carries one `source-<id>` symlink per source folder so every `material://<source-id>/…` URI resolves unchanged; registry records never encode physical positions. The tree, `.flat/`, and per-module `SOURCES.md` lists are maintained solely by `tools/build_materials_tree.py` (PLACEMENT map = single source of truth; moving a folder = edit map, re-run). Unregistered dumps land in `materials/_unsorted/` until registered.
 5. **`work/inbox/` is the zero-friction capture point.** Photos of handwritten pages, pasted links, fragments — no naming, no metadata required at capture time. Routing inbox items into workspaces, notes, or registries is the operator's job; the inbox should trend toward empty.
 6. **Only Markdown and YAML belong under `knowledge/`** (plus images under `attachments/`). Binary files elsewhere in the authored tree are validator warnings.
 
