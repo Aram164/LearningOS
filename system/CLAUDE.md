@@ -194,3 +194,59 @@ plans.
 - Job knowledge deliberately does not appear in the registries or generated
   views while quarantined. If job-relevant durable knowledge should enter the
   canon, Aram says so explicitly.
+
+---
+
+## 14. Garden & Harvest (the exploratory layer, added 2026-07-18)
+
+The **Garden** (`knowledge/garden/`) is a second, deliberately unstructured layer
+beside the canonical notes ("the Fortress"). It exists so a half-formed,
+cross-cutting or interdisciplinary idea can be captured and left to mature
+**without** paying the Fortress's price of admission — frontmatter,
+concept/source links, validation. Garden files are pure Markdown with optional
+inline `#tags`; they carry no schema, are never loaded as canonical notes, and
+are skipped by `make check` (the validator's canonical-tree sweeps exempt this
+subtree). Nothing in the Garden is canonical, cited, linked, or counted until it
+is Harvested.
+
+**Garden vs. inbox — keep them distinct.** `work/inbox/` and workspace
+`scratch/` are *processing queues*: transient, meant to trend toward empty; the
+operator empties them by routing each item to its home. The Garden is the
+opposite — a *durable holding ground* where an idea is allowed to sit and gestate
+for as long as it needs. Route to inbox what wants filing now; put in the Garden
+what wants time. Never let the Garden become a second inbox (a dumping ground for
+things that only need routing), and never let a real idea rot in inbox when it
+belongs in the Garden.
+
+**Automatic permissions (extends §3):** on request, drop a captured thought into
+`knowledge/garden/` as a plain-Markdown file (infer a short kebab-case filename
+and reasonable `#tags`) and rebuild the Nebula. Neither touches canonical data.
+
+**The Nebula** (`generated/nebula.md`, rebuilt by `make views`) is the only lens
+on the Garden: every garden note grouped by tag and annotated with a
+harvest-pressure signal (last-touched date per Git; uncommitted and oldest
+first). It is a disposable generated view — never edit it (§1).
+
+**"Harvest the Garden" routine.** When Aram says this — or asks to promote a
+specific garden note — the operator:
+
+1. reads every `.md` in `knowledge/garden/`;
+2. assesses which ideas have matured into a coherent, independent purpose (reuse
+   an existing note where the idea already has a home — §8);
+3. for each ripe idea, proposes full canonical frontmatter (id, title, role,
+   concepts, sources, state) and the target `knowledge/notes/<domain>/` path,
+   preserving the user's wording verbatim (§3, §6);
+4. gets approval per note or per batch — promotion assigns a role and creates a
+   canonical note, so it follows the visible-review rules (§4);
+5. moves the approved note into the Fortress, adds the frontmatter, and registers
+   new concepts/sources only as needed;
+6. runs `python tools/validate.py` and rebuilds views; the promoted idea now
+   participates in the canon, and its garden file is removed (its history stays
+   in Git).
+
+**Anti-rot.** The Garden is a nursery, not an attic. When the Nebula shows notes
+that have sat untouched for a long time, surface them at the next harvest and
+propose the honest three-way call for each — **promote, keep gestating, or
+prune**. Deleting a garden note needs no heavyweight approval (it was never
+canonical), but always name which notes you are removing. The tiebreaker is
+unchanged: reduce organizational burden rather than create it.

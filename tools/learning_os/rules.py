@@ -45,7 +45,7 @@ JUDGMENT_HEADERS = {"strengths", "weaknesses", "level", "best for", "best-for"}
 GENERATED_ALLOWED = {
     "manifest.json", "concept-index.md", "source-index.md", "module-view.md",
     "coordination-view.md", "dependency-report.md", "concept-map.md",
-    "backlinks.json", ".gitkeep",
+    "backlinks.json", "nebula.md", ".gitkeep",
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
@@ -56,6 +56,18 @@ CANONICAL_TREES = ("knowledge", "sources", "records", "work")
 # registries). Anything else there (PDFs, slides, images) is a misplaced binary
 # — see BINARY-IN-KNOWLEDGE. (Formerly the misleadingly named IMAGE_OK.)
 KNOWLEDGE_TEXT_SUFFIXES = {".md", ".yaml", ".yml"}
+
+# knowledge/garden/ is the exploratory layer (CLAUDE.md §14): deliberately
+# free-form and exempt from every structural rule. The validator skips it
+# wherever it walks the canonical trees, so half-formed notes — informal links,
+# bare wikilinks, references to generated/ — never block `make check`. (Stray
+# non-Markdown files there are still flagged, keeping the Garden text-only.)
+GARDEN_SUBTREE = ("knowledge", "garden")
+
+
+def _in_garden(root: Path, path: Path) -> bool:
+    garden = root.joinpath(*GARDEN_SUBTREE)
+    return path == garden or garden in path.parents
 
 
 @dataclass
@@ -370,6 +382,8 @@ class Validator:
             for f in sorted(base.rglob("*")):
                 if f.suffix.lower() not in (".md", ".yaml", ".yml") or not f.is_file():
                     continue
+                if _in_garden(r.root, f):
+                    continue
                 text = f.read_text(encoding="utf-8", errors="replace")
                 # Only the repository's own generated/ tree counts — 'generated/'
                 # inside URLs or longer paths (e.g. sklearn.org/modules/generated/)
@@ -538,6 +552,8 @@ class Validator:
             if not base.is_dir():
                 continue
             for f in sorted(base.rglob("*.md")):
+                if _in_garden(r.root, f):
+                    continue
                 text = f.read_text(encoding="utf-8", errors="replace")
                 for target in MD_LINK_RE.findall(text):
                     self._check_link(target, f)
@@ -613,6 +629,8 @@ class Validator:
             if not base.is_dir():
                 continue
             for f in base.rglob("*.md"):
+                if _in_garden(self.repo.root, f):
+                    continue
                 for target in MD_LINK_RE.findall(f.read_text(encoding="utf-8", errors="replace")):
                     if target.startswith(("http://", "https://")):
                         urls.add(target)
