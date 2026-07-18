@@ -8,6 +8,7 @@ depend on registry partitioning):
   - collections: sources/collections/*.yaml       (one curated list per file)
   - modules:   records/modules.yaml
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
+  - garden:    knowledge/garden/**/*.md           (free-form, no schema — §14)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
   - coordination: work/COORDINATION.md
 """
@@ -23,6 +24,24 @@ import yaml
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 
 ID_RE = re.compile(r"^(note|concept|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+# Inline #tags in Garden notes (CLAUDE.md §14). Conservative: a tag starts with
+# a lowercase letter (so ATX headings "# H", shebangs, "#1" issue refs and hex
+# colours like #Fff are not tags) and may contain lowercase letters, digits,
+# hyphens and underscores. It must not follow a word char, "#", "/" or "&" (so
+# "##x", "path/#anchor" and HTML entities are skipped).
+GARDEN_TAG_RE = re.compile(r"(?<![\w#/&])#([a-z][a-z0-9_-]*)")
+
+# Strip fenced (``` … ```) and inline (`…`) code before pulling #tags, so a
+# hashtag written as code — e.g. `#tags` in prose, or a `#include` in a snippet —
+# is not mistaken for a tag.
+_CODE_FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
+_INLINE_CODE_RE = re.compile(r"`[^`]*`")
+
+
+def _strip_code(text: str) -> str:
+    return _INLINE_CODE_RE.sub(" ", _CODE_FENCE_RE.sub(" ", text))
+
 
 RELATION_TYPES = {
     "requires", "builds-on", "derives", "generalizes",
@@ -183,6 +202,34 @@ class Note:
 
 
 @dataclass
+class GardenNote:
+    """A free-form note in knowledge/garden/ (CLAUDE.md §14). Deliberately has
+    NO schema, NO required frontmatter, and is invisible to the validator and to
+    repo.notes. `tags` are the inline #tags pulled from the body. Nothing here is
+    canonical until it is Harvested into knowledge/notes/."""
+    path: Path
+    body: str
+    tags: list[str] = field(default_factory=list)
+
+    @property
+    def slug(self) -> str:
+        return self.path.stem
+
+    @property
+    def title(self) -> str:
+        """First Markdown H1, else first non-empty line, else the filename."""
+        for line in self.body.splitlines():
+            s = line.strip()
+            if s.startswith("# "):
+                return s[2:].strip()
+        for line in self.body.splitlines():
+            s = line.strip()
+            if s:
+                return s.lstrip("#").strip() or self.slug
+        return self.slug
+
+
+@dataclass
 class Workspace:
     id: str
     path: Path
@@ -225,6 +272,7 @@ class Repo:
     collection_origins: dict[str, Path] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
     notes: dict[str, Note] = field(default_factory=dict)
+    garden_notes: list[GardenNote] = field(default_factory=list)
     workspaces: dict[str, Workspace] = field(default_factory=dict)
     coordination: Coordination | None = None
     duplicate_ids: list[tuple[str, str, Path]] = field(default_factory=list)
@@ -367,6 +415,20 @@ def load_repo(root: Path | str) -> Repo:
             nid = str(meta.get("id", f.stem))
             note = Note(id=nid, path=f, meta=meta, body=body)
             _register(repo, repo.notes, nid, note, f, "note")
+
+    # Garden (exploratory layer — CLAUDE.md §14). Free-form Markdown in
+    # knowledge/garden/: NO frontmatter schema, NOT registered as notes, and
+    # skipped by the validator (see rules.py _in_garden). We only read the body
+    # and pull inline #tags so the Nebula view can group them. README, dot- and
+    # underscore-files are treated as meta and excluded from the idea list.
+    garden_dir = root / "knowledge" / "garden"
+    if garden_dir.is_dir():
+        for f in sorted(garden_dir.rglob("*.md")):
+            if f.name.startswith((".", "_")) or f.stem.lower() == "readme":
+                continue
+            text = f.read_text(encoding="utf-8", errors="replace")
+            tags = sorted(set(GARDEN_TAG_RE.findall(_strip_code(text))))
+            repo.garden_notes.append(GardenNote(path=f, body=text, tags=tags))
 
     # Workspaces: active + archived. Active workspaces sit exactly one level
     # under work/active/ (a workspace is a single directory). Archived
