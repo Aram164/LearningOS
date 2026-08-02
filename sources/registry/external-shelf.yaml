@@ -524,3 +524,175 @@ sources:
         level: advanced
         strengths:
           - "Line-by-line C walkthrough of CPython — cherry-pick L1 overview, L3 frames/calls/scope, L8 user-defined classes. Old (Py 2.7) but the architecture stands; Guo says watch Kaptur first"
+
+  # ============================================ §8b Python depth drills (Aug 2026)
+  # Authored ladder + the books it added to the shelf. Built 2026-08-02 from the
+  # Level-Up competency map, the Intermediate Roadmap and the OOP/Scope Repair Plan;
+  # the job-specific anchors deliberately stay in Job/ (CLAUDE.md §13).
+  - id: source-python-depth-drills
+    title: Python Depth Drills — nine stages (guides + notebooks, authored)
+    type: other
+    authors: [Aram Aljanadi]
+    year: 2026
+    material: material://source-python-depth-drills
+    evaluations:
+      - concepts: [concept-python]
+        roles: [exercise, first-learning, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The ladder form of the Python middle band: 9 stages × ~20 predict-then-run questions (165 total), each stage = one guide (claim → ranked reading → drills → done-when → traps checklist) + one notebook with folded solutions. Every code cell verified to execute; claimed outputs diffed against real output"
+          - "Stages 0/6/7/8 exist to close the four gaps the Level-Up competency map rated needs 4–5 / currently 2–3 and the original five-stage plan didn't reach: identity+mutation (rated the widest gap), the data model, generators, and interfaces/dispatch"
+          - "Complements rather than duplicates the other two Python docs: the Roadmap is symptom→step lookup, the Repair Plan is five drill sessions, this is the ordered gated ladder. Guides cite Roadmap steps and Repair Plan sessions instead of restating them"
+        weaknesses:
+          - "Questions tagged [Stratum] are anchored to a query-optimizer codebase (renamed and re-shaped, answerable without access to it). The file-level anchors live outside this tree in Job/python-drills/STRATUM-ANCHORS.md"
+        useful_sections:
+          - "Stage 0 — names, identity & mutation": "the prerequisite the older plans skipped; Stages 2/4/5 are this same rule in three costumes"
+          - "Stage 8 — interfaces & dispatch": "tag-dispatch vs subclass polymorphism (the expression problem), the one stage that is mostly judgement"
+          - "SHELF.md": "cross-cutting sources no stage owns — testing (pytest/Hypothesis), debugging (pdb, PDSH 01.06), performance (PDSH 01.07, cProfile, tracemalloc), style"
+
+  - id: source-slatkin-effective-python
+    title: Slatkin — Effective Python (3rd ed.)
+    type: book
+    authors: [Brett Slatkin]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best complement to Fluent Python at the intermediate band: ~125 short items, four minutes each, telling you what to DO where FP explains how the language works. Per-stage item mapping is in the depth-drills SHELF.md §2"
+          - "'Be Defensive When Iterating Over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+        weaknesses:
+          - "Item numbering differs between 2nd and 3rd editions; search by item title. 💰 purchase pending — not on the shelf yet"
+
+  - id: source-cosmicpython-architecture-patterns
+    title: Percival & Gregory — Architecture Patterns with Python
+    type: book
+    authors: [Harry Percival, Bob Gregory]
+    url: https://www.cosmicpython.com/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: advanced
+        strengths:
+          - "Free online. Ch 2–4 are the judgement half of interfaces: dependency inversion, ports and adapters, WHY you declare an interface at a layer boundary — the design reading behind depth-drills Stage 8"
+        weaknesses:
+          - "Later chapters (repository, unit of work, message bus) are web-app-shaped; skippable unless building that"
+
+  - id: source-viafore-robust-python
+    title: Viafore — Robust Python
+    type: book
+    authors: [Patrick Viafore]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        level: intermediate
+        strengths:
+          - "Book-length treatment of depth-drills Stage 8: type hints, Protocol, ABCs, Enum, dataclass, designing interfaces that fail loudly. Targets the Level-Up note 'implements an implicit interface, never declares one'"
+        weaknesses:
+          - "The mypy docs cover ~80% of it free; buy only if the typing half of Stage 8 is where the gap turns out to be"
+
+  - id: source-beazley-python-distilled
+    title: Beazley — Python Distilled
+    type: book
+    authors: [David Beazley]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "Same ground as Fluent Python in a fifth of the words, systems-flavoured — a revision pass AFTER a stage rather than a first read. Ch 5 (functions), 7 (classes), 8 (modules) map onto depth-drills Stages 1–5"
+
+  - id: source-beazley-generator-tricks
+    title: Beazley — Generator Tricks for Systems Programmers
+    type: course
+    authors: [David Beazley]
+    url: https://www.dabeaz.com/generators/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, implementation]
+        level: intermediate
+        strengths:
+          - "⭐ Slides + code, ~2h. Builds generator PIPELINES over log files — the closest public analogue to a pass pipeline over a graph. The best single resource for depth-drills Stage 7; Parts 1–4 if short on time"
+
+  - id: source-hunner-iterator-protocol
+    title: Trey Hunner — The Iterator Protocol / Loop Better
+    type: website
+    authors: [Trey Hunner]
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+    identifiers:
+      loop-better: https://treyhunner.com/2019/06/loop-better-a-deeper-look-at-iteration-in-python/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        strengths:
+          - "The clean iterable-vs-iterator distinction (~20 min), and why returning self from __iter__ makes an object un-re-iterable. Depth-drills Q7.5 in article form"
+
+  - id: source-coghlan-import-traps
+    title: Coghlan — Traps for the Unwary in Python's Import System
+    type: website
+    authors: [Alyssa Coghlan]
+    url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        strengths:
+          - "⭐ Core-dev explanation of the double-import trap (python pkg/mod.py vs python -m pkg.mod), name shadowing, stale bytecode. The 'works from the project root but not here' bug, diagnosed properly. Depth-drills Q5.16"
+
+  - id: source-rhodes-python-patterns
+    title: Brandon Rhodes — python-patterns.guide
+    type: website
+    authors: [Brandon Rhodes]
+    url: https://python-patterns.guide/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best writing on WHEN to reach for each design mechanism in Python. Read 'Composition Over Inheritance' first; the Decorator entry distinguishes the GoF pattern from Python's @, which are routinely conflated"
+
+  - id: source-powell-python-expert
+    title: James Powell — So you want to be a Python expert?
+    type: video
+    authors: [James Powell]
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, intuition]
+        level: intermediate
+        strengths:
+          - "⭐ First ~25 min: derives the data model from first principles instead of listing dunders — why the protocols are shaped the way they are. The best entry point to depth-drills Stage 6"
+
+  - id: source-hettinger-class-toolkit
+    title: Hettinger — Python's Class Development Toolkit
+    type: video
+    authors: [Raymond Hettinger]
+    url: https://www.youtube.com/watch?v=HTLu2DFOdTg
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        level: intermediate
+        strengths:
+          - "Builds a class from scratch adding @classmethod (alternative constructors), @staticmethod, @property and __slots__ one at a time, each with a stated reason. The 'why', where Schafer gives the 'how'"
+
+  - id: source-pytest-docs
+    title: pytest — official documentation
+    type: documentation
+    organization: pytest-dev
+    url: https://docs.pytest.org/en/stable/getting-started.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        strengths:
+          - "assert introspection, fixtures, and @parametrize — parametrize is the highest-value feature for drill work (one test, twenty cases). Also 'good integration practices' for where tests sit and how conftest.py changes sys.path"
+
+  - id: source-hypothesis-docs
+    title: Hypothesis — property-based testing for Python
+    type: documentation
+    organization: Hypothesis
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [implementation]
+        level: intermediate
+        strengths:
+          - "Turns invariants into tests: 'a == b implies hash(a) == hash(b)' and 'copying then mutating the copy never changes the original' are properties a fuzzer can falsify. ~30 min to the basics; pairs with depth-drills Stages 0 and 6"

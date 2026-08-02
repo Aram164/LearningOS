@@ -337,7 +337,10 @@ sources:
     title: Professor Leonard — Calculus 1 + 2 (YouTube)
     type: video
     authors: [Professor Leonard]
-    url: https://www.youtube.com/@ProfessorLeonard
+    url: https://www.youtube.com/playlist?list=PLF797E961509B4EB5
+    identifiers:
+      calculus-1-playlist: https://www.youtube.com/playlist?list=PLF797E961509B4EB5
+      channel: https://www.youtube.com/@ProfessorLeonard
     evaluations:
       - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
                    concept-differentiation, concept-taylor-series, concept-riemann-integral]
