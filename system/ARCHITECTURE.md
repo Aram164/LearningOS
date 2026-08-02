@@ -87,9 +87,14 @@ Produced by the operator through reasoning, never canonical: study plans, source
 LearningOS/
 ├── repository/     ← the authored repository (the operator's default search space)
 ├── materials/      ← books, slides, videos, PDFs, datasets (material:// root)
-├── projects/       ← active code repositories (mlprov, amls-project, stratum, …)
-└── legacy/         ← frozen pre-v3 tree after migration cutover
+└── projects/       ← active code repositories (mlprov, amls-project, …)
 ```
+
+> **Correction (2026-08-03, ADR-003 S7):** as built, the frozen `legacy/` tree
+> and the quarantined `Job/` folder live at the *semestercontext root*, beside
+> `LearningOS/` — not under it. The stratum repository moved from `projects/`
+> into `Job/` on 2026-07-17 under the quarantine (CLAUDE.md §13); the
+> Job↔LearningOS boundary workflow is `Job/WORKFLOW.md`.
 
 Code repositories are neither authored knowledge nor materials; `projects/` is their owned home. A repository is moved there only when the move is safe (paths, remotes, teammates); otherwise its location is documented and it is excluded from the knowledge search space. References use `github://` (remote) or `project://` (local) URIs.
 

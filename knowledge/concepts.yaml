@@ -181,6 +181,9 @@ concepts:
     label: skrub DataOps
     aliases: [skrub, DataOp, lazy computation graph]
     domain_hints: [data-systems]
+    description: >-
+      Boundary marker — its notes are quarantined in Job/ (CLAUDE.md §13,
+      Job/WORKFLOW.md §6); the canon holds the identity, not the content.
   - id: concept-data-provenance
     label: Data provenance
     aliases: [Provenienz, lineage, provenance tracking]
