@@ -192,8 +192,12 @@ weekly commit/push/`make views` hygiene reminder.
   `note-python-intermediate-roadmap.md`; Rust Job-track already in the Job
   copy, `diff -q` identical) — legacy reset lossless. The untracked
   `crosscutting/seminar/` tree (8 files, grade-pending module) was
-  *preserved* by committing it into legacy, then all legacy files were made
-  read-only (`chmod a-w`).
+  *preserved* by committing it into legacy. The **enforced** freeze is the
+  root pre-commit hook (verified working: blocks any commit touching
+  `legacy/` without `ALLOW_LEGACY=1`). A filesystem-level `chmod -R a-w
+  legacy/` was attempted but is unverifiable through the Cowork sandbox
+  mount (it normalizes modes) — Aram should run it once in his own terminal
+  for the belt-and-suspenders lock.
 - **S6:** `concept-skrub` kept, `description:` boundary-marker added.
   `Job/WORKFLOW.md` + `inputs/README.md` snapshot markers written; verified
   exception recorded: the Rust plan's live home is the Job copy (no
