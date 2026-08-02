@@ -104,6 +104,14 @@ list to also update.
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py` then `python tools/generate.py`.
 
+**Wire on use (ADR-005):** whenever an already-registered source is actually
+used, cited, or recommended in a session and still has no concept-linked
+evaluation, add the minimal stub *then* — the concepts it serves, its roles,
+one strengths line. A source without a concept link is invisible to concept
+retrieval no matter how good it is. Debt is repaid at the moment of use, never
+as a bulk backfill (bulk passes invent judgments); the current debt is listed
+in `generated/reports/health.md`.
+
 **Degree-planning menus:** the per-module resource menus for FUTURE TU modules
 live in `work/active/workspace-degree-planning/inputs/MASTERS-*-RESOURCES.md`
 (prospective picks, not registry material). Only their cross-module anchor

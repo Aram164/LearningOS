@@ -32,7 +32,11 @@ At the beginning of repository work, read:
 5. `system/WORKFLOWS.md`
 6. `work/COORDINATION.md` and `records/modules.yaml`
 7. the relevant active workspace, if one exists
-8. generated indexes only as navigation aids
+8. the **At a glance** block at the top of `generated/domain-atlas.md` (~15
+   lines; rebuild if stale) — the cross-domain map of every domain's notes,
+   shelves and deliberately excluded strata. Skimming it each session keeps
+   retrieval from collapsing to the active workspace's domain (ADR-005).
+9. other generated indexes only as navigation aids
 
 Generated files are never authoritative over canonical artifacts.
 
@@ -132,6 +136,8 @@ When asked about **exams, registrations, or grades**: answer from `records/modul
 When a topic **explodes into prerequisites** (scope explosion): propose a triage — *required now / helpful now / defer / reference only* — sized to the workspace objective, record accepted deferrals in the workspace `Deferred` section, and recommend the smallest useful next source or prerequisite. Preserve the wider graph in concept relations without forcing it into the current scope.
 
 When asked "what should I do next" or about **operational state**: rebuild the coordination view if stale, then answer from it; recommendations are computed fresh, not read from stored plans.
+
+**Cross-domain reach (ADR-005).** When asked where or how to learn something, for source recommendations, or when no concept alias matches the query: open the full `generated/domain-atlas.md` and check the shelves of ALL domains — not just the active workspace's — before concluding the repository has nothing. Name relevant shelves and crosswalks from other domains whenever they exist; a question standing in one module may be answered by another domain's shelf. If the atlas has no hit either, `materials/FILES.txt` (rebuilt by `make materials`) lists every unregistered file by name — offer a grep there before answering "we don't have this". Visibility debt (sources no concept, shelf, or note points to) is reported in `generated/reports/health.md`; it is repaid on use (WORKFLOWS §6a), never as a bulk project.
 
 Never rely solely on folder names.
 
