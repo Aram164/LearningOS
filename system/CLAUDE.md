@@ -197,6 +197,9 @@ plans.
 - The boundary workflow — reference, capture, and promotion across
   Job↔LearningOS — is formalized in `Job/WORKFLOW.md` (adopted 2026-08-03,
   ADR-003); it operates within this quarantine, never against it.
+- **Narrow carve-out (ADR-004, Aram-approved):** the validator's hygiene
+  sweep may list file *names and mtimes* (never content) under
+  `Job/workspace-job-deem/inputs/` to detect cross-boundary shadow copies.
 
 ---
 
