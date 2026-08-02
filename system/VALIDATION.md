@@ -61,6 +61,25 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **E** Internal Markdown links (relative paths, `note://` etc.) resolve.
 - Online-only (`--online` flag): **W** external URL unreachable. External link rot never blocks offline validation.
 
+## Hygiene sweep (ADR-004, 2026-08-03)
+
+All hygiene findings are **W** — they announce mess the moment it exists so it
+never accumulates into an audit session; they nag, never block.
+
+- **W** `HYGIENE-LOCK` — a `.git/index.lock` older than 10 minutes (repository
+  or container repo): a crashed git process is silently blocking all commits.
+- **W** `HYGIENE-VIEWS` — `generated/manifest.json` absent or older than the
+  last commit: the post-commit rebuild did not run (`make views`).
+- **W** `HYGIENE-UNFILED` — a loose `.md` outside the legal drop zones
+  (repository root beyond README/CLAUDE, `knowledge/` root, bucket-less
+  `knowledge/notes/`, `work/` root beyond COORDINATION, `records/`/`sources/`,
+  a workspace root beside CONTEXT.md). `work/inbox/`, workspace subfolders and
+  the Garden are exempt by design.
+- **W** `HYGIENE-SHADOW` — a same-named `.md` under a shadow root
+  (`legacy/Plans/`, `Job/workspace-job-deem/inputs/`) modified *after* the
+  canonical note: live drift into a frozen copy. Filename + mtime comparison
+  only — content is never read (narrow §13 carve-out, ADR-004).
+
 ## Generated outputs
 
 - **E** `generated/` contains only the defined deterministic outputs; agent-computed artifacts (plans, source menus, summaries, recommendations) live in workspaces, never in `generated/`.
