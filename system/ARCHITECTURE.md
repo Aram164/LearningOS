@@ -66,6 +66,7 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - manifest;
 - concept index;
 - source index (including crosswalk selector views);
+- domain atlas (the cross-domain map — ADR-005);
 - module views;
 - coordination view;
 - backlinks;

@@ -124,3 +124,55 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
     assert "## Exam spine" in coord
     assert "## Active workspaces" in coord
     assert "## Neglect signals (Git)" in coord
+
+
+# ---------------------------------------------------------------- domain atlas
+
+
+def test_domain_atlas_at_a_glance_covers_all_domains(mini_repo):
+    """ADR-005: the atlas always maps ALL seven buckets + the excluded strata."""
+    outputs = generate_all(load_repo(mini_repo), generated_at="T1")
+    atlas = outputs["domain-atlas.md"]
+    assert "## At a glance" in atlas
+    for dom in ("mathematics", "machine-learning", "systems", "data-systems",
+                "algorithms", "programming", "cross-domain"):
+        assert f"- **{dom}**" in atlas, dom
+        assert f"## {dom}" in atlas, dom
+    assert "- **mathematics** — 1 note" in atlas
+    assert "quarantined" in atlas  # Job/ named as excluded, contents never listed
+    assert "## Not in this map" in atlas
+
+
+def test_domain_atlas_shelves_harvest_descriptions_and_never_drop(mini_repo):
+    """Shelf descriptions are harvested from canonical collection fields; a
+    collection missing from the view mapping falls back to cross-domain."""
+    (mini_repo / "sources" / "collections" / "math-bookshelf.yaml").write_text(
+        "title: Math shelf\ndescription: The demo shelf purpose line.\n"
+        "entries:\n  - source: source-demo-book\n    why: demo\n",
+        encoding="utf-8")
+    (mini_repo / "sources" / "collections" / "future-shelf.yaml").write_text(
+        "title: Future shelf\nentries:\n  - source: source-demo-book\n    why: x\n",
+        encoding="utf-8")
+    atlas = generate_all(load_repo(mini_repo), generated_at="T1")["domain-atlas.md"]
+    math_section = atlas.split("## mathematics")[1].split("\n## ")[0]
+    assert "[Math shelf](collections/math-bookshelf.md)" in math_section
+    assert "The demo shelf purpose line." in math_section
+    cross_section = atlas.split("## cross-domain")[1].split("\n## ")[0]
+    assert "[Future shelf](collections/future-shelf.md)" in cross_section
+
+
+def test_health_reports_wiring_debt(mini_repo):
+    """ADR-005 (3C): visibility debt is measured in the health report — a source
+    with no concept-linked evaluation, no shelf, and no note reference is
+    'least visible'; wired sources are counted, never listed as debt."""
+    import yaml as _yaml
+    src_file = mini_repo / "sources" / "sources.yaml"
+    data = _yaml.safe_load(src_file.read_text(encoding="utf-8"))
+    data["sources"].append({"id": "source-unwired", "title": "Unwired Thing",
+                            "type": "book"})
+    src_file.write_text(_yaml.safe_dump(data), encoding="utf-8")
+    health = generate_all(load_repo(mini_repo), generated_at="T1")["reports/health.md"]
+    assert "## Source wiring (visibility debt)" in health
+    assert "concept-wired" in health and "1/2" in health
+    assert "**least visible**" in health and "`source-unwired`" in health
+    assert "Wire on use" in health

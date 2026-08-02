@@ -23,6 +23,8 @@ Emits two disposable navigation aids into ``LearningOS/materials/``:
   independent toggles. Local links are RELATIVE to this file — keep INDEX.html
   in ``materials/`` or the file links break.
 * ``README.md`` — a plain-text / grep-able map of the same content.
+* ``FILES.txt`` — names-only listing of every UNREGISTERED file (ADR-005), so
+  "do I own something on X?" is grep-able without registering archive dumps.
 
 Neither is canonical. They are pure VIEWS over what is physically on disk plus
 the registered sources in ``sources/``. Rebuild any time:
@@ -50,7 +52,7 @@ MATERIALS = REPO.parent / "materials"    # LearningOS/materials
 SOURCES = REPO / "sources"
 
 SKIP_DIRS = {".flat", ".git", "__pycache__"}
-SKIP_FILES = {".DS_Store", "INDEX.html", "README.md"}
+SKIP_FILES = {".DS_Store", "INDEX.html", "README.md", "FILES.txt"}
 
 # A file is a "support asset" (hidden by default) if its extension is web/font
 # tech, or if any ancestor folder up to the source root is an asset directory.
@@ -1020,6 +1022,42 @@ update();
 """
 
 
+def collect_loose_files(node, out):
+    """Relative paths of UNREGISTERED (loose) content files: everything not
+    inside a registered source's folder, support assets skipped. Mirrors
+    render_unregistered's pruning (registered subtrees are cut whole)."""
+    for f in node["files"]:
+        if not f["support"]:
+            out.append(f["rel"])
+    for d in node["dirs"]:
+        if d["source_id"]:
+            continue
+        collect_loose_files(d, out)
+
+
+def build_files_listing(roots) -> str:
+    """materials/FILES.txt (ADR-005): a names-only, grep-able listing of every
+    UNREGISTERED file in the materials tree — the Foundations archive and any
+    other loose material. Registered sources are deliberately absent (they are
+    findable via the registry / source-index / INDEX.html); this file exists so
+    "do I own something on X?" is answerable without registering 200+ archive
+    files. Promotion path when a hit matters: WORKFLOWS §6a."""
+    loose: list[str] = []
+    for r in roots:
+        collect_loose_files(r, loose)
+    loose.sort()
+    header = [
+        "# GENERATED file - do not edit. Rebuilt by `make materials`",
+        "# (tools/build_materials_index.py).",
+        "# Unregistered (loose) materials only - registered sources live in the",
+        "# registry and source-index. Names-only grep surface; nothing here is",
+        "# canonical. Register a file the moment it becomes relevant (WORKFLOWS §6a).",
+        f"# {len(loose)} unregistered files.",
+        "",
+    ]
+    return "\n".join(header + loose) + "\n"
+
+
 def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
                  missing_by_domain, roots_by_name, nlocal, n_online, n_missing,
                  ncontent, nsupport, total):
@@ -1030,7 +1068,8 @@ def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
         "> Files view = raw disk tree; flat search). ",
         f"> {nlocal} local sources · {n_online} online · {n_missing} missing URLs · "
         f"{ncontent} files ({nsupport} support hidden) · {human_size(total)}. ",
-        "> Rebuild with `make materials`. Local links in INDEX.html are relative to `materials/`.",
+        "> Rebuild with `make materials`. Local links in INDEX.html are relative to `materials/`. ",
+        "> Unregistered file names are grep-able in `FILES.txt`.",
         "",
     ]
 
@@ -1186,8 +1225,11 @@ def main():
         build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
                      missing_by_domain, roots_by_name, len(local_ids), n_online,
                      n_missing, ncontent, nsupport, total), encoding="utf-8")
+    files_txt = build_files_listing(roots)
+    (MATERIALS / "FILES.txt").write_text(files_txt, encoding="utf-8")
     print(f"  wrote materials/INDEX.html  ({len(page)//1024} KB)")
     print(f"  wrote materials/README.md")
+    print(f"  wrote materials/FILES.txt  ({files_txt.count(chr(10)) - 7} unregistered files)")
     print(f"  {summary}")
 
 
