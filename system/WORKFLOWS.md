@@ -325,3 +325,21 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
 6. **A concept or relation worth registering** → workflow 4 or workflow 5.
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
+
+## 22. End a session
+
+Adopted 2026-08-03 (ADR-003 S1). Any session that touched canonical files ends
+with, in order:
+
+1. `python tools/validate.py` — 0 errors, 0 warnings;
+2. **commit**, message naming the session's effort (the pre-commit hook
+   re-runs the validator; the post-commit hook rebuilds `generated/`);
+3. **push**.
+
+A session is not closed while canonical changes sit uncommitted. If the commit
+fails, diagnose it *now*, not next session — in July 2026 two stale
+`.git/index.lock` files (crashed git processes) silently blocked every commit
+in both repositories for two weeks, leaving `modules.yaml`, `COORDINATION.md`
+and an entire workspace on one disk with stale views (ADR-003 S1/S2). The
+failure mode to design against is not "forgot to commit" but "commit failed
+quietly and nobody looked."

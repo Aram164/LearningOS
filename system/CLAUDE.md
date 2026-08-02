@@ -194,6 +194,9 @@ plans.
 - Job knowledge deliberately does not appear in the registries or generated
   views while quarantined. If job-relevant durable knowledge should enter the
   canon, Aram says so explicitly.
+- The boundary workflow — reference, capture, and promotion across
+  Job↔LearningOS — is formalized in `Job/WORKFLOW.md` (adopted 2026-08-03,
+  ADR-003); it operates within this quarantine, never against it.
 
 ---
 

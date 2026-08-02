@@ -1,0 +1,30 @@
+# Learning OS v3 — CI validation (added 2026-08-03, ADR-003 S5).
+# Runs the same validator the pre-commit hook runs locally, so a bad state
+# can never live unnoticed on the remote. Weekly run adds --online (URL-rot
+# audit over the sources registry — the job local runs skip).
+name: validate
+
+on:
+  push:
+    branches: [main]
+  pull_request: {}
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC ≈ 08:00 Berlin
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - name: validate (schemas + VALIDATION.md rules)
+        run: python tools/validate.py
+      - name: URL-rot audit (weekly only)
+        if: github.event_name == 'schedule'
+        run: python tools/validate.py --online
+      - name: tests
+        run: python -m pytest -q
