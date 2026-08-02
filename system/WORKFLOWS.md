@@ -343,3 +343,50 @@ in both repositories for two weeks, leaving `modules.yaml`, `COORDINATION.md`
 and an entire workspace on one disk with stale views (ADR-003 S1/S2). The
 failure mode to design against is not "forgot to commit" but "commit failed
 quietly and nobody looked."
+
+## 23. Process a lecture
+
+Composite (added 2026-08-03, ADR-004 follow-up): the unit of study between
+"module" and "session". Orchestrates workflows 2, 3, 6a and 17 around one
+lecture; introduces no new entities or owners. Scope rule first, learned the
+hard way (SaD L11, AML L04/L07): **the slides as taught are the only source of
+scope truth** — never scope from textbook chapter titles or keyword-matched
+readings, and match readings to the lecture's actual scope plus its
+prior-lecture prerequisites.
+
+1. **Materials in.** Slides/recordings land in the materials tree via
+   workflow 6a (`material://` on the module's source record); never into the
+   authored tree.
+2. **Scope pass.** Read the deck; list the concepts actually taught; check
+   the concept index for what is re-covered (re-covered → "revise via
+   existing note", not new study steps).
+3. **Durable artifacts as canonical notes** (workflow 3), one per purpose,
+   linked to the lecture's concepts + the module source, `contexts:` the
+   exam-prep workspace:
+   - the lecture reference → `role: reference`;
+   - drills → `role: exercise-bank`;
+   - a self-test → `role: mock-exam` (difficulty ≥ the real exam).
+4. **The study script is operational, not canon:** the lecture's Mini Plan
+   goes to the workspace `inputs/` (workflow 2) and the workspace's
+   `Next Action` points at it. Plans expire with the workspace; only the
+   notes survive.
+5. **Handwritten work** from the lecture → workflow 17.
+6. **Rebuild and validate.**
+
+## 24. Turn the semester
+
+Composite: the boundary ritual at a term's end (or before a new term's
+registrations). Pure orchestration — every step is an existing workflow:
+
+1. **Walk the term's modules** in `records/modules.yaml`: each one is either
+   truly done → close it (workflow 19), or something outlives it → carry it
+   (workflow 20). No module skips this fork.
+2. **Harvest the Garden** (CLAUDE.md §14): promote the ripe, prune the dead,
+   let the rest gestate.
+3. **Prune operational residue:** `COORDINATION.md` mentions no closed module
+   (workflow 19 step 4); collections drop entries that served only the closed
+   term (workflow 6b); the inbox is empty (workflow 21).
+4. **Plan forward:** newly chosen modules enter via workflow 18 (record →
+   promote menu → workspaces → dependencies).
+5. **Rebuild, validate, commit, push** (workflow 22) — the semester turns in
+   one reviewed commit.
