@@ -3,7 +3,7 @@ id: workspace-algo2-exam-prep
 type: workspace
 title: "Algo 2 oral exam prep — AL track (October window)"
 created: "2026-07-17"
-status: active
+status: blocked
 standing: false
 concepts: [concept-fast-multiplication, concept-amortized-analysis, concept-b-trees,
   concept-fibonacci-heaps, concept-splay-trees, concept-cuckoo-hashing,
@@ -13,6 +13,13 @@ sources: [source-clrs, source-dms-grundwerkzeuge, source-ottmann-widmayer]
 ---
 
 # Algo 2 exam prep — AL
+
+> **Status 2026-07-25 — DROPPED from the autumn cycle (Aram).** Not sitting the
+> 2.-PZ oral, not registering in the Anmeldung window, no study time allocated.
+> Workspace `blocked` by decision, not by dependency. Module record stays
+> `enrolled` in records/modules.yaml (no formal Abmeldung). Reversible — see the
+> Deferrals entry in work/COORDINATION.md. Everything below is preserved for when
+> or if it is reinstated.
 
 ## Objective
 
@@ -41,9 +48,9 @@ per-topic literature).
 
 ## Next Action
 
-Admin only: during the Anmeldung window, register AND book the oral slot via
-AGNES + Prüfungs-Moodle. Study starts post-AMLS-sitting at ~8–10h/week
-interleaved with AML/M2 prep.
+None — dropped from the autumn cycle (Aram, 2026-07-25). No registration, no
+slot booking, no study. To reinstate: restore `status: active`, register/book in
+the Anmeldung window, and resume the AL.X study chain below.
 
 ## Deferred
 

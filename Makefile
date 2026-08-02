@@ -12,14 +12,15 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views test all setup garden
+.PHONY: help check views materials test all setup garden
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
 	@echo "make views  - rebuild everything under generated/ (the dashboards)"
+	@echo "make materials - rebuild the materials catalogue (materials/INDEX.html + README.md)"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test   - run the test suite"
-	@echo "make all    - check + views + test"
+	@echo "make all    - check + views + materials + test"
 	@echo "make setup  - create .venv, install deps, install both Git hooks (run once per clone/move)"
 
 check:
@@ -28,13 +29,16 @@ check:
 views:
 	$(PY) tools/generate.py
 
+materials:
+	$(PY) tools/build_materials_index.py
+
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"
 
 test:
 	$(PY) -m pytest -q
 
-all: check views test
+all: check views materials test
 
 setup:
 	$(PYTHON) -m venv $(VENV)

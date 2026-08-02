@@ -13,6 +13,17 @@ sources: [source-fluent-python]
 > **Migration note (2026-07-17, Stage 2):** body preserved verbatim from
 > `Plans/Programming/python/Python-Intermediate-Roadmap.md` (legacy tree).
 
+> **See also:** [[note-python-depth-drills]] — the ordered nine-stage ladder
+> (guides + notebooks, `material://source-python-depth-drills`). This file stays the
+> symptom→step *lookup*; the ladder is the *gated path*. The ladder's stage guides cite the steps
+> below rather than restating them: Stage 0→Step 2, Stage 1→Step 3, Stage 2→Step 3, Stage 3→Step 11,
+> Stage 4→Steps 7/8/9/21, Stage 5→Steps 16/23, Stage 6→Steps 4/13/14, Stage 7→Steps 12/24,
+> Stage 8→Steps 10/15/26.
+>
+> Siblings: [[note-python-oop-scope-repair-plan]] (the drill sessions
+> this file's Steps 2/3/7/8 point at) and [[note-programming-toolbox-bootcamp]] (shell / Git /
+> venv / pytest / Docker — the tooling half Step 16 assumes).
+
 # Python Intermediate Roadmap — Reference & Repair Map
 
 > **Purpose:** Complete map from "knows basics" to confident intermediate + Stratum-level Python. **Usage model: lookup file, not a linear course.** When something feels shaky, find the symptom in the index, jump to that step, work its materials.
@@ -288,6 +299,7 @@ sources: [source-fluent-python]
 - **Key model:** a module executes *once* on first import and is cached in `sys.modules`; subsequent imports return the cached object. `sys.path` determines where Python looks; it depends on *how you launched Python*. `python -m pkg.module` from project root fixes most "works here not there" bugs.
 - **Going deeper:** `importlib.import_module("pkg.mod")` — programmatic import; returns the module object. `importlib.reload(mod)` — re-execute a module (rarely needed; hot-reload scenarios). Essential for Step 23 (monkey-patching).
 - **Layout reference:** how mlprov is structured (`pyproject.toml` + package dir + `tests/`) is your live example.
+- **The three circular-import fixes (job-real):** when modules A and B import each other, either (1) move the import *inside* the function/method that needs it — the local-import fix Stratum's `_column_expr.py` uses for `MissingMaskOp`; (2) hoist the shared name into a third module both import; or (3) defer type-only imports under `if TYPE_CHECKING:` with `from __future__ import annotations`. Reach for (1) for a one-off; (2) when the cycle signals a real layering problem.
 - **Done when:** an import error makes you check `sys.path` and launch directory, not shuffle files.
 
 ---
@@ -506,6 +518,7 @@ sources: [source-fluent-python]
 
 - **Pattern:** find a node matching a pattern → create a new node → rewire inputs/outputs of neighbors. `replace_op_in_outputs(op, replacement)` and `op.replace_input(old, new)` in `_op_utils.py` are the two primitives. Every optimizer pass uses these.
 - **Visitor pattern:** iterating `topological_iterator(root)` and applying a transform to each node — this is the visitor design pattern. Python's `singledispatch` makes it clean: dispatch by node type.
+- **Three ways to dispatch by node type — and when to pick each:** an `elif node.type == …` chain (closed, small, hot — e.g. `NumericOp.process` in `_numeric_ops.py`); subclass polymorphism (each type overrides a method — e.g. `ColumnExpr.to_pandas`/`to_polars`, open to new types without touching a central switch); or a dispatch dict / `singledispatch` (the middle ground). The deciding question is *where adding a new op type forces an edit*: one central function, or one new class.
 - **Reference:** [python-patterns.guide — Visitor](https://python-patterns.guide/) — Brandon Rhodes' treatment; read after Step 21.
 
 ### CSE (Common Subexpression Elimination)
@@ -546,6 +559,24 @@ sources: [source-fluent-python]
 - **Memory profiling:** `tracemalloc` (stdlib) + [memray](https://github.com/bloomberg/memray) (Bloomberg's profiler, highly recommended) — identify which objects are using the most memory.
 - **`sys.getsizeof(obj)`:** returns *shallow* size of one object (doesn't recurse into attributes). Stratum's `_object_size.py` wraps this. For true deep size: `pympler` library or `objgraph`.
 - **Done when:** you can profile an Op-heavy run, identify the hot objects, and evaluate whether `__slots__` is worth adding.
+
+---
+
+## Step 28 — CPU & timing profiling ("making Python faster")
+
+*Step 27 covers **memory**; this is its **time** counterpart. A cost-based optimizer only pays off if you can measure where time actually goes — this is the profiling half the roadmap was missing.*
+
+**Symptoms:** "it feels slow" with no numbers; guessing at hot spots; optimizing the wrong loop; no baseline before/after a rewrite.
+
+- **Owned series:** [Brandon Rohrer — Making Python Faster](https://brandonrohrer.com/code_optimization.html) ⭐ (`PY` `JK`), plus [multiprocessing](https://brandonrohrer.com/multiprocessing.html) and [threading](https://brandonrohrer.com/threading.html) — practical and measurement-first; the multiprocessing/threading pieces back Stratum's `runtime/_scheduler.py`.
+- **Wall-clock first:** `time.perf_counter()` and `timeit` for micro-benchmarks. Stratum already wraps this — `start_time()`/`log_time()` in `utils/_utils.py` time each pass; read them, then add your own around a rewrite.
+- **Function-level:** `cProfile` + `pstats` (stdlib) — where time goes by function; sort by cumulative time. Visualize with [snakeviz](https://jiffyclub.github.io/snakeviz/).
+- **Line-level:** [`line_profiler`](https://github.com/pyutils/line_profiler) (`@profile`) — the hot *line* inside the hot function.
+- **Sampling (no code changes):** [`py-spy`](https://github.com/benfred/py-spy) — attach to a running process, get a flamegraph; [`scalene`](https://github.com/plasma-umass/scalene) — CPU + memory, separates Python from native time (useful once the Rust backend is in the loop).
+- **Complexity first:** reason about the big-O of a pass over N ops *before* profiling — an O(N²) rewrite over a large DAG is an algorithm bug (Step 26), not a micro-optimization.
+- **Method:** baseline → profile → change one thing → re-measure. Never optimize without a before-number.
+- **Stratum anchor:** profile `optimize()` on a large pipeline; find the dominant pass; decide whether it's algorithmic (Step 26) or per-node overhead (Step 27, `__slots__`).
+- **Done when:** you never say "faster" without a before/after number, and you reach for a profiler before rewriting.
 
 ---
 
