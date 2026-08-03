@@ -69,6 +69,7 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - domain atlas (the cross-domain map — ADR-005);
 - module views;
 - coordination view;
+- reading room (the human home page composing the other views — ADR-006);
 - backlinks;
 - validation reports.
 
@@ -96,6 +97,14 @@ LearningOS/
 > `LearningOS/` — not under it. The stratum repository moved from `projects/`
 > into `Job/` on 2026-07-17 under the quarantine (CLAUDE.md §13); the
 > Job↔LearningOS boundary workflow is `Job/WORKFLOW.md`.
+
+> **Amendment (2026-08-03, ADR-006):** interface layers may exist as further
+> `LearningOS/` siblings — first: `obsidian-ui/` (the Obsidian desktop
+> interface, its own repository and its own project). An interface layer lives
+> entirely OUTSIDE `repository/`, owns presentation and interaction only, and
+> consumes canonical state solely through the CLI (`tools/los.py`) and the
+> `generated/` views. §17 is unchanged: the system never *depends* on
+> Obsidian or any proprietary interface.
 
 Code repositories are neither authored knowledge nor materials; `projects/` is their owned home. A repository is moved there only when the move is safe (paths, remotes, teammates); otherwise its location is documented and it is excluded from the knowledge search space. References use `github://` (remote) or `project://` (local) URIs.
 

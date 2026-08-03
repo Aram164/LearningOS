@@ -1,5 +1,7 @@
 generated/*
 !generated/.gitkeep
+# Obsidian (or any app) workspace state is interface-layer, never core (ADR-006).
+.obsidian/
 .DS_Store
 **/__pycache__/
 # Project-local virtual environment (created by `make setup`); never committed —

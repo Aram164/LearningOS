@@ -656,6 +656,53 @@ def _first_para(text: str | None) -> str:
     return ""
 
 
+def _materials_queue_rows(repo: Repo) -> list[str]:
+    """Pending-human-decision piles under materials/ (human-operability #10).
+    Shared by the coordination view and the reading room."""
+    rows: list[str] = []
+    materials = repo.root.parent / "materials"
+    for qname in ("_unsorted", "_duplicates-for-review"):
+        qdir = materials / qname
+        if qdir.is_dir():
+            n = sum(1 for f in qdir.rglob("*")
+                    if f.is_file() and f.name != ".DS_Store")
+            if n:
+                rows.append(f"- `materials/{qname}/` — **{n} files** "
+                            "awaiting a register-or-discard decision")
+    return rows
+
+
+def adoption_counts(repo: Repo) -> dict:
+    """Adoption of the existing note review/evidence fields (no new schema —
+    the fields have been in note.schema.json since v3; the gap is usage).
+    Shared by the health report, the reading room, and `los.py status`."""
+    notes = repo.notes.values()
+    total = len(repo.notes)
+    reviewed = sorted(n.id for n in notes if n.meta.get("reviewed"))
+    with_evidence = sorted(n.id for n in notes if n.meta.get("evidence"))
+    by_state: dict[str, int] = {}
+    for n in notes:
+        s = str(n.meta.get("state", "(unset)"))
+        by_state[s] = by_state.get(s, 0) + 1
+    # A reviewed note whose last Git touch postdates its review date has
+    # drifted past its review; uncommitted edits count as drifted too.
+    changed_since_review: list[str] = []
+    for n in repo.notes.values():
+        rev = n.meta.get("reviewed")
+        if not rev:
+            continue
+        last = _git_last_commit(repo.root, n.path.relative_to(repo.root).as_posix())
+        if not last or str(last) > str(rev):
+            changed_since_review.append(n.id)
+    return {
+        "notes_total": total,
+        "notes_reviewed": len(reviewed),
+        "notes_with_evidence": len(with_evidence),
+        "changed_since_review": sorted(changed_since_review),
+        "by_state": by_state,
+    }
+
+
 def build_coordination_view(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Coordination view", generated_at)
     lines.append("*Assembled from: the exam spine in records/modules.yaml, workspace "
@@ -698,16 +745,7 @@ def build_coordination_view(repo: Repo, generated_at: str) -> str:
 
     lines.append("## Materials queues (pending human decisions)")
     lines.append("")
-    queue_rows = []
-    materials = repo.root.parent / "materials"
-    for qname in ("_unsorted", "_duplicates-for-review"):
-        qdir = materials / qname
-        if qdir.is_dir():
-            n = sum(1 for f in qdir.rglob("*")
-                    if f.is_file() and f.name != ".DS_Store")
-            if n:
-                queue_rows.append(f"- `materials/{qname}/` — **{n} files** "
-                                  "awaiting a register-or-discard decision")
+    queue_rows = _materials_queue_rows(repo)
     if queue_rows:
         lines.extend(queue_rows)
         lines.append("")
@@ -953,6 +991,32 @@ def build_health(repo: Repo, generated_at: str) -> str:
     lines.append("*Wire on use (WORKFLOWS §6a): when one of these actually comes "
                  "up in a session, add the minimal evaluation stub — concepts + "
                  "roles + one strengths line. Never bulk-backfill.*")
+    lines.append("")
+
+    # Review & evidence adoption (2026-08-03). The fields (`reviewed`,
+    # `evidence`, `state`) have existed in note.schema.json since v3 — this
+    # section surfaces how far they are actually used. Adopt on touch
+    # (WORKFLOWS §13 review a note, §8 record evidence); never bulk-backfill.
+    ad = adoption_counts(repo)
+    lines.append("## Review & evidence adoption")
+    lines.append("")
+    lines.append(f"- notes with a `reviewed` date: {ad['notes_reviewed']}"
+                 f"/{ad['notes_total']}")
+    if ad["changed_since_review"]:
+        lines.append("  - changed after their last review (Git postdates "
+                     "`reviewed`, or uncommitted): "
+                     + " · ".join(f"`{nid}`" for nid in ad["changed_since_review"]))
+    lines.append(f"- notes with `evidence` entries: {ad['notes_with_evidence']}"
+                 f"/{ad['notes_total']}")
+    lines.append("- note states: "
+                 + " · ".join(f"{k}: {ad['by_state'][k]}"
+                              for k in sorted(ad["by_state"])))
+    lines.append("")
+    lines.append("*The schema already has these fields; the gap is adoption. "
+                 "Set `reviewed` when a semantic review actually happens "
+                 "(WORKFLOWS §13 — file modification is not review) and attach "
+                 "`evidence` when a derivation/exercise/implementation exists "
+                 "(§8). On-touch only — never as a bulk project.*")
     lines.append("")
     lines.append("*Run `python tools/validate.py` for the full rule check.*")
     lines.append("")
@@ -1223,6 +1287,114 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
     return "\n".join(lines)
 
 
+# ------------------------------------------------------- reading room (ADR-006)
+
+def build_reading_room(repo: Repo, generated_at: str) -> str:
+    """The human home page (ADR-006): one generated screen that composes the
+    deeper views and links into them. Interface layers (Obsidian, GitHub
+    mobile, a bare editor) open THIS file first. It deliberately duplicates no
+    canonical fact — everything is drawn from the same inputs as the views it
+    links, and it is disposable like every generated file. Deterministic:
+    dates come from Git, never the wall clock (no countdowns — VALIDATION's
+    byte-identical rule, human-operability review #11)."""
+    lines = _md_header("Reading room", generated_at)
+    lines.append("*The human home page — start here. Everything below is a "
+                 "link into a deeper view; rebuild anytime with `make views` "
+                 "(or `python tools/los.py generate`).*")
+    lines.append("")
+
+    # Exam spine (registered attempts only — the facts live in modules.yaml).
+    lines.append("## Next exams")
+    lines.append("")
+    spine = _exam_spine(repo)
+    if spine:
+        for date, mid, module, att in spine:
+            lines.append(f"- **{date}** — {module.get('title', mid)} "
+                         f"(Termin {att.get('termin', '?')})")
+    else:
+        lines.append("(no registered attempts in records/modules.yaml)")
+    lines.append("")
+    lines.append("Full spine, priorities and neglect signals: "
+                 "[coordination-view.md](coordination-view.md)")
+    lines.append("")
+
+    # Active workspaces with their next actions (from frontmatter + CONTEXT).
+    active = sorted(repo.active_workspaces(), key=lambda w: w.id)
+    lines.append(f"## Active workspaces ({len(active)})")
+    lines.append("")
+    if active:
+        for ws in active:
+            na = _first_para(ws.section("Next Action"))
+            standing = " · standing" if ws.standing else ""
+            lines.append(f"- `{ws.id}` ({ws.status}{standing})"
+                         + (f" — next: {na}" if na else ""))
+    else:
+        lines.append("(no active workspaces)")
+    lines.append("")
+
+    # Recently changed notes: uncommitted first (most in need of a commit),
+    # then newest last-commit date. Same Git-derived idiom as the Nebula.
+    lines.append("## Recently changed notes")
+    lines.append("")
+    dated = []
+    for n in repo.notes.values():
+        rel = n.path.relative_to(repo.root).as_posix()
+        dated.append((_git_last_commit(repo.root, rel), n))
+    uncommitted = sorted((n for d, n in dated if not d), key=lambda n: n.id)
+    committed = sorted(((d, n) for d, n in dated if d),
+                       key=lambda t: (t[0], t[1].id), reverse=True)
+    shown = 0
+    for n in uncommitted[:10]:
+        rel = n.path.relative_to(repo.root).as_posix()
+        lines.append(f"- `uncommitted` — [{n.meta.get('title', n.id)}](../{rel}) "
+                     f"· {n.meta.get('state', '')}")
+        shown += 1
+    for d, n in committed[: max(0, 10 - shown)]:
+        rel = n.path.relative_to(repo.root).as_posix()
+        lines.append(f"- `{d}` — [{n.meta.get('title', n.id)}](../{rel}) "
+                     f"· {n.meta.get('state', '')}")
+    if not dated:
+        lines.append("(no notes yet)")
+    lines.append("")
+
+    # Queues that want a decision or a harvest.
+    lines.append("## Queues")
+    lines.append("")
+    inbox = repo.root / "work" / "inbox"
+    n_inbox = len([f for f in inbox.iterdir()
+                   if not f.name.startswith(".")]) if inbox.is_dir() else 0
+    lines.append(f"- inbox: {n_inbox} item(s) in `work/inbox/` "
+                 "(the operator routes; trend toward empty)")
+    lines.append(f"- garden: {len(repo.garden_notes)} idea(s) gestating — "
+                 "[nebula.md](nebula.md)")
+    lines.extend(_materials_queue_rows(repo)
+                 or ["- materials queues: empty (nothing awaits a decision)"])
+    lines.append("")
+
+    # Review & evidence adoption, one line; details live in the health report.
+    ad = adoption_counts(repo)
+    lines.append("## Review & evidence adoption")
+    lines.append("")
+    lines.append(f"- reviewed: {ad['notes_reviewed']}/{ad['notes_total']} · "
+                 f"with evidence: {ad['notes_with_evidence']}/{ad['notes_total']} · "
+                 "details: [reports/health.md](reports/health.md)")
+    lines.append("")
+
+    lines.append("## All views")
+    lines.append("")
+    lines.append("[domain-atlas.md](domain-atlas.md) (cross-domain map) · "
+                 "[concept-index.md](concept-index.md) · "
+                 "[concept-map.md](concept-map.md) · "
+                 "[source-index.md](source-index.md) · "
+                 "[dependency-report.md](dependency-report.md) · "
+                 "[module-view.md](module-view.md) · "
+                 "[nebula.md](nebula.md) · "
+                 "[reports/health.md](reports/health.md) · "
+                 "[reports/validation-report.md](reports/validation-report.md)")
+    lines.append("")
+    return "\n".join(lines)
+
+
 def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     """Build all outputs; returns {relative path: content}.
 
@@ -1244,6 +1416,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "domain-atlas.md": build_domain_atlas(repo, generated_at) + "\n",
         "reports/health.md": build_health(repo, generated_at) + "\n",
         "nebula.md": build_nebula(repo, generated_at) + "\n",
+        "reading-room.md": build_reading_room(repo, generated_at) + "\n",
     }
     for name in sorted(repo.collections):
         outputs[f"collections/{name}.md"] = build_collection_view(
