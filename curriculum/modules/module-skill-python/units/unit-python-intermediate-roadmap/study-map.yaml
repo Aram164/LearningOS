@@ -2,7 +2,7 @@ id: study-map-python-intermediate-roadmap
 type: study-map
 unit_id: unit-python-intermediate-roadmap
 status: ready
-current_stage: stage-01-python-intermediate-roadmap
+current_stage: stage-python-step-01-baseline-syntax-and-core-mechanics
 source_plan:
   path: note://note-python-intermediate-roadmap
   provenance: durable-note
@@ -10,16 +10,1300 @@ detours: []
 shelving:
   state: none
 stages:
-- id: stage-01-python-intermediate-roadmap
-  title: Python intermediate roadmap
+- id: stage-python-step-01-baseline-syntax-and-core-mechanics
+  title: 'Step 1 — Baseline: syntax & core mechanics'
   status: pending
-  objective: Use the preserved Python intermediate roadmap artifact as the scope and work record.
+  objective: You're past this. Listed for gap-fills only.
   done_when:
-  - Record concrete work or evidence without inferring mastery from the artifact.
-  scope_triage: required-now
+  - The roadmap states no done-when test for this step — record in this note what you actually worked
+    and what still fails, and stop there.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
   resources:
   - kind: reference
-    label: 'Durable artifact note-python-intermediate-roadmap: Python intermediate roadmap'
-  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-01-python-intermediate-roadmap/notes.md
+    label: Roadmap Step 1 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 1 — Baseline: syntax & core mechanics'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Book: Automate the Boring Stuff — dip back in for any syntax hole.'
+  - kind: reference
+    label: 'Reference: Official Python Tutorial ch. 3–5 — skim; small revelations hide here.'
+    url: https://docs.python.org/3/tutorial/
+  - kind: read
+    label: 'Bridge: Beyond the Basic Stuff with Python (Sweigart, free online) — ch. 4 (common Python
+      gotchas) is a 30-min pass worth doing once.'
+    url: https://inventwithpython.com/beyond/
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-01-baseline-syntax-and-core-mechanics/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-02-names-objects-references-mutability
+  title: Step 2 — Names, objects, references, mutability
+  status: pending
+  objective: 'The single most important mental-model fix from C++. Everything else builds on it. Symptoms
+    it repairs: aliasing surprises, mutable default arguments, shallow vs deep copy confusion, "is `=`
+    a copy?"'
+  done_when:
+  - You can predict, without running, what any mix of rebinding vs mutation prints.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 2 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 2 — Names, objects, references, mutability'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 6 — PY.02 ✅. Re-read §"Identity, Equality, Aliases" + §"Function Parameters as
+      References."'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Core: Ned Batchelder — Facts and myths about Python names and values ⭐ (~40 min), or the PyCon
+      talk.'
+    source_id: source-batchelder-names
+    url: https://nedbatchelder.com/text/names.html
+  - kind: reference
+    label: 'Tool: Python Tutor — visualize every snippet you don''t trust.'
+    source_id: source-python-tutor
+    url: https://pythontutor.com
+  - kind: reference
+    label: 'Reference: `is` vs `==`, `copy.copy` vs `copy.deepcopy` (copy module docs).'
+    url: https://docs.python.org/3/library/copy.html
+  - kind: reference
+    label: 'Going deeper: `sys.getrefcount(obj)` — see CPython''s reference count live; `id(obj)` — the
+      memory address, which is what `is` compares. weakref module — references that don''t prevent garbage
+      collection; important for cache / buffer pool patterns like Stratum''s `BufferPool`.'
+    url: https://docs.python.org/3/library/weakref.html
+  - kind: reference
+    label: 'Stratum anchor: `BufferPool.live_variable_map` holds `(size, data)` tuples keyed by `Op` objects.
+      The `pin`/`unpin`/`remove` pattern is a manual reference-counting cache. Understanding object identity
+      (`is` vs `==`) is essential to see why `Op` objects can safely be dict keys.'
+  - kind: practise
+    label: 'Drills: Repair Plan Session 1 (D1–D4); then explain the classic `def f(x, lst=[])` mutable-default
+      bug from memory.'
+    vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-02-names-objects-references-mutability/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-03-scope-namespaces-functions-as-objects
+  title: Step 3 — Scope, namespaces, functions as objects
+  status: pending
+  objective: 'Repair the symptoms this step names: `UnboundLocalError`, confusion about what a function
+    "sees", `global`/`nonlocal`, passing functions around.'
+  done_when:
+  - You can explain why `nonlocal` exists and what problem it solves.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 3 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 3 — Scope, namespaces, functions as objects'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Real Python — LEGB Rule — §LEGB + §functions.'
+    source_id: source-realpython-legb
+    url: https://realpython.com/python-scope-legb-rule/
+  - kind: read
+    label: 'Core: FP Ch 7 (Functions as First-Class Objects) — PY.05 ⬜. Functions are objects with attributes;
+      `def` executes at runtime, not at parse time.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Key fact: scope is decided at compile time per function — any assignment anywhere in a function
+      body makes that name local for the entire function, even lines above the assignment.'
+  - kind: reference
+    label: 'Going deeper: `inspect.currentframe()`, `locals()`, `globals()` — expose the current scope
+      as a live dict. Used in Stratum''s logging and debugging.'
+  - kind: watch
+    label: 'Video: any Hettinger talk — watch how he passes functions as values without ceremony.'
+  - kind: practise
+    label: 'Drills: Repair Plan Session 1 D3/D4; then write `make_counter()` returning a closure — first
+      without `nonlocal` (watch it fail), then with.'
+    vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-03-scope-namespaces-functions-as-objects/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-04-the-data-model-and-dunder-methods
+  title: Step 4 — The data model & dunder methods
+  status: pending
+  objective: 'The "grand unified theory" of Python: `len()`, operators, `for` loops, `with` — all just
+    call dunders. Symptoms it repairs: dunders feel magic; you don''t know which to implement; `print(obj)`
+    shows `<object at 0x...>`.'
+  done_when:
+  - Given "I want `len(x)` / `x[i]` / `for item in x` / `x == y` to work," you name the dunder instantly.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 4 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 4 — The data model & dunder methods'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 1 (Data Model) — PY.01 ✅; FP Ch 11 (A Pythonic Object) — PY.07 ✅. Re-read Ch 11
+      §`__repr__`/`__str__`, §hashable objects, §`__format__`.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Going further: FP Ch 16 (Operator Overloading) — when you need `+`/`==` on your own classes.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Reference: Data model chapter of the language reference — the authoritative dunder list; bookmark,
+      don''t read linearly.'
+    url: https://docs.python.org/3/reference/datamodel.html
+  - kind: watch
+    label: 'Video: James Powell — "So you want to be a Python expert?" — first 25 min is the best live
+      demo of the data model''s logic.'
+    source_id: source-powell-python-expert
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+  - kind: practise
+    label: 'Code: FP example-code-2e `01-data-model/` (FrenchDeck, Vector) — retype FrenchDeck from memory.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Stratum anchor: `Op.__repr__`, `Op.__str__` in `_ops.py` are your live examples of well-crafted
+      dunders on a class hierarchy; `PlaceHolder.__repr__` is the minimal case.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-04-the-data-model-and-dunder-methods/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-05-built-in-containers-and-comprehensions
+  title: Step 5 — Built-in containers & comprehensions
+  status: pending
+  objective: 'Repair the symptoms this step names: misusing lists where sets/dicts fit, slice confusion,
+    sort vs sorted, clunky loops that should be comprehensions.'
+  done_when:
+  - You reflexively reach for set/dict for membership tests, and `key=lambda` is muscle memory.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 5 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 5 — Built-in containers & comprehensions'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 2 (Sequences) — PY.03 ⬜ — slicing, unpacking, `sort` vs `sorted`, when lists are
+      wrong.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Core: FP Ch 3 (Dicts and Sets) — PY.04 ⬜ — hashing, dict views, `setdefault`/`defaultdict`,
+      set algebra, dict ordering (insertion-order since 3.7).'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — List Comprehensions — incl. when not to use them.'
+    url: https://realpython.com/list-comprehension-python/
+  - kind: reference
+    label: 'Reference: Sorting HOWTO — `key=` functions; the idiom that replaces C++ comparators.'
+    url: https://docs.python.org/3/howto/sorting.html
+  - kind: practise
+    label: 'Code: example-code-2e `02-array-seq/`, `03-dict-set/`; rewrite three of your own mlprov/job
+      loops as comprehensions.'
+  - kind: reference
+    label: 'Stratum anchor: `indegree = {n: len(children.get(n, [])) for n in nodes}` in `_optimize.py`
+      is the pattern — dict comprehension over a node set, `.get()` with default to avoid KeyError.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-05-built-in-containers-and-comprehensions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-06-strings-bytes-and-formatting
+  title: Step 6 — Strings, bytes, and formatting
+  status: pending
+  objective: 'Repair the symptoms this step names: `UnicodeDecodeError`, `b''...''` confusion, ugly string
+    building.'
+  done_when:
+  - A `UnicodeDecodeError` tells you exactly where the sandwich broke.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 6 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 6 — Strings, bytes, and formatting'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 4 (Unicode Text vs Bytes) — §"Character Issues" + §"Basic Encoders/Decoders" +
+      §"Handling Text Files" (the "Unicode sandwich"); skim the rest.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — f-strings / string formatting — format-spec mini-language (`f"{x:.3f}"`,
+      `{x!r}`).'
+    url: https://realpython.com/python-string-formatting/
+  - kind: reference
+    label: 'Key model: `str` = text (Unicode code points); `bytes` = raw data. Encode on the way out,
+      decode on the way in, never mix.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-06-strings-bytes-and-formatting/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-07-classes-i-mechanics
+  title: 'Step 7 — Classes I: mechanics'
+  status: pending
+  objective: 'Repair the symptoms this step names: `self` feels magic, instance vs class attributes blur,
+    `@classmethod` vs `@staticmethod` unclear.'
+  done_when:
+  - You can predict `m.__dict__` vs `Module.__dict__` contents and explain attribute shadowing.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 7 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 7 — Classes I: mechanics'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Official tutorial ch. 9 (Classes) §9.1–9.4 — classes are namespaces; attribute lookup
+      is dict lookup.'
+    source_id: source-python-docs-classes-mro
+    url: https://docs.python.org/3/tutorial/classes.html
+  - kind: watch
+    label: 'Video + code: Corey Schafer OOP playlist #1–3, code at CoreyMSchafer/code_snippets.'
+    source_id: source-corey-schafer-oop
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+  - kind: read
+    label: 'Article: Real Python — Instance, Class, and Static Methods Demystified.'
+    url: https://realpython.com/instance-class-and-static-methods-demystified/
+  - kind: reference
+    label: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed-layout tuple of named slots;
+      eliminates per-instance dict overhead; important for classes created in hot loops (like Op nodes
+      in Stratum''s large DAGs). Real Python — `__slots__`. Also see Step 27.'
+    url: https://realpython.com/python-slots/
+  - kind: reference
+    label: '`__init_subclass__` — a hook called on the base class every time a subclass is defined; used
+      in frameworks to auto-register subclasses. Docs. Stratum''s `Op` hierarchy could use this; understanding
+      it helps you read framework code.'
+    url: https://docs.python.org/3/reference/datamodel.html#object.__init_subclass__
+  - kind: reference
+    label: 'Key reframe: `obj.method(x)` ≡ `Class.method(obj, x)`. `self` is an ordinary first argument.'
+  - kind: practise
+    label: 'Drills: Repair Plan Session 2.'
+    vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-07-classes-i-mechanics/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+  title: 'Step 8 — Classes II: inheritance, super(), MRO, mixins'
+  status: pending
+  objective: 'Your named headache. The repair plan''s Sessions 3–4 are the drill version of this step.
+    Symptoms it repairs: super() confusion, mixin `__init__` chains, subclassing pandas/numpy/sklearn,
+    diamond inheritance.'
+  done_when:
+  - '`print(Cls.__mro__)` is your reflex.'
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 8 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 8 — Classes II: inheritance, super(), MRO, mixins'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Hettinger — Python''s super() considered super! ⭐ — THE mental model: super() = next
+      in MRO.'
+    source_id: source-hettinger-super
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+  - kind: read
+    label: 'Core: FP Ch 14 (Inheritance) — PY.08 ✅. Re-read §"Multiple Inheritance and MRO" + §"Mixin
+      Classes" + §"Subclassing Built-In Types Is Tricky."'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — Supercharge Your Classes With super().'
+    url: https://realpython.com/python-super/
+  - kind: reference
+    label: 'Reference: Official MRO write-up — C3 linearization; read after Hettinger.'
+    url: https://docs.python.org/3/howto/mro.html
+  - kind: practise
+    label: 'Practical: numpy subclassing guide + pandas subclassing guide — your mlprov reality.'
+    source_id: source-numpy-subclassing-docs
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+  - kind: reference
+    label: '`__init_subclass__`: (see Step 7) — used in abstract base classes where you want to enforce
+      constraints on every concrete subclass at class-definition time, not at instantiation.'
+  - kind: reference
+    label: 'Stratum anchor: `Op` base class defines `clone()` using a class-level `fields` list — a manual
+      version of what `__init_subclass__` + descriptors could auto-generate. `ImplOp.clone()` and `BaseEstimatorOp.clone()`
+      override this because their internal state is more complex. Read these and annotate…'
+  - kind: practise
+    label: 'Drills: Repair Plan Sessions 3–4 (LoggingDict rebuild, diamond drill, ProvDataFrame MRO annotation).'
+    vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-08-classes-ii-inheritance-super-mro-mixins/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-09-data-class-builders
+  title: Step 9 — Data class builders
+  status: pending
+  objective: 'Repair the symptoms this step names: writing boilerplate `__init__`/`__repr__`/`__eq__`
+    by hand.'
+  done_when:
+  - You stop hand-writing `__init__` for pure data containers.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 9 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 9 — Data class builders'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 5 (Data Class Builders) — PY.09 ✅. Re-read §"Main Features" comparison table.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — Data Classes — `field(default_factory=...)`, `frozen=True`, `__post_init__`.'
+    url: https://realpython.com/python-data-classes/
+  - kind: reference
+    label: 'Going deeper: `@dataclass(slots=True)` (3.10+) — auto-generates `__slots__`; eliminates `__dict__`
+      per instance. Use when you have many short-lived instances.'
+  - kind: reference
+    label: 'Rule of thumb: records of data → `@dataclass`; immutable / tuple-compatible → `NamedTuple`;
+      behavior-heavy → plain class.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-09-data-class-builders/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-10-duck-typing-abcs-protocols
+  title: Step 10 — Duck typing, ABCs, protocols
+  status: pending
+  objective: 'Repair the symptoms this step names: "what type does this function accept?", `isinstance`
+    overuse, designing interfaces.'
+  done_when:
+  - You can say why an ABC's `abstractmethod` is better than just `raise NotImplementedError` (ABC raises
+    at instantiation, not at call time).
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 10 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 10 — Duck typing, ABCs, protocols'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 13 (Interfaces, Protocols, ABCs) — PY.11 ⬜ — the four interface mechanisms: duck
+      typing, goose typing (ABCs), static protocols, static duck typing.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Reference: collections.abc table — which dunders give you which "free" methods.'
+    url: https://docs.python.org/3/library/collections.abc.html
+  - kind: reference
+    label: 'Going deeper: `@runtime_checkable` on a `Protocol` — lets you use `isinstance(x, MyProtocol)`
+      at runtime (normally protocols are static-only). `TypeVar` + `Generic` for parameterized protocols.
+      Docs.'
+    url: https://docs.python.org/3/library/typing.html#typing.Protocol
+  - kind: practise
+    label: 'Code: example-code-2e `13-protocol-abc/`.'
+  - kind: reference
+    label: 'Stratum anchor: Stratum''s `Op.process()` is an abstract method pattern without ABCs (raises
+      `NotImplementedError`). The sklearn fit/predict contract is pure duck typing — anything with `.fit/.predict`
+      is an estimator.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-10-duck-typing-abcs-protocols/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-11-closures-and-decorators
+  title: Step 11 — Closures & decorators
+  status: pending
+  objective: 'Repair the symptoms this step names: `@something` syntax feels magic, can''t write a decorator
+    with arguments, losing function metadata.'
+  done_when:
+  - Decorator factories don't scare you.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 11 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 11 — Closures & decorators'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: reference
+    label: 'Prerequisite: Steps 3 and 2.'
+  - kind: read
+    label: 'Core: FP Ch 9 (Decorators and Closures) — PY.10 ⬜ — registration decorators, `functools.wraps`,
+      `lru_cache`, `singledispatch`.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — Primer on Python Decorators ⭐ — do this FIRST, then FP Ch 9.'
+    url: https://realpython.com/primer-on-python-decorators/
+  - kind: watch
+    label: 'Video: Corey Schafer — Decorators.'
+    url: https://www.youtube.com/watch?v=FsAPt_9Bf3U
+  - kind: reference
+    label: 'Mental model: `@dec` is just `f = dec(f)`. Nothing else.'
+  - kind: reference
+    label: 'Going deeper: `functools.singledispatch` — dispatch table by first argument type; used extensively
+      in optimizer/rewrite passes like Stratum''s `extract_dataframe_op`. Docs. `functools.cache` (3.9+,
+      alias for `lru_cache(maxsize=None)`) — zero-arg version, fastest.'
+    url: https://docs.python.org/3/library/functools.html#functools.singledispatch
+  - kind: practise
+    label: 'Drills: from memory: `@timer`, `@logged`, then `@retry(n=3)` (decorator factory). Verify `__name__`
+      survives via `@wraps`.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-11-closures-and-decorators/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-12-iterators-generators-lazy-pipelines
+  title: Step 12 — Iterators, generators, lazy pipelines
+  status: pending
+  objective: 'Repair the symptoms this step names: `yield` confusion, iterator-exhausted-once surprises,
+    memory blowups from loading whole files.'
+  done_when:
+  - You reach for genexps instead of lists and `yield from` for recursive traversal feels natural.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 12 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 12 — Iterators, generators, lazy pipelines'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 17 (Iterators, Generators, Classic Coroutines) — PY.06 ⬜ — read the generators
+      section first; the coroutines section is Step 24.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Trey Hunner — The Iterator Protocol: How for Loops Work.'
+    source_id: source-hunner-iterator-protocol
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+  - kind: read
+    label: 'Classic: David Beazley — Generator Tricks for Systems Programmers ⭐ — generator pipelines
+      over logs; career-grade for data engineering.'
+    source_id: source-beazley-generator-tricks
+    url: https://www.dabeaz.com/generators/
+  - kind: read
+    label: 'Article: Real Python — Introduction to Generators.'
+    url: https://realpython.com/introduction-to-python-generators/
+  - kind: reference
+    label: '`yield from`: delegates to a sub-iterator; essential in recursive generator traversals (like
+      Stratum''s DAG walkers). `yield from inner` is shorthand for `for x in inner: yield x` but also
+      proxies `.send()` and `.throw()`. PEP 380.'
+    url: https://peps.python.org/pep-0380/
+  - kind: reference
+    label: 'Hierarchy: iterable (has `__iter__`) ⊃ iterator (also has `__next__`, exhausts) ⊃ generator
+      (iterator written with `yield`).'
+  - kind: reference
+    label: 'Stratum anchor: `topological_iterator` in `_op_utils.py` is a generator that walks the Op
+      DAG — read it once you know generators. The `for op in topological_iterator(root):` pattern throughout
+      the optimizer is the canonical lazy DAG traversal.'
+  - kind: practise
+    label: 'Drills: (1) manual `__iter__`/`__next__` → rewrite with generator; (2) 3-stage lazy CSV pipeline;
+      (3) write a topological sort of a toy DAG as a generator.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-12-iterators-generators-lazy-pipelines/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-13-context-managers-with-else-match
+  title: Step 13 — Context managers, with / else / match
+  status: pending
+  objective: 'Repair the symptoms this step names: `with` feels like ritual, can''t write your own, `try/else`
+    semantics unclear.'
+  done_when:
+  - You know `with` is exactly `try/finally` with syntactic sugar, and you use it for every resource that
+    needs cleanup.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 13 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 13 — Context managers, with / else / match'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 18 (with, match, else) — PY.14 ⬜.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — Context Managers and the with Statement.'
+    url: https://realpython.com/python-with-statement/
+  - kind: reference
+    label: 'Two ways to write one: class with `__enter__`/`__exit__`, or `@contextlib.contextmanager`
+      + one `yield` (contextlib docs).'
+    url: https://docs.python.org/3/library/contextlib.html
+  - kind: reference
+    label: 'Stratum anchor: `DummyConfigManager` in `_ops.py` is a minimal do-nothing context manager
+      — shows the interface in its simplest form. `estimator_parallel_config()` returns either a real
+      one or the dummy depending on config.'
+  - kind: practise
+    label: 'Drill: write a `timer()` context manager both ways; wrap an mlprov test.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-13-context-managers-with-else-match/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-14-exceptions-and-error-handling
+  title: Step 14 — Exceptions & error handling
+  status: pending
+  objective: 'Repair the symptoms this step names: bare `except:`, unsure what to catch, when to define
+    custom exceptions.'
+  done_when:
+  - Your `except` clauses name specific exceptions and your libraries raise typed ones.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 14 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 14 — Exceptions & error handling'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Official tutorial ch. 8 — `else`, `finally`, exception chaining (`raise X from Y`).'
+    url: https://docs.python.org/3/tutorial/errors.html
+  - kind: read
+    label: 'Article: Real Python — Python Exceptions.'
+    url: https://realpython.com/python-exceptions/
+  - kind: reference
+    label: 'Reference: Built-in exception hierarchy — catch the most specific class.'
+    url: https://docs.python.org/3/library/exceptions.html#exception-hierarchy
+  - kind: reference
+    label: 'Going deeper: `ExceptionGroup` (3.11+) and `except` — handle multiple concurrent exceptions
+      (asyncio context). `traceback` module — format and log exceptions programmatically.'
+  - kind: reference
+    label: 'Idiom: EAFP ("easier to ask forgiveness") — `try: d[k] except KeyError:` over `if k in d:`.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Stratum anchor: `Scheduler.process_op()` wraps every op execution in `try/except Exception
+      as e: raise RuntimeError(...)` — the pattern of catching broad exceptions and re-raising with more
+      context. Note `RuntimeError(f"[{self.mode}] Error processing ''{op}'': {e}")` — the string interpolation…'
+  - kind: reference
+    label: 'Rules of thumb: never bare `except:`; custom exceptions = one class per library (`class StratumError(Exception):
+      pass`) subclassed per error type.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-14-exceptions-and-error-handling/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-15-type-hints
+  title: Step 15 — Type hints
+  status: pending
+  objective: 'Repair the symptoms this step names: reading hinted signatures in skrub/sklearn/Stratum,
+    `Optional`, generics, mypy errors.'
+  done_when:
+  - You write hints by default and can read any Stratum/sklearn signature fluently.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 15 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 15 — Type hints'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 8 (Type Hints in Functions) — PY.12 ⬜; FP Ch 15 (more types) — PY.13 ⬜.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Article: Real Python — Python Type Checking — practical mypy setup.'
+    url: https://realpython.com/python-type-checking/
+  - kind: reference
+    label: 'Reference: mypy cheat sheet ⭐ — fastest on-ramp; start here.'
+    url: https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html
+  - kind: reference
+    label: 'Going deeper:'
+  - kind: reference
+    label: 'Stratum anchor: `_ops.py` is full of `list[Op]`, `dict[Hashable, Any]`, `tuple[list[Op], int
+      | None, list[Op]]` — modern Python 3.10+ union syntax. `from __future__ import annotations` at the
+      top of every file makes all these work even on older Python.'
+  - kind: practise
+    label: 'Drill: annotate one mlprov module fully, run `mypy`, fix every complaint.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-15-type-hints/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-16-modules-imports-packages-environments
+  title: Step 16 — Modules, imports, packages, environments
+  status: pending
+  objective: 'Repair the symptoms this step names: `ModuleNotFoundError`, `__init__.py` mystery, circular
+    imports, "works in IDE not terminal."'
+  done_when:
+  - An import error makes you check `sys.path` and launch directory, not shuffle files.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 16 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 16 — Modules, imports, packages, environments'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Real Python — Python Modules and Packages.'
+    url: https://realpython.com/python-modules-packages/
+  - kind: read
+    label: 'Deeper: Real Python — Python import: Advanced Techniques — §basics + §circular imports + §the
+      import system.'
+    url: https://realpython.com/python-import/
+  - kind: reference
+    label: 'Key model: a module executes once on first import and is cached in `sys.modules`; subsequent
+      imports return the cached object. `sys.path` determines where Python looks; it depends on how you
+      launched Python. `python -m pkg.module` from project root fixes most "works here not there" bugs.'
+  - kind: reference
+    label: 'Going deeper: `importlib.import_module("pkg.mod")` — programmatic import; returns the module
+      object. `importlib.reload(mod)` — re-execute a module (rarely needed; hot-reload scenarios). Essential
+      for Step 23 (monkey-patching).'
+  - kind: reference
+    label: 'Layout reference: how mlprov is structured (`pyproject.toml` + package dir + `tests/`) is
+      your live example.'
+  - kind: reference
+    label: 'The three circular-import fixes (job-real): when modules A and B import each other, either
+      (1) move the import inside the function/method that needs it — the local-import fix Stratum''s `_column_expr.py`
+      uses for `MissingMaskOp`; (2) hoist the shared name into a third module both import; or (3)…'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-16-modules-imports-packages-environments/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-17-standard-library-power-tools
+  title: Step 17 — Standard library power tools
+  status: pending
+  objective: 'Repair the symptoms this step names: writing 10 lines for what stdlib does in 1; manual
+    path surgery; nested loops that should be `itertools`.'
+  done_when:
+  - '"stdlib probably has this" is your first thought.'
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 17 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 17 — Standard library power tools'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: reference
+    label: 'collections: docs — `Counter`, `defaultdict`, `deque`, `namedtuple`, `UserDict` (the Step-8
+      subclassing fix), `ChainMap`.'
+    url: https://docs.python.org/3/library/collections.html
+  - kind: reference
+    label: 'itertools: Real Python guide + docs recipes — the recipes are goldmine idiomatic code.'
+    url: https://realpython.com/python-itertools/
+  - kind: reference
+    label: 'functools: docs — `lru_cache`/`cache`, `partial`, `reduce`, `cached_property`, `singledispatch`.'
+    url: https://docs.python.org/3/library/functools.html
+  - kind: reference
+    label: 'pathlib: Real Python — pathlib — replace every `os.path` + string concat habit.'
+    url: https://realpython.com/python-pathlib/
+  - kind: reference
+    label: 'abc: docs — `ABC`, `abstractmethod`, `ABCMeta` — the formal way to define abstract interfaces
+      (vs. just `raise NotImplementedError`).'
+    url: https://docs.python.org/3/library/abc.html
+  - kind: reference
+    label: 'inspect: docs — `getmembers`, `signature`, `isclass`, `isfunction`, `currentframe` — introspects
+      live objects; essential for Step 22.'
+    url: https://docs.python.org/3/library/inspect.html
+  - kind: reference
+    label: 'logging: Real Python — logging — Stratum uses `logging` everywhere (`logger = logging.getLogger(__name__)`);
+      know how to configure it.'
+    url: https://realpython.com/python-logging/
+  - kind: reference
+    label: 'Browsing resource: PyMOTW-3 — one worked article per stdlib module.'
+    url: https://pymotw.com/3/
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-17-standard-library-power-tools/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-18-pythonic-style-and-idioms
+  title: Step 18 — Pythonic style & idioms
+  status: pending
+  objective: 'Repair the symptoms this step names: code works but reads like translated C++.'
+  done_when:
+  - You can shrink 20 lines of KW-19 code meaningfully without losing clarity.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 18 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 18 — Pythonic style & idioms'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: watch
+    label: 'Video: Hettinger — Transforming Code into Beautiful, Idiomatic Python ⭐ (~50 min) — the single
+      highest-value hour in this file.'
+    url: https://www.youtube.com/watch?v=OSGv2VnC0go
+  - kind: reference
+    label: 'Reference: PEP 8 — skim once; let `ruff` enforce it.'
+    url: https://peps.python.org/pep-0008/
+  - kind: reference
+    label: 'Patterns: python-patterns.guide (Brandon Rhodes) — read "Composition Over Inheritance" first.'
+    source_id: source-rhodes-python-patterns
+    url: https://python-patterns.guide/
+  - kind: reference
+    label: 'Idiom checklist: unpacking over indexing; `enumerate`/`zip` over index loops; comprehensions;
+      `key=` functions; EAFP; context managers for resources; flat over nested.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-18-pythonic-style-and-idioms/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-19-concurrency-and-the-gil
+  title: Step 19 — Concurrency & the GIL
+  status: pending
+  objective: Relevant for AMLS parallelism + job perf work.
+  done_when:
+  - The roadmap states no done-when test for this step — record in this note what you actually worked
+    and what still fails, and stop there.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: reference-only
+  resources:
+  - kind: reference
+    label: Roadmap Step 19 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 19 — Concurrency & the GIL'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Orientation: Real Python — Speed Up Your Python Program With Concurrency — the threading vs
+      multiprocessing vs asyncio decision map.'
+    url: https://realpython.com/python-concurrency/
+  - kind: read
+    label: 'The GIL: Real Python — What Is the GIL? + Beazley — Understanding the GIL (slides).'
+    url: https://realpython.com/python-gil/
+  - kind: reference
+    label: 'Threading primitives: `threading.RLock` (reentrant lock — the same thread can acquire it multiple
+      times without deadlock), `threading.Lock`, `threading.Event`. Official docs. Used in Stratum''s
+      `_patching.py` (`_LOCK = threading.RLock()`) to make the monkey-patching idempotent across threads.'
+    url: https://docs.python.org/3/library/threading.html
+  - kind: reference
+    label: '`concurrent.futures`: Real Python — concurrent.futures — `ThreadPoolExecutor` for I/O-bound,
+      `ProcessPoolExecutor` for CPU-bound; cleaner API than raw `threading`/`multiprocessing`.'
+    url: https://realpython.com/python-concurrency/#using-concurrentfutures
+  - kind: watch
+    label: 'Video: Beazley — Python Concurrency From the Ground Up: LIVE! ⭐ — builds a concurrent server
+      from scratch on stage.'
+    url: https://www.youtube.com/watch?v=MCs5OvhV9S4
+  - kind: read
+    label: 'asyncio basics: Real Python — Async IO in Python — `async def`, `await`, `asyncio.run()`.
+      Know the model; don''t need to write it for Stratum work.'
+    url: https://realpython.com/async-io-python/
+  - kind: read
+    label: 'Book: FP Ch 19–21 — read only if needed after the above.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Job tie-in: Brandon Rohrer''s Making Python Faster series.'
+    url: https://brandonrohrer.com/code_optimization.html
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-19-concurrency-and-the-gil/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-20-interpreter-internals
+  title: Step 20 — Interpreter internals
+  status: pending
+  objective: The "how does it actually work" itch. Your C++ background is an asset here.
+  done_when:
+  - The roadmap states no done-when test for this step — record in this note what you actually worked
+    and what still fails, and stop there.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: reference-only
+  resources:
+  - kind: reference
+    label: Roadmap Step 20 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 20 — Interpreter internals'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Appetizer (15 min): `import dis; dis.dis(f)` — see `LOAD_FAST` (local) vs `LOAD_GLOBAL` (global)
+      — scope made physical. `dis.dis` on Stratum''s `process_op` and compare with `LOAD_ATTR`, `CALL_FUNCTION`.'
+  - kind: practise
+    label: 'Bytecode module: `opcode` — the full list of bytecode instructions. `compile(source, "<string>",
+      "exec")` returns a `code` object; inspect its `co_consts`, `co_varnames`, `co_code`.'
+  - kind: read
+    label: 'Core: Allison Kaptur — A Python Interpreter Written in Python ⭐ (~1.5h) — Byterun: working
+      bytecode VM in 500 lines; frames, value stack, why scope IS the frame structure.'
+    source_id: source-kaptur-byterun
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+  - kind: read
+    label: 'Foundations alternative: Composing Programs ch. 1.6 & 3 (Berkeley CS61A) — environments/frames
+      diagrams done formally.'
+    url: https://www.composingprograms.com/
+  - kind: read
+    label: 'Deep: Philip Guo — CPython internals lectures — cherry-pick L1 (overview), L3 (frames/scope),
+      L8 (classes). Old (Py 2.7) but architecture stands.'
+    source_id: source-guo-cpython-internals
+    url: https://pgbovine.net/cpython-internals.htm
+  - kind: read
+    label: 'Modern alternative: CPython internals book (Real Python, paid) or the free devguide.python.org
+      — the official contributor guide explains the C source layout.'
+    url: https://realpython.com/products/cpython-internals-book/
+  - kind: reference
+    label: '`eval()`/`exec()`: Real Python — eval and exec — run Python code from strings; understand
+      why this is powerful and dangerous.'
+    url: https://realpython.com/python-eval-function/
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-20-interpreter-internals/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-21-attribute-magic-properties-descriptors-metaclasses-module-getattr
+  title: 'Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`'
+  status: pending
+  objective: Read to understand libraries; you will write `@property` often, descriptors occasionally,
+    metaclasses almost never.
+  done_when:
+  - '`obj.attr` triggering code is no longer magic — you know the lookup chain: data descriptor → instance
+    `__dict__` → non-data descriptor/class attribute → `__getattr__`.'
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: reference-only
+  resources:
+  - kind: reference
+    label: Roadmap Step 21 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Properties: FP Ch 22 (Dynamic Attributes and Properties) — `@property` is the 95%-case; turns
+      `get_x()` habits into plain attribute access. `@property` + `@x.setter` + `@x.deleter` trio.'
+    source_id: source-fluent-python
+  - kind: read
+    label: 'Descriptors: Official Descriptor HOWTO (Hettinger) ⭐ — explains how `@property`, `@classmethod`,
+      methods themselves ALL work underneath via the descriptor protocol (`__get__`, `__set__`, `__delete__`).
+      Real Python — descriptors as a gentler alternative.'
+    url: https://docs.python.org/3/howto/descriptor.html
+  - kind: reference
+    label: '`__getattr__` vs `__getattribute__`: `__getattr__` is called only when normal lookup fails
+      (fallback); `__getattribute__` intercepts every attribute access. FP Ch 22 §"Using a Property for
+      Attribute Validation." Use `__getattr__` for lazy attributes and proxy objects.'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'Module-level `__getattr__` (PEP 562): defining `def __getattr__(name):` at module level (not
+      inside a class) intercepts attribute access on the module object itself — `stratum._rust_backend`
+      uses this exact pattern to lazily read config flags: `USE_RUST = __getattr__("USE_RUST")`. PEP 562.
+      Key…'
+    url: https://peps.python.org/pep-0562/
+  - kind: reference
+    label: '`__class_getitem__`: makes `MyClass[int]` work (generic syntax). Needed if you''re writing
+      parameterizable containers.'
+  - kind: read
+    label: 'Metaclasses: FP Ch 24 — skim only. FP''s own advice: "if you''re not sure you need them, you
+      don''t." The one pattern worth knowing: `type(obj)` is its metaclass; `type` itself is a metaclass;
+      classes are instances of `type`.'
+    source_id: source-fluent-python
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-21-attribute-magic-properties-descriptors-metaclasses-module-getattr/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-22-runtime-introspection-and-reflection
+  title: Step 22 — Runtime introspection & reflection
+  status: pending
+  objective: 'Used pervasively in Stratum: `isinstance`, `getattr`, `hasattr`, `type`, `vars`, `inspect`.
+    Symptoms it repairs: confused by code that reads/modifies objects without knowing their type at write-time;
+    `isinstance` chains; `getattr(obj, name, default)` calls.'
+  done_when:
+  - '`getattr(obj, name, None)` and `hasattr(obj, name)` are your reflex for "does this object have X."'
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 22 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 22 — Runtime introspection & reflection'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: Real Python — Python''s `isinstance` and `issubclass` — when to use it, when duck typing
+      is better.'
+    url: https://realpython.com/python-isinstance/
+  - kind: read
+    label: 'Core: Official docs — Built-in functions: `getattr`, `setattr`, `hasattr`, `delattr` — the
+      reflection quad. `getattr(obj, name, default)` is the safe form; `setattr(mod, name, value)` patches
+      attributes on anything, including modules (Step 23).'
+    url: https://docs.python.org/3/library/functions.html
+  - kind: reference
+    label: '`type()` and `vars()`: `type(obj)` returns the class; `vars(obj)` returns the `__dict__`.
+      `type(obj).__name__`, `type(obj).__module__` tell you the class string — used in `estm_supports_polars()`
+      in Stratum (`estimator.__class__.__module__.startswith("sklearn.")`).'
+  - kind: reference
+    label: '`inspect` module: Real Python — inspect — `inspect.signature(f)`, `inspect.getmembers(obj)`,
+      `inspect.isclass`, `inspect.isfunction`, `inspect.getmro(cls)` (same as `cls.__mro__`). Used for
+      framework code, plugins, and any "I need to know what this object has" scenario.'
+    url: https://realpython.com/python-inspect-module/
+  - kind: reference
+    label: '`__class__.__name__` idiom: the pattern `self.__class__.__name__` in `Op.__str__` — works
+      correctly in subclasses (returns the subclass name, not `Op`).'
+  - kind: reference
+    label: 'Stratum anchor: `_ops.py` is full of this. `isinstance(value, DataOp)`, `isinstance(value,
+      (list, tuple))`, `isinstance(impl, Value)` etc. in `as_op()` and `replace_dataop()`. `hasattr(self.skrub_impl,
+      "eval")` in `ImplOp.process` — checking for an optional method before calling it (duck typing via…'
+  - kind: practise
+    label: 'Drill: write a function `describe(obj)` that prints the class name, all public attributes
+      (excluding dunders), and which are callable vs data; use only `type()`, `dir()`, `getattr()`, `callable()`.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-22-runtime-introspection-and-reflection/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-23-import-machinery-and-monkey-patching
+  title: Step 23 — Import machinery & monkey-patching
+  status: pending
+  objective: 'Stratum''s `patching/_patching.py` is a full monkey-patching system. Understanding it requires
+    knowing how Python''s import system works. Symptoms it repairs: `importlib.import_module` looks foreign;
+    `setattr(module, "ClassName", MyClass)` seems wrong; "why would you replace a class inside another
+    module?"'
+  done_when:
+  - You can explain the timing issue ("already bound names are not affected") and the sentinel pattern.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 23 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 23 — Import machinery & monkey-patching'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core — the import system: Real Python — Python import: Advanced Techniques — §"The Python
+      import system," §"`sys.modules`," §"Reloading modules."'
+    url: https://realpython.com/python-import/
+  - kind: reference
+    label: '`sys.modules`: a plain dict mapping module names to module objects. First `import foo` executes
+      `foo.py` and stores the result in `sys.modules["foo"]`. Every subsequent `import foo` just returns
+      `sys.modules["foo"]`. Monkey-patching works because ALL code that does `from foo import Bar` later
+      gets…'
+  - kind: reference
+    label: '`importlib.import_module(name)`: programmatic equivalent of `import name`; returns the module
+      object. If the module is already in `sys.modules`, returns the cached object without re-executing.
+      Used in `_patching.py`''s `_import_module()`.'
+  - kind: reference
+    label: '`setattr(module, "ClassName", ReplacementClass)`: replaces the name `ClassName` in `module.__dict__`.
+      Any code in that module that uses `ClassName` after the patch sees the new class. Code that already
+      did `from module import ClassName` and stored a local binding is NOT affected — order matters.'
+  - kind: read
+    label: 'Article: Real Python — Monkey Patching in Python — the `unittest.mock.patch` context manager
+      does exactly this; understanding it demystifies Stratum''s manual version.'
+    url: https://realpython.com/python-mock-patch/
+  - kind: reference
+    label: 'Idempotence pattern: Stratum uses `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock`
+      to ensure patching runs exactly once even across threads. Classic sentinel + lock pattern. threading.RLock
+      docs.'
+    url: https://docs.python.org/3/library/threading.html#threading.RLock
+  - kind: reference
+    label: '`from __future__ import annotations` interaction: patching at import time must happen before
+      any module that uses the patched names is imported. `_patching.py` imports and patches during its
+      own module execution, so `import stratum.patching` triggers it; the `__init__.py` that does `from
+      .patching…'
+  - kind: reference
+    label: 'Stratum anchor: read `_patching.py` in full after this step. It is a clean, well-commented
+      example of: `importlib.import_module`, `setattr`, `threading.RLock`, module-level patching, and
+      idempotent initialization — all patterns you''ll use.'
+  - kind: practise
+    label: 'Drill: write a toy `patch_module.py` that (1) imports `math`, (2) replaces `math.sqrt` with
+      a version that prints before delegating, (3) verifies that `import math; math.sqrt(9)` in another
+      file sees the patched version if `patch_module` is imported first.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-23-import-machinery-and-monkey-patching/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-24-generator-coroutines-send-throw-stopiteration-value
+  title: 'Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`'
+  status: pending
+  objective: 'Used in `ImplOp.process()` in Stratum to fuse a generator-based evaluation protocol with
+    regular function calls. Symptoms it repairs: `gen.send(value)` looks wrong; confused by `StopIteration
+    as e: return e.value`; difference between a generator and a coroutine is unclear.'
+  done_when:
+  - '`gen.send()` feels like a natural two-way communication channel, not magic.'
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 24 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Core: FP Ch 17 — the coroutines section (after the generators section). Specifically: §"Using
+      a Generator as a Coroutine," §"`send()`, `throw()`, `close()`."'
+    source_id: source-fluent-python
+  - kind: reference
+    label: 'The protocol in full:'
+  - kind: read
+    label: 'Article: Real Python — Generators and Coroutines — §"Advanced Generator Methods."'
+    url: https://realpython.com/introduction-to-python-generators/#using-advanced-generator-methods
+  - kind: reference
+    label: 'PEP 342: PEP 342 — Coroutines via Enhanced Generators — the spec; readable.'
+    url: https://peps.python.org/pep-0342/
+  - kind: reference
+    label: 'Stratum anchor: `ImplOp.process()` uses the full protocol — `gen = self.skrub_impl.eval(mode=mode,
+      environment=environment)`, then `while True: last_yield = gen.send(last_yield)`, catching `StopIteration
+      as e: return e.value`. The generator yields `DataOp` objects (requesting inputs), the scheduler…'
+  - kind: practise
+    label: 'Drill: write a `compute_steps()` generator that yields strings requesting inputs and uses
+      `send()` to receive answers:'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-24-generator-coroutines-send-throw-stopiteration-value/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions
+  title: 'Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions'
+  status: pending
+  objective: 'Stratum has a Rust backend (`_rust_backend_native`) compiled with PyO3/maturin. This is
+    what "developing microkernels underneath Python" means. Symptoms it repairs: `.so`/`.pyd` import fails
+    or succeeds mysteriously; `from . import _rust_backend_native` looks like magic; unsure how to write
+    and build a Rust function callable from Python.'
+  done_when:
+  - You can trace the path from a Rust `#[pyfunction]` through the `.so` to a Python `import` and understand
+    what PyO3 generates in between.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 25 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: reference
+    label: How Python loads compiled extensions · Python treats `.so` (Linux/macOS) and `.pyd` (Windows)
+      files as importable modules — it calls `dlopen()` on the file and looks for an entry point `PyInit_<modname>`.
+  - kind: reference
+    label: 'How Python loads compiled extensions · `try: from . import _rust_backend_native; HAVE_RUST
+      = True except: HAVE_RUST = False` — the standard "optional compiled extension" pattern in Stratum.
+      The `HAVE_RUST` flag gates all Rust feature usage.'
+  - kind: reference
+    label: 'How Python loads compiled extensions · Reference: Python C extension docs — the C version;
+      read §1 (structure of an extension) to understand what PyO3 generates automatically.'
+    url: https://docs.python.org/3/extending/extending.html
+  - kind: read
+    label: 'PyO3 — the Rust↔Python bridge · Core: PyO3 user guide ⭐ — start with "Getting started" + "Python
+      classes" + "Calling Python from Rust." This is the primary resource; it''s well-written.'
+    url: https://pyo3.rs/latest/
+  - kind: reference
+    label: 'PyO3 — the Rust↔Python bridge · What it does: `#[pyfunction]`, `#[pyclass]`, `#[pymethods]`
+      — Rust macros that generate the C API glue. `#[pymodule]` — the entry point Python calls on `import`.'
+  - kind: reference
+    label: 'PyO3 — the Rust↔Python bridge · Key concept: PyO3 manages the GIL via `Python<''py>` lifetime
+      tokens — you must hold a GIL token to call Python APIs from Rust. `py.allow_threads(|| { ... })`
+      releases the GIL during pure Rust work (e.g., compute-heavy operations).'
+  - kind: read
+    label: 'maturin — the build tool · Core: maturin docs — `maturin develop` builds and installs the
+      extension in-place (like `pip install -e .`). `maturin build` produces a wheel.'
+    url: https://www.maturin.rs/
+  - kind: reference
+    label: 'maturin — the build tool · Project layout: `Cargo.toml` + `src/lib.rs` (Rust) + `pyproject.toml`
+      (Python). The `[lib] crate-type = ["cdylib"]` line tells Rust to compile as a C-compatible dynamic
+      library.'
+  - kind: reference
+    label: 'maturin — the build tool · Stratum anchor: `_rust_backend.py` imports `_rust_backend_native`
+      — the compiled `.so` built by maturin. `hashing_tfidf_fit = getattr(native, "hashing_tfidf_csr",
+      None)` — `getattr` with `None` default gracefully handles missing functions (version skew between
+      Rust and…'
+  - kind: practise
+    label: 'maturin — the build tool · Practical: Real Python — Build a Python C Extension Module — C
+      version; read for mental model, then prefer PyO3 in practice.'
+    url: https://realpython.com/build-python-c-extension-module/
+  - kind: reference
+    label: 'Data marshaling · NumPy ↔ Rust: PyO3 + `numpy` crate — zero-copy array sharing via buffer
+      protocol. pyo3-numpy docs. The `csr_to_dense` and TF-IDF functions in Stratum all work on sparse
+      matrices, converted via this bridge.'
+    url: https://docs.rs/numpy/latest/numpy/
+  - kind: reference
+    label: 'Data marshaling · Buffer protocol: Python buffer protocol — the general mechanism for zero-copy
+      memory sharing between Python objects and native code. `memoryview` is the Python-level interface.'
+    url: https://docs.python.org/3/c-api/buffer.html
+  - kind: reference
+    label: 'Data marshaling · `ctypes`: Official docs + Real Python — ctypes — call existing shared libraries
+      without writing any C/Rust. Useful for quick prototypes; not used in Stratum (they use PyO3 instead).'
+    url: https://docs.python.org/3/library/ctypes.html
+  - kind: reference
+    label: 'Data marshaling · Overview of alternatives: Real Python — Python Bindings Overview — ctypes,
+      CFFI, PyO3, Cython, pybind11 — comparison of all approaches; read once to orient.'
+    url: https://realpython.com/python-bindings-overview/
+  - kind: reference
+    label: 'Data marshaling · Cython: Cython docs — "Python with types" that compiles to C. Used in NumPy,
+      sklearn. Know it exists; PyO3 is preferred for new Rust-based work.'
+    url: https://cython.readthedocs.io/en/latest/
+  - kind: reference
+    label: Practical workflow · `cargo new --lib mykernel` → add `pyo3` to `Cargo.toml` → write `#[pyfunction]`
+      + `#[pymodule]`
+  - kind: reference
+    label: Practical workflow · `maturin develop` → `.so` installed in current venv
+  - kind: reference
+    label: Practical workflow · `from mykernel import my_function` → call from Python
+  - kind: practise
+    label: 'Practical workflow · Drill: write a minimal PyO3 extension with one function `def add(a: i64,
+      b: i64) -> i64`, build it with maturin, call it from Python. Then add a function that accepts a
+      NumPy array (read-only) and returns its sum.'
+  - kind: practise
+    label: 'Practical workflow · Done when: you can trace the path from a Rust `#[pyfunction]` through
+      the `.so` to a Python `import` and understand what PyO3 generates in between.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-26-dag-ir-patterns-in-python
+  title: Step 26 — DAG / IR patterns in Python
+  status: pending
+  objective: 'Stratum''s entire optimizer is a DAG transformation pipeline in Python. These patterns come
+    from compiler design — PL theory applied in Python. Symptoms it repairs: code that builds and transforms
+    graph structures feels ad-hoc; unclear how to visit all nodes, replace nodes, maintain input/output
+    edges consistently.'
+  done_when:
+  - You can read an optimizer pass in `_algebraic_rewrites.py` and explain what invariant it maintains
+    and what it transforms.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 26 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 26 — DAG / IR patterns in Python'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: reference
+    label: 'Core graph representation · Node + edge list: `Op` in Stratum uses explicit `inputs: list[Op]`
+      and `outputs: list[Op]` on each node — a doubly-linked representation. Enables O(1) parent and child
+      lookup at the cost of keeping both sides in sync.'
+  - kind: reference
+    label: 'Core graph representation · Topological sort: Kahn''s algorithm (`deque` + indegree dict)
+      in `_optimize.py`''s `topological_traverse`. DFS-based in `_linearization.py`''s `linearize_dag`.
+      Know both.'
+  - kind: read
+    label: 'Core graph representation · Article: Real Python — Python Graphs — adjacency list, DFS/BFS
+      in Python.'
+    url: https://realpython.com/python-graphs/
+  - kind: read
+    label: 'Core graph representation · Book: CLRS §22 (Graph algorithms, already in your Algo2 plan)
+      — the formal version; the Stratum code is direct applied CLRS.'
+  - kind: reference
+    label: 'Node replacement (rewrite rules) · Pattern: find a node matching a pattern → create a new
+      node → rewire inputs/outputs of neighbors. `replace_op_in_outputs(op, replacement)` and `op.replace_input(old,
+      new)` in `_op_utils.py` are the two primitives. Every optimizer pass uses these.'
+  - kind: reference
+    label: 'Node replacement (rewrite rules) · Visitor pattern: iterating `topological_iterator(root)`
+      and applying a transform to each node — this is the visitor design pattern. Python''s `singledispatch`
+      makes it clean: dispatch by node type.'
+  - kind: reference
+    label: 'Node replacement (rewrite rules) · Three ways to dispatch by node type — and when to pick
+      each: an `elif node.type == …` chain (closed, small, hot — e.g. `NumericOp.process` in `_numeric_ops.py`);
+      subclass polymorphism (each type overrides a method — e.g. `ColumnExpr.to_pandas`/`to_polars`, open
+      to…'
+  - kind: reference
+    label: 'Node replacement (rewrite rules) · Reference: python-patterns.guide — Visitor — Brandon Rhodes''
+      treatment; read after Step 21.'
+    source_id: source-rhodes-python-patterns
+    url: https://python-patterns.guide/
+  - kind: reference
+    label: 'CSE (Common Subexpression Elimination) · Concept: if two subtrees are identical (same op type
+      + same inputs), compute once, reuse the result. Stratum''s `_cse.py` implements this.'
+  - kind: reference
+    label: 'CSE (Common Subexpression Elimination) · Python implementation: hash-cons — assign each node
+      a hash based on its type + the hashes of its inputs; equal hashes → candidate for merging. Requires
+      `__hash__` and `__eq__` on node types (or an external hash table keyed on structural equality).'
+  - kind: read
+    label: 'CSE (Common Subexpression Elimination) · Article: Wikipedia — Common subexpression elimination
+      — concept overview; then read `_cse.py`.'
+    url: https://en.wikipedia.org/wiki/Common_subexpression_elimination
+  - kind: reference
+    label: Linearization / scheduling · Topological order = valid execution order. Post-order DFS on a
+      DAG = reverse topological order (output last).
+  - kind: reference
+    label: 'Linearization / scheduling · Stratum''s split invariant: all ops before `split_pos` are pre-split
+      (fit phase), all after are post-split (predict phase). The deferred-pop logic in `linearize_dag`
+      enforces this.'
+  - kind: reference
+    label: 'Linearization / scheduling · Buffer pool / liveness analysis: after linearization, for each
+      op compute the last point where each of its inputs is needed (`remove_after` list in `_input_removal_planning.py`).
+      This is register allocation / liveness analysis from compiler theory.'
+  - kind: reference
+    label: 'Immutable IR vs mutable IR · Stratum uses mutable IR (nodes have mutable `inputs`/`outputs`
+      lists, in-place rewriting). This is simpler but requires careful bookkeeping. Alternative: immutable
+      IR where rewrites return new nodes (functional style, easier to debug). Know the trade-off.'
+  - kind: read
+    label: 'Resources · Book: Crafting Interpreters (Nystrom, free online) — the best accessible intro
+      to IR design, AST walking, and optimization passes. Not Python-specific but your C++ background
+      makes Part II very readable.'
+    url: https://craftinginterpreters.com/
+  - kind: read
+    label: 'Resources · Book: Engineering a Compiler (Cooper & Torczon, 3rd ed.) — the textbook for compiler
+      middle-end (IR, optimization, register allocation). Graduate-level; dip in when you hit a specific
+      Stratum concept.'
+  - kind: reference
+    label: 'Resources · Python AST as a worked example: `import ast; tree = ast.parse("x + 1"); ast.dump(tree)`
+      — Python''s own IR for source code. `ast.NodeVisitor` and `ast.NodeTransformer` are the visitor
+      and rewriter patterns in stdlib form. Green Tree Snakes — the missing Python AST docs.'
+    url: https://greentreesnakes.readthedocs.io/
+  - kind: reference
+    label: 'Resources · Stratum anchor: read `_optimize.py` top-to-bottom as a complete compiler middle-end
+      pipeline: parse (skrub → Op IR), optimize (CSE, rewrites, choice unrolling), legalize (algebraic
+      rewrites), lower (linearize), schedule.'
+  - kind: practise
+    label: 'Resources · Drill: build a minimal expression DAG in Python: nodes are `Add(left, right)`,
+      `Mul(left, right)`, `Const(value)`. Write a topological sort, a simple constant-folding pass (replace
+      `Add(Const(1), Const(2))` with `Const(3)`), and an evaluator that walks the DAG.'
+  - kind: practise
+    label: 'Resources · Done when: you can read an optimizer pass in `_algebraic_rewrites.py` and explain
+      what invariant it maintains and what it transforms.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-26-dag-ir-patterns-in-python/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-27-slots-weakref-memory-layout
+  title: Step 27 — `__slots__`, `weakref`, memory layout
+  status: pending
+  objective: 'For performance-sensitive code; relevant when Op DAGs get large. Symptoms it repairs: high
+    memory usage from many small objects; `weakref` appearing in buffer pool code; `__slots__` in scikit-learn
+    internals.'
+  done_when:
+  - You can profile an Op-heavy run, identify the hot objects, and evaluate whether `__slots__` is worth
+    adding.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 27 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 27 — `__slots__`, `weakref`, memory layout'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: reference
+    label: '`__slots__`: Real Python — `__slots__` — replaces per-instance `__dict__` with a fixed C array
+      of named slots. Memory reduction: ~40-60% per instance. Trade-off: no dynamic attributes, harder
+      to pickle (need `__getstate__`/`__setstate__`). Use when you create millions of small instances
+      (e.g…'
+    url: https://realpython.com/python-slots/
+  - kind: reference
+    label: '`weakref`: Official docs — a reference that doesn''t prevent garbage collection. `weakref.ref(obj)`
+      returns a callable that returns `obj` or `None` if collected. `weakref.WeakValueDictionary` — a
+      dict that drops entries when values are garbage-collected; perfect for caches (like a buffer pool
+      that…'
+    url: https://docs.python.org/3/library/weakref.html
+  - kind: reference
+    label: 'Memory profiling: `tracemalloc` (stdlib) + memray (Bloomberg''s profiler, highly recommended)
+      — identify which objects are using the most memory.'
+    url: https://github.com/bloomberg/memray
+  - kind: reference
+    label: '`sys.getsizeof(obj)`: returns shallow size of one object (doesn''t recurse into attributes).
+      Stratum''s `_object_size.py` wraps this. For true deep size: `pympler` library or `objgraph`.'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-27-slots-weakref-memory-layout/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-step-28-cpu-and-timing-profiling-making-python-faster
+  title: Step 28 — CPU & timing profiling ("making Python faster")
+  status: pending
+  objective: 'Step 27 covers memory; this is its time counterpart. A cost-based optimizer only pays off
+    if you can measure where time actually goes — this is the profiling half the roadmap was missing.
+    Symptoms it repairs: "it feels slow" with no numbers; guessing at hot spots; optimizing the wrong
+    loop; no baseline before/after a rewrite.'
+  done_when:
+  - You never say "faster" without a before/after number, and you reach for a profiler before rewriting.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: helpful-now
+  resources:
+  - kind: reference
+    label: Roadmap Step 28 in full — symptoms, materials, drills, done-when.
+    locator: '## Step 28 — CPU & timing profiling ("making Python faster")'
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+  - kind: read
+    label: 'Owned series: Brandon Rohrer — Making Python Faster ⭐ (`PY` `JK`), plus multiprocessing and
+      threading — practical and measurement-first; the multiprocessing/threading pieces back Stratum''s
+      `runtime/_scheduler.py`.'
+    url: https://brandonrohrer.com/code_optimization.html
+  - kind: reference
+    label: 'Wall-clock first: `time.perf_counter()` and `timeit` for micro-benchmarks. Stratum already
+      wraps this — `start_time()`/`log_time()` in `utils/_utils.py` time each pass; read them, then add
+      your own around a rewrite.'
+  - kind: reference
+    label: 'Function-level: `cProfile` + `pstats` (stdlib) — where time goes by function; sort by cumulative
+      time. Visualize with snakeviz.'
+    url: https://jiffyclub.github.io/snakeviz/
+  - kind: reference
+    label: 'Line-level: `line_profiler` (`@profile`) — the hot line inside the hot function.'
+    url: https://github.com/pyutils/line_profiler
+  - kind: reference
+    label: 'Sampling (no code changes): `py-spy` — attach to a running process, get a flamegraph; `scalene`
+      — CPU + memory, separates Python from native time (useful once the Rust backend is in the loop).'
+    url: https://github.com/benfred/py-spy
+  - kind: reference
+    label: 'Complexity first: reason about the big-O of a pass over N ops before profiling — an O(N²)
+      rewrite over a large DAG is an algorithm bug (Step 26), not a micro-optimization.'
+  - kind: reference
+    label: 'Method: baseline → profile → change one thing → re-measure. Never optimize without a before-number.'
+  - kind: reference
+    label: 'Stratum anchor: profile `optimize()` on a large pipeline; find the dominant pass; decide whether
+      it''s algorithmic (Step 26) or per-node overhead (Step 27, `__slots__`).'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-python-step-28-cpu-and-timing-profiling-making-python-faster/notes.md
   attachments: []
   source_feedback: []
