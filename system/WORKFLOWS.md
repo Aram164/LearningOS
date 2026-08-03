@@ -402,3 +402,24 @@ registrations). Pure orchestration — every step is an existing workflow:
    promote menu → workspaces → dependencies).
 5. **Rebuild, validate, commit, push** (workflow 22) — the semester turns in
    one reviewed commit.
+
+## 25. The two-layer operating model (ADR-006)
+
+Adopted 2026-08-03 (Aram). Day-to-day operation does not change with the
+Obsidian layer installed:
+
+1. **Aram operates as usual** — he talks to the operator, captures into the
+   inbox, studies, decides. He never files, never rebuilds, never edits YAML.
+2. **The operator writes** — canonical edits land in the repository under
+   this document's workflows, and every session that touched canonical files
+   ends with §22 (validate → commit → push). The post-commit hook rebuilds
+   `generated/`.
+3. **Obsidian only shows** — the reading room opens on start, shelves and
+   canvas and views render the current state, and because views rebuild on
+   every commit, what Obsidian displays is current *by construction*. Nothing
+   in the UI is required for correctness; its action buttons (capture,
+   rebuild, validate) are conveniences, not duties.
+
+The freshness guarantee of layer 3 is exactly the session-end ritual of
+layer 2. If a view ever looks stale, that is the signal that a session ended
+without §22 — fix the ritual (or press Rebuild), never the generated file.
