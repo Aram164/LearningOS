@@ -1,0 +1,119 @@
+id: study-map-amls-l03
+type: study-map
+unit_id: unit-amls-l03
+status: ready
+current_stage: stage-amls-l03-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l03-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Build a page-located outline of the compilation chain, inference methods and rewrites actually
+    taught.
+  done_when:
+  - Every outline item cites a deck page
+  - Matrix-chain optimization and deferred standardization can be explained without notes
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-program-rewrites
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 03 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 03; 03_Compilation.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/03_Compilation.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l03-integrate
+  title: Integrate lecturer prose and an executable compiler view
+  status: pending
+  objective: Use DMMLS for exam-near language and MLC for one concrete rewrite without expanding beyond
+    the deck. Triage every curated primary paper for this lecture and anchor its useful claim, mechanism
+    or result back to the deck.
+  done_when:
+  - The stage note maps each useful source point back to a deck concept
+  - One MLC rewrite is hand-traced or executed
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-program-rewrites
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Primary paper — SystemML: Declarative Machine Learning on Spark'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 03
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.vldb.org/pvldb/vol9/p1425-boehm.pdf
+  - kind: read
+    label: 'Primary paper — SPOOF: Sum-Product Optimization and Operator Fusion'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 03
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.cidrdb.org/cidr2017/papers/p3-elgamal-cidr17.pdf
+  - kind: read
+    label: 'Primary paper — SPORES: Sum-Product Optimization via Relational Equality Saturation'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 03
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2002.07951
+  - kind: read
+    label: 'Primary paper — TASO: Optimizing DL Computation with Automatic Generation of Graph Substitutions'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 03
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://theory.stanford.edu/~aiken/publications/papers/sosp19.pdf
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 03 (17 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 03; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: DMMLS — rewrites and compilation sections
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after campus-license acquisition
+  - kind: practise
+    label: MLC — tensor programs, graph rewrites and automatic optimization
+    source_id: source-mlc-book
+    locator: Matching executable chapters
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l03-evidence
+  title: Full evidence — reference, drills and lecture mock
+  status: pending
+  objective: Produce a compact reference and solve CSE, matrix-chain and computation-graph questions closed-book.
+  done_when:
+  - A reference outline covers the full deck scope
+  - At least four source-tagged drills are answered before checking solutions
+  - A 45-minute lecture mock includes CSE and the matrix-chain DP from Lecture 13 pages 45–46
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-program-rewrites
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: CMU 10-414 — HW1 autodiff/computation-graph parts
+    source_id: source-cmu-10414
+    locator: HW1 selected parts
+  - kind: practise
+    label: MIT 6.172 — selected compiler/performance quiz items
+    source_id: source-mit-6172
+    locator: Question first; solution after attempt
+  - kind: practise
+    label: Official AMLS sample — Task 5 CSE and matrix-chain optimization
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 45–46
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-evidence/notes.md
+  attachments: []
+  source_feedback: []

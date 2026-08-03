@@ -1,0 +1,135 @@
+id: study-map-aml-l11
+type: study-map
+unit_id: unit-aml-l11
+status: ready
+current_stage: stage-aml-l11-scope-check
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l11-scope-check
+  title: Verify whether L11 belongs to the 2026 course
+  objective: Prevent a prior-year RNN deck from silently becoming current exam scope.
+  done_when:
+  - Check the current course archive/LMS for a 2026 L11 deck or explicit syllabus confirmation before
+    studying this unit as required.
+  - If no current evidence appears, keep all remaining stages reference-only/deferred.
+  estimate_minutes: 15
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Local archive contains current VL01–VL10 only; L11 is older-lecture-slides/11-rnn...pdf
+    source_id: source-aml-ss26-lectures
+    locator: Scope completeness finding verified 2026-08-03
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-scope-check/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l11-rnn
+  title: RNN states, forward pass, and sequence architectures
+  objective: If scope is confirmed—or for reference—trace hidden-state recurrence and distinguish one-to-one,
+    one-to-many, many-to-one, and many-to-many designs.
+  done_when:
+  - Trace a short RNN forward pass with parameter sharing through time.
+  - Match sequence tasks to the older deck's architecture patterns.
+  estimate_minutes: 90
+  exam_critical: false
+  scope_triage: reference-only
+  resources:
+  - kind: read
+    label: Older L11 RNN deck — complete 85 pages, conditional scope
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf
+  - kind: read
+    label: ISLP §10.5
+    source_id: source-islp
+    locator: §10.5
+  - kind: watch
+    label: Rohrer RNN explanation — optional visual pass
+    source_id: source-rohrer-e2eml
+    locator: RNN/sequence-model chapter
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-rnn/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l11-bptt
+  title: BPTT and gradient stability through time
+  objective: Unroll the recurrence as a computation graph and explain why repeated temporal Jacobians
+    create vanishing/exploding gradients.
+  done_when:
+  - Trace a small BPTT dependency path and identify shared-parameter gradient accumulation.
+  - Connect L09's gradient-health argument to temporal depth.
+  estimate_minutes: 95
+  exam_critical: false
+  scope_triage: reference-only
+  resources:
+  - kind: read
+    label: Murphy §15.2 selected RNN/BPTT derivations
+    source_id: source-murphy-pml1
+    locator: §15.2
+  - kind: watch
+    label: UMich EECS 498 recurrent networks lecture
+    source_id: source-eecs498
+    url: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
+  - kind: read
+    label: Goodfellow sequence-model chapter — optional depth
+    source_id: source-goodfellow-dl
+    locator: Sequence modeling selections
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-bptt/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l11-gates
+  title: GRU, LSTM, and deep recurrent models
+  objective: Understand gating as controlled memory/update flow and reproduce the older deck's equations
+    only if scope is confirmed.
+  done_when:
+  - Explain reset/update versus input/forget/output gates in words and trace one LSTM cell.
+  - State what deep/bidirectional recurrence changes while keeping unposted 2026 scope caveat visible.
+  estimate_minutes: 100
+  exam_critical: false
+  scope_triage: reference-only
+  resources:
+  - kind: read
+    label: Older L11 GRU/LSTM/deep-RNN sections
+    source_id: source-aml-ss26-lectures
+    locator: 11-rnn...pdf GRU/LSTM sections
+  - kind: read
+    label: Murphy §15.2 gate equations
+    source_id: source-murphy-pml1
+    locator: §15.2
+  - kind: reference
+    label: D2L RNN/GRU/LSTM chapters — executable optional reference
+    source_id: source-d2l
+    url: https://d2l.ai/
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-gates/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l11-practice
+  title: Conditional RNN trace gate
+  objective: Keep a ready practice route without spending exam-prep time before current scope is confirmed.
+  done_when:
+  - 'If confirmed: trace forward state, one BPTT path, and one LSTM cell; otherwise mark the stage skipped
+    with the scope-check evidence.'
+  estimate_minutes: 90
+  exam_critical: false
+  scope_triage: deferred
+  resources:
+  - kind: practise
+    label: Build three small traces directly from the older deck; no local dedicated L11 exercise sheet
+      exists
+    source_id: source-aml-ss26-lectures
+    locator: 11-rnn...pdf worked examples
+  - kind: reference
+    label: Géron/D2L sequence chapters only after scope confirmation
+    source_id: source-geron-handson
+    locator: RNN/sequence-model selections
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-practice/notes.md

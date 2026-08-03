@@ -15,10 +15,26 @@ components:
   order: 2
 examination:
   type: klausur
-  notes: ONE combined 3h Klausur for both components, one grade. 1. Termin was Mo 2026-07-27 12:00-15:00
-    (ESZ 110/115/307); 2. Termin Fr 2026-10-09 13:00-16:00 (Raum ESZ 110/115). 2.-PZ Anmeldung window
-    2026-08-31 to 2026-09-10; Rücktritt (2. Termin) by Fr 2026-10-02 via AGNES. Re-verified 2026-07-25
-    against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).
+  sittings:
+  - termin: 1
+    date: '2026-07-27'
+    time: 12:00-15:00
+    label: 1. Termin · combined M2 Klausur
+    notes: ESZ 110/115/307.
+  - termin: 2
+    date: '2026-10-09'
+    time: 13:00-16:00
+    label: 2. Termin · combined M2 Klausur
+    notes: ESZ 110/115; Rücktritt by 2026-10-02 via AGNES.
+  registration_windows:
+  - opens: '2026-08-31'
+    closes: '2026-09-10'
+    label: 2.-PZ Anmeldung
+    action: Register the combined M2 Klausur via AGNES.
+    termins:
+    - 2
+  notes: ONE combined 3h Klausur for both components, one grade. Sittings and the Anmeldung window re-verified
+    2026-07-25 against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).
 attempts:
 - termin: 1
   date: '2026-07-27'
@@ -35,5 +51,16 @@ unit_order:
 - unit-m2-sad-l03
 - unit-m2-sad-l04
 - unit-m2-sad-l05
+- unit-m2-sad-l06
+- unit-m2-sad-l07
+- unit-m2-sad-l08
+- unit-m2-sad-l09
+- unit-m2-sad-l10
+- unit-m2-sad-l11
+- unit-m2-sad-l12
+- unit-m2-sad-l13
+- unit-m2-sad-l14
+- unit-m2-sad-l15
+- unit-m2-sad-clustering
 - unit-m2-sad-l06-l10
 - unit-m2-analysis-exam-prep

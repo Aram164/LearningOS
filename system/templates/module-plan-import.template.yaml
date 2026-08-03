@@ -1,0 +1,122 @@
+# Copy this file into the owning workspace's outputs/ directory and replace
+# every placeholder. Do not use YAML anchors, aliases, or merge keys.
+module_id: module-example
+
+plan_contract:
+  version: 1
+  coverage_audit: work/active/workspace-example/outputs/example-coverage-audit.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+module_patch:
+  # Include every final unit exactly once, including unchanged existing units.
+  unit_order:
+    - unit-example-l01
+
+source_patches: []
+
+source_map:
+  type: module-source-map
+  module_id: module-example
+  sources:
+    - source_id: source-example-course
+      role: course-material
+      why: "Current taught material is the scope authority."
+      priority: 0
+      unit_routes:
+        - unit-example-l01
+    - source_id: source-example-book
+      role: spine
+      why: "Selected explanation after the current course pass."
+      priority: 1
+      unit_routes:
+        - unit-example-l01
+
+units:
+  - unit:
+      id: unit-example-l01
+      type: unit
+      module_id: module-example
+      kind: lecture
+      title: Example Lecture 01
+      order: 1
+      scope: "Current L01 material: exact concepts actually taught."
+      status: ready
+      scope_sources:
+        - source_id: source-example-course
+          authority: slides
+          locator: lecture-slides/01-example.pdf
+      source_selections:
+        - source_id: source-example-book
+          locator: "Chapter 1: exact sections"
+          purpose: Derivation and independent explanation
+          stage_ids:
+            - stage-example-l01-derive
+      current_study_map: study-map-example-l01
+      artifacts: {}
+      workspace_ids:
+        - workspace-example
+    study_map:
+      id: study-map-example-l01
+      type: study-map
+      unit_id: unit-example-l01
+      status: ready
+      current_stage: stage-example-l01-scope
+      source_plan:
+        path: work/active/workspace-example/outputs/example-module-plan.yaml
+        provenance: operator
+      detours: []
+      shelving:
+        state: none
+      stages:
+        - id: stage-example-l01-scope
+          title: Confirm the taught scope
+          status: pending
+          objective: Open the current material and reproduce its concept boundary.
+          done_when:
+            - Explain every in-scope concept and record explicit exclusions.
+          estimate_minutes: 60
+          exam_critical: true
+          scope_triage: required-now
+          resources:
+            - kind: read
+              label: Current L01 deck
+              source_id: source-example-course
+              locator: lecture-slides/01-example.pdf
+          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-scope/notes.md
+          attachments: []
+          source_feedback: []
+        - id: stage-example-l01-derive
+          title: Build the derivation
+          status: pending
+          objective: Derive the lecture's core result with the selected spine.
+          done_when:
+            - Reproduce the derivation without the source.
+          estimate_minutes: 90
+          exam_critical: true
+          scope_triage: required-now
+          resources:
+            - kind: read
+              label: Exact book section
+              source_id: source-example-book
+              locator: "Chapter 1: exact sections"
+          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-derive/notes.md
+          attachments: []
+          source_feedback: []
+
+workspace_updates:
+  - id: workspace-example
+    # These are final joins, not only the records newly added by this package.
+    sources:
+      - source-example-course
+      - source-example-book
+    unit_ids:
+      - unit-example-l01
+    sections:
+      Current Scope: "One individual current unit per ordinary lecture."
+      Next Action: "Start stage-example-l01-scope after the import gates pass."

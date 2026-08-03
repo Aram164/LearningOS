@@ -1,0 +1,37 @@
+id: unit-aml-l10
+type: unit
+module_id: module-hu-aml
+kind: lecture
+title: AML Lecture 10 — Convolutional Neural Networks
+order: 10
+scope: Current 2026 L10 deck; convolution versus cross-correlation, filters, padding/stride/output shapes,
+  multi-channel computation, parameter counts, pooling, complete CNNs, and the LeNet/AlexNet/GoogLeNet/ResNet
+  architecture lineage.
+status: ready
+scope_sources:
+- source_id: source-aml-ss26-lectures
+  authority: slides
+  locator: lecture-slides/VL 10-cnn.pdf (70 pages)
+- source_id: source-aml-ss26-lectures
+  authority: reference
+  locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+source_selections:
+- source_id: source-islp
+  locator: §10.3
+  purpose: Primary gentle CNN reading
+- source_id: source-murphy-pml1
+  locator: §14.1–14.3
+  purpose: Convolution and exact architecture depth
+- source_id: source-eecs498
+  locator: L7–L8
+  purpose: Selected CNN lecture/practice depth
+- source_id: source-cs231n-notes
+  locator: Convolutional Networks notes
+  purpose: Written shape/architecture complement
+- source_id: source-cs4780-homeworks
+  locator: 2018 HW9 CNN tasks
+  purpose: Local solution-backed practice
+artifacts: {}
+workspace_ids:
+- workspace-aml-exam-prep
+current_study_map: study-map-aml-l10

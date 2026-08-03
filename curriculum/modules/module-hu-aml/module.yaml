@@ -5,10 +5,26 @@ semester: sose-2026
 status: enrolled
 examination:
   type: klausur
-  notes: '1. Termin was Mi 2026-07-22 15:00-18:00 (ESZ 115); 2. Termin Mi 2026-09-30 09:00-12:00 (ESZ
-    110). Plan of record since KW 24: skip the 1. Termin, write the 2. Termin. 2.-PZ Anmeldung window
-    2026-08-31 to 2026-09-10; Rücktritt (2. Termin) by Mi 2026-09-23 via AGNES. Re-verified 2026-07-25
-    against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).'
+  sittings:
+  - termin: 1
+    date: '2026-07-22'
+    time: 15:00-18:00
+    label: 1. Termin
+    notes: ESZ 115.
+  - termin: 2
+    date: '2026-09-30'
+    time: 09:00-12:00
+    label: 2. Termin
+    notes: ESZ 110; Rücktritt by 2026-09-23 via AGNES.
+  registration_windows:
+  - opens: '2026-08-31'
+    closes: '2026-09-10'
+    label: 2.-PZ Anmeldung
+    action: Register the 2. Termin via AGNES.
+    termins:
+    - 2
+  notes: 'Plan of record since KW 24: skip the 1. Termin, write the 2. Termin. Sittings and the Anmeldung
+    window re-verified 2026-07-25 against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).'
 attempts:
 - termin: 1
   date: '2026-07-22'
@@ -20,9 +36,14 @@ kind: academic
 area_id: program-bachelors
 source_map: source-map.yaml
 unit_order:
+- unit-aml-l01
 - unit-aml-l02
 - unit-aml-l03
 - unit-aml-l04
 - unit-aml-l05
 - unit-aml-l06
 - unit-aml-l07
+- unit-aml-l08
+- unit-aml-l09
+- unit-aml-l10
+- unit-aml-l11

@@ -1,14 +1,100 @@
 id: unit-m2-analysis-exam-prep
 type: unit
 module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
 kind: exam-block
-title: Analysis — exam preparation block
+title: Analysis - script-led exam preparation
 order: 100
-scope: Analysis component preparation; a study map must be built from the component's taught scope.
-status: needs-map
-scope_sources: []
-source_selections: []
-artifacts: {}
+scope: 'Learner-selected authority: Hella Rabus, unser skript.pdf (Stand 4 February 2025), introduction
+  and Chapters 1-7. Wiederholung sections are required; Ausflug sections are exam-light application context;
+  Exkurs sections and Chapter 8 are deferred as non-exam material. Current local HU series 05-09 and WV
+  define the closest available exercise evidence. The script itself says proofs need not be memorized:
+  definitions, theorem conditions/results, and application control the plan.'
+status: ready
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: 'unser skript.pdf: pp. iv-vii course contract, pp. ii-iii contents, Chapters 1-7; Stand 04.02.2025'
+- source_id: source-analysis-skript
+  authority: reference
+  locator: ana_inf_serie05.pdf through serie09.pdf and ana_inf_serieWV.pdf; WiSe 2024/25 current local
+    HU exercise evidence
+source_selections:
+- source_id: source-analysis-skript
+  locator: unser skript.pdf Chapters 1-7 plus course series 05-09/WV and kleine_beweise disclaimer
+  purpose: Primary scope, notation, theorem, example, application, and exam-style exercise authority
+  stage_ids:
+  - stage-m2-analysis-calibrate
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+  - stage-m2-analysis-anx
+  - stage-m2-analysis-exkurse
+- source_id: source-professor-leonard
+  locator: Topic-matched Calculus 1/2 selections; maximum 20 minutes per diagnosed intuition gap
+  purpose: Optional first exposure before returning to the HU script
+  stage_ids:
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-ang
+- source_id: source-3b1b-essence-of-calculus
+  locator: Limits/continuity and Taylor selections only
+  purpose: Optional visual intuition
+  stage_ids:
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-anf
+- source_id: source-fritzsche-trainingsbuch
+  locator: Kapitel 1-4, topic-matched exercises only
+  purpose: Gentle explained drill after HU tasks
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+- source_id: source-analysis-drill-blaetter-extern
+  locator: Exact file/task locators listed in stages
+  purpose: Solution-backed gap practice
+  stage_ids:
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+- source_id: source-analysis-klausuren-extern
+  locator: Marburg/Regensburg for solved gaps; Ulm/Leipzig for fresh timing
+  purpose: Transfer and timing after script-scope matching
+  stage_ids:
+  - stage-m2-analysis-anx
+- source_id: source-strang-calculus
+  locator: Chapters 5, 7, and 10 selections
+  purpose: Local gentle intuition for integration and Taylor
+  stage_ids:
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+- source_id: source-mit-18100a
+  locator: L7-L9 and L23-L24 only
+  purpose: Optional rigorous repair, never a linear second course
+  stage_ids:
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-and
+- source_id: source-analysis-grundlagen-handouts
+  locator: Mengen-und-Abbildungen.pdf and Relationen.pdf exact missing subsection only
+  purpose: Prerequisite repair
+  stage_ids:
+  - stage-m2-analysis-an0
+- source_id: source-ableitinger-musterloesungen
+  locator: One Analysis example matching a diagnosed proof-presentation error
+  purpose: Optional exam-writing repair
+  stage_ids:
+  - stage-m2-analysis-anx
+current_study_map: study-map-m2-analysis-exam-prep
+artifacts:
+  ultimate_reference: note-an-source-crosswalk
 workspace_ids:
 - workspace-m2-exam-prep
-component_id: component-m2-analysis

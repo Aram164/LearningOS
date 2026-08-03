@@ -1,0 +1,44 @@
+id: unit-amls-l04
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 04 — Compilation – Adaptation, Fusion, and JIT
+order: 2
+scope: Runtime adaptation and dynamic recompilation; operator fusion/code generation; memoized plan search;
+  XLA, MLIR and vectorized execution.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 04_AdvancedCompilation.pdf — 39 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §04 (4 curated) and Part 2 §04 (13 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l04-integrate
+- source_id: source-dmmls-boehm
+  locator: Fusion and code-generation sections
+  purpose: Lecturer-authored framing
+  stage_ids:
+  - stage-amls-l04-integrate
+- source_id: source-mlc-book
+  locator: Graph optimization and fusion notebook
+  purpose: Executable fusion view
+  stage_ids:
+  - stage-amls-l04-integrate
+- source_id: source-cmu-10414
+  locator: Graph/compiler optimization material
+  purpose: Implementation drill
+  stage_ids:
+  - stage-amls-l04-evidence
+- source_id: source-mit-6172
+  locator: Vectorization and instruction-level parallelism quizzes
+  purpose: Written performance drill
+  stage_ids:
+  - stage-amls-l04-evidence
+current_study_map: study-map-amls-l04
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

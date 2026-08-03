@@ -666,6 +666,7 @@ class Validator:
     def check_modules(self):
         for module in self.repo.modules.values():
             mid = module.get("id")
+            where = self._origin_for("module", str(mid))
             attempts = module.get("attempts", []) or []
             # Coerce to str before comparing: the loader normalizes YAML dates to
             # ISO strings, but a bare-year int (date: 2026) would stay an int and
@@ -674,18 +675,49 @@ class Validator:
             dates = [str(a.get("date")) for a in attempts if a.get("date")]
             if dates != sorted(dates):
                 self.err("MOD-ORDER", f"module '{mid}' attempt dates are not chronologically ordered",
-                         "records/modules.yaml")
+                         where)
             for i, att in enumerate(attempts):
                 if att.get("grade") is not None and att.get("result") != "passed" \
                         and module.get("status") != "completed":
                     self.err("MOD-GRADE",
                              f"module '{mid}' attempt[{i}] carries a grade but result is "
                              f"'{att.get('result')}' and module is not completed",
-                             "records/modules.yaml")
+                             where)
                 if att.get("result") == "registered" and i != len(attempts) - 1:
                     self.err("MOD-REGISTERED",
                              f"module '{mid}' attempt[{i}] is 'registered' but is not the latest attempt",
-                             self._origin_for("module", str(mid)))
+                             where)
+            examination = module.get("examination") or {}
+            sittings = examination.get("sittings", []) or []
+            sitting_keys = [
+                (int(row.get("termin", 0)), str(row.get("date", "")),
+                 str(row.get("end_date") or row.get("date", "")))
+                for row in sittings if isinstance(row, dict)
+            ]
+            if len(sitting_keys) != len(set(sitting_keys)):
+                self.err("MOD-SITTING-DUP", f"module '{mid}' has duplicate examination sittings", where)
+            for row in sittings:
+                start = str(row.get("date", ""))
+                end = str(row.get("end_date") or start)
+                if start and end < start:
+                    self.err("MOD-SITTING-RANGE",
+                             f"module '{mid}' sitting ends before it starts ({start} to {end})", where)
+            windows = examination.get("registration_windows", []) or []
+            window_keys = [
+                (str(row.get("opens", "")), str(row.get("closes", "")),
+                 str(row.get("label", "")))
+                for row in windows if isinstance(row, dict)
+            ]
+            if len(window_keys) != len(set(window_keys)):
+                self.err("MOD-REGISTRATION-DUP",
+                         f"module '{mid}' has duplicate registration windows", where)
+            for row in windows:
+                opens = str(row.get("opens", ""))
+                closes = str(row.get("closes", ""))
+                if opens and closes < opens:
+                    self.err("MOD-REGISTRATION-RANGE",
+                             f"module '{mid}' registration window closes before it opens "
+                             f"({opens} to {closes})", where)
 
     def check_curriculum(self):
         """Cross-file invariants for the module-first operational tree."""

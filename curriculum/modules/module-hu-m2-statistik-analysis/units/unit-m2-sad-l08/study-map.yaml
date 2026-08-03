@@ -1,0 +1,126 @@
+id: study-map-m2-sad-l08
+type: study-map
+unit_id: unit-m2-sad-l08
+status: ready
+current_stage: stage-sad-l08-normal
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l08-normal
+  title: Normal model, z-standardization, and table use
+  objective: Read the complete current deck and calculate Normal probabilities and quantiles reliably.
+  done_when:
+  - Standardize N(mu,sigma^2), use symmetry/table values, and reverse a z-score.
+  - State the 68–95–99.7 rule and explain parameter effects on the curve.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 L08 — complete current deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/08_normal_distribution.pdf
+  - kind: reference
+    label: 2025 L08 Normal Distribution — same-topic second pass
+    source_id: source-sad-2025-recordings
+    locator: 08_normal_distribution_no_notes.pdf
+  - kind: read
+    label: Fahrmeir Ch 6 plus OpenIntro Ch 4
+    source_id: source-fahrmeir-statistik
+    locator: Ch 6
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l08-clt
+  title: LLN, CLT, and Normal approximation
+  objective: Separate LLN from CLT, derive the sampling-mean scaling, and decide when Normal approximation
+    is justified.
+  done_when:
+  - State LLN and CLT in precise one-sentence forms.
+  - Solve one Normal-approximation problem and explain the role of sample size.
+  estimate_minutes: 75
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Fahrmeir Ch 7 + Blitzstein selected CLT sections
+    source_id: source-fahrmeir-statistik
+    locator: Ch 7
+  - kind: watch
+    label: StatQuest — Central Limit Theorem
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=YAlJCEDH2uY
+  - kind: watch
+    label: 3Blue1Brown — But what is the Central Limit Theorem?
+    url: https://www.youtube.com/watch?v=zeJD6dqJ5lo
+  - kind: reference
+    label: Harvard Stat 110 Units 5–6
+    source_id: source-stat110
+    url: https://stat110.hsites.harvard.edu/youtube
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l08-mle
+  title: Likelihood, MLE, and why Gaussian errors produce MSE
+  objective: Treat the parameter as variable, distinguish probability from likelihood, and reproduce the
+    normal likelihood to squared-error chain.
+  done_when:
+  - Compute a simple likelihood/MLE and explain probability versus likelihood.
+  - Write the Gaussian-errors → likelihood → log → constants-drop → MSE chain in five steps.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: StatQuest — Maximum Likelihood
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=XepXtl9YKwc
+  - kind: watch
+    label: StatQuest — Probability is not Likelihood
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=pYxNSUDSFH4
+  - kind: read
+    label: MIT 18.650 L4–5 MLE — optional rigorous derivation
+    source_id: source-mit-18650
+    url: https://ocw.mit.edu/courses/18-650-statistics-for-applications-fall-2016/resources/lecture-3-maximum-likelihood-estimation/
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l08-practice
+  title: UE5 bridge and mixed Normal/CLT/MLE gate
+  objective: Combine z calculations, approximation choice, and the MLE-to-loss explanation under exam
+    conditions.
+  done_when:
+  - Complete the L08-relevant UE5 tasks.
+  - Pass the deep-plan L08 self-test without notes.
+  estimate_minutes: 100
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Current UE5 plus current Übungsblatt 4 (Normal, estimation, CLT)
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf; exercise-slides/Statistics_And_Data_Science.pdf
+  - kind: reference
+    label: Prior-year UE5 as a separate same-course practice source
+    source_id: source-sad-2025-recordings
+    locator: UE5.pdf
+  - kind: practise
+    label: MIT 18.05 Normal/CLT exam problems with solutions
+    source_id: source-mit-1805
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/pages/exams/
+  - kind: practise
+    label: FAU exam first, then secondary German solved bank for targeted gaps
+    source_id: source-fau-klausur-ws1415
+    locator: Normal/distribution questions
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-practice/notes.md

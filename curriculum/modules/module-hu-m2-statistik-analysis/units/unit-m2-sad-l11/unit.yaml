@@ -1,0 +1,32 @@
+id: unit-m2-sad-l11
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 11 — Data Science & Machine Learning Workflow
+order: 11
+scope: Current 2026 L11 deck; DS/ML framing, data and feature pipelines, supervised/unsupervised tasks,
+  splits/CV/bootstrap, losses and inductive bias, evaluation metrics, over/underfitting, bias–variance,
+  and compute considerations.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/11_datascience_intro.pdf (49 pages)
+source_selections:
+- source_id: source-islp
+  locator: Ch 2
+  purpose: Statistical learning workflow and evaluation
+- source_id: source-kelleher-fmlpda
+  locator: Introductory/workflow sections
+  purpose: Course-named ML text
+- source_id: source-kroese-dsml
+  locator: §7.2 and workflow selections
+  purpose: Evaluation/data-science reference
+- source_id: source-domingos-useful-things
+  locator: Complete essay
+  purpose: Optional overfitting/inductive-bias framing
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l11

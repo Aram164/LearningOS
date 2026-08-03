@@ -1,0 +1,43 @@
+id: unit-m2-sad-l15
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 15 — Neural Networks
+order: 15
+scope: Current 2026 L15 deck; single neurons and the MLR equivalence, one-hot/softmax outputs, XOR/nonlinearity,
+  MLP forward passes and parameter counts, gradient/backprop overview, training practices, universal approximation,
+  and CNN/RNN/Transformer outlook.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/15_neural_networks.pdf (38 pages)
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 14_neural_nets_part1.pdf + 15_neural_nets_part2.pdf
+source_selections:
+- source_id: source-kelleher-fmlpda
+  locator: Ch 7
+  purpose: Primary course-aligned neural-network text
+- source_id: source-islp
+  locator: §10.1–10.2
+  purpose: Gentle MLP/forward-pass reading
+- source_id: source-murphy-pml1
+  locator: §13.2–13.3
+  purpose: Optional network/backprop depth
+- source_id: source-cs229-notes
+  locator: §7
+  purpose: Compact neural-network derivation
+- source_id: source-aml-ss26-lectures
+  locator: AML VL08–VL09
+  purpose: Cross-module deepening after SaD L15
+- source_id: source-cs4780-homeworks
+  locator: 2018 HW9
+  purpose: Local solution-backed NN practice
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+related_module_ids:
+- module-hu-aml
+current_study_map: study-map-m2-sad-l15

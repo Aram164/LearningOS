@@ -1,0 +1,116 @@
+id: study-map-amls-l04
+type: study-map
+unit_id: unit-amls-l04
+status: ready
+current_stage: stage-amls-l04-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l04-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Trace why runtime adaptation is needed and how fusion/JIT changes the execution plan.
+  done_when:
+  - The adaptation-to-fusion flow is page-located
+  - AOT vs JIT and materialization vs fusion can be compared without notes
+  estimate_minutes: 80
+  exam_critical: true
+  concepts:
+  - concept-operator-fusion
+  - concept-program-rewrites
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 04 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 04; 04_AdvancedCompilation.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/04_AdvancedCompilation.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l04-integrate
+  title: Integrate fusion prose and implementation
+  status: pending
+  objective: Connect SystemDS fusion decisions to one MLC graph-optimization/fusion example. Triage every
+    curated primary paper for this lecture and anchor its useful claim, mechanism or result back to the
+    deck.
+  done_when:
+  - One fused and unfused dataflow is compared
+  - Source additions are explicitly mapped to deck pages
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-operator-fusion
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — On Optimizing Operator Fusion Plans for Large-Scale ML in SystemML
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 04
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1801.00829
+  - kind: read
+    label: 'Primary paper — MLIR: Scaling Compiler Infrastructure for Domain-Specific Computation'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 04
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2002.11054
+  - kind: read
+    label: Primary paper — Attention Is All You Need
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 04
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1706.03762
+  - kind: read
+    label: 'Primary paper — FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 04
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2205.14135
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 04 (13 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 04; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: DMMLS — fusion and code generation
+    source_id: source-dmmls-boehm
+    locator: Verify TOC on first open
+  - kind: practise
+    label: MLC — graph optimization and fusion notebook
+    source_id: source-mlc-book
+    locator: Matching executable chapters
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l04-evidence
+  title: Full evidence — reference, drills and lecture mock
+  status: pending
+  objective: Demonstrate adaptation/fusion trade-offs with diagrams, a micro-example and timed performance
+    questions.
+  done_when:
+  - A reference sheet covers adaptation hooks fusion templates memoization XLA and MLIR
+  - Four written drills are attempted closed-book
+  - A 45-minute mock includes one fusion decision and one JIT/adaptation scenario
+  estimate_minutes: 135
+  exam_critical: true
+  concepts:
+  - concept-operator-fusion
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: MIT 6.172 — vectorization and ILP quiz items
+    source_id: source-mit-6172
+    locator: Selected question-first items
+  - kind: practise
+    label: CMU 10-414 — graph/compiler optimization exercise
+    source_id: source-cmu-10414
+    locator: Smallest matching exercise
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-evidence/notes.md
+  attachments: []
+  source_feedback: []

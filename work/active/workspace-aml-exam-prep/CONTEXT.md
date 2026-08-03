@@ -22,21 +22,52 @@ notes:
 - note-aml-sad-master-wiring
 sources:
 - source-aml-ss26-lectures
+- source-islp
+- source-esl
+- source-murphy-pml1
+- source-csc411-notes
+- source-kroese-dsml
+- source-mml
 - source-cs229-notes
+- source-cs229-2022-videos
+- source-mit-6036
+- source-eecs498
+- source-cs231n-notes
+- source-cs231n-2017-videos
 - source-statquest
 - source-3b1b-neural-networks
-- source-cs229-2022-videos
+- source-3b1b-linear-algebra
+- source-karpathy-micrograd
+- source-rohrer-e2eml
+- source-geron-handson
+- source-caltech-lfd
+- source-ng-coursera
+- source-cs4780-homeworks
+- source-mit-6034-quizzes
+- source-pytorch-tutorials
+- source-kelleher-fmlpda
+- source-domingos-useful-things
+- source-sad-ss26-lectures
+- source-goodfellow-dl
+- source-d2l
+- source-sutton-barto-rl
+- source-zacharski-data-mining
 program_ids:
 - program-bachelors
 module_ids:
 - module-hu-aml
 unit_ids:
+- unit-aml-l01
 - unit-aml-l02
 - unit-aml-l03
 - unit-aml-l04
 - unit-aml-l05
 - unit-aml-l06
 - unit-aml-l07
+- unit-aml-l08
+- unit-aml-l09
+- unit-aml-l10
+- unit-aml-l11
 ---
 
 # AML exam prep — 2. Termin
@@ -50,18 +81,20 @@ the remaining Foundations fast path: F.D1/D5 loose ends, then Blocks I→K→L�
 
 ## Current Scope
 
-*Required now* — nothing before mid-August: this workspace is deliberately parked
-behind M2 prep and the AMLS sitting. First real block: L07 via the Mini Plan in
-`inputs/` (closes legacy step F.K2).
+*Required now* — nothing before mid-August: this workspace remains parked
+behind M2 prep and the AMLS sitting. All current AML L01–L10 lectures now
+have individual plans, so the first real study block can still begin with
+L07 and continue directly into L08–L10 without a planning detour.
 
-*Helpful now* — passive: keep the Master Wiring cross-wires in mind during M2 prep
-(the MLE→MSE/cross-entropy engine and the metrics/testing wires serve both exams).
+*Helpful now* — passive cross-wires during M2: SaD L11 supplies workflow
+and metrics; SaD L15 is the deliberate warm-up for AML L08–L09.
 
-*Defer* — building the L08–L11 units (full 4-doc depth was the architecture
-decision); kernels-beyond-lecture (SVM explicitly out of scope — L07 has no SVM).
+*Defer studying* — L08–L10 until after the AMLS sitting. Their plans are
+ready; this does not move their calendar priority.
 
-*Reference only* — ISLP Ch 9 (reaches kernels only via SVM), ESL grad-level
-chapters.
+*Reference only* — AML L11 is a conditional prior-year RNN plan. The local
+2026 archive currently stops at L10, so L11 must not become exam scope
+until a current deck or syllabus confirmation appears.
 
 ## Open Questions
 
@@ -78,12 +111,16 @@ Plan (`inputs/AML_L07_Mini_Plan.md`), self-test with `note-aml-l07-mock-exam`
 
 ## Durable Notes
 
-The complete L07 unit is migrated: reference, exercise bank, mock exam,
-Bonusblatt-04 solutions. The Master Wiring note carries the session sequences for
-the not-yet-built blocks (§5) and the slide-verified scope corrections (§4).
+AML now has individual current study maps for L01–L11. L01 and L08–L10
+are grounded in current 2026 decks. L11 preserves the older RNN material
+behind a mandatory scope-check stage. The source map includes every local
+course asset family, the complete local CS4780 bank, shared books, official
+web courses/docs, and explicit off-scope shelf dispositions.
 
 ## Deferred
 
-- L08–L10 unit builds (legacy decision KW 27: full 4-doc depth) — after L07 is
-  actually studied, during the 2.-Termin prep window.
-- Migration of the L02–L06 units — Stage 2; legacy files remain readable.
+- Studying L08–L10 remains after L07 and the AMLS sitting; only the missing
+  planning work has been completed now.
+- L11 RNN execution is deferred until 2026 scope is confirmed.
+- Sutton & Barto remains visible but off-scope for posted AML L01–L10;
+  Zacharski is an optional L02 alternative, not a neural-network source.

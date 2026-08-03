@@ -182,7 +182,8 @@ That only works if the interface can see everything without re-deriving it, so
   `evaluations` incl. `useful_sections` and their `concepts`
 - notes: `domain`, `summary`
 - top level: `exam_spine` (same source of truth as `los.py status`) and
-  review/evidence adoption in `counts`
+  review/evidence adoption in `counts` — *superseded, see the fifth addendum:
+  `exam_spine` was replaced by `academic_deadlines`*
 
 **Binding rule:** if an interface needs a fact, it comes from the manifest. If
 the manifest lacks it, the fix is core-side generation, never parsing in the
@@ -204,3 +205,44 @@ named keys touched). Web Viewer on so registered URLs open in-app; Daily Notes
 off because it silently creates a second inbox against ARCHITECTURE §3.3.5;
 the link graph off because it shows file links rather than the relation
 registry — a competing graph, which the anti-goals forbid.
+
+## Addendum (2026-08-03, fifth) — one fact, one shape in the contract
+
+A review of the shipped app found the manifest carrying two keys with no live
+consumer, both duplicating something it already published. The contract now
+states the rule that was only implicit: **where a projection could be expressed
+two ways, the manifest carries exactly one.** An index beside an ordered list is
+not a duplicate; a second shape for the same access path is.
+
+**`exam_spine` is retired from `generated/manifest.json`.** It listed only
+attempts with `result: registered` — a strict subset of `academic_deadlines`,
+in a different shape, carrying a third copy of `examination.notes`. Interfaces
+read `academic_deadlines`, which additionally covers available sittings that
+have no attempt yet and grouped registration windows.
+
+`_exam_spine()` survives as the internal helper behind the "Exam spine" table in
+`coordination-view.md` / `reading-room.md` and behind `los.py status --json`.
+The CLI status payload keeps its `exam_spine` field: it is a separate surface
+with its own consumers and its own test (`tests/test_cli.py`), and it answers a
+narrower question — *what am I actually registered for* — that the helper models
+exactly. Retiring a manifest key is not retiring the concept.
+
+**`stages` becomes a declared index, not spare data.** The flat array (every
+stage with `study_map_id`, `unit_id`, `module_id` added) exists so an interface
+can resolve a stage from an ID alone without walking `study_maps`. The nested
+`study_maps[].stages` remains the ordering authority — a rail needs the ordered
+list. The UI now uses each for its own job.
+
+**New structured examination facts.** `examination.sittings` and
+`examination.registration_windows` (schema'd, validated for duplicates and
+inverted ranges) let the core project dates that exist *before* an attempt does.
+Correlating a sitting with an attempt to derive `registration_state` is a
+business rule and lives in `_academic_deadlines()`, never in an interface.
+Their restatement in `examination.notes` was trimmed the same day: prose keeps
+only what the structured fields cannot hold — verification provenance, plan of
+record, and institutional logistics.
+
+**Versioning note.** `contract_version` stays `2`. The two layers ship together
+in one review, there is exactly one consumer of the manifest, and it was updated
+in the same pass; a bump would signal a compatibility story that does not exist
+here. The next removal that lands *without* a matching UI change must bump.

@@ -1,3 +1,139 @@
 type: module-source-map
 module_id: module-hu-amls
-sources: []
+sources:
+- source_id: source-amls-ss26-lectures
+  role: course-material
+  why: SS26 slides and recordings are the scope authority and contain the official 90-minute sample exam.
+  when: First pass for every lecture; return to slides for every closed-book check.
+  priority: 0
+  unit_routes:
+  - unit-amls-l01
+  - unit-amls-l02
+  - unit-amls-l03
+  - unit-amls-l04
+  - unit-amls-l05
+  - unit-amls-l06
+  - unit-amls-l07
+  - unit-amls-l08
+  - unit-amls-l09
+  - unit-amls-l10
+  - unit-amls-l11
+  - unit-amls-l12
+  - unit-amls-l13
+  - unit-amls-theory
+- source_id: source-dmmls-boehm
+  role: spine
+  why: The lecturer's own survey is the exam-nearest prose for compilation, execution, data access and
+    lifecycle systems.
+  when: Targeted second pass only; verify the TOC after acquiring the campus-licensed copy.
+  priority: 1
+  unit_routes:
+  - unit-amls-l02
+  - unit-amls-l03
+  - unit-amls-l04
+  - unit-amls-l05
+  - unit-amls-l06
+  - unit-amls-l09
+  - unit-amls-l10
+  - unit-amls-l11
+- source_id: source-mlsysbook-vol1
+  role: exam-preparation
+  why: Verified local chapters plus SocratiQ checks cover foundations, acceleration, lifecycle, responsibility
+    and serving.
+  when: Chapter-pick after the matching deck; use checkpoints as written recall.
+  priority: 2
+  unit_routes:
+  - unit-amls-l01
+  - unit-amls-l02
+  - unit-amls-l08
+  - unit-amls-l10
+  - unit-amls-l11
+  - unit-amls-l12
+  - unit-amls-l13
+  - unit-amls-theory
+- source_id: source-mlsysbook-vol2
+  role: spine
+  why: Local at-scale companion for distributed training, collective communication, infrastructure, storage,
+    robust AI and inference.
+  when: Lectures 05–09 and 12–13 only; never read linearly.
+  priority: 2
+  unit_routes:
+  - unit-amls-l05
+  - unit-amls-l06
+  - unit-amls-l07
+  - unit-amls-l08
+  - unit-amls-l09
+  - unit-amls-l12
+  - unit-amls-l13
+  - unit-amls-theory
+- source_id: source-ultrascale-playbook
+  role: first-exposure
+  why: Concrete 5D-parallelism, ZeRO and kernel explanations make lectures 05–07 operational.
+  when: After the deck, before distributed-training drills.
+  priority: 2
+  unit_routes:
+  - unit-amls-l05
+  - unit-amls-l06
+  - unit-amls-l07
+- source_id: source-htsym-scaling-book
+  role: derivation
+  why: Supplies roofline, arithmetic-intensity and transformer FLOP accounting for lectures 07–08.
+  when: Use only the matching calculation sections.
+  priority: 3
+  unit_routes:
+  - unit-amls-l07
+  - unit-amls-l08
+- source_id: source-mlc-book
+  role: implementation
+  why: Executable tensor-program, rewrite and fusion material is the do-it twin for lectures 03–04.
+  when: After the compilation deck; stop at the first working rewrite/fusion example.
+  priority: 2
+  unit_routes:
+  - unit-amls-l03
+  - unit-amls-l04
+- source_id: source-huyen-dmls
+  role: reference
+  why: Local lifecycle prose adds production trade-offs for data, model development, deployment and monitoring.
+  when: Helpful second pass for lectures 10–13; not a scope source.
+  priority: 3
+  unit_routes:
+  - unit-amls-l10
+  - unit-amls-l11
+  - unit-amls-l12
+  - unit-amls-l13
+- source_id: source-cmu-10414
+  role: practice
+  why: Needle lectures and assignments provide checkable autodiff, compilation, parallelism and GPU exercises.
+  when: Use the smallest matching lecture/HW part after the deck.
+  priority: 2
+  unit_routes:
+  - unit-amls-l01
+  - unit-amls-l02
+  - unit-amls-l03
+  - unit-amls-l04
+  - unit-amls-l06
+  - unit-amls-l07
+  - unit-amls-l08
+  - unit-amls-theory
+- source_id: source-mit-6172
+  role: exam-preparation
+  why: Closest external written-question bank for vectorization, races, locality, caching and hardware
+    performance.
+  when: Timed drills for the technical core and final remediation.
+  priority: 1
+  unit_routes:
+  - unit-amls-l03
+  - unit-amls-l04
+  - unit-amls-l05
+  - unit-amls-l08
+  - unit-amls-l09
+  - unit-amls-theory
+- source_id: source-stanford-cs149
+  role: practice
+  why: Parallel-abstraction and GPU written assignments supplement lectures 05 and 08.
+  when: One selected written problem after the matching lecture.
+  priority: 2
+  unit_routes:
+  - unit-amls-l05
+  - unit-amls-l08
+  - unit-amls-theory

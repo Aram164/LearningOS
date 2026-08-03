@@ -1,0 +1,118 @@
+id: study-map-m2-sad-l07
+type: study-map
+unit_id: unit-m2-sad-l07
+status: ready
+current_stage: stage-sad-l07-models
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l07-models
+  title: Match word problems to discrete probability models
+  objective: Learn each distribution through its sampling assumptions before memorizing its formula.
+  done_when:
+  - Distinguish with/without replacement, fixed trials/until success, and rate/count settings.
+  - Choose Bernoulli, Binomial, Hypergeometric, Geometric, or Poisson for five unseen prompts and justify
+    each choice.
+  estimate_minutes: 80
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 L07 — complete current deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf
+  - kind: reference
+    label: 2025 L07 — prior-year same-topic deck
+    source_id: source-sad-2025-recordings
+    locator: 07_discrete_distributions.pptx (1).pdf
+  - kind: read
+    label: Fahrmeir Statistik Ch 5
+    source_id: source-fahrmeir-statistik
+    locator: Ch 5
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-models/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l07-formula-card
+  title: Build and reproduce the distribution decision card
+  objective: Create a one-page card with support, PMF, parameters, E, Var, and the verbal trigger for
+    every lecture distribution.
+  done_when:
+  - Reproduce the card from memory.
+  - Compute one exact probability for Binomial, Hypergeometric, and Poisson without a template.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Blitzstein Ch 3–4 — Bernoulli/Binomial/Hypergeometric/Poisson
+    source_id: source-blitzstein-hwang
+    locator: Ch 3–4 selections
+  - kind: reference
+    label: Harvard Stat 110 distribution handout and Units 3–4
+    source_id: source-stat110
+    url: https://stat110.hsites.harvard.edu/handouts
+  - kind: read
+    label: Pitman Ch 2–3 as middle-rung alternative
+    source_id: source-pitman-probability
+    locator: Ch 2–3 selections
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-formula-card/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l07-media
+  title: Targeted distribution intuition
+  objective: Use short verified media only for models that still feel mechanical.
+  done_when:
+  - Explain why Hypergeometric is not Binomial and why Poisson models rare counts.
+  estimate_minutes: 35
+  exam_critical: false
+  scope_triage: helpful-now
+  resources:
+  - kind: watch
+    label: StatQuest — Binomial Distribution in 30 seconds
+    source_id: source-statquest
+    url: https://www.youtube.com/shorts/aH3mZjHkAbs
+  - kind: watch
+    label: StatQuest — Sampling from a Distribution
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=XLCWeSVzHUU
+  - kind: watch
+    label: Brandon Foltz — Introduction to the Poisson Distribution
+    source_id: source-brandon-foltz
+    url: https://www.youtube.com/watch?v=8px7xuk_7OU
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-media/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l07-practice
+  title: UE4 and solution-backed mixed classification drill
+  objective: Interleave model selection and calculation until the distribution is recognized from wording
+    alone.
+  done_when:
+  - Complete the distribution parts of current/prior UE4.
+  - 'Pass four cold checks: Binomial, Hypergeometric, Poisson, and distribution choice.'
+  estimate_minutes: 100
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Current UE4 and prior-year UE4
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf
+  - kind: practise
+    label: MIT 18.05 discrete-distribution problems and exam questions
+    source_id: source-mit-1805
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/pages/exams/
+  - kind: practise
+    label: Dekking + Schaum selected answer-backed distribution drills
+    source_id: source-dekking-mips
+    locator: Discrete distribution selections
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-practice/notes.md

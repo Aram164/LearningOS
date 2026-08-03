@@ -1,0 +1,139 @@
+id: study-map-aml-l10
+type: study-map
+unit_id: unit-aml-l10
+status: ready
+current_stage: stage-aml-l10-convolution
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l10-convolution
+  title: Convolution/cross-correlation and learned filters
+  objective: Follow the current deck and compute 1D/2D cross-correlation while explaining weight sharing
+    and locality.
+  done_when:
+  - Compute the deck's small filter examples by hand and distinguish mathematical convolution from DL
+    cross-correlation.
+  - Explain why shared local filters reduce parameters and preserve spatial structure.
+  estimate_minutes: 100
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 VL10 — complete 70-page CNN deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf
+  - kind: reference
+    label: Older VL10 variant — examples only after current deck
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+  - kind: read
+    label: ISLP §10.3 — primary CNN reading
+    source_id: source-islp
+    locator: §10.3
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l10-shapes
+  title: Padding, stride, channels, receptive fields, and parameter counts
+  objective: Make every tensor shape and parameter count mechanically reliable.
+  done_when:
+  - Use floor((n+2p-f)/s)+1 for the deck examples including 28x28, f=5, s=1, p=0 → 24x24.
+  - Compute output and parameter shapes for multi-channel/multi-filter layers and explain padding/stride
+    tradeoffs.
+  estimate_minutes: 110
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Murphy §14.1–14.2 — convolution and shape depth
+    source_id: source-murphy-pml1
+    locator: §14.1–14.2
+  - kind: read
+    label: CS231n convolutional network notes
+    source_id: source-cs231n-notes
+    url: https://cs231n.github.io/convolutional-networks/
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l10-pooling
+  title: Pooling and complete CNN design
+  objective: Trace a complete conv-activation-pool-stack-flatten/classifier architecture and compare pooling
+    choices.
+  done_when:
+  - Trace shapes through a small full CNN.
+  - Compare max/average pooling and state the role of fully connected output layers.
+  estimate_minutes: 70
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current VL10 pooling/full-architecture sections
+    source_id: source-aml-ss26-lectures
+    locator: VL10 pooling and architecture sections
+  - kind: read
+    label: Official PyTorch CNN tutorial — implementation connection only
+    source_id: source-pytorch-tutorials
+    url: https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l10-architectures
+  title: LeNet, AlexNet, GoogLeNet, and ResNet as design ideas
+  objective: Recognize the architectural innovations and residual connection logic without memorizing
+    arbitrary historical trivia.
+  done_when:
+  - Identify the design contribution of each architecture at deck depth.
+  - Explain a residual block and why skip connections help optimization.
+  estimate_minutes: 70
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Murphy §14.3 — closest one-to-one architecture list
+    source_id: source-murphy-pml1
+    locator: §14.3
+  - kind: watch
+    label: UMich EECS 498 L7–L8 selected CNN/architecture lectures
+    source_id: source-eecs498
+    url: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
+  - kind: watch
+    label: CS231n 2017 convolution/architecture lectures — optional alternative
+    source_id: source-cs231n-2017-videos
+    locator: CNN architecture lectures
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l10-practice
+  title: Convolution arithmetic and solution-backed CNN gate
+  objective: Close L10 with filter, shape, parameter, pooling, and architecture questions under time pressure.
+  done_when:
+  - Pass a mixed ten-question shape/parameter gate without notes.
+  - Complete selected CS4780 HW9 CNN tasks and one EECS/CS231n exercise with a key or verified trace.
+  estimate_minutes: 130
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Cornell CS4780 2018 HW9 CNN tasks and local solutions
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW9; 2018Spring/HW9
+  - kind: practise
+    label: UMich EECS 498 L7–L8 exercises/examples
+    source_id: source-eecs498
+    locator: L7–L8
+  - kind: reference
+    label: No dedicated local L10 exercise sheet; do not relabel earlier Übung decks
+    source_id: source-aml-ss26-lectures
+    locator: Explicit completeness disposition
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-practice/notes.md

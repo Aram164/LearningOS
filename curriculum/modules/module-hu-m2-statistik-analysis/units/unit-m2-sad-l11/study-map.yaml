@@ -1,0 +1,112 @@
+id: study-map-m2-sad-l11
+type: study-map
+unit_id: unit-m2-sad-l11
+status: ready
+current_stage: stage-sad-l11-workflow
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l11-workflow
+  title: Problem types, data representations, and the DS pipeline
+  objective: Follow the current L11 deck from question/data collection through features, model, loss,
+    validation, and reporting.
+  done_when:
+  - Classify tasks as supervised/unsupervised and classification/regression.
+  - Sketch a leak-free train/validation/test pipeline and distinguish features, labels, functions, and
+    losses.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 L11 — 11_datascience_intro.pdf, all 49 pages
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf
+  - kind: read
+    label: ISLP Ch 2 — workflow, generalization, resampling
+    source_id: source-islp
+    locator: Ch 2
+  - kind: read
+    label: Kelleher introductory/workflow sections
+    source_id: source-kelleher-fmlpda
+    locator: Introductory chapters
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-workflow/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l11-evaluation
+  title: Metrics, averaging, thresholds, and model comparison
+  objective: Calculate and choose accuracy, precision, recall, F-score, ROC/AUC, and cross-validation
+    summaries under imbalance.
+  done_when:
+  - Compute accuracy, precision, recall, and F1 from a confusion matrix.
+  - Explain micro/macro/weighted averaging, threshold tradeoffs, and when accuracy is misleading.
+  estimate_minutes: 95
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: scikit-learn model evaluation — authoritative averaging/metric definitions
+    url: https://scikit-learn.org/stable/modules/model_evaluation.html
+  - kind: read
+    label: Kroese §7.2 — evaluation reference
+    source_id: source-kroese-dsml
+    locator: §7.2
+  - kind: reference
+    label: 2025 L11 Instance-based deck only for its vectorization/metric sections; it is not the 2026
+      L11 scope deck
+    source_id: source-sad-2025-recordings
+    locator: 11_instance-based.pdf
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l11-generalization
+  title: Inductive bias, overfitting, bias–variance, CV, and bootstrap
+  objective: Explain why generalization needs assumptions and how validation/resampling exposes model
+    and data problems.
+  done_when:
+  - Diagnose underfit versus overfit from train/validation behavior.
+  - Explain bias–variance and choose CV/bootstrap for a stated purpose.
+  estimate_minutes: 75
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+  - kind: reference
+    label: ISLP Ch 2 resampling/generalization recap
+    source_id: source-islp
+    locator: Ch 2 selections
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l11-practice
+  title: Workflow and metric self-test
+  objective: Apply the whole workflow to small scenarios before studying specific model families.
+  done_when:
+  - Design a complete split/metric plan for one imbalanced classifier and one regression task.
+  - Answer the current-deck checkpoints without treating 2025 numbering as authoritative.
+  estimate_minutes: 75
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Current Blatt 5 plus UE7 metric solution walkthrough
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-05.pdf Aufgabe 3; exercise-slides/UE7.pdf slides 22–30
+  - kind: reference
+    label: No matching 2025 Data-Science-Intro lecture exists; L11_instance-based is reference-only
+    source_id: source-sad-2025-recordings
+    locator: Explicit non-match disposition
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-practice/notes.md

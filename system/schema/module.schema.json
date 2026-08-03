@@ -35,7 +35,42 @@
       "additionalProperties": false,
       "properties": {
         "type": { "enum": ["klausur", "muendlich", "portfolio", "project", "hausarbeit", "other"] },
-        "notes": { "type": "string" }
+        "notes": { "type": "string" },
+        "sittings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["termin", "date"],
+            "additionalProperties": false,
+            "properties": {
+              "termin": { "type": "integer", "minimum": 1, "maximum": 3 },
+              "date": { "type": "string", "format": "date" },
+              "end_date": { "type": "string", "format": "date" },
+              "time": { "type": "string", "minLength": 1 },
+              "label": { "type": "string", "minLength": 1 },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "registration_windows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["opens", "closes", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "opens": { "type": "string", "format": "date" },
+              "closes": { "type": "string", "format": "date" },
+              "label": { "type": "string", "minLength": 1 },
+              "action": { "type": "string", "minLength": 1 },
+              "termins": {
+                "type": "array",
+                "items": { "type": "integer", "minimum": 1, "maximum": 3 },
+                "uniqueItems": true
+              }
+            }
+          }
+        }
       }
     },
     "attempts": {

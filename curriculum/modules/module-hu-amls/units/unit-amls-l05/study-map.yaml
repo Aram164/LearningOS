@@ -1,0 +1,120 @@
+id: study-map-amls-l05
+type: study-map
+unit_id: unit-amls-l05
+status: ready
+current_stage: stage-amls-l05-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l05-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Map each execution abstraction to its data movement, synchronization and fault-tolerance
+    costs.
+  done_when:
+  - MapReduce Spark distributed matrix operations and parfor are page-located
+  - Data-parallel vs task-parallel execution can be selected for a new scenario
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-data-parallelism
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 05 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 05; 05_ExecutionStrategies.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/05_ExecutionStrategies.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l05-integrate
+  title: Integrate distributed-training and lecturer perspectives
+  status: pending
+  objective: Relate the deck's batch execution to Vol 2, Ultra-Scale and DMMLS without replacing the taught
+    vocabulary. Triage every curated primary paper for this lecture and anchor its useful claim, mechanism
+    or result back to the deck.
+  done_when:
+  - A comparison table covers data task tensor and pipeline parallelism
+  - Every source addition has a lecture-side anchor
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 100
+  exam_critical: true
+  concepts:
+  - concept-data-parallelism
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — Resilient Distributed Datasets (RDD / Spark)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 05
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia
+  - kind: read
+    label: Primary paper — Hybrid Parallelization Strategies for Large-Scale ML in SystemML
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 05
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://dl.acm.org/doi/10.14778/2732286.2732292
+  - kind: read
+    label: 'Primary paper — Cerebro: A Data System for Optimized Deep Learning Model Selection'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 05
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.vldb.org/pvldb/vol13/p2159-nakandala.pdf
+  - kind: read
+    label: 'Primary paper — Modin: Towards Scalable Dataframe Systems'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 05
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.vldb.org/pvldb/vol13/p2033-petersohn.pdf
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 05 (12 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 05; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: MLSysBook Vol 2 — Distributed Training
+    source_id: source-mlsysbook-vol2
+    locator: Distributed Training chapter
+  - kind: read
+    label: Ultra-Scale — DP/TP/PP sections
+    source_id: source-ultrascale-playbook
+    locator: Data tensor and pipeline parallelism
+  - kind: read
+    label: DMMLS — parallel execution
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after acquisition
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l05-evidence
+  title: Full evidence — reference, drills and lecture mock
+  status: pending
+  objective: Solve execution-plan and concurrency questions in written-exam form.
+  done_when:
+  - A reference diagram covers data flow synchronization resilience and shuffle
+  - Four MIT/Stanford drills are attempted closed-book
+  - A 45-minute mock includes distributed matrix multiplication parfor scheduling and a race/synchronization
+    question
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-data-parallelism
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: MIT 6.172 — parallelism and races
+    source_id: source-mit-6172
+    locator: Selected quizzes with solutions checked after attempt
+  - kind: practise
+    label: Stanford CS149 — parallel abstractions written assignment
+    source_id: source-stanford-cs149
+    locator: Selected written problems
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l05/stages/stage-amls-l05-evidence/notes.md
+  attachments: []
+  source_feedback: []

@@ -394,6 +394,12 @@ class Migration:
         current = path.read_text(encoding="utf-8") if path.is_file() else None
         if current == content:
             return
+        if current is not None and path.suffix in {".yaml", ".yml"}:
+            try:
+                if yaml.safe_load(current) == yaml.safe_load(content):
+                    return
+            except yaml.YAMLError:
+                pass
         self.actions.append(f"write {rel}")
         if self.apply:
             path.parent.mkdir(parents=True, exist_ok=True)
@@ -440,7 +446,11 @@ def run(root: Path, apply: bool) -> Migration:
     modules: dict[str, dict] = {}
     units_by_module: dict[str, list[tuple[dict, dict | None]]] = {}
     for mid, legacy in before.legacy_modules.items():
-        module = copy.deepcopy(legacy)
+        # Partitioned modules become authoritative after the first migration.
+        # Re-running the compatibility migrator must preserve later canonical
+        # additions (for example structured sittings/registration windows)
+        # instead of replacing them with the frozen legacy snapshot.
+        module = copy.deepcopy(before.modules.get(mid, legacy))
         module.update({"type": "module", "kind": "academic",
                        "area_id": "program-bachelors", "source_map": "source-map.yaml"})
         if mid == "module-hu-m2-statistik-analysis":
@@ -493,14 +503,51 @@ def run(root: Path, apply: bool) -> Migration:
         "Analysis component preparation; a study map must be built from the component's taught scope.",
         "needs-map", ["workspace-m2-exam-prep"], component_id="component-m2-analysis"))
 
-    amls_map = parse_plan(root, "work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md",
-                          "unit-amls-theory", source_ids)
-    for stage in amls_map["stages"]:
-        stage["working_note"] = stage["working_note"].format(module_id="module-hu-amls")
-    units_by_module["module-hu-amls"] = [make_unit(
-        "module-hu-amls", "unit-amls-theory", "exam-block", "AMLS theory preparation", 1,
-        "Existing AMLS theory plan, retained as the unit's source plan.", "ready",
-        ["workspace-amls-exam-prep"], study_map=amls_map)]
+    # The compatibility migrator seeds AML and M2 only on the first run. Once
+    # partitioned units exist, they are canonical and may legitimately grow via
+    # module-plan-import; preserve those units and their evolved source maps.
+    for mid in ("module-hu-aml", "module-hu-m2-statistik-analysis"):
+        existing_units = [unit for unit in before.units.values()
+                          if unit.module_id == mid]
+        if not existing_units:
+            continue
+        units_by_module[mid] = [
+            (copy.deepcopy(unit.data),
+             copy.deepcopy(before.study_maps[unit.data["current_study_map"]].data)
+             if unit.data.get("current_study_map") in before.study_maps else None)
+            for unit in existing_units
+        ]
+        source_map_defs[mid] = copy.deepcopy(
+            before.module_source_maps.get(mid, {"sources": []})
+        ).get("sources", [])
+
+    # AMLS was initially migrated as one placeholder. Once the module has a
+    # real partitioned lecture tree, a compatibility dry run must preserve it
+    # instead of reconstructing that placeholder from the frozen Chat2 plan.
+    # This makes the migration genuinely idempotent after post-migration unit
+    # building, just as partitioned module facts are preserved above.
+    existing_amls = [unit for unit in before.units.values()
+                     if unit.module_id == "module-hu-amls"]
+    if any(unit.id.startswith("unit-amls-l") for unit in existing_amls):
+        units_by_module["module-hu-amls"] = [
+            (copy.deepcopy(unit.data),
+             copy.deepcopy(before.study_maps[unit.data["current_study_map"]].data)
+             if unit.data.get("current_study_map") in before.study_maps else None)
+            for unit in existing_amls
+        ]
+        source_map_defs["module-hu-amls"] = copy.deepcopy(
+            before.module_source_maps.get("module-hu-amls", {"sources": []})
+        ).get("sources", [])
+    else:
+        amls_map = parse_plan(
+            root, "work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md",
+            "unit-amls-theory", source_ids)
+        for stage in amls_map["stages"]:
+            stage["working_note"] = stage["working_note"].format(module_id="module-hu-amls")
+        units_by_module["module-hu-amls"] = [make_unit(
+            "module-hu-amls", "unit-amls-theory", "exam-block", "AMLS theory preparation", 1,
+            "Existing AMLS theory plan, retained as the unit's source plan.", "ready",
+            ["workspace-amls-exam-prep"], study_map=amls_map)]
 
     algo_map = parse_plan(root, "work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md",
                           "unit-algo2-exam-prep", source_ids)
@@ -615,10 +662,13 @@ def run(root: Path, apply: bool) -> Migration:
                 clean_map = copy.deepcopy(study_map)
                 for stage in clean_map["stages"]:
                     old_note = stage.pop("_old_note", None)
-                    note_text = ""
                     if old_note and (root / old_note).is_file():
-                        note_text = (root / old_note).read_text(encoding="utf-8")
-                    migration.write(stage["working_note"], note_text)
+                        migration.write(
+                            stage["working_note"],
+                            (root / old_note).read_text(encoding="utf-8"),
+                        )
+                    elif not (root / stage["working_note"]).is_file():
+                        migration.write(stage["working_note"], "")
                 migration.write(f"{base}/study-map.yaml", dump_yaml(clean_map))
 
     migration.write("curriculum/resume.yaml", dump_yaml({
@@ -634,16 +684,21 @@ def run(root: Path, apply: bool) -> Migration:
 
     migration.update_workspace("workspace-aml-exam-prep", {
         "program_ids": ["program-bachelors"], "module_ids": ["module-hu-aml"],
-        "unit_ids": [f"unit-aml-l0{i}" for i in range(2, 8)],
+        "unit_ids": [unit["id"] for unit, _ in sorted(
+            units_by_module["module-hu-aml"],
+            key=lambda pair: (pair[0]["order"], pair[0]["id"]))],
     })
     migration.update_workspace("workspace-m2-exam-prep", {
         "program_ids": ["program-bachelors"], "module_ids": ["module-hu-m2-statistik-analysis"],
-        "unit_ids": [*[f"unit-m2-sad-l0{i}" for i in range(1, 6)],
-                     "unit-m2-sad-l06-l10", "unit-m2-analysis-exam-prep"],
+        "unit_ids": [unit["id"] for unit, _ in sorted(
+            units_by_module["module-hu-m2-statistik-analysis"],
+            key=lambda pair: (pair[0]["order"], pair[0]["id"]))],
     })
     migration.update_workspace("workspace-amls-exam-prep", {
         "program_ids": ["program-bachelors"], "module_ids": ["module-hu-amls"],
-        "unit_ids": ["unit-amls-theory"],
+        "unit_ids": [unit["id"] for unit, _ in sorted(
+            units_by_module["module-hu-amls"],
+            key=lambda pair: (pair[0]["order"], pair[0]["id"]))],
     })
     migration.update_workspace("workspace-algo2-exam-prep", {
         "program_ids": ["program-bachelors"], "module_ids": ["module-hu-algo2"],
@@ -676,20 +731,25 @@ def run(root: Path, apply: bool) -> Migration:
         "mappings": migration.mappings,
     }
     migration.write("migration/curriculum-v2/old-to-new.yaml", dump_yaml(mappings))
-    report = [
-        "# Curriculum v2 migration report", "",
-        "> Mechanical, idempotent migration. No durable note body, source ID, concept ID, or relation ID was changed.", "",
-        f"- Programs/boundaries: {len(PROGRAMS)}",
-        f"- Modules: {len(modules)} ({len(before.legacy_modules)} academic + {len(modules) - len(before.legacy_modules)} universal)",
-        f"- Units: {sum(len(v) for v in units_by_module.values())}",
-        f"- Mini Plans converted: {len(MINI_PLANS)}",
-        "- SaD L04 resume state: `stage-event-spaces` active (copied exactly)",
-        "- Master’s Planning: tracked quarantine; boundary-only in the manifest",
-        "- Job: never read or migrated", "",
-        "## Rollback", "",
-        "Switch back to `codex/learning-path-app-v1`, or revert this branch's migration commits. The original module registry is also preserved under `migration/curriculum-v2/originals/`.", "",
-    ]
-    migration.write("migration/curriculum-v2/report.md", "\n".join(report))
+    # The report records the migration event, not the current curriculum. Once
+    # written it is historical evidence; later legitimate unit building must
+    # not rewrite its counts on every compatibility dry run.
+    report_path = root / "migration/curriculum-v2/report.md"
+    if not report_path.exists():
+        report = [
+            "# Curriculum v2 migration report", "",
+            "> Mechanical, idempotent migration. No durable note body, source ID, concept ID, or relation ID was changed.", "",
+            f"- Programs/boundaries: {len(PROGRAMS)}",
+            f"- Modules: {len(modules)} ({len(before.legacy_modules)} academic + {len(modules) - len(before.legacy_modules)} universal)",
+            f"- Units: {sum(len(v) for v in units_by_module.values())}",
+            f"- Mini Plans converted: {len(MINI_PLANS)}",
+            "- SaD L04 resume state: `stage-event-spaces` active (copied exactly)",
+            "- Master’s Planning: tracked quarantine; boundary-only in the manifest",
+            "- Job: never read or migrated", "",
+            "## Rollback", "",
+            "Switch back to `codex/learning-path-app-v1`, or revert this branch's migration commits. The original module registry is also preserved under `migration/curriculum-v2/originals/`.", "",
+        ]
+        migration.write("migration/curriculum-v2/report.md", "\n".join(report))
     return migration
 
 

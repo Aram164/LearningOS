@@ -1,0 +1,127 @@
+id: study-map-amls-l07
+type: study-map
+unit_id: unit-amls-l07
+status: ready
+current_stage: stage-amls-l07-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l07-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Trace the systems costs of transformer training, post-training and inference.
+  done_when:
+  - Training and inference paths are page-located
+  - Scaling laws parallelism KV cache vLLM and FlashAttention can be related
+  estimate_minutes: 85
+  exam_critical: true
+  concepts:
+  - concept-llm-systems
+  - concept-data-parallelism
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 07 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 07; 07_LLM_TrainingInference.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/07_LLM_TrainingInference.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l07-integrate
+  title: Integrate scaling, FLOP and inference views
+  status: pending
+  objective: Use Ultra-Scale, HTSYM and Vol 2 to quantify the lecture's training/inference mechanisms.
+    Triage every curated primary paper for this lecture and anchor its useful claim, mechanism or result
+    back to the deck.
+  done_when:
+  - One transformer FLOP/memory calculation is worked
+  - A DP TP PP EP CP and inference table maps back to deck pages
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-llm-systems
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — Attention Is All You Need
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1706.03762
+  - kind: read
+    label: Primary paper — Language Models are Few-Shot Learners (GPT-3)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2005.14165
+  - kind: read
+    label: Primary paper — Scaling Laws for Neural Language Models
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2001.08361
+  - kind: read
+    label: Primary paper — Training Compute-Optimal LLMs (Chinchilla)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2203.15556
+  - kind: read
+    label: 'Primary paper — LoRA: Low-Rank Adaptation of Large Language Models'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2106.09685
+  - kind: read
+    label: Primary paper — Neural Machine Translation of Rare Words with Subword Units (BPE)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 07
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://aclanthology.org/P16-1162/
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 07 (16 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 07; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: HF Ultra-Scale Playbook — 5D parallelism and ZeRO
+    source_id: source-ultrascale-playbook
+    locator: Full playbook selectively
+  - kind: read
+    label: How to Scale Your Model — transformer FLOPs and inference
+    source_id: source-htsym-scaling-book
+    locator: Matching quantitative chapters
+  - kind: read
+    label: MLSysBook Vol 2 — Inference at Scale
+    source_id: source-mlsysbook-vol2
+    locator: Inference at Scale chapter
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l07-evidence
+  title: Mid-tier evidence — reference and drills
+  status: pending
+  objective: Produce a systems reference and solve one end-to-end scaling/inference scenario.
+  done_when:
+  - Reference covers transformer compute scaling distributed training post-training and KV-cache optimizations
+  - One CMU systems exercise is completed
+  - A 20-minute closed-book explain-and-calculate check passes
+  estimate_minutes: 100
+  exam_critical: true
+  concepts:
+  - concept-llm-systems
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: CMU 10-414 — transformer/parallel systems selection
+    source_id: source-cmu-10414
+    locator: Smallest matching lecture exercise
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l07/stages/stage-amls-l07-evidence/notes.md
+  attachments: []
+  source_feedback: []

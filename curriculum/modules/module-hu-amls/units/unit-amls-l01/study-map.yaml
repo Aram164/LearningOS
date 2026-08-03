@@ -1,0 +1,97 @@
+id: study-map-amls-l01
+type: study-map
+unit_id: unit-amls-l01
+status: ready
+current_stage: stage-amls-l01-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l01-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Establish the course's ML-system definitions, lifecycle and architecture vocabulary.
+  done_when:
+  - Definitions and architecture examples are page-located
+  - The SystemDS/DAPHNE preview can be redrawn from memory
+  estimate_minutes: 65
+  exam_critical: false
+  concepts:
+  - concept-ml-systems
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 01 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 01; 01_Introduction.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/01_Introduction.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l01-integrate
+  title: Integrate one foundation chapter and course overview
+  status: pending
+  objective: Use Vol 1 and CMU only to stabilize the course vocabulary. Triage every curated primary paper
+    for this lecture and anchor its useful claim, mechanism or result back to the deck.
+  done_when:
+  - A five-layer mental model is written
+  - Source differences are recorded without adding new scope
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 60
+  exam_critical: false
+  concepts:
+  - concept-ml-systems
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: Primary paper — Data Management in ML Systems
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 01
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://link.springer.com/book/10.1007/978-3-031-01869-5
+  - kind: read
+    label: Primary paper — Hidden Technical Debt in Machine Learning Systems
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 01
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 01 (2 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 01; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: MLSysBook Vol 1 — Chapters 1–2 selected sections
+    source_id: source-mlsysbook-vol1
+    locator: Defining ML systems lifecycle and deployment paradigms
+  - kind: reference
+    label: CMU 10-414 — Lecture 1 overview
+    source_id: source-cmu-10414
+    locator: Systems/build-first overview
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l01-evidence
+  title: Light evidence — reference and recall
+  status: pending
+  objective: Produce one-page orientation and recall the stack without notes.
+  done_when:
+  - One-page reference covers the entire deck
+  - A 10-minute closed-book redraw/explain check succeeds
+  estimate_minutes: 45
+  exam_critical: false
+  concepts:
+  - concept-ml-systems
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: MLSysBook Vol 1 chapter checkpoints
+    source_id: source-mlsysbook-vol1
+    locator: Chapters 1–2 selected checks
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-evidence/notes.md
+  attachments: []
+  source_feedback: []

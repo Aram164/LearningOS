@@ -1,0 +1,136 @@
+id: study-map-amls-l11
+type: study-map
+unit_id: unit-amls-l11
+status: ready
+current_stage: stage-amls-l11-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l11-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Connect search strategies to their systems costs and model-management reuse.
+  done_when:
+  - Grid random Bayesian and NAS mechanisms are page-located
+  - Acquisition exploitation/exploration and lineage reuse can be explained
+  estimate_minutes: 80
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 11 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 11; 11_ModelSelection.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/11_ModelSelection.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l11-integrate
+  title: Integrate management, benchmarking and evaluation views
+  status: pending
+  objective: Add only source detail that sharpens search cost, evaluation or lineage reasoning. Triage
+    every curated primary paper for this lecture and anchor its useful claim, mechanism or result back
+    to the deck.
+  done_when:
+  - A source-to-deck comparison distinguishes selection evaluation and management
+  - No source chapter becomes a substitute syllabus
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — ImageNet Classification with Deep CNNs (AlexNet)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks
+  - kind: read
+    label: 'Primary paper — Snorkel: Rapid Training Data Creation with Weak Supervision'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1711.10160
+  - kind: read
+    label: 'Primary paper — Hyperband: A Novel Bandit-Based Approach to HPO'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1603.06560
+  - kind: read
+    label: 'Primary paper — Auto-sklearn: Efficient and Robust Automated ML'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://papers.nips.cc/paper/5872-efficient-and-robust-automated-machine-learning
+  - kind: read
+    label: Primary paper — Neural Architecture Search with Reinforcement Learning
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1611.01578
+  - kind: read
+    label: Primary paper — Accelerating the ML Lifecycle with MLflow
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://people.eecs.berkeley.edu/~matei/papers/2018/ieee_mlflow.pdf
+  - kind: read
+    label: 'Primary paper — LIMA: Fine-grained Lineage Tracing and Reuse in ML Systems'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 11
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://mboehm7.github.io/resources/sigmod2021a_lima.pdf
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 11 (42 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 11; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: DMMLS — model selection/management
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after acquisition
+  - kind: read
+    label: MLSysBook Vol 1 — benchmarking and model/data evaluation
+    source_id: source-mlsysbook-vol1
+    locator: Chapter 12 selected sections/checkpoints
+  - kind: read
+    label: Huyen DMLS Chapter 6
+    source_id: source-huyen-dmls
+    locator: Model development and offline evaluation
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l11-evidence
+  title: Mid-tier evidence — reference and drills
+  status: pending
+  objective: Answer model-selection calculations and mechanism questions in written form.
+  done_when:
+  - Reference covers search Bayesian optimization NAS and lineage reuse
+  - Official sample Task 3 pages 41–42 is answered before checking
+  - Two fresh search-cost or acquisition-function drills are completed
+  estimate_minutes: 100
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Official AMLS sample — Task 3 Model Selection
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 41–42
+  - kind: practise
+    label: MLSysBook Vol 1 checkpoints
+    source_id: source-mlsysbook-vol1
+    locator: Selected benchmarking/model-evaluation checks
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-evidence/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,18 +1,31 @@
 id: module-hu-amls
 institution: TU Berlin
-title: Advanced Machine Learning Systems (AMLS)
+title: Architecture of ML Systems (AMLS)
 semester: sose-2026
 status: enrolled
 examination:
   type: klausur
+  sittings:
+  - termin: 1
+    date: '2026-07-23'
+    time: '16:00'
+    label: Course-run sitting 1
+  - termin: 2
+    date: '2026-08-06'
+    time: '16:00'
+    label: Course-run sitting 2
+  - termin: 3
+    date: '2026-08-27'
+    time: '16:00'
+    label: Course-run sitting 3 (last)
   notes: 'Written exam, 100% of the grade; the team project (submitted 2026-07-15) is a prerequisite and
-    adds up to 5 bonus points (course page, verified 2026-07-02). Course-run sittings at 16:00: 2026-07-23
-    / 2026-08-06 / 2026-08-27 (confirmed by Aram 2026-07-25; course-run — NOT on the central HU Informatik
-    Prüfungsplan because it is a TU Berlin course (Fak. IV EECS, Boehm/BIFOLD); the 2026-07-23 sitting
-    has now passed). Exam Anmeldung runs on the TU side: Aram sits it as a HU Nebenhörer — Nebenhörerschaft
-    at the TU Studierendensekretariat (nebenhoerer@studsek.tu-berlin.de) + exam registration via TU MOSES/MTS,
-    to confirm with the AMLS chair — then recognised back at HU. NOTE: taken as Bachelor-UEWP — LP-gesperrt
-    im Master (Doppelanrechnungsverbot); knowledge fully reusable (module card, Masters-Planning).'
+    adds up to 5 bonus points (course page, verified 2026-07-02). The sittings are course-run (confirmed
+    by Aram 2026-07-25) — NOT on the central HU Informatik Prüfungsplan, because this is a TU Berlin course
+    (Fak. IV EECS, Boehm/BIFOLD). Exam Anmeldung runs on the TU side: Aram sits it as a HU Nebenhörer
+    — Nebenhörerschaft at the TU Studierendensekretariat (nebenhoerer@studsek.tu-berlin.de) + exam registration
+    via TU MOSES/MTS, to confirm with the AMLS chair — then recognised back at HU. No dated Anmeldung
+    window exists to record. NOTE: taken as Bachelor-UEWP — LP-gesperrt im Master (Doppelanrechnungsverbot);
+    knowledge fully reusable (module card, Masters-Planning).'
 attempts:
 - termin: 3
   date: '2026-08-27'
@@ -24,4 +37,17 @@ kind: academic
 area_id: program-bachelors
 source_map: source-map.yaml
 unit_order:
+- unit-amls-l03
+- unit-amls-l04
+- unit-amls-l05
+- unit-amls-l08
+- unit-amls-l09
+- unit-amls-l06
+- unit-amls-l07
+- unit-amls-l10
+- unit-amls-l11
+- unit-amls-l12
+- unit-amls-l13
+- unit-amls-l01
+- unit-amls-l02
 - unit-amls-theory

@@ -1,0 +1,45 @@
+id: unit-aml-l08
+type: unit
+module_id: module-hu-aml
+kind: lecture
+title: AML Lecture 08 — Feedforward Neural Networks
+order: 8
+scope: Current 2026 L08 deck; XOR via stacking, feedforward computation and shapes, activations/expressiveness,
+  regression/binary/multiclass/multilabel output layers, softmax, and accuracy/precision/recall/F1 with
+  micro/macro/weighted averaging.
+status: ready
+scope_sources:
+- source_id: source-aml-ss26-lectures
+  authority: slides
+  locator: lecture-slides/VL 08-feedforward-neural-network.pdf (81 pages)
+- source_id: source-aml-ss26-lectures
+  authority: reference
+  locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
+source_selections:
+- source_id: source-islp
+  locator: §10.1–10.2
+  purpose: Primary gentle MLP/forward-pass reading
+- source_id: source-cs229-notes
+  locator: §7.1–7.4
+  purpose: Compact model/forward-pass derivation
+- source_id: source-murphy-pml1
+  locator: §13.2
+  purpose: Optional architecture/output-layer depth
+- source_id: source-kroese-dsml
+  locator: §9.2 and §7.2
+  purpose: Network/evaluation reference
+- source_id: source-csc411-notes
+  locator: §3.3 and §8.3 selections
+  purpose: Independent network/metric notes
+- source_id: source-cs4780-homeworks
+  locator: 2018 HW9 selected forward/ReLU tasks
+  purpose: Local solution-backed practice
+artifacts:
+  other:
+  - note-aml-sad-master-wiring
+  - note-aml-bonusblatt04-solutions
+workspace_ids:
+- workspace-aml-exam-prep
+related_module_ids:
+- module-hu-m2-statistik-analysis
+current_study_map: study-map-aml-l08

@@ -1,0 +1,38 @@
+id: unit-m2-sad-l06
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 06 — Random Variables, Expectation & Variance
+order: 6
+scope: Current 2026 L06 deck; random variables, PMF/PDF/CDF, transformations, expectation, variance, covariance,
+  sample means, and Chebyshev bounds.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/06_random_variables.pdf
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 05_random_variables.pdf + 06_expected_values.pptx-1.pdf
+source_selections:
+- source_id: source-fahrmeir-statistik
+  locator: Ch 5–7
+  purpose: German notation, E/Var, covariance, Chebyshev
+- source_id: source-blitzstein-hwang
+  locator: Ch 3–4 and Ch 10 selections
+  purpose: RV and expectation intuition
+- source_id: source-openintro-statistics
+  locator: Ch 4 selections
+  purpose: Gentle distributions bridge
+- source_id: source-stat110
+  locator: Units 3–4
+  purpose: Optional rigorous RV/expectation course
+- source_id: source-mit-1805
+  locator: RV, expectation, variance notes and problems
+  purpose: Solved practice
+artifacts:
+  ultimate_reference: note-sad-probability-inference-deep-plan
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l06

@@ -104,6 +104,16 @@ list to also update.
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py` then `python tools/generate.py`.
 
+**Source-completeness gate (mandatory):** before importing a plan, enumerate
+every learning source named by its authoritative templates, bibliographies,
+course artifacts, and preserved inputs. Every item must retain a reachable
+locator and an explicit disposition: selected for a unit/stage,
+`reference-only`, or deferred with a reason. A collection may preserve a large
+bibliography, but its selected entries still need exact stage resources. Never
+use the number of registered source IDs as evidence that the underlying source
+inventory is complete; never silently drop a source because it is inconvenient
+to model.
+
 **Wire on use (ADR-005):** whenever an already-registered source is actually
 used, cited, or recommended in a session and still has no concept-linked
 evaluation, add the minimal stub *then* — the concepts it serves, its roles,
@@ -171,8 +181,11 @@ attempt change to that academic module's partitioned `module.yaml`.
 On registration, withdrawal (Rücktritt), sitting, or grade:
 
 1. append or update the attempt in the owning academic module's `module.yaml` (`termin`, `date`, `result`, optional `grade`);
-2. update module `status` when warranted;
-3. rebuild module and coordination views.
+2. record known available sitting dates/ranges and Anmeldung windows as
+   structured `examination.sittings` / `examination.registration_windows`
+   facts in that same module; attempts still record what Aram actually chose;
+3. update module `status` when warranted;
+4. rebuild module and coordination views.
 
 Never record these facts anywhere else.
 
@@ -373,28 +386,39 @@ The unit is the module-owned study object between module and stage. For
 university lectures, **slides as taught are the scope authority**: never scope
 from textbook chapter titles or keyword matches. A topic, milestone,
 lecture-cluster, exam-block, or bridge uses the same unit interaction with its
-own confirmed scope source.
+own confirmed scope source. Every new or revised module plan follows
+[`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md); its coverage audit, templates,
+no-write preflight, snapshot guard, and acceptance gates are mandatory.
 
-1. **Materials in.** Slides/recordings land in the materials tree via
-   workflow 6a (`material://` on the module's source record); never into the
-   authored tree.
+1. **Materials in.** Slides/recordings and every accompanying reading list or
+   bibliography land in the materials tree via workflow 6a (`material://` on
+   the module's source record); never into the authored tree. Run the mandatory
+   source-completeness gate before scoping.
 2. **Scope pass.** Read the deck; list the concepts actually taught; check
    the concept index for what is re-covered (re-covered → "revise via
    existing note", not new study steps).
-3. **Durable artifacts as canonical notes** (workflow 3), one per purpose,
+3. **Coverage and granularity pass.** Complete the item-by-item local/web audit,
+   reconcile current and prior-year materials by contents, and give every
+   ordinary lecture its own unit/map. Record duplicate, deferred, off-scope,
+   and unresolved items rather than omitting them.
+4. **Package and preflight.** Build from
+   `system/templates/module-plan-import.template.yaml`; run
+   `module-plan-import ... --check`; fix the package until the shadow validation
+   passes with zero canonical writes, then apply once with the current snapshot.
+5. **Durable artifacts as canonical notes** (workflow 3), one per purpose,
    linked to concepts and sources. Put only their stable note IDs on the unit:
    - the lecture reference → `role: reference`;
    - drills → `role: exercise-bank`;
    - a self-test → `role: mock-exam` (difficulty ≥ the real exam).
-4. **One current study script:** import or create `study-map.yaml` beside the
+6. **One current study script:** import or create `study-map.yaml` beside the
    unit. Preserve provenance to the original Mini Plan. Git preserves prior
    versions; never create several competing current scripts.
-5. **Work stage by stage.** Exact actions and locators, done-when criteria,
+7. **Work stage by stage.** Exact actions and locators, done-when criteria,
    working note, attachments, feedback and optional detours stay with the
    stage. Handwritten work remains faithful and stage-owned until shelving.
-6. **Shelve by review.** Optional stages may remain; apply only selected
+8. **Shelve by review.** Optional stages may remain; apply only selected
    durable changes and preserve stage provenance.
-7. **Validate and regenerate.**
+9. **Validate, regenerate, test, and diff-review** against the coverage audit.
 
 ## 24. Turn the semester
 

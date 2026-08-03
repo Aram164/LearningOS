@@ -1,0 +1,130 @@
+id: study-map-amls-l06
+type: study-map
+unit_id: unit-amls-l06
+status: ready
+current_stage: stage-amls-l06-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l06-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Draw the parameter-server architecture and reason about synchronization and staleness.
+  done_when:
+  - Architecture and update paths are page-located
+  - BSP ASP and SSP trade-offs can be explained without notes
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-parameter-servers
+  - concept-data-parallelism
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 06 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 06; 06_ParameterServers.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/06_ParameterServers.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l06-integrate
+  title: Integrate communication and modern scaling views
+  status: pending
+  objective: Reconcile parameter-server updates with collective communication and ZeRO. Triage every curated
+    primary paper for this lecture and anchor its useful claim, mechanism or result back to the deck.
+  done_when:
+  - A comparison separates PS collective and ZeRO responsibilities
+  - All additions remain anchored to the lecture
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 100
+  exam_critical: true
+  concepts:
+  - concept-parameter-servers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — Large Scale Distributed Deep Networks (DistBelief)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks
+  - kind: read
+    label: Primary paper — Scaling Distributed ML with the Parameter Server
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/li_mu
+  - kind: read
+    label: 'Primary paper — Hogwild!: A Lock-Free Approach to Parallelizing SGD'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1106.5730
+  - kind: read
+    label: Primary paper — More Effective Distributed ML via a Stale Synchronous Parallel Parameter Server
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://papers.nips.cc/paper/4894-more-effective-distributed-ml-via-a-stale-synchronous-parallel-parameter-server
+  - kind: read
+    label: 'Primary paper — Adam: A Method for Stochastic Optimization'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1412.6980
+  - kind: read
+    label: Primary paper — Communication-Efficient Learning from Decentralized Data (FedAvg)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 06
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://proceedings.mlr.press/v54/mcmahan17a.html
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 06 (31 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 06; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: MLSysBook Vol 2 — Collective Communication and Distributed Training
+    source_id: source-mlsysbook-vol2
+    locator: Matching chapters
+  - kind: read
+    label: Ultra-Scale — ZeRO and communication
+    source_id: source-ultrascale-playbook
+    locator: Matching sections
+  - kind: read
+    label: DMMLS — parameter servers
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after acquisition
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l06-evidence
+  title: Mid-tier evidence — reference and drills
+  status: pending
+  objective: Produce the architecture reference and answer synchronization questions closed-book.
+  done_when:
+  - Reference includes data/model parallel PS BSP ASP SSP and federated learning
+  - Official sample Task 1 pages 37–38 is answered before checking
+  - One CMU distributed-training exercise is completed
+  estimate_minutes: 110
+  exam_critical: true
+  concepts:
+  - concept-parameter-servers
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Official AMLS sample — Task 1 Parameter Servers
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 37–38
+  - kind: practise
+    label: CMU 10-414 — distributed/parallel training exercise
+    source_id: source-cmu-10414
+    locator: Smallest matching exercise
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l06/stages/stage-amls-l06-evidence/notes.md
+  attachments: []
+  source_feedback: []
