@@ -134,3 +134,24 @@ Direct creation of NEW files in `work/inbox/` by an interface is equivalent
 to `los.py capture` and equally blessed: the inbox is the designated
 judgment-free write surface (ARCHITECTURE §3.3.5); routing stays with the
 operator. Everything else remains CLI-or-nothing.
+
+## Addendum (2026-08-03, third) — custody settled, v0.3 shipped
+
+**Custody.** `LearningOS/obsidian-ui/` is a **local-only git repository: no
+GitHub remote, not folded into this repo, and outside `semestercontext`**
+(whose `.gitignore` covers all of `LearningOS/`). Aram's decision. The
+separation this ADR establishes is a *code* boundary, not a hosting one — it
+survives without a second GitHub repo, and the interface layer is
+reconstructible from the core plus a plugin folder, so it does not need
+independent backup. Revisit only if the interface acquires collaborators.
+
+**Why v0.3.** v0.2's dashboard was never seen: it auto-opened only when no
+file was restored, and Obsidian always restores one, so the vault presented as
+a folder of markdown — the exact failure mode the 2026-07-16 review warned
+about ("an interface nobody uses is a dead second interface"). v0.3 makes the
+dashboard the guaranteed, pinned home view, collapses the sidebars at launch,
+and adds a Node test suite that `install.py` runs before writing anything.
+Every app behaviour is a toggle in plugin settings. No boundary change: reads
+still come from `los.py status --json`, `generated/`, and vault metadata; the
+only write is still `work/inbox/`; the test suite now asserts that against the
+plugin source.
