@@ -1,17 +1,38 @@
 ---
 id: workspace-amls-exam-prep
 type: workspace
-title: "AMLS written exam prep — S.X track (last August sitting)"
-created: "2026-07-17"
+title: AMLS written exam prep — S.X track (last August sitting)
+created: '2026-07-17'
 status: active
 standing: false
-concepts: [concept-ml-systems, concept-program-rewrites, concept-operator-fusion,
-  concept-data-parallelism, concept-parameter-servers, concept-llm-systems,
-  concept-hardware-accelerators, concept-data-access-optimization,
-  concept-ml-lifecycle, concept-ml-fairness-explainability, concept-model-serving]
-notes: [note-amls-source-crosswalk]
-sources: [source-amls-ss26-lectures, source-dmmls-boehm, source-mlsysbook-vol1,
-  source-mlsysbook-vol2, source-ultrascale-playbook, source-mit-6172, source-cmu-10414]
+concepts:
+- concept-ml-systems
+- concept-program-rewrites
+- concept-operator-fusion
+- concept-data-parallelism
+- concept-parameter-servers
+- concept-llm-systems
+- concept-hardware-accelerators
+- concept-data-access-optimization
+- concept-ml-lifecycle
+- concept-ml-fairness-explainability
+- concept-model-serving
+notes:
+- note-amls-source-crosswalk
+sources:
+- source-amls-ss26-lectures
+- source-dmmls-boehm
+- source-mlsysbook-vol1
+- source-mlsysbook-vol2
+- source-ultrascale-playbook
+- source-mit-6172
+- source-cmu-10414
+program_ids:
+- program-bachelors
+module_ids:
+- module-hu-amls
+unit_ids:
+- unit-amls-theory
 ---
 
 # AMLS exam prep — S.X

@@ -1,15 +1,32 @@
 ---
 id: workspace-algo2-exam-prep
 type: workspace
-title: "Algo 2 oral exam prep — AL track (October window)"
-created: "2026-07-17"
+title: Algo 2 oral exam prep — AL track (October window)
+created: '2026-07-17'
 status: blocked
 standing: false
-concepts: [concept-fast-multiplication, concept-amortized-analysis, concept-b-trees,
-  concept-fibonacci-heaps, concept-splay-trees, concept-cuckoo-hashing,
-  concept-shortest-paths, concept-max-flow, concept-bipartite-matching,
-  concept-computational-geometry, concept-fft]
-sources: [source-clrs, source-dms-grundwerkzeuge, source-ottmann-widmayer]
+concepts:
+- concept-fast-multiplication
+- concept-amortized-analysis
+- concept-b-trees
+- concept-fibonacci-heaps
+- concept-splay-trees
+- concept-cuckoo-hashing
+- concept-shortest-paths
+- concept-max-flow
+- concept-bipartite-matching
+- concept-computational-geometry
+- concept-fft
+sources:
+- source-clrs
+- source-dms-grundwerkzeuge
+- source-ottmann-widmayer
+program_ids:
+- program-bachelors
+module_ids:
+- module-hu-algo2
+unit_ids:
+- unit-algo2-exam-prep
 ---
 
 # Algo 2 exam prep — AL

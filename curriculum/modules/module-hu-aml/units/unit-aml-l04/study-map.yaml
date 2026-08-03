@@ -1,0 +1,207 @@
+id: study-map-aml-l04
+type: study-map
+unit_id: unit-aml-l04
+status: ready
+current_stage: stage-01-multivariate-regression-the-normal-equation
+source_plan:
+  path: work/active/workspace-aml-exam-prep/inputs/AML_L04_Mini_Plan.md
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-multivariate-regression-the-normal-equation
+  title: Multivariate regression & the normal equation
+  status: pending
+  objective: 'Many features at once: `h_𝐰(x) = w₁x₁ + … + wₙxₙ + w₀ = 𝐰·𝐱` (a hyper-plane); the **closed-form**
+    solution `𝐰 = (XᵀX)⁻¹Xᵀ𝐲`, when `XᵀX` is singular, and `pinv`.'
+  done_when:
+  - Explain and apply Multivariate regression & the normal equation without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **Andrew Ng — "Linear Regression with multiple variables"** (Lecture 02-01 — *the video you
+      linked*, [watch](https://www.youtube.com/watch?v=ViTUqw8kXPQ&list=PLiPvV5TNogxIS4bHQVW4pMkj4CHA8COdX&index=4))
+      → then **"Normal Equation"** and **"Normal Equation Noninvertibility"** (same 02-xx section). These
+      are the *core* L04 videos — the one you found is the right starting point.
+  - kind: reference
+    label: 🔗 **Eli Bendersky — "Derivation of the Normal Equation"** ⭐ — [link](https://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression/)
+      — derives `𝐰 = (XᵀX)⁻¹Xᵀ𝐲` in *exactly* Ng's notation; fills the proof AML leaves out.
+  - kind: read
+    label: '📖 **ISLP §3.2 "Multiple Linear Regression"** — readable now (you did Ch 3 for L03). Local:
+      `…/Bücher/Introduction to Statistical Learning .pdf`. · **Toronto CSC411 Ch 2** (concise).'
+    source_id: source-islp
+  - kind: read
+    label: 📝 Reference §1–§5 (multivariate, gradient, normal equation, singular `XᵀX`, NE vs GD).
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-01-multivariate-regression-the-normal-equation/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 90
+- id: stage-02-non-linear-polynomial-regression
+  title: Non-linear / polynomial regression
+  status: pending
+  objective: 'Going non-linear by **adding computed/polynomial features** (x → x, x², x³, …) to a linear
+    model — **a curve in x is a straight line in feature space, so it''s still ordinary linear regression**
+    (same loss, same normal equation; you only widen `X`). *AML stops here: no splines, GAMs, or local
+    regression.*'
+  done_when:
+  - Explain and apply Non-linear / polynomial regression without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **Andrew Ng — "Features and Polynomial Regression"** ⭐ (a course we *already have* — [Coursera
+      ML playlist](https://www.youtube.com/playlist?list=PLiPvV5TNogxIS4bHQVW4pMkj4CHA8COdX), Week 2)
+      — the canonical, gentle "just add x² as a feature" walkthrough; the most on-point video for this
+      topic.
+  - kind: read
+    label: 📖 **MIT 6.036 (AML spine) — the *Features* unit** (Lecture 3) covers feature transformations
+      incl. **polynomial features** and the overfitting they cause, with auto-graded exercises — [course](https://openlearninglibrary.mit.edu/courses/course-v1:MITx+6.036+1T2019/course/).
+  - kind: reference
+    label: '🔗 **scikit-learn — "Underfitting vs. Overfitting"** ⭐ — [interactive demo](https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html)
+      — **the single best *visual* for polynomial regression**: degree 1 (underfit) → 4 (just right) →
+      15 (wild overfit), with runnable code. *(Reused in Step 3.)*'
+  - kind: read
+    label: 📖 **ISLP §7.1 Polynomial Regression (p.290) — *this section only.*** Light extension of Ch
+      3. **Skip §7.3 Basis Functions / §7.4 Splines (beyond L04).**
+    source_id: source-islp
+  - kind: read
+    label: '📖 **Toronto CSC411 §3 "Nonlinear Regression"** — best-scoped book match. Local: `…/Bücher/Machine
+      Learning and Data Mining…CSC 411…pdf`.'
+  - kind: read
+    label: 📕 *Skip for now:* **ESL Ch 5** is graduate-level (splines/wavelets) — well beyond L04.
+  - kind: read
+    label: 📝 Reference §6–§8.
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-02-non-linear-polynomial-regression/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 60
+- id: stage-03-overfitting-biasvariance
+  title: Overfitting & bias–variance
+  status: pending
+  objective: '*(Comes before regularization — regularization is the **fix** for the overfitting you see
+    here.)* More features always lower *train* error; the *test* error is U-shaped in model flexibility
+    / polynomial degree.'
+  done_when:
+  - Explain and apply Overfitting & bias–variance without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: 🔗 **scikit-learn — "Underfitting vs. Overfitting"** ⭐ — [interactive example](https://scikit-learn.org/stable/auto_examples/model_selection/plot_underfitting_overfitting.html)
+      — polynomial degree 1 / 4 / 15 with train vs test curves and code. Directly previews the Übungsblatt
+      2 task.
+  - kind: read
+    label: 📖 **ISLP §2.2.2 "The Bias-Variance Trade-Off"** — you already read it for L02; re-skim through
+      the *polynomial-degree* lens.
+    source_id: source-islp
+  - kind: reference
+    label: 🔗 **Pedro Domingos — "A Few Useful Things to Know About Machine Learning"** ⭐ — [pdf](https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf)
+      — its "overfitting has many faces" and "more data beats a cleverer algorithm" sections are the perfect
+      L04 framing (if you read it for L02, just re-read those two parts).
+  - kind: read
+    label: 📝 Cross-link `lect02 KNN-classifier/AML_L02_Ultimate_Reference.md` §8 (incl. §8.1.1); Reference
+      §9–§10.
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-03-overfitting-biasvariance/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 45
+- id: stage-04-regularization-ridge-lasso
+  title: 'Regularization: Ridge & Lasso'
+  status: pending
+  objective: Penalizing weight size (L2 = Ridge `λΣwⱼ²`, L1 = Lasso `λΣ|wⱼ|`) to control overfitting;
+    the λ knob; never penalize `w₀`. **The intuition:** a wiggly overfit curve needs *big* weights to
+    make sharp turns; penalizing weight size forces a *smoother* curve. Ridge shrinks all weights; Lasso
+    zeros some out. *(Reference §11–§14 has the through-line + both the geometric and the gradient "why
+    L1 zeros weights".)*
+  done_when:
+  - 'Explain and apply Regularization: Ridge & Lasso without relying on the study map.'
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: '🎥 **StatQuest — the regularization trilogy** ⭐⭐ (watch in order — this is the intuition the
+      slides skip):'
+    source_id: source-statquest
+  - kind: reference
+    label: '[*Regularization Part 1: Ridge (L2)*](https://www.youtube.com/watch?v=Q81RR3yKn30) — shrink
+      the slope to **desensitize** the fit.'
+  - kind: reference
+    label: '[*Regularization Part 2: Lasso (L1)*](https://www.youtube.com/watch?v=NGf0voTMlcs) — same
+      idea, but it can drive a weight **to exactly 0**.'
+  - kind: read
+    label: '[*Ridge vs Lasso, Visualized!!!*](https://www.youtube.com/watch?v=Xm2C_gTAl8c) — animates
+      the **diamond-vs-circle** (Reference §14).'
+  - kind: watch
+    label: '🎥 **Andrew Ng — Coursera ML, the full regularization set** ⭐ (a course we *already have*,
+      and the most on-point): **"The Problem of Overfitting" → "Cost Function" (the regularized cost)
+      → "Regularized Linear Regression" → "Regularized Logistic Regression"** — Week 3 of the [playlist](https://www.youtube.com/playlist?list=PLiPvV5TNogxIS4bHQVW4pMkj4CHA8COdX).
+      The gentlest, exactly AML''s level.'
+  - kind: watch
+    label: 🎥 **Stanford CS229 2022 (AML spine) — Lecture 10 "Bias-Variance & Regularization"** ([playlist](https://www.youtube.com/playlist?list=PLoROMvodv4rNyWOpJg_Yh4NSqI4Z4vOYy))
+      — the rigorous version; frames **Ridge = MAP**. Heavier than Ng.
+    source_id: source-cs229-notes
+  - kind: read
+    label: 📖 **MIT 6.036 (AML spine) — the *Regression* chapter** derives **ridge regression** (`J_ridge
+      = MSE + λ‖θ‖²`) with auto-graded exercises — [course](https://openlearninglibrary.mit.edu/courses/course-v1:MITx+6.036+1T2019/course/)
+      · [notes](https://introml.mit.edu/notes/regression.html).
+  - kind: read
+    label: 🔗 **Brandon Rohrer Ch 18 — Regularization** ⭐ — [link](https://brandonrohrer.com/regularization.html)
+      (the index tags this *to L04*).
+  - kind: read
+    label: 🔗 **scikit-learn user guide §1.1.2 Ridge / §1.1.3 Lasso** — [Linear Models](https://scikit-learn.org/stable/modules/linear_model.html)
+      — authoritative, free, the math + the `+λI` closed form.
+  - kind: read
+    label: 📖 **ISLP §6.2.1 Ridge + §6.2.2 Lasso (p.240)** — matches AML exactly. *(Skip §6.1 subset selection.)*
+      · **Toronto CSC411 §3.2** (p.11).
+    source_id: source-islp
+  - kind: watch
+    label: '📖 **CS229 Lecture Notes §9.1 "Regularization"** ⭐ — `…/Bücher/CS229 Lecture Notes.pdf` (p.125)
+      — **the cleanest L04 treatment**: the regularized loss `Jλ = J + λR(θ)`, **L2 = weight decay** (with
+      the `θ ← (1−λη)θ − η∇J` gradient derivation — *why* the weights shrink), and **L1 = ‖θ‖₁ = Lasso/sparsity**.
+      Companion to your video spine. *(Feature-maps view of polynomial features: §5.1–5.2.)*'
+    source_id: source-cs229-notes
+  - kind: read
+    label: 📕 *Optional depth:* **ESL §3.4 Shrinkage** (rigorous) · **Murphy PML1** ridge (in Ch 11, dense).
+    source_id: source-murphy-pml1
+  - kind: read
+    label: 📝 Reference §11–§15 (Ridge, Lasso, L1/L2 geometry, Lₚ norms).
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-04-regularization-ridge-lasso/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 90
+- id: stage-05-practice-self-test
+  title: Practice & self-test
+  status: pending
+  objective: Work through Practice & self-test within this unit's scope.
+  done_when:
+  - Explain and apply Practice & self-test without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: '**Bonusblatt 2** (`…/Bonus-exercises/zusatz-blatt02.pdf`) — regression + decision-boundary/classification
+      (Aufgabe 3). ✓ **solution key**: `../lect03 linear regression/AML_BonusSheet02_Solution.md`.'
+  - kind: read
+    label: '**ISLP exercises** — **Ch 3** (multiple regression) + **§7.1** (polynomial) + **Ch 6** (Ridge/Lasso);
+      solutions on [botlnec Ch 3](https://botlnec.github.io/islp/sols/chapter3/exercise1/) / [Ch 6](https://botlnec.github.io/islp/sols/chapter6/exercise1/)
+      / [Ch 7](https://botlnec.github.io/islp/sols/chapter7/exercise1/). *(For Ch 7 do the polynomial
+      problems only.)*'
+    source_id: source-islp
+  - kind: reference
+    label: '**Caltech LFD HW4 + HW6** (overfitting, regularization, validation) ⭐ — [HW4](https://work.caltech.edu/homework/hw4.pdf)/[sol](https://work.caltech.edu/homework/hw4_sol.pdf),
+      [HW6](https://work.caltech.edu/homework/hw6.pdf)/[sol](https://work.caltech.edu/homework/hw6_sol.pdf).'
+  - kind: read
+    label: '**Géron *Hands-On ML* Ch 4** exercises (local) — polynomial + Ridge/Lasso, **solutions in
+      Appendix A**.'
+  - kind: reference
+    label: '**MIT 6.036 (OLL)** regularization unit — auto-graded; **Ng Coursera ex1** (multivariate/normal-equation)
+      + **ex2/ex3** (regularization).'
+  - kind: reference
+    label: ✓ **CS4780 HW (local)** — `…/CS4780-homeworks/2018Spring/HW6/` **Problem 1 (GD) + Problem 2
+      (Linear Regression) + Problem 3 (Weighted Ridge)** and `2018Fall/HW6/` **Problem 1 (l2/ridge)**,
+      with full solutions. ⭐
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-05-practice-self-test/notes.md
+  attachments: []
+  source_feedback: []

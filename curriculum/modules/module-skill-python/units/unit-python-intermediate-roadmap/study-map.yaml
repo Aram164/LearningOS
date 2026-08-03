@@ -1,0 +1,25 @@
+id: study-map-python-intermediate-roadmap
+type: study-map
+unit_id: unit-python-intermediate-roadmap
+status: ready
+current_stage: stage-01-python-intermediate-roadmap
+source_plan:
+  path: note://note-python-intermediate-roadmap
+  provenance: durable-note
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-python-intermediate-roadmap
+  title: Python intermediate roadmap
+  status: pending
+  objective: Use the preserved Python intermediate roadmap artifact as the scope and work record.
+  done_when:
+  - Record concrete work or evidence without inferring mastery from the artifact.
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: 'Durable artifact note-python-intermediate-roadmap: Python intermediate roadmap'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-intermediate-roadmap/stages/stage-01-python-intermediate-roadmap/notes.md
+  attachments: []
+  source_feedback: []

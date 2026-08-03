@@ -1,0 +1,34 @@
+type: module-source-map
+module_id: module-hu-aml
+sources:
+- source_id: source-aml-ss26-lectures
+  role: course-material
+  why: Slides define lecture scope.
+  priority: 0
+  unit_routes:
+  - unit-aml-l02
+  - unit-aml-l03
+  - unit-aml-l04
+  - unit-aml-l05
+  - unit-aml-l06
+  - unit-aml-l07
+- source_id: source-islp
+  role: spine
+  why: Primary statistical-learning reading spine.
+  priority: 1
+  unit_routes:
+  - unit-aml-l02
+  - unit-aml-l03
+  - unit-aml-l04
+- source_id: source-cs229-notes
+  role: derivation
+  why: Derivations and probabilistic justification.
+  priority: 2
+  unit_routes:
+  - unit-aml-l03
+  - unit-aml-l05
+- source_id: source-statquest
+  role: intuition
+  why: Short intuitive refreshers.
+  priority: 3
+  unit_routes: []

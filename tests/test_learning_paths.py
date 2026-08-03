@@ -66,7 +66,7 @@ def test_path_loads_validates_and_projects_stage_notes(mini_repo):
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     path_rec = next(r for r in manifest["records"] if r["id"] == "path-demo-probability")
     assert path_rec["stages"][0]["notes_text"] == "My uncertain derivation.\n"
-    assert manifest["_generated"]["contract_version"] == 1
+    assert manifest["_generated"]["contract_version"] == 2
     assert manifest["_generated"]["snapshot_id"].startswith("sha256:")
     assert "concept_to_notes" in manifest["backlinks"]
 
@@ -119,6 +119,7 @@ def test_machine_bootstrap_discovers_contract_and_path(mini_repo):
     proc = run_los(mini_repo, "bootstrap")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
-    assert payload["capabilities"]["contract_version"] == 1
+    assert payload["capabilities"]["contract_version"] == 2
     assert payload["capabilities"]["rules"]["shelving_requires_explicit_approval"]
-    assert payload["active_learning_paths"][0]["id"] == "path-demo-probability"
+    assert payload["active_study_maps"] == []
+    assert payload["resume_pointer"] == {}

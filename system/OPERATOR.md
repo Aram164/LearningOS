@@ -1,70 +1,102 @@
-# LearningOS Operator Contract v1
+# LearningOS Operator Contract v2
 
-This is the vendor-neutral entry point for every AI operator (Codex, Claude,
-local agents, and future Obsidian integrations). Platform-specific instruction
-files may add mechanics, but they may not weaken this contract.
+This is the vendor-neutral entry point for every AI operator, local agent, and
+interface. Platform-specific instructions may add mechanics but may not weaken
+this contract.
 
 ## Start here
 
-Run these commands instead of discovering the repository by recursively
-reading it:
+Do not recursively discover the repository. Begin with:
 
 ```bash
 python tools/los.py capabilities --json
 python tools/los.py bootstrap
 ```
 
-The stable read contract is `generated/manifest.json`, currently
-`contract_version: 1`. Interfaces and agents read that single atomic snapshot;
-they do not parse canonical Markdown/YAML to reconstruct application state.
-Use `search`, `inspect`, and `related` through `tools/los.py` for targeted reads.
+The stable read contract is the single atomic `generated/manifest.json`,
+`contract_version: 2`. It contains programs, semesters, partitioned modules,
+components, units, study maps, stages, source maps, joins, progress, resume
+pointer, and boundary-only quarantine records. Interfaces must not reconstruct
+application state by parsing canonical Markdown or YAML. Use `list-*`,
+`inspect`, `search`, and `related` for targeted reads.
+
+## Product hierarchy
+
+```text
+program / area
+└── module
+    ├── optional stable components
+    ├── module source map
+    └── units
+        ├── durable artifact references
+        └── one current study map
+            └── ordered stages
+```
+
+Many modules, units, and study maps may be active. The global resume pointer is
+only a shortcut to the last active stage; it never replaces or hides the tree.
+Skills and projects use modules and units without false academic metadata.
 
 ## Hard boundaries
 
-1. Never edit `generated/`; change authored input and run `los generate`.
+1. Never edit `generated/`; change authored input, validate, and regenerate.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
-3. `Job/` is quarantined. Do not read, scan, index, cite, or route it unless the
-   user explicitly authorizes that task. Job never appears in the core manifest.
-4. Exam facts belong only in `records/modules.yaml`; coordination facts belong
+3. `Job/` is outside LearningOS. Never read, scan, index, cite, or route it
+   without an explicit Job task; it never appears in the manifest.
+4. Master's Planning is Git-tracked under `curriculum/quarantine/`, excluded
+   from normal loading and search, and represented only by a boundary record.
+5. Academic administrative facts live only in the owning partitioned
+   `curriculum/modules/<module-id>/module.yaml`; coordination decisions live
    only in `work/COORDINATION.md`.
-5. Learning paths are temporary operational state owned by a workspace. They do
-   not become durable knowledge merely because a stage is complete.
-6. Shelving is approval-gated: propose destinations, metadata, links, and diffs;
-   do not change canonical notes until the learner approves the proposal.
-7. Never declare mastery. Report the evidence trail or its absence.
-8. Validate after authored changes. Stop on errors; surface warnings.
+6. Units own study maps and stage work. Workspaces coordinate efforts through
+   explicit `program_ids`, `module_ids`, and `unit_ids`; they do not own the
+   curriculum hierarchy.
+7. Durable notes remain globally canonical under `knowledge/`; units reference
+   Ultimate References, Exercise Banks, Mock Exams, and other artifacts by ID.
+8. Source identity/evaluation, module role, unit selection, and stage action are
+   distinct ownership layers. Stage feedback is use evidence, not an automatic
+   rewrite of a global source evaluation.
+9. Shelving is approval-gated. Apply only explicitly selected proposal items.
+10. Never declare mastery. Report evidence or its absence.
+11. General AI conversation is read-only. Writes use an action-specific gateway
+    capability and must remain inside its module/unit/stage scope.
+12. Every app mutation carries the current manifest snapshot. On conflict,
+    reload rather than overwrite.
+13. Validate after authored changes. Acceptance requires 0 errors and 0 warnings.
 
-## Learning-path workflow
+## Unit workflow
 
-One subtopic is represented by `work/active/<workspace>/paths/path-*.yaml`.
-Work in the ordered stages while allowing a stage to be skipped or revisited.
-The current stage owns its working note in the same workspace. Use the gateway:
+Choose a module and unit. The unit has at most one current study map. Work in
+ordered stages while preserving independent state for every other unit.
 
 ```bash
-python tools/los.py path-note PATH_ID STAGE_ID --replace --text "..."
-python tools/los.py path-progress PATH_ID STAGE_ID complete
+python tools/los.py stage-note UNIT_ID STAGE_ID --replace --text "..." --expected-snapshot SNAPSHOT
+python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot SNAPSHOT
+python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
+python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
 ```
 
-Pass `--expected-snapshot` from the manifest when operating through an app. A
-conflict means another authored change occurred; reload instead of overwriting.
+A stage owns its working note, attachments, exact resources, source-use
+feedback, and optional detour relationship. A detour records its originating
+stage and return stage; there is no canonical session entity.
 
-When asked to "shelve" a path:
+## Shelving and session closure
 
-1. inspect the path and every stage note;
-2. preserve the learner's original wording, uncertainty, and corrections;
-3. propose zero or more durable notes and/or Garden items, with destinations,
-   roles, concepts, sources, attachments, and any concept relations;
-4. show a reviewable diff and keep ambiguous material in workspace scratch;
-5. wait for explicit approval;
-6. apply only approved changes, validate, regenerate, and then archive the path.
+Shelving reads selected stage notes and attachments, preserves uncertainty and
+wrong turns, proposes durable notes/Garden items and diffs, and waits for
+explicit selected-item approval. After application, validate and regenerate.
+
+End a learning session deliberately with `los session-end`. First run it with
+no commit message to review session-owned and unrelated changes. Only the
+ephemeral session ledger may be staged. The protected Canvas files are always
+excluded. Commit and optional push occur only after explicit confirmation.
 
 ## Capture routing
 
-Stage-specific learning belongs in its stage note. An unrelated quick capture
-goes to `work/inbox/`. A deliberately half-formed idea that should gestate goes
-to `knowledge/garden/`. The operator, not the user, handles later filing.
+Stage-specific learning belongs in its stage note. Unrelated quick capture goes
+to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
+`knowledge/garden/`. The operator, not the learner, handles filing.
 
-For deeper architectural and semantic rules, continue with
-`system/PHILOSOPHY.md`, `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the
-platform adapter `system/CLAUDE.md` where applicable.
+Continue with `system/PHILOSOPHY.md`, `system/ARCHITECTURE.md`,
+`system/WORKFLOWS.md`, and the platform adapter when applicable.

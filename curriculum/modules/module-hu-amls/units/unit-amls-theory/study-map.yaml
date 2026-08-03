@@ -1,0 +1,23 @@
+id: study-map-amls-theory
+type: study-map
+unit_id: unit-amls-theory
+status: ready
+current_stage: stage-01-amls-theory
+source_plan:
+  path: work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-amls-theory
+  title: Work through the existing plan
+  status: pending
+  objective: Use the preserved source plan as the unit's scoped study script.
+  done_when:
+  - Record the resulting work and evidence in this stage.
+  scope_triage: required-now
+  resources: []
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-01-amls-theory/notes.md
+  attachments: []
+  source_feedback: []

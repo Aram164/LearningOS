@@ -1,0 +1,18 @@
+type: module-source-map
+module_id: module-skill-python
+sources:
+- source_id: source-python-depth-drills
+  role: spine
+  why: Authored staged depth ladder.
+  priority: 0
+  unit_routes: []
+- source_id: source-fluent-python
+  role: optional-depth
+  why: Language-model depth and idioms.
+  priority: 2
+  unit_routes: []
+- source_id: source-python-docs-classes-mro
+  role: reference
+  why: Official class and MRO reference.
+  priority: 1
+  unit_routes: []

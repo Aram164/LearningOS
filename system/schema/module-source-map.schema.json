@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/module-source-map.schema.json",
+  "title": "Module-specific source map",
+  "type": "object",
+  "required": ["type", "module_id", "sources"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "module-source-map" },
+    "module_id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "role", "why", "priority"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "role": { "enum": ["course-material", "spine", "first-exposure", "intuition", "derivation", "implementation", "practice", "exam-preparation", "optional-depth", "reference", "candidate"] },
+          "why": { "type": "string", "minLength": 1 },
+          "when": { "type": "string" },
+          "priority": { "type": "integer", "minimum": 0 },
+          "unit_routes": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

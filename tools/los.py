@@ -27,6 +27,7 @@ explicitly the operator's job. Exit codes: 0 ok · 1 validation errors ·
 from __future__ import annotations
 
 import argparse
+import copy
 import contextlib
 import datetime as _dt
 import fcntl
@@ -53,7 +54,7 @@ from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import validate  # noqa: E402
 
 TOOLS = Path(__file__).resolve().parent
-CONTRACT_VERSION = 1
+CONTRACT_VERSION = 2
 
 
 def _root(args) -> Path:
@@ -133,6 +134,7 @@ def cmd_status(args) -> int:
             "concepts": len(repo.concepts),
             "concept_relations": len(repo.relations),
             "sources": len(repo.sources),
+            "programs": len(repo.programs),
             "modules": len(repo.modules),
             "modules_enrolled": sum(
                 1 for m in repo.modules.values() if m.get("status") == "enrolled"),
@@ -141,6 +143,8 @@ def cmd_status(args) -> int:
             "archived_workspaces": len(repo.archived_workspaces()),
             "inbox_items": n_inbox,
             "garden_notes": len(repo.garden_notes),
+            "units": len(repo.units),
+            "study_maps": len(repo.study_maps),
         },
         "adoption": {
             "notes_reviewed": ad["notes_reviewed"],
@@ -159,7 +163,9 @@ def cmd_status(args) -> int:
     print(f"Learning OS v3 · learning_os v{__version__} · {root}")
     print(f"  notes {c['notes']} · concepts {c['concepts']} · "
           f"relations {c['concept_relations']} · sources {c['sources']}")
-    print(f"  modules {c['modules']} ({c['modules_enrolled']} enrolled) · "
+    print(f"  programs {c['programs']} · modules {c['modules']} "
+          f"({c['modules_enrolled']} enrolled) · units {c['units']} · "
+          f"study maps {c['study_maps']} · "
           f"workspaces {c['active_workspaces']} active "
           f"({c['standing_workspaces']} standing), "
           f"{c['archived_workspaces']} archived")
@@ -186,9 +192,12 @@ def _capabilities(root: Path) -> dict:
         "projection": "generated/manifest.json",
         "operator_contract": "system/OPERATOR.md",
         "commands": {
-            "read": ["status", "capabilities", "bootstrap", "search", "inspect", "related"],
-            "safe_writes": ["capture", "path-note", "path-progress", "path-attach", "generate"],
-            "approval_gated": ["shelve"],
+            "read": ["status", "capabilities", "bootstrap", "search", "inspect", "related",
+                     "program-list", "module-list", "unit-list"],
+            "safe_writes": ["capture", "unit-map-import", "stage-note", "stage-progress",
+                            "stage-attach", "source-feedback", "detour-create",
+                            "detour-resolve", "shelving-prepare", "generate", "session-end"],
+            "approval_gated": ["shelving-apply"],
         },
         "rules": {
             "canonical_writes_require_operator": True,
@@ -222,13 +231,17 @@ def cmd_capabilities(args) -> int:
 def cmd_bootstrap(args) -> int:
     root = _root(args)
     manifest = _fresh_manifest(root)
-    paths = [r for r in manifest["records"]
-             if r.get("type") == "learning-path" and not r.get("archived")]
     payload = {
         "capabilities": _capabilities(root),
         "snapshot": manifest.get("_generated", {}),
-        "active_learning_paths": paths,
-        "next": "Inspect an active path, or ask the learner which subtopic to begin.",
+        "programs": manifest.get("programs", []),
+        "modules": manifest.get("modules", []),
+        "units": manifest.get("units", []),
+        "active_study_maps": [m for m in manifest.get("study_maps", [])
+                              if m.get("status") in {"active", "paused", "ready"}],
+        "resume_pointer": manifest.get("resume_pointer", {}),
+        "quarantine_boundaries": manifest.get("quarantine_boundaries", []),
+        "next": "Resume the pointer or choose any visible module and unit.",
     }
     print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
     return 0
@@ -266,13 +279,18 @@ def cmd_related(args) -> int:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
     ids = set()
-    for key in ("concepts", "sources", "contexts", "notes"):
+    for key in ("concepts", "sources", "contexts", "notes", "program_ids",
+                "module_ids", "unit_ids", "unit_order", "related_module_ids"):
         ids.update(rec.get(key, []) or [])
     if rec.get("workspace_id"):
         ids.add(rec["workspace_id"])
+    for key in ("area_id", "module_id", "unit_id", "current_study_map"):
+        if rec.get(key):
+            ids.add(rec[key])
     backlinks = manifest.get("backlinks", {})
     for table in ("concept_to_notes", "source_to_notes", "workspace_to_notes",
-                  "module_to_workspaces"):
+                  "module_to_workspaces", "unit_to_workspaces", "module_to_units",
+                  "source_to_units"):
         ids.update((backlinks.get(table) or {}).get(args.id, []) or [])
     for relation in manifest.get("relations", []):
         if relation.get("from") == args.id:
@@ -283,6 +301,38 @@ def cmd_related(args) -> int:
            for rid in sorted(ids) if rid in by_id]
     print(json.dumps(out, indent=2, sort_keys=True, ensure_ascii=False))
     return 0
+
+
+def _print_rows(rows: list[dict]) -> int:
+    print(json.dumps(rows, indent=2, sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+def cmd_program_list(args) -> int:
+    manifest = _fresh_manifest(_root(args))
+    return _print_rows(manifest.get("programs", []))
+
+
+def cmd_module_list(args) -> int:
+    manifest = _fresh_manifest(_root(args))
+    rows = manifest.get("modules", [])
+    if args.program_id:
+        rows = [row for row in rows if row.get("area_id") == args.program_id]
+    if args.status:
+        rows = [row for row in rows if row.get("status") == args.status]
+    return _print_rows(rows)
+
+
+def cmd_unit_list(args) -> int:
+    manifest = _fresh_manifest(_root(args))
+    rows = manifest.get("units", [])
+    if args.module_id:
+        rows = [row for row in rows if row.get("module_id") == args.module_id]
+    if args.component_id:
+        rows = [row for row in rows if row.get("component_id") == args.component_id]
+    if args.status:
+        rows = [row for row in rows if row.get("status") == args.status]
+    return _print_rows(rows)
 
 
 # ---------------------------------------------------- validate / generate
@@ -338,8 +388,521 @@ def cmd_capture(args) -> int:
             _atomic_text(target, body)
 
     print(f"captured -> {target.relative_to(root)}")
+    _record_touched(root, [target])
     print("routing is the operator's job (WORKFLOWS §21); the inbox trends "
           "toward empty")
+    return 0
+
+
+# --------------------------------------------------------- curriculum writes
+def _session_ledger(root: Path) -> Path:
+    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    return Path(tempfile.gettempdir()) / f"learningos-{token}-touched.json"
+
+
+def _record_touched(root: Path, paths) -> None:
+    ledger = _session_ledger(root)
+    current: set[str] = set()
+    if ledger.is_file():
+        try:
+            current.update(json.loads(ledger.read_text(encoding="utf-8")))
+        except (json.JSONDecodeError, OSError):
+            current.clear()
+    for path in paths:
+        p = Path(path)
+        try:
+            rel = p.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            continue
+        if rel not in {"Untitled.canvas", "Untitled 1.canvas", "Untitled 2.canvas"}:
+            current.add(rel)
+    _atomic_text(ledger, json.dumps(sorted(current), indent=2) + "\n")
+
+
+def _write_transaction(root: Path, writes: dict[Path, str], touched_extra=()) -> tuple[int, list]:
+    """Apply authored writes atomically enough to validate and roll back as a set."""
+    backups: dict[Path, str | None] = {
+        path: path.read_text(encoding="utf-8") if path.is_file() else None
+        for path in writes
+    }
+    for path, content in writes.items():
+        _atomic_text(path, content)
+    errors = [issue for issue in validate(load_repo(root), online=False)
+              if issue.severity == "E"]
+    if errors:
+        for path, old in backups.items():
+            if old is None:
+                path.unlink(missing_ok=True)
+            else:
+                _atomic_text(path, old)
+        return 1, errors
+    _publish(root)
+    _record_touched(root, [*writes, *touched_extra])
+    return 0, []
+
+
+def _unit_map_or_error(root: Path, unit_id: str):
+    repo = load_repo(root)
+    unit = repo.units.get(unit_id)
+    if unit is None:
+        print(f"los: unit not found: {unit_id}", file=sys.stderr)
+        return repo, None, None
+    map_id = unit.data.get("current_study_map")
+    study_map = repo.study_maps.get(map_id) if map_id else None
+    if study_map is None:
+        print(f"los: unit has no current study map: {unit_id}", file=sys.stderr)
+        return repo, unit, None
+    return repo, unit, study_map
+
+
+def _dump_yaml(data: dict) -> str:
+    return yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
+
+
+def _stage(data: dict, stage_id: str):
+    return next((row for row in data.get("stages", []) or []
+                 if isinstance(row, dict) and row.get("id") == stage_id), None)
+
+
+def cmd_unit_map_import(args) -> int:
+    root = _root(args)
+    source = Path(args.file).expanduser().resolve()
+    if not source.is_file():
+        print(f"los: no such map file: {source}", file=sys.stderr)
+        return 2
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo = load_repo(root)
+        unit = repo.units.get(args.unit_id)
+        if unit is None:
+            print(f"los: unit not found: {args.unit_id}", file=sys.stderr)
+            return 2
+        target = unit.path.parent / "study-map.yaml"
+        if target.exists() and not args.replace:
+            print("los: this unit already has a current study map; use --replace to make Git the prior-version archive",
+                  file=sys.stderr)
+            return 2
+        try:
+            data = yaml.safe_load(source.read_text(encoding="utf-8"))
+        except yaml.YAMLError as exc:
+            print(f"los: invalid study-map YAML: {exc}", file=sys.stderr)
+            return 2
+        if not isinstance(data, dict) or data.get("unit_id") != args.unit_id:
+            print("los: imported map must be a mapping with the requested unit_id", file=sys.stderr)
+            return 2
+        unit_data = dict(unit.data)
+        unit_data["current_study_map"] = data.get("id")
+        unit_data["status"] = "ready"
+        writes = {target: _dump_yaml(data), unit.path: _dump_yaml(unit_data)}
+        for stage in data.get("stages", []) or []:
+            note_ref = stage.get("working_note") if isinstance(stage, dict) else None
+            if note_ref:
+                note = root / str(note_ref)
+                if not note.exists():
+                    writes[note] = ""
+        code, errors = _write_transaction(root, writes)
+        if code:
+            print("los: study map import rejected by validation", file=sys.stderr)
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "study_map_id": data.get("id")}, ensure_ascii=False))
+    return 0
+
+
+def cmd_stage_note(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, _, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None:
+            return 2
+        stage = _stage(study_map.data, args.stage_id)
+        if stage is None:
+            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            return 2
+        target = root / str(stage.get("working_note", ""))
+        if not stage.get("working_note"):
+            print("los: stage has no working_note", file=sys.stderr)
+            return 2
+        value = args.text if args.text is not None else sys.stdin.read()
+        old = target.read_text(encoding="utf-8") if target.is_file() else ""
+        if args.replace:
+            updated = value.rstrip() + ("\n" if value.strip() else "")
+        else:
+            divider = "\n" if old and not old.endswith("\n\n") else ""
+            updated = old + divider + value.rstrip() + "\n"
+        code, errors = _write_transaction(root, {target: updated})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "stage_id": args.stage_id, "working_note": stage["working_note"]},
+                     ensure_ascii=False))
+    return 0
+
+
+def cmd_stage_progress(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, unit, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None or unit is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        unit_data = copy.deepcopy(unit.data)
+        stages = data.get("stages", []) or []
+        stage = _stage(data, args.stage_id)
+        if stage is None:
+            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            return 2
+        action = args.status
+        if action in {"active", "revisit"}:
+            for other in stages:
+                if other.get("status") in {"active", "paused"}:
+                    other["status"] = "pending"
+            stage["status"] = "active"
+            stage.pop("completed", None)
+            data["current_stage"] = stage["id"]
+            data["status"] = "active"
+            unit_data["status"] = "active"
+        elif action == "paused":
+            stage["status"] = "paused"
+            data["current_stage"] = stage["id"]
+            data["status"] = "paused"
+            unit_data["status"] = "paused"
+        else:
+            if stage.get("status") != "active":
+                print("los: complete/skip applies only to the active stage; activate it first",
+                      file=sys.stderr)
+                return 2
+            stage["status"] = "complete" if action == "complete" else "skipped"
+            if action == "complete":
+                stage["completed"] = _dt.date.today().isoformat()
+            following = next((row for row in stages[stages.index(stage) + 1:]
+                              if row.get("status") == "pending"), None)
+            if following:
+                following["status"] = "active"
+                data["current_stage"] = following["id"]
+                data["status"] = "active"
+                unit_data["status"] = "active"
+            else:
+                data["status"] = "ready-to-shelve"
+                data.setdefault("shelving", {})["state"] = "draft"
+                unit_data["status"] = "ready-to-shelve"
+        code, errors = _write_transaction(root, {
+            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id, "stage_id": args.stage_id,
+                      "status": action, "map_status": data["status"],
+                      "current_stage": data["current_stage"]}, ensure_ascii=False))
+    return 0
+
+
+def cmd_stage_attach(args) -> int:
+    root = _root(args)
+    source = Path(args.file).expanduser().resolve()
+    if not source.is_file():
+        print(f"los: no such file: {source}", file=sys.stderr)
+        return 2
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, _, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        stage = _stage(data, args.stage_id)
+        if stage is None:
+            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            return 2
+        note_path = root / stage["working_note"]
+        attachment_dir = note_path.parent / "attachments"
+        target = attachment_dir / source.name
+        if target.exists():
+            stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+            target = attachment_dir / f"{stamp}-{source.name}"
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        rel = target.relative_to(root).as_posix()
+        stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
+        code, errors = _write_transaction(root, {study_map.path: _dump_yaml(data)}, [target])
+        if code:
+            target.unlink(missing_ok=True)
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "stage_id": args.stage_id, "attachment": rel}, ensure_ascii=False))
+    return 0
+
+
+def cmd_source_feedback(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo, _, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None:
+            return 2
+        if args.source_id not in repo.sources:
+            print(f"los: source not found: {args.source_id}", file=sys.stderr)
+            return 2
+        data = copy.deepcopy(study_map.data)
+        stage = _stage(data, args.stage_id)
+        if stage is None:
+            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            return 2
+        entry = {"source_id": args.source_id, "feedback": args.feedback,
+                 "recorded": _dt.date.today().isoformat()}
+        if args.note:
+            entry["note"] = args.note
+        stage.setdefault("source_feedback", []).append(entry)
+        code, errors = _write_transaction(root, {study_map.path: _dump_yaml(data)})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "stage_id": args.stage_id, "feedback": entry}, ensure_ascii=False))
+    return 0
+
+
+def cmd_detour_create(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, unit, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None or unit is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        stage = _stage(data, args.stage_id)
+        if stage is None:
+            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            return 2
+        base = re.sub(r"[^a-z0-9]+", "-", args.title.lower()).strip("-") or "gap"
+        did = f"detour-{base}"
+        existing = {row.get("id") for row in data.get("detours", []) or []}
+        if did in existing:
+            suffix = 2
+            while f"{did}-{suffix}" in existing:
+                suffix += 1
+            did = f"{did}-{suffix}"
+        detour = {"id": did, "title": args.title, "spawned_by_stage": args.stage_id,
+                  "classification": args.classification, "status": "open",
+                  "return_to_stage": args.stage_id}
+        data.setdefault("detours", []).append(detour)
+        stage["detour_id"] = did
+        if args.classification == "required-now":
+            stage["status"] = "paused"
+            data["status"] = "paused"
+            unit_data = copy.deepcopy(unit.data)
+            unit_data["status"] = "paused"
+        else:
+            unit_data = unit.data
+        code, errors = _write_transaction(root, {
+            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "detour": detour}, ensure_ascii=False))
+    return 0
+
+
+def cmd_detour_resolve(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, unit, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None or unit is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        detour = next((row for row in data.get("detours", []) or []
+                       if row.get("id") == args.detour_id), None)
+        if detour is None:
+            print(f"los: detour not found: {args.detour_id}", file=sys.stderr)
+            return 2
+        detour["status"] = "resolved"
+        if args.resolution:
+            detour["resolution"] = args.resolution
+        target_stage = _stage(data, detour["return_to_stage"])
+        for other in data.get("stages", []) or []:
+            if other.get("status") in {"active", "paused"}:
+                other["status"] = "pending"
+        target_stage["status"] = "active"
+        data["current_stage"] = target_stage["id"]
+        data["status"] = "active"
+        unit_data = copy.deepcopy(unit.data)
+        unit_data["status"] = "active"
+        code, errors = _write_transaction(root, {
+            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "detour_id": args.detour_id,
+                      "return_to_stage": target_stage["id"]}, ensure_ascii=False))
+    return 0
+
+
+def cmd_shelving_prepare(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, _, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        items = []
+        if args.items_file:
+            raw = json.loads(Path(args.items_file).read_text(encoding="utf-8"))
+            items = raw.get("items", raw) if isinstance(raw, dict) else raw
+            if not isinstance(items, list):
+                print("los: shelving items file must contain a JSON list", file=sys.stderr)
+                return 2
+        proposal_path = study_map.path.parent / "shelving-proposal.md"
+        lines = ["# Shelving proposal review packet", "",
+                 "> Operational proposal only. No canonical change is applied until selected IDs are explicitly approved.", ""]
+        for stage in data.get("stages", []) or []:
+            lines.extend([f"## {stage.get('title', stage.get('id'))}", ""])
+            note = root / str(stage.get("working_note", ""))
+            lines.append(note.read_text(encoding="utf-8", errors="replace") if note.is_file()
+                         else "*(No stage note yet.)*")
+            lines.append("")
+            if stage.get("attachments"):
+                lines.append("Attachments: " + ", ".join(a["path"] for a in stage["attachments"]))
+                lines.append("")
+        shelving = data.setdefault("shelving", {})
+        shelving.update({"state": "proposed" if items else "draft",
+                          "proposal_path": proposal_path.relative_to(root).as_posix(),
+                          "summary": args.summary or "Review stage notes and attachments without rewriting learner wording."})
+        if items:
+            shelving["items"] = items
+        code, errors = _write_transaction(root, {
+            proposal_path: "\n".join(lines).rstrip() + "\n",
+            study_map.path: _dump_yaml(data)})
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "proposal_path": shelving["proposal_path"],
+                      "state": shelving["state"]}, ensure_ascii=False))
+    return 0
+
+
+def _approved_destination(root: Path, item: dict) -> Path | None:
+    rel = str(item.get("destination", ""))
+    target = (root / rel).resolve()
+    allowed = (root / "knowledge" / "notes").resolve(), (root / "knowledge" / "garden").resolve()
+    if not any(parent == target or parent in target.parents for parent in allowed):
+        return None
+    return target
+
+
+def cmd_shelving_apply(args) -> int:
+    if not args.approve:
+        print("los: shelving apply requires --approve and explicit selected proposal IDs",
+              file=sys.stderr)
+        return 2
+    root = _root(args)
+    selected = set(args.selected)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        _, _, study_map = _unit_map_or_error(root, args.unit_id)
+        if study_map is None:
+            return 2
+        data = copy.deepcopy(study_map.data)
+        shelving = data.get("shelving") or {}
+        items = [item for item in shelving.get("items", []) or []
+                 if item.get("id") in selected]
+        if not items or {item.get("id") for item in items} != selected:
+            print("los: every selected ID must exist in the current proposal", file=sys.stderr)
+            return 2
+        writes: dict[Path, str] = {}
+        for item in items:
+            target = _approved_destination(root, item)
+            if target is None or target.exists():
+                print(f"los: unsafe or existing shelving destination: {item.get('destination')}",
+                      file=sys.stderr)
+                return 2
+            content = item.get("content")
+            if not isinstance(content, str) or not content.strip():
+                print(f"los: proposal item {item.get('id')} has no reviewable content", file=sys.stderr)
+                return 2
+            writes[target] = content.rstrip() + "\n"
+        shelving["state"] = "applied"
+        writes[study_map.path] = _dump_yaml(data)
+        code, errors = _write_transaction(root, writes)
+        if code:
+            print("los: approved shelving changes failed validation and were rolled back",
+                  file=sys.stderr)
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "unit_id": args.unit_id,
+                      "applied": sorted(selected)}, ensure_ascii=False))
+    return 0
+
+
+def cmd_session_end(args) -> int:
+    root = _root(args)
+    ledger = _session_ledger(root)
+    touched = json.loads(ledger.read_text(encoding="utf-8")) if ledger.is_file() else []
+    touched = [path for path in touched
+               if path not in {"Untitled.canvas", "Untitled 1.canvas", "Untitled 2.canvas"}]
+    validation = subprocess.run([sys.executable, str(TOOLS / "validate.py")], cwd=root,
+                                capture_output=True, text=True)
+    if validation.returncode != 0 or "0 warning(s)" not in validation.stdout:
+        print(validation.stdout, end="")
+        print(validation.stderr, end="", file=sys.stderr)
+        return validation.returncode or 1
+    with _operator_lock(root):
+        _publish(root)
+    all_changed = subprocess.run(
+        ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
+        cwd=root, capture_output=True, text=True, timeout=30).stdout.splitlines()
+    owned = [line for line in all_changed if line[3:] in touched]
+    unrelated = [line for line in all_changed if line[3:] not in touched]
+    payload = {"ok": True, "touched": touched, "owned_changes": owned,
+               "unrelated_changes": unrelated, "committed": False, "pushed": False}
+    if not args.commit_message:
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
+        return 0
+    if not touched:
+        print("los: no files were touched through this learning session", file=sys.stderr)
+        return 2
+    subprocess.run(["git", "add", "--", *touched], cwd=root, check=True, timeout=30)
+    commit = subprocess.run(["git", "commit", "-m", args.commit_message], cwd=root,
+                            capture_output=True, text=True, timeout=180)
+    if commit.returncode != 0:
+        print(commit.stdout, end="")
+        print(commit.stderr, end="", file=sys.stderr)
+        return commit.returncode
+    payload["committed"] = True
+    if args.push:
+        pushed = subprocess.run(["git", "push"], cwd=root, capture_output=True,
+                                text=True, timeout=180)
+        if pushed.returncode != 0:
+            print(pushed.stdout, end="")
+            print(pushed.stderr, end="", file=sys.stderr)
+            return pushed.returncode
+        payload["pushed"] = True
+    ledger.unlink(missing_ok=True)
+    print(json.dumps(payload, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -519,6 +1082,20 @@ def main() -> int:
     p.add_argument("id")
     p.set_defaults(func=cmd_related)
 
+    p = sub.add_parser("program-list", help="list programs and boundary areas")
+    p.set_defaults(func=cmd_program_list)
+
+    p = sub.add_parser("module-list", help="list modules with optional program/status filters")
+    p.add_argument("--program-id", default=None)
+    p.add_argument("--status", default=None)
+    p.set_defaults(func=cmd_module_list)
+
+    p = sub.add_parser("unit-list", help="list units with optional module/component/status filters")
+    p.add_argument("--module-id", default=None)
+    p.add_argument("--component-id", default=None)
+    p.add_argument("--status", default=None)
+    p.set_defaults(func=cmd_unit_list)
+
     p = sub.add_parser("validate", help="delegate to tools/validate.py")
     p.add_argument("--online", action="store_true", help="also audit external URLs")
     p.set_defaults(func=cmd_validate)
@@ -532,6 +1109,83 @@ def main() -> int:
     p.add_argument("--file", default=None, help="copy this file into the inbox")
     p.add_argument("--title", default=None, help="optional title for text captures")
     p.set_defaults(func=cmd_capture)
+
+    p = sub.add_parser("unit-map-import",
+                       help="create/import the single current study map for a unit")
+    p.add_argument("unit_id")
+    p.add_argument("--file", required=True)
+    p.add_argument("--replace", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_unit_map_import)
+
+    p = sub.add_parser("stage-note", help="save or append a unit-stage working note")
+    p.add_argument("unit_id")
+    p.add_argument("stage_id")
+    p.add_argument("--text", default=None)
+    p.add_argument("--replace", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_stage_note)
+
+    p = sub.add_parser("stage-progress", help="activate, pause, complete, skip, or revisit a unit stage")
+    p.add_argument("unit_id")
+    p.add_argument("stage_id")
+    p.add_argument("status", choices=("active", "paused", "complete", "skipped", "revisit"))
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_stage_progress)
+
+    p = sub.add_parser("stage-attach", help="attach a file inside a unit stage")
+    p.add_argument("unit_id")
+    p.add_argument("stage_id")
+    p.add_argument("--file", required=True)
+    p.add_argument("--label", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_stage_attach)
+
+    p = sub.add_parser("source-feedback", help="record stage-local evidence about source usefulness")
+    p.add_argument("unit_id")
+    p.add_argument("stage_id")
+    p.add_argument("source_id")
+    p.add_argument("feedback", choices=("helpful", "too-advanced", "wrong-perspective",
+                                        "useful-for-derivation", "useful-for-review", "skipped"))
+    p.add_argument("--note", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_source_feedback)
+
+    p = sub.add_parser("detour-create", help="record a prerequisite detour with a return stage")
+    p.add_argument("unit_id")
+    p.add_argument("stage_id")
+    p.add_argument("--title", required=True)
+    p.add_argument("--classification", required=True,
+                   choices=("required-now", "helpful-now", "deferred", "reference-only"))
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_detour_create)
+
+    p = sub.add_parser("detour-resolve", help="resolve a detour and return to its originating stage")
+    p.add_argument("unit_id")
+    p.add_argument("detour_id")
+    p.add_argument("--resolution", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_detour_resolve)
+
+    p = sub.add_parser("shelving-prepare", help="prepare a review packet; never applies canonical changes")
+    p.add_argument("unit_id")
+    p.add_argument("--items-file", default=None,
+                   help="optional JSON proposal items produced with explicit unit context")
+    p.add_argument("--summary", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_shelving_prepare)
+
+    p = sub.add_parser("shelving-apply", help="apply only explicitly approved proposal IDs")
+    p.add_argument("unit_id")
+    p.add_argument("--selected", nargs="+", required=True)
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_shelving_apply)
+
+    p = sub.add_parser("session-end", help="validate, show exact session-owned files, optionally commit/push")
+    p.add_argument("--commit-message", default=None)
+    p.add_argument("--push", action="store_true")
+    p.set_defaults(func=cmd_session_end)
 
     p = sub.add_parser("path-note", help="save or append working notes for one path stage")
     p.add_argument("path_id")

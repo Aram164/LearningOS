@@ -1,0 +1,169 @@
+id: study-map-m2-sad-l02
+type: study-map
+unit_id: unit-m2-sad-l02
+status: ready
+current_stage: stage-01-statistics-types-core-vocabulary
+source_plan:
+  path: work/active/workspace-m2-exam-prep/inputs/SaD_L02_Mini_Plan.md
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-statistics-types-core-vocabulary
+  title: Statistics types + core vocabulary
+  status: pending
+  objective: Descriptive vs inferential vs exploratory; population/sample/instance/feature; why we sample.
+  done_when:
+  - Explain and apply Statistics types + core vocabulary without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **Kurzes Tutorium Statistik (Bärtl, DE)** — Grundbegriffe (Grundgesamtheit/Stichprobe/Merkmal).
+    source_id: source-kurzes-tutorium-statistik
+  - kind: read
+    label: 📖 **Fahrmeir Ch 2 §intro** *or* **OpenIntro Ch 1.2–1.3** (population/sample, sampling).
+  - kind: read
+    label: 📝 Reference §1–§2.
+  - kind: practise
+    label: ✍️ No drill — just fix the vocabulary; it underpins everything.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-01-statistics-types-core-vocabulary/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 30
+- id: stage-02-scale-types-skalenniveaus
+  title: Scale types (Skalenniveaus)
+  status: pending
+  objective: Nominal / ordinal / discrete / continuous; qualitative vs quantitative; discretization. **High
+    exam value — the "classify each feature" task.**
+  done_when:
+  - Explain and apply Scale types (Skalenniveaus) without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **KTS / jbstatistics — "Types of data / levels of measurement."**
+    source_id: source-jbstatistics
+  - kind: read
+    label: 📖 **Fahrmeir Ch 2** (Merkmalstypen) or OpenIntro Ch 1.2.
+  - kind: read
+    label: 📝 Reference §3.
+  - kind: practise
+    label: ✍️ Exercise Bank **E2–E3** (classify + which measures are legal).
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-02-scale-types-skalenniveaus/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 30
+- id: stage-03-frequencies-histograms-simpson-s-paradox
+  title: Frequencies, histograms, Simpson's paradox
+  status: pending
+  objective: Absolute/relative frequency; binning (equi-width vs equi-depth); why rates don't add.
+  done_when:
+  - Explain and apply Frequencies, histograms, Simpson's paradox without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **jbstatistics — frequency distributions / histograms**; any **Simpson's paradox** explainer
+      (Minute Physics).
+    source_id: source-jbstatistics
+  - kind: read
+    label: 📖 OpenIntro Ch 2.1 (distributions/histograms).
+    source_id: source-openintro-statistics
+  - kind: read
+    label: 📝 Reference §4–§5.
+  - kind: practise
+    label: ✍️ Exercise Bank **E7** (Simpson by hand).
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-03-frequencies-histograms-simpson-s-paradox/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 40
+- id: stage-04-location-mean-median-mode-quantiles-boxplots
+  title: 'Location: mean, median, mode, quantiles, boxplots'
+  status: pending
+  objective: Formal definitions + properties (robustness, ordinal/nominal legality); quartiles, IQR, boxplot,
+    violin.
+  done_when:
+  - 'Explain and apply Location: mean, median, mode, quantiles, boxplots without relying on the study
+    map.'
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 ⭐ **jbstatistics — mean/median/mode** + **"Boxplots, Clearly Explained" (StatQuest)**.
+  - kind: read
+    label: 📖 **Fahrmeir Ch 2** (Lagemaße, Quantile) or OpenIntro Ch 2.1.
+  - kind: read
+    label: 📝 Reference §6–§7.
+  - kind: practise
+    label: ✍️ Exercise Bank **E4** (quartiles/boxplot) + **E6** (robustness).
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-04-location-mean-median-mode-quantiles-boxplots/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 45
+- id: stage-05-dispersion-the-n-vs-n1-divisor
+  title: Dispersion + the n vs n−1 divisor
+  status: pending
+  objective: Range, MAD, variance, SD, variance coefficient; **the ÷(n−1) vs ÷n distinction** (Bessel)
+    — L02's slide inconsistency.
+  done_when:
+  - Explain and apply Dispersion + the n vs n−1 divisor without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 ⭐ **StatQuest — "Population vs Sample Variance"** (settles n vs n−1) + jbstatistics variance/SD.
+  - kind: read
+    label: 📖 **Fahrmeir Ch 2** (Streumaße); the *why n−1* is completed in **L09** — don't chase it now.
+    source_id: source-fahrmeir-statistik
+  - kind: read
+    label: 📝 Reference §8–§9.
+  - kind: practise
+    label: ✍️ Exercise Bank **E1** (full pass) + **E5** (both divisors).
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-05-dispersion-the-n-vs-n1-divisor/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 45
+- id: stage-06-mind-the-sample
+  title: Mind the sample
+  status: pending
+  objective: Sampling bias, stratified sampling, confounders; the mammal-size and St. Louis case studies;
+    "models."
+  done_when:
+  - Explain and apply Mind the sample without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 📝 Reference §10 (+ the two case studies).
+  - kind: watch
+    label: ✍️ Exercise Bank **E8** (spot the bias). No video needed.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-06-mind-the-sample/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 20
+- id: stage-07-practice-self-test-exercise-bank
+  title: Practice & self-test  (→ exercise bank)
+  status: pending
+  objective: '1. **UE1/UE2** → collect walked-through solutions in the Übung.
+
+    2. **E1–E8** → keys in the bank.
+
+    3. **FAU descriptive block** (median/quartiles/range/skewness) timed ~25 min → self-grade with the
+    Lösung.'
+  done_when:
+  - Explain and apply Practice & self-test  (→ exercise bank) without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: '**UE1/UE2** → collect walked-through solutions in the Übung.'
+  - kind: reference
+    label: '**E1–E8** → keys in the bank.'
+  - kind: reference
+    label: '**FAU descriptive block** (median/quartiles/range/skewness) timed ~25 min → self-grade with
+      the Lösung.'
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-07-practice-self-test-exercise-bank/notes.md
+  attachments: []
+  source_feedback: []

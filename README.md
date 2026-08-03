@@ -2,6 +2,12 @@
 
 Plain-file knowledge repository for deep technical learning. Fresh Git repository, scaffolded 2026-07-16 (Stage 1, Phase 2 of the migration).
 
+Operational learning is module-first: program/area → module → optional
+component → unit → one current study map → ordered stages. The physical
+tree is under `curriculum/`; workspaces coordinate units through explicit IDs,
+and durable knowledge remains under `knowledge/`. The manifest v2 resume
+pointer is a shortcut only—it never hides other modules or study maps.
+
 ## Quick start
 
 The **operator** is whoever drives this repository through its rules — normally
@@ -12,12 +18,12 @@ never edit it.
 
 1. **With Claude:** open this folder in a chat and say what you're working on.
    The operator reads `CLAUDE.md`, then `work/COORDINATION.md` +
-   `records/modules.yaml`, then your active workspace, plus the at-a-glance
+   the relevant `curriculum/modules/*/module.yaml`, then your active workspace, plus the at-a-glance
    block of `generated/domain-atlas.md` (the cross-domain map). That's the
    whole interface.
 2. **By hand:** the one-page home is `generated/reading-room.md` (run
    `make views` to refresh) — exams, workspaces, recent notes, queues, all
-   linked. Exam facts live in `records/modules.yaml`; the full "what should I
+   linked. Exam facts live in each owning academic module; the full "what should I
    do next?" dashboard is `generated/coordination-view.md`; your knowledge is
    under `knowledge/notes/`; capture anything into `work/inbox/` (or
    `python tools/los.py capture --text "…"`).
@@ -36,7 +42,7 @@ The rest of this file is the full manual; the four commands are under
 ## How to use it (the whole manual)
 
 **Start a session:** open this folder in a chat. The operator reads `CLAUDE.md`,
-then `work/COORDINATION.md` + `records/modules.yaml`, then your active
+then `work/COORDINATION.md` + the module-first `curriculum/` tree, then your active
 workspace — plus the at-a-glance block of `generated/domain-atlas.md`, so every
 session starts with the full cross-domain map in view. You just say what
 you're working on.
@@ -60,7 +66,7 @@ stop — that's the operator's job.
 rewrite, split, or merge).
 
 **A fact changes** ("I registered for X", "deferring Y"): say it once. Exam
-events land ONLY in `records/modules.yaml`, decisions in `COORDINATION.md` —
+events land ONLY in the owning academic `module.yaml`, decisions in `COORDINATION.md` —
 never in prose copies.
 
 **An effort ends:** its workspace is archived whole; the durable notes stay.
@@ -73,7 +79,8 @@ it's a disposable view; delete it freely.
 
 Everything is plain text; nothing requires any tool to read. The four questions:
 
-- **Exam dates, registrations, grades?** Open `records/modules.yaml` — it is
+- **Exam dates, registrations, grades?** Open the owning academic module under
+  `curriculum/modules/` — it is
   commented and readable raw. This file is the only truth for those facts.
 - **What should I do next?** Run `make views` (or `python tools/generate.py`),
   then open `generated/coordination-view.md` — exam spine, every workspace's

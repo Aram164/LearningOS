@@ -6,7 +6,7 @@ See system/BUILD-SPEC.md Steps 3-5; rules in system/VALIDATION.md.
 
 import sys as _sys
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def _check_deps() -> None:

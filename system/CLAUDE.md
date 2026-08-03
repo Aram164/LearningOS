@@ -4,20 +4,22 @@
 > adapter and deeper policy reference; it may add mechanics but never weaken
 > the shared operator contract.
 
-> ## ⛔ HARD RULES — the ten invariants
+> ## ⛔ HARD RULES — the twelve invariants
 >
 > If context is tight and you read nothing else in this repository, obey these:
 >
 > 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`python tools/generate.py`).
-> 2. **Exam, registration and grade facts live ONLY in `records/modules.yaml`.** Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
+> 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** `records/modules.yaml` is a frozen compatibility snapshot. Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
 > 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
-> 6. **Answer exam questions from `modules.yaml`; answer "what next" from a freshly rebuilt coordination view** — never from stored plans or prose copies.
+> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from manifest v2 plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **`Job/` is quarantined** (§13) — no reading, scanning, indexing or citing without Aram's explicit command; permission lasts one task.
 > 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints 0 errors, 0 warnings (a pre-commit hook enforces this on commits).
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
+> 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
+> 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
 
 ## 1. Purpose
 
@@ -37,7 +39,7 @@ At the beginning of repository work, read:
 3. `system/ARCHITECTURE.md`
 4. `system/schema/*.schema.json` + `system/VALIDATION.md`
 5. `system/WORKFLOWS.md`
-6. `work/COORDINATION.md` and `records/modules.yaml`
+6. `work/COORDINATION.md` and the relevant `curriculum/modules/*/module.yaml`
 7. the relevant active workspace, if one exists
 8. the **At a glance** block at the top of `generated/domain-atlas.md` (~15
    lines; rebuild if stale) — the cross-domain map of every domain's notes,
@@ -138,7 +140,9 @@ When asked for **exam artifacts** ("mock exams for AML"): filter notes by `role`
 
 When asked **"have I actually worked through this?"**: answer with the evidence attached to the relevant notes (derivations, exercises, implementations) — or its documented absence. Never declare mastery; show trails.
 
-When asked about **exams, registrations, or grades**: answer from `records/modules.yaml` — never from prose copies.
+When asked about **exams, registrations, or grades**: answer from the owning
+partitioned academic `module.yaml` — never from `records/modules.yaml` or prose
+copies.
 
 When a topic **explodes into prerequisites** (scope explosion): propose a triage — *required now / helpful now / defer / reference only* — sized to the workspace objective, record accepted deferrals in the workspace `Deferred` section, and recommend the smallest useful next source or prerequisite. Preserve the wider graph in concept relations without forcing it into the current scope.
 
@@ -162,7 +166,9 @@ When new durable knowledge appears:
 6. record only concept-to-concept semantics in the relation registry;
 7. rebuild generated artifacts.
 
-When a new operational fact appears (commitment, deferral, dependency, exam event): route it to its single owner (`COORDINATION.md` or `modules.yaml`), never into notes or the coordination view.
+When a new operational fact appears (commitment, deferral, dependency, exam
+event): route it to its single owner (`COORDINATION.md` or the owning
+partitioned academic module), never into notes or the coordination view.
 
 ---
 

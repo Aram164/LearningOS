@@ -1,0 +1,14 @@
+id: unit-thesis-landscape
+type: unit
+module_id: module-project-bachelor-thesis
+kind: milestone
+title: Research landscape & question framing
+order: 1
+scope: Landscape and planning milestone grounded in the active thesis workspace.
+status: active
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-thesis-mle-medical
+current_study_map: study-map-thesis-landscape

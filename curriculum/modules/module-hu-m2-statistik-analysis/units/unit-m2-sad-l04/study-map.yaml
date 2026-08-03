@@ -1,0 +1,196 @@
+id: study-map-m2-sad-l04-probability-bayes
+type: study-map
+unit_id: unit-m2-sad-l04
+status: active
+current_stage: stage-event-spaces
+source_plan:
+  path: work/active/workspace-m2-exam-prep/inputs/SaD_L04_Mini_Plan.md
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-event-spaces
+  title: Event spaces and events
+  status: active
+  objective: Distinguish experiments, outcomes, events, and set operations using the lecture's vocabulary.
+  estimate_minutes: 30
+  concepts:
+  - concept-probability
+  resources:
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsexperiment and Ereignisse
+    source_id: source-kurzes-tutorium-statistik
+  - kind: read
+    label: Blitzstein, Chapter 1 — sample spaces
+    source_id: source-blitzstein-hwang
+    locator: Chapter 1
+  - kind: reference
+    label: Existing SaD L04 synthesis
+    vault_path: knowledge/notes/mathematics/note-sad-l04-probability-bayes.md
+  done_when:
+  - Explain outcome versus event and use complement, union, and intersection correctly.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-event-spaces/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-probability-axioms
+  title: Probability and axioms
+  status: pending
+  objective: Connect relative frequency, Laplace experiments, and Kolmogorov's axioms without treating
+    formulas as isolated facts.
+  estimate_minutes: 40
+  concepts:
+  - concept-probability
+  resources:
+  - kind: watch
+    label: Kurzes Tutorium Statistik — probability basics
+    source_id: source-kurzes-tutorium-statistik
+  - kind: read
+    label: Blitzstein, Chapter 1 — axioms and inclusion–exclusion
+    source_id: source-blitzstein-hwang
+    locator: Chapter 1
+  - kind: practise
+    label: Exercise Bank B1–B2
+    source_id: source-sad-uebungen
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  done_when:
+  - Derive the complement and inclusion–exclusion rules from the axioms and solve B1–B2.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-probability-axioms/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-counting-complement
+  title: Counting and the complement
+  status: pending
+  objective: Use complement counting on the birthday paradox as the bridge to combinatorics.
+  estimate_minutes: 30
+  concepts:
+  - concept-probability
+  - concept-combinatorics
+  resources:
+  - kind: read
+    label: Blitzstein, Chapter 1 — counting and replacement
+    source_id: source-blitzstein-hwang
+    locator: Chapter 1
+  - kind: practise
+    label: Exercise Bank B9 — complement counting
+    source_id: source-sad-uebungen
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  done_when:
+  - Set up the birthday-paradox product from the complement without looking at a solution.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-counting-complement/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-conditional-bayes
+  title: Conditional probability and Bayes
+  status: pending
+  objective: Understand conditioning geometrically, derive Bayes from the multiplication rule, and solve
+    a medical-test table without base-rate neglect.
+  estimate_minutes: 60
+  exam_critical: true
+  concepts:
+  - concept-conditional-probability
+  - concept-bayes-theorem
+  resources:
+  - kind: watch
+    label: 3Blue1Brown — The medical test paradox
+    url: https://www.youtube.com/watch?v=lG4VkPoG3ko
+  - kind: watch
+    label: 3Blue1Brown — Bayes theorem, the geometry of changing beliefs
+    url: https://www.youtube.com/watch?v=HZGCoVF3YvM
+  - kind: read
+    label: Blitzstein, Chapter 2 — conditioning, Bayes, and pitfalls
+    source_id: source-blitzstein-hwang
+    locator: Sections 2.1–2.3 and 2.8
+  - kind: practise
+    label: Exercise Bank B3 and B5 plus the FAU 4-Feldertafel item
+    source_id: source-fau-klausur-ws1415
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  done_when:
+  - Explain why a positive test need not imply a high disease probability, then solve B3 and B5 cold.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-conditional-bayes/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-independence
+  title: Independence
+  status: pending
+  objective: Distinguish independence from conditional independence and recognize that neither implies
+    the other.
+  estimate_minutes: 30
+  concepts:
+  - concept-conditional-probability
+  resources:
+  - kind: read
+    label: Blitzstein, Chapter 2 — independence
+    source_id: source-blitzstein-hwang
+    locator: Chapter 2
+  - kind: practise
+    label: Exercise Bank B4 — independence check
+    source_id: source-sad-uebungen
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  done_when:
+  - State the equivalent independence conditions and give both counterexample directions.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-independence/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-naive-bayes
+  title: Naive Bayes classifier
+  status: pending
+  objective: Derive and apply the factored classifier, then diagnose the zero-frequency problem and smoothing
+    fix.
+  estimate_minutes: 50
+  exam_critical: true
+  concepts:
+  - concept-naive-bayes
+  - concept-laplace-smoothing
+  resources:
+  - kind: watch
+    label: StatQuest — Naive Bayes, Clearly Explained
+    source_id: source-statquest
+  - kind: read
+    label: CS229 notes — Naive Bayes event models
+    source_id: source-cs229-notes
+    locator: Section 4.2
+  - kind: practise
+    label: Exercise Bank B6–B8
+    source_id: source-sad-uebungen
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  done_when:
+  - Classify an example by hand and explain how a zero count changes with Laplace smoothing.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-naive-bayes/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now
+- id: stage-practice-self-test
+  title: Practice and self-test
+  status: pending
+  objective: Consolidate the path with mixed, timed problems and explanation from memory.
+  estimate_minutes: 60
+  exam_critical: true
+  concepts:
+  - concept-probability
+  - concept-conditional-probability
+  - concept-bayes-theorem
+  - concept-naive-bayes
+  resources:
+  - kind: practise
+    label: SaD L04 Exercise Bank B1–B9
+    source_id: source-sad-uebungen
+    vault_path: knowledge/notes/mathematics/note-sad-l04-exercise-bank.md
+  - kind: practise
+    label: FAU Bayes item, timed
+    source_id: source-fau-klausur-ws1415
+  - kind: practise
+    label: Master Wiring Naive Bayes with smoothing self-test
+    vault_path: work/active/workspace-m2-exam-prep/inputs/Chat1_Foundations_AML_SaD_Plan.md
+  done_when:
+  - Complete the timed Bayes item and Naive Bayes self-test, then explain mistakes without consulting
+    the reference.
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-practice-self-test/notes.md
+  attachments: []
+  source_feedback: []
+  scope_triage: required-now

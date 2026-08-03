@@ -1,0 +1,12 @@
+id: unit-ppds-mlprov-submission
+type: unit
+module_id: module-hu-ppds
+kind: milestone
+title: mlprov project submission
+order: 1
+scope: Submitted mlprov project milestone; no mastery or completion is inferred from submission.
+status: paused
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids: []

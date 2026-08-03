@@ -1,0 +1,14 @@
+id: unit-algo2-exam-prep
+type: unit
+module_id: module-hu-algo2
+kind: exam-block
+title: Algo 2 oral exam preparation
+order: 1
+scope: Existing Algo 2 plan, retained as the unit's source plan.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-algo2-exam-prep
+current_study_map: study-map-algo2-exam-prep

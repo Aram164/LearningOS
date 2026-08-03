@@ -1,0 +1,16 @@
+id: module-hu-ppds
+institution: HU Berlin
+title: PPDS — Praktische Projektarbeit Datenbanksysteme (mlprov)
+semester: sose-2026
+status: enrolled
+examination:
+  type: project
+  notes: 'Project module: the mlprov provenance library (team project), submitted 2026-07-15. Taken as
+    Bachelor-UEWP — LP-gesperrt im Master (Doppelanrechnungsverbot); knowledge/code fully reusable. Grade
+    pending.'
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-ppds-mlprov-submission

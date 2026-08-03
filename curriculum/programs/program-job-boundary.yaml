@@ -1,0 +1,10 @@
+id: program-job-boundary
+type: program
+title: Job
+kind: boundary
+status: boundary-only
+default: false
+semester_bound: false
+description: Hard confidentiality boundary. Job content never enters LearningOS.
+boundary_action: Request explicit Job access
+semesters: []

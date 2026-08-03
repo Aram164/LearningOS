@@ -1,0 +1,25 @@
+id: study-map-python-depth-drills
+type: study-map
+unit_id: unit-python-depth-drills
+status: ready
+current_stage: stage-01-python-depth-drills
+source_plan:
+  path: note://note-python-depth-drills
+  provenance: durable-note
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-python-depth-drills
+  title: Python depth drills
+  status: pending
+  objective: Use the preserved Python depth drills artifact as the scope and work record.
+  done_when:
+  - Record concrete work or evidence without inferring mastery from the artifact.
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: 'Durable artifact note-python-depth-drills: Python depth drills'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-01-python-depth-drills/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,13 @@
+id: module-foundation-ml-math-bridges
+type: module
+kind: foundation
+area_id: program-skills
+title: ML & mathematics bridges
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-bridge-regression-sad-aml
+- unit-bridge-aml-sad-master-wiring
+related_module_ids:
+- module-hu-aml
+- module-hu-m2-statistik-analysis
