@@ -14,7 +14,7 @@ TIMESTAMP_LINE = re.compile(r"^> Generated: .*$", re.MULTILINE)
 
 
 def strip_timestamps(content: str, name: str) -> str:
-    if name.endswith(".json"):
+    if name.endswith((".json", ".canvas")):
         data = json.loads(content)
         data.get("_generated", {}).pop("generated_at", None)
         return json.dumps(data, indent=2, sort_keys=True)
