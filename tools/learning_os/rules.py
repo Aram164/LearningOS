@@ -25,6 +25,7 @@ import jsonschema
 from .loader import (
     EVIDENCE_SCHEMES,
     ID_RE,
+    PATH_ID_RE,
     RELATION_TYPES,
     Repo,
 )
@@ -177,6 +178,7 @@ class Validator:
         self.check_modules()
         self.check_files()
         self.check_workspaces()
+        self.check_learning_paths()
         self.check_links()
         self.check_generated()
         self.check_hygiene()
@@ -205,6 +207,8 @@ class Validator:
             self._schema_check("note", note.meta, self._rel(note.path))
         for ws in r.workspaces.values():
             self._schema_check("workspace", ws.meta, self._rel(ws.path))
+        for path in r.learning_paths.values():
+            self._schema_check("learning-path", path.data, self._rel(path.path))
         if r.coordination is not None:
             self._schema_check("coordination", r.coordination.meta, "work/COORDINATION.md")
         for name, doc in r.collections.items():
@@ -231,6 +235,12 @@ class Validator:
                               f"{family} id '{rec_id}' carries a numeric suffix without a "
                               f"collision counterpart '{m.group('base')}' (suffixes are collision-only)",
                               where)
+        for path_id, learning_path in self.repo.learning_paths.items():
+            where = self._rel(learning_path.path)
+            if not PATH_ID_RE.match(path_id):
+                self.err("ID-PATTERN",
+                         f"learning path id '{path_id}' does not match the ID pattern",
+                         where)
 
     def check_references(self):
         r = self.repo
@@ -266,6 +276,35 @@ class Validator:
             for sid in ws.meta.get("sources", []) or []:
                 if sid not in r.sources:
                     self.err("REF-SOURCE", f"workspace '{ws.id}' references unknown source '{sid}'", where)
+        for path in r.learning_paths.values():
+            where = self._rel(path.path)
+            data = path.data
+            declared = data.get("workspace_id")
+            if declared not in r.workspaces:
+                self.err("REF-WORKSPACE",
+                         f"learning path '{path.id}' references unknown workspace '{declared}'",
+                         where)
+            elif declared != path.workspace_id:
+                self.err("PATH-OWNER",
+                         f"learning path declares '{declared}' but lives under '{path.workspace_id}'",
+                         where)
+            module_id = data.get("module_id")
+            if module_id and module_id not in r.modules:
+                self.err("REF-MODULE",
+                         f"learning path '{path.id}' references unknown module '{module_id}'",
+                         where)
+            for stage in data.get("stages", []) or []:
+                for cid in stage.get("concepts", []) or []:
+                    if cid not in r.concepts:
+                        self.err("REF-CONCEPT",
+                                 f"learning path '{path.id}' references unknown concept '{cid}'",
+                                 where)
+                for resource in stage.get("resources", []) or []:
+                    sid = resource.get("source_id") if isinstance(resource, dict) else None
+                    if sid and sid not in r.sources:
+                        self.err("REF-SOURCE",
+                                 f"learning path '{path.id}' references unknown source '{sid}'",
+                                 where)
         for concept in r.concepts.values():
             rb = concept.get("replaced_by")
             if rb and rb not in r.concepts:
@@ -638,6 +677,53 @@ class Validator:
                         self.err("GEN-ARCHIVED",
                                  f"archived workspace '{wid}' appears in generated/{name}")
 
+    def check_learning_paths(self):
+        """Ordered-stage invariants that JSON Schema cannot express cleanly."""
+        for learning_path in self.repo.learning_paths.values():
+            where = self._rel(learning_path.path)
+            data = learning_path.data
+            stages = data.get("stages", []) or []
+            if not isinstance(stages, list):
+                continue  # schema reports the structural error
+            ids = [s.get("id") for s in stages if isinstance(s, dict)]
+            if len(ids) != len(set(ids)):
+                self.err("PATH-STAGE-DUP", "learning path stage ids must be unique", where)
+            current = data.get("current_stage")
+            if current not in ids:
+                self.err("PATH-CURRENT",
+                         f"current_stage '{current}' does not identify a stage", where)
+            active = [s.get("id") for s in stages if isinstance(s, dict)
+                      and s.get("status") == "active"]
+            if data.get("status") == "active":
+                if active != [current]:
+                    self.err("PATH-ACTIVE",
+                             "an active path must have exactly one active stage, equal to current_stage",
+                             where)
+            elif len(active) > 1:
+                self.err("PATH-ACTIVE", "a path may not have multiple active stages", where)
+            for stage in stages:
+                if not isinstance(stage, dict):
+                    continue
+                note_path = stage.get("notes_path")
+                if note_path:
+                    target = self.repo.root / str(note_path)
+                    try:
+                        target.resolve().relative_to(learning_path.path.parent.parent.resolve())
+                    except (ValueError, OSError):
+                        self.err("PATH-NOTE-OWNER",
+                                 f"stage notes_path escapes owning workspace: '{note_path}'",
+                                 where)
+            proposal = (data.get("shelving") or {}).get("proposal_path") \
+                if isinstance(data.get("shelving") or {}, dict) else None
+            if proposal:
+                target = self.repo.root / str(proposal)
+                try:
+                    target.resolve().relative_to(learning_path.path.parent.parent.resolve())
+                except (ValueError, OSError):
+                    self.err("PATH-SHELVE-OWNER",
+                             f"shelving proposal escapes owning workspace: '{proposal}'",
+                             where)
+
     def check_external_urls(self):
         import urllib.request
         urls = set()
@@ -689,19 +775,27 @@ class Validator:
                 continue
 
     def _hygiene_stale_views(self):
-        head = self._git(["log", "-1", "--format=%ct"]).strip()
-        if not head:
-            return  # no git history (synthetic repo) — nothing to compare against
-        head_ts = float(head)
         manifest = self.repo.root / "generated" / "manifest.json"
         if not manifest.is_file():
+            # Synthetic/portable trees without Git history are valid before
+            # their first projection. A real checkout should always publish.
+            if not self._git(["log", "-1", "--format=%H"]).strip():
+                return
             self.warn("HYGIENE-VIEWS",
                       "generated/ views absent — run `make views` (they are disposable, "
                       "but the human-fallback path depends on them)")
-        elif manifest.stat().st_mtime < head_ts - 5:
+            return
+        try:
+            from .genout import _source_fingerprint
+            data = json.loads(manifest.read_text(encoding="utf-8"))
+            projected = (data.get("_generated") or {}).get("source_fingerprint")
+            current = _source_fingerprint(self.repo)
+        except (OSError, json.JSONDecodeError):
+            projected, current = None, "unreadable"
+        if projected != current:
             self.warn("HYGIENE-VIEWS",
-                      "generated/ views are older than the last commit — the post-commit "
-                      "rebuild did not run; run `make views`",
+                      "generated/manifest.json is not the current authored snapshot — "
+                      "run `make views`",
                       "generated/manifest.json")
 
     def _hygiene_unfiled(self):
@@ -713,7 +807,7 @@ class Validator:
                       self._rel(p))
 
         for p in root.glob("*.md"):
-            if p.name not in {"README.md", "CLAUDE.md"}:
+            if p.name not in {"README.md", "CLAUDE.md", "AGENTS.md"}:
                 flag(p, "repository root is not a filing location")
         for p in (root / "knowledge").glob("*.md"):
             flag(p, "notes belong in knowledge/notes/<domain>/")

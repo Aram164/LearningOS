@@ -14,6 +14,8 @@ is byte-for-byte reproducible.
 from __future__ import annotations
 
 import json
+import hashlib
+import os
 import re
 import subprocess
 from pathlib import Path, PurePosixPath
@@ -144,7 +146,40 @@ def _material_location(repo: Repo, ref) -> dict:
     return {"material_path": str(rel), "material_exists": target.exists()}
 
 
-def build_manifest(repo: Repo, generated_at: str) -> dict:
+def _source_fingerprint(repo: Repo) -> str:
+    """Content identity of every authored input used by the projection."""
+    digest = hashlib.sha256()
+    roots = ("knowledge", "sources", "records", "work", "system/schema")
+    for rel_root in roots:
+        base = repo.root / rel_root
+        if not base.exists():
+            continue
+        files = [base] if base.is_file() else sorted(p for p in base.rglob("*") if p.is_file())
+        for path in files:
+            rel = path.relative_to(repo.root).as_posix()
+            if any(part.startswith(".") for part in path.relative_to(repo.root).parts):
+                continue
+            digest.update(rel.encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def _git_state(root: Path) -> tuple[str | None, bool]:
+    try:
+        rev = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root,
+                             capture_output=True, text=True, timeout=30)
+        status = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=all", "--",
+             "knowledge", "sources", "records", "work", "system/schema"],
+            cwd=root, capture_output=True, text=True, timeout=30)
+        return (rev.stdout.strip() or None, bool(status.stdout.strip()))
+    except Exception:  # noqa: BLE001
+        return None, False
+
+
+def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None) -> dict:
     """The COMPLETE machine-readable projection of the repository (ADR-001):
     every canonical record (notes incl. attachments/evidence/contexts, concepts,
     sources, modules incl. attempts, workspaces, coordination) plus all
@@ -260,6 +295,38 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "notes": sorted(ws.meta.get("notes", []) or []),
             "sources": sorted(ws.meta.get("sources", []) or []),
         })
+    for learning_path in sorted(repo.learning_paths.values(), key=lambda p: p.id):
+        data = learning_path.data
+        projected_stages = []
+        for stage in data.get("stages", []) or []:
+            projected = dict(stage)
+            note_ref = stage.get("notes_path") if isinstance(stage, dict) else None
+            note_file = repo.root / str(note_ref) if note_ref else None
+            if note_file and note_file.is_file():
+                projected["notes_text"] = note_file.read_text(
+                    encoding="utf-8", errors="replace")
+                projected["notes_updated"] = _git_last_commit(
+                    repo.root, note_file.relative_to(repo.root).as_posix())
+            else:
+                projected["notes_text"] = ""
+                projected["notes_updated"] = None
+            projected_stages.append(projected)
+        records.append({
+            "id": learning_path.id, "type": "learning-path",
+            "title": data.get("title", ""),
+            "path": str(learning_path.path.relative_to(repo.root)),
+            "workspace_id": learning_path.workspace_id,
+            "area": data.get("area", "university"),
+            "module_id": data.get("module_id"),
+            "status": data.get("status", ""),
+            "current_stage": data.get("current_stage", ""),
+            "created": data.get("created"), "updated": data.get("updated"),
+            "objective": data.get("objective", ""),
+            "source_plan": data.get("source_plan"),
+            "stages": projected_stages,
+            "shelving": dict(data.get("shelving", {}) or {}),
+            "archived": learning_path.archived,
+        })
     if repo.coordination is not None:
         records.append({
             "id": "coordination", "type": "coordination",
@@ -274,10 +341,24 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
                         key=lambda r: (str(r.get("from")), str(r.get("type")), str(r.get("to"))))
     ]
     ad = adoption_counts(repo)
+    fingerprint = _source_fingerprint(repo)
+    revision, dirty = _git_state(repo.root)
+    generated_meta = _json_header(generated_at)
+    generated_meta.update({
+        "contract_version": 1,
+        "snapshot_id": f"sha256:{fingerprint}",
+        "source_fingerprint": fingerprint,
+        "source_revision": revision,
+        "source_dirty": dirty,
+    })
     return {
-        "_generated": _json_header(generated_at),
+        "_generated": generated_meta,
         "records": records,
         "relations": relations,
+        # Backlinks are part of the SAME atomic manifest snapshot. The legacy
+        # backlinks.json remains as a compatibility view, but interfaces never
+        # need to race two separately-written files again.
+        "backlinks": {k: v for k, v in (backlinks or {}).items() if k != "_generated"},
         # Interface convenience: the exam spine, already ordered. Same source
         # of truth as `los.py status` (records/modules.yaml); projected here so
         # a UI can render a countdown with no Python running at all.
@@ -293,6 +374,9 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "modules": len(repo.modules),
             "workspaces_active": len(repo.active_workspaces()),
             "workspaces_archived": len(repo.archived_workspaces()),
+            "learning_paths": len(repo.learning_paths),
+            "learning_paths_active": sum(
+                1 for p in repo.active_learning_paths() if p.status == "active"),
             "relations": len(repo.relations),
             "notes_reviewed": ad["notes_reviewed"],
             "notes_with_evidence": ad["notes_with_evidence"],
@@ -343,8 +427,13 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
     for m in (concept_to_notes, source_to_notes, workspace_to_notes, module_to_workspaces):
         for k in m:
             m[k] = sorted(set(m[k])) if all(isinstance(x, str) for x in m[k]) else m[k]
+    generated_meta = _json_header(generated_at)
+    generated_meta.update({
+        "contract_version": 1,
+        "snapshot_id": f"sha256:{_source_fingerprint(repo)}",
+    })
     return {
-        "_generated": _json_header(generated_at),
+        "_generated": generated_meta,
         "concept_to_notes": dict(sorted(concept_to_notes.items())),
         "source_to_notes": dict(sorted(source_to_notes.items())),
         "note_incoming": dict(sorted(note_incoming.items())),
@@ -1594,8 +1683,8 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     repeated generation over the same committed tree is byte-for-byte identical.
     """
     generated_at = generated_at or stable_generated_at(repo.root)
-    manifest = build_manifest(repo, generated_at)
     backlinks = build_backlinks(repo, generated_at)
+    manifest = build_manifest(repo, generated_at, backlinks)
     outputs = {
         "manifest.json": json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
@@ -1634,7 +1723,19 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
     for rel, content in outputs.items():
         target = gen / rel
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content, encoding="utf-8")
+        # Never expose a half-written projection to Obsidian. os.replace is an
+        # atomic publication step on the same filesystem; manifest.json is
+        # published last because it is the versioned interface contract.
+        if rel == "manifest.json":
+            continue
+        tmp = target.with_name(f".{target.name}.tmp")
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, target)
+    if "manifest.json" in outputs:
+        target = gen / "manifest.json"
+        tmp = target.with_name(".manifest.json.tmp")
+        tmp.write_text(outputs["manifest.json"], encoding="utf-8")
+        os.replace(tmp, target)
     _remove_stale(gen, outputs)
 
 

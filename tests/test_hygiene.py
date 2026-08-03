@@ -82,7 +82,10 @@ def test_fresh_views_do_not_warn(mini_repo):
     _git(mini_repo, "init", "-q")
     _git(mini_repo, "add", "-A")
     _git(mini_repo, "commit", "-qm", "init")
-    (mini_repo / "generated" / "manifest.json").write_text("{}", encoding="utf-8")
+    from learning_os.genout import generate_all, write_outputs
+    from learning_os.loader import load_repo
+    repo = load_repo(mini_repo)
+    write_outputs(repo, generate_all(repo, generated_at="T1"))
     assert "HYGIENE-VIEWS" not in codes(run(mini_repo))
 
 
