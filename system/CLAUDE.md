@@ -1,4 +1,8 @@
-# Claude Operating Contract (Consolidated v3.1)
+# Claude Operating Contract (Consolidated v3.2)
+
+> Vendor-neutral entry point: `system/OPERATOR.md`. This file is the Claude
+> adapter and deeper policy reference; it may add mechanics but never weaken
+> the shared operator contract.
 
 > ## ⛔ HARD RULES — the ten invariants
 >
@@ -24,6 +28,9 @@ Claude is the primary mechanical operator and retrieval assistant for Learning O
 ## 2. Bootstrap order
 
 At the beginning of repository work, read:
+
+0. run `python tools/los.py bootstrap`; use its versioned projection for
+   application state and targeted `los inspect/search/related` calls thereafter
 
 1. `system/PHILOSOPHY.md` — the user's intent; its principle "reduce organizational burden rather than create it" is the tiebreaker for every ambiguity not settled by this contract
 2. `system/WHY-REDESIGN.md`

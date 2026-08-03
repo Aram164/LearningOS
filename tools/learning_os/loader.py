@@ -10,6 +10,7 @@ depend on registry partitioning):
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
   - garden:    knowledge/garden/**/*.md           (free-form, no schema — §14)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
+  - learning paths: <workspace>/paths/path-*.yaml (operational, workspace-owned)
   - coordination: work/COORDINATION.md
 """
 
@@ -24,6 +25,7 @@ import yaml
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 
 ID_RE = re.compile(r"^(note|concept|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$")
+PATH_ID_RE = re.compile(r"^path-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # Inline #tags in Garden notes (CLAUDE.md §14). Conservative: a tag starts with
 # a lowercase letter (so ATX headings "# H", shebangs, "#1" issue refs and hex
@@ -251,6 +253,33 @@ class Workspace:
 
 
 @dataclass
+class LearningPath:
+    """A temporary, ordered route through one subtopic.
+
+    Learning paths are operational state owned by a workspace. They are not a
+    second knowledge graph: stage notes remain scratch until the operator and
+    learner approve a shelving proposal.
+    """
+    id: str
+    path: Path
+    data: dict
+    workspace_id: str
+    archived: bool = False
+
+    @property
+    def title(self) -> str:
+        return str(self.data.get("title", self.id))
+
+    @property
+    def status(self) -> str:
+        return str(self.data.get("status", ""))
+
+    @property
+    def current_stage(self) -> str:
+        return str(self.data.get("current_stage", ""))
+
+
+@dataclass
 class Coordination:
     path: Path
     meta: dict
@@ -274,6 +303,7 @@ class Repo:
     notes: dict[str, Note] = field(default_factory=dict)
     garden_notes: list[GardenNote] = field(default_factory=list)
     workspaces: dict[str, Workspace] = field(default_factory=dict)
+    learning_paths: dict[str, LearningPath] = field(default_factory=dict)
     coordination: Coordination | None = None
     duplicate_ids: list[tuple[str, str, Path]] = field(default_factory=list)
     parse_failures: list[tuple[Path, str]] = field(default_factory=list)
@@ -303,6 +333,9 @@ class Repo:
 
     def archived_workspaces(self) -> list[Workspace]:
         return [w for w in self.workspaces.values() if w.archived]
+
+    def active_learning_paths(self) -> list[LearningPath]:
+        return [p for p in self.learning_paths.values() if not p.archived]
 
 
 def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path, family_name: str):
@@ -453,6 +486,28 @@ def load_repo(root: Path | str) -> Repo:
             wid = str(meta.get("id", f.parent.name))
             ws = Workspace(id=wid, path=f, meta=meta, body=body, archived=archived)
             _register(repo, repo.workspaces, wid, ws, f, "workspace")
+
+            # Learning paths live inside and are owned by the workspace. The
+            # workspace directory, not a duplicated field, determines their
+            # ownership; the schema still carries workspace_id so projections
+            # and agents can verify that the declaration agrees with location.
+            paths_dir = f.parent / "paths"
+            if paths_dir.is_dir():
+                for pf in sorted(paths_dir.glob("path-*.yaml")):
+                    try:
+                        data = _load_yaml(pf)
+                    except LoaderError as exc:
+                        repo.parse_failures.append((pf, str(exc)))
+                        continue
+                    pid = _record_id(data)
+                    if pid is None:
+                        repo.parse_failures.append(
+                            (pf, f"{pf}: learning path with missing or empty id — skipped"))
+                        continue
+                    learning_path = LearningPath(
+                        id=pid, path=pf, data=data, workspace_id=wid, archived=archived)
+                    _register(repo, repo.learning_paths, pid, learning_path, pf,
+                              "learning-path")
 
     # Coordination
     coord_file = root / "work" / "COORDINATION.md"
