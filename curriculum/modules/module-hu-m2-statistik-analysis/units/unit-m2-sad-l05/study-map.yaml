@@ -123,7 +123,7 @@ stages:
   attachments: []
   source_feedback: []
   estimate_minutes: 15
-- id: stage-06-practice-self-test-exercise-bank
+- id: stage-06-practice-self-test-exercise-bank-m2-sad-l05
   title: Practice & self-test  (→ exercise bank)
   status: pending
   objective: '1. **UE3** (counting half) → collect walked-through solutions in the Übung.
@@ -143,6 +143,6 @@ stages:
   - kind: read
     label: '**FAU** Binomial/counting items (timed) → then Blitzstein Ch 1 strategic practice for volume.'
     source_id: source-blitzstein-hwang
-  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-06-practice-self-test-exercise-bank/notes.md
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-06-practice-self-test-exercise-bank-m2-sad-l05/notes.md
   attachments: []
   source_feedback: []

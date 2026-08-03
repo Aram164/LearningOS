@@ -428,6 +428,149 @@ def test_session_end_reports_canvas_as_unrelated_and_never_session_owned(mini_re
     assert report.is_file(), "session-end validated a different repository root"
 
 
+# ------------------------------------------- write-path robustness (red-team)
+NOTE_REL = "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+
+
+def test_empty_note_text_is_refused_instead_of_truncating(mini_repo):
+    add_curriculum(mini_repo)
+    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+                    "--replace", "--text", "Real content worth keeping.")
+    assert saved.returncode == 0, saved.stderr
+    note = mini_repo / NOTE_REL
+    before = note.read_text(encoding="utf-8")
+    for empty in ("", "   \n\t "):
+        wiped = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+                        "--replace", "--text", empty)
+        assert wiped.returncode == 2
+        assert "empty note" in wiped.stderr
+    assert note.read_text(encoding="utf-8") == before
+
+
+def test_empty_snapshot_token_is_refused_not_read_as_unguarded(mini_repo):
+    add_curriculum(mini_repo)
+    probe = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+                    "--text", "probe", "--expected-snapshot", "")
+    assert probe.returncode == 3
+    assert "expected-snapshot" in probe.stderr
+    # omitting the flag entirely still writes unguarded, as documented
+    unguarded = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+                        "--text", "probe")
+    assert unguarded.returncode == 0, unguarded.stderr
+
+
+def test_two_captures_with_one_title_in_one_second_keep_both(mini_repo):
+    add_curriculum(mini_repo)
+    first = run_los(mini_repo, "capture", "--json", "--title", "race", "--text", "FIRST")
+    second = run_los(mini_repo, "capture", "--json", "--title", "race", "--text", "SECOND")
+    assert first.returncode == 0, first.stderr
+    assert second.returncode == 0, second.stderr
+    one, two = json.loads(first.stdout), json.loads(second.stdout)
+    assert one["ok"] and two["ok"]
+    assert one["captured"] != two["captured"]
+    bodies = [(mini_repo / payload["captured"]).read_text(encoding="utf-8")
+              for payload in (one, two)]
+    assert any("FIRST" in body for body in bodies)
+    assert any("SECOND" in body for body in bodies)
+
+
+def test_unwritable_note_target_refuses_cleanly_without_debris(mini_repo):
+    add_curriculum(mini_repo)
+    note = mini_repo / NOTE_REL
+    note.unlink()
+    note.mkdir()  # the target is now a directory: an ordinary filesystem mishap
+    proc = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--text", "probe")
+    assert proc.returncode == 2
+    assert "cannot write" in proc.stderr
+    assert "Traceback" not in proc.stderr
+    assert not list(note.parent.glob(".*.tmp")), "a temp file was left behind"
+
+
+def test_a_failed_write_rolls_the_whole_transaction_back(mini_repo):
+    """stage-progress writes the study map AND the unit.
+
+    When the second write failed the first stayed applied, and `validate` saw
+    nothing wrong — a silent cross-file split-brain.
+    """
+    add_curriculum(mini_repo)
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    study_map, unit = unit_dir / "study-map.yaml", unit_dir / "unit.yaml"
+    before_map = study_map.read_text(encoding="utf-8")
+    before_unit = unit.read_text(encoding="utf-8")
+    (unit_dir / ".unit.yaml.tmp").mkdir()  # block the atomic temp name
+    proc = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete")
+    assert proc.returncode == 2
+    assert "Traceback" not in proc.stderr
+    assert study_map.read_text(encoding="utf-8") == before_map
+    assert unit.read_text(encoding="utf-8") == before_unit
+    (unit_dir / ".unit.yaml.tmp").rmdir()
+    retry = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete")
+    assert retry.returncode == 0, retry.stderr
+
+
+def test_stage_ids_must_be_unique_across_study_maps(mini_repo):
+    """`stages` is projected as a flat by-id index, so a stage id reused in
+    another unit resolves to whichever map was generated last. Five stages in
+    the curriculum-v2 import collided this way and only in-map uniqueness was
+    checked."""
+    import shutil
+
+    add_curriculum(mini_repo)
+    units = mini_repo / "curriculum/modules/module-demo/units"
+    shutil.copytree(units / "unit-demo-l01", units / "unit-demo-l02")
+    for name in ("unit.yaml", "study-map.yaml"):
+        target = units / "unit-demo-l02" / name
+        text = target.read_text(encoding="utf-8")
+        # everything is re-identified except the stage id, which stays colliding
+        text = text.replace("unit-demo-l01", "unit-demo-l02")
+        text = text.replace("study-map-demo-l01", "study-map-demo-l02")
+        target.write_text(text, encoding="utf-8")
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    codes = {issue.code for issue in validate(load_repo(mini_repo), online=False)}
+    assert "MAP-STAGE-GLOBAL-DUP" in codes
+
+
+def test_an_impossible_calendar_date_fails_validation(mini_repo):
+    """`format: date` is declared in the schemas but was never enforced, so a
+    transposed exam date validated clean."""
+    registry = mini_repo / "records" / "modules.yaml"
+    data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    data["modules"][0]["attempts"][0]["date"] = "2026-13-45"
+    write_yaml(registry, data)
+    proc = run_los(mini_repo, "validate")
+    assert proc.returncode != 0
+    assert "2026-13-45" in proc.stdout
+    assert "date" in proc.stdout
+
+
+def test_session_end_reports_warnings_without_blocking(mini_repo):
+    """Errors gate a session; by-design offline-material warnings must not."""
+    add_curriculum(mini_repo)
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.email", "tests@example.invalid"],
+                    ["git", "config", "user.name", "Tests"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-qm", "fixture"]):
+        subprocess.run(command, cwd=mini_repo, check=True)
+    registry = mini_repo / "sources" / "sources.yaml"
+    data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    data["sources"][0]["material"] = "material://source-demo-book-offline"
+    write_yaml(registry, data)
+    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+                    "--replace", "--text", "Session-owned note.")
+    assert saved.returncode == 0, saved.stderr
+    check = run_los(mini_repo, "validate")
+    assert check.returncode == 0, check.stderr
+    assert "0 warning(s)" not in check.stdout, "fixture did not produce a warning"
+    ended = run_los(mini_repo, "session-end")
+    assert ended.returncode == 0, ended.stderr
+    payload = json.loads(ended.stdout)
+    assert "warning(s)" in payload["validation"]
+
+
 def test_live_migration_is_idempotent_in_dry_run(repo_root):
     proc = subprocess.run([sys.executable, str(MIGRATE), "--root", str(repo_root), "--report"],
                           capture_output=True, text=True, timeout=120)

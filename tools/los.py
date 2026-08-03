@@ -74,16 +74,39 @@ def _operator_lock(root: Path):
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
+class WriteRefused(Exception):
+    """A canonical write could not be performed; nothing was changed."""
+
+
 def _atomic_text(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
+    """Temp file + os.replace, cleaning up after any failure.
+
+    Every mutating command funnels through here, so an ordinary filesystem
+    problem — target replaced by a directory, permission denied, full disk —
+    must surface as an actionable refusal instead of a traceback that leaves a
+    stray `.tmp` sibling behind.
+    """
     tmp = path.with_name(f".{path.name}.tmp")
-    tmp.write_text(content, encoding="utf-8")
-    os.replace(tmp, path)
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp.write_text(content, encoding="utf-8")
+        os.replace(tmp, path)
+    except OSError as exc:
+        with contextlib.suppress(OSError):
+            tmp.unlink(missing_ok=True)
+        raise WriteRefused(f"cannot write {path}: {exc.strerror or exc}") from exc
 
 
 def _expected_ok(root: Path, expected: str | None) -> bool:
-    if not expected:
+    if expected is None:
         return True
+    if not expected.strip():
+        # An empty token is almost always a scripting slip (a command
+        # substitution that returned nothing), not a deliberate unguarded
+        # write. Omitting the flag remains the way to write unguarded.
+        print("los: --expected-snapshot was empty; refusing to write without a "
+              "concurrency token", file=sys.stderr)
+        return False
     actual = f"sha256:{_source_fingerprint(load_repo(root))}"
     if actual == expected:
         return True
@@ -384,12 +407,25 @@ def cmd_capture(args) -> int:
             slug = re.sub(r"[^a-z0-9]+", "-",
                           (args.title or capture_text).lower()).strip("-")[:40] or "capture"
             target = inbox / f"{stamp}-{slug}.md"
+            # The stamp is second-precision, so two captures with the same title
+            # inside one second collided and the second silently overwrote the
+            # first. The --file branch already guarded this; text now does too.
+            serial = 2
+            while target.exists():
+                target = inbox / f"{stamp}-{slug}-{serial}.md"
+                serial += 1
             body = (f"# {args.title}\n\n{capture_text}\n" if args.title
                     else capture_text.rstrip() + "\n")
             _atomic_text(target, body)
 
-    print(f"captured -> {target.relative_to(root)}")
+    relative = target.relative_to(root).as_posix()
     _record_touched(root, [target])
+    if getattr(args, "json", False):
+        # The app needs a structural confirmation; a human at a terminal keeps
+        # the prose.
+        print(json.dumps({"ok": True, "captured": relative}, ensure_ascii=False))
+        return 0
+    print(f"captured -> {relative}")
     print("routing is the operator's job (WORKFLOWS §21); the inbox trends "
           "toward empty")
     return 0
@@ -427,17 +463,35 @@ def _write_transaction(root: Path, writes: dict[Path, str], touched_extra=(),
         path: path.read_text(encoding="utf-8") if path.is_file() else None
         for path in writes
     }
-    for path, content in writes.items():
-        _atomic_text(path, content)
+
+    def _rollback() -> None:
+        for path, old in backups.items():
+            try:
+                if old is None:
+                    # Only remove what this transaction could have created; a
+                    # path that was never a regular file is not ours to delete.
+                    if path.is_file():
+                        path.unlink()
+                else:
+                    _atomic_text(path, old)
+            except (OSError, WriteRefused) as exc:
+                print(f"los: could not roll back {path} ({exc}) — inspect it by hand",
+                      file=sys.stderr)
+
+    # Rolling back only on validation error left a real split-brain: if the
+    # second file's write raised, the first stayed applied and validate saw
+    # nothing wrong. A failed write must undo the whole set.
+    try:
+        for path, content in writes.items():
+            _atomic_text(path, content)
+    except (WriteRefused, OSError):
+        _rollback()
+        raise
     if not prevalidated:
         errors = [issue for issue in validate(load_repo(root), online=False)
                   if issue.severity == "E"]
         if errors:
-            for path, old in backups.items():
-                if old is None:
-                    path.unlink(missing_ok=True)
-                else:
-                    _atomic_text(path, old)
+            _rollback()
             return 1, errors
     _publish(root)
     _record_touched(root, [*writes, *touched_extra])
@@ -954,6 +1008,13 @@ def cmd_stage_note(args) -> int:
             print("los: stage has no working_note", file=sys.stderr)
             return 2
         value = args.text if args.text is not None else sys.stdin.read()
+        if not value.strip():
+            # `--replace --text ""` used to truncate an existing note to zero
+            # bytes and report success. Emptying a note is a deliberate edit,
+            # not something a save button should ever do.
+            print("los: refusing to write an empty note — pass real text",
+                  file=sys.stderr)
+            return 2
         old = target.read_text(encoding="utf-8") if target.is_file() else ""
         if args.replace:
             updated = value.rstrip() + ("\n" if value.strip() else "")
@@ -1295,10 +1356,16 @@ def cmd_session_end(args) -> int:
     validation = subprocess.run(
         [sys.executable, str(TOOLS / "validate.py"), "--root", str(root)], cwd=root,
         capture_output=True, text=True)
-    if validation.returncode != 0 or "0 warning(s)" not in validation.stdout:
+    if validation.returncode != 0:
         print(validation.stdout, end="")
         print(validation.stderr, end="", file=sys.stderr)
         return validation.returncode or 1
+    # Errors gate; warnings are advisory and reported. Gating on zero warnings
+    # made session-end impossible in a repository carrying the by-design
+    # "material may be offline" set — and validate.py's own contract is that
+    # link rot never blocks.
+    validation_line = next((line for line in validation.stdout.splitlines()
+                            if "warning(s)" in line), "").strip()
     with _operator_lock(root):
         _publish(root)
     all_changed = subprocess.run(
@@ -1307,7 +1374,8 @@ def cmd_session_end(args) -> int:
     owned = [line for line in all_changed if line[3:] in touched]
     unrelated = [line for line in all_changed if line[3:] not in touched]
     payload = {"ok": True, "touched": touched, "owned_changes": owned,
-               "unrelated_changes": unrelated, "committed": False, "pushed": False}
+               "unrelated_changes": unrelated, "committed": False, "pushed": False,
+               "validation": validation_line}
     if not args.commit_message:
         print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0
@@ -1354,6 +1422,10 @@ def cmd_path_note(args) -> int:
             print(f"los: stage has no notes_path: {args.stage_id}", file=sys.stderr)
             return 2
         text_value = args.text if args.text is not None else sys.stdin.read()
+        if not text_value.strip():
+            print("los: refusing to write an empty note — pass real text",
+                  file=sys.stderr)
+            return 2
         target = root / str(note_ref)
         old = target.read_text(encoding="utf-8") if target.is_file() else ""
         if args.replace:
@@ -1537,6 +1609,8 @@ def main() -> int:
     p.add_argument("--text", default=None, help="capture this text (else stdin)")
     p.add_argument("--file", default=None, help="copy this file into the inbox")
     p.add_argument("--title", default=None, help="optional title for text captures")
+    p.add_argument("--json", action="store_true",
+                   help="confirm structurally instead of in prose (used by the app)")
     p.set_defaults(func=cmd_capture)
 
     p = sub.add_parser("unit-map-import",
@@ -1660,7 +1734,13 @@ def main() -> int:
     p.set_defaults(func=cmd_path_attach)
 
     args = parser.parse_args()
-    return args.func(args)
+    try:
+        return args.func(args)
+    except WriteRefused as exc:
+        # Nothing was changed: _atomic_text cleans up its temp file and
+        # _write_transaction rolls the set back before re-raising.
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
 
 
 if __name__ == "__main__":
