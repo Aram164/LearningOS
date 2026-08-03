@@ -1,0 +1,120 @@
+id: study-map-amls-l13
+type: study-map
+unit_id: unit-amls-l13
+status: ready
+current_stage: stage-amls-l13-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l13-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Trace a deployed model from exchange format through serving, monitoring and update.
+  done_when:
+  - Serving and monitoring mechanisms are page-located
+  - Three throughput strategies and two update strategies can be selected for scenarios
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-model-serving
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 13 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13; 13_ModelDeployment.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/13_ModelDeployment.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l13-integrate
+  title: Integrate inference, serving and operations views
+  status: pending
+  objective: Use Vol 2, Vol 1 and Huyen to sharpen serving trade-offs without expanding the exam scope.
+    Triage every curated primary paper for this lecture and anchor its useful claim, mechanism or result
+    back to the deck.
+  done_when:
+  - A serving decision table covers throughput latency memory monitoring and updates
+  - All source details map to deck sections
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-model-serving
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Primary paper — Clipper: A Low-Latency Online Prediction Serving System'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 13
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.usenix.org/system/files/conference/nsdi17/nsdi17-crankshaw.pdf
+  - kind: read
+    label: 'Primary paper — PRETZEL: Opening the Black Box of ML Prediction Serving Systems'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 13
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.usenix.org/system/files/osdi18-lee.pdf
+  - kind: read
+    label: Primary paper — A Tensor Compiler for Unified ML Prediction Serving (Hummingbird)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 13
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/2010.04804
+  - kind: read
+    label: Primary paper — Distilling the Knowledge in a Neural Network
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 13
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1503.02531
+  - kind: read
+    label: 'Primary paper — NoScope: Optimizing Deep CNN-Based Queries over Video Streams'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 13
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: http://www.vldb.org/pvldb/vol10/p1586-kang.pdf
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 13 (25 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 13; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: MLSysBook Vol 2 — Inference at Scale
+    source_id: source-mlsysbook-vol2
+    locator: Inference at Scale chapter
+  - kind: read
+    label: MLSysBook Vol 1 — Model Serving and ML Operations
+    source_id: source-mlsysbook-vol1
+    locator: Chapters 13–14 selected sections/checkpoints
+  - kind: read
+    label: Huyen DMLS Chapters 7–9
+    source_id: source-huyen-dmls
+    locator: Deployment prediction service shifts monitoring continual learning
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l13-evidence
+  title: Light evidence — reference and recall
+  status: pending
+  objective: Build the serving reference and answer the official deployment question.
+  done_when:
+  - Reference covers exchange patterns optimizations monitoring drift retraining and unlearning
+  - Official sample Task 7 page 48 is answered before checking
+  estimate_minutes: 75
+  exam_critical: true
+  concepts:
+  - concept-model-serving
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Official AMLS sample — Task 7 Model Deployment
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 page 48
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-evidence/notes.md
+  attachments: []
+  source_feedback: []

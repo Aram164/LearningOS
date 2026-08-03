@@ -1,0 +1,49 @@
+id: unit-amls-l05
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 05 — Data- and Task-Parallel Execution
+order: 3
+scope: Batch execution and Flynn taxonomy; MapReduce/Spark; distributed matrix operators and shuffle choices;
+  parfor scheduling and hybrid parallelism.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 05_ExecutionStrategies.pdf — 42 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §05 (4 curated) and Part 2 §05 (12 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l05-integrate
+- source_id: source-mlsysbook-vol2
+  locator: Distributed Training
+  purpose: At-scale written companion
+  stage_ids:
+  - stage-amls-l05-integrate
+- source_id: source-ultrascale-playbook
+  locator: Data/tensor/pipeline parallelism sections
+  purpose: Concrete parallelism mechanics
+  stage_ids:
+  - stage-amls-l05-integrate
+- source_id: source-dmmls-boehm
+  locator: Parallel execution sections
+  purpose: Lecturer-authored terminology
+  stage_ids:
+  - stage-amls-l05-integrate
+- source_id: source-mit-6172
+  locator: Parallelism and race-condition quizzes
+  purpose: Timed written drills
+  stage_ids:
+  - stage-amls-l05-evidence
+- source_id: source-stanford-cs149
+  locator: Parallel abstractions and written assignment
+  purpose: Parallel reasoning practice
+  stage_ids:
+  - stage-amls-l05-evidence
+current_study_map: study-map-amls-l05
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

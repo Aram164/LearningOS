@@ -1,0 +1,148 @@
+id: study-map-aml-l09
+type: study-map
+unit_id: unit-aml-l09
+status: ready
+current_stage: stage-aml-l09-backprop
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l09-backprop
+  title: Computation graphs, chain rule, and the full backward pass
+  objective: Reuse L08's cached forward values and reproduce the current deck's worked backpropagation
+    example node by node.
+  done_when:
+  - State and apply dz, da_prev, dW, and db layer rules with correct shapes.
+  - Reproduce the worked gradient including dW^(2) near [0.0143, 0.0506] and identify every chain-rule
+    path.
+  estimate_minutes: 140
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 VL09 — complete 74-page deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 09-neural-networks.pdf
+  - kind: reference
+    label: Older VL09 variant — second explanation only
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
+  - kind: read
+    label: Murphy §13.3–13.5 — primary derivation depth
+    source_id: source-murphy-pml1
+    locator: §13.3–13.5
+  - kind: read
+    label: MML §5.6 — chain-rule/matrix-calculus safety net
+    source_id: source-mml
+    locator: §5.6
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l09-regularization
+  title: Weight decay, dropout, early stopping, and double descent
+  objective: Connect each training control to bias–variance/generalization and keep classical versus modern
+    risk curves distinct.
+  done_when:
+  - Relate Frobenius/L2 weight decay to Ridge, and explain train/eval behavior of dropout.
+  - Explain early stopping and sketch classical U-curve versus double descent.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: ISLP §10.7–10.8
+    source_id: source-islp
+    locator: §10.7–10.8
+  - kind: read
+    label: CS229 regularization/optimization selections
+    source_id: source-cs229-notes
+    locator: §8.2; §9.1 selections
+  - kind: read
+    label: Goodfellow regularization chapter — optional depth
+    source_id: source-goodfellow-dl
+    locator: Regularization chapter selections
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l09-gradient-health
+  title: Vanishing/exploding gradients and training diagnostics
+  objective: Use repeated Jacobian factors to explain gradient decay/growth and distinguish the remedies
+    actually in the deck.
+  done_when:
+  - Reproduce the lambda^7-style argument and diagnose vanishing versus exploding behavior.
+  - State explicitly that batch normalization is not part of this L09 deck.
+  estimate_minutes: 65
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current VL09 final gradient-pathology section
+    source_id: source-aml-ss26-lectures
+    locator: VL09 vanishing/exploding section
+  - kind: watch
+    label: '3Blue1Brown NN #3–4 — backprop and calculus'
+    source_id: source-3b1b-neural-networks
+    url: https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+  - kind: watch
+    label: StatQuest — Backpropagation Main Ideas
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=IN2XmBhILt4
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l09-autograd
+  title: PyTorch autograd as the executable computation graph
+  objective: Connect cached forward values and reverse-mode gradients to loss.backward without replacing
+    the analytical derivation with code.
+  done_when:
+  - Build a tiny tensor graph, call backward, and compare gradients to a hand/finite-difference check.
+  - Explain requires_grad, grad accumulation, zeroing, and no_grad at lecture depth.
+  estimate_minutes: 75
+  exam_critical: false
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: PyTorch autograd tutorial — official reference
+    source_id: source-pytorch-tutorials
+    url: https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
+  - kind: watch
+    label: Karpathy micrograd — optional implementation spelling-out
+    source_id: source-karpathy-micrograd
+    url: https://www.youtube.com/watch?v=VMj-3S1tku0
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l09-practice
+  title: Numerical-gradient and backpropagation gate
+  objective: Test the analytical path, regularization reasoning, and gradient-health concepts with solution-backed
+    problems.
+  done_when:
+  - Finish one full hand backprop plus a finite-difference check.
+  - Solve one CS4780 neural-network problem and one selected EECS 498 exercise/trace.
+  estimate_minutes: 130
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Cornell CS4780 2018 HW9 NN/ReLU tasks and local solutions
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW9; 2018Spring/HW9
+  - kind: practise
+    label: UMich EECS 498 L6 fully connected networks
+    source_id: source-eecs498
+    url: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
+  - kind: reference
+    label: No local dedicated L09 exercise sheet; Bonusblatt 4 is L07/L08 and is not relabeled
+    source_id: source-aml-ss26-lectures
+    locator: Explicit completeness disposition
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-practice/notes.md

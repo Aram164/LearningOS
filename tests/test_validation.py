@@ -130,6 +130,24 @@ def test_attempt_dates_must_be_ordered(mini_repo):
     assert "MOD-ORDER" in codes(run(mini_repo), "E")
 
 
+def test_structured_exam_ranges_must_be_forward_and_unique(mini_repo):
+    f = mini_repo / "records" / "modules.yaml"
+    data = yaml.safe_load(f.read_text())
+    data["modules"][0]["examination"] = {
+        "type": "klausur",
+        "sittings": [
+            {"termin": 2, "date": "2026-10-09", "end_date": "2026-10-08"},
+            {"termin": 2, "date": "2026-10-09", "end_date": "2026-10-08"},
+        ],
+        "registration_windows": [
+            {"opens": "2026-09-10", "closes": "2026-08-31", "label": "Gate"},
+        ],
+    }
+    f.write_text(yaml.safe_dump(data))
+    result = set(codes(run(mini_repo), "E"))
+    assert {"MOD-SITTING-DUP", "MOD-SITTING-RANGE", "MOD-REGISTRATION-RANGE"} <= result
+
+
 # --------------------------------------------------------------------- files
 def test_note_filename_must_equal_id(mini_repo):
     old = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"

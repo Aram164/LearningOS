@@ -1,0 +1,44 @@
+id: unit-amls-l06
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 06 — Parameter Servers
+order: 6
+scope: Data/model-parallel parameter-server architecture; BSP, ASP and SSP; optimizer/batch communication;
+  distributed RL and federated learning.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 06_ParameterServers.pdf — 47 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §06 (6 curated) and Part 2 §06 (31 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l06-integrate
+- source_id: source-mlsysbook-vol2
+  locator: Collective Communication and Distributed Training
+  purpose: Written systems companion
+  stage_ids:
+  - stage-amls-l06-integrate
+- source_id: source-ultrascale-playbook
+  locator: ZeRO and communication sections
+  purpose: Modern communication mechanics
+  stage_ids:
+  - stage-amls-l06-integrate
+- source_id: source-dmmls-boehm
+  locator: Parameter-server sections
+  purpose: Lecturer-authored phrasing
+  stage_ids:
+  - stage-amls-l06-integrate
+- source_id: source-cmu-10414
+  locator: Distributed/parallel training material
+  purpose: Checkable drill
+  stage_ids:
+  - stage-amls-l06-evidence
+current_study_map: study-map-amls-l06
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

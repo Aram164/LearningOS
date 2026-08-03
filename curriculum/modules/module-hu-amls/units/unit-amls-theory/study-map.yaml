@@ -1,23 +1,92 @@
-id: study-map-amls-theory
+id: study-map-amls-exam-synthesis
 type: study-map
 unit_id: unit-amls-theory
 status: ready
-current_stage: stage-01-amls-theory
+current_stage: stage-amls-mock-blueprint
 source_plan:
-  path: work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md
-  provenance: migrated-mini-plan
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
 detours: []
 shelving:
   state: none
 stages:
-- id: stage-01-amls-theory
-  title: Work through the existing plan
+- id: stage-amls-mock-blueprint
+  title: Freeze the official exam blueprint
   status: pending
-  objective: Use the preserved source plan as the unit's scoped study script.
+  objective: Extract the seven areas and point weights from the official sample without reading its displayed
+    answers.
   done_when:
-  - Record the resulting work and evidence in this stage.
+  - A blank 100-point answer booklet is prepared for Tasks 1–7
+  - Each task is routed to its owning lecture unit
+  estimate_minutes: 25
+  exam_critical: true
+  concepts:
+  - concept-ml-systems
   scope_triage: required-now
-  resources: []
-  working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-01-amls-theory/notes.md
+  resources:
+  - kind: read
+    label: Official AMLS sample exam blueprint
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 36–48; mask answers during setup
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-blueprint/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-mock-sit
+  title: Sit and mark the 90-minute module mock
+  status: pending
+  objective: Complete all seven official tasks closed-book, then mark against the slide answers and log
+    gaps by unit.
+  done_when:
+  - Exactly 90 minutes is used with no notes
+  - Every lost point is tagged to unit source and error type
+  - The score is recorded as evidence without declaring mastery
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-ml-systems
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Official AMLS 90-minute 100-point sample
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 36–48
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-sit/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-mock-remediate
+  title: Remediate only evidenced gaps
+  status: pending
+  objective: Reopen only the units and external question banks justified by the marked mock.
+  done_when:
+  - Each remediation item names the missed task and owning unit
+  - A second closed-book variant is solved for every remediated gap
+  - No source is reread linearly
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-ml-systems
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: MLSysBook Vol 1 — routed checkpoints
+    source_id: source-mlsysbook-vol1
+    locator: Only chapters named by the failed unit
+  - kind: practise
+    label: MLSysBook Vol 2 — routed checkpoints
+    source_id: source-mlsysbook-vol2
+    locator: Only chapters named by the failed unit
+  - kind: practise
+    label: CMU 10-414 — selected assignment variant
+    source_id: source-cmu-10414
+    locator: Compilation or GPU gaps only
+  - kind: practise
+    label: MIT 6.172 — selected quiz variant
+    source_id: source-mit-6172
+    locator: Performance locality or parallelism gaps only
+  - kind: practise
+    label: Stanford CS149 — selected written problem
+    source_id: source-stanford-cs149
+    locator: Parallel or GPU gaps only
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-remediate/notes.md
   attachments: []
   source_feedback: []

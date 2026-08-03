@@ -1,0 +1,110 @@
+id: study-map-m2-sad-clustering
+type: study-map
+unit_id: unit-m2-sad-clustering
+status: ready
+current_stage: stage-sad-clustering-scope
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-clustering-scope
+  title: Recover the exercise-defined clustering scope
+  objective: Treat UE7—not an invented lecture—as the current authority and connect clustering to L11's
+    unsupervised-learning definition.
+  done_when:
+  - Explain why clustering is exploratory and why there may be no single true number of clusters.
+  - Distinguish hierarchical, partitioning, and density-based families from UE7 slides 32–43.
+  estimate_minutes: 55
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current UE7 clustering introduction and method families
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 32–43
+  - kind: reference
+    label: Current L11 supervised/unsupervised framing
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf
+  - kind: reference
+    label: No 2026 clustering lecture deck exists; 2026 L12 is tree-based
+    source_id: source-sad-ss26-lectures
+    locator: Explicit completeness disposition
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-scope/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-clustering-kmeans
+  title: Trace k-means through assignment and centroid updates
+  objective: Reproduce the full five-point/two-cluster UE7 walkthrough and understand the objective-driven
+    iteration.
+  done_when:
+  - Run distance, assignment, centroid recomputation, and convergence for a small dataset by hand.
+  - Explain dependence on k and initialization, sensitivity to outliers, and convergence to local rather
+    than guaranteed global optima.
+  estimate_minutes: 105
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current UE7 k-means worked example
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 44–75
+  - kind: reference
+    label: 2025 L12 Clustering — full same-course second explanation
+    source_id: source-sad-2025-recordings
+    locator: 12_clustering.pdf
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-clustering-depth
+  title: Optional hierarchical/density depth and cluster validation
+  objective: Fill only the conceptual gaps left by the UE slides without turning this auxiliary topic
+    into a second unsupervised-learning course.
+  done_when:
+  - Compare k-means with hierarchical and density-based clustering on shape, k, and outlier assumptions.
+  - Mark any validation/algorithm detail not present in UE7 as optional depth.
+  estimate_minutes: 60
+  exam_critical: false
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: ISLP §12.2 selected clustering sections
+    source_id: source-islp
+    locator: §12.2
+  - kind: read
+    label: Kroese clustering selections — optional independent reference
+    source_id: source-kroese-dsml
+    locator: Clustering selections
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-depth/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-clustering-practice
+  title: k-means trace and final-course question gate
+  objective: Combine the clustering calculation with UE7's explicit final-exam question prompts.
+  done_when:
+  - Complete a fresh k-means trace to stable assignments.
+  - 'Answer the UE7 unsupervised-learning questions: supervised versus unsupervised, two clustering families,
+    and Manhattan distance.'
+  estimate_minutes: 80
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: UE7 clustering walkthrough plus slides 77–87 final-exam question inventory
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 44–87
+  - kind: reference
+    label: UE7 also reviews Blatt 5 permutation tests, neural nets, and metrics; those route to L10, L15,
+      and L11 respectively
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 12–30 — cross-unit disposition
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-practice/notes.md

@@ -1,0 +1,39 @@
+id: unit-m2-sad-l13
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 13 — Similarity-Based Learning
+order: 13
+scope: Current 2026 L13 deck; k-NN classification/regression, aggregation and imbalance, Minkowski/cosine/Jaccard/Mahalanobis
+  measures, normalization, metric axioms, and efficient search/indexing including kd/k-means/M-trees and
+  LSH.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/13_similarity_based.pdf (32 pages)
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 11_instance-based.pdf + 13_similarity_based_part3.pdf
+source_selections:
+- source_id: source-kelleher-fmlpda
+  locator: Ch 5
+  purpose: Primary similarity-based text
+- source_id: source-aml-ss26-lectures
+  locator: AML VL02 k-NN
+  purpose: Cross-module deepening after SaD scope
+- source_id: source-cs4780-homeworks
+  locator: 2017/2018 HW1 k-NN
+  purpose: Local solution-backed practice
+- source_id: source-mit-6034-quizzes
+  locator: Nearest-neighbor problems
+  purpose: Solved tracing practice
+artifacts:
+  other:
+  - note-sad-l11-instance-based
+workspace_ids:
+- workspace-m2-exam-prep
+related_module_ids:
+- module-hu-aml
+current_study_map: study-map-m2-sad-l13

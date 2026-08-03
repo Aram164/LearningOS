@@ -1,0 +1,34 @@
+id: unit-m2-sad-l12
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 12 — Tree-Based Learning & Ensembles
+order: 12
+scope: Current 2026 L12 deck; classification/regression trees, entropy/information gain/ID3, variance
+  reduction, stopping/pruning, bagging, random forests, boosting, stacking, and ensemble tradeoffs.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/12_tree_based.pdf (36 pages)
+source_selections:
+- source_id: source-kelleher-fmlpda
+  locator: Ch 4
+  purpose: Primary course-aligned tree family
+- source_id: source-islp
+  locator: §8.1–8.2
+  purpose: Trees, bagging, random forests, boosting
+- source_id: source-kroese-dsml
+  locator: Ch 8 selections
+  purpose: Independent tree/ensemble reference
+- source_id: source-cs4780-homeworks
+  locator: 2018 HW8 tree/AdaBoost tasks
+  purpose: Local solution-backed practice
+- source_id: source-mit-6034-quizzes
+  locator: ID3/tree construction problems
+  purpose: Solved tracing practice
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l12

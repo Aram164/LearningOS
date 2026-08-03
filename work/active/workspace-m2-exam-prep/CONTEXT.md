@@ -24,11 +24,54 @@ notes:
 - note-sad-hypothesis-testing-handwritten
 - note-regression-sad-aml-islp-bridge
 sources:
-- source-fau-klausur-ws1415
-- source-dekking-mips
-- source-fahrmeir-arbeitsbuch
+- source-sad-ss26-lectures
 - source-sad-uebungen
+- source-sad-2025-recordings
+- source-teschl-mathe-informatiker
+- source-fahrmeir-statistik
+- source-fahrmeir-arbeitsbuch
+- source-blitzstein-hwang
+- source-pitman-probability
+- source-tijms-understanding-probability
+- source-ross-first-course
+- source-schaums-probability
+- source-openintro-statistics
+- source-dekking-mips
 - source-mit-1805
+- source-stat110
+- source-mit-18650
+- source-fau-klausur-ws1415
+- source-sad-klausuren-extern
+- source-statquest
+- source-jbstatistics
+- source-kurzes-tutorium-statistik
+- source-brandon-foltz
+- source-kelleher-fmlpda
+- source-islp
+- source-kroese-dsml
+- source-cs229-notes
+- source-cs229-2022-videos
+- source-murphy-pml1
+- source-csc411-notes
+- source-aml-ss26-lectures
+- source-cs4780-homeworks
+- source-mit-6034-quizzes
+- source-3b1b-neural-networks
+- source-3b1b-linear-algebra
+- source-eecs498
+- source-rohrer-e2eml
+- source-domingos-useful-things
+- source-swanson-principles-probability
+- source-analysis-skript
+- source-professor-leonard
+- source-3b1b-essence-of-calculus
+- source-fritzsche-trainingsbuch
+- source-analysis-drill-blaetter-extern
+- source-analysis-klausuren-extern
+- source-strang-calculus
+- source-mit-18100a
+- source-analysis-grundlagen-handouts
+- source-ableitinger-musterloesungen
 program_ids:
 - program-bachelors
 module_ids:
@@ -39,6 +82,17 @@ unit_ids:
 - unit-m2-sad-l03
 - unit-m2-sad-l04
 - unit-m2-sad-l05
+- unit-m2-sad-l06
+- unit-m2-sad-l07
+- unit-m2-sad-l08
+- unit-m2-sad-l09
+- unit-m2-sad-l10
+- unit-m2-sad-l11
+- unit-m2-sad-l12
+- unit-m2-sad-l13
+- unit-m2-sad-l14
+- unit-m2-sad-l15
+- unit-m2-sad-clustering
 - unit-m2-sad-l06-l10
 - unit-m2-analysis-exam-prep
 ---
@@ -56,19 +110,7 @@ parallel tracks.
 
 ## Current Scope
 
-*Required now* — SaD cluster N1 (descriptive: L01–L03) using the L02 unit
-(reference + exercise bank), then N2 (probability/combinatorics: L04–L05);
-Analysis block AN.0 (refresh Grundlagen + ℝ — learned a year ago).
-
-*Helpful now* — first pass over the FAU Klausur pair to calibrate the German exam
-format; Dekking exercises as cross-cluster drill.
-
-*Defer* — clusters N3–N5 and Analysis blocks A–G until N1/N2/AN.0 are closed;
-mock-exam runs (Ulm timed mock, 18.05 exams) belong to the final phase.
-
-*Reference only* — the SaD 06–10 deep plan, the AN source crosswalk and Chat8
-"KW-27 RECALIBRATION" schedule (legacy tree, Stage 2) — the recalibration dates
-are stale now that the sitting moved; reuse its block ordering, not its calendar.
+Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after AML on 30.09 switch to AN.X and combined M2 mocks for the 09.10 sitting.
 
 ## Open Questions
 
@@ -79,19 +121,17 @@ are stale now that the sitting moved; reuse its block ordering, not its calendar
 
 ## Next Action
 
-AN.0 refresh session (~2h, skript Ch 1–2 + kleine Beweise skim), then cluster N1
-with `note-sad-l02-exercise-bank` (drills E1–E8, self-graded). The SaD L02 Mini
-Plan in `inputs/` is the study script for the L02 half.
+Start stage-m2-analysis-calibrate (60 min): read the script's course contract, take one cold WV sample, and create the five-class error ledger. Then begin AN.0 with unser skript Chapters 1-2.
 
 ## Durable Notes
 
-Created or linked so far: the SaD L02 unit pair, the source-crosswalk narrative,
-the handwritten hypothesis-testing pages (transcribe when N4 comes up), the
-Regression Bridge (Block E backbone — also serves the AML exam).
+Analysis now has an executable script-led study map. unser skript.pdf is the scope and notation authority; current HU exercises come before external banks; intuition sources are capped detours; proofs are selective understanding repairs because the script says they need not be memorized.
 
 ## Deferred
 
-- Full transcription of the handwritten Teil-01/02/03 scans — do per-cluster
-  during prep, not upfront (decision 2026-07-17: transcription doubles as review).
-- Migration of the L01/L03/L04/L05 SaD units, the 06–10 deep plan and the
-  difficulty map — Stage 2 of the v3 migration; legacy files remain readable.
+- Full transcription of handwritten Teil-01/02/03 scans — do per cluster
+  during prep so transcription doubles as review.
+- Teschl & Teschl remains officially named but unresolved: no reachable
+  local material or verified URL is currently registered.
+- Swanson's *Principles of Probability* is explicitly excluded as
+  off-syllabus formal-logic/measure-theory material.

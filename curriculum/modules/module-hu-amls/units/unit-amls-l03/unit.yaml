@@ -1,0 +1,44 @@
+id: unit-amls-l03
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 03 — Compilation – Size Inference and Rewrites
+order: 1
+scope: Compilation pipeline; size, sparsity and cost inference; CSE and algebraic rewrites; matrix-chain
+  optimization and deferred standardization.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 03_Compilation.pdf — 43 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §03 (4 curated) and Part 2 §03 (17 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l03-integrate
+- source_id: source-dmmls-boehm
+  locator: Rewrites and compilation sections (verify TOC after acquisition)
+  purpose: Lecturer-authored terminology
+  stage_ids:
+  - stage-amls-l03-integrate
+- source_id: source-mlc-book
+  locator: Tensor program abstraction, graph rewrites and automatic optimization
+  purpose: Executable implementation view
+  stage_ids:
+  - stage-amls-l03-integrate
+- source_id: source-cmu-10414
+  locator: Computation-graph/autodiff lectures and HW1 autodiff parts
+  purpose: Checkable implementation drill
+  stage_ids:
+  - stage-amls-l03-evidence
+- source_id: source-mit-6172
+  locator: Selected compiler/performance quiz items
+  purpose: Written performance reasoning
+  stage_ids:
+  - stage-amls-l03-evidence
+current_study_map: study-map-amls-l03
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

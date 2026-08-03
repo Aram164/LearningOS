@@ -1,0 +1,40 @@
+id: unit-m2-sad-l10
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 10 — Statistical Hypothesis Testing
+order: 10
+scope: Current 2026 L10 deck; null/alternative, z/t tests, one/two-sided decisions, Type I/II errors and
+  power, p-values, CI duality, chi-square, rank/permutation tests, and multiple testing.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/10_testing.pdf
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 10_statistical_significance.pdf
+source_selections:
+- source_id: source-fahrmeir-statistik
+  locator: Ch 10–11
+  purpose: German test logic and formulas
+- source_id: source-openintro-statistics
+  locator: Ch 5–7
+  purpose: Gentle mean/categorical/numerical testing
+- source_id: source-fahrmeir-arbeitsbuch
+  locator: Ch 10–11
+  purpose: Solved German tests
+- source_id: source-mit-18650
+  locator: L7–12
+  purpose: Optional rigorous tests/goodness-of-fit
+- source_id: source-mit-1805
+  locator: Hypothesis-testing notes/exams
+  purpose: Solved practice
+artifacts:
+  ultimate_reference: note-sad-probability-inference-deep-plan
+  other:
+  - note-sad-hypothesis-testing-handwritten
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l10

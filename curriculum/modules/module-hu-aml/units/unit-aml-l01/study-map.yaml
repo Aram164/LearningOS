@@ -1,0 +1,151 @@
+id: study-map-aml-l01
+type: study-map
+unit_id: unit-aml-l01
+status: ready
+current_stage: stage-aml-l01-scope
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l01-scope
+  title: Course scope and the historical concept map
+  objective: Read the current L01 deck completely, using history to locate ideas rather than memorizing
+    an unbounded chronology.
+  done_when:
+  - Explain the line from McCulloch–Pitts/perceptron and XOR to CNNs, backprop, LSTM, and Transformers
+    at deck depth.
+  - Mark course logistics and purely illustrative history as reference-only unless the deck turns them
+    into a concept question.
+  estimate_minutes: 80
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 VL01 Introduction — complete 69-page deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 01-Introduction.pdf
+  - kind: reference
+    label: Older VL01 variant — compare only for omitted examples, not current scope
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
+  - kind: watch
+    label: '3Blue1Brown NN #1 as a visual preview, not a history source'
+    source_id: source-3b1b-neural-networks
+    url: https://www.youtube.com/watch?v=aircAruvnKk
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-scope/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l01-formulation
+  title: Datasets, features, labels, tasks, and generalization
+  objective: Convert examples such as MNIST and Iris into precise supervised-learning objects and a leak-free
+    evaluation story.
+  done_when:
+  - Write X, y, feature, label, example, hypothesis/model, loss, train set, and test set for two scenarios.
+  - Distinguish classification/regression and supervised/unsupervised learning; explain why training performance
+    is not generalization.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: ISLP Ch 2 — statistical learning and evaluation selections
+    source_id: source-islp
+    locator: Ch 2
+  - kind: read
+    label: MIT 6.036 — representations, overfitting/generalization, task families
+    source_id: source-mit-6036
+    url: https://ocw.mit.edu/courses/6-036-introduction-to-machine-learning-fall-2020/
+  - kind: reference
+    label: SaD L11 workflow/metrics bridge
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l01-prerequisites
+  title: Linear-algebra primer and tooling readiness
+  objective: Diagnose—not blindly restudy—the vector/matrix and Python/Jupyter prerequisites that later
+    lectures assume.
+  done_when:
+  - Complete the Primer self-check for vectors, matrices, dot products, shapes, linear maps, and basic
+    derivatives.
+  - Open a notebook and express one dataset as an m-by-n matrix with an m-vector of labels.
+  estimate_minutes: 90
+  exam_critical: false
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: Local Primer_Linear_Algebra.pdf — prerequisite diagnostic
+    source_id: source-aml-ss26-lectures
+    locator: Primer_Linear_Algebra.pdf
+  - kind: watch
+    label: 3Blue1Brown Essence of Linear Algebra — targeted gaps only
+    source_id: source-3b1b-linear-algebra
+    url: https://www.3blue1brown.com/topics/linear-algebra
+  - kind: reference
+    label: Jupyter documentation
+    url: https://docs.jupyter.org/
+  - kind: reference
+    label: Python tutorial
+    url: https://docs.python.org/3/tutorial/
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l01-reference-shelf
+  title: Resolve the deck's named external references
+  objective: Keep every named link reachable while separating optional orientation material from exam
+    scope.
+  done_when:
+  - Record a one-line disposition for CIML, DeepLearning.AI, Anaconda, Jupyter, and the optional overview
+    essay.
+  estimate_minutes: 35
+  exam_critical: false
+  scope_triage: reference-only
+  resources:
+  - kind: reference
+    label: CIML — A Course in Machine Learning
+    url: http://ciml.info/
+  - kind: reference
+    label: DeepLearning.AI — course ecosystem mentioned by the deck
+    url: https://www.deeplearning.ai/
+  - kind: reference
+    label: Anaconda documentation
+    url: https://docs.anaconda.com/
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    url: https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-reference-shelf/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-aml-l01-gate
+  title: Introduction self-test and source disposition gate
+  objective: Demonstrate precise ML vocabulary and confirm that every local L01 asset has a role.
+  done_when:
+  - Answer a ten-item formulation/generalization self-test without slides.
+  - 'Confirm dispositions: current deck required; older deck and named web shelf reference-only; Primer
+    diagnostic; no dedicated L01 exercise sheet exists locally.'
+  estimate_minutes: 55
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Create two end-to-end task formulations from MNIST/Iris-style prompts
+    source_id: source-aml-ss26-lectures
+    locator: VL01 examples
+  - kind: reference
+    label: Local bonus sheets 01–04 and exercise decks start with later lecture topics; none is misrepresented
+      as an L01 sheet
+    source_id: source-aml-ss26-lectures
+    locator: bonus-exercises/ and exercise-slides/ — explicit disposition
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-gate/notes.md

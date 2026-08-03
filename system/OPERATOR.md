@@ -16,7 +16,8 @@ python tools/los.py bootstrap
 The stable read contract is the single atomic `generated/manifest.json`,
 `contract_version: 2`. It contains programs, semesters, partitioned modules,
 components, units, study maps, stages, source maps, joins, progress, resume
-pointer, and boundary-only quarantine records. Interfaces must not reconstruct
+pointer, structured academic deadlines (registered attempts, available
+sittings, and registration windows), and boundary-only quarantine records. Interfaces must not reconstruct
 application state by parsing canonical Markdown or YAML. Use `list-*`,
 `inspect`, `search`, and `related` for targeted reads.
 
@@ -64,6 +65,11 @@ Skills and projects use modules and units without false academic metadata.
 12. Every app mutation carries the current manifest snapshot. On conflict,
     reload rather than overwrite.
 13. Validate after authored changes. Acceptance requires 0 errors and 0 warnings.
+14. Source completeness is mandatory. Every learning source named by an
+    authoritative template, bibliography, plan, or course artifact must remain
+    reachable and be explicitly selected, reference-only, or deferred with a
+    reason. Registered-source counts never prove inventory completeness, and
+    silent omission is forbidden.
 
 ## Unit workflow
 
@@ -76,6 +82,19 @@ python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot
 python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
 python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
 ```
+
+When confirmed lecture scope requires a module-wide batch (new units, current
+study maps, source routing, and workspace joins), follow
+[`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md). Complete its material-coverage
+audit, build from the canonical template, and require the no-write gate
+`.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
+--check` to pass before applying the same package with `--expected-snapshot`.
+The gateway never deletes units or creates durable notes.
+
+An explicitly reviewed semantic replacement of one existing durable note uses
+`los note-revise NOTE_ID --file REVISED.md --approve --expected-snapshot
+SNAPSHOT`. It preserves the note's ID, path, and role; moves, merges, splits,
+and role changes remain outside this capability.
 
 A stage owns its working note, attachments, exact resources, source-use
 feedback, and optional detour relationship. A detour records its originating

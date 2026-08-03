@@ -1,0 +1,33 @@
+id: unit-m2-sad-clustering
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: topic
+title: SaD Auxiliary Topic — Clustering & k-Means (UE7-defined scope)
+order: 16
+scope: 'Current 2026 UE7 slides 32–75 define the missing clustering topic: clustering as exploratory unsupervised
+  learning, hierarchical/partitioning/density families, k-means assignment/update iterations, convergence,
+  initialization, outliers, and local optima. The 2025 L12 clustering deck is the same-topic reference;
+  no separate 2026 clustering lecture deck exists.'
+status: ready
+scope_sources:
+- source_id: source-sad-uebungen
+  authority: brief
+  locator: exercise-slides/UE7.pdf slides 32–75
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 12_clustering.pdf
+- source_id: source-sad-ss26-lectures
+  authority: reference
+  locator: 11_datascience_intro.pdf supervised/unsupervised framing
+source_selections:
+- source_id: source-islp
+  locator: §12.2
+  purpose: Optional clustering algorithms and validation depth
+- source_id: source-kroese-dsml
+  locator: Clustering selections
+  purpose: Independent data-science reference
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-clustering

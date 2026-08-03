@@ -1,0 +1,39 @@
+id: unit-amls-l09
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 09 — Data Access Methods
+order: 5
+scope: Caching/buffer management, partitioning and indexing; lossless compression; mixed precision, min-max
+  quantization and numerical stability.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 09_DataAccess.pdf — 41 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §09 (4 curated) and Part 2 §09 (22 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l09-integrate
+- source_id: source-dmmls-boehm
+  locator: Data access and compression sections
+  purpose: Lecturer-authored framing
+  stage_ids:
+  - stage-amls-l09-integrate
+- source_id: source-mlsysbook-vol2
+  locator: Data Storage
+  purpose: At-scale storage companion
+  stage_ids:
+  - stage-amls-l09-integrate
+- source_id: source-mit-6172
+  locator: Locality and caching quizzes
+  purpose: Timed written drills
+  stage_ids:
+  - stage-amls-l09-evidence
+current_study_map: study-map-amls-l09
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

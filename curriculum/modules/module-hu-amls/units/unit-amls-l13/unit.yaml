@@ -1,0 +1,39 @@
+id: unit-amls-l13
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 13 — Model Deployment and Serving
+order: 11
+scope: Model exchange and serving patterns; batching/caching/quantization/distillation/cascades; monitoring,
+  concept drift, retraining and machine unlearning.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 13_ModelDeployment.pdf — 49 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §13 (5 curated) and Part 2 §13 (25 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l13-integrate
+- source_id: source-mlsysbook-vol2
+  locator: Inference at Scale
+  purpose: At-scale serving companion
+  stage_ids:
+  - stage-amls-l13-integrate
+- source_id: source-mlsysbook-vol1
+  locator: Model Serving and ML Operations
+  purpose: Serving/operations reference and checkpoints
+  stage_ids:
+  - stage-amls-l13-integrate
+- source_id: source-huyen-dmls
+  locator: Chapters 7–9
+  purpose: Deployment prediction monitoring and continual-learning trade-offs
+  stage_ids:
+  - stage-amls-l13-integrate
+current_study_map: study-map-amls-l13
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

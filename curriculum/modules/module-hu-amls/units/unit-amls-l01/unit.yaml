@@ -1,0 +1,34 @@
+id: unit-amls-l01
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 01 — Introduction and Overview
+order: 12
+scope: Narrow/broad ML-system definitions, lifecycle and use cases; ML-system categories; SystemDS and
+  DAPHNE architecture overview.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 01_Introduction.pdf — 42 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §01 (2 curated) and Part 2 §01 (2 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l01-integrate
+- source_id: source-mlsysbook-vol1
+  locator: Chapter 1 and Chapter 2 selected sections
+  purpose: Foundation and checkpoints
+  stage_ids:
+  - stage-amls-l01-integrate
+- source_id: source-cmu-10414
+  locator: Lecture 1 systems/build-first overview
+  purpose: Alternative system framing
+  stage_ids:
+  - stage-amls-l01-integrate
+current_study_map: study-map-amls-l01
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

@@ -1,0 +1,44 @@
+id: unit-amls-l07
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 07 — LLM Training and Inference
+order: 7
+scope: Transformer systems, scaling laws and distributed training; SFT/RLHF/DPO/LoRA; KV-cache management,
+  vLLM, FlashAttention and compound systems.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 07_LLM_TrainingInference.pdf — 35 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §07 (6 curated) and Part 2 §07 (16 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l07-integrate
+- source_id: source-ultrascale-playbook
+  locator: Full playbook with focus on 5D parallelism and ZeRO
+  purpose: Main written companion
+  stage_ids:
+  - stage-amls-l07-integrate
+- source_id: source-htsym-scaling-book
+  locator: Transformer FLOP and inference accounting
+  purpose: Quantitative derivation
+  stage_ids:
+  - stage-amls-l07-integrate
+- source_id: source-mlsysbook-vol2
+  locator: Inference at Scale
+  purpose: At-scale inference view
+  stage_ids:
+  - stage-amls-l07-integrate
+- source_id: source-cmu-10414
+  locator: Transformer/parallel systems material
+  purpose: Checkable systems drill
+  stage_ids:
+  - stage-amls-l07-evidence
+current_study_map: study-map-amls-l07
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep

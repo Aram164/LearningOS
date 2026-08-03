@@ -1,0 +1,730 @@
+module_id: module-hu-aml
+
+plan_contract:
+  version: 1
+  coverage_audit: work/active/workspace-m2-exam-prep/outputs/SaD-AML-source-completeness-audit-2026-08-03.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+module_patch:
+  unit_order: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+
+source_map:
+  type: module-source-map
+  module_id: module-hu-aml
+  sources:
+  - source_id: source-aml-ss26-lectures
+    role: course-material
+    why: Current L01–L10 decks define 2026 scope; Primer, bonus sheets, exercise decks, older L01–L10 variants, and the older-only L11 RNN deck live in the same course archive.
+    priority: 0
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-islp
+    role: spine
+    why: Gentle statistical-learning spine; Ch 2 for framing, Ch 10 for neural networks/CNNs/RNNs, and scoped chapters for L02–L07.
+    priority: 1
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-esl
+    role: optional-depth
+    why: Graduate-depth statistical learning; selected only after the course/ISLP pass and never as the first neural-network source.
+    priority: 10
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-murphy-pml1
+    role: derivation
+    why: Best end-to-end MLE/optimization and neural-network derivation spine; exact sections are routed per lecture.
+    priority: 2
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-csc411-notes
+    role: reference
+    why: Compact independent notes for regression, classifiers, metrics, neural networks, backpropagation, and CNNs.
+    priority: 11
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-kroese-dsml
+    role: reference
+    why: Independent data-science/ML text; selected sections support evaluation, neural networks, and implementation.
+    priority: 12
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-mml
+    role: derivation
+    why: Mathematical safety net, especially Ch 5 chain rule/matrix calculus and Ch 7 optimization; it has no useful k-NN or logistic-regression first pass.
+    priority: 5
+    unit_routes: [unit-aml-l03, unit-aml-l04, unit-aml-l06, unit-aml-l09]
+  - source_id: source-cs229-notes
+    role: derivation
+    why: Concise derivations for regression/classification/optimization, the only selected kernels-without-SVM chapter for L07, and neural-network fundamentals.
+    priority: 3
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-cs229-2022-videos
+    role: optional-depth
+    why: Topic-matched lecture spine only; numbering is verified by topic and the course is never watched linearly.
+    priority: 13
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-mit-6036
+    role: practice
+    why: Auto-graded/structured ML units for perceptron, regression, classification, model selection, and neural-network fundamentals.
+    priority: 14
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09]
+  - source_id: source-eecs498
+    role: optional-depth
+    why: Strong selected lectures for optimization, fully connected networks, CNNs, and RNNs; deeper than AML in places.
+    priority: 15
+    unit_routes: [unit-aml-l06, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-cs231n-notes
+    role: reference
+    why: Written classification/optimization/ConvNet notes; the CNN notes are an especially close L10 complement.
+    priority: 16
+    unit_routes: [unit-aml-l02, unit-aml-l06, unit-aml-l10]
+  - source_id: source-cs231n-2017-videos
+    role: optional-depth
+    why: Original CNN lecture alternative; use only the convolution/architecture lectures, not the full course.
+    priority: 17
+    unit_routes: [unit-aml-l10]
+  - source_id: source-statquest
+    role: intuition
+    why: Short explainers for metrics, neurons, gradient descent, backpropagation, and CNN intuition.
+    priority: 18
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-3b1b-neural-networks
+    role: first-exposure
+    why: Best four-video visual bridge into L08–L09; use #1–2 for forward/GD and #3–4 for backpropagation.
+    priority: 4
+    unit_routes: [unit-aml-l01, unit-aml-l08, unit-aml-l09]
+  - source_id: source-3b1b-linear-algebra
+    role: intuition
+    why: Targeted visual repair for vector, matrix, linear-map, and basis gaps identified by the local AML linear-algebra primer; never watched linearly as part of L01.
+    priority: 9
+    unit_routes: [unit-aml-l01, unit-aml-l03, unit-aml-l06, unit-aml-l07]
+  - source_id: source-karpathy-micrograd
+    role: implementation
+    why: Optional code-level spelling-out of backpropagation after the L09 analytical pass.
+    priority: 19
+    unit_routes: [unit-aml-l09]
+  - source_id: source-rohrer-e2eml
+    role: intuition
+    why: Visual explanations for model workflow, metrics, neural networks, CNNs, and RNNs; use only for named gaps.
+    priority: 20
+    unit_routes: [unit-aml-l01, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-geron-handson
+    role: implementation
+    why: Local applied reference with runnable neural-network and CNN material; code depth is optional for a written exam.
+    priority: 21
+    unit_routes: [unit-aml-l01, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-caltech-lfd
+    role: practice
+    why: Selected bias/variance, regression, and learning-theory homework; neural-network gaps are better served elsewhere.
+    priority: 22
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04]
+  - source_id: source-ng-coursera
+    role: intuition
+    why: Gentle regression/logistic/GD/kernel explanations; not selected for the L08–L11 neural arc.
+    priority: 23
+    unit_routes: [unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07]
+  - source_id: source-cs4780-homeworks
+    role: practice
+    why: "Complete local 2017/2018 solution-backed bank: HW1 k-NN, HW2 perceptron, HW3 probability/MLE, HW4 logistic, HW6 regression/GD/ridge, HW7 kernels, HW8 trees/boosting, HW9 neural networks/CNN/ReLU."
+    priority: 6
+    unit_routes: [unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10]
+  - source_id: source-mit-6034-quizzes
+    role: practice
+    why: Solution-backed tracing questions for perceptrons, neural networks, and related ML mechanics.
+    priority: 24
+    unit_routes: [unit-aml-l07, unit-aml-l08, unit-aml-l09]
+  - source_id: source-pytorch-tutorials
+    role: implementation
+    why: Official autograd and CNN implementation reference; required only for connecting L09/L10 formulas to framework behavior.
+    priority: 25
+    unit_routes: [unit-aml-l09, unit-aml-l10]
+  - source_id: source-kelleher-fmlpda
+    role: reference
+    why: Shared local ML book from the AML shelf; useful for introductory framing and a second neural-network explanation.
+    priority: 26
+    unit_routes: [unit-aml-l01, unit-aml-l08, unit-aml-l09]
+  - source_id: source-domingos-useful-things
+    role: optional-depth
+    why: Concise framing of overfitting, generalization, data, representation, and inductive bias.
+    priority: 27
+    unit_routes: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04]
+  - source_id: source-sad-ss26-lectures
+    role: reference
+    why: SaD L11 supplies workflow/metrics and SaD L15 is the deliberate bridge into AML L08–L09.
+    priority: 7
+    unit_routes: [unit-aml-l01, unit-aml-l08, unit-aml-l09]
+  - source_id: source-goodfellow-dl
+    role: optional-depth
+    why: Free deep-learning reference for feedforward, regularization, CNN, and sequence models; broader and deeper than the exam.
+    priority: 28
+    unit_routes: [unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-d2l
+    role: optional-depth
+    why: Executable neural-network/CNN/RNN reference for later implementation; not a required written-exam spine.
+    priority: 29
+    unit_routes: [unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  - source_id: source-sutton-barto-rl
+    role: reference
+    why: Present on the shared AML shelf but reinforcement learning is outside the locally posted L01–L10 scope.
+    priority: 98
+    unit_routes: []
+  - source_id: source-zacharski-data-mining
+    role: reference
+    why: Present on the shared AML shelf; selected only as an optional k-NN/data-mining alternative, not for the missing neural plans.
+    priority: 97
+    unit_routes: [unit-aml-l02]
+
+units:
+  - unit:
+      id: unit-aml-l01
+      type: unit
+      module_id: module-hu-aml
+      kind: lecture
+      title: AML Lecture 01 — Introduction & ML Problem Formulation
+      order: 1
+      scope: Current 2026 L01 deck; ML definitions and course orientation, historical milestones as a concept map, datasets/features/labels, learning tasks, train/test reasoning, MNIST/Iris examples, and the linear-algebra/tooling prerequisite shelf.
+      status: ready
+      scope_sources:
+      - {source_id: source-aml-ss26-lectures, authority: slides, locator: "lecture-slides/VL 01-Introduction.pdf (69 pages)"}
+      - {source_id: source-aml-ss26-lectures, authority: reference, locator: "older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf"}
+      source_selections:
+      - {source_id: source-islp, locator: "Ch 2 selections", purpose: "Learning task, generalization, data-split framing"}
+      - {source_id: source-mit-6036, locator: "Introduction, representations, generalization", purpose: "Structured independent introduction"}
+      - {source_id: source-domingos-useful-things, locator: "Complete essay", purpose: "Optional conceptual framing"}
+      - {source_id: source-sad-ss26-lectures, locator: "SaD L11", purpose: "Cross-module workflow/metrics bridge"}
+      artifacts: {}
+      workspace_ids: [workspace-aml-exam-prep]
+      related_module_ids: [module-hu-m2-statistik-analysis]
+      current_study_map: study-map-aml-l01
+    study_map:
+      id: study-map-aml-l01
+      type: study-map
+      unit_id: unit-aml-l01
+      status: ready
+      current_stage: stage-aml-l01-scope
+      source_plan: {path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml, provenance: operator}
+      detours: []
+      shelving: {state: none}
+      stages:
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l01-scope
+        title: Course scope and the historical concept map
+        objective: Read the current L01 deck completely, using history to locate ideas rather than memorizing an unbounded chronology.
+        done_when: ["Explain the line from McCulloch–Pitts/perceptron and XOR to CNNs, backprop, LSTM, and Transformers at deck depth.", "Mark course logistics and purely illustrative history as reference-only unless the deck turns them into a concept question."]
+        estimate_minutes: 80
+        exam_critical: false
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "2026 VL01 Introduction — complete 69-page deck", source_id: source-aml-ss26-lectures, locator: "lecture-slides/VL 01-Introduction.pdf"}
+        - {kind: reference, label: "Older VL01 variant — compare only for omitted examples, not current scope", source_id: source-aml-ss26-lectures, locator: "older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf"}
+        - {kind: watch, label: "3Blue1Brown NN #1 as a visual preview, not a history source", source_id: source-3b1b-neural-networks, url: "https://www.youtube.com/watch?v=aircAruvnKk"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-scope/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l01-formulation
+        title: Datasets, features, labels, tasks, and generalization
+        objective: Convert examples such as MNIST and Iris into precise supervised-learning objects and a leak-free evaluation story.
+        done_when: ["Write X, y, feature, label, example, hypothesis/model, loss, train set, and test set for two scenarios.", "Distinguish classification/regression and supervised/unsupervised learning; explain why training performance is not generalization."]
+        estimate_minutes: 90
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "ISLP Ch 2 — statistical learning and evaluation selections", source_id: source-islp, locator: "Ch 2"}
+        - {kind: read, label: "MIT 6.036 — representations, overfitting/generalization, task families", source_id: source-mit-6036, url: "https://ocw.mit.edu/courses/6-036-introduction-to-machine-learning-fall-2020/"}
+        - {kind: reference, label: "SaD L11 workflow/metrics bridge", source_id: source-sad-ss26-lectures, locator: "lecture-slides/11_datascience_intro.pdf"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l01-prerequisites
+        title: Linear-algebra primer and tooling readiness
+        objective: Diagnose—not blindly restudy—the vector/matrix and Python/Jupyter prerequisites that later lectures assume.
+        done_when: ["Complete the Primer self-check for vectors, matrices, dot products, shapes, linear maps, and basic derivatives.", "Open a notebook and express one dataset as an m-by-n matrix with an m-vector of labels."]
+        estimate_minutes: 90
+        exam_critical: false
+        scope_triage: helpful-now
+        resources:
+        - {kind: read, label: "Local Primer_Linear_Algebra.pdf — prerequisite diagnostic", source_id: source-aml-ss26-lectures, locator: "Primer_Linear_Algebra.pdf"}
+        - {kind: watch, label: "3Blue1Brown Essence of Linear Algebra — targeted gaps only", source_id: source-3b1b-linear-algebra, url: "https://www.3blue1brown.com/topics/linear-algebra"}
+        - {kind: reference, label: "Jupyter documentation", url: "https://docs.jupyter.org/"}
+        - {kind: reference, label: "Python tutorial", url: "https://docs.python.org/3/tutorial/"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l01-reference-shelf
+        title: Resolve the deck's named external references
+        objective: Keep every named link reachable while separating optional orientation material from exam scope.
+        done_when: ["Record a one-line disposition for CIML, DeepLearning.AI, Anaconda, Jupyter, and the optional overview essay."]
+        estimate_minutes: 35
+        exam_critical: false
+        scope_triage: reference-only
+        resources:
+        - {kind: reference, label: "CIML — A Course in Machine Learning", url: "http://ciml.info/"}
+        - {kind: reference, label: "DeepLearning.AI — course ecosystem mentioned by the deck", url: "https://www.deeplearning.ai/"}
+        - {kind: reference, label: "Anaconda documentation", url: "https://docs.anaconda.com/"}
+        - {kind: read, label: "Domingos — A Few Useful Things to Know About Machine Learning", source_id: source-domingos-useful-things, url: "https://homes.cs.washington.edu/~pedrod/papers/cacm12.pdf"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-reference-shelf/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l01-gate
+        title: Introduction self-test and source disposition gate
+        objective: Demonstrate precise ML vocabulary and confirm that every local L01 asset has a role.
+        done_when: ["Answer a ten-item formulation/generalization self-test without slides.", "Confirm dispositions: current deck required; older deck and named web shelf reference-only; Primer diagnostic; no dedicated L01 exercise sheet exists locally."]
+        estimate_minutes: 55
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: practise, label: "Create two end-to-end task formulations from MNIST/Iris-style prompts", source_id: source-aml-ss26-lectures, locator: "VL01 examples"}
+        - {kind: reference, label: "Local bonus sheets 01–04 and exercise decks start with later lecture topics; none is misrepresented as an L01 sheet", source_id: source-aml-ss26-lectures, locator: "bonus-exercises/ and exercise-slides/ — explicit disposition"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-gate/notes.md
+
+  - unit:
+      id: unit-aml-l08
+      type: unit
+      module_id: module-hu-aml
+      kind: lecture
+      title: AML Lecture 08 — Feedforward Neural Networks
+      order: 8
+      scope: Current 2026 L08 deck; XOR via stacking, feedforward computation and shapes, activations/expressiveness, regression/binary/multiclass/multilabel output layers, softmax, and accuracy/precision/recall/F1 with micro/macro/weighted averaging.
+      status: ready
+      scope_sources:
+      - {source_id: source-aml-ss26-lectures, authority: slides, locator: "lecture-slides/VL 08-feedforward-neural-network.pdf (81 pages)"}
+      - {source_id: source-aml-ss26-lectures, authority: reference, locator: "older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf"}
+      source_selections:
+      - {source_id: source-islp, locator: "§10.1–10.2", purpose: "Primary gentle MLP/forward-pass reading"}
+      - {source_id: source-cs229-notes, locator: "§7.1–7.4", purpose: "Compact model/forward-pass derivation"}
+      - {source_id: source-murphy-pml1, locator: "§13.2", purpose: "Optional architecture/output-layer depth"}
+      - {source_id: source-kroese-dsml, locator: "§9.2 and §7.2", purpose: "Network/evaluation reference"}
+      - {source_id: source-csc411-notes, locator: "§3.3 and §8.3 selections", purpose: "Independent network/metric notes"}
+      - {source_id: source-cs4780-homeworks, locator: "2018 HW9 selected forward/ReLU tasks", purpose: "Local solution-backed practice"}
+      artifacts: {other: [note-aml-sad-master-wiring, note-aml-bonusblatt04-solutions]}
+      workspace_ids: [workspace-aml-exam-prep]
+      related_module_ids: [module-hu-m2-statistik-analysis]
+      current_study_map: study-map-aml-l08
+    study_map:
+      id: study-map-aml-l08
+      type: study-map
+      unit_id: unit-aml-l08
+      status: ready
+      current_stage: stage-aml-l08-forward
+      source_plan: {path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml, provenance: operator}
+      detours: []
+      shelving: {state: none}
+      stages:
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l08-forward
+        title: XOR, stacking, shapes, and the shared forward-pass example
+        objective: Follow the current deck from the perceptron/XOR wall into a multilayer forward pass and run the lecture's numerical example by hand once for reuse in L09.
+        done_when: ["Build XOR as AND(OR,NAND) and contrast it with L07's computed-feature fix.", "Trace a^(l)=g(W^(l)a^(l-1)+b^(l)) with shapes and reproduce the shared output near 0.94."]
+        estimate_minutes: 110
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "2026 VL08 — complete 81-page deck", source_id: source-aml-ss26-lectures, locator: "lecture-slides/VL 08-feedforward-neural-network.pdf"}
+        - {kind: reference, label: "Older VL08 variant — examples only after current deck", source_id: source-aml-ss26-lectures, locator: "older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf"}
+        - {kind: read, label: "ISLP §10.1–10.2", source_id: source-islp, locator: "§10.1–10.2"}
+        - {kind: reference, label: "SaD L15 warm-up: neuron, MLR equivalence, MLP shapes", source_id: source-sad-ss26-lectures, locator: "lecture-slides/15_neural_networks.pdf"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-forward/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l08-activations
+        title: Activations, expressiveness, and output-layer choice
+        objective: Explain why nonlinear activations are necessary and select identity, sigmoid, per-label sigmoid, or softmax by task.
+        done_when: ["Prove two linear layers collapse to one and compare sigmoid/tanh/ReLU behavior.", "Distinguish multiclass from multilabel output/loss semantics and compute softmax stably by hand."]
+        estimate_minutes: 90
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "CS229 notes §7.1–7.4", source_id: source-cs229-notes, locator: "§7.1–7.4"}
+        - {kind: read, label: "Murphy §13.2 — optional deeper architecture/output view", source_id: source-murphy-pml1, locator: "§13.2"}
+        - {kind: watch, label: "3Blue1Brown NN #1–2", source_id: source-3b1b-neural-networks, url: "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"}
+        - {kind: watch, label: "StatQuest — Neural Networks Part 1", source_id: source-statquest, url: "https://www.youtube.com/watch?v=CqOfi41LfDw"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-activations/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l08-metrics
+        title: Confusion matrices and multiclass metric averaging
+        objective: Calculate and interpret accuracy, precision, recall, F1, and micro/macro/weighted averages exactly as the deck defines them.
+        done_when: ["Compute per-class and micro/macro/weighted metrics from a multiclass confusion matrix.", "Explain why averaging is in the deck/sklearn documentation rather than the books and when accuracy fails under imbalance."]
+        estimate_minutes: 100
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "Current VL08 metric block — primary scope", source_id: source-aml-ss26-lectures, locator: "VL08 metrics section"}
+        - {kind: read, label: "scikit-learn model evaluation — authoritative micro/macro/weighted definitions", url: "https://scikit-learn.org/stable/modules/model_evaluation.html"}
+        - {kind: read, label: "Kroese §7.2 independent evaluation reference", source_id: source-kroese-dsml, locator: "§7.2"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-metrics/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l08-practice
+        title: Forward-pass, XOR, metric, and solution-backed practice
+        objective: Make the shared numerical example, shape arithmetic, and metrics executable before backpropagation.
+        done_when: ["Complete Bonusblatt 4 Tasks 3–4 and check the existing solution note.", "Solve one CS4780/MIT network trace and a full multiclass-metric table with a key."]
+        estimate_minutes: 120
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: practise, label: "Bonusblatt 4 Aufgaben 3–4; Tasks 1–2 remain L07", source_id: source-aml-ss26-lectures, locator: "bonus-exercises/zusatz-blatt04.pdf"}
+        - {kind: practise, label: "Cornell CS4780 2018 HW9 selected ReLU/NN tasks and local solutions", source_id: source-cs4780-homeworks, locator: "2018Fall/HW9; 2018Spring/HW9"}
+        - {kind: practise, label: "MIT 6.034 neural-network tracing selections", source_id: source-mit-6034-quizzes, locator: "Neural-network quiz problems"}
+        - {kind: reference, label: "Exercise slide filenames are not sheet numbers; Übung 07 is the perceptron tutorial, not a dedicated L08 sheet", source_id: source-aml-ss26-lectures, locator: "exercise-slides/Übung 07.pdf — explicit disposition"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-practice/notes.md
+
+  - unit:
+      id: unit-aml-l09
+      type: unit
+      module_id: module-hu-aml
+      kind: lecture
+      title: AML Lecture 09 — Backpropagation & Neural-Network Training
+      order: 9
+      scope: Current 2026 L09 deck; computation graphs, chain rule/backprop and the shared worked example, training, Frobenius/L2 regularization, dropout, early stopping, double descent, vanishing/exploding gradients, and PyTorch autograd. Batch normalization is not in this deck.
+      status: ready
+      scope_sources:
+      - {source_id: source-aml-ss26-lectures, authority: slides, locator: "lecture-slides/VL 09-neural-networks.pdf (74 pages)"}
+      - {source_id: source-aml-ss26-lectures, authority: reference, locator: "older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf"}
+      source_selections:
+      - {source_id: source-murphy-pml1, locator: "§13.3–13.5", purpose: "Primary backprop/training derivation"}
+      - {source_id: source-islp, locator: "§10.7–10.8", purpose: "Training/regularization reading"}
+      - {source_id: source-cs229-notes, locator: "§7.3, §8.2, §9.1 selections", purpose: "Backprop/regularization/optimization depth"}
+      - {source_id: source-mml, locator: "§5.6", purpose: "Chain-rule and matrix-calculus safety net"}
+      - {source_id: source-kroese-dsml, locator: "§9.3", purpose: "Independent backprop reference"}
+      - {source_id: source-cs4780-homeworks, locator: "2018 HW9 selected NN tasks", purpose: "Local solution-backed practice"}
+      artifacts: {other: [note-aml-sad-master-wiring]}
+      workspace_ids: [workspace-aml-exam-prep]
+      related_module_ids: [module-hu-m2-statistik-analysis]
+      current_study_map: study-map-aml-l09
+    study_map:
+      id: study-map-aml-l09
+      type: study-map
+      unit_id: unit-aml-l09
+      status: ready
+      current_stage: stage-aml-l09-backprop
+      source_plan: {path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml, provenance: operator}
+      detours: []
+      shelving: {state: none}
+      stages:
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l09-backprop
+        title: Computation graphs, chain rule, and the full backward pass
+        objective: Reuse L08's cached forward values and reproduce the current deck's worked backpropagation example node by node.
+        done_when: ["State and apply dz, da_prev, dW, and db layer rules with correct shapes.", "Reproduce the worked gradient including dW^(2) near [0.0143, 0.0506] and identify every chain-rule path."]
+        estimate_minutes: 140
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "2026 VL09 — complete 74-page deck", source_id: source-aml-ss26-lectures, locator: "lecture-slides/VL 09-neural-networks.pdf"}
+        - {kind: reference, label: "Older VL09 variant — second explanation only", source_id: source-aml-ss26-lectures, locator: "older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf"}
+        - {kind: read, label: "Murphy §13.3–13.5 — primary derivation depth", source_id: source-murphy-pml1, locator: "§13.3–13.5"}
+        - {kind: read, label: "MML §5.6 — chain-rule/matrix-calculus safety net", source_id: source-mml, locator: "§5.6"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l09-regularization
+        title: Weight decay, dropout, early stopping, and double descent
+        objective: Connect each training control to bias–variance/generalization and keep classical versus modern risk curves distinct.
+        done_when: ["Relate Frobenius/L2 weight decay to Ridge, and explain train/eval behavior of dropout.", "Explain early stopping and sketch classical U-curve versus double descent."]
+        estimate_minutes: 90
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "ISLP §10.7–10.8", source_id: source-islp, locator: "§10.7–10.8"}
+        - {kind: read, label: "CS229 regularization/optimization selections", source_id: source-cs229-notes, locator: "§8.2; §9.1 selections"}
+        - {kind: read, label: "Goodfellow regularization chapter — optional depth", source_id: source-goodfellow-dl, locator: "Regularization chapter selections"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l09-gradient-health
+        title: Vanishing/exploding gradients and training diagnostics
+        objective: Use repeated Jacobian factors to explain gradient decay/growth and distinguish the remedies actually in the deck.
+        done_when: ["Reproduce the lambda^7-style argument and diagnose vanishing versus exploding behavior.", "State explicitly that batch normalization is not part of this L09 deck."]
+        estimate_minutes: 65
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "Current VL09 final gradient-pathology section", source_id: source-aml-ss26-lectures, locator: "VL09 vanishing/exploding section"}
+        - {kind: watch, label: "3Blue1Brown NN #3–4 — backprop and calculus", source_id: source-3b1b-neural-networks, url: "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi"}
+        - {kind: watch, label: "StatQuest — Backpropagation Main Ideas", source_id: source-statquest, url: "https://www.youtube.com/watch?v=IN2XmBhILt4"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l09-autograd
+        title: PyTorch autograd as the executable computation graph
+        objective: Connect cached forward values and reverse-mode gradients to loss.backward without replacing the analytical derivation with code.
+        done_when: ["Build a tiny tensor graph, call backward, and compare gradients to a hand/finite-difference check.", "Explain requires_grad, grad accumulation, zeroing, and no_grad at lecture depth."]
+        estimate_minutes: 75
+        exam_critical: false
+        scope_triage: helpful-now
+        resources:
+        - {kind: read, label: "PyTorch autograd tutorial — official reference", source_id: source-pytorch-tutorials, url: "https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html"}
+        - {kind: watch, label: "Karpathy micrograd — optional implementation spelling-out", source_id: source-karpathy-micrograd, url: "https://www.youtube.com/watch?v=VMj-3S1tku0"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l09-practice
+        title: Numerical-gradient and backpropagation gate
+        objective: Test the analytical path, regularization reasoning, and gradient-health concepts with solution-backed problems.
+        done_when: ["Finish one full hand backprop plus a finite-difference check.", "Solve one CS4780 neural-network problem and one selected EECS 498 exercise/trace."]
+        estimate_minutes: 130
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: practise, label: "Cornell CS4780 2018 HW9 NN/ReLU tasks and local solutions", source_id: source-cs4780-homeworks, locator: "2018Fall/HW9; 2018Spring/HW9"}
+        - {kind: practise, label: "UMich EECS 498 L6 fully connected networks", source_id: source-eecs498, url: "https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/"}
+        - {kind: reference, label: "No local dedicated L09 exercise sheet; Bonusblatt 4 is L07/L08 and is not relabeled", source_id: source-aml-ss26-lectures, locator: "Explicit completeness disposition"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-practice/notes.md
+
+  - unit:
+      id: unit-aml-l10
+      type: unit
+      module_id: module-hu-aml
+      kind: lecture
+      title: AML Lecture 10 — Convolutional Neural Networks
+      order: 10
+      scope: Current 2026 L10 deck; convolution versus cross-correlation, filters, padding/stride/output shapes, multi-channel computation, parameter counts, pooling, complete CNNs, and the LeNet/AlexNet/GoogLeNet/ResNet architecture lineage.
+      status: ready
+      scope_sources:
+      - {source_id: source-aml-ss26-lectures, authority: slides, locator: "lecture-slides/VL 10-cnn.pdf (70 pages)"}
+      - {source_id: source-aml-ss26-lectures, authority: reference, locator: "older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf"}
+      source_selections:
+      - {source_id: source-islp, locator: "§10.3", purpose: "Primary gentle CNN reading"}
+      - {source_id: source-murphy-pml1, locator: "§14.1–14.3", purpose: "Convolution and exact architecture depth"}
+      - {source_id: source-eecs498, locator: "L7–L8", purpose: "Selected CNN lecture/practice depth"}
+      - {source_id: source-cs231n-notes, locator: "Convolutional Networks notes", purpose: "Written shape/architecture complement"}
+      - {source_id: source-cs4780-homeworks, locator: "2018 HW9 CNN tasks", purpose: "Local solution-backed practice"}
+      artifacts: {}
+      workspace_ids: [workspace-aml-exam-prep]
+      current_study_map: study-map-aml-l10
+    study_map:
+      id: study-map-aml-l10
+      type: study-map
+      unit_id: unit-aml-l10
+      status: ready
+      current_stage: stage-aml-l10-convolution
+      source_plan: {path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml, provenance: operator}
+      detours: []
+      shelving: {state: none}
+      stages:
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l10-convolution
+        title: Convolution/cross-correlation and learned filters
+        objective: Follow the current deck and compute 1D/2D cross-correlation while explaining weight sharing and locality.
+        done_when: ["Compute the deck's small filter examples by hand and distinguish mathematical convolution from DL cross-correlation.", "Explain why shared local filters reduce parameters and preserve spatial structure."]
+        estimate_minutes: 100
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "2026 VL10 — complete 70-page CNN deck", source_id: source-aml-ss26-lectures, locator: "lecture-slides/VL 10-cnn.pdf"}
+        - {kind: reference, label: "Older VL10 variant — examples only after current deck", source_id: source-aml-ss26-lectures, locator: "older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf"}
+        - {kind: read, label: "ISLP §10.3 — primary CNN reading", source_id: source-islp, locator: "§10.3"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l10-shapes
+        title: Padding, stride, channels, receptive fields, and parameter counts
+        objective: Make every tensor shape and parameter count mechanically reliable.
+        done_when: ["Use floor((n+2p-f)/s)+1 for the deck examples including 28x28, f=5, s=1, p=0 → 24x24.", "Compute output and parameter shapes for multi-channel/multi-filter layers and explain padding/stride tradeoffs."]
+        estimate_minutes: 110
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "Murphy §14.1–14.2 — convolution and shape depth", source_id: source-murphy-pml1, locator: "§14.1–14.2"}
+        - {kind: read, label: "CS231n convolutional network notes", source_id: source-cs231n-notes, url: "https://cs231n.github.io/convolutional-networks/"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l10-pooling
+        title: Pooling and complete CNN design
+        objective: Trace a complete conv-activation-pool-stack-flatten/classifier architecture and compare pooling choices.
+        done_when: ["Trace shapes through a small full CNN.", "Compare max/average pooling and state the role of fully connected output layers."]
+        estimate_minutes: 70
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "Current VL10 pooling/full-architecture sections", source_id: source-aml-ss26-lectures, locator: "VL10 pooling and architecture sections"}
+        - {kind: read, label: "Official PyTorch CNN tutorial — implementation connection only", source_id: source-pytorch-tutorials, url: "https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l10-architectures
+        title: LeNet, AlexNet, GoogLeNet, and ResNet as design ideas
+        objective: Recognize the architectural innovations and residual connection logic without memorizing arbitrary historical trivia.
+        done_when: ["Identify the design contribution of each architecture at deck depth.", "Explain a residual block and why skip connections help optimization."]
+        estimate_minutes: 70
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: read, label: "Murphy §14.3 — closest one-to-one architecture list", source_id: source-murphy-pml1, locator: "§14.3"}
+        - {kind: watch, label: "UMich EECS 498 L7–L8 selected CNN/architecture lectures", source_id: source-eecs498, url: "https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/"}
+        - {kind: watch, label: "CS231n 2017 convolution/architecture lectures — optional alternative", source_id: source-cs231n-2017-videos, locator: "CNN architecture lectures"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l10-practice
+        title: Convolution arithmetic and solution-backed CNN gate
+        objective: Close L10 with filter, shape, parameter, pooling, and architecture questions under time pressure.
+        done_when: ["Pass a mixed ten-question shape/parameter gate without notes.", "Complete selected CS4780 HW9 CNN tasks and one EECS/CS231n exercise with a key or verified trace."]
+        estimate_minutes: 130
+        exam_critical: true
+        scope_triage: required-now
+        resources:
+        - {kind: practise, label: "Cornell CS4780 2018 HW9 CNN tasks and local solutions", source_id: source-cs4780-homeworks, locator: "2018Fall/HW9; 2018Spring/HW9"}
+        - {kind: practise, label: "UMich EECS 498 L7–L8 exercises/examples", source_id: source-eecs498, locator: "L7–L8"}
+        - {kind: reference, label: "No dedicated local L10 exercise sheet; do not relabel earlier Übung decks", source_id: source-aml-ss26-lectures, locator: "Explicit completeness disposition"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-practice/notes.md
+
+  - unit:
+      id: unit-aml-l11
+      type: unit
+      module_id: module-hu-aml
+      kind: lecture
+      title: AML Lecture 11 — Recurrent Neural Networks (prior-year reference; 2026 scope unconfirmed)
+      order: 11
+      scope: Conditional plan based only on the local older 85-page RNN deck; RNN forward passes and architectures, BPTT, vanishing gradients, GRU, LSTM, and deep RNNs. No current 2026 L11 deck is locally posted, so this unit is not promoted to current exam scope until verified.
+      status: ready
+      scope_sources:
+      - {source_id: source-aml-ss26-lectures, authority: reference, locator: "older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf (85 pages; prior year only)"}
+      source_selections:
+      - {source_id: source-islp, locator: "§10.5", purpose: "Preliminary RNN reading pending current-deck verification"}
+      - {source_id: source-murphy-pml1, locator: "§15.2", purpose: "RNN/BPTT/GRU/LSTM derivation depth"}
+      - {source_id: source-eecs498, locator: "Recurrent Networks lecture", purpose: "Optional matched video"}
+      - {source_id: source-rohrer-e2eml, locator: "Ch 24 / RNN explanation", purpose: "Optional visual first pass"}
+      artifacts: {other: [note-aml-sad-master-wiring]}
+      workspace_ids: [workspace-aml-exam-prep]
+      current_study_map: study-map-aml-l11
+    study_map:
+      id: study-map-aml-l11
+      type: study-map
+      unit_id: unit-aml-l11
+      status: ready
+      current_stage: stage-aml-l11-scope-check
+      source_plan: {path: work/active/workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml, provenance: operator}
+      detours: []
+      shelving: {state: none}
+      stages:
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l11-scope-check
+        title: Verify whether L11 belongs to the 2026 course
+        objective: Prevent a prior-year RNN deck from silently becoming current exam scope.
+        done_when: ["Check the current course archive/LMS for a 2026 L11 deck or explicit syllabus confirmation before studying this unit as required.", "If no current evidence appears, keep all remaining stages reference-only/deferred."]
+        estimate_minutes: 15
+        exam_critical: false
+        scope_triage: required-now
+        resources:
+        - {kind: reference, label: "Local archive contains current VL01–VL10 only; L11 is older-lecture-slides/11-rnn...pdf", source_id: source-aml-ss26-lectures, locator: "Scope completeness finding verified 2026-08-03"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-scope-check/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l11-rnn
+        title: RNN states, forward pass, and sequence architectures
+        objective: If scope is confirmed—or for reference—trace hidden-state recurrence and distinguish one-to-one, one-to-many, many-to-one, and many-to-many designs.
+        done_when: ["Trace a short RNN forward pass with parameter sharing through time.", "Match sequence tasks to the older deck's architecture patterns."]
+        estimate_minutes: 90
+        exam_critical: false
+        scope_triage: reference-only
+        resources:
+        - {kind: read, label: "Older L11 RNN deck — complete 85 pages, conditional scope", source_id: source-aml-ss26-lectures, locator: "older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf"}
+        - {kind: read, label: "ISLP §10.5", source_id: source-islp, locator: "§10.5"}
+        - {kind: watch, label: "Rohrer RNN explanation — optional visual pass", source_id: source-rohrer-e2eml, locator: "RNN/sequence-model chapter"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-rnn/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l11-bptt
+        title: BPTT and gradient stability through time
+        objective: Unroll the recurrence as a computation graph and explain why repeated temporal Jacobians create vanishing/exploding gradients.
+        done_when: ["Trace a small BPTT dependency path and identify shared-parameter gradient accumulation.", "Connect L09's gradient-health argument to temporal depth."]
+        estimate_minutes: 95
+        exam_critical: false
+        scope_triage: reference-only
+        resources:
+        - {kind: read, label: "Murphy §15.2 selected RNN/BPTT derivations", source_id: source-murphy-pml1, locator: "§15.2"}
+        - {kind: watch, label: "UMich EECS 498 recurrent networks lecture", source_id: source-eecs498, url: "https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/"}
+        - {kind: read, label: "Goodfellow sequence-model chapter — optional depth", source_id: source-goodfellow-dl, locator: "Sequence modeling selections"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-bptt/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l11-gates
+        title: GRU, LSTM, and deep recurrent models
+        objective: Understand gating as controlled memory/update flow and reproduce the older deck's equations only if scope is confirmed.
+        done_when: ["Explain reset/update versus input/forget/output gates in words and trace one LSTM cell.", "State what deep/bidirectional recurrence changes while keeping unposted 2026 scope caveat visible."]
+        estimate_minutes: 100
+        exam_critical: false
+        scope_triage: reference-only
+        resources:
+        - {kind: read, label: "Older L11 GRU/LSTM/deep-RNN sections", source_id: source-aml-ss26-lectures, locator: "11-rnn...pdf GRU/LSTM sections"}
+        - {kind: read, label: "Murphy §15.2 gate equations", source_id: source-murphy-pml1, locator: "§15.2"}
+        - {kind: reference, label: "D2L RNN/GRU/LSTM chapters — executable optional reference", source_id: source-d2l, url: "https://d2l.ai/"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-gates/notes.md
+      - status: pending
+        attachments: []
+        source_feedback: []
+        id: stage-aml-l11-practice
+        title: Conditional RNN trace gate
+        objective: Keep a ready practice route without spending exam-prep time before current scope is confirmed.
+        done_when: ["If confirmed: trace forward state, one BPTT path, and one LSTM cell; otherwise mark the stage skipped with the scope-check evidence."]
+        estimate_minutes: 90
+        exam_critical: false
+        scope_triage: deferred
+        resources:
+        - {kind: practise, label: "Build three small traces directly from the older deck; no local dedicated L11 exercise sheet exists", source_id: source-aml-ss26-lectures, locator: "11-rnn...pdf worked examples"}
+        - {kind: reference, label: "Géron/D2L sequence chapters only after scope confirmation", source_id: source-geron-handson, locator: "RNN/sequence-model selections"}
+        working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-practice/notes.md
+
+workspace_updates:
+- id: workspace-aml-exam-prep
+  sources: [source-aml-ss26-lectures, source-islp, source-esl, source-murphy-pml1, source-csc411-notes, source-kroese-dsml, source-mml, source-cs229-notes, source-cs229-2022-videos, source-mit-6036, source-eecs498, source-cs231n-notes, source-cs231n-2017-videos, source-statquest, source-3b1b-neural-networks, source-3b1b-linear-algebra, source-karpathy-micrograd, source-rohrer-e2eml, source-geron-handson, source-caltech-lfd, source-ng-coursera, source-cs4780-homeworks, source-mit-6034-quizzes, source-pytorch-tutorials, source-kelleher-fmlpda, source-domingos-useful-things, source-sad-ss26-lectures, source-goodfellow-dl, source-d2l, source-sutton-barto-rl, source-zacharski-data-mining]
+  unit_ids: [unit-aml-l01, unit-aml-l02, unit-aml-l03, unit-aml-l04, unit-aml-l05, unit-aml-l06, unit-aml-l07, unit-aml-l08, unit-aml-l09, unit-aml-l10, unit-aml-l11]
+  sections:
+    Current Scope: |
+      *Required now* — nothing before mid-August: this workspace remains parked
+      behind M2 prep and the AMLS sitting. All current AML L01–L10 lectures now
+      have individual plans, so the first real study block can still begin with
+      L07 and continue directly into L08–L10 without a planning detour.
+
+      *Helpful now* — passive cross-wires during M2: SaD L11 supplies workflow
+      and metrics; SaD L15 is the deliberate warm-up for AML L08–L09.
+
+      *Defer studying* — L08–L10 until after the AMLS sitting. Their plans are
+      ready; this does not move their calendar priority.
+
+      *Reference only* — AML L11 is a conditional prior-year RNN plan. The local
+      2026 archive currently stops at L10, so L11 must not become exam scope
+      until a current deck or syllabus confirmation appears.
+    Durable Notes: |
+      AML now has individual current study maps for L01–L11. L01 and L08–L10
+      are grounded in current 2026 decks. L11 preserves the older RNN material
+      behind a mandatory scope-check stage. The source map includes every local
+      course asset family, the complete local CS4780 bank, shared books, official
+      web courses/docs, and explicit off-scope shelf dispositions.
+    Deferred: |
+      - Studying L08–L10 remains after L07 and the AMLS sitting; only the missing
+        planning work has been completed now.
+      - L11 RNN execution is deferred until 2026 scope is confirmed.
+      - Sutton & Barto remains visible but off-scope for posted AML L01–L10;
+        Zacharski is an optional L02 alternative, not a neural-network source.

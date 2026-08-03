@@ -1,0 +1,36 @@
+id: unit-aml-l01
+type: unit
+module_id: module-hu-aml
+kind: lecture
+title: AML Lecture 01 — Introduction & ML Problem Formulation
+order: 1
+scope: Current 2026 L01 deck; ML definitions and course orientation, historical milestones as a concept
+  map, datasets/features/labels, learning tasks, train/test reasoning, MNIST/Iris examples, and the linear-algebra/tooling
+  prerequisite shelf.
+status: ready
+scope_sources:
+- source_id: source-aml-ss26-lectures
+  authority: slides
+  locator: lecture-slides/VL 01-Introduction.pdf (69 pages)
+- source_id: source-aml-ss26-lectures
+  authority: reference
+  locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
+source_selections:
+- source_id: source-islp
+  locator: Ch 2 selections
+  purpose: Learning task, generalization, data-split framing
+- source_id: source-mit-6036
+  locator: Introduction, representations, generalization
+  purpose: Structured independent introduction
+- source_id: source-domingos-useful-things
+  locator: Complete essay
+  purpose: Optional conceptual framing
+- source_id: source-sad-ss26-lectures
+  locator: SaD L11
+  purpose: Cross-module workflow/metrics bridge
+artifacts: {}
+workspace_ids:
+- workspace-aml-exam-prep
+related_module_ids:
+- module-hu-m2-statistik-analysis
+current_study_map: study-map-aml-l01

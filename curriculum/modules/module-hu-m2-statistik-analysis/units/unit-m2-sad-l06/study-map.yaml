@@ -1,0 +1,127 @@
+id: study-map-m2-sad-l06
+type: study-map
+unit_id: unit-m2-sad-l06
+status: ready
+current_stage: stage-sad-l06-scope
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l06-scope
+  title: Build the random-variable language from the current deck
+  objective: Follow L06 in deck order and distinguish outcome, random variable, realization, PMF/PDF,
+    and CDF before calculating moments.
+  done_when:
+  - Define every object in words and notation; convert a finite probability table into its CDF.
+  - Compute and interpret one transformed random variable without confusing values with probabilities.
+  estimate_minutes: 75
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 2026 L06 — 06_random_variables.pdf (complete deck)
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf
+  - kind: reference
+    label: 2025 L05 Random Variables — prior-year second explanation
+    source_id: source-sad-2025-recordings
+    locator: 05_random_variables.pdf
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-scope/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l06-moments
+  title: Derive expectation, variance, covariance, sample-mean variance, and Chebyshev
+  objective: Calculate E[X], E[g(X)], Var(X), Cov(X,Y), E[aX+b], Var(aX+b), and Var of a sample mean from
+    definitions.
+  done_when:
+  - Solve a five-row probability-table problem for E, Var, and standard deviation by hand.
+  - Explain why Var(X-bar)=Var(X)/n under IID assumptions and apply one Chebyshev bound.
+  estimate_minutes: 100
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Fahrmeir Statistik Ch 5–7 — notation-matched derivations
+    source_id: source-fahrmeir-statistik
+    locator: Ch 5–7
+  - kind: read
+    label: Blitzstein & Hwang Ch 3–4 plus selected Ch 10
+    source_id: source-blitzstein-hwang
+    locator: Ch 3–4; Ch 10 selections
+  - kind: reference
+    label: 2025 L06 Expected Values — same-course depth
+    source_id: source-sad-2025-recordings
+    locator: 06_expected_values.pptx-1.pdf
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-moments/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l06-source-ladder
+  title: Use one alternate explanation, not five parallel textbooks
+  objective: Close only diagnosed intuition gaps using the registered probability ladder and verified
+    video shelf.
+  done_when:
+  - Select and record one useful alternate source; explicitly skip the remaining ladder for this pass.
+  estimate_minutes: 45
+  exam_critical: false
+  scope_triage: helpful-now
+  resources:
+  - kind: read
+    label: 'Gentle/intermediate/rigorous ladder: Tijms → Pitman → Ross; Schaum only for drill'
+    source_id: source-tijms-understanding-probability
+    locator: RVs, expectation, variance selections
+  - kind: watch
+    label: StatQuest — Expected Values, Main Ideas
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=KLs_7b7SKi4
+  - kind: watch
+    label: StatQuest — Expected Values for Continuous Variables
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=OSPr6G6Ka-U
+  - kind: watch
+    label: StatQuest — Main Ideas behind Probability Distributions
+    source_id: source-statquest
+    url: https://www.youtube.com/watch?v=oI3hZJqXJuc
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4, notes/handouts/videos
+    source_id: source-stat110
+    url: https://stat110.hsites.harvard.edu/
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-source-ladder/notes.md
+- status: pending
+  attachments: []
+  source_feedback: []
+  id: stage-sad-l06-practice
+  title: Course exercises and solution-backed gate
+  objective: Turn the definitions into fast table calculations and select harder practice only after the
+    UE task is secure.
+  done_when:
+  - Complete the L06-relevant parts of UE4 and check the walkthrough/notes.
+  - Pass the deep-plan L06 checklist cold, including affine transforms and Chebyshev.
+  estimate_minutes: 90
+  exam_critical: true
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Current UE4 plus prior-year UE4
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf
+  - kind: practise
+    label: Fahrmeir Arbeitsbuch Ch 5–7 selected solved tasks
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Ch 5–7 selections
+  - kind: practise
+    label: MIT 18.05 matching RV/expectation problems and solved exams
+    source_id: source-mit-1805
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/pages/exams/
+  - kind: practise
+    label: Dekking answer-backed exercises; Schaum only if more repetition is needed
+    source_id: source-dekking-mips
+    locator: RVs and expectation selections
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-practice/notes.md

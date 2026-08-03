@@ -1,0 +1,122 @@
+id: study-map-amls-l10
+type: study-map
+unit_id: unit-amls-l10
+status: ready
+current_stage: stage-amls-l10-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l10-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Trace a raw dataset through the acquisition and preparation operations taught.
+  done_when:
+  - Every transformation has a page locator
+  - Recoding one-hot encoding feature hashing and binning can be executed by hand
+  estimate_minutes: 85
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  - concept-data-provenance
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 10 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 10; 10_DataSourcing.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/10_DataSourcing.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l10-integrate
+  title: Integrate data-engineering and lifecycle views
+  status: pending
+  objective: Relate the deck pipeline to MLSysBook, Huyen and DMMLS while preserving exam scope. Triage
+    every curated primary paper for this lecture and anchor its useful claim, mechanism or result back
+    to the deck.
+  done_when:
+  - A concise pipeline table captures data quality transformation and training-serving consistency
+  - Each source point maps to a deck operation
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  - concept-data-provenance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — Automating Large-Scale Data Quality Verification (Deequ)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 10
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://www.vldb.org/pvldb/vol11/p1781-schelter.pdf
+  - kind: read
+    label: Primary paper — Data Validation for Machine Learning (TFX/TFDV)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 10
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://mlsys.org/Conferences/2019/doc/2019/167.pdf
+  - kind: read
+    label: Primary paper — Efficient Estimation of Word Representations (word2vec)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 10
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1301.3781
+  - kind: read
+    label: 'Primary paper — SAGA: A Scalable Framework for Optimizing Data Cleaning Pipelines for ML'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 10
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://mboehm7.github.io/resources/sigmod2024a.pdf
+  - kind: read
+    label: 'Primary paper — CatDB: Data-catalog-guided, LLM-based Generation of Data-centric ML Pipelines'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 10
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://fathollahzadeh.github.io/papers/CatDB_VLDB2025.pdf
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 10 (26 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 10; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: MLSysBook Vol 1 — data foundations/engineering
+    source_id: source-mlsysbook-vol1
+    locator: Data chapters and checkpoints
+  - kind: read
+    label: Huyen DMLS Chapters 3–4
+    source_id: source-huyen-dmls
+    locator: Data engineering and training data
+  - kind: read
+    label: DMMLS — lifecycle/data preparation
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after acquisition
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l10-evidence
+  title: Light evidence — reference and recall
+  status: pending
+  objective: Produce one preparation reference and complete the official hand-transformation task.
+  done_when:
+  - A one-page reference covers the deck
+  - Official sample Task 2 pages 39–40 is completed closed-book before checking
+  - No new depth is added unless the check exposes a gap
+  estimate_minutes: 70
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Official AMLS sample — Task 2 Data Preparation
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 pages 39–40
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l10/stages/stage-amls-l10-evidence/notes.md
+  attachments: []
+  source_feedback: []

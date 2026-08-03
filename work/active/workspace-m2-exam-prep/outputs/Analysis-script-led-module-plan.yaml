@@ -1,0 +1,1223 @@
+module_id: module-hu-m2-statistik-analysis
+plan_contract:
+  version: 1
+  coverage_audit: work/active/workspace-m2-exam-prep/outputs/Analysis-course-script-coverage-audit-2026-08-03.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+module_patch:
+  unit_order:
+  - unit-m2-sad-l01
+  - unit-m2-sad-l02
+  - unit-m2-sad-l03
+  - unit-m2-sad-l04
+  - unit-m2-sad-l05
+  - unit-m2-sad-l06
+  - unit-m2-sad-l07
+  - unit-m2-sad-l08
+  - unit-m2-sad-l09
+  - unit-m2-sad-l10
+  - unit-m2-sad-l11
+  - unit-m2-sad-l12
+  - unit-m2-sad-l13
+  - unit-m2-sad-l14
+  - unit-m2-sad-l15
+  - unit-m2-sad-clustering
+  - unit-m2-sad-l06-l10
+  - unit-m2-analysis-exam-prep
+source_patches: []
+source_map:
+  type: module-source-map
+  module_id: module-hu-m2-statistik-analysis
+  sources:
+  - source_id: source-sad-ss26-lectures
+    role: course-material
+    why: The fifteen current SoSe 2026 decks are the non-negotiable lecture and exam scope.
+    priority: 0
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+    - unit-m2-sad-clustering
+    - unit-m2-sad-l06-l10
+  - source_id: source-sad-uebungen
+    role: practice
+    why: Current Blatt/UE decks are the closest available guide to expected computations and German wording.
+    priority: 1
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+    - unit-m2-sad-clustering
+  - source_id: source-sad-2025-recordings
+    role: reference
+    why: Same-course older decks and UE1–UE7 are used only where topic alignment was verified; numbering
+      is not assumed.
+    priority: 2
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+    - unit-m2-sad-clustering
+  - source_id: source-teschl-mathe-informatiker
+    role: candidate
+    why: The L01 slides name Teschl & Teschl, but no reachable local material or verified URL exists;
+      keep visible and do not block study on it.
+    priority: 10
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-fahrmeir-statistik
+    role: spine
+    why: Course-compatible notation and complete descriptive, probability, estimation, and testing coverage.
+    priority: 3
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l06-l10
+  - source_id: source-fahrmeir-arbeitsbuch
+    role: practice
+    why: German worked exercises for the corresponding Fahrmeir chapters, especially estimation and testing.
+    priority: 4
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-blitzstein-hwang
+    role: derivation
+    why: Story-proof explanations for random variables, expectation, distributions, Normal/CLT, and conditional
+      probability.
+    priority: 5
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l06-l10
+  - source_id: source-pitman-probability
+    role: optional-depth
+    why: Intermediate alternative when Blitzstein is too terse or deep; use only for L04–L08.
+    priority: 11
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+  - source_id: source-tijms-understanding-probability
+    role: optional-depth
+    why: Simulation-first escape hatch and particularly useful LLN/CLT intuition; use only for L04–L08.
+    priority: 12
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+  - source_id: source-ross-first-course
+    role: optional-depth
+    why: Proof-heavy depth for L04–L08 only; never a first pass for this exam.
+    priority: 13
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+  - source_id: source-schaums-probability
+    role: practice
+    why: Additional worked calculations for L04–L08 when course and Fahrmeir exercises are exhausted.
+    priority: 14
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+  - source_id: source-swanson-principles-probability
+    role: reference
+    why: Despite its title, this is a formal-logic/measure-theory text and is not selected for the SaD
+      probability syllabus.
+    priority: 99
+    unit_routes: []
+  - source_id: source-openintro-statistics
+    role: first-exposure
+    why: Accessible probability, distributions, confidence intervals, tests, and regression before the
+      German exam layer.
+    priority: 6
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-dekking-mips
+    role: practice
+    why: Broad bank of answer-backed probability and statistics exercises.
+    priority: 7
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-mit-1805
+    role: practice
+    why: Official notes plus solved practice exams for probability and inference.
+    priority: 8
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l06-l10
+  - source_id: source-stat110
+    role: optional-depth
+    why: Cherry-pick Units 3–6 for RVs, expectation, distributions, Normal, and CLT; never run as a second
+      full course.
+    priority: 15
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+  - source_id: source-mit-18650
+    role: optional-depth
+    why: Rigorous MLE, parametric inference, testing, goodness-of-fit, and regression-inference extensions.
+    priority: 16
+    unit_routes:
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l14
+  - source_id: source-fau-klausur-ws1415
+    role: exam-preparation
+    why: Best local full German solved exam match for the statistics half.
+    priority: 9
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-sad-klausuren-extern
+    role: exam-preparation
+    why: Local HS Harz, Köln, Leuphana, and Regensburg solved exams for gap-targeted drilling.
+    priority: 17
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-statquest
+    role: intuition
+    why: Exact short refreshers for distributions, CLT, MLE, intervals, tests, trees, Naive Bayes, and
+      neural nets.
+    priority: 18
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l03
+    - unit-m2-sad-l04
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+    - unit-m2-sad-l12
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-jbstatistics
+    role: intuition
+    why: Short calculation-exact probability and inference refreshers.
+    priority: 19
+    unit_routes:
+    - unit-m2-sad-l02
+    - unit-m2-sad-l05
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-kurzes-tutorium-statistik
+    role: intuition
+    why: German vocabulary and compact exam-style statistics explanations.
+    priority: 20
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l02
+    - unit-m2-sad-l04
+    - unit-m2-sad-l06
+    - unit-m2-sad-l07
+    - unit-m2-sad-l08
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-brandon-foltz
+    role: intuition
+    why: Calm step-by-step alternative for Poisson, confidence intervals, and tests when a short explainer
+      is too fast.
+    priority: 21
+    unit_routes:
+    - unit-m2-sad-l07
+    - unit-m2-sad-l09
+    - unit-m2-sad-l10
+  - source_id: source-kelleher-fmlpda
+    role: spine
+    why: Course-named primary text; Chapters 4–7 map directly to trees, similarity, probability-based
+      learning, and neural nets.
+    priority: 3
+    unit_routes:
+    - unit-m2-sad-l03
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-islp
+    role: reference
+    why: Ch 2 for workflow/evaluation, Ch 8 for trees/ensembles, Ch 4 for Naive Bayes, Ch 10 for neural
+      nets.
+    priority: 4
+    unit_routes:
+    - unit-m2-sad-l03
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+    - unit-m2-sad-clustering
+  - source_id: source-kroese-dsml
+    role: reference
+    why: Broader workflow, evaluation, tree, probability, and neural-network reference for the ML half.
+    priority: 22
+    unit_routes:
+    - unit-m2-sad-l11
+    - unit-m2-sad-l12
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+    - unit-m2-sad-clustering
+  - source_id: source-cs229-notes
+    role: derivation
+    why: Selected derivations for trees/boosting, Naive Bayes, and neural networks; advanced material
+      remains optional.
+    priority: 23
+    unit_routes:
+    - unit-m2-sad-l04
+    - unit-m2-sad-l12
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-cs229-2022-videos
+    role: optional-depth
+    why: Topic-matched video depth only; do not follow the whole course.
+    priority: 24
+    unit_routes:
+    - unit-m2-sad-l12
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-murphy-pml1
+    role: optional-depth
+    why: Gaussian/Multinomial Naive Bayes and neural-network derivations beyond the course text.
+    priority: 25
+    unit_routes:
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-csc411-notes
+    role: reference
+    why: Compact independent treatment of classifiers and neural networks.
+    priority: 26
+    unit_routes:
+    - unit-m2-sad-l14
+    - unit-m2-sad-l15
+  - source_id: source-aml-ss26-lectures
+    role: reference
+    why: AML L02 deepens k-NN and AML L08–L09 deepen SaD L15; use after the SaD-scoped pass.
+    priority: 27
+    unit_routes:
+    - unit-m2-sad-l13
+    - unit-m2-sad-l15
+  - source_id: source-cs4780-homeworks
+    role: practice
+    why: Local solution-backed tree and neural-network problems; restrict each homework to the lecture
+      topic.
+    priority: 28
+    unit_routes:
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l15
+  - source_id: source-mit-6034-quizzes
+    role: practice
+    why: Solution-backed ID3, nearest-neighbor, and neural-network tracing problems.
+    priority: 29
+    unit_routes:
+    - unit-m2-sad-l12
+    - unit-m2-sad-l13
+    - unit-m2-sad-l15
+  - source_id: source-3b1b-neural-networks
+    role: intuition
+    why: Visual forward-pass, gradient, and backpropagation intuition for L15.
+    priority: 30
+    unit_routes:
+    - unit-m2-sad-l15
+  - source_id: source-3b1b-linear-algebra
+    role: intuition
+    why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and
+      L03.
+    priority: 34
+    unit_routes:
+    - unit-m2-sad-l01
+    - unit-m2-sad-l03
+  - source_id: source-eecs498
+    role: optional-depth
+    why: Selected fully connected and convolutional-network lectures only after SaD scope is secure.
+    priority: 31
+    unit_routes:
+    - unit-m2-sad-l15
+  - source_id: source-rohrer-e2eml
+    role: intuition
+    why: Friendly tree and neural-network visual explanations; use only for an identified intuition gap.
+    priority: 32
+    unit_routes:
+    - unit-m2-sad-l12
+    - unit-m2-sad-l15
+  - source_id: source-domingos-useful-things
+    role: optional-depth
+    why: One concise reading on generalization, overfitting, data, and inductive bias for the L11 framing.
+    priority: 33
+    unit_routes:
+    - unit-m2-sad-l11
+  - source_id: source-analysis-skript
+    role: course-material
+    why: 'Primary authority chosen by the learner: the 2025 HU script defines notation, chapter order,
+      scope labels, theorem statements, examples, and the closest current HU exercise sets.'
+    priority: 0
+    unit_routes: &id001
+    - unit-m2-analysis-exam-prep
+  - source_id: source-professor-leonard
+    role: first-exposure
+    why: Optional 20-minute intuition unlock before the script for a genuinely new topic; never substitutes
+      for the HU definitions or notation.
+    priority: 1
+    unit_routes: *id001
+  - source_id: source-3b1b-essence-of-calculus
+    role: intuition
+    why: Short visual previews for limits, derivatives, Taylor, and integration when the cold diagnostic
+      exposes a missing mental picture.
+    priority: 2
+    unit_routes: *id001
+  - source_id: source-fritzsche-trainingsbuch
+    role: practice
+    why: Gentle German worked companion after current HU tasks; Chapters 1-4 match the script sequence
+      and explain solutions without becoming a second syllabus.
+    priority: 3
+    unit_routes: *id001
+  - source_id: source-analysis-drill-blaetter-extern
+    role: practice
+    why: Topic-specific solved drills fill the local exercise gap, especially for differentiation, Taylor,
+      and integration where current HU sheets are absent.
+    priority: 4
+    unit_routes: *id001
+  - source_id: source-analysis-klausuren-extern
+    role: exam-preparation
+    why: German and MIT exam papers are used only after scope-matching to unser skript; they provide transfer
+      and timing, not syllabus authority.
+    priority: 5
+    unit_routes: *id001
+  - source_id: source-strang-calculus
+    role: intuition
+    why: Local gentle calculus chapters support Taylor and Riemann-integral intuition when video is unnecessary.
+    priority: 6
+    unit_routes: *id001
+  - source_id: source-mit-18100a
+    role: optional-depth
+    why: Mapped rigorous lectures repair one blocked theorem or pointwise/uniform-convergence distinction;
+      the script explicitly prevents a proof-heavy second course.
+    priority: 10
+    unit_routes: *id001
+  - source_id: source-analysis-grundlagen-handouts
+    role: reference
+    why: Sets, relations, and proof notes are prerequisite repair only because Chapters 1-2 remain the
+      course authority.
+    priority: 11
+    unit_routes: *id001
+  - source_id: source-forster-wessoly
+    role: reference
+    why: Terse solved German problems are a reserve bank after the current HU sets and Fritzsche, not
+      a parallel plan.
+    priority: 12
+    unit_routes: *id001
+  - source_id: source-deitmar-uebungsbuch
+    role: reference
+    why: Fresh solved exercises are reserved for exhausted topics; not selected for the first pass.
+    priority: 13
+    unit_routes: *id001
+  - source_id: source-ableitinger-musterloesungen
+    role: reference
+    why: Used only to repair proof presentation after an error; the script says proof memorization is
+      not required.
+    priority: 14
+    unit_routes: *id001
+  - source_id: source-abbott-understanding-analysis
+    role: optional-depth
+    why: Readable English rigor for one stubborn concept; never read linearly during exam preparation.
+    priority: 15
+    unit_routes: *id001
+  - source_id: source-grieser-analysis1
+    role: reference
+    why: German second voice for a blocked concept when matching Klausur vocabulary matters.
+    priority: 16
+    unit_routes: *id001
+  - source_id: source-lebl-basic-analysis
+    role: reference
+    why: Volume I is an alternate rigorous reference; Volume II is beyond the one-variable exam scope.
+    priority: 17
+    unit_routes: *id001
+  - source_id: source-labs-schreyer-mathe-informatiker
+    role: reference
+    why: Broad mathematics-for-computer-science backup; use only for a named prerequisite gap.
+    priority: 18
+    unit_routes: *id001
+  - source_id: source-mfnf-analysis1
+    role: reference
+    why: Accessible German explanation fallback for a specific gap, not an exam authority.
+    priority: 19
+    unit_routes: *id001
+  - source_id: source-ohlbach-eisinger-beweise
+    role: reference
+    why: General proof-pattern reference only; use after a diagnosed proof-structure problem.
+    priority: 20
+    unit_routes: *id001
+  - source_id: source-velleman-how-to-prove-it
+    role: reference
+    why: General proof textbook is deferred unless basic proof syntax blocks script applications.
+    priority: 21
+    unit_routes: *id001
+  - source_id: source-ross-elementary-analysis
+    role: reference
+    why: Proof-oriented alternate text, shelved during the exam-first pass.
+    priority: 22
+    unit_routes: *id001
+  - source_id: source-thomas-calculus
+    role: reference
+    why: Large computational calculus reference; local targeted drills only if selected banks are exhausted.
+    priority: 23
+    unit_routes: *id001
+  - source_id: source-stewart-calculus
+    role: reference
+    why: Large computational calculus alternative, redundant for the first pass.
+    priority: 24
+    unit_routes: *id001
+  - source_id: source-rudin-principles
+    role: reference
+    why: Too proof-dense for this exam plan and explicitly not selected; retained for future depth.
+    priority: 99
+    unit_routes: []
+units:
+- unit:
+    id: unit-m2-analysis-exam-prep
+    type: unit
+    module_id: module-hu-m2-statistik-analysis
+    component_id: component-m2-analysis
+    kind: exam-block
+    title: Analysis - script-led exam preparation
+    order: 100
+    scope: 'Learner-selected authority: Hella Rabus, unser skript.pdf (Stand 4 February 2025), introduction
+      and Chapters 1-7. Wiederholung sections are required; Ausflug sections are exam-light application
+      context; Exkurs sections and Chapter 8 are deferred as non-exam material. Current local HU series
+      05-09 and WV define the closest available exercise evidence. The script itself says proofs need
+      not be memorized: definitions, theorem conditions/results, and application control the plan.'
+    status: ready
+    scope_sources:
+    - source_id: source-analysis-skript
+      authority: brief
+      locator: 'unser skript.pdf: pp. iv-vii course contract, pp. ii-iii contents, Chapters 1-7; Stand
+        04.02.2025'
+    - source_id: source-analysis-skript
+      authority: reference
+      locator: ana_inf_serie05.pdf through serie09.pdf and ana_inf_serieWV.pdf; WiSe 2024/25 current local
+        HU exercise evidence
+    source_selections:
+    - source_id: source-analysis-skript
+      locator: unser skript.pdf Chapters 1-7 plus course series 05-09/WV and kleine_beweise disclaimer
+      purpose: Primary scope, notation, theorem, example, application, and exam-style exercise authority
+      stage_ids:
+      - stage-m2-analysis-calibrate
+      - stage-m2-analysis-an0
+      - stage-m2-analysis-ana
+      - stage-m2-analysis-anb
+      - stage-m2-analysis-anc
+      - stage-m2-analysis-and
+      - stage-m2-analysis-ane
+      - stage-m2-analysis-anf
+      - stage-m2-analysis-ang
+      - stage-m2-analysis-anx
+      - stage-m2-analysis-exkurse
+    - source_id: source-professor-leonard
+      locator: Topic-matched Calculus 1/2 selections; maximum 20 minutes per diagnosed intuition gap
+      purpose: Optional first exposure before returning to the HU script
+      stage_ids:
+      - stage-m2-analysis-ana
+      - stage-m2-analysis-anb
+      - stage-m2-analysis-ane
+      - stage-m2-analysis-ang
+    - source_id: source-3b1b-essence-of-calculus
+      locator: Limits/continuity and Taylor selections only
+      purpose: Optional visual intuition
+      stage_ids:
+      - stage-m2-analysis-anc
+      - stage-m2-analysis-anf
+    - source_id: source-fritzsche-trainingsbuch
+      locator: Kapitel 1-4, topic-matched exercises only
+      purpose: Gentle explained drill after HU tasks
+      stage_ids:
+      - stage-m2-analysis-an0
+      - stage-m2-analysis-and
+      - stage-m2-analysis-ane
+    - source_id: source-analysis-drill-blaetter-extern
+      locator: Exact file/task locators listed in stages
+      purpose: Solution-backed gap practice
+      stage_ids:
+      - stage-m2-analysis-ana
+      - stage-m2-analysis-anb
+      - stage-m2-analysis-anc
+      - stage-m2-analysis-ane
+      - stage-m2-analysis-anf
+      - stage-m2-analysis-ang
+    - source_id: source-analysis-klausuren-extern
+      locator: Marburg/Regensburg for solved gaps; Ulm/Leipzig for fresh timing
+      purpose: Transfer and timing after script-scope matching
+      stage_ids:
+      - stage-m2-analysis-anx
+    - source_id: source-strang-calculus
+      locator: Chapters 5, 7, and 10 selections
+      purpose: Local gentle intuition for integration and Taylor
+      stage_ids:
+      - stage-m2-analysis-anf
+      - stage-m2-analysis-ang
+    - source_id: source-mit-18100a
+      locator: L7-L9 and L23-L24 only
+      purpose: Optional rigorous repair, never a linear second course
+      stage_ids:
+      - stage-m2-analysis-ana
+      - stage-m2-analysis-and
+    - source_id: source-analysis-grundlagen-handouts
+      locator: Mengen-und-Abbildungen.pdf and Relationen.pdf exact missing subsection only
+      purpose: Prerequisite repair
+      stage_ids:
+      - stage-m2-analysis-an0
+    - source_id: source-ableitinger-musterloesungen
+      locator: One Analysis example matching a diagnosed proof-presentation error
+      purpose: Optional exam-writing repair
+      stage_ids:
+      - stage-m2-analysis-anx
+    current_study_map: study-map-m2-analysis-exam-prep
+    artifacts:
+      ultimate_reference: note-an-source-crosswalk
+    workspace_ids:
+    - workspace-m2-exam-prep
+  study_map:
+    id: study-map-m2-analysis-exam-prep
+    type: study-map
+    unit_id: unit-m2-analysis-exam-prep
+    status: ready
+    current_stage: stage-m2-analysis-calibrate
+    source_plan:
+      path: work/active/workspace-m2-exam-prep/outputs/Analysis-script-led-module-plan.yaml
+      provenance: operator
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-m2-analysis-calibrate
+      title: Calibrate the script-led method and exam boundary
+      status: pending
+      objective: 'Use the agreed loop for every block: 10-minute cold diagnostic; at most 20 minutes of
+        intuition support only if blocked; active pass through unser skript; solve the current HU tasks
+        before external drills; repair only proofs that explain a failed application; finish with a closed-book
+        retrieval test.'
+      done_when:
+      - 'Explain from memory how Wiederholung, Ausflug, and Exkurs change study priority: Wiederholung
+        is required, Ausflug is exam-light application context, and Exkurs is not exam-relevant.'
+      - Record that the script prioritizes definitions, theorem assumptions/results, and application;
+        proofs are used for understanding and are not memorized as a default.
+      - Read the disclaimer in kleine_beweise.pdf and treat it as a repair list, not an exam prediction.
+      - Complete one 20-minute cold sample from ana_inf_serieWV.pdf and start an error ledger classified
+        as definition, theorem-condition, method-choice, algebra, or time error.
+      estimate_minutes: 60
+      exam_critical: true
+      concepts:
+      - concept-proof-technique
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Course contract, notation, and chapter map
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. iv-x and contents pp. ii-iii (PDF pp. 2-10)'
+      - kind: read
+        label: Tutor proof-list disclaimer and repair candidates
+        source_id: source-analysis-skript
+        locator: 'kleine_beweise.pdf: both pages'
+      - kind: practise
+        label: Cold exam-style sample before studying
+        source_id: source-analysis-skript
+        locator: 'ana_inf_serieWV.pdf: choose one subproblem from WV1.1-WV1.4'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-an0
+      title: AN.0 - foundations and the real numbers
+      status: pending
+      objective: Rebuild only the prerequisites the script assumes, then make the real-number axioms,
+        order, completeness, intervals, suprema/infima, powers, roots, and the computer-number excursion
+        usable.
+      done_when:
+      - Define and use induction, intervals, absolute value, supremum, infimum, maximum, minimum, completeness,
+        and the Archimedean consequence in the script's notation.
+      - Solve the script examples and Serie 05 Aufgabe 5.4 without copying a proof; check boundary cases
+        and distinguish supremum from maximum.
+      - Summarize the Maschinenzahlen/Rundungsfehler Ausflug in five applied statements, without spending
+        proof-drill time on it.
+      - Pass a 15-minute closed-book gate containing one induction item, one sup/inf item, and one interval/absolute-value
+        item.
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-real-numbers
+      - concept-proof-technique
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Main source - Chapters 1-2
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. 1-40 (PDF pp. 11-50); Exkurs none; §2.4 Ausflug at overview
+          depth'
+      - kind: practise
+        label: Current HU sup/inf application
+        source_id: source-analysis-skript
+        locator: 'ana_inf_serie05.pdf: Aufgabe 5.4'
+      - kind: reference
+        label: Prerequisite repair only when notation or relations block the script
+        source_id: source-analysis-grundlagen-handouts
+        locator: 'Mengen-und-Abbildungen.pdf and Relationen.pdf: exact missing subsection only'
+      - kind: practise
+        label: Gentle solved companion after the HU task
+        source_id: source-fritzsche-trainingsbuch
+        locator: 'Kapitel 1 - Sprache der Analysis: matching problems only'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-an0/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ana
+      title: AN.A - sequences and convergence
+      status: pending
+      objective: Use Chapter 3 as the spine for sequence definitions, epsilon-N work, accumulation points,
+        subsequences, Cauchy sequences, monotone convergence, divergent sequences, and recursion applications.
+      done_when:
+      - State each Chapter 3 convergence criterion with all assumptions and select the right criterion
+        for a new sequence.
+      - Produce two correct epsilon-N arguments and calculate at least eight limits, including a root/rationalization,
+        a recursive sequence, and a subsequence-based divergence argument.
+      - Complete the current HU Serie 05-07 core tasks before opening external solutions.
+      - Use kleine_beweise only to repair a failed theorem application, then explain the proof idea in
+        three to five sentences rather than memorizing it.
+      - Pass a 30-minute closed-book mixed sequence test and update the error ledger.
+      estimate_minutes: 360
+      exam_critical: true
+      concepts:
+      - concept-sequences-convergence
+      - concept-proof-technique
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Main source - Chapter 3
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. 41-79 (PDF pp. 51-89); §3.2 and §3.4 Exkurse reference-only;
+          §3.3 and §3.8 Ausflüge at application depth'
+      - kind: practise
+        label: Current HU sequence and recursion tasks
+        source_id: source-analysis-skript
+        locator: ana_inf_serie05.pdf Aufgaben 5.1-5.3; ana_inf_serie06.pdf all; ana_inf_serie07.pdf all
+      - kind: practise
+        label: Solved gap drills after the HU series
+        source_id: source-analysis-drill-blaetter-extern
+        locator: Grenzwerte-von-Folgen.pdf; Loesungen4.pdf; auf-2-2_Folgen_Loesungen.pdf
+      - kind: watch
+        label: Optional intuition unlock - sequences only, maximum 20 minutes before returning to the
+          script
+        source_id: source-professor-leonard
+        locator: 'Calculus 2: Introduction to Sequences selection'
+      - kind: reference
+        label: Optional rigorous second voice for one blocked theorem
+        source_id: source-mit-18100a
+        locator: Lectures 7-9 only
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ana/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-anb
+      title: AN.B - series and convergence criteria
+      status: pending
+      objective: Turn Chapter 4 into a decision process for necessary conditions, geometric/telescoping
+        series, comparison, ratio, root, Leibniz, and absolute convergence.
+      done_when:
+      - Build a one-page convergence decision tree whose theorem statements match the script exactly.
+      - Classify at least twelve series and justify each choice; compute at least three sums where a sum
+        is actually obtainable.
+      - Complete Serie 08 Aufgaben 8.1-8.3 and WV1.3 before using the external worked sets.
+      - Treat §4.5 product series as a non-exam Exkurs and §4.4 rearrangements as an exam-light Ausflug.
+      - Pass a 30-minute closed-book series classification test with no criterion chosen from surface
+        appearance alone.
+      estimate_minutes: 270
+      exam_critical: true
+      concepts:
+      - concept-series
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Main source - Chapter 4
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. 80-97 (PDF pp. 90-107); §4.5 Exkurs excluded'
+      - kind: practise
+        label: Current HU series tasks
+        source_id: source-analysis-skript
+        locator: Pd3szO-ana_inf_serie08.pdf Aufgaben 8.1-8.3; ana_inf_serieWV.pdf WV1.3
+      - kind: practise
+        label: External solved drill after the HU tasks
+        source_id: source-analysis-drill-blaetter-extern
+        locator: KIT_Blatt-Reihen.pdf; Tutorium-Musterloesung-Reihen.pdf; auf-2-3_Reihen_Loesungen.pdf
+      - kind: watch
+        label: Optional intuition unlock - introduction and geometric series only
+        source_id: source-professor-leonard
+        locator: 'Calculus 2: Introduction to Series and Geometric Series selections'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anb/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-anc
+      title: AN.C - function limits and continuity
+      status: pending
+      objective: Work through §§5.1-5.5 so sequence criteria, one-sided/improper limits, continuity, IVT,
+        inverse functions, extrema, and compact-interval theorems become application tools.
+      done_when:
+      - State continuity and each compact-interval theorem with domain assumptions; identify when IVT,
+        min-max, or the inverse-function result applies.
+      - Solve current HU Serie 08 Aufgabe 8.4, Serie 09, and WV1.2/WV1.4 without reading solutions first.
+      - Give one epsilon-delta or sequence-criterion continuity argument and one counterexample for a
+        missing assumption.
+      - Pass a 35-minute closed-book test containing a piecewise-continuity problem, a one-sided limit,
+        and an IVT/existence argument.
+      estimate_minutes: 300
+      exam_critical: true
+      concepts:
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - kind: watch
+        label: Optional visual preview only when the cold diagnostic fails
+        source_id: source-3b1b-essence-of-calculus
+        locator: Limits/continuity selections; maximum 20 minutes
+      - kind: read
+        label: Main source - Chapter 5 through §5.5
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. 98-121 (PDF pp. 108-131)'
+      - kind: practise
+        label: Current HU limits and continuity tasks
+        source_id: source-analysis-skript
+        locator: Pd3szO-ana_inf_serie08.pdf Aufgabe 8.4; ana_inf_serie09.pdf all; ana_inf_serieWV.pdf
+          WV1.2 and WV1.4
+      - kind: practise
+        label: Direct continuity drills after the HU tasks
+        source_id: source-analysis-drill-blaetter-extern
+        locator: 'u10_Loesung.pdf: G31-G33, H37-H40'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anc/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-and
+      title: AN.D - exponential/logarithm and uniform convergence
+      status: pending
+      objective: Learn §§5.6-5.7 at script depth, keeping exponential/log laws computational and distinguishing
+        pointwise from uniform convergence without expanding the non-exam power-series Exkurs.
+      done_when:
+      - State and apply the script's exponential/logarithm properties and solve representative algebra/limit
+        tasks.
+      - Distinguish pointwise and uniform convergence on one standard example and identify why exchanging
+        limits needs stronger control.
+      - Mark §5.8 power series as Exkurs and do not expand it into a second course.
+      - Pass a 20-minute closed-book gate with one log/exp manipulation and one uniform-convergence diagnosis.
+      estimate_minutes: 150
+      exam_critical: true
+      concepts:
+      - concept-uniform-convergence
+      - concept-limits-continuity
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Main source - §§5.6-5.7
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: printed pp. 122-129 (PDF pp. 132-139); §5.8 Exkurs excluded'
+      - kind: practise
+        label: Explained companion exercises
+        source_id: source-fritzsche-trainingsbuch
+        locator: 'Kapitel 4: gleichmäßige Konvergenz selection only'
+      - kind: reference
+        label: Optional rigorous repair for the pointwise/uniform distinction
+        source_id: source-mit-18100a
+        locator: Lectures 23-24 only
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-and/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ane
+      title: AN.E - differentiation, mean-value theorems, and l'Hospital
+      status: pending
+      objective: Use the script's derivative definition and theorem chain to calculate derivatives, justify
+        extrema/monotonicity, apply Rolle/MVT, and use l'Hospital only when its assumptions hold.
+      done_when:
+      - State differentiability and the relevant MVT/l'Hospital assumptions before calculating.
+      - Solve at least twelve derivative/monotonicity/extremum/limit problems, including one MVT proof-style
+        application.
+      - Treat §§6.2 and 6.6 as non-exam Exkurse and §6.4 as an exam-light Ausflug; retain §6.7 higher
+        derivatives.
+      - Pass a 40-minute closed-book test with derivative-from-definition, MVT, extrema/monotonicity,
+        and l'Hospital items.
+      estimate_minutes: 330
+      exam_critical: true
+      concepts:
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - kind: watch
+        label: Optional intuition unlock for derivative or MVT only
+        source_id: source-professor-leonard
+        locator: 'Calculus 1: definition of derivative and Mean Value Theorem selections'
+      - kind: read
+        label: Main source - Chapter 6 core before Taylor
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: §§6.1, 6.3-6.5, and 6.7; printed pp. 137-167 (PDF pp. 147-177); §§6.2
+          and 6.6 excluded'
+      - kind: practise
+        label: Targeted solved calculations after the script examples
+        source_id: source-analysis-drill-blaetter-extern
+        locator: 'IngMath2_Aufgaben.pdf: Ch. 13 and §§14.1-14.2; AS-Ana1.pdf: matching differentiation
+          tasks'
+      - kind: practise
+        label: Gentle German companion when the external collection is too terse
+        source_id: source-fritzsche-trainingsbuch
+        locator: 'Kapitel 3: Differenzierbarkeit and Mittelwertsatz selections'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ane/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-anf
+      title: AN.F - Taylor approximation and interpolation overview
+      status: pending
+      objective: Make Taylor polynomials, the remainder/error bound, and approximation useable from §6.8;
+        keep §6.9 excluded and §6.10 at Ausflug overview depth.
+      done_when:
+      - Construct Taylor polynomials through at least order three at a general expansion point.
+      - Use the script's remainder statement to bound an approximation error and to evaluate one limit.
+      - Explain the interpolation Ausflug's purpose and workflow without turning it into a full numerical-analysis
+        unit.
+      - Pass a 30-minute closed-book Taylor/error-bound test.
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-taylor-series
+      - concept-differentiation
+      scope_triage: required-now
+      resources:
+      - kind: watch
+        label: Optional visual preview for Taylor approximation
+        source_id: source-3b1b-essence-of-calculus
+        locator: Taylor-series selection; maximum 20 minutes
+      - kind: read
+        label: Main source - Taylor and interpolation boundary
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: §6.8 and §6.10, printed pp. 168-190 (PDF pp. 178-200); §6.9 Exkurs
+          excluded'
+      - kind: practise
+        label: Solved Taylor and curve-analysis tasks
+        source_id: source-analysis-drill-blaetter-extern
+        locator: 'IngMath2_Aufgaben.pdf: §14.3 and selected §14.4 tasks'
+      - kind: reference
+        label: Gentle alternative explanation
+        source_id: source-strang-calculus
+        locator: 'Chapter 10: Taylor/infinite-series selection only'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anf/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-ang
+      title: AN.G - Riemann integration and the fundamental theorem
+      status: pending
+      objective: Use §§7.1-7.3 to connect Riemann sums, integrability, the fundamental theorem, substitution,
+        integration by parts, and improper integrals.
+      done_when:
+      - State the Riemann-integral and fundamental-theorem results with their assumptions and explain
+        the derivative/integral inverse relationship.
+      - Solve at least twelve integrals, including substitution, integration by parts, and two improper-convergence
+        decisions.
+      - Treat §7.4 numerical integration as a non-exam Exkurs.
+      - Pass a 40-minute closed-book integration test and explain one density-CDF cross-wire to the SaD
+        half.
+      estimate_minutes: 330
+      exam_critical: true
+      concepts:
+      - concept-riemann-integral
+      scope_triage: required-now
+      resources:
+      - kind: watch
+        label: Optional intuition unlock for the fundamental theorem
+        source_id: source-professor-leonard
+        locator: 'Calculus 2: Fundamental Theorem of Calculus selection'
+      - kind: read
+        label: Main source - Chapter 7 core
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: §§7.1-7.3, printed pp. 191-214 (PDF pp. 201-224); §7.4 Exkurs excluded'
+      - kind: practise
+        label: Solved Riemann/integration/improper-integral tasks
+        source_id: source-analysis-drill-blaetter-extern
+        locator: 'IngMath2_Aufgaben.pdf: Ch. 16-18 selections; Aufgabensammlung-M1_Loesung.pdf: Aufgabe
+          13'
+      - kind: reference
+        label: Gentle Riemann-sum and technique companion
+        source_id: source-strang-calculus
+        locator: Chapters 5 and 7 only
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ang/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-anx
+      title: AN.X - retrieval, mixed practice, and combined-M2 mocks
+      status: pending
+      objective: Convert the completed blocks into exam performance using the script's definitions/results,
+        current HU exam-style tasks, gap-targeted external questions, and combined SaD-Analysis timing.
+      done_when:
+      - Produce a closed-book theorem ledger containing each exam-relevant definition/result, its assumptions,
+        its trigger, and one application; do not copy full proofs.
+      - Complete ana_inf_serieWV.pdf under its stated 30-45-minute-per-problem conditions and correct
+        it from the script.
+      - Use kleine_beweise only on error-ledger proof/logic gaps and retain its explicit no-exam-prediction
+        disclaimer.
+      - Complete one Analysis-only 90-minute mixed mock and one full 3-hour combined M2 mock with the
+        SaD half; grade both and re-drill every red error.
+      - In the final 72 hours, pass two short retrieval rounds and stop adding new sources or non-exam
+        Exkurse.
+      estimate_minutes: 540
+      exam_critical: true
+      concepts:
+      - concept-real-numbers
+      - concept-sequences-convergence
+      - concept-series
+      - concept-limits-continuity
+      - concept-uniform-convergence
+      - concept-differentiation
+      - concept-taylor-series
+      - concept-riemann-integral
+      - concept-proof-technique
+      scope_triage: required-now
+      resources:
+      - kind: practise
+        label: Closest current HU exam-style set
+        source_id: source-analysis-skript
+        locator: 'ana_inf_serieWV.pdf: WV1.1-WV1.4 under 30-45 minute limits'
+      - kind: read
+        label: Selective logic repair, not memorization
+        source_id: source-analysis-skript
+        locator: 'kleine_beweise.pdf: only the theorem behind an error-ledger item'
+      - kind: practise
+        label: German solved gap checks
+        source_id: source-analysis-klausuren-extern
+        locator: 'Marburg and Regensburg: topic-matched tasks only; compare notation and scope back to
+          unser skript'
+      - kind: practise
+        label: Fresh timed external paper for transfer
+        source_id: source-analysis-klausuren-extern
+        locator: 'Ulm or Leipzig: one timed selection; exclude topics absent from unser skript'
+      - kind: reference
+        label: Proof-writing repair only after a diagnosed presentation error
+        source_id: source-ableitinger-musterloesungen
+        locator: Analysis examples only; one matching Musterlösung
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-m2-analysis-exkurse
+      title: Deferred - Chapter 8 and non-exam Exkurse
+      status: pending
+      objective: Preserve the script's computer-science connections without displacing exam preparation.
+      done_when:
+      - 'After the M2 exam, choose at most one connection to explore: gradients in R^n, differential equations,
+        numerical root finding, or numerical integration.'
+      - Record that Chapter 8 and sections explicitly labelled Exkurs are not exam-relevant according
+        to the script's own course contract.
+      estimate_minutes: 90
+      exam_critical: false
+      concepts:
+      - concept-differentiation
+      scope_triage: deferred
+      resources:
+      - kind: reference
+        label: Deferred computer-science connections
+        source_id: source-analysis-skript
+        locator: 'unser skript.pdf: Chapter 8, printed pp. 226-248 (PDF pp. 236-258), plus other Exkurs
+          sections'
+      working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-exkurse/notes.md
+      attachments: []
+      source_feedback: []
+workspace_updates:
+- id: workspace-m2-exam-prep
+  sources:
+  - source-sad-ss26-lectures
+  - source-sad-uebungen
+  - source-sad-2025-recordings
+  - source-teschl-mathe-informatiker
+  - source-fahrmeir-statistik
+  - source-fahrmeir-arbeitsbuch
+  - source-blitzstein-hwang
+  - source-pitman-probability
+  - source-tijms-understanding-probability
+  - source-ross-first-course
+  - source-schaums-probability
+  - source-openintro-statistics
+  - source-dekking-mips
+  - source-mit-1805
+  - source-stat110
+  - source-mit-18650
+  - source-fau-klausur-ws1415
+  - source-sad-klausuren-extern
+  - source-statquest
+  - source-jbstatistics
+  - source-kurzes-tutorium-statistik
+  - source-brandon-foltz
+  - source-kelleher-fmlpda
+  - source-islp
+  - source-kroese-dsml
+  - source-cs229-notes
+  - source-cs229-2022-videos
+  - source-murphy-pml1
+  - source-csc411-notes
+  - source-aml-ss26-lectures
+  - source-cs4780-homeworks
+  - source-mit-6034-quizzes
+  - source-3b1b-neural-networks
+  - source-3b1b-linear-algebra
+  - source-eecs498
+  - source-rohrer-e2eml
+  - source-domingos-useful-things
+  - source-swanson-principles-probability
+  - source-analysis-skript
+  - source-professor-leonard
+  - source-3b1b-essence-of-calculus
+  - source-fritzsche-trainingsbuch
+  - source-analysis-drill-blaetter-extern
+  - source-analysis-klausuren-extern
+  - source-strang-calculus
+  - source-mit-18100a
+  - source-analysis-grundlagen-handouts
+  - source-ableitinger-musterloesungen
+  unit_ids:
+  - unit-m2-sad-l01
+  - unit-m2-sad-l02
+  - unit-m2-sad-l03
+  - unit-m2-sad-l04
+  - unit-m2-sad-l05
+  - unit-m2-sad-l06
+  - unit-m2-sad-l07
+  - unit-m2-sad-l08
+  - unit-m2-sad-l09
+  - unit-m2-sad-l10
+  - unit-m2-sad-l11
+  - unit-m2-sad-l12
+  - unit-m2-sad-l13
+  - unit-m2-sad-l14
+  - unit-m2-sad-l15
+  - unit-m2-sad-clustering
+  - unit-m2-sad-l06-l10
+  - unit-m2-analysis-exam-prep
+  sections:
+    Current Scope: 'Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD
+      N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses;
+      after AML on 30.09 switch to AN.X and combined M2 mocks for the 09.10 sitting.'
+    Next Action: 'Start stage-m2-analysis-calibrate (60 min): read the script''s course contract, take
+      one cold WV sample, and create the five-class error ledger. Then begin AN.0 with unser skript Chapters
+      1-2.'
+    Durable Notes: Analysis now has an executable script-led study map. unser skript.pdf is the scope
+      and notation authority; current HU exercises come before external banks; intuition sources are capped
+      detours; proofs are selective understanding repairs because the script says they need not be memorized.

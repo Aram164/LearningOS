@@ -1,0 +1,35 @@
+id: unit-m2-sad-l07
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: lecture
+title: SaD Lecture 07 — Discrete Distributions
+order: 7
+scope: Current 2026 L07 deck; Bernoulli, Binomial, Hypergeometric, Geometric, and Poisson distributions,
+  their assumptions, PMFs, expectation, and variance.
+status: ready
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/07_discrete_distributions.pdf
+- source_id: source-sad-2025-recordings
+  authority: reference
+  locator: 07_discrete_distributions.pptx (1).pdf
+source_selections:
+- source_id: source-fahrmeir-statistik
+  locator: Ch 5
+  purpose: Course-notation distribution definitions
+- source_id: source-blitzstein-hwang
+  locator: Ch 3–4
+  purpose: Distribution-generating stories
+- source_id: source-stat110
+  locator: Units 3–4
+  purpose: Optional Binomial/Hypergeometric/Poisson depth
+- source_id: source-mit-1805
+  locator: Discrete-distribution problems
+  purpose: Solved practice
+artifacts:
+  ultimate_reference: note-sad-probability-inference-deep-plan
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l07

@@ -1,0 +1,114 @@
+id: study-map-amls-l09
+type: study-map
+unit_id: unit-amls-l09
+status: ready
+current_stage: stage-amls-l09-scope
+source_plan:
+  path: work/active/workspace-amls-exam-prep/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-amls-l09-scope
+  title: Scope from the SS26 deck
+  status: pending
+  objective: Connect data layout and movement to caching, compression and precision choices.
+  done_when:
+  - Every mechanism is page-located
+  - Min-max quantization and bfloat16 trade-offs can be explained and calculated
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: SS26 Lecture 09 recording and deck
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 09; 09_DataAccess.pdf
+    vault_path: material://source-amls-ss26-lectures/lecture-slides/09_DataAccess.pdf
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-scope/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l09-integrate
+  title: Integrate data-management and storage perspectives
+  status: pending
+  objective: Use DMMLS and Vol 2 to deepen data-access reasoning while keeping the deck taxonomy. Triage
+    every curated primary paper for this lecture and anchor its useful claim, mechanism or result back
+    to the deck.
+  done_when:
+  - A decision table compares cache partition index compress and quantize choices
+  - Additions are tied to deck pages
+  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Primary paper — Compressed Linear Algebra for Large-Scale ML
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 09
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://vldb.org/pvldb/vol9/p960-elgohary.pdf
+  - kind: read
+    label: 'Primary paper — ZipML: Training Linear Models with End-to-End Low Precision'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 09
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://arxiv.org/abs/1611.05402
+  - kind: read
+    label: 'Primary paper — AWARE: Workload-aware, Redundancy-exploiting Linear Algebra'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 09
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://mboehm7.github.io/resources/sigmod2023a.pdf
+  - kind: read
+    label: 'Primary paper — Milvus: A Purpose-Built Vector Data Management System'
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 1, Lecture 09
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    url: https://dl.acm.org/doi/10.1145/3448016.3457550
+  - kind: reference
+    label: Complete slide-citation bibliography — Lecture 09 (22 entries)
+    source_id: source-amls-ss26-lectures
+    locator: AMLS paper reading list, Part 2, Lecture 09; reference-only
+    vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  - kind: read
+    label: DMMLS — data access and compression
+    source_id: source-dmmls-boehm
+    locator: Verify TOC after acquisition
+  - kind: read
+    label: MLSysBook Vol 2 — Data Storage
+    source_id: source-mlsysbook-vol2
+    locator: Data Storage chapter
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-integrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-amls-l09-evidence
+  title: Full evidence — reference, drills and lecture mock
+  status: pending
+  objective: Solve locality, caching and quantization questions closed-book.
+  done_when:
+  - A reference sheet covers the full deck
+  - Four MIT locality/cache drills are attempted
+  - A 45-minute mock includes official Task 6 min-max quantization from Lecture 13 page 47
+  estimate_minutes: 140
+  exam_critical: true
+  concepts:
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: MIT 6.172 — locality and caching quizzes
+    source_id: source-mit-6172
+    locator: Selected question-first items
+  - kind: practise
+    label: Official AMLS sample — Task 6 min-max quantization
+    source_id: source-amls-ss26-lectures
+    locator: Lecture 13 page 47
+  working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-evidence/notes.md
+  attachments: []
+  source_feedback: []

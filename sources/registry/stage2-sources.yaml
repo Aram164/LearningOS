@@ -4,61 +4,95 @@
 sources:
   # ==================================================================== AMLS
   - id: source-amls-ss26-lectures
-    title: AMLS — Advanced Machine Learning Systems, slides + recordings (SS26)
+    title: AMLS — Architecture of ML Systems, slides, recordings, and source papers (SS26)
     type: lecture
-    authors: [Matthias Boehm]
+    authors:
+    - Matthias Boehm
+    organization: TU Berlin
     year: 2026
     url: https://mboehm7.github.io/teaching/ss26_amls/index.htm
+    material: material://source-amls-ss26-lectures
     evaluations:
-      - roles: [first-learning]
-        strengths:
-          - "THE course: the SS26 page links slides AND mp4 recordings for every held lecture (01–11 verified Jul 2) — watch the matching mp4 → slides → self-test; replaces the old SS23-archive workaround"
-        weaknesses:
-          - "Lectures 12–13 slides/mp4 were still pending as of Jul 9/16 — check the course page (legacy Open Loop #6)"
-      - concepts: [concept-ml-systems]
-        roles: [first-learning]
-        useful_sections:
-          - "01–02 — Introduction; Languages, Architectures, System Landscape": "ML-in-DB vs DB-inspired vs lifecycle systems"
-      - concepts: [concept-program-rewrites]
-        roles: [first-learning]
-        useful_sections:
-          - "03 — Size Inference, Rewrites, Operator Selection": "10-414 autodiff/computation-graph lectures are the depth twin (AML-L09 synergy)"
-      - concepts: [concept-operator-fusion]
-        roles: [first-learning]
-        useful_sections:
-          - "04 — Operator Fusion and Runtime Adaptation": "MLC fusion notebooks as the do-it twin"
-      - concepts: [concept-data-parallelism]
-        roles: [first-learning]
-        useful_sections:
-          - "05 — Data- and Task-Parallel Execution": "CS149 parallel abstractions + 6.172 Cilk supplement; 6.172 parallelism/races quizzes are the written-drill anchor"
-      - concepts: [concept-parameter-servers]
-        roles: [first-learning]
-        useful_sections:
-          - "06 — Parameter Servers": "V2 Collective Communication + USP ZeRO as the book layer"
-      - concepts: [concept-llm-systems]
-        roles: [first-learning]
-        useful_sections:
-          - "07 — LLM Training and Inference": "USP is 'the whole book is this lecture'; HTSYM for FLOP accounting"
-      - concepts: [concept-hardware-accelerators]
-        roles: [first-learning]
-        useful_sections:
-          - "08 — Hybrid Execution and HW Accelerators": "10-414 GPU lecture; 6.172 caching/HW quiz items"
-      - concepts: [concept-data-access-optimization]
-        roles: [first-learning]
-        useful_sections:
-          - "09 — Caching, Partitioning, Indexing, Compression": "6.172 locality/caching is BOTH the supplement and the testing anchor"
-      - concepts: [concept-ml-lifecycle, concept-data-provenance]
-        roles: [first-learning]
-        useful_sections:
-          - "10–11 — Data Sourcing/Cleaning/Prep; Model Selection & Management": "wire lecture 10 to Aram's own mlprov code (M + JK synergy); 11 cross-wires AML Block D CV"
-      - concepts: [concept-ml-fairness-explainability]
-        roles: [first-learning]
-        useful_sections:
-          - "12 — Model Debugging, Fairness, Explainability": "own project code is the lab: fairlearn (mlprov M.4.x) + Captum/saliency (AMLS Task 1.4)"
-      - concepts: [concept-model-serving]
-        roles: [first-learning]
-        useful_sections:
-          - "13 — Model Serving Systems": "MLSysBook serving chapters + Huyen"
+    - roles:
+      - first-learning
+      strengths:
+      - The course scope authority; all 13 SS26 decks are local and reachable, verified 2026-08-03.
+      weaknesses:
+      - 'Lecture 12''s title page says ''Last update: Jul 09, 2025'' while the SS26 course sequence places
+        it on 2026-07-09; treat the year as an unresolved deck-stamp anomaly.'
+    - concepts:
+      - concept-ml-systems
+      roles:
+      - first-learning
+      useful_sections:
+      - 01 — Introduction and Overview: ML-system definitions, lifecycle, SystemDS and DAPHNE overview
+      - 02 — Languages, Architectures, and System Landscape: language abstractions, system stack and landscape
+    - concepts:
+      - concept-program-rewrites
+      roles:
+      - first-learning
+      useful_sections:
+      - 03 — Compilation – Size Inference and Rewrites: size and sparsity inference, rewrite rules, CSE and
+          matrix-chain optimization
+    - concepts:
+      - concept-operator-fusion
+      roles:
+      - first-learning
+      useful_sections:
+      - 04 — Compilation – Adaptation, Fusion, and JIT: dynamic recompilation, fusion/code generation, XLA
+          and MLIR
+    - concepts:
+      - concept-data-parallelism
+      roles:
+      - first-learning
+      useful_sections:
+      - 05 — Data- and Task-Parallel Execution: MapReduce/Spark, distributed matrix operations and parfor
+    - concepts:
+      - concept-parameter-servers
+      roles:
+      - first-learning
+      useful_sections:
+      - 06 — Parameter Servers: data/model parallelism, BSP/ASP/SSP and federated learning
+    - concepts:
+      - concept-llm-systems
+      roles:
+      - first-learning
+      useful_sections:
+      - 07 — LLM Training and Inference: scaling, distributed training, post-training and inference systems
+    - concepts:
+      - concept-hardware-accelerators
+      roles:
+      - first-learning
+      useful_sections:
+      - 08 — Hardware Accelerators: GPUs, Tensor Cores, interconnects, FPGAs, ASICs and TPUs
+    - concepts:
+      - concept-data-access-optimization
+      roles:
+      - first-learning
+      useful_sections:
+      - 09 — Data Access Methods: caching, partitioning, indexing, compression and quantization
+    - concepts:
+      - concept-ml-lifecycle
+      - concept-data-provenance
+      roles:
+      - first-learning
+      useful_sections:
+      - 10 — Data Acquisition and Preparation: acquisition, cleaning, transformation and encoding
+      - 11 — Model Selection and Management: search strategies, AutoML/NAS and model lineage
+    - concepts:
+      - concept-ml-fairness-explainability
+      roles:
+      - first-learning
+      useful_sections:
+      - 12 — Model Debugging, Fairness, and Explainability: SliceLine, LIME/SHAP and fairness constraints
+    - concepts:
+      - concept-model-serving
+      roles:
+      - first-learning
+      useful_sections:
+      - 13 — Model Deployment and Serving: exchange, serving optimization, monitoring, drift and updates
+    identifiers:
+      paper-reading-list: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
 
   - id: source-dmmls-boehm
     title: Data Management in Machine Learning Systems

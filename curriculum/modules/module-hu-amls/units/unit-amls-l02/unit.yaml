@@ -1,0 +1,39 @@
+id: unit-amls-l02
+type: unit
+module_id: module-hu-amls
+kind: lecture
+title: AMLS Lecture 02 — Languages, Architectures, and System Landscape
+order: 13
+scope: Data-science lifecycle and ML-system stack; workload/data representations; eager/lazy/program optimization;
+  language abstractions, system landscape and benchmarks.
+status: ready
+scope_sources:
+- source_id: source-amls-ss26-lectures
+  authority: slides
+  locator: 02_SystemArchitecture.pdf — 39 pages
+source_selections:
+- source_id: source-amls-ss26-lectures
+  locator: AMLS-Source-Papers-Reading-List.md — Part 1 §02 (4 curated) and Part 2 §02 (26 bibliography
+    entries)
+  purpose: Primary-paper collection and complete bibliography
+  stage_ids:
+  - stage-amls-l02-integrate
+- source_id: source-dmmls-boehm
+  locator: ML-in-DB, DB-inspired and lifecycle-system landscape
+  purpose: Lecturer-authored landscape
+  stage_ids:
+  - stage-amls-l02-integrate
+- source_id: source-mlsysbook-vol1
+  locator: ML Systems and ML Frameworks selected sections
+  purpose: Architecture companion
+  stage_ids:
+  - stage-amls-l02-integrate
+- source_id: source-cmu-10414
+  locator: Needle design lectures
+  purpose: Build-first architecture view
+  stage_ids:
+  - stage-amls-l02-integrate
+current_study_map: study-map-amls-l02
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep
