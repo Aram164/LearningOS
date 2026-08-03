@@ -200,6 +200,9 @@ One documented command produces, from canonical inputs only:
 - `dependency-report.md`;
 - `concept-map.md` — Mermaid rendering of the prerequisite graph (`requires` + `builds-on`), the visual twin of the dependency report;
 - `backlinks.json`;
+- `nebula.md` — the Garden lens (ADR-002) — and `domain-atlas.md` — the cross-domain map (ADR-005);
+- `reading-room.md` — the human home page (ADR-006): exam spine, workspace next actions, recently changed notes, queues, and review-adoption counts, each a link into the deeper view. Interface layers open this file first;
+- health report (`reports/health.md`, incl. review & evidence adoption);
 - validation report.
 
 Generated files state that they are generated, name the generator version and canonical inputs, and are gitignored.

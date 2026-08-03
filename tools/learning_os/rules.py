@@ -45,7 +45,8 @@ JUDGMENT_HEADERS = {"strengths", "weaknesses", "level", "best for", "best-for"}
 GENERATED_ALLOWED = {
     "manifest.json", "concept-index.md", "source-index.md", "module-view.md",
     "coordination-view.md", "dependency-report.md", "concept-map.md",
-    "backlinks.json", "nebula.md", "domain-atlas.md", ".gitkeep",
+    "backlinks.json", "nebula.md", "domain-atlas.md", "reading-room.md",
+    ".gitkeep",
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")

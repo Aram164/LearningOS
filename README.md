@@ -15,9 +15,12 @@ never edit it.
    `records/modules.yaml`, then your active workspace, plus the at-a-glance
    block of `generated/domain-atlas.md` (the cross-domain map). That's the
    whole interface.
-2. **By hand:** exam facts live in `records/modules.yaml`; "what should I do
-   next?" is `generated/coordination-view.md` (run `make views` to refresh);
-   your knowledge is under `knowledge/notes/`; capture anything into `work/inbox/`.
+2. **By hand:** the one-page home is `generated/reading-room.md` (run
+   `make views` to refresh) — exams, workspaces, recent notes, queues, all
+   linked. Exam facts live in `records/modules.yaml`; the full "what should I
+   do next?" dashboard is `generated/coordination-view.md`; your knowledge is
+   under `knowledge/notes/`; capture anything into `work/inbox/` (or
+   `python tools/los.py capture --text "…"`).
 3. **After editing:** run `make check`. The pre-commit hook blocks commits while
    the validator reports errors.
 
@@ -94,9 +97,15 @@ anything — a text editor and Git are enough to operate this repository forever
 make setup      # once per clone/move: create .venv, install deps, install both Git hooks
 make check      # validate (schemas + VALIDATION.md rules)
 make views      # rebuild everything under the gitignored output tree
+make status     # one-screen repository state
 make test       # test suite
 make            # list the one-word commands
 ```
+
+Interface layers (the Obsidian UI project, scripts, other agents) use the
+stable CLI gateway instead of parsing YAML — `python tools/los.py status
+--json | validate | generate | capture` (ADR-006). The loader stays the single
+authority; the CLI only delegates.
 
 `make setup` creates a project-local virtual environment at `.venv/` (gitignored)
 from `requirements-dev.txt`, so the tooling never touches your system Python —
