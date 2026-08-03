@@ -112,6 +112,27 @@ def test_health_carries_adoption_section(mini_repo):
     assert "`evidence` entries: 0/1" in health
 
 
+# ---------------------------------------------------------- concept canvas
+def test_concept_canvas_is_valid_json_canvas(mini_repo):
+    outputs = generate_all(load_repo(mini_repo), generated_at="T1")
+    data = json.loads(outputs["concept-canvas.canvas"])
+    assert "_generated" in data
+    node_ids = {n["id"] for n in data["nodes"]}
+    assert node_ids == {"concept-expected-value", "concept-variance"}
+    for n in data["nodes"]:
+        assert {"id", "type", "text", "x", "y", "width", "height"} <= set(n)
+    [edge] = data["edges"]
+    assert edge["fromNode"] == "concept-variance"
+    assert edge["toNode"] == "concept-expected-value"
+    assert edge["label"] == "builds-on"
+    # prerequisite-depth layout: the dependent sits one layer right of its prereq
+    xs = {n["id"]: n["x"] for n in data["nodes"]}
+    assert xs["concept-variance"] > xs["concept-expected-value"]
+    # note links rendered on the concept card
+    ev = next(n for n in data["nodes"] if n["id"] == "concept-expected-value")
+    assert "note-demo" in ev["text"]
+
+
 def test_adoption_counts_flag_drift_past_review(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     text = note.read_text(encoding="utf-8")

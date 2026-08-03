@@ -70,6 +70,7 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - module views;
 - coordination view;
 - reading room (the human home page composing the other views — ADR-006);
+- concept canvas (JSON Canvas of the relation registry — ADR-006);
 - backlinks;
 - validation reports.
 

@@ -106,3 +106,31 @@ restate them):**
 - `LearningOS/obsidian-ui/` seeded: README + boundary CLAUDE.md + the input
   plan under `inputs/` — a stub for the separate project, deliberately not a
   Git repository yet (that is the UI project's first act).
+
+## Addendum (2026-08-03, later same day) — gate lifted, v0.1 shipped
+
+Aram lifted the Phase-D gate ("forget about M2 now, I want the whole thing
+working perfectly now") — the *sequencing* note above is superseded; the exam
+facts and COORDINATION priorities themselves are untouched. Shipped the same
+day from `obsidian-ui/` (v0.1.0):
+
+- **Plugin** `learningos-ui` — single-file `main.js`, no build system:
+  reading room auto-opens; capture modal → `work/inbox/`; rebuild/validate/
+  status via `los.py`; status-bar validation state + next-exam countdown
+  (countdowns are legal UI — the determinism rule binds generated files, not
+  live displays); concept-canvas command.
+- **Shelves** — Obsidian Bases definitions (notes ×7 views, garden,
+  workspaces), installed to `repository/bases/`.
+- **Safety config** — managed keys merged into `.obsidian/app.json`:
+  `alwaysUpdateLinks:false`, Markdown links, attachments→`work/inbox/`,
+  local trash, archive/venv excluded from search.
+- **Core side** — new generated view `concept-canvas.canvas` (JSON Canvas of
+  the relation registry, prerequisite-depth layout, colored typed edges).
+
+**Boundary clarifications (binding):** interface furniture lives in the vault
+only at gitignored paths — `.obsidian/`, `/bases/`, `/.trash/` — installed
+and owned by `obsidian-ui/install.py`, which never edits core-tracked files.
+Direct creation of NEW files in `work/inbox/` by an interface is equivalent
+to `los.py capture` and equally blessed: the inbox is the designated
+judgment-free write surface (ARCHITECTURE §3.3.5); routing stays with the
+operator. Everything else remains CLI-or-nothing.

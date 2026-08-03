@@ -202,6 +202,7 @@ One documented command produces, from canonical inputs only:
 - `backlinks.json`;
 - `nebula.md` — the Garden lens (ADR-002) — and `domain-atlas.md` — the cross-domain map (ADR-005);
 - `reading-room.md` — the human home page (ADR-006): exam spine, workspace next actions, recently changed notes, queues, and review-adoption counts, each a link into the deeper view. Interface layers open this file first;
+- `concept-canvas.canvas` — JSON Canvas rendering of the relation registry (ADR-006): concept cards with note links, labelled colored edges, prerequisite-depth layout. Obsidian renders it natively; any JSON Canvas tool can read it;
 - health report (`reports/health.md`, incl. review & evidence adoption);
 - validation report.
 
