@@ -339,6 +339,32 @@ def make_unit(module_id: str, unit_id: str, kind: str, title: str, order: int,
     return unit, study_map
 
 
+def preserve_existing_units(before, units_by_module: dict, source_map_defs: dict,
+                            module_id: str,
+                            keep_if=lambda units: True) -> bool:
+    """Reuse a module's on-disk units instead of the migrator's first-run seed.
+
+    The compatibility migrator seeds a module only once. After that the
+    partitioned units and their source map are canonical: they may legitimately
+    grow (module-plan-import) or be refined by hand (an authored stage ladder),
+    and a re-run must preserve that work rather than collapse it back to the
+    seed. Returns True when existing units were adopted.
+    """
+    existing = [unit for unit in before.units.values() if unit.module_id == module_id]
+    if not existing or not keep_if(existing):
+        return False
+    units_by_module[module_id] = [
+        (copy.deepcopy(unit.data),
+         copy.deepcopy(before.study_maps[unit.data["current_study_map"]].data)
+         if unit.data.get("current_study_map") in before.study_maps else None)
+        for unit in existing
+    ]
+    source_map_defs[module_id] = copy.deepcopy(
+        before.module_source_maps.get(module_id, {"sources": []})
+    ).get("sources", [])
+    return True
+
+
 def source_maps(source_ids: set[str]) -> dict[str, list[dict]]:
     raw = {
         "module-hu-aml": [
@@ -507,38 +533,16 @@ def run(root: Path, apply: bool) -> Migration:
     # partitioned units exist, they are canonical and may legitimately grow via
     # module-plan-import; preserve those units and their evolved source maps.
     for mid in ("module-hu-aml", "module-hu-m2-statistik-analysis"):
-        existing_units = [unit for unit in before.units.values()
-                          if unit.module_id == mid]
-        if not existing_units:
-            continue
-        units_by_module[mid] = [
-            (copy.deepcopy(unit.data),
-             copy.deepcopy(before.study_maps[unit.data["current_study_map"]].data)
-             if unit.data.get("current_study_map") in before.study_maps else None)
-            for unit in existing_units
-        ]
-        source_map_defs[mid] = copy.deepcopy(
-            before.module_source_maps.get(mid, {"sources": []})
-        ).get("sources", [])
+        preserve_existing_units(before, units_by_module, source_map_defs, mid)
 
     # AMLS was initially migrated as one placeholder. Once the module has a
     # real partitioned lecture tree, a compatibility dry run must preserve it
     # instead of reconstructing that placeholder from the frozen Chat2 plan.
     # This makes the migration genuinely idempotent after post-migration unit
     # building, just as partitioned module facts are preserved above.
-    existing_amls = [unit for unit in before.units.values()
-                     if unit.module_id == "module-hu-amls"]
-    if any(unit.id.startswith("unit-amls-l") for unit in existing_amls):
-        units_by_module["module-hu-amls"] = [
-            (copy.deepcopy(unit.data),
-             copy.deepcopy(before.study_maps[unit.data["current_study_map"]].data)
-             if unit.data.get("current_study_map") in before.study_maps else None)
-            for unit in existing_amls
-        ]
-        source_map_defs["module-hu-amls"] = copy.deepcopy(
-            before.module_source_maps.get("module-hu-amls", {"sources": []})
-        ).get("sources", [])
-    else:
+    if not preserve_existing_units(
+            before, units_by_module, source_map_defs, "module-hu-amls",
+            keep_if=lambda units: any(unit.id.startswith("unit-amls-l") for unit in units)):
         amls_map = parse_plan(
             root, "work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md",
             "unit-amls-theory", source_ids)
@@ -583,6 +587,10 @@ def run(root: Path, apply: bool) -> Migration:
             "module-skill-python", uid, "topic", title, order,
             "Seeded from the existing roadmap without inferring completion.", "ready", [],
             {"ultimate_reference": note_id}, study_map=smap))
+    # Each skill unit is seeded as a single note-backed stage. Once a real stage
+    # ladder has been authored against the unit's materials (the ten-stage Python
+    # depth drills), that map is canonical; a re-run must not flatten it back.
+    preserve_existing_units(before, units_by_module, source_map_defs, "module-skill-python")
 
     modules["module-project-bachelor-thesis"] = {
         "id": "module-project-bachelor-thesis", "type": "module", "kind": "project",
