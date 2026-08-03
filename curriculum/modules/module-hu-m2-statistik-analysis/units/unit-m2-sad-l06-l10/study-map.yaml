@@ -1,0 +1,27 @@
+id: study-map-m2-sad-l06-l10
+type: study-map
+unit_id: unit-m2-sad-l06-l10
+status: ready
+current_stage: stage-01-sad-l06l10-probability-and-inference-deep-plan
+source_plan:
+  path: note://note-sad-probability-inference-deep-plan
+  provenance: durable-note
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-sad-l06l10-probability-and-inference-deep-plan
+  title: SaD L06–L10 probability and inference deep plan
+  status: pending
+  objective: Use the preserved SaD L06–L10 probability and inference deep plan artifact as the scope and
+    work record.
+  done_when:
+  - Record concrete work or evidence without inferring mastery from the artifact.
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: 'Durable artifact note-sad-probability-inference-deep-plan: SaD L06–L10 probability and inference
+      deep plan'
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06-l10/stages/stage-01-sad-l06l10-probability-and-inference-deep-plan/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,14 @@
+id: unit-amls-theory
+type: unit
+module_id: module-hu-amls
+kind: exam-block
+title: AMLS theory preparation
+order: 1
+scope: Existing AMLS theory plan, retained as the unit's source plan.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-amls-exam-prep
+current_study_map: study-map-amls-theory

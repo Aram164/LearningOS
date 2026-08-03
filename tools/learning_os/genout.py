@@ -61,7 +61,7 @@ def _md_header(title: str, generated_at: str) -> list[str]:
         "> ⚠️ GENERATED file — a disposable VIEW over the canonical records, not "
         "part of the canonical architecture. Never edit; edit canonical inputs "
         f"instead. Rebuilt by `python tools/generate.py` (learning_os v{__version__}) "
-        "from: knowledge/, sources/, records/, work/.",
+        "from: knowledge/, sources/, curriculum/, records/, work/.",
         f"> Generated: {generated_at}",
         "",
     ]
@@ -149,7 +149,7 @@ def _material_location(repo: Repo, ref) -> dict:
 def _source_fingerprint(repo: Repo) -> str:
     """Content identity of every authored input used by the projection."""
     digest = hashlib.sha256()
-    roots = ("knowledge", "sources", "records", "work", "system/schema")
+    roots = ("knowledge", "sources", "records", "work", "curriculum", "system/schema")
     for rel_root in roots:
         base = repo.root / rel_root
         if not base.exists():
@@ -172,7 +172,7 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
                              capture_output=True, text=True, timeout=30)
         status = subprocess.run(
             ["git", "status", "--porcelain", "--untracked-files=all", "--",
-             "knowledge", "sources", "records", "work", "system/schema"],
+             "knowledge", "sources", "records", "work", "curriculum", "system/schema"],
             cwd=root, capture_output=True, text=True, timeout=30)
         return (rev.stdout.strip() or None, bool(status.stdout.strip()))
     except Exception:  # noqa: BLE001
@@ -262,15 +262,20 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         })
     for mid in sorted(repo.modules):
         m = repo.modules[mid]
+        origin = repo.module_origins.get(mid)
         records.append({
             "id": mid, "type": "module", "title": m.get("title", ""),
-            "path": "records/modules.yaml", "status": m.get("status", ""),
+            "path": str(origin.relative_to(repo.root)) if origin else "records/modules.yaml",
+            "kind": m.get("kind", "academic"), "area_id": m.get("area_id"),
+            "status": m.get("status", ""),
             "institution": m.get("institution"), "code": m.get("code"),
             "credits": m.get("credits"), "semester": m.get("semester"),
             "components": list(m.get("components", []) or []),
             "examination": m.get("examination"),
             "attempts": list(m.get("attempts", []) or []),
             "grade": m.get("grade"),
+            "unit_order": list(m.get("unit_order", []) or []),
+            "source_map": m.get("source_map"),
         })
     for name in sorted(repo.collections):
         doc = repo.collections[name]
@@ -294,6 +299,9 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "concepts": sorted(ws.meta.get("concepts", []) or []),
             "notes": sorted(ws.meta.get("notes", []) or []),
             "sources": sorted(ws.meta.get("sources", []) or []),
+            "program_ids": sorted(ws.meta.get("program_ids", []) or []),
+            "module_ids": sorted(ws.meta.get("module_ids", []) or []),
+            "unit_ids": sorted(ws.meta.get("unit_ids", []) or []),
         })
     for learning_path in sorted(repo.learning_paths.values(), key=lambda p: p.id):
         data = learning_path.data
@@ -327,6 +335,46 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "shelving": dict(data.get("shelving", {}) or {}),
             "archived": learning_path.archived,
         })
+    for program in sorted(repo.programs.values(), key=lambda p: p.id):
+        records.append({
+            **dict(program.data),
+            "path": str(program.path.relative_to(repo.root)),
+        })
+    for unit in sorted(repo.units.values(), key=lambda u: u.id):
+        data = unit.data
+        records.append({
+            **dict(data),
+            "path": str(unit.path.relative_to(repo.root)),
+        })
+    for study_map in sorted(repo.study_maps.values(), key=lambda sm: sm.id):
+        data = study_map.data
+        projected_stages = []
+        for stage in data.get("stages", []) or []:
+            projected = dict(stage)
+            note_ref = stage.get("working_note") if isinstance(stage, dict) else None
+            note_file = repo.root / str(note_ref) if note_ref else None
+            if note_file and note_file.is_file():
+                projected["notes_text"] = note_file.read_text(
+                    encoding="utf-8", errors="replace")
+                projected["notes_updated"] = _git_last_commit(
+                    repo.root, note_file.relative_to(repo.root).as_posix())
+            else:
+                projected["notes_text"] = ""
+                projected["notes_updated"] = None
+            projected_stages.append(projected)
+        records.append({
+            **{k: v for k, v in data.items() if k != "stages"},
+            "module_id": study_map.module_id,
+            "path": str(study_map.path.relative_to(repo.root)),
+            "stages": projected_stages,
+        })
+    for mid in sorted(repo.module_source_maps):
+        source_map = repo.module_source_maps[mid]
+        records.append({
+            "id": f"source-map-{mid.removeprefix('module-')}",
+            **dict(source_map),
+            "path": str(repo.module_source_map_origins[mid].relative_to(repo.root)),
+        })
     if repo.coordination is not None:
         records.append({
             "id": "coordination", "type": "coordination",
@@ -345,12 +393,88 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     revision, dirty = _git_state(repo.root)
     generated_meta = _json_header(generated_at)
     generated_meta.update({
-        "contract_version": 1,
+        "contract_version": 2,
         "snapshot_id": f"sha256:{fingerprint}",
         "source_fingerprint": fingerprint,
         "source_revision": revision,
         "source_dirty": dirty,
     })
+    programs_v2 = [r for r in records if r.get("type") == "program"]
+    modules_v2 = [r for r in records if r.get("type") == "module"]
+    units_v2 = [r for r in records if r.get("type") == "unit"]
+    study_maps_v2 = [r for r in records if r.get("type") == "study-map"]
+    source_maps_v2 = [r for r in records if r.get("type") == "module-source-map"]
+    stages_v2 = [
+        {**stage, "study_map_id": study_map["id"],
+         "unit_id": study_map["unit_id"], "module_id": study_map["module_id"]}
+        for study_map in study_maps_v2 for stage in study_map.get("stages", [])
+    ]
+    module_to_units = {
+        module["id"]: [uid for uid in module.get("unit_order", []) if uid]
+        for module in modules_v2
+    }
+    unit_to_study_map = {
+        unit["id"]: unit.get("current_study_map")
+        for unit in units_v2 if unit.get("current_study_map")
+    }
+    component_to_units: dict[str, list[str]] = {}
+    source_to_modules: dict[str, list[str]] = {}
+    source_to_units: dict[str, list[str]] = {}
+    workspace_to_modules: dict[str, list[str]] = {}
+    workspace_to_units: dict[str, list[str]] = {}
+    for unit in units_v2:
+        if unit.get("component_id"):
+            component_to_units.setdefault(unit["component_id"], []).append(unit["id"])
+        for scoped in unit.get("scope_sources", []) or []:
+            if scoped.get("source_id"):
+                source_to_units.setdefault(scoped["source_id"], []).append(unit["id"])
+        for selection in unit.get("source_selections", []) or []:
+            if selection.get("source_id"):
+                source_to_units.setdefault(selection["source_id"], []).append(unit["id"])
+    for source_map in source_maps_v2:
+        mid = source_map.get("module_id")
+        for entry in source_map.get("sources", []) or []:
+            sid = entry.get("source_id")
+            if sid:
+                source_to_modules.setdefault(sid, []).append(mid)
+            for uid in entry.get("unit_routes", []) or []:
+                source_to_units.setdefault(sid, []).append(uid)
+    for study_map in study_maps_v2:
+        for stage in study_map.get("stages", []) or []:
+            for resource in stage.get("resources", []) or []:
+                sid = resource.get("source_id")
+                if sid:
+                    source_to_units.setdefault(sid, []).append(study_map["unit_id"])
+    for workspace in [r for r in records if r.get("type") == "workspace" and not r.get("archived")]:
+        workspace_to_modules[workspace["id"]] = list(workspace.get("module_ids", []) or [])
+        workspace_to_units[workspace["id"]] = list(workspace.get("unit_ids", []) or [])
+    for table in (component_to_units, source_to_modules, source_to_units,
+                  workspace_to_modules, workspace_to_units):
+        for key in table:
+            table[key] = sorted(set(table[key]))
+    progress = {}
+    study_map_by_unit = {sm["unit_id"]: sm for sm in study_maps_v2}
+    unit_by_id = {u["id"]: u for u in units_v2}
+    for module in modules_v2:
+        module_units = [unit_by_id[uid] for uid in module.get("unit_order", [])
+                        if uid in unit_by_id]
+        stage_rows = [stage for unit in module_units
+                      for stage in (study_map_by_unit.get(unit["id"], {}).get("stages", []) or [])]
+        progress[module["id"]] = {
+            "units_total": len(module_units),
+            "units_complete": sum(1 for unit in module_units if unit.get("status") == "complete"),
+            "units_needing_map": sum(1 for unit in module_units if unit.get("status") == "needs-map"),
+            "stages_total": len(stage_rows),
+            "stages_complete": sum(1 for stage in stage_rows if stage.get("status") == "complete"),
+        }
+    semesters_v2 = [
+        {**semester, "program_id": program["id"]}
+        for program in programs_v2 for semester in program.get("semesters", []) or []
+    ]
+    inbox_dir = repo.root / "work" / "inbox"
+    inbox_items = len([
+        item for item in inbox_dir.iterdir() if not item.name.startswith(".")
+    ]) if inbox_dir.is_dir() else 0
     return {
         "_generated": generated_meta,
         "records": records,
@@ -368,6 +492,30 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
              "notes": (module.get("examination") or {}).get("notes")}
             for date, mid, module, att in _exam_spine(repo)
         ],
+        "programs": programs_v2,
+        "semesters": semesters_v2,
+        "modules": modules_v2,
+        "units": units_v2,
+        "study_maps": study_maps_v2,
+        "stages": stages_v2,
+        "module_source_maps": source_maps_v2,
+        "resume_pointer": dict(repo.resume_pointer or {}),
+        "quarantine_boundaries": [
+            {k: program.get(k) for k in
+             ("id", "title", "kind", "status", "description", "boundary_action")}
+            for program in programs_v2
+            if program.get("status") in {"quarantined", "boundary-only"}
+        ],
+        "indexes": {
+            "module_to_units": module_to_units,
+            "unit_to_study_map": unit_to_study_map,
+            "component_to_units": dict(sorted(component_to_units.items())),
+            "source_to_modules": dict(sorted(source_to_modules.items())),
+            "source_to_units": dict(sorted(source_to_units.items())),
+            "workspace_to_modules": dict(sorted(workspace_to_modules.items())),
+            "workspace_to_units": dict(sorted(workspace_to_units.items())),
+        },
+        "progress": progress,
         "counts": {
             "notes": len(repo.notes), "concepts": len(repo.concepts),
             "sources": len(repo.sources), "collections": len(repo.collections),
@@ -377,6 +525,15 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "learning_paths": len(repo.learning_paths),
             "learning_paths_active": sum(
                 1 for p in repo.active_learning_paths() if p.status == "active"),
+            "programs": len(repo.programs),
+            "units": len(repo.units),
+            "study_maps": len(repo.study_maps),
+            "stages": len(stages_v2),
+            "stages_complete": sum(1 for stage in stages_v2 if stage.get("status") == "complete"),
+            "source_feedback_records": sum(
+                len(stage.get("source_feedback", []) or []) for stage in stages_v2),
+            "units_needing_map": sum(1 for unit in units_v2 if unit.get("status") == "needs-map"),
+            "inbox_items": inbox_items,
             "relations": len(repo.relations),
             "notes_reviewed": ad["notes_reviewed"],
             "notes_with_evidence": ad["notes_with_evidence"],
@@ -391,6 +548,9 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
     workspace_to_notes: dict[str, list] = {}
     concept_relations: dict[str, dict] = {}
     module_to_workspaces: dict[str, list] = {}
+    unit_to_workspaces: dict[str, list] = {}
+    module_to_units: dict[str, list] = {}
+    source_to_units: dict[str, list] = {}
 
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
         for cid in note.meta.get("concepts", []) or []:
@@ -411,10 +571,33 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
             lst = workspace_to_notes.setdefault(ws.id, [])
             if nid not in lst:
                 lst.append(nid)
-        for m in re.finditer(r"\bmodule-[a-z0-9]+(?:-[a-z0-9]+)*\b", ws.body):
-            lst = module_to_workspaces.setdefault(m.group(0), [])
-            if ws.id not in lst:
-                lst.append(ws.id)
+        explicit_modules = ws.meta.get("module_ids", []) or []
+        for mid in explicit_modules:
+            module_to_workspaces.setdefault(mid, []).append(ws.id)
+        for uid in ws.meta.get("unit_ids", []) or []:
+            unit_to_workspaces.setdefault(uid, []).append(ws.id)
+        # Compatibility only for pre-v2 workspaces. V2 relationships are
+        # declared in frontmatter and never inferred from names or prose.
+        if not explicit_modules:
+            for m in re.finditer(r"\bmodule-[a-z0-9]+(?:-[a-z0-9]+)*\b", ws.body):
+                module_to_workspaces.setdefault(m.group(0), []).append(ws.id)
+    for mid, module in repo.modules.items():
+        module_to_units[mid] = list(module.get("unit_order", []) or [])
+    for unit in repo.units.values():
+        for scoped in unit.data.get("scope_sources", []) or []:
+            sid = scoped.get("source_id") if isinstance(scoped, dict) else None
+            if sid:
+                source_to_units.setdefault(sid, []).append(unit.id)
+        for selection in unit.data.get("source_selections", []) or []:
+            sid = selection.get("source_id") if isinstance(selection, dict) else None
+            if sid:
+                source_to_units.setdefault(sid, []).append(unit.id)
+    for study_map in repo.study_maps.values():
+        for stage in study_map.data.get("stages", []) or []:
+            for resource in stage.get("resources", []) or []:
+                sid = resource.get("source_id") if isinstance(resource, dict) else None
+                if sid:
+                    source_to_units.setdefault(sid, []).append(study_map.unit_id)
     for rel in repo.relations:
         frm, to, rtype = rel.get("from"), rel.get("to"), rel.get("type")
         concept_relations.setdefault(frm, {"outgoing": [], "incoming": []})
@@ -424,12 +607,13 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
     for d in concept_relations.values():
         d["outgoing"].sort(key=lambda e: (e["type"], e["to"]))
         d["incoming"].sort(key=lambda e: (e["type"], e["from"]))
-    for m in (concept_to_notes, source_to_notes, workspace_to_notes, module_to_workspaces):
+    for m in (concept_to_notes, source_to_notes, workspace_to_notes,
+              module_to_workspaces, unit_to_workspaces, module_to_units, source_to_units):
         for k in m:
             m[k] = sorted(set(m[k])) if all(isinstance(x, str) for x in m[k]) else m[k]
     generated_meta = _json_header(generated_at)
     generated_meta.update({
-        "contract_version": 1,
+        "contract_version": 2,
         "snapshot_id": f"sha256:{_source_fingerprint(repo)}",
     })
     return {
@@ -440,6 +624,9 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
         "workspace_to_notes": dict(sorted(workspace_to_notes.items())),
         "concept_relations": dict(sorted(concept_relations.items())),
         "module_to_workspaces": dict(sorted(module_to_workspaces.items())),
+        "unit_to_workspaces": dict(sorted(unit_to_workspaces.items())),
+        "module_to_units": dict(sorted(module_to_units.items())),
+        "source_to_units": dict(sorted(source_to_units.items())),
     }
 
 
@@ -795,7 +982,9 @@ def build_module_view(repo: Repo, generated_at: str) -> str:
         lines.append(" · ".join(facts))
         if m.get("components"):
             lines.append("")
-            lines.append("Components (one grade): " + " + ".join(m["components"]))
+            component_titles = [c.get("title", c.get("id", "")) if isinstance(c, dict)
+                                else str(c) for c in m["components"]]
+            lines.append("Components (one grade): " + " + ".join(component_titles))
         attempts = m.get("attempts", []) or []
         if attempts:
             lines.append("")
@@ -1382,9 +1571,9 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
         lines.append(f"- **{dom}** — " + " · ".join(bits))
     lines.append(
         "- **Outside this map (deliberate):** Foundations archive (unregistered; "
-        "names in `materials/FILES.txt`) · prospective degree menus "
-        "(workspace-degree-planning `inputs/`) · frozen `legacy/` · quarantined "
-        "`Job/` (CLAUDE.md §13) — details in the last section.")
+        "names in `materials/FILES.txt`) · Master's Planning quarantine "
+        "(boundary only) · frozen `legacy/` · quarantined `Job/` "
+        "(CLAUDE.md §13) — details in the last section.")
     lines.append("")
     lines.append(
         "*Per-domain shelves and wiring hubs below · per-concept joins → "
@@ -1447,14 +1636,10 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
     else:
         lines.append("- **Materials tree** — not reachable from this checkout; "
                      "archive counts unavailable.")
-    menus = sorted((repo.root / "work" / "active" / "workspace-degree-planning"
-                    / "inputs").glob("MASTERS-*-RESOURCES.md"))
-    if menus:
-        lines.append(
-            f"- **Prospective degree menus** — {len(menus)} per-module resource "
-            "files in `work/active/workspace-degree-planning/inputs/` (~200 "
-            "rows, deliberately unregistered). A module's menu is promoted to "
-            "the registry when the module is chosen (WORKFLOWS §6a).")
+    lines.append(
+        "- **Master's Planning** — Git-tracked operational quarantine; only its "
+        "boundary record is normally loadable. Content, counts and menus are "
+        "excluded until deliberate future promotion (WORKFLOWS §27).")
     if (repo.root.parent.parent / "legacy").is_dir():
         lines.append(
             "- **Legacy tree** — the frozen pre-v3 history beside `LearningOS/` "

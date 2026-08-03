@@ -1,0 +1,26 @@
+id: study-map-thesis-landscape
+type: study-map
+unit_id: unit-thesis-landscape
+status: active
+current_stage: stage-01-research-landscape-and-question-framing
+source_plan:
+  path: work/active/workspace-thesis-mle-medical/outputs/thesis-landscape-and-plan.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-research-landscape-and-question-framing
+  title: Research landscape and question framing
+  status: active
+  objective: Use the existing thesis landscape and brief to frame the next milestone.
+  done_when:
+  - Record the concrete next research decision without inferring completion from the plan.
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Existing thesis landscape and plan
+    vault_path: work/active/workspace-thesis-mle-medical/outputs/thesis-landscape-and-plan.md
+  working_note: curriculum/modules/module-project-bachelor-thesis/units/unit-thesis-landscape/stages/stage-01-research-landscape-and-question-framing/notes.md
+  attachments: []
+  source_feedback: []

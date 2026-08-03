@@ -1,0 +1,10 @@
+id: module-project-bachelor-thesis
+type: module
+kind: project
+area_id: program-thesis-projects
+title: Bachelor thesis
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-thesis-landscape
+- unit-thesis-experiments

@@ -25,7 +25,7 @@ standing: false        # true only for continuous efforts (degree planning, job)
 concepts: []
 notes: []
 sources: []
-deadline:              # non-exam operational deadline only; exam dates live in modules.yaml
+deadline:              # non-exam operational deadline only; exam dates live in the owning academic module.yaml
 ---
 ```
 
@@ -112,13 +112,12 @@ retrieval no matter how good it is. Debt is repaid at the moment of use, never
 as a bulk backfill (bulk passes invent judgments); the current debt is listed
 in `generated/reports/health.md`.
 
-**Degree-planning menus:** the per-module resource menus for FUTURE TU modules
-live in `work/active/workspace-degree-planning/inputs/MASTERS-*-RESOURCES.md`
-(prospective picks, not registry material). Only their cross-module anchor
-tier is registered (`registry/degree-anchors.yaml` + the degree-module-anchors
-collection). **When a module is actually chosen, promote its full menu**: walk
-that module's section, register each resource per the steps above, and start a
-module collection.
+**Prospective Master's menus:** all prospective menus and their planning
+context are quarantined under `curriculum/quarantine/masters-planning/`. They
+are not current module use, bootstrap input, or default-search content. If the
+Master's actually begins, promotion is deliberate: select a module, create its
+active partition under the new program, register only adopted resources, build
+units from confirmed scope, and validate.
 
 ### 6b. Maintain a source collection (curated reading list)
 
@@ -163,13 +162,15 @@ When a commitment, explicit priority decision, cross-workspace dependency, or de
 2. never copy exam dates, workspace statuses, or workspace lists into it;
 3. rebuild `generated/coordination-view.md`.
 
-If the user states an operational fact in conversation ("I'm skipping M2, writing the 2. Termin"), route it: the deferral to `COORDINATION.md`, the attempt change to `records/modules.yaml`.
+If the user states an operational fact in conversation ("I'm skipping M2,
+writing the 2. Termin"), route it: the deferral to `COORDINATION.md`, the
+attempt change to that academic module's partitioned `module.yaml`.
 
 ## 10. Record a module event
 
 On registration, withdrawal (Rücktritt), sitting, or grade:
 
-1. append or update the attempt in `records/modules.yaml` (`termin`, `date`, `result`, optional `grade`);
+1. append or update the attempt in the owning academic module's `module.yaml` (`termin`, `date`, `result`, optional `grade`);
 2. update module `status` when warranted;
 3. rebuild module and coordination views.
 
@@ -196,7 +197,7 @@ One documented command produces, from canonical inputs only:
 - `concept-index.md` — with a letter-grouped table of contents;
 - `source-index.md` — with a letter-grouped table of contents, including per-lecture and per-concept selector views with first-learning / review / implementation recommendations;
 - `module-view.md`;
-- `coordination-view.md` — exam spine (from modules.yaml) + workspace statuses/deadlines/next actions (from frontmatter) + coordination facts + materials-queue counts (`materials/_unsorted/`, `materials/_duplicates-for-review/`) + Git-derived neglect signals;
+- `coordination-view.md` — exam spine (from partitioned academic modules) + workspace statuses/deadlines/next actions (from frontmatter) + coordination facts + materials-queue counts (`materials/_unsorted/`, `materials/_duplicates-for-review/`) + Git-derived neglect signals;
 - `dependency-report.md`;
 - `concept-map.md` — Mermaid rendering of the prerequisite graph (`requires` + `builds-on`), the visual twin of the dependency report;
 - `backlinks.json`;
@@ -290,10 +291,16 @@ A year later, "cross-entropy" retrieves this note through either concept, shows 
 
 Modules and workspaces are deliberately decoupled: one module may spawn several workspaces (the Kombimodul M2 = SaD + Analysis under one grade; a course with a separate exam-prep effort and project effort). When a course begins, or a previously prospective module is actually chosen:
 
-1. **Module record first.** Ensure the module exists in `records/modules.yaml` and record the registration (workflow 10); set `status: enrolled`. A merely prospective choice is `status: planned` with no attempt. This registry is the sole owner of the administrative facts — never restate them in a workspace or here.
-2. **Promote the source menu.** If a degree-planning menu exists for the module, walk its section and register each resource, starting a module collection — the "when a module is actually chosen, promote its full menu" path of workflow 6a, plus workflow 6b. Prospective picks become registered sources only at this point.
+1. **Module record first.** Ensure the module has one partition at
+   `curriculum/modules/<module-id>/module.yaml` and record registration
+   (workflow 10). A merely prospective Master's choice stays quarantined; it is
+   not an active `planned` module.
+2. **Promote only adopted sources.** If a quarantined menu exists, register only
+   resources selected for the confirmed active module. Build its module source
+   map with roles, reasons, priority and unit routes; do not promote the whole
+   prospective sea.
 3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
-4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in `modules.yaml`.
+4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
 5. **Rebuild and validate** (`python tools/generate.py`, then `python tools/validate.py`).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
@@ -304,7 +311,11 @@ A module ending is larger than archiving one workspace (workflow 11): it settles
 
 When a module is finished — its final attempt sat, or abandoned:
 
-1. **Settle the record** in `records/modules.yaml` only (workflow 10). Record the final sitting or submission on the attempt (`result: passed`/`failed`). When the grade posts, record it and set `status: completed` (or `dropped` if abandoned); while the grade is still pending the module stays `enrolled` — archival below does not wait on it.
+1. **Settle the record** in the owning partitioned academic `module.yaml` only
+   (workflow 10). Record the final sitting or submission on the attempt
+   (`result: passed`/`failed`). When the grade posts, record it and set
+   `status: completed` (or `dropped` if abandoned); while a grade is pending,
+   preserve that administrative state explicitly.
 2. **Confirm durable knowledge landed — before archiving.** For each of the module's workspaces, verify the understanding worth keeping is already a note under `knowledge/`; extend or create as needed (workflow 3; workflow 17 for handwritten pages). An archived workspace is frozen, so promotion happens first, never after.
 3. **Archive each workspace whole** (workflow 11 for every workspace the module owns): durable links confirmed, `status: complete`, moved to `archive/workspaces/<year>/`. Archival waits on step 2, not on the grade. Skip any `standing: true` effort — it is exempt and does not close with the module.
 4. **Clear operational state.** Remove the module's now-dead entries from `COORDINATION.md` — resolved dependencies, satisfied deferrals, stale priorities and commitments (workflow 9). Coordination should not mention a closed module.
@@ -333,38 +344,36 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
 2. **Temporary material** tied to an active effort (fragments, a rough source list, lecture-specific checklists) → that workspace's `scratch/` or `inputs/` (workflow 2).
 3. **A new learning resource** (course, video, book, blog, paper, tool) → register it (workflow 6a); add to a curated list if it belongs on one (workflow 6b).
 4. **An operational fact** (commitment, priority, dependency, deferral) → `COORDINATION.md` (workflow 9).
-5. **An exam, registration, or grade fact** → `records/modules.yaml` (workflow 10) — never anywhere else.
+5. **An exam, registration, or grade fact** → the owning academic module's
+   `module.yaml` (workflow 10) — never anywhere else.
 6. **A concept or relation worth registering** → workflow 4 or workflow 5.
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
 
 ## 22. End a session
 
-Adopted 2026-08-03 (ADR-003 S1). Any session that touched canonical files ends
-with, in order:
+Any learning session that used guarded mutation commands ends deliberately:
 
-1. `python tools/validate.py` — 0 errors, 0 warnings;
-2. **commit**, message naming the session's effort (the pre-commit hook
-   re-runs the validator; the post-commit hook rebuilds `generated/`);
-3. **push**.
+1. save pending stage work;
+2. run `los session-end` without a commit message; it validates, regenerates,
+   and shows session-owned files separately from unrelated changes;
+3. review that exact list;
+4. optionally rerun with `--commit-message`; only the ephemeral gateway ledger
+   is staged, and the three protected Canvas names are unconditionally removed;
+5. use `--push` only through the approved repository workflow.
 
-A session is not closed while canonical changes sit uncommitted. If the commit
-fails, diagnose it *now*, not next session — in July 2026 two stale
-`.git/index.lock` files (crashed git processes) silently blocked every commit
-in both repositories for two weeks, leaving `modules.yaml`, `COORDINATION.md`
-and an entire workspace on one disk with stale views (ADR-003 S1/S2). The
-failure mode to design against is not "forgot to commit" but "commit failed
-quietly and nobody looked."
+Do not commit on every keystroke. A session is not a canonical entity; its
+ledger lives in temporary storage only long enough to guarantee exact staging.
+If a commit or push fails, report it immediately and keep unrelated changes
+isolated.
 
 ## 23. Process a lecture
 
-Composite (added 2026-08-03, ADR-004 follow-up): the unit of study between
-"module" and "session". Orchestrates workflows 2, 3, 6a and 17 around one
-lecture; introduces no new entities or owners. Scope rule first, learned the
-hard way (SaD L11, AML L04/L07): **the slides as taught are the only source of
-scope truth** — never scope from textbook chapter titles or keyword-matched
-readings, and match readings to the lecture's actual scope plus its
-prior-lecture prerequisites.
+The unit is the module-owned study object between module and stage. For
+university lectures, **slides as taught are the scope authority**: never scope
+from textbook chapter titles or keyword matches. A topic, milestone,
+lecture-cluster, exam-block, or bridge uses the same unit interaction with its
+own confirmed scope source.
 
 1. **Materials in.** Slides/recordings land in the materials tree via
    workflow 6a (`material://` on the module's source record); never into the
@@ -373,24 +382,26 @@ prior-lecture prerequisites.
    the concept index for what is re-covered (re-covered → "revise via
    existing note", not new study steps).
 3. **Durable artifacts as canonical notes** (workflow 3), one per purpose,
-   linked to the lecture's concepts + the module source, `contexts:` the
-   exam-prep workspace:
+   linked to concepts and sources. Put only their stable note IDs on the unit:
    - the lecture reference → `role: reference`;
    - drills → `role: exercise-bank`;
    - a self-test → `role: mock-exam` (difficulty ≥ the real exam).
-4. **The study script is operational, not canon:** the lecture's Mini Plan
-   goes to the workspace `inputs/` (workflow 2) and the workspace's
-   `Next Action` points at it. Plans expire with the workspace; only the
-   notes survive.
-5. **Handwritten work** from the lecture → workflow 17.
-6. **Rebuild and validate.**
+4. **One current study script:** import or create `study-map.yaml` beside the
+   unit. Preserve provenance to the original Mini Plan. Git preserves prior
+   versions; never create several competing current scripts.
+5. **Work stage by stage.** Exact actions and locators, done-when criteria,
+   working note, attachments, feedback and optional detours stay with the
+   stage. Handwritten work remains faithful and stage-owned until shelving.
+6. **Shelve by review.** Optional stages may remain; apply only selected
+   durable changes and preserve stage provenance.
+7. **Validate and regenerate.**
 
 ## 24. Turn the semester
 
 Composite: the boundary ritual at a term's end (or before a new term's
 registrations). Pure orchestration — every step is an existing workflow:
 
-1. **Walk the term's modules** in `records/modules.yaml`: each one is either
+1. **Walk the term's partitioned academic modules**: each one is either
    truly done → close it (workflow 19), or something outlives it → carry it
    (workflow 20). No module skips this fork.
 2. **Harvest the Garden** (CLAUDE.md §14): promote the ripe, prune the dead,
@@ -414,12 +425,34 @@ Obsidian layer installed:
    this document's workflows, and every session that touched canonical files
    ends with §22 (validate → commit → push). The post-commit hook rebuilds
    `generated/`.
-3. **Obsidian only shows** — the reading room opens on start, shelves and
-   canvas and views render the current state, and because views rebuild on
-   every commit, what Obsidian displays is current *by construction*. Nothing
-   in the UI is required for correctness; its action buttons (capture,
-   rebuild, validate) are conveniences, not duties.
+3. **Obsidian presents and delegates** — it reads only atomic manifest v2 and
+   sends mutations to action-specific CLI commands with snapshot guards. It
+   never parses or writes canonical YAML/Markdown. The app remains optional;
+   plain files and CLI retain the whole system.
 
 The freshness guarantee of layer 3 is exactly the session-end ritual of
-layer 2. If a view ever looks stale, that is the signal that a session ended
-without §22 — fix the ritual (or press Rebuild), never the generated file.
+layer 2. If a view looks stale, reload its manifest or press Rebuild; never
+edit a generated file.
+
+## 26. Source routing and feedback
+
+Register one global source identity first. Add a module source-map entry only
+for its role in that module. Add exact unit selections only for confirmed
+scope, then put the smallest actionable watch/read/practise/reference locator
+on a stage. Routing one source to two modules creates two joins, never a second
+source record.
+
+Use `source-feedback` for lightweight personal evidence (`helpful`,
+`too-advanced`, `wrong-perspective`, `useful-for-derivation`,
+`useful-for-review`, or `skipped`). Feedback remains on that stage. If it
+suggests a global evaluation change, prepare a separate reviewable proposal.
+
+## 27. Promote a future Master's module
+
+Use only after the future program actually begins. Enter the boundary
+deliberately, select a confirmed module, create/activate the program and
+semester facts without invention, migrate that module's administrative facts,
+register only adopted resources, create units from confirmed scope, add
+explicit workspace joins, validate, regenerate, and review. The quarantined
+originals and migration mapping remain Git-tracked. No bulk promotion is
+allowed.

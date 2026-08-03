@@ -1,0 +1,43 @@
+migration: curriculum-v2
+date: '2026-08-03'
+notes: Original Mini Plans remain in place; quarantined material is moved intact.
+mappings:
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L02_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L03_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L04_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l04/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L05_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l05/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L06_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l06/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-aml-exam-prep/inputs/AML_L07_Mini_Plan.md
+  new: curriculum/modules/module-hu-aml/units/unit-aml-l07/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L01_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L02_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L03_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L04_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-m2-exam-prep/inputs/SaD_L05_Mini_Plan.md
+  new: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml
+  kind: retained-source-plan
+- old: work/active/workspace-degree-planning
+  new: curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning
+  kind: move
+- old: sources/collections/degree-module-anchors.yaml
+  new: curriculum/quarantine/masters-planning/sources/degree-module-anchors.yaml
+  kind: move

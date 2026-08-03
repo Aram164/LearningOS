@@ -1,19 +1,46 @@
 ---
 id: workspace-m2-exam-prep
 type: workspace
-title: "M2 Klausur prep — SaD + Analysis (Kombimodul, merged track)"
-created: "2026-07-16"
+title: M2 Klausur prep — SaD + Analysis (Kombimodul, merged track)
+created: '2026-07-16'
 status: active
 standing: false
-concepts: [concept-descriptive-statistics, concept-probability, concept-combinatorics,
-  concept-random-variable, concept-normal-distribution, concept-maximum-likelihood,
-  concept-statistical-estimation, concept-hypothesis-testing, concept-decision-trees,
-  concept-naive-bayes, concept-neural-network]
-notes: [note-sad-l02-descriptive-basics, note-sad-l02-exercise-bank,
-  note-sad-source-crosswalk, note-sad-hypothesis-testing-handwritten,
-  note-regression-sad-aml-islp-bridge]
-sources: [source-fau-klausur-ws1415, source-dekking-mips, source-fahrmeir-arbeitsbuch,
-  source-sad-uebungen, source-mit-1805]
+concepts:
+- concept-descriptive-statistics
+- concept-probability
+- concept-combinatorics
+- concept-random-variable
+- concept-normal-distribution
+- concept-maximum-likelihood
+- concept-statistical-estimation
+- concept-hypothesis-testing
+- concept-decision-trees
+- concept-naive-bayes
+- concept-neural-network
+notes:
+- note-sad-l02-descriptive-basics
+- note-sad-l02-exercise-bank
+- note-sad-source-crosswalk
+- note-sad-hypothesis-testing-handwritten
+- note-regression-sad-aml-islp-bridge
+sources:
+- source-fau-klausur-ws1415
+- source-dekking-mips
+- source-fahrmeir-arbeitsbuch
+- source-sad-uebungen
+- source-mit-1805
+program_ids:
+- program-bachelors
+module_ids:
+- module-hu-m2-statistik-analysis
+unit_ids:
+- unit-m2-sad-l01
+- unit-m2-sad-l02
+- unit-m2-sad-l03
+- unit-m2-sad-l04
+- unit-m2-sad-l05
+- unit-m2-sad-l06-l10
+- unit-m2-analysis-exam-prep
 ---
 
 # M2 exam prep — SaD + Analysis

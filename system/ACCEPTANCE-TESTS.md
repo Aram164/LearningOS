@@ -17,7 +17,9 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] Notes own note-to-concept and note-to-source links.
 - [ ] Concept registry owns identities and aliases; relation registry contains only concept-to-concept edges.
 - [ ] Source registry owns source identity and evaluations.
-- [ ] `records/modules.yaml` owns all module facts; **no exam date, registration, withdrawal, or grade appears canonically anywhere else** (grep-testable against COORDINATION.md and notes frontmatter).
+- [ ] Every partitioned academic `module.yaml` owns its module facts;
+  `records/modules.yaml` is migration compatibility only; **no exam date,
+  registration, withdrawal, or grade appears canonically elsewhere**.
 - [ ] `COORDINATION.md` contains only commitments, explicit priorities, cross-workspace dependencies, and deferrals — no workspace lists, statuses, or computed recommendations.
 - [ ] Workspaces own active operational state.
 - [ ] No generated file is used as a canonical input.
@@ -67,7 +69,8 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 
 ## H. Modules
 
-- [ ] `modules.yaml` validates against its schema.
+- [ ] Every partitioned module validates against `module.schema.json`; the
+  legacy snapshot validates only as a compatibility input.
 - [ ] An attempt sequence of registered → withdrawn → registered (2. Termin) is representable and renders correctly in the module view.
 - [ ] A Kombimodul (one grade, multiple components) is representable.
 - [ ] Module views are generated, never hand-maintained.
@@ -81,7 +84,8 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] Manifest includes every canonical artifact; indexes resolve every listed record.
 - [ ] Backlinks match canonical forward references.
 - [ ] The source index reproduces per-lecture and per-concept selector views with first-learning / review / implementation recommendations.
-- [ ] The coordination view merges modules.yaml exam spine + workspace frontmatter + COORDINATION facts + Git-derived neglect signals.
+- [ ] The coordination view merges the partitioned academic exam spine +
+  workspace frontmatter + COORDINATION facts + Git-derived neglect signals.
 - [ ] Validation report distinguishes errors from warnings.
 
 ## J. Migration
@@ -90,7 +94,8 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] The pilot included the AML–SaD Master Wiring and was reviewed before Stage 2.
 - [ ] Handwritten originals are preserved.
 - [ ] SESSION-LOG and operational files were checked for hidden durable knowledge.
-- [ ] Module facts (attempts, Rücktritte, grades) were extracted into modules.yaml.
+- [ ] Module facts (attempts, Rücktritte, grades) were migrated exactly into
+  their partitioned academic modules.
 - [ ] Old concept-index depth glyphs were not treated as canonical proof.
 - [ ] Legacy wiring was not copied blindly into the relation registry.
 - [ ] Crosswalk judgments were extracted to source records; generated selector views verified against originals.
@@ -102,7 +107,8 @@ The rebuild is complete only when every critical test passes or is explicitly wa
 - [ ] Root `CLAUDE.md` reflects the frozen operating contract; Claude bootstraps without the legacy architecture.
 - [ ] Claude retrieves a concept through aliases (including German).
 - [ ] Claude retrieves notes, sources, and relations together; filters exam artifacts by role.
-- [ ] Claude answers exam-date questions from `modules.yaml` and refuses to duplicate the fact elsewhere.
+- [ ] Claude answers exam-date questions from the owning partitioned academic
+  module and refuses to duplicate the fact elsewhere.
 - [ ] Claude answers "have I worked through this?" by showing evidence entries, never by declaring mastery.
 - [ ] Claude proposes required-now/helpful-now/defer/reference-only triage on scope explosion and records deferrals in the workspace `Deferred` section.
 - [ ] Claude routes inbox captures without asking the user filing questions.
@@ -141,3 +147,46 @@ Pass: concept relations extracted to the registry; judgments to source records; 
 ## Completion threshold
 
 Cutover only when: all critical structural, ownership, reference, module, generated-artifact, and preservation tests pass; remaining failures are documented; no unresolved failure risks semantic loss; the user has reviewed the pilot and final migration reports.
+
+---
+
+## Module-first curriculum v2 acceptance (2026-08-03)
+
+These checks supersede any earlier assumption that one workspace learning path
+is the whole learning interface.
+
+- [ ] Manifest contract v2 atomically exposes programs, semesters, modules,
+  structured components, units, maps, stages/notes, source maps, artifacts,
+  workspace joins, progress, reverse indexes, boundaries, and resume snapshot.
+- [ ] Bachelor's is active/default; every current Bachelor module is visible.
+  Skills and Thesis/Projects use universal modules without invented academic
+  fields. Master's and Job expose boundary records only.
+- [ ] M2 owns stable SaD and Analysis components, one combined exam/grade, and
+  separately selectable unit state. SaD L04 resumes at `stage-event-spaces`;
+  selecting L02 does not alter it.
+- [ ] AML L02–L07 and SaD L01–L05 preserved Mini Plans are current unit study
+  maps. SaD L06–L10 remains an intentional lecture cluster.
+- [ ] Python topic units and thesis milestone units exist without false
+  completion. Analysis and the second thesis unit honestly show `needs-map`.
+- [ ] One source can join two modules without duplicate identity. ISLP unit
+  selections retain the exact L03/L04/SaD locators.
+- [ ] Stage feedback is recorded locally and leaves the global source
+  evaluation byte-for-byte unchanged.
+- [ ] A required-now detour pauses its origin and resolving it returns to the
+  exact originating stage.
+- [ ] Shelving prepares a review packet and applies only explicitly selected,
+  valid proposal IDs after validation.
+- [ ] German aliases retrieve the correct records. Default search excludes
+  generated, archive, system, registries, migration, Master's quarantine and
+  Job; Omnisearch PDF/image extraction uses English and German OCR locally.
+- [ ] Deleting generated outputs and regenerating recreates contract v2 with
+  the same canonical fingerprint for the same authored state.
+- [ ] Migration dry-run is idempotent, original paths/records are backed up and
+  mapped, and quarantine retains all prospective Master's files in Git.
+- [ ] UI fixture tests use several modules, components, units and maps; the app
+  renders offline and contains no direct canonical parser or writer.
+- [ ] The real nested Obsidian vault loads the bundled plugin, renders Home,
+  navigates module → unit → stage, performs a guarded stage-note mutation,
+  survives reload, and remains usable in light/dark and narrow/wide layouts.
+- [ ] `los session-end` shows exact owned/unrelated files, commits only its
+  ledger, and never stages the three protected Canvas files.

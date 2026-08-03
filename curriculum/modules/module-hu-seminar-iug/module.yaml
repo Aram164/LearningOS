@@ -1,0 +1,16 @@
+id: module-hu-seminar-iug
+institution: HU Berlin
+title: Seminar Informatik und Gesellschaft (Plattformregulierung)
+semester: sose-2026
+status: enrolled
+examination:
+  type: portfolio
+  notes: 'Three graded deliverables: presentation held 2026-06-18 (Plattformregulierung — DSA/DMA, Big
+    Tech), oral peer review held 2026-07-02 (Linus Kurth, Desinformation/Bots), written peer review was
+    due 2026-07-16 (2-4 pages — submission to confirm). Prof. Vladova. Grade pending.'
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-seminar-iug-portfolio

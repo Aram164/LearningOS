@@ -1,0 +1,5 @@
+type: quarantine-index
+id: quarantine-masters-planning
+workspace_ids:
+- workspace-degree-planning
+boundary_program_id: program-masters-planning

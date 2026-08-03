@@ -4,8 +4,10 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 
 ## Identity
 
-- **E** IDs unique within each family (note, concept, source, workspace, module).
-- **E** IDs match `^(note|concept|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$`.
+- **E** IDs unique within each family (note, concept, source, workspace,
+  program, module, component, unit, study map, stage, detour).
+- **E** Every ID matches its entity-family prefix and lowercase kebab-case
+  contract; component, unit, map, stage and detour references resolve.
 - **E** An ID never changes when its file moves or is renamed.
 - **W** Numeric suffix present without a collision counterpart (gratuitous suffix).
 
@@ -33,9 +35,46 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 
 - **E** No canonical file references anything under `generated/` as an input.
 - **E** No file under `generated/` is tracked by Git.
-- **E** COORDINATION.md contains no ISO date equal to any `modules.yaml` attempt date (exam-date duplication), and no `status:` restatements of workspace state.
+- **E** COORDINATION.md contains no ISO date equal to any partitioned academic
+  module attempt date (exam-date duplication), and no `status:` restatements of
+  workspace state.
 - **W** A `role: crosswalk` note contains Markdown tables whose headers match evaluation vocabulary (strengths/weaknesses/level/best-for) — judgments belong in source records.
-- **E** Module attempt dates are chronologically ordered per module; `grade` only on `passed` attempts or completed modules; `result: registered` only on the latest attempt.
+- **E** Academic module attempt dates are chronologically ordered per module;
+  `grade` only on `passed` attempts or completed modules; `result: registered`
+  only on the latest attempt. Academic-only fields are not required on skill,
+  project, or foundation modules.
+
+## Curriculum v2
+
+- **E** Exactly one program is the active default Bachelor's program; Skills
+  and Thesis/Projects are non-semester active areas.
+- **E** Partitioned module records are complete against the frozen legacy
+  registry during migration; once a partition exists, it is authoritative.
+- **E** Every module's `unit_order` contains all and only its units, once each.
+- **E** Every component ID is stable and owned by the same module as its units.
+- **E** Every unit has one owning module, a valid kind/status, resolvable scope
+  sources and artifacts, and at most one current study map.
+- **E** Every current map points back to its unit/module, has ordered unique
+  stages, and names exactly one current active/paused stage when operational.
+- **E** Stage working notes and attachments remain inside the owning unit's
+  stage folder. Source actions use registered source IDs and exact locators
+  where selection is required.
+- **E** Detours name an originating stage, classification, and return stage;
+  open required-now detours pause their origin rather than silently replacing
+  it.
+- **E** Module source maps use global source IDs, declared roles, valid unit
+  routes, and do not duplicate global evaluations.
+- **E** V2 workspaces declare `program_ids`, `module_ids`, and `unit_ids`;
+  relationships are not inferred from titles or prose.
+- **E** The resume pointer, if present, resolves to one map/unit/stage but has
+  no filtering semantics.
+- **E** Only `curriculum/quarantine/index.yaml` is normally loaded. Master's
+  content and all Job content are absent from records, counts, indexes and
+  generated manifest text.
+- **E** Shelving apply accepts explicit existing proposal IDs and approved
+  destinations only. General AI has no write capability.
+- **E** Session closure stages only its temporary action ledger and always
+  excludes `Untitled.canvas`, `Untitled 1.canvas`, and `Untitled 2.canvas`.
 
 ## Operating contract
 

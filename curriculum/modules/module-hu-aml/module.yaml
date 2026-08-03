@@ -1,0 +1,28 @@
+id: module-hu-aml
+institution: HU Berlin
+title: Angewandtes Maschinelles Lernen (AML)
+semester: sose-2026
+status: enrolled
+examination:
+  type: klausur
+  notes: '1. Termin was Mi 2026-07-22 15:00-18:00 (ESZ 115); 2. Termin Mi 2026-09-30 09:00-12:00 (ESZ
+    110). Plan of record since KW 24: skip the 1. Termin, write the 2. Termin. 2.-PZ Anmeldung window
+    2026-08-31 to 2026-09-10; Rücktritt (2. Termin) by Mi 2026-09-23 via AGNES. Re-verified 2026-07-25
+    against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).'
+attempts:
+- termin: 1
+  date: '2026-07-22'
+  result: withdrawn
+  notes: Ruecktritt executed (confirmed by Aram 2026-07-17); plan of record since KW 24 — write the 2.
+    Termin instead.
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-aml-l02
+- unit-aml-l03
+- unit-aml-l04
+- unit-aml-l05
+- unit-aml-l06
+- unit-aml-l07

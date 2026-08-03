@@ -16,6 +16,9 @@
     "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
     "notes": { "type": "array", "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
     "sources": { "type": "array", "items": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
-    "deadline": { "type": "string", "format": "date" }
+    "deadline": { "type": "string", "format": "date" },
+    "program_ids": { "type": "array", "items": { "type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "module_ids": { "type": "array", "items": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "unit_ids": { "type": "array", "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true }
   }
 }

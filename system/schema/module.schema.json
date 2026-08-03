@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/module.schema.json",
+  "title": "Partitioned module record",
+  "type": "object",
+  "required": ["id", "type", "kind", "area_id", "title", "status", "unit_order", "source_map"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "module" },
+    "kind": { "enum": ["academic", "skill", "project", "foundation"] },
+    "area_id": { "type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "title": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["planned", "enrolled", "active", "paused", "awaiting-grade", "completed", "dropped", "archived"] },
+    "institution": { "type": "string", "minLength": 1 },
+    "code": { "type": "string" },
+    "credits": { "type": "number", "minimum": 0 },
+    "semester": { "type": "string", "pattern": "^(sose|wise)-[0-9]{4}$" },
+    "components": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "order"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^component-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "short_title": { "type": "string" },
+          "order": { "type": "integer", "minimum": 0 }
+        }
+      }
+    },
+    "examination": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": { "enum": ["klausur", "muendlich", "portfolio", "project", "hausarbeit", "other"] },
+        "notes": { "type": "string" }
+      }
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["termin", "result"],
+        "additionalProperties": false,
+        "properties": {
+          "termin": { "type": "integer", "minimum": 1, "maximum": 3 },
+          "date": { "type": "string", "format": "date" },
+          "result": { "enum": ["registered", "withdrawn", "passed", "failed"] },
+          "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0 },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0 },
+    "unit_order": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    },
+    "source_map": { "type": "string", "const": "source-map.yaml" },
+    "related_module_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "kind": { "const": "academic" } }, "required": ["kind"] },
+      "then": { "required": ["institution", "semester"] }
+    }
+  ]
+}

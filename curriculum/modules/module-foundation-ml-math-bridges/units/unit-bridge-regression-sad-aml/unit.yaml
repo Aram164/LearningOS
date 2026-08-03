@@ -1,0 +1,18 @@
+id: unit-bridge-regression-sad-aml
+type: unit
+module_id: module-foundation-ml-math-bridges
+kind: bridge
+title: Regression — SaD × AML × ISLP
+order: 1
+scope: Cross-module regression bridge with one primary owner and explicit related modules.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts:
+  ultimate_reference: note-regression-sad-aml-islp-bridge
+workspace_ids:
+- workspace-aml-exam-prep
+- workspace-m2-exam-prep
+related_module_ids:
+- module-hu-aml
+- module-hu-m2-statistik-analysis

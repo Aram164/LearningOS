@@ -1,9 +1,16 @@
 ---
 id: workspace-thesis-mle-medical
 type: workspace
-title: "Bachelor thesis — Exploring & optimizing MLE agents for medical use cases"
-created: "2026-07-20"
+title: Bachelor thesis — Exploring & optimizing MLE agents for medical use cases
+created: '2026-07-20'
 status: active
+program_ids:
+- program-thesis-projects
+module_ids:
+- module-project-bachelor-thesis
+unit_ids:
+- unit-thesis-landscape
+- unit-thesis-experiments
 ---
 
 # Thesis — Exploring and optimizing MLE agents for medical use cases

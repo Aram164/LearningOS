@@ -6,7 +6,12 @@ depend on registry partitioning):
   - relations: knowledge/concept-relations.yaml   or knowledge/concept-relations/*.yaml
   - sources:   sources/sources.yaml               or sources/registry/*.yaml
   - collections: sources/collections/*.yaml       (one curated list per file)
-  - modules:   records/modules.yaml
+  - programs:  curriculum/programs/*.yaml
+  - modules:   curriculum/modules/<module-id>/module.yaml, with
+               records/modules.yaml as a backward-compatible migration input
+  - units:     curriculum/modules/<module-id>/units/<unit-id>/unit.yaml
+  - study maps: one optional study-map.yaml beside each unit.yaml
+  - module source maps: curriculum/modules/<module-id>/source-map.yaml
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
   - garden:    knowledge/garden/**/*.md           (free-form, no schema — §14)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
@@ -26,6 +31,9 @@ FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 
 ID_RE = re.compile(r"^(note|concept|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$")
 PATH_ID_RE = re.compile(r"^path-[a-z0-9]+(?:-[a-z0-9]+)*$")
+PROGRAM_ID_RE = re.compile(r"^program-[a-z0-9]+(?:-[a-z0-9]+)*$")
+UNIT_ID_RE = re.compile(r"^unit-[a-z0-9]+(?:-[a-z0-9]+)*$")
+STUDY_MAP_ID_RE = re.compile(r"^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # Inline #tags in Garden notes (CLAUDE.md §14). Conservative: a tag starts with
 # a lowercase letter (so ATX headings "# H", shebangs, "#1" issue refs and hex
@@ -280,6 +288,33 @@ class LearningPath:
 
 
 @dataclass
+class Program:
+    """A top-level academic program, active area, or boundary card."""
+    id: str
+    path: Path
+    data: dict
+
+
+@dataclass
+class Unit:
+    """A module-owned lecture, topic, cluster, milestone, exam block, or bridge."""
+    id: str
+    path: Path
+    data: dict
+    module_id: str
+
+
+@dataclass
+class StudyMap:
+    """The single current ordered study script owned by one curriculum unit."""
+    id: str
+    path: Path
+    data: dict
+    module_id: str
+    unit_id: str
+
+
+@dataclass
 class Coordination:
     path: Path
     meta: dict
@@ -299,7 +334,17 @@ class Repo:
     source_origins: dict[str, Path] = field(default_factory=dict)
     collections: dict[str, dict] = field(default_factory=dict)
     collection_origins: dict[str, Path] = field(default_factory=dict)
+    programs: dict[str, Program] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
+    module_origins: dict[str, Path] = field(default_factory=dict)
+    legacy_modules: dict[str, dict] = field(default_factory=dict)
+    module_source_maps: dict[str, dict] = field(default_factory=dict)
+    module_source_map_origins: dict[str, Path] = field(default_factory=dict)
+    units: dict[str, Unit] = field(default_factory=dict)
+    study_maps: dict[str, StudyMap] = field(default_factory=dict)
+    resume_pointer: dict | None = None
+    resume_pointer_path: Path | None = None
+    quarantined_workspace_ids: set[str] = field(default_factory=set)
     notes: dict[str, Note] = field(default_factory=dict)
     garden_notes: list[GardenNote] = field(default_factory=list)
     workspaces: dict[str, Workspace] = field(default_factory=dict)
@@ -336,6 +381,9 @@ class Repo:
 
     def active_learning_paths(self) -> list[LearningPath]:
         return [p for p in self.learning_paths.values() if not p.archived]
+
+    def current_study_maps(self) -> list[StudyMap]:
+        return list(self.study_maps.values())
 
 
 def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path, family_name: str):
@@ -404,7 +452,28 @@ def load_repo(root: Path | str) -> Repo:
             repo.collections[f.stem] = doc
             repo.collection_origins[f.stem] = f
 
-    # Modules
+    # Curriculum programs / areas. Quarantined content is deliberately not
+    # traversed: only the small boundary records under curriculum/programs are
+    # part of the normal model. curriculum/quarantine is a sealed tracked tree.
+    programs_dir = root / "curriculum" / "programs"
+    if programs_dir.is_dir():
+        for f in sorted(programs_dir.glob("*.yaml")):
+            try:
+                data = _load_yaml(f)
+            except LoaderError as exc:
+                repo.parse_failures.append((f, str(exc)))
+                continue
+            pid = _record_id(data)
+            if pid is None:
+                repo.parse_failures.append(
+                    (f, f"{f}: program with missing or empty id — skipped"))
+                continue
+            _register(repo, repo.programs, pid, Program(pid, f, data), f, "program")
+
+    # Backward-compatible monolithic module input. Once partitioned module
+    # records exist they are authoritative; the legacy mapping remains loaded
+    # separately so migration completeness can be proven without double-owning
+    # administrative facts.
     modules_file = root / "records" / "modules.yaml"
     if modules_file.exists():
         try:
@@ -430,7 +499,94 @@ def load_repo(root: Path | str) -> Repo:
                     (modules_file,
                      f"{modules_file}: module record with missing or empty id — skipped"))
                 continue
+            if mid in repo.legacy_modules:
+                repo.duplicate_ids.append(("legacy-module", mid, modules_file))
+                continue
+            repo.legacy_modules[mid] = rec
+
+    partitioned_modules = sorted((root / "curriculum" / "modules").glob("*/module.yaml"))
+    if partitioned_modules:
+        for f in partitioned_modules:
+            try:
+                rec = _load_yaml(f)
+            except LoaderError as exc:
+                repo.parse_failures.append((f, str(exc)))
+                continue
+            mid = _record_id(rec)
+            if mid is None:
+                repo.parse_failures.append(
+                    (f, f"{f}: partitioned module with missing or empty id — skipped"))
+                continue
+            _register(repo, repo.modules, mid, rec, f, "module")
+            repo.module_origins.setdefault(mid, f)
+
+            source_map_file = f.parent / "source-map.yaml"
+            if source_map_file.is_file():
+                try:
+                    source_map = _load_yaml(source_map_file)
+                except LoaderError as exc:
+                    repo.parse_failures.append((source_map_file, str(exc)))
+                else:
+                    repo.module_source_maps[mid] = source_map
+                    repo.module_source_map_origins[mid] = source_map_file
+
+            units_dir = f.parent / "units"
+            if not units_dir.is_dir():
+                continue
+            for unit_file in sorted(units_dir.glob("*/unit.yaml")):
+                try:
+                    unit_data = _load_yaml(unit_file)
+                except LoaderError as exc:
+                    repo.parse_failures.append((unit_file, str(exc)))
+                    continue
+                uid = _record_id(unit_data)
+                if uid is None:
+                    repo.parse_failures.append(
+                        (unit_file, f"{unit_file}: unit with missing or empty id — skipped"))
+                    continue
+                unit = Unit(uid, unit_file, unit_data, mid)
+                _register(repo, repo.units, uid, unit, unit_file, "unit")
+
+                map_file = unit_file.parent / "study-map.yaml"
+                if map_file.is_file():
+                    try:
+                        map_data = _load_yaml(map_file)
+                    except LoaderError as exc:
+                        repo.parse_failures.append((map_file, str(exc)))
+                        continue
+                    smid = _record_id(map_data)
+                    if smid is None:
+                        repo.parse_failures.append(
+                            (map_file, f"{map_file}: study map with missing or empty id — skipped"))
+                        continue
+                    study_map = StudyMap(smid, map_file, map_data, mid, uid)
+                    _register(repo, repo.study_maps, smid, study_map, map_file, "study-map")
+    else:
+        for mid, rec in repo.legacy_modules.items():
             _register(repo, repo.modules, mid, rec, modules_file, "module")
+            repo.module_origins.setdefault(mid, modules_file)
+
+    resume_file = root / "curriculum" / "resume.yaml"
+    if resume_file.is_file():
+        try:
+            repo.resume_pointer = _load_yaml(resume_file)
+            repo.resume_pointer_path = resume_file
+        except LoaderError as exc:
+            repo.parse_failures.append((resume_file, str(exc)))
+
+    # Read only the sealed boundary index, never the quarantined workspace or
+    # its prospective resource menus. This permits historical provenance IDs
+    # to remain resolvable without leaking quarantined content into the model.
+    quarantine_index = root / "curriculum" / "quarantine" / "index.yaml"
+    if quarantine_index.is_file():
+        try:
+            quarantine_data = _load_yaml(quarantine_index)
+        except LoaderError as exc:
+            repo.parse_failures.append((quarantine_index, str(exc)))
+        else:
+            for wid in quarantine_data.get("workspace_ids", []) or []:
+                if isinstance(wid, str):
+                    repo.quarantined_workspace_ids.add(wid)
 
     # Notes
     notes_dir = root / "knowledge" / "notes"

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/resume.schema.json",
+  "title": "Global resume pointer",
+  "type": "object",
+  "required": ["type", "module_id", "unit_id", "study_map_id", "stage_id"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "resume-pointer" },
+    "module_id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "study_map_id": { "type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "stage_id": { "type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "updated": { "type": "string", "format": "date" }
+  }
+}

@@ -1,6 +1,8 @@
-# Learning OS v3 — Architecture (Consolidated v3.1)
+# Learning OS v3 — Architecture (Consolidated v3.2)
 
-> Consolidated 2026-07-16. Incorporates the Architecture Revisions §1–§16 and the final ownership-boundary review. This file is the single authoritative architecture; the original package and the revisions document are historical.
+> Consolidated 2026-07-16; module-first curriculum amendment adopted
+> 2026-08-03. This file is the single authoritative architecture; earlier
+> packages and the monolithic module registry are migration history.
 
 ## 1. Purpose
 
@@ -46,12 +48,23 @@ No additional canonical *knowledge* entity type without demonstrated recurring n
 
 ### 2.2 Durable factual records
 
-**Module records** (`records/modules.yaml`): administrative facts — institution, module identity, credits, examination attempts, grades. Facts, not knowledge; they never contain synthesis.
+**Partitioned module records**
+(`curriculum/modules/<module-id>/module.yaml`): one authoritative record per
+module. Academic modules own institution, credits, examination attempts and
+grades; skill, project and foundation modules omit academic-only fields. Facts,
+not knowledge; modules never contain durable synthesis.
+
+**Curriculum operations** (`curriculum/`): programs/areas, modules, optional
+components, units, module source maps, one current study map per unit, stage
+working notes and attachments, and one resume pointer. This is operationally
+canonical and Git-tracked. Durable knowledge remains under `knowledge/`.
 
 ### 2.3 Operationally canonical
 
 - `work/COORDINATION.md` — cross-workspace coordination facts (§10);
 - **active workspaces** — one coherent learning effort each (§9).
+- **module-owned units and study maps** — the actual study hierarchy; workspaces
+  reference them explicitly and may coordinate several of them.
 
 Operationally canonical means: authoritative while active, but not part of the permanent knowledge model.
 
@@ -144,8 +157,19 @@ repository/
 │   ├── concepts.yaml
 │   └── concept-relations.yaml
 │
+├── curriculum/
+│   ├── programs/                 ← active areas and quarantine boundaries
+│   ├── resume.yaml               ← convenience pointer only
+│   ├── modules/<module-id>/
+│   │   ├── module.yaml           ← one administrative/module owner
+│   │   ├── source-map.yaml       ← roles in this module
+│   │   └── units/<unit-id>/
+│   │       ├── unit.yaml         ← scope and artifact references
+│   │       ├── study-map.yaml    ← one current script
+│   │       └── stages/<stage-id>/{notes.md,attachments/}
+│   └── quarantine/               ← excluded content, boundary index only
 ├── records/
-│   └── modules.yaml
+│   └── modules.yaml               ← frozen migration compatibility input
 │
 ├── sources/
 │   ├── sources.yaml
@@ -184,7 +208,13 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Relation registry | `knowledge/concept-relations.yaml` | fixed |
 | Source registry | `sources/sources.yaml` (partitionable to `sources/registry/*.yaml`) | fixed |
 | Source collections (reading lists) | `sources/collections/<name>.yaml` | kebab-case |
-| Module records | `records/modules.yaml` | fixed |
+| Program/area record | `curriculum/programs/<program-id>.yaml` | filename = program ID |
+| Module record | `curriculum/modules/<module-id>/module.yaml` | one partition per module |
+| Module source map | `curriculum/modules/<module-id>/source-map.yaml` | fixed inside module |
+| Unit | `curriculum/modules/<module-id>/units/<unit-id>/unit.yaml` | one owning module |
+| Current study map | beside its unit as `study-map.yaml` | at most one current map per unit |
+| Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
+| Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
@@ -215,8 +245,12 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Concept → concept semantics | `knowledge/concept-relations.yaml` |
 | Source identity | `sources/sources.yaml` |
 | Contextual source evaluation (incl. crosswalk judgments) | The source record |
-| Module identity, credits, components | `records/modules.yaml` |
-| **Exam dates, registrations, withdrawals, sittings, grades** | `records/modules.yaml` (attempts) |
+| Module identity, kind, area, unit order, components | Owning partitioned `module.yaml` |
+| **Exam dates, registrations, withdrawals, sittings, grades** | Academic module's `module.yaml` (`attempts`) |
+| Unit scope, component, status, current map, artifact references | Owning `unit.yaml` |
+| Module-specific source roles and unit routes | Owning `source-map.yaml` |
+| Ordered stage work, feedback, detours, shelving state | Owning `study-map.yaml` + stage folder |
+| Global resume convenience | `curriculum/resume.yaml` |
 | Commitments and explicit priority decisions | `work/COORDINATION.md` |
 | Cross-workspace dependencies and deferrals | `work/COORDINATION.md` |
 | Current goal and scope of one effort | Active workspace `CONTEXT.md` |
@@ -229,7 +263,10 @@ Where every artifact physically lands, and what it is named. The user should nev
 
 A canonical fact has exactly one owner.
 
-**The deadline rule:** exam dates exist canonically *only* in `records/modules.yaml`. A workspace `deadline` is for non-exam deadlines owned by that effort (project submissions, peer reviews). `COORDINATION.md` never restates either; the generated coordination view merges them.
+**The deadline rule:** exam dates exist canonically *only* in the owning
+academic module's `module.yaml`. A workspace `deadline` is for non-exam
+deadlines owned by that effort (project submissions, peer reviews).
+`COORDINATION.md` never restates either; generated views merge them.
 
 ---
 
@@ -359,11 +396,14 @@ Do not rewrite an archived workspace to make it tidy.
 
 It must **not** contain:
 
-- exam dates or sittings (owned by `records/modules.yaml`);
+- exam dates or sittings (owned by the academic module's `module.yaml`);
 - workspace statuses or lists (owned by workspace frontmatter; merged views are generated);
 - computed recommendations, priority orderings, or neglect warnings (agent-computed, disposable).
 
-The dashboard is `generated/coordination-view.md`, assembled from: the exam spine in `modules.yaml`, statuses/deadlines/next actions from workspace frontmatter, the facts in `COORDINATION.md`, and neglect signals computed from Git timestamps.
+The dashboard is `generated/coordination-view.md`, assembled from: the exam
+spine in partitioned academic modules, statuses/deadlines/next actions from
+workspace frontmatter, the facts in `COORDINATION.md`, and neglect signals
+computed from Git timestamps.
 
 **Rationale:** the v2 brain drifted because it manually restated facts owned elsewhere. The coordination layer stays drift-proof only if it remains a small facts file, never a dashboard.
 
@@ -371,7 +411,8 @@ The dashboard is `generated/coordination-view.md`, assembled from: the exam spin
 
 ## 11. Module records
 
-`records/modules.yaml` owns administrative reality:
+Each `curriculum/modules/<module-id>/module.yaml` owns that module's
+administrative reality:
 
 - institution, module code, title, credits, semester;
 - status: `planned` / `enrolled` / `completed` / `dropped`;
@@ -422,6 +463,59 @@ IDs are lowercase, ASCII, hyphen-separated, stable after creation, unique within
 
 ---
 
+## 14A. Module-first curriculum model
+
+The default active program is the current Bachelor's. Skills and
+Thesis/Projects are active non-semester areas. Master's Planning is prospective
+and operationally quarantined. Job is a stronger external confidentiality
+boundary. Archive preserves completed semesters and work.
+
+Module `kind` is `academic`, `skill`, `project`, or `foundation`. Only academic
+modules may be required to carry institution, code, credits, semester, and
+examination facts. Components are structured records with stable IDs; the
+combined M2 module therefore owns one examination while SaD and Analysis units
+route to separate component IDs.
+
+A unit is a `lecture`, `topic`, `lecture-cluster`, `milestone`, `exam-block`, or
+`bridge`. It owns scope, ordering, state, source selections, the current-map
+reference, and stable IDs of durable artifacts. The state vocabulary is
+`needs-map`, `not-started`, `ready`, `active`, `paused`, `ready-to-shelve`, and
+`complete`. A clustered unit is valid; the model must not invent individual
+lectures when the preserved plan intentionally spans several.
+
+A unit has at most one current study map. Git preserves its prior forms rather
+than a pile of competing active scripts. The map owns ordered stages, its
+current stage, source-plan provenance, explicit prerequisite detours with a
+return stage, and shelving proposal state. A stage owns its objective, state,
+done-when evidence, exact source actions/locators, scope triage, working note,
+attachments, source-use feedback, and completion date. There is deliberately no
+canonical session entity.
+
+Source relationships have four distinct owners:
+
+1. the global source record owns identity, location, authorship and contextual
+   pedagogical evaluations;
+2. the module source map owns why/when a source is used in that module, its
+   role, priority and unit routes;
+3. the unit owns exact selected sections against lecture scope;
+4. the stage owns the small watch/read/practise/reference action and locator.
+
+Stage feedback is personal use evidence. It never silently changes the global
+evaluation. A later evaluation change is an approval-gated proposal.
+
+Workspaces retain their independent lifecycle and coordinate curriculum work
+with explicit `program_ids`, `module_ids`, and `unit_ids`. Naming and prose are
+never used to infer v2 relationships. The current resume pointer is generated
+as a convenience and cannot hide any module, unit, or map.
+
+`curriculum/quarantine/index.yaml` is the only normally loadable record at the
+Master's boundary. The loader, validator's normal scan, manifest, bootstrap,
+active counts, recommendations, and default search exclude quarantined content.
+Promotion begins only when the future program actually starts: select the
+module deliberately, migrate its administrative facts into an active program,
+register only adopted resources, create units from confirmed scope, validate,
+and regenerate. Nothing is promoted merely because it was prospective.
+
 ## 15. Multi-chat model
 
 Chats are transient; workspaces are persistent. A chat operates on one primary workspace, but a workspace may span many conversations. Workspace identity, not chat identity, is canonical.
@@ -438,7 +532,8 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 6. Concepts are identities, not note containers.
 7. Only concept-to-concept semantic edges belong in the relation registry; there is no `related-to`.
 8. Source evaluations are contextual and canonical only in source records; crosswalk notes carry narrative, never the sole copy of a judgment.
-9. Exam dates, registrations, withdrawals, and grades exist canonically only in `records/modules.yaml`.
+9. Exam dates, registrations, withdrawals, and grades exist canonically only
+   in the owning academic module's partitioned `module.yaml`.
 10. `COORDINATION.md` contains only facts not owned or derivable elsewhere.
 11. Note roles are metadata, never directory structure; exam artifacts are durable notes.
 12. The operator may automate mechanics but never silently changes user meaning.
@@ -449,6 +544,20 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 17. Migration must preserve original content before normalization.
 18. A note's identity survives normal evolution; identity changes (split, merge, replacement, re-scoping) are explicit, approved events with a supersession trail.
 19. The repository defines what the system is; operator-specific behavior lives only in the operator contract (`CLAUDE.md` for Claude).
+20. Every unit belongs to exactly one module; an optional component belongs to
+    that same module.
+21. A unit has at most one current study map, and every map's current stage is
+    one of its own ordered stages.
+22. The resume pointer is optional convenience state and never filters the
+    curriculum.
+23. Workspace-to-module/unit joins are explicit in v2; interfaces never infer
+    them from names or prose.
+24. Master's quarantined content and Job content never enter the normal
+    manifest; only declared boundary records may appear.
+25. Interface writes use action-specific, snapshot-checked gateway commands;
+    no interface writes canonical files directly.
+26. A learning-session commit stages only its action ledger. Unrelated files,
+    including untracked Canvas files, are never absorbed.
 
 ---
 

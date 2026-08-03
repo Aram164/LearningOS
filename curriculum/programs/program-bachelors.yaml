@@ -1,0 +1,13 @@
+id: program-bachelors
+type: program
+title: Bachelor’s
+kind: academic
+status: active
+default: true
+semester_bound: true
+description: Current Bachelor’s execution and its semester history.
+semesters:
+- id: semester-sose-2026
+  title: SoSe 2026
+  status: current
+  order: 202601

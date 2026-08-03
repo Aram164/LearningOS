@@ -1,0 +1,25 @@
+id: study-map-python-oop-scope
+type: study-map
+unit_id: unit-python-oop-scope
+status: ready
+current_stage: stage-01-python-oop-scope-repair
+source_plan:
+  path: note://note-python-oop-scope-repair-plan
+  provenance: durable-note
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-python-oop-scope-repair
+  title: Python OOP & scope repair
+  status: pending
+  objective: Use the preserved Python OOP & scope repair artifact as the scope and work record.
+  done_when:
+  - Record concrete work or evidence without inferring mastery from the artifact.
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: 'Durable artifact note-python-oop-scope-repair-plan: Python OOP & scope repair'
+  working_note: curriculum/modules/module-skill-python/units/unit-python-oop-scope/stages/stage-01-python-oop-scope-repair/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,9 @@
+id: program-thesis-projects
+type: program
+title: Thesis & projects
+kind: projects
+status: active
+default: false
+semester_bound: false
+description: Bachelor thesis milestones and independently completable projects.
+semesters: []

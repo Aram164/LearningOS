@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/program.schema.json",
+  "title": "LearningOS program or area",
+  "type": "object",
+  "required": ["id", "type", "title", "kind", "status", "default", "semester_bound"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "program" },
+    "title": { "type": "string", "minLength": 1 },
+    "kind": { "enum": ["academic", "skills", "projects", "quarantine", "boundary"] },
+    "status": { "enum": ["active", "quarantined", "boundary-only", "archived"] },
+    "default": { "type": "boolean" },
+    "semester_bound": { "type": "boolean" },
+    "description": { "type": "string" },
+    "boundary_action": { "type": "string" },
+    "semesters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "status", "order"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^semester-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "title": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["current", "previous", "future", "archived"] },
+          "order": { "type": "integer", "minimum": 0 }
+        }
+      }
+    }
+  }
+}

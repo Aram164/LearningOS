@@ -1,0 +1,19 @@
+id: unit-m2-sad-l04
+type: unit
+module_id: module-hu-m2-statistik-analysis
+kind: lecture
+title: SaD Lecture 04 — Probability & Naïve Bayes
+order: 4
+scope: The lecture as taught; the preserved Mini Plan is the single study script.
+status: active
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+source_selections: []
+artifacts:
+  ultimate_reference: note-sad-l04-probability-bayes
+  exercise_bank: note-sad-l04-exercise-bank
+workspace_ids:
+- workspace-m2-exam-prep
+component_id: component-m2-sad
+current_study_map: study-map-m2-sad-l04-probability-bayes

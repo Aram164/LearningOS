@@ -1,0 +1,39 @@
+id: module-hu-m2-statistik-analysis
+institution: HU Berlin
+code: M2
+title: Statistik & Datenanalyse + Analysis (Kombimodul)
+semester: sose-2026
+status: enrolled
+components:
+- id: component-m2-sad
+  title: Statistik und Datenanalyse
+  short_title: SaD
+  order: 1
+- id: component-m2-analysis
+  title: Analysis
+  short_title: Analysis
+  order: 2
+examination:
+  type: klausur
+  notes: ONE combined 3h Klausur for both components, one grade. 1. Termin was Mo 2026-07-27 12:00-15:00
+    (ESZ 110/115/307); 2. Termin Fr 2026-10-09 13:00-16:00 (Raum ESZ 110/115). 2.-PZ Anmeldung window
+    2026-08-31 to 2026-09-10; Rücktritt (2. Termin) by Fr 2026-10-02 via AGNES. Re-verified 2026-07-25
+    against the official Prüfungsplan (pplaninformatik_sose26, Stand 14-07-2026).
+attempts:
+- termin: 1
+  date: '2026-07-27'
+  result: withdrawn
+  notes: Ruecktritt executed (confirmed by Aram 2026-07-17). Deferral to the 2. Termin decided 2026-07-16
+    (recorded in work/COORDINATION.md).
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-m2-sad-l01
+- unit-m2-sad-l02
+- unit-m2-sad-l03
+- unit-m2-sad-l04
+- unit-m2-sad-l05
+- unit-m2-sad-l06-l10
+- unit-m2-analysis-exam-prep

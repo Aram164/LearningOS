@@ -1,0 +1,40 @@
+type: module-source-map
+module_id: module-hu-m2-statistik-analysis
+sources:
+- source_id: source-sad-ss26-lectures
+  role: course-material
+  why: SaD slides define lecture scope.
+  priority: 0
+  unit_routes:
+  - unit-m2-sad-l01
+  - unit-m2-sad-l02
+  - unit-m2-sad-l03
+  - unit-m2-sad-l04
+  - unit-m2-sad-l05
+  - unit-m2-sad-l06-l10
+- source_id: source-sad-uebungen
+  role: practice
+  why: Course-aligned exercise sheets.
+  priority: 1
+  unit_routes:
+  - unit-m2-sad-l01
+  - unit-m2-sad-l02
+  - unit-m2-sad-l03
+  - unit-m2-sad-l04
+  - unit-m2-sad-l05
+- source_id: source-blitzstein-hwang
+  role: spine
+  why: Probability explanations and derivations.
+  priority: 2
+  unit_routes: []
+- source_id: source-fahrmeir-statistik
+  role: reference
+  why: German notation aligned with the exam.
+  priority: 3
+  unit_routes: []
+- source_id: source-islp
+  role: optional-depth
+  why: Regression and ML bridge material.
+  priority: 4
+  unit_routes:
+  - unit-m2-sad-l03

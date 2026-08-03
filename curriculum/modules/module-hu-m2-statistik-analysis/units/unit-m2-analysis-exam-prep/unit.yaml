@@ -1,0 +1,14 @@
+id: unit-m2-analysis-exam-prep
+type: unit
+module_id: module-hu-m2-statistik-analysis
+kind: exam-block
+title: Analysis — exam preparation block
+order: 100
+scope: Analysis component preparation; a study map must be built from the component's taught scope.
+status: needs-map
+scope_sources: []
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+component_id: component-m2-analysis

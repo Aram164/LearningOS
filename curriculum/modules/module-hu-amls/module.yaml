@@ -1,0 +1,27 @@
+id: module-hu-amls
+institution: TU Berlin
+title: Advanced Machine Learning Systems (AMLS)
+semester: sose-2026
+status: enrolled
+examination:
+  type: klausur
+  notes: 'Written exam, 100% of the grade; the team project (submitted 2026-07-15) is a prerequisite and
+    adds up to 5 bonus points (course page, verified 2026-07-02). Course-run sittings at 16:00: 2026-07-23
+    / 2026-08-06 / 2026-08-27 (confirmed by Aram 2026-07-25; course-run — NOT on the central HU Informatik
+    Prüfungsplan because it is a TU Berlin course (Fak. IV EECS, Boehm/BIFOLD); the 2026-07-23 sitting
+    has now passed). Exam Anmeldung runs on the TU side: Aram sits it as a HU Nebenhörer — Nebenhörerschaft
+    at the TU Studierendensekretariat (nebenhoerer@studsek.tu-berlin.de) + exam registration via TU MOSES/MTS,
+    to confirm with the AMLS chair — then recognised back at HU. NOTE: taken as Bachelor-UEWP — LP-gesperrt
+    im Master (Doppelanrechnungsverbot); knowledge fully reusable (module card, Masters-Planning).'
+attempts:
+- termin: 3
+  date: '2026-08-27'
+  result: registered
+  notes: 'Sitting chosen 2026-07-17 (Aram): the LAST course-run slot. Course-run registration formality
+    to complete closer to the date if required.'
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-amls-theory

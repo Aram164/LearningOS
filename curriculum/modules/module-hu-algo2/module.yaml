@@ -1,0 +1,16 @@
+id: module-hu-algo2
+institution: HU Berlin
+title: Algorithmen und Datenstrukturen II (Algo 2)
+semester: sose-2026
+status: enrolled
+examination:
+  type: muendlich
+  notes: 30-minute oral exam (Zoom), 2. Pruefungszeitraum, window 2026-10-05 to 2026-10-08 nach Vereinbarung
+    — slot must be booked via AGNES + Pruefungs-Moodle; Anmeldung window 2026-08-31 to 2026-09-10. Uebungen
+    ungraded.
+type: module
+kind: academic
+area_id: program-bachelors
+source_map: source-map.yaml
+unit_order:
+- unit-algo2-exam-prep

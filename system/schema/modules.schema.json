@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/modules.schema.json",
-  "title": "Module records",
-  "description": "Validates records/modules.yaml — the single canonical owner of administrative module facts: identity, credits, examination attempts (registrations, withdrawals/Rücktritte, sittings), and grades. Exam dates must not appear canonically anywhere else. Dashboards over this registry are generated.",
+  "title": "Backward-compatible monolithic module records",
+  "description": "Compatibility input for records/modules.yaml. Curriculum v2 uses partitioned curriculum/modules/<id>/module.yaml records; this contract remains loadable during migration.",
   "type": "object",
   "required": ["modules"],
   "additionalProperties": false,
@@ -11,16 +11,22 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "institution", "title", "status"],
+        "required": ["id", "title", "status"],
         "additionalProperties": false,
         "properties": {
           "id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "type": { "const": "module" },
+          "kind": { "enum": ["academic", "skill", "project", "foundation"] },
+          "area_id": { "type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$" },
           "institution": { "type": "string", "minLength": 1 },
-          "code": { "type": "string", "description": "Official module code, e.g. M2.1" },
+          "code": { "type": "string" },
           "title": { "type": "string", "minLength": 1 },
           "credits": { "type": "number", "minimum": 0 },
-          "semester": { "type": "string", "pattern": "^(sose|wise)-[0-9]{4}$", "description": "e.g. sose-2026" },
-          "status": { "enum": ["planned", "enrolled", "completed", "dropped"] },
+          "semester": { "type": "string", "pattern": "^(sose|wise)-[0-9]{4}$" },
+          "status": { "enum": ["planned", "enrolled", "active", "paused", "awaiting-grade", "completed", "dropped", "archived"] },
+          "source_map": { "type": "string" },
+          "unit_order": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+          "related_module_ids": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
           "examination": {
             "type": "object",
             "additionalProperties": false,
@@ -31,8 +37,22 @@
           },
           "components": {
             "type": "array",
-            "items": { "type": "string" },
-            "description": "Course components of a combined module (Kombimodul) sharing one grade."
+            "items": {
+              "oneOf": [
+                { "type": "string", "minLength": 1 },
+                {
+                  "type": "object",
+                  "required": ["id", "title", "order"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "id": { "type": "string" },
+                    "title": { "type": "string" },
+                    "short_title": { "type": "string" },
+                    "order": { "type": "integer", "minimum": 0 }
+                  }
+                }
+              ]
+            }
           },
           "attempts": {
             "type": "array",
@@ -49,7 +69,7 @@
               }
             }
           },
-          "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0, "description": "Final module grade." }
+          "grade": { "type": "number", "minimum": 1.0, "maximum": 5.0 }
         }
       }
     }

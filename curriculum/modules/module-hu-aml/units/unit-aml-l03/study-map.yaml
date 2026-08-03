@@ -1,0 +1,129 @@
+id: study-map-aml-l03
+type: study-map
+unit_id: unit-aml-l03
+status: ready
+current_stage: stage-01-simple-multiple-linear-regression
+source_plan:
+  path: work/active/workspace-aml-exam-prep/inputs/AML_L03_Mini_Plan.md
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-01-simple-multiple-linear-regression
+  title: Simple & multiple linear regression
+  status: pending
+  objective: The model hₘ(x) = w₁x + w₀ (and the multivariate w·x); fitting a line by least squares.
+  done_when:
+  - Explain and apply Simple & multiple linear regression without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **Andrew Ng — Coursera ML** Weeks 1–2 (linear regression, one & multiple variables) — [playlist](https://www.youtube.com/playlist?list=PLiPvV5TNogxIS4bHQVW4pMkj4CHA8COdX)
+      · or **CS229 Lecture 2** ([playlist](https://www.youtube.com/playlist?list=PLoROMvodv4rMiGQp3WXShtMGgzqpfVfbU))
+    source_id: source-cs229-notes
+  - kind: read
+    label: 📖 **ISLP** Ch 3 — §3.1 (simple), §3.2 (multiple) — `Bücher/Introduction to Statistical Learning
+      .pdf`
+    source_id: source-islp
+  - kind: read
+    label: 📖 **Murphy PML1** Ch 11 "Linear Regression" — `Bücher/probabilistic ML.pdf`
+    source_id: source-murphy-pml1
+  - kind: read
+    label: 📖 **Toronto CSC411** Ch 2 "Linear Regression"
+  - kind: read
+    label: 📖 **MML** Ch 9 (Linear Regression) — [free](https://mml-book.github.io/) · **ESL** Ch 3 (depth)
+    source_id: source-mml
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-01-simple-multiple-linear-regression/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 90
+- id: stage-02-the-normal-equation-vectorized-ols
+  title: The normal equation & vectorized OLS
+  status: pending
+  objective: 'Closed-form w₁ = (x−x̄)·(y−ȳ)/‖x−x̄‖²; the matrix form (XᵀX)⁻¹Xᵀy (your bonus-sheet 1 expression
+    #4).'
+  done_when:
+  - Explain and apply The normal equation & vectorized OLS without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: watch
+    label: 🎥 **3B1B — Essence of Linear Algebra** ([playlist](https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab))
+      — the visuals behind the normal equation (projection, dot products)
+    source_id: source-3b1b-linear-algebra
+  - kind: watch
+    label: '🎥 **CS4780 #17 — Linear Regression** (OLS = MLE) — https://www.youtube.com/watch?v=_21o_ylL0q4'
+  - kind: read
+    label: '📖 **ISLP** §3.2; **Murphy PML1** §11 "Example: MLE for linear regression"'
+  - kind: watch
+    label: '📖 **CS229 Lecture Notes §1.1–1.3** ⭐ — `…/Bücher/CS229 Lecture Notes.pdf` (p.9–17) — **the
+      written companion to your CS229 video spine**: §1.1 GD/LMS (also your L06), §1.2 the **normal equations
+      via matrix calculus**, §1.3 **why squared-error = MLE under Gaussian noise** (the probabilistic
+      justification the slides skip).'
+    source_id: source-cs229-notes
+  - kind: reference
+    label: '📝 Reference: the regression bridge doc (vectorized w₁/w₀ derivation)'
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-02-the-normal-equation-vectorized-ols/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 60
+- id: stage-03-mse-loss-assessing-the-fit
+  title: MSE loss & assessing the fit
+  status: pending
+  objective: The ½m·‖w₁x+w₀−y‖² loss; R², RSE, the MSE-vs-w loss curve.
+  done_when:
+  - Explain and apply MSE loss & assessing the fit without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 🔗 **Brandon Rohrer Ch 3** (choosing a loss function) — [link](https://brandonrohrer.com/how_modeling_works_3.html)
+  - kind: read
+    label: 📖 **ISLP** §3.1.3 (assessing accuracy), §3.3 (other considerations)
+    source_id: source-islp
+  - kind: reference
+    label: '🔗 StatQuest: linear regression / least squares / R² singles'
+    source_id: source-statquest
+  - kind: reference
+    label: 🔗 *Optional depth:* **Setosa.io — "Ordinary Least Squares Regression" (visual)** — [interactive](https://setosa.io/ev/ordinary-least-squares-regression/)
+      — drag the points and watch the least-squares line move; the cleanest intuition for what minimizing
+      the MSE *does*.
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-03-mse-loss-assessing-the-fit/notes.md
+  attachments: []
+  source_feedback: []
+  estimate_minutes: 45
+- id: stage-04-practice-self-test
+  title: Practice & self-test
+  status: pending
+  objective: Work through Practice & self-test within this unit's scope.
+  done_when:
+  - Explain and apply Practice & self-test without relying on the study map.
+  exam_critical: false
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: '**Bonusblatt 2** (`…/Bonus-exercises/zusatz-blatt02.pdf`) — Aufgabe 1 (linear regression,
+      loss choice/differentiability) + Aufgabe 2 (multivariate regression). ✓ **solution key**: `AML_BonusSheet02_Solution.md`
+      (this folder).'
+  - kind: practise
+    label: '**Übung 03 notebook** — the vectorized single-predictor regression implementation.'
+  - kind: read
+    label: '**ISLP Ch 3 exercises** — conceptual + applied, solutions on [botlnec](https://botlnec.github.io/islp/sols/chapter3/exercise1/).'
+    source_id: source-islp
+  - kind: reference
+    label: '**Caltech LFD Homework 2** (linear regression) ⭐ — [HW](https://work.caltech.edu/homework/hw2.pdf)
+      + [solution key](https://work.caltech.edu/homework/hw2_sol.pdf). Solved, exam-style.'
+  - kind: read
+    label: '**Géron *Hands-On ML* Ch 4** exercises (local PDF) — linear regression + normal equation,
+      **solutions in Appendix A**.'
+  - kind: reference
+    label: '**MIT 6.036 (Open Learning Library)** regression units — auto-graded; **Ng Coursera ex1**
+      — linear regression + GD ([repo](https://github.com/blitz70/ML)).'
+  - kind: reference
+    label: ✓ **CS4780 HW (local)** — `…/CS4780-homeworks/2018Spring/HW6/` **Problem 2 (Linear Regression)**
+      + Problem 1 (Gradient Descent), with full solution. ⭐
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-04-practice-self-test/notes.md
+  attachments: []
+  source_feedback: []

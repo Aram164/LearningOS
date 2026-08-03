@@ -26,8 +26,11 @@ from .loader import (
     EVIDENCE_SCHEMES,
     ID_RE,
     PATH_ID_RE,
+    PROGRAM_ID_RE,
     RELATION_TYPES,
     Repo,
+    STUDY_MAP_ID_RE,
+    UNIT_ID_RE,
 )
 
 ISO_DATE_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
@@ -53,7 +56,7 @@ GENERATED_ALLOWED = {
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 
-CANONICAL_TREES = ("knowledge", "sources", "records", "work")
+CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum")
 
 # File extensions that are legitimately authored text under knowledge/ (notes and
 # registries). Anything else there (PDFs, slides, images) is a misplaced binary
@@ -88,6 +91,12 @@ SHADOW_MTIME_SLACK_S = 120   # clock slack before a shadow counts as "newer"
 def _in_garden(root: Path, path: Path) -> bool:
     garden = root.joinpath(*GARDEN_SUBTREE)
     return path == garden or garden in path.parents
+
+
+def _in_quarantine(root: Path, path: Path) -> bool:
+    """Normal validation never reads sealed prospective content."""
+    quarantine = root / "curriculum" / "quarantine"
+    return path == quarantine or quarantine in path.parents
 
 
 @dataclass
@@ -157,7 +166,17 @@ class Validator:
             o = r.source_origins.get(rec_id)
             return self._rel(o) if o else "sources/sources.yaml"
         if family == "module":
-            return "records/modules.yaml"
+            o = r.module_origins.get(rec_id)
+            return self._rel(o) if o else "records/modules.yaml"
+        if family == "program":
+            p = r.programs.get(rec_id)
+            return self._rel(p.path) if p else ""
+        if family == "unit":
+            u = r.units.get(rec_id)
+            return self._rel(u.path) if u else ""
+        if family == "study-map":
+            sm = r.study_maps.get(rec_id)
+            return self._rel(sm.path) if sm else ""
         if family == "note":
             n = r.notes.get(rec_id)
             return self._rel(n.path) if n else ""
@@ -176,9 +195,11 @@ class Validator:
         self.check_collections()
         self.check_ownership()
         self.check_modules()
+        self.check_curriculum()
         self.check_files()
         self.check_workspaces()
         self.check_learning_paths()
+        self.check_study_maps()
         self.check_links()
         self.check_generated()
         self.check_hygiene()
@@ -201,8 +222,23 @@ class Validator:
                            "knowledge/concept-relations.yaml")
         self._schema_check("sources", {"sources": list(r.sources.values())},
                            "sources/sources.yaml")
-        self._schema_check("modules", {"modules": list(r.modules.values())},
+        self._schema_check("modules", {"modules": list(r.legacy_modules.values())},
                            "records/modules.yaml")
+        for program in r.programs.values():
+            self._schema_check("program", program.data, self._rel(program.path))
+        for mid, module in r.modules.items():
+            origin = r.module_origins.get(mid)
+            if origin and origin.name == "module.yaml":
+                self._schema_check("module", module, self._rel(origin))
+        for unit in r.units.values():
+            self._schema_check("unit", unit.data, self._rel(unit.path))
+        for mid, source_map in r.module_source_maps.items():
+            self._schema_check("module-source-map", source_map,
+                               self._rel(r.module_source_map_origins[mid]))
+        for study_map in r.study_maps.values():
+            self._schema_check("study-map", study_map.data, self._rel(study_map.path))
+        if r.resume_pointer is not None and r.resume_pointer_path is not None:
+            self._schema_check("resume", r.resume_pointer, self._rel(r.resume_pointer_path))
         for note in r.notes.values():
             self._schema_check("note", note.meta, self._rel(note.path))
         for ws in r.workspaces.values():
@@ -235,6 +271,18 @@ class Validator:
                               f"{family} id '{rec_id}' carries a numeric suffix without a "
                               f"collision counterpart '{m.group('base')}' (suffixes are collision-only)",
                               where)
+        for pid in self.repo.programs:
+            if not PROGRAM_ID_RE.match(pid):
+                self.err("ID-PATTERN", f"program id '{pid}' does not match the ID pattern",
+                         self._origin_for("program", pid))
+        for uid in self.repo.units:
+            if not UNIT_ID_RE.match(uid):
+                self.err("ID-PATTERN", f"unit id '{uid}' does not match the ID pattern",
+                         self._origin_for("unit", uid))
+        for smid in self.repo.study_maps:
+            if not STUDY_MAP_ID_RE.match(smid):
+                self.err("ID-PATTERN", f"study map id '{smid}' does not match the ID pattern",
+                         self._origin_for("study-map", smid))
         for path_id, learning_path in self.repo.learning_paths.items():
             where = self._rel(learning_path.path)
             if not PATH_ID_RE.match(path_id):
@@ -253,7 +301,7 @@ class Validator:
                 if sid not in r.sources:
                     self.err("REF-SOURCE", f"note '{note.id}' references unknown source '{sid}'", where)
             for wid in note.meta.get("contexts", []) or []:
-                if wid not in r.workspaces:
+                if wid not in r.workspaces and wid not in r.quarantined_workspace_ids:
                     self.err("REF-WORKSPACE", f"note '{note.id}' references unknown workspace '{wid}'", where)
             for target in note.meta.get("supersedes", []) or []:
                 if target not in r.notes:
@@ -276,6 +324,124 @@ class Validator:
             for sid in ws.meta.get("sources", []) or []:
                 if sid not in r.sources:
                     self.err("REF-SOURCE", f"workspace '{ws.id}' references unknown source '{sid}'", where)
+            for pid in ws.meta.get("program_ids", []) or []:
+                if pid not in r.programs:
+                    self.err("REF-PROGRAM", f"workspace '{ws.id}' references unknown program '{pid}'", where)
+            for mid in ws.meta.get("module_ids", []) or []:
+                if mid not in r.modules:
+                    self.err("REF-MODULE", f"workspace '{ws.id}' references unknown module '{mid}'", where)
+            for uid in ws.meta.get("unit_ids", []) or []:
+                if uid not in r.units:
+                    self.err("REF-UNIT", f"workspace '{ws.id}' references unknown unit '{uid}'", where)
+        for mid, module in r.modules.items():
+            where = self._origin_for("module", mid)
+            area_id = module.get("area_id")
+            if area_id and area_id not in r.programs:
+                self.err("REF-PROGRAM", f"module '{mid}' references unknown program '{area_id}'", where)
+            component_ids = {c.get("id") for c in module.get("components", []) or []
+                             if isinstance(c, dict)}
+            for uid in module.get("unit_order", []) or []:
+                unit = r.units.get(uid)
+                if unit is None:
+                    self.err("REF-UNIT", f"module '{mid}' orders unknown unit '{uid}'", where)
+                elif unit.module_id != mid:
+                    self.err("UNIT-OWNER", f"module '{mid}' orders unit '{uid}' owned by '{unit.module_id}'", where)
+            source_map = r.module_source_maps.get(mid)
+            if module.get("source_map") and source_map is None:
+                self.err("REF-SOURCE-MAP", f"module '{mid}' declares a missing source map", where)
+            for related in module.get("related_module_ids", []) or []:
+                if related not in r.modules:
+                    self.err("REF-MODULE", f"module '{mid}' references unknown related module '{related}'", where)
+            for uid, unit in r.units.items():
+                if unit.module_id != mid:
+                    continue
+                component_id = unit.data.get("component_id")
+                if component_id and component_id not in component_ids:
+                    self.err("REF-COMPONENT",
+                             f"unit '{uid}' references unknown component '{component_id}' in '{mid}'",
+                             self._rel(unit.path))
+        for uid, unit in r.units.items():
+            where = self._rel(unit.path)
+            data = unit.data
+            if data.get("module_id") != unit.module_id:
+                self.err("UNIT-OWNER",
+                         f"unit '{uid}' declares module '{data.get('module_id')}' but lives under '{unit.module_id}'",
+                         where)
+            for scoped in data.get("scope_sources", []) or []:
+                sid = scoped.get("source_id") if isinstance(scoped, dict) else None
+                if sid and sid not in r.sources:
+                    self.err("REF-SOURCE", f"unit '{uid}' references unknown scope source '{sid}'", where)
+            map_stage_ids = set()
+            current_map = r.study_maps.get(data.get("current_study_map"))
+            if current_map:
+                map_stage_ids = {stage.get("id") for stage in current_map.data.get("stages", []) or []}
+            for selection in data.get("source_selections", []) or []:
+                sid = selection.get("source_id") if isinstance(selection, dict) else None
+                if sid and sid not in r.sources:
+                    self.err("REF-SOURCE", f"unit '{uid}' selects unknown source '{sid}'", where)
+                for stage_id in selection.get("stage_ids", []) or []:
+                    if stage_id not in map_stage_ids:
+                        self.err("REF-STAGE", f"unit '{uid}' source selection routes to unknown stage '{stage_id}'", where)
+            for nid in (data.get("artifacts") or {}).values():
+                values = nid if isinstance(nid, list) else [nid]
+                for value in values:
+                    if value and value not in r.notes:
+                        self.err("REF-NOTE", f"unit '{uid}' references unknown artifact '{value}'", where)
+            for wid in data.get("workspace_ids", []) or []:
+                if wid not in r.workspaces:
+                    self.err("REF-WORKSPACE", f"unit '{uid}' references unknown workspace '{wid}'", where)
+            for related in data.get("related_module_ids", []) or []:
+                if related not in r.modules:
+                    self.err("REF-MODULE", f"unit '{uid}' references unknown related module '{related}'", where)
+            for related_uid in [data.get("parent_unit_id"), *(data.get("child_unit_ids", []) or [])]:
+                if related_uid and related_uid not in r.units:
+                    self.err("REF-UNIT", f"unit '{uid}' references unknown unit '{related_uid}'", where)
+            smid = data.get("current_study_map")
+            if smid:
+                sm = r.study_maps.get(smid)
+                if sm is None:
+                    self.err("REF-STUDY-MAP", f"unit '{uid}' references unknown study map '{smid}'", where)
+                elif sm.unit_id != uid:
+                    self.err("MAP-OWNER", f"study map '{smid}' belongs to '{sm.unit_id}', not '{uid}'", where)
+        for mid, source_map in r.module_source_maps.items():
+            where = self._rel(r.module_source_map_origins[mid])
+            if source_map.get("module_id") != mid:
+                self.err("SOURCE-MAP-OWNER", f"source map declares '{source_map.get('module_id')}', lives under '{mid}'", where)
+            for entry in source_map.get("sources", []) or []:
+                sid = entry.get("source_id") if isinstance(entry, dict) else None
+                if sid and sid not in r.sources:
+                    self.err("REF-SOURCE", f"module source map references unknown source '{sid}'", where)
+                for uid in entry.get("unit_routes", []) or []:
+                    if uid not in r.units:
+                        self.err("REF-UNIT", f"module source map routes to unknown unit '{uid}'", where)
+                    elif r.units[uid].module_id != mid:
+                        self.err("SOURCE-MAP-ROUTE", f"module source map routes to foreign unit '{uid}'", where)
+        for smid, study_map in r.study_maps.items():
+            where = self._rel(study_map.path)
+            data = study_map.data
+            if data.get("unit_id") != study_map.unit_id:
+                self.err("MAP-OWNER", f"study map '{smid}' declares unit '{data.get('unit_id')}' but lives under '{study_map.unit_id}'", where)
+            for stage in data.get("stages", []) or []:
+                for resource in stage.get("resources", []) or []:
+                    sid = resource.get("source_id") if isinstance(resource, dict) else None
+                    if sid and sid not in r.sources:
+                        self.err("REF-SOURCE", f"study map '{smid}' references unknown source '{sid}'", where)
+                for feedback in stage.get("source_feedback", []) or []:
+                    sid = feedback.get("source_id") if isinstance(feedback, dict) else None
+                    if sid and sid not in r.sources:
+                        self.err("REF-SOURCE", f"study map '{smid}' records feedback for unknown source '{sid}'", where)
+        if r.resume_pointer:
+            pointer = r.resume_pointer
+            where = self._rel(r.resume_pointer_path) if r.resume_pointer_path else "curriculum/resume.yaml"
+            if pointer.get("module_id") not in r.modules:
+                self.err("REF-MODULE", "resume pointer references an unknown module", where)
+            if pointer.get("unit_id") not in r.units:
+                self.err("REF-UNIT", "resume pointer references an unknown unit", where)
+            sm = r.study_maps.get(pointer.get("study_map_id"))
+            if sm is None:
+                self.err("REF-STUDY-MAP", "resume pointer references an unknown study map", where)
+            elif pointer.get("stage_id") not in {s.get("id") for s in sm.data.get("stages", []) or []}:
+                self.err("REF-STAGE", "resume pointer references an unknown stage", where)
         for path in r.learning_paths.values():
             where = self._rel(path.path)
             data = path.data
@@ -350,7 +516,8 @@ class Validator:
             if ref[len("source://"):] not in r.sources:
                 self.err("URI-SOURCE", f"'{ref}' does not resolve", where)
         elif ref.startswith("workspace://"):
-            if ref[len("workspace://"):] not in r.workspaces:
+            wid = ref[len("workspace://"):]
+            if wid not in r.workspaces and wid not in r.quarantined_workspace_ids:
                 self.err("URI-WORKSPACE", f"'{ref}' does not resolve", where)
         elif ref.startswith("material://"):
             rest = ref[len("material://"):]
@@ -441,7 +608,7 @@ class Validator:
             for f in sorted(base.rglob("*")):
                 if f.suffix.lower() not in (".md", ".yaml", ".yml") or not f.is_file():
                     continue
-                if _in_garden(r.root, f):
+                if _in_garden(r.root, f) or _in_quarantine(r.root, f):
                     continue
                 text = f.read_text(encoding="utf-8", errors="replace")
                 # Only the repository's own generated/ tree counts — 'generated/'
@@ -518,7 +685,113 @@ class Validator:
                 if att.get("result") == "registered" and i != len(attempts) - 1:
                     self.err("MOD-REGISTERED",
                              f"module '{mid}' attempt[{i}] is 'registered' but is not the latest attempt",
-                             "records/modules.yaml")
+                             self._origin_for("module", str(mid)))
+
+    def check_curriculum(self):
+        """Cross-file invariants for the module-first operational tree."""
+        r = self.repo
+        if not r.programs and not r.units and not r.study_maps:
+            return  # backward-compatible v1/synthetic repository
+        defaults = [p.id for p in r.programs.values()
+                    if p.data.get("default") and p.data.get("status") == "active"]
+        if defaults != ["program-bachelors"]:
+            self.err("PROGRAM-DEFAULT",
+                     "the active/default program must be exactly program-bachelors",
+                     "curriculum/programs")
+        if "workspace-degree-planning" in r.workspaces:
+            self.err("QUARANTINE-MASTERS",
+                     "Master's Planning workspace is loaded as current work instead of quarantined",
+                     self._origin_for("workspace", "workspace-degree-planning"))
+        missing_legacy = sorted(set(r.legacy_modules) - set(r.modules))
+        if missing_legacy:
+            self.err("MODULE-MIGRATION",
+                     "partitioned records do not cover legacy module ids: " + ", ".join(missing_legacy),
+                     "records/modules.yaml")
+        for mid, module in r.modules.items():
+            where = self._origin_for("module", mid)
+            if module.get("kind") == "academic":
+                for field in ("institution", "semester"):
+                    if not module.get(field):
+                        self.err("MODULE-ACADEMIC", f"academic module '{mid}' lacks {field}", where)
+            components = module.get("components", []) or []
+            component_ids = [c.get("id") for c in components if isinstance(c, dict)]
+            if len(component_ids) != len(set(component_ids)):
+                self.err("COMPONENT-DUP", f"module '{mid}' has duplicate component ids", where)
+            ordered = module.get("unit_order", []) or []
+            actual = [u.id for u in r.units.values() if u.module_id == mid]
+            if set(ordered) != set(actual) or len(ordered) != len(actual):
+                self.err("UNIT-ORDER",
+                         f"module '{mid}' unit_order must contain every owned unit exactly once",
+                         where)
+            source_map = r.module_source_maps.get(mid, {})
+            joins = [(e.get("source_id"), e.get("role"))
+                     for e in source_map.get("sources", []) or [] if isinstance(e, dict)]
+            if len(joins) != len(set(joins)):
+                self.err("SOURCE-MAP-DUP",
+                         f"module '{mid}' repeats the same source-role join", where)
+        for uid, unit in r.units.items():
+            where = self._rel(unit.path)
+            current = unit.data.get("current_study_map")
+            owned = [sm.id for sm in r.study_maps.values() if sm.unit_id == uid]
+            if len(owned) > 1:
+                self.err("UNIT-MAP-MULTIPLE",
+                         f"unit '{uid}' has more than one current study map: {owned}", where)
+            if current and owned != [current]:
+                self.err("UNIT-MAP-CURRENT",
+                         f"unit '{uid}' current_study_map does not match its physical study map", where)
+            if not current and owned:
+                self.err("UNIT-MAP-UNDECLARED",
+                         f"unit '{uid}' has a study-map.yaml but does not declare it", where)
+
+    def check_study_maps(self):
+        for study_map in self.repo.study_maps.values():
+            where = self._rel(study_map.path)
+            data = study_map.data
+            stages = data.get("stages", []) or []
+            if not isinstance(stages, list):
+                continue
+            ids = [s.get("id") for s in stages if isinstance(s, dict)]
+            if len(ids) != len(set(ids)):
+                self.err("MAP-STAGE-DUP", "study-map stage ids must be unique", where)
+            current = data.get("current_stage")
+            if current not in ids:
+                self.err("MAP-CURRENT", f"current_stage '{current}' does not identify a stage", where)
+            active = [s.get("id") for s in stages if isinstance(s, dict)
+                      and s.get("status") == "active"]
+            if data.get("status") == "active" and active != [current]:
+                self.err("MAP-ACTIVE",
+                         "an active study map must have exactly one active current stage", where)
+            if data.get("status") != "active" and len(active) > 0:
+                self.err("MAP-ACTIVE",
+                         "a non-active study map may not contain an active stage", where)
+            for stage in stages:
+                if not isinstance(stage, dict):
+                    continue
+                note_ref = stage.get("working_note")
+                if note_ref:
+                    target = self.repo.root / str(note_ref)
+                    expected_unit = study_map.path.parent.resolve()
+                    try:
+                        target.resolve().relative_to(expected_unit)
+                    except (ValueError, OSError):
+                        self.err("MAP-NOTE-OWNER",
+                                 f"working note escapes owning unit: '{note_ref}'", where)
+                    if not target.is_file():
+                        self.err("MAP-NOTE-MISSING", f"working note does not exist: '{note_ref}'", where)
+                if stage.get("completed") and stage.get("status") != "complete":
+                    self.err("MAP-COMPLETED-DATE",
+                             f"stage '{stage.get('id')}' has a completion date but is not complete", where)
+            stage_ids = set(ids)
+            detour_ids: set[str] = set()
+            for detour in data.get("detours", []) or []:
+                did = detour.get("id")
+                if did in detour_ids:
+                    self.err("DETOUR-DUP", f"duplicate detour id '{did}'", where)
+                detour_ids.add(did)
+                for field in ("spawned_by_stage", "return_to_stage"):
+                    if detour.get(field) not in stage_ids:
+                        self.err("DETOUR-STAGE",
+                                 f"detour '{did}' {field} does not resolve to a stage", where)
 
     def check_files(self):
         r = self.repo
@@ -611,7 +884,7 @@ class Validator:
             if not base.is_dir():
                 continue
             for f in sorted(base.rglob("*.md")):
-                if _in_garden(r.root, f):
+                if _in_garden(r.root, f) or _in_quarantine(r.root, f):
                     continue
                 text = f.read_text(encoding="utf-8", errors="replace")
                 for target in MD_LINK_RE.findall(text):
@@ -735,7 +1008,7 @@ class Validator:
             if not base.is_dir():
                 continue
             for f in base.rglob("*.md"):
-                if _in_garden(self.repo.root, f):
+                if _in_garden(self.repo.root, f) or _in_quarantine(self.repo.root, f):
                     continue
                 for target in MD_LINK_RE.findall(f.read_text(encoding="utf-8", errors="replace")):
                     if target.startswith(("http://", "https://")):

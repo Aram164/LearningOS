@@ -1,0 +1,14 @@
+id: unit-python-intermediate-roadmap
+type: unit
+module_id: module-skill-python
+kind: topic
+title: Python intermediate roadmap
+order: 2
+scope: Seeded from the existing roadmap without inferring completion.
+status: ready
+scope_sources: []
+source_selections: []
+artifacts:
+  ultimate_reference: note-python-intermediate-roadmap
+workspace_ids: []
+current_study_map: study-map-python-intermediate-roadmap

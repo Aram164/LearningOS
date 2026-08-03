@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/unit.schema.json",
+  "title": "Curriculum unit",
+  "type": "object",
+  "required": ["id", "type", "module_id", "kind", "title", "order", "scope", "status", "artifacts", "workspace_ids"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "type": { "const": "unit" },
+    "module_id": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "component_id": { "type": "string", "pattern": "^component-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "kind": { "enum": ["lecture", "topic", "lecture-cluster", "milestone", "exam-block", "bridge"] },
+    "title": { "type": "string", "minLength": 1 },
+    "order": { "type": "integer", "minimum": 0 },
+    "scope": { "type": "string", "minLength": 1 },
+    "status": { "enum": ["needs-map", "not-started", "ready", "active", "paused", "ready-to-shelve", "complete"] },
+    "scope_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "authority"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "authority": { "enum": ["slides", "recording", "brief", "plan", "reference"] },
+          "locator": { "type": "string" }
+        }
+      }
+    },
+    "source_selections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["source_id", "locator", "purpose"],
+        "additionalProperties": false,
+        "properties": {
+          "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "locator": { "type": "string", "minLength": 1 },
+          "purpose": { "type": "string", "minLength": 1 },
+          "stage_ids": {
+            "type": "array",
+            "items": { "type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "current_study_map": { "type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ultimate_reference": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "exercise_bank": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "mock_exam": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+        "other": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "uniqueItems": true
+        }
+      }
+    },
+    "parent_unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "child_unit_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    },
+    "related_module_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    },
+    "workspace_ids": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+      "uniqueItems": true
+    }
+  }
+}

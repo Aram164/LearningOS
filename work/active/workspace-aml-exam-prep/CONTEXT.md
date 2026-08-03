@@ -1,17 +1,42 @@
 ---
 id: workspace-aml-exam-prep
 type: workspace
-title: "AML Klausur prep — 2. Termin track (Blocks K–M + N-style review)"
-created: "2026-07-16"
+title: AML Klausur prep — 2. Termin track (Blocks K–M + N-style review)
+created: '2026-07-16'
 status: active
 standing: false
-concepts: [concept-perceptron, concept-kernel-trick, concept-xor-problem,
-  concept-neural-network, concept-backpropagation, concept-logistic-regression,
-  concept-cross-entropy, concept-gradient-descent]
-notes: [note-aml-l07-linear-classifiers, note-aml-l07-exercise-bank,
-  note-aml-l07-mock-exam, note-aml-bonusblatt04-solutions, note-aml-sad-master-wiring]
-sources: [source-aml-ss26-lectures, source-cs229-notes, source-statquest,
-  source-3b1b-neural-networks, source-cs229-2022-videos]
+concepts:
+- concept-perceptron
+- concept-kernel-trick
+- concept-xor-problem
+- concept-neural-network
+- concept-backpropagation
+- concept-logistic-regression
+- concept-cross-entropy
+- concept-gradient-descent
+notes:
+- note-aml-l07-linear-classifiers
+- note-aml-l07-exercise-bank
+- note-aml-l07-mock-exam
+- note-aml-bonusblatt04-solutions
+- note-aml-sad-master-wiring
+sources:
+- source-aml-ss26-lectures
+- source-cs229-notes
+- source-statquest
+- source-3b1b-neural-networks
+- source-cs229-2022-videos
+program_ids:
+- program-bachelors
+module_ids:
+- module-hu-aml
+unit_ids:
+- unit-aml-l02
+- unit-aml-l03
+- unit-aml-l04
+- unit-aml-l05
+- unit-aml-l06
+- unit-aml-l07
 ---
 
 # AML exam prep — 2. Termin
