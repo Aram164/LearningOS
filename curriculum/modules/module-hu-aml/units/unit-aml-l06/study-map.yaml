@@ -119,7 +119,7 @@ stages:
   attachments: []
   source_feedback: []
   estimate_minutes: 45
-- id: stage-05-practice-self-test
+- id: stage-05-practice-self-test-aml-l06
   title: Practice & self-test
   status: pending
   objective: 'See **`AML_L06_Exercise_Bank.md`** (this folder) for the full, scoped list. Highlights:'
@@ -140,6 +140,6 @@ stages:
   - kind: read
     label: ✓ **CS4780 2018Spring HW6 P1** (Optimization with GD) + **Caltech LFD HW5** (SGD experiment)
       + **Géron Ch 4** (batch/SGD/mini-batch) — local/linked, with solutions.
-  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-05-practice-self-test/notes.md
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-05-practice-self-test-aml-l06/notes.md
   attachments: []
   source_feedback: []

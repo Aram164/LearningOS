@@ -131,7 +131,15 @@ def parse_frontmatter(text: str, path: Path) -> tuple[dict, str]:
 
 def _load_yaml(path: Path) -> dict:
     try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        # An unreadable file (replaced by a directory, permission denied) raises
+        # before YAML parsing starts, so it used to bypass the parse-failure
+        # mechanism and crash every command — including `validate`, the one a
+        # confused user runs first.
+        raise LoaderError(f"{path}: cannot read file: {exc.strerror or exc}") from exc
+    try:
+        data = yaml.safe_load(text)
     except yaml.YAMLError as exc:
         raise LoaderError(f"{path}: invalid YAML: {exc}") from exc
     if data is None:

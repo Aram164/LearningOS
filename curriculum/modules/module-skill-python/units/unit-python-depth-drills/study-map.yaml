@@ -2,7 +2,7 @@ id: study-map-python-depth-drills
 type: study-map
 unit_id: unit-python-depth-drills
 status: ready
-current_stage: stage-01-python-depth-drills
+current_stage: stage-python-depth-0-names-and-identity
 source_plan:
   path: note://note-python-depth-drills
   provenance: durable-note
@@ -10,16 +10,253 @@ detours: []
 shelving:
   state: none
 stages:
-- id: stage-01-python-depth-drills
-  title: Python depth drills
+- id: stage-python-depth-0-names-and-identity
+  title: Stage 0 — Names, identity & mutation
   status: pending
-  objective: Use the preserved Python depth drills artifact as the scope and work record.
+  objective: Work Stage 0 (Names, identity & mutation) until its self-test needs no lookups; unlocks everything
+    below it.
   done_when:
-  - Record concrete work or evidence without inferring mastery from the artifact.
+  - Answer all 20 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
   scope_triage: required-now
   resources:
+  - kind: read
+    label: 'Stage 0 guide — Names, identity & mutation: claim under test, prerequisites, ranked reading,
+      drills, done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+  - kind: practise
+    label: Stage 0 self-test notebook — 20 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
   - kind: reference
-    label: 'Durable artifact note-python-depth-drills: Python depth drills'
-  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-01-python-depth-drills/notes.md
+    label: Ladder README — entry point, order, and the two shorter paths.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/README.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-0-names-and-identity/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-1-functions-as-objects
+  title: Stage 1 — Functions as first-class objects
+  status: pending
+  objective: Work Stage 1 (Functions as first-class objects) until its self-test needs no lookups; unlocks
+    stages 2, 3 and 8.
+  done_when:
+  - Answer all 19 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 1 guide — Functions as first-class objects: claim under test, prerequisites, ranked
+      reading, drills, done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+  - kind: practise
+    label: Stage 1 self-test notebook — 19 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-1-functions-as-objects/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-2-scope-and-closures
+  title: Stage 2 — Scope & closures
+  status: pending
+  objective: Work Stage 2 (Scope & closures) until its self-test needs no lookups; unlocks stage 3.
+  done_when:
+  - Answer all 19 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 2 guide — Scope & closures: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+  - kind: practise
+    label: Stage 2 self-test notebook — 19 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-2-scope-and-closures/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-3-decorators
+  title: Stage 3 — Decorators
+  status: pending
+  objective: Work Stage 3 (Decorators) until its self-test needs no lookups; unlocks stage 5.
+  done_when:
+  - Answer all 20 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 3 guide — Decorators: claim under test, prerequisites, ranked reading, drills, done-when,
+      traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-3-decorators.md
+  - kind: practise
+    label: Stage 3 self-test notebook — 20 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-3-decorators/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-4-classes-as-objects
+  title: Stage 4 — Classes as objects
+  status: pending
+  objective: Work Stage 4 (Classes as objects) until its self-test needs no lookups; unlocks stages 6
+    and 8.
+  done_when:
+  - Answer all 20 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 4 guide — Classes as objects: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+  - kind: practise
+    label: Stage 4 self-test notebook — 20 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-4-classes-as-objects/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-5-imports-and-registration
+  title: Stage 5 — Imports & registration
+  status: pending
+  objective: Work Stage 5 (Imports & registration) until its self-test needs no lookups; unlocks registry
+    and plugin code.
+  done_when:
+  - Answer all 17 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 5 guide — Imports & registration: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+  - kind: practise
+    label: Stage 5 self-test notebook — 17 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-5-imports-and-registration/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-6-data-model-and-dunders
+  title: Stage 6 — The data model & dunders
+  status: pending
+  objective: Work Stage 6 (The data model & dunders) until its self-test needs no lookups; unlocks stages
+    7 and 8.
+  done_when:
+  - Answer all 18 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 6 guide — The data model & dunders: claim under test, prerequisites, ranked reading,
+      drills, done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+  - kind: practise
+    label: Stage 6 self-test notebook — 18 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-6-data-model-and-dunders/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-7-generators-and-iterators
+  title: Stage 7 — Generators & iterators
+  status: pending
+  objective: Work Stage 7 (Generators & iterators) until its self-test needs no lookups; unlocks tree
+    and graph traversal code.
+  done_when:
+  - Answer all 15 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 7 guide — Generators & iterators: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+  - kind: practise
+    label: Stage 7 self-test notebook — 15 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-7-generators-and-iterators/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-8-interfaces-and-dispatch
+  title: Stage 8 — Interfaces & dispatch
+  status: pending
+  objective: Work Stage 8 (Interfaces & dispatch) until its self-test needs no lookups; unlocks design
+    reviews.
+  done_when:
+  - Answer all 14 notebook questions predict-then-run, with the solutions folded until after the guess.
+  - Meet the stage guide's own done-when checklist.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: 'Stage 8 guide — Interfaces & dispatch: claim under test, prerequisites, ranked reading, drills,
+      done-when, traps checklist.'
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+  - kind: practise
+    label: Stage 8 self-test notebook — 14 predict-then-run questions with folded solutions.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-8-interfaces-and-dispatch/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-python-depth-capstone
+  title: Capstone — rebuild blind
+  status: pending
+  objective: 'Close the ladder: rebuild the capstone exercises without the guides open.'
+  done_when:
+  - Complete capstone.ipynb without reopening the stage guides.
+  - Name which stage each mistake belongs to and revisit that stage, not the capstone.
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Capstone notebook — the ladder's terminal self-test.
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/capstone.ipynb
+  - kind: reference
+    label: SHELF.md — cross-cutting topics no stage owns (testing, debugging, performance, style).
+    source_id: source-python-depth-drills
+    vault_path: material://source-python-depth-drills/SHELF.md
+  working_note: curriculum/modules/module-skill-python/units/unit-python-depth-drills/stages/stage-python-depth-capstone/notes.md
   attachments: []
   source_feedback: []

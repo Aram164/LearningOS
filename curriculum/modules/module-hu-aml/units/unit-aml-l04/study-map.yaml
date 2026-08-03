@@ -171,7 +171,7 @@ stages:
   attachments: []
   source_feedback: []
   estimate_minutes: 90
-- id: stage-05-practice-self-test
+- id: stage-05-practice-self-test-aml-l04
   title: Practice & self-test
   status: pending
   objective: Work through Practice & self-test within this unit's scope.
@@ -202,6 +202,6 @@ stages:
     label: ✓ **CS4780 HW (local)** — `…/CS4780-homeworks/2018Spring/HW6/` **Problem 1 (GD) + Problem 2
       (Linear Regression) + Problem 3 (Weighted Ridge)** and `2018Fall/HW6/` **Problem 1 (l2/ridge)**,
       with full solutions. ⭐
-  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-05-practice-self-test/notes.md
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-05-practice-self-test-aml-l04/notes.md
   attachments: []
   source_feedback: []

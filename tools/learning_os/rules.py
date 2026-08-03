@@ -137,7 +137,11 @@ class Validator:
         if schema is None:
             self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
             return
-        validator = jsonschema.Draft202012Validator(schema)
+        # Without a format checker jsonschema ignores "format" entirely, so
+        # `2026-13-45` validated clean on the most operationally critical field
+        # in the repository — exam dates.
+        validator = jsonschema.Draft202012Validator(
+            schema, format_checker=jsonschema.FormatChecker())
         for e in sorted(validator.iter_errors(instance), key=str):
             locator = "/".join(str(p) for p in e.absolute_path)
             self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)
@@ -776,6 +780,24 @@ class Validator:
                          f"unit '{uid}' has a study-map.yaml but does not declare it", where)
 
     def check_study_maps(self):
+        # The manifest publishes `stages` as a FLAT by-id index (ADR-006, fifth
+        # addendum), so stage ids must be unique across the whole repository and
+        # not merely inside one map: a reused id makes resolution ambiguous, and
+        # a consumer holding only the id silently gets whichever map was
+        # projected last.
+        owners: dict[str, list] = {}
+        for study_map in self.repo.study_maps.values():
+            for stage in study_map.data.get("stages", []) or []:
+                if isinstance(stage, dict) and stage.get("id"):
+                    owners.setdefault(str(stage["id"]), []).append(study_map)
+        for stage_id, maps in sorted(owners.items()):
+            if len(maps) > 1:
+                names = ", ".join(sorted(str(m.data.get("id")) for m in maps))
+                self.err("MAP-STAGE-GLOBAL-DUP",
+                         f"stage id '{stage_id}' is used by {len(maps)} study maps "
+                         f"({names}); stages are indexed by id alone",
+                         self._rel(maps[0].path))
+
         for study_map in self.repo.study_maps.values():
             where = self._rel(study_map.path)
             data = study_map.data

@@ -163,7 +163,7 @@ stages:
   attachments: []
   source_feedback: []
   estimate_minutes: 30
-- id: stage-06-practice-self-test-exercise-bank
+- id: stage-06-practice-self-test-exercise-bank-aml-l02
   title: Practice & self-test  (→ exercise bank)
   status: pending
   objective: 'Do these closed-book, then self-grade. Full details + links in **`AML_L02_Exercise_Bank.md`**:'
@@ -181,6 +181,6 @@ stages:
     label: '**`AML_L02_Mock_Exam.md`** (75 min, timed)'
   - kind: reference
     label: '**MIT 6.034 Quiz 3** Problem 1A (question-only)'
-  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-06-practice-self-test-exercise-bank/notes.md
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-06-practice-self-test-exercise-bank-aml-l02/notes.md
   attachments: []
   source_feedback: []

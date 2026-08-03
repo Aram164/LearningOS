@@ -113,7 +113,7 @@ stages:
   attachments: []
   source_feedback: []
   estimate_minutes: 60
-- id: stage-05-practice-self-test
+- id: stage-05-practice-self-test-aml-l05
   title: Practice & self-test
   status: pending
   objective: 'See **`AML_L05_Exercise_Bank.md`** (this folder) for the full, scoped list. Highlights:'
@@ -136,6 +136,6 @@ stages:
       + SGD) — local/linked, with solutions.
   - kind: reference
     label: '**Bonusblatt 3** Aufgabe 2–3 → ✓ `AML_BonusSheet03_Solution.md`.'
-  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-05-practice-self-test/notes.md
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-05-practice-self-test-aml-l05/notes.md
   attachments: []
   source_feedback: []
