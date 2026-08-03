@@ -127,18 +127,45 @@ def stable_generated_at(root: Path) -> str:
 
 
 # --------------------------------------------------------------------- build
+def _material_location(repo: Repo, ref) -> dict:
+    """Resolve a ``material://`` URI to a path relative to the LearningOS root
+    (the vault's parent) plus an existence flag. Interfaces get a path they can
+    hand to the OS file opener; the resolution rule stays here."""
+    if not ref or not str(ref).startswith("material://"):
+        return {"material_path": None, "material_exists": False}
+    target = repo.materials_root / str(ref)[len("material://"):]
+    try:
+        rel = target.resolve().relative_to(repo.learningos_root.resolve())
+    except (ValueError, OSError):
+        try:
+            rel = target.relative_to(repo.learningos_root)
+        except ValueError:
+            return {"material_path": None, "material_exists": False}
+    return {"material_path": str(rel), "material_exists": target.exists()}
+
+
 def build_manifest(repo: Repo, generated_at: str) -> dict:
     """The COMPLETE machine-readable projection of the repository (ADR-001):
     every canonical record (notes incl. attachments/evidence/contexts, concepts,
     sources, modules incl. attempts, workspaces, coordination) plus all
     relations. A consumer needing repository state should read this file, not
-    parse the tree."""
+    parse the tree.
+
+    ADR-006 addendum (2026-08-03, fourth): this is also the INTERFACE contract.
+    Every field an interface would otherwise re-derive by parsing Markdown or
+    YAML is projected here — workspace `next_action`/`objective`, source
+    `url`/`material`/`evaluations`, note `domain`/`summary`, and the
+    `exam_spine`. Usability lives in the interface; deriving meaning stays here,
+    once. If a UI needs to regex a canonical file, that is a manifest bug."""
     records = []
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
+        rel = note.path.relative_to(repo.root)
         records.append({
             "id": note.id, "type": "note",
             "title": note.meta.get("title", ""),
-            "path": str(note.path.relative_to(repo.root)),
+            "path": str(rel),
+            "domain": rel.parent.name if rel.parent.name != "notes" else "",
+            "summary": _first_para(_strip_headings(note.body))[:400],
             "role": note.meta.get("role", "synthesis"),
             "state": note.meta.get("state"),
             "authorship": note.meta.get("authorship"),
@@ -166,6 +193,37 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "path": str(repo.source_origins.get(sid, "").relative_to(repo.root))
             if repo.source_origins.get(sid) else "sources/sources.yaml",
             "source_type": s.get("type", ""),
+            # interface fields: everything needed to SHOW and OPEN a source.
+            # `material_path` is resolved HERE (material:// → the .flat farm is
+            # a business rule, loader.materials_root) so no interface has to
+            # reimplement URI resolution. It is relative to the LearningOS
+            # root, i.e. the vault's parent.
+            "url": s.get("url"),
+            "material": s.get("material"),
+            **_material_location(repo, s.get("material")),
+            "authors": list(s.get("authors", []) or []),
+            "organization": s.get("organization"),
+            "year": s.get("year"),
+            "identifiers": dict(s.get("identifiers", {}) or {}),
+            "roles": sorted({str(r) for ev in (s.get("evaluations") or [])
+                             for r in (ev.get("roles") or [])}),
+            # `useful_sections` is where the reading plan actually lives ("read
+            # ch. 3 for X") — projected with its concept links so an interface
+            # can turn a source into a navigable table of contents.
+            "evaluations": [
+                {"roles": list(ev.get("roles", []) or []),
+                 "strengths": list(ev.get("strengths", []) or []),
+                 "weaknesses": list(ev.get("weaknesses", []) or []),
+                 "verdict": ev.get("verdict"),
+                 "concepts": sorted(ev.get("concepts", []) or []),
+                 "useful_sections": [
+                     {"section": str(k), "note": str(v)}
+                     for entry in (ev.get("useful_sections") or [])
+                     if isinstance(entry, dict)
+                     for k, v in entry.items()
+                 ]}
+                for ev in (s.get("evaluations") or []) if isinstance(ev, dict)
+            ],
         })
     for mid in sorted(repo.modules):
         m = repo.modules[mid]
@@ -194,6 +252,10 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "path": str(ws.path.relative_to(repo.root)),
             "status": ws.status, "standing": ws.standing, "archived": ws.archived,
             "deadline": ws.meta.get("deadline"),
+            # interface fields: the two sections every surface wants to show.
+            # Parsed HERE so no interface ever regexes CONTEXT.md again.
+            "objective": _first_para(ws.section("Objective"))[:400],
+            "next_action": _first_para(ws.section("Next Action"))[:400],
             "concepts": sorted(ws.meta.get("concepts", []) or []),
             "notes": sorted(ws.meta.get("notes", []) or []),
             "sources": sorted(ws.meta.get("sources", []) or []),
@@ -211,10 +273,20 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
         for r in sorted(repo.relations,
                         key=lambda r: (str(r.get("from")), str(r.get("type")), str(r.get("to"))))
     ]
+    ad = adoption_counts(repo)
     return {
         "_generated": _json_header(generated_at),
         "records": records,
         "relations": relations,
+        # Interface convenience: the exam spine, already ordered. Same source
+        # of truth as `los.py status` (records/modules.yaml); projected here so
+        # a UI can render a countdown with no Python running at all.
+        "exam_spine": [
+            {"date": date, "module_id": mid,
+             "title": module.get("title", mid), "termin": att.get("termin"),
+             "notes": (module.get("examination") or {}).get("notes")}
+            for date, mid, module, att in _exam_spine(repo)
+        ],
         "counts": {
             "notes": len(repo.notes), "concepts": len(repo.concepts),
             "sources": len(repo.sources), "collections": len(repo.collections),
@@ -222,6 +294,8 @@ def build_manifest(repo: Repo, generated_at: str) -> dict:
             "workspaces_active": len(repo.active_workspaces()),
             "workspaces_archived": len(repo.archived_workspaces()),
             "relations": len(repo.relations),
+            "notes_reviewed": ad["notes_reviewed"],
+            "notes_with_evidence": ad["notes_with_evidence"],
         },
     }
 
@@ -644,6 +718,22 @@ def build_module_view(repo: Repo, generated_at: str) -> str:
                              f"| {att.get('notes', '')} |")
         lines.append("")
     return "\n".join(lines)
+
+
+def _strip_headings(text: str | None) -> str:
+    """Drop headings, blockquote callouts and list bullets so `_first_para`
+    lands on actual prose. Used for the manifest's `summary` fields."""
+    if not text:
+        return ""
+    keep = []
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if (stripped.startswith("#") or stripped.startswith(">")
+                or stripped.startswith("|") or stripped.startswith("```")
+                or set(stripped) <= {"-", "*", "_"} and len(stripped) >= 3):
+            continue
+        keep.append(line)
+    return "\n".join(keep)
 
 
 def _first_para(text: str | None) -> str:
