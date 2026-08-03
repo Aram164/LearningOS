@@ -287,12 +287,21 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         })
     for name in sorted(repo.collections):
         doc = repo.collections[name]
+        entries = [e for e in doc.get("entries", []) or [] if isinstance(e, dict)]
         records.append({
             "id": name, "type": "collection",
             "title": doc.get("title", name),
             "path": f"sources/collections/{name}.yaml",
-            "sources": [str(e.get("source", "")) for e in doc.get("entries", []) or []
-                        if isinstance(e, dict)],
+            "sources": [str(e.get("source", "")) for e in entries],
+            # A shelf is curation, not a bag of ids: its rationale, its domain and
+            # each entry's group + role are what make it browsable. Projected here
+            # so no interface re-parses the collection YAML (ADR-006).
+            "summary": " ".join(str(doc.get("description", "")).split()),
+            "domain": ATLAS_COLLECTION_DOMAIN.get(name, "cross-domain"),
+            "entries": [{"source": str(e.get("source", "")),
+                         "group": str(e.get("group", "")) or None,
+                         "why": " ".join(str(e.get("why", "")).split()) or None}
+                        for e in entries],
         })
     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
         records.append({
@@ -1616,6 +1625,26 @@ def _atlas_short(text: str, limit: int = 220) -> str:
     return s[: cut if cut > 0 else limit].rstrip(" ,;—-") + " …"
 
 
+_ATLAS_ROLE_ORDER = {"crosswalk": 0, "reference": 1, "synthesis": 2,
+                     "exercise-bank": 3, "mock-exam": 4}
+
+
+def _atlas_role_order(role: str) -> tuple[int, str]:
+    return (_ATLAS_ROLE_ORDER.get(role, 9), role)
+
+
+def _atlas_note_link(note, repo: Repo) -> str:
+    """One navigable atlas row for a note: title link, id, and state."""
+    title = note.meta.get("title", note.id)
+    try:
+        rel = note.path.relative_to(repo.root).as_posix()
+        label = f"[{title}](../{rel})"
+    except ValueError:  # note outside the repo root — degrade to plain text
+        label = str(title)
+    state = note.meta.get("state")
+    return f"{label} — `{note.id}`" + (f" · {state}" if state else "")
+
+
 def _count_material_files(base: Path) -> int:
     """Files under a materials subtree (view signal only; hidden/support-skip
     names excluded). Returns 0 when the subtree does not exist."""
@@ -1720,8 +1749,21 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
             lines.append("Wiring hubs (crosswalks):")
             lines.append("")
             for n in cross:
-                title = n.meta.get("title", n.id)
-                lines.append(f"- `{n.id}` — {title}")
+                lines.append(f"- {_atlas_note_link(n, repo)}")
+        if notes:
+            # A map that only counts its territory is not a map: every note is
+            # listed and linked, grouped by role, so the atlas can be navigated
+            # instead of merely skimmed (ADR-005 asks for reach, not a census).
+            lines.append("")
+            lines.append("Notes by role:")
+            lines.append("")
+            by_role: dict[str, list] = {}
+            for n in notes:
+                by_role.setdefault(n.meta.get("role", "synthesis"), []).append(n)
+            for role in sorted(by_role, key=_atlas_role_order):
+                lines.append(f"- **{role}** ({len(by_role[role])})")
+                for n in sorted(by_role[role], key=lambda x: str(x.meta.get("title", x.id))):
+                    lines.append(f"  - {_atlas_note_link(n, repo)}")
         lines.append("")
         if shelves:
             lines.append("Shelves:")

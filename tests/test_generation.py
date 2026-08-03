@@ -179,6 +179,42 @@ def test_domain_atlas_shelves_harvest_descriptions_and_never_drop(mini_repo):
     assert "[Future shelf](collections/future-shelf.md)" in cross_section
 
 
+def test_domain_atlas_enumerates_and_links_every_note(mini_repo):
+    """A map that only counts its territory cannot be navigated. Every note is
+    listed under its role with a working relative link and its id, so the atlas
+    answers "what is in this domain" without a second lookup (ADR-005)."""
+    atlas = generate_all(load_repo(mini_repo), generated_at="T1")["domain-atlas.md"]
+    math_section = atlas.split("## mathematics")[1].split("\n## ")[0]
+    assert "Notes by role:" in math_section
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    rel = note.path.relative_to(mini_repo).as_posix()
+    assert f"](../{rel})" in math_section, "note link must resolve from generated/"
+    assert f"`{note.id}`" in math_section
+    # The compact session-start block stays a census, not a listing.
+    glance = atlas.split("## At a glance")[1].split("\n## ")[0]
+    assert f"`{note.id}`" not in glance
+
+
+def test_collection_records_carry_their_curation(mini_repo):
+    """The shelf, not the registry, is where reading strategy lives: interfaces
+    get the description, the domain and each entry's group/role from the
+    manifest, and never re-parse the collection YAML (ADR-006)."""
+    (mini_repo / "sources" / "collections" / "math-bookshelf.yaml").write_text(
+        "title: Math shelf\ndescription: The demo shelf purpose line.\n"
+        "entries:\n  - source: source-demo-book\n    group: tier-1-now\n"
+        "    why: Read this first.\n",
+        encoding="utf-8")
+    manifest = json.loads(
+        generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    shelf = next(row for row in manifest["records"]
+                 if row["type"] == "collection" and row["id"] == "math-bookshelf")
+    assert shelf["summary"] == "The demo shelf purpose line."
+    assert shelf["domain"] == "mathematics"
+    assert shelf["entries"] == [{"source": "source-demo-book", "group": "tier-1-now",
+                                 "why": "Read this first."}]
+    assert shelf["sources"] == ["source-demo-book"]
+
+
 def test_health_reports_wiring_debt(mini_repo):
     """ADR-005 (3C): visibility debt is measured in the health report — a source
     with no concept-linked evaluation, no shelf, and no note reference is
