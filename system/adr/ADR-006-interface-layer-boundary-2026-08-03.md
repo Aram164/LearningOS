@@ -155,3 +155,52 @@ Every app behaviour is a toggle in plugin settings. No boundary change: reads
 still come from `los.py status --json`, `generated/`, and vault metadata; the
 only write is still `work/inbox/`; the test suite now asserts that against the
 plugin source.
+
+## Addendum (2026-08-03, fourth) — the manifest is the interface contract
+
+Aram, on v0.3: *"navigability and usability are really bad, everything is just
+a dump of links … the endgoal [is] removing usability constraints from the OS
+in favour of robustness and efficacy and perfecting the UI-App interface."*
+Adopted as a division of labour, and it settles a question this ADR left open:
+
+**The core may be optimised for robustness and correctness at the cost of
+being pleasant to browse. All usability constraints move to the interface
+layer.** Generated Markdown remains the plain-text fallback and the
+non-Obsidian surface; it is no longer required to be a good browsing
+experience. Correspondingly, "hard to find" is now a bug in `obsidian-ui/`,
+never a reason to reshape canonical data.
+
+That only works if the interface can see everything without re-deriving it, so
+`generated/manifest.json` is promoted from "complete machine projection" to
+**the interface contract**. Added this day:
+
+- workspaces: `objective`, `next_action` (parsed core-side — the UI was
+  regexing `CONTEXT.md`, which is a rule reimplementation and now forbidden)
+- sources: `url`, `material`, `material_path` + `material_exists`
+  (`material://` resolution through the `.flat` farm is a business rule and
+  stays here), `authors`, `organization`, `year`, `identifiers`, `roles`, and
+  `evaluations` incl. `useful_sections` and their `concepts`
+- notes: `domain`, `summary`
+- top level: `exam_spine` (same source of truth as `los.py status`) and
+  review/evidence adoption in `counts`
+
+**Binding rule:** if an interface needs a fact, it comes from the manifest. If
+the manifest lacks it, the fix is core-side generation, never parsing in the
+UI. The interface must render fully with the CLI unavailable — the CLI is for
+mutations (`generate`, `validate`, `capture`) and the validation badge only.
+`obsidian-ui/tests/` asserts both halves against the plugin source.
+
+**`materials/INDEX.html` is retired.** The 2.4 MB self-contained catalogue was
+a second implementation of "how do I find a source", separately built and
+separately styled. Its job — search, facets, evaluations, open online, open
+the local copy — is now the Obsidian Source Explorer's, reading the manifest
+fields above. `tools/build_materials_index.py` keeps the builder behind
+`--html` as a fallback and now deletes a stale `INDEX.html`; `README.md` and
+`FILES.txt` remain the plain-text/grep surfaces.
+
+**Vault furniture** grows one managed file: core-plugin states
+(`obsidian-ui/vault-config/core-plugins.json`, merged like `app.json`, only
+named keys touched). Web Viewer on so registered URLs open in-app; Daily Notes
+off because it silently creates a second inbox against ARCHITECTURE §3.3.5;
+the link graph off because it shows file links rather than the relation
+registry — a competing graph, which the anti-goals forbid.

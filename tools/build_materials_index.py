@@ -1,9 +1,20 @@
 #!/usr/bin/env python3
 """Build a human-browsable CATALOGUE of the materials tree + the source registry.
 
-Emits two disposable navigation aids into ``LearningOS/materials/``:
+RETIRED SURFACE (2026-08-03, ADR-006 addendum 4): ``INDEX.html`` is no longer
+written. Browsing sources is the interface layer's job — the Obsidian UI's
+Source Explorer reads the same facts out of ``generated/manifest.json`` (which
+now carries ``url``, ``material_path``, ``roles`` and ``evaluations``), with
+search, facets, evaluations and one-click open. Keeping a second, separately
+built browser meant two implementations of "how do I find a source". The
+generator below still exists and can emit the page again with
+``--html`` if the interface ever regresses; ``README.md`` and ``FILES.txt``
+remain as the plain-text/grep surfaces.
 
-* ``INDEX.html`` — a self-contained, searchable page with TWO switchable views:
+Emits into ``LearningOS/materials/``:
+
+* ``INDEX.html`` (only with ``--html``) — a self-contained, searchable page
+  with TWO switchable views:
     - **Sources** (default): source-first. Each domain lists its registered
       sources directly as clean, collapsed cards (the ``course/practice-extern``
       storage scaffolding is flattened away); expand a card to see its files.
@@ -40,6 +51,7 @@ import html
 import json
 import os
 import re
+import sys
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import quote
@@ -49,6 +61,11 @@ import yaml
 TOOLS = Path(__file__).resolve().parent
 REPO = TOOLS.parent                      # LearningOS/repository
 MATERIALS = REPO.parent / "materials"    # LearningOS/materials
+
+# INDEX.html was retired 2026-08-03 (the Obsidian Source Explorer replaced it).
+# Pass --html to build it anyway; the builder is kept as a fallback, not a
+# maintained surface.
+HTML_ENABLED = "--html" in sys.argv
 SOURCES = REPO / "sources"
 
 SKIP_DIRS = {".flat", ".git", "__pycache__"}
@@ -1220,14 +1237,20 @@ def main():
             .replace("⟪VIEWFILES⟫", view_files)
             .replace("⟪LEAVES⟫", leaves_json))
 
-    (MATERIALS / "INDEX.html").write_text(page, encoding="utf-8")
+    if HTML_ENABLED:
+        (MATERIALS / "INDEX.html").write_text(page, encoding="utf-8")
+        print(f"  wrote materials/INDEX.html  ({len(page)//1024} KB)")
+    else:
+        stale = MATERIALS / "INDEX.html"
+        if stale.exists():
+            stale.unlink()
+            print("  removed stale materials/INDEX.html (retired 2026-08-03)")
     (MATERIALS / "README.md").write_text(
         build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
                      missing_by_domain, roots_by_name, len(local_ids), n_online,
                      n_missing, ncontent, nsupport, total), encoding="utf-8")
     files_txt = build_files_listing(roots)
     (MATERIALS / "FILES.txt").write_text(files_txt, encoding="utf-8")
-    print(f"  wrote materials/INDEX.html  ({len(page)//1024} KB)")
     print(f"  wrote materials/README.md")
     print(f"  wrote materials/FILES.txt  ({files_txt.count(chr(10)) - 7} unregistered files)")
     print(f"  {summary}")
