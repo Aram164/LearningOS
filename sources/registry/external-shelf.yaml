@@ -551,18 +551,23 @@ sources:
           - "SHELF.md": "cross-cutting sources no stage owns — testing (pytest/Hypothesis), debugging (pdb, PDSH 01.06), performance (PDSH 01.07, cProfile, tracemalloc), style"
 
   - id: source-slatkin-effective-python
-    title: Slatkin — Effective Python (3rd ed.)
+    title: Slatkin — Effective Python (2nd ed.)
     type: book
     authors: [Brett Slatkin]
+    year: 2019
+    material: material://source-slatkin-effective-python/effective-python.pdf
     evaluations:
       - concepts: [concept-python]
         roles: [review, reference]
         level: intermediate
         strengths:
-          - "⭐ The best complement to Fluent Python at the intermediate band: ~125 short items, four minutes each, telling you what to DO where FP explains how the language works. Per-stage item mapping is in the depth-drills SHELF.md §2"
-          - "'Be Defensive When Iterating Over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+          - "⭐ The best complement to Fluent Python at the intermediate band: 90 short items, four minutes each, telling you what to DO where FP explains how the language works. Verified per-stage item-number mapping (this edition) is in the depth-drills SHELF.md §1"
+          - "Item 31 'Be Defensive When Iterating Over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+          - "Items 70, 75–81 (profiling, repr, unittest, mock, pdb, tracemalloc) are the only local coverage of the three cross-cutting topics no depth-drills stage owns — SHELF.md §3a/3b/3c"
         weaknesses:
-          - "Item numbering differs between 2nd and 3rd editions; search by item title. 💰 purchase pending — not on the shelf yet"
+          - "This is the 2nd ed. (90 items, Python 3.8-era); the 3rd ed. (~125 items) adds material the depth-drill guides were originally written against and this copy does not contain: functools.partial, functools.singledispatch, 'Prefer dataclasses for defining lightweight classes', 'Never Use for Loop Variables After the Loop Ends'. Those four citations are marked 3rd-ed-only where they appear"
+          - "Item numbers differ between editions — cite by item title when writing for a reader who may hold the 3rd"
+          - "Concurrency (Items 52–64) and asyncio are deliberately out of scope for the depth ladder — Roadmap Step 19"
 
   - id: source-cosmicpython-architecture-patterns
     title: Percival & Gregory — Architecture Patterns with Python

@@ -11,6 +11,12 @@ sources:
   why: Language-model depth and idioms.
   priority: 2
   unit_routes: []
+- source_id: source-slatkin-effective-python
+  role: optional-depth
+  why: Prescriptive companion to Fluent Python — 90 short items saying what to do; per-stage item
+    mapping lives in the depth-drills SHELF.
+  priority: 2
+  unit_routes: []
 - source_id: source-python-docs-classes-mro
   role: reference
   why: Official class and MRO reference.
