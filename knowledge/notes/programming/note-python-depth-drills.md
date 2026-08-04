@@ -102,6 +102,16 @@ things the stages don't own:
   [[source-slatkin-effective-python]] (the closest complement to Fluent Python at this band),
   [[source-cosmicpython-architecture-patterns]] (free; Stage 8's design half),
   [[source-viafore-robust-python]], [[source-beazley-python-distilled]].
+
+  > **2026-08-05 — the mapping paid off.** [[source-slatkin-effective-python]] arrived and moved
+  > from "worth adding" to the shelf (`SHELF.md` §1a). The copy is the **2nd ed. (90 items)**,
+  > not the 3rd the guides were drafted against, so the per-stage table was re-verified item by
+  > item against the local PDF and the nine stage guides now cite item *numbers*. Four cited
+  > titles turned out to be 3rd-ed additions absent from this copy (`functools.partial`,
+  > `functools.singledispatch`, the `dataclasses` item, "Never Use `for` Loop Variables After
+  > the Loop Ends"); each is flagged in place rather than quietly dropped. Items 70 and 75–81
+  > also gave `SHELF.md` §3a/3b/3c their first local coverage of testing, debugging and
+  > profiling.
 - **Cross-cutting topics no stage owns** — testing ([[source-pytest-docs]],
   [[source-hypothesis-docs]]), debugging (`pdb`, PDSH `01.06`), performance
   (PDSH `01.07`, `cProfile`, `tracemalloc`), style. Each was a genuine hole: the plan's method is

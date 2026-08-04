@@ -105,6 +105,7 @@ PLACEMENT = {
     "kleinberg-tardos":             "Books/algorithms",
     # ------------------------------------------------------------- Programming
     "fluent-python":                "Programming/python",
+    "slatkin-effective-python":     "Programming/python",
     "automate-boring-stuff":        "Programming/python",
     "pydata-handbook":              "Programming/python",
     "python-cheatsheets":           "Programming/python",

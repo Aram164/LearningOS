@@ -7,6 +7,9 @@ entries:
   - source: source-fluent-python
     group: python
     why: "The PY track spine — reading order lives with the Python plans."
+  - source: source-slatkin-effective-python
+    group: python
+    why: "The prescriptive complement to Fluent Python at the same band (local, 2nd ed.): FP explains how the language works, Slatkin says what to do about it in 90 four-minute items. Verified per-stage mapping in the depth-drills SHELF.md §1."
   - source: source-automate-boring-stuff
     group: python
     why: "Beginner practical-Python companion to Fluent Python's depth (local)."
