@@ -551,23 +551,24 @@ sources:
           - "SHELF.md": "cross-cutting sources no stage owns — testing (pytest/Hypothesis), debugging (pdb, PDSH 01.06), performance (PDSH 01.07, cProfile, tracemalloc), style"
 
   - id: source-slatkin-effective-python
-    title: Slatkin — Effective Python (2nd ed.)
+    title: Slatkin — Effective Python
     type: book
     authors: [Brett Slatkin]
-    year: 2019
+    year: 2024
     material: material://source-slatkin-effective-python/effective-python.pdf
     evaluations:
       - concepts: [concept-python]
         roles: [review, reference]
         level: intermediate
         strengths:
-          - "⭐ The best complement to Fluent Python at the intermediate band: 90 short items, four minutes each, telling you what to DO where FP explains how the language works. Verified per-stage item-number mapping (this edition) is in the depth-drills SHELF.md §1"
-          - "Item 31 'Be Defensive When Iterating Over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
-          - "Items 70, 75–81 (profiling, repr, unittest, mock, pdb, tracemalloc) are the only local coverage of the three cross-cutting topics no depth-drills stage owns — SHELF.md §3a/3b/3c"
+          - "⭐ The best complement to Fluent Python at the intermediate band: 125 short items, four minutes each, telling you what to DO where FP explains how the language works. Per-stage item mapping is in the depth-drills SHELF.md §1a"
+          - "3e Item 21 'Be Defensive when Iterating over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+          - "3e Item 49 'Prefer Object-Oriented Polymorphism over functools.singledispatch' is depth-drills Stage 8's expression-problem judgement stated outright — the 3rd ed. is the only edition that has it"
+          - "3e Items 92–96, 99, 108–115 are the only local coverage of the three cross-cutting topics no depth-drills stage owns (testing, debugging, performance) — SHELF.md §3a/3b/3c. Items 94–96 (replacing Python with C, ctypes, extension modules) also feed the Rust/PyO3 track, Roadmap Step 25"
         weaknesses:
-          - "This is the 2nd ed. (90 items, Python 3.8-era); the 3rd ed. (~125 items) adds material the depth-drill guides were originally written against and this copy does not contain: functools.partial, functools.singledispatch, 'Prefer dataclasses for defining lightweight classes', 'Never Use for Loop Variables After the Loop Ends'. Those four citations are marked 3rd-ed-only where they appear"
-          - "Item numbers differ between editions — cite by item title when writing for a reader who may hold the 3rd"
-          - "Concurrency (Items 52–64) and asyncio are deliberately out of scope for the depth ladder — Roadmap Step 19"
+          - "⚠️ TWO FILES, ONE RECORD. Citations throughout the depth drills use 3rd-ed numbering, taken from effective-python-3e-toc-sample.pdf — an 80-page publisher sample that carries the complete 125-item table of contents but NO item body text. The readable full text on the shelf (effective-python.pdf, the `material:` path above) is the 2nd ed., 90 items, Python 3.8-era. To read a cited item in the 2e copy, use the 3e→2e crosswalk in SHELF.md §1a"
+          - "~35 items are 3rd-ed-only and have no 2e text on the shelf at all — including 3e 20, 22, 30, 39, 46, 49, 50, 51, 65, 89, 93. SHELF.md §1a marks which stage citations fall in that set"
+          - "Concurrency (3e Items 67–79) and asyncio are deliberately out of scope for the depth ladder — Roadmap Step 19"
 
   - id: source-cosmicpython-architecture-patterns
     title: Percival & Gregory — Architecture Patterns with Python

@@ -104,14 +104,21 @@ things the stages don't own:
   [[source-viafore-robust-python]], [[source-beazley-python-distilled]].
 
   > **2026-08-05 — the mapping paid off.** [[source-slatkin-effective-python]] arrived and moved
-  > from "worth adding" to the shelf (`SHELF.md` §1a). The copy is the **2nd ed. (90 items)**,
-  > not the 3rd the guides were drafted against, so the per-stage table was re-verified item by
-  > item against the local PDF and the nine stage guides now cite item *numbers*. Four cited
-  > titles turned out to be 3rd-ed additions absent from this copy (`functools.partial`,
-  > `functools.singledispatch`, the `dataclasses` item, "Never Use `for` Loop Variables After
-  > the Loop Ends"); each is flagged in place rather than quietly dropped. Items 70 and 75–81
-  > also gave `SHELF.md` §3a/3b/3c their first local coverage of testing, debugging and
-  > profiling.
+  > from "worth adding" to the shelf (`SHELF.md` §1a). Two files, one record: the **full text is
+  > the 2nd ed. (90 items)**, and an 80-page **3rd-ed publisher sample** carries the complete
+  > 125-item contents but no item bodies. Citations throughout use **3rd-ed numbering** — the
+  > edition the guides were drafted against — with a 3e→2e crosswalk in §1a so the numbers stay
+  > usable against the readable copy.
+  >
+  > The renumbering was not bookkeeping. It surfaced items the 2nd ed. simply doesn't have and
+  > the ladder had been arguing for on its own: **3e Item 49, "Prefer Object-Oriented
+  > Polymorphism over `functools.singledispatch`"** is Stage 8's expression-problem judgement
+  > stated outright; **Item 30** ("Know That Function Arguments Can Be Mutated") is Stage 0's
+  > whole claim in one rule; **Items 46 and 89** are Stage 7's one-shot-iterator fix rather than
+  > just its hazard. `SHELF.md` §3a/3b/3c also gained their first coverage of testing, debugging
+  > and profiling — and §3c now hands off to the Rust track through 3e Items 94–96, which are
+  > the decision procedure for *whether* to leave Python that [[note-rust-learning-plan]]
+  > otherwise assumes already happened.
 - **Cross-cutting topics no stage owns** — testing ([[source-pytest-docs]],
   [[source-hypothesis-docs]]), debugging (`pdb`, PDSH `01.06`), performance
   (PDSH `01.07`, `cProfile`, `tracemalloc`), style. Each was a genuine hole: the plan's method is
