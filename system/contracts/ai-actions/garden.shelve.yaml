@@ -1,0 +1,25 @@
+schema_version: 1
+id: garden.shelve
+title: Shelve with AI
+description: Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.
+target_kinds:
+  - garden-note
+interaction_mode: discussion
+approval_required: true
+context_selection: exact
+supported_providers:
+  - manual-bundle
+  - claude
+  - chatgpt
+allowed_capabilities:
+  - garden.add-transcription
+  - garden.update
+  - relationship.create
+forbidden_capabilities:
+  - artifact.delete
+  - artifact.overwrite-original
+  - repository.read-job
+  - repository.write-arbitrary
+confidentiality_policy:
+  job_derived_requires_confirmation: true
+  employer_repository_access: forbidden

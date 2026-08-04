@@ -1,0 +1,30 @@
+schema_version: 1
+contract: learningos-capabilities
+queries:
+  - ai_action.list
+  - ai_action.status
+commands:
+  - ai_action.prepare
+  - ai_action.import_delivery
+  - ai_action.validate_delivery
+  - ai_action.apply_delivery
+domain_capabilities:
+  garden.add-transcription:
+    writes:
+      - knowledge/garden/transcriptions/
+    invariants:
+      - original-remains-immutable
+      - provenance-is-ai-derived
+  garden.update:
+    writes:
+      - operations/ai-actions/garden-state/
+    allowed_fields:
+      - title
+      - state
+  relationship.create:
+    writes:
+      - knowledge/relationships.yaml
+forbidden:
+  - repository.read-job
+  - repository.write-arbitrary
+  - artifact.delete

@@ -52,6 +52,9 @@ from learning_os.genout import (  # noqa: E402
 )
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 from learning_os.rules import validate  # noqa: E402
+from learning_os.ai_actions import (  # noqa: E402
+    AIActionError, AIActionService, StaleDeliveryError,
+)
 
 TOOLS = Path(__file__).resolve().parent
 CONTRACT_VERSION = 2
@@ -216,11 +219,13 @@ def _capabilities(root: Path) -> dict:
         "operator_contract": "system/OPERATOR.md",
         "commands": {
             "read": ["status", "capabilities", "bootstrap", "search", "inspect", "related",
-                     "program-list", "module-list", "unit-list"],
+                     "program-list", "module-list", "unit-list", "ai-action-list",
+                     "ai-action-status", "ai-action-validate-delivery"],
             "safe_writes": ["capture", "module-plan-import", "unit-map-import", "stage-note", "stage-progress",
                             "stage-attach", "source-feedback", "detour-create",
-                            "detour-resolve", "shelving-prepare", "generate", "session-end"],
-            "approval_gated": ["note-revise", "shelving-apply"],
+                            "detour-resolve", "shelving-prepare", "generate", "session-end",
+                            "ai-action-prepare", "ai-action-import-delivery"],
+            "approval_gated": ["note-revise", "shelving-apply", "ai-action-apply-delivery"],
         },
         "rules": {
             "canonical_writes_require_operator": True,
@@ -228,6 +233,8 @@ def _capabilities(root: Path) -> dict:
             "job_quarantine": True,
             "interfaces_read_projection_only": True,
             "module_plan_preflight_required": True,
+            "ai_actions_are_provider_independent": True,
+            "ai_actions_never_read_job": True,
         },
         "root": str(root),
     }
@@ -377,6 +384,63 @@ def cmd_generate(args) -> int:
     with _operator_lock(root):
         _publish(root)
     print("published generated/manifest.json (atomic contract snapshot)")
+    return 0
+
+
+# ------------------------------------------------------------- AI actions
+def cmd_ai_action_list(args) -> int:
+    actions = AIActionService(_root(args)).list_actions()
+    print(json.dumps({"ok": True, "actions": actions}, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_ai_action_prepare(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        service = AIActionService(root)
+        request = service.prepare(
+            action_id=args.action_id, target_kind=args.target_kind,
+            target_id=args.target_id, provider=args.provider,
+            expected_snapshot=args.expected_snapshot, request_id=args.request_id,
+            job_export_confirmed=args.confirm_job_export,
+        )
+        _publish(root)
+    print(json.dumps({
+        "ok": True, "request": service.request_status(request["id"]),
+        "bundle_path": service.repository.request_dir(request["id"]).relative_to(root).as_posix(),
+    }, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_ai_action_import_delivery(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        service = AIActionService(root)
+        delivery = service.import_delivery(Path(args.path))
+        _publish(root)
+    print(json.dumps({"ok": True, "delivery": delivery}, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_ai_action_validate_delivery(args) -> int:
+    result = AIActionService(_root(args)).validate_delivery(args.delivery_id)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_ai_action_apply_delivery(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        receipt = AIActionService(root).apply_delivery(args.delivery_id)
+        touched = [root / rel for rel in receipt.pop("touched_paths", [])]
+        _record_touched(root, touched)
+    print(json.dumps({"ok": True, "receipt": receipt}, indent=2, ensure_ascii=False))
+    return 0
+
+
+def cmd_ai_action_status(args) -> int:
+    request = AIActionService(_root(args)).request_status(args.request_id)
+    print(json.dumps({"ok": True, "request": request}, indent=2, ensure_ascii=False))
     return 0
 
 
@@ -1604,6 +1668,38 @@ def main() -> int:
     p = sub.add_parser("generate", help="delegate to tools/generate.py")
     p.set_defaults(func=cmd_generate)
 
+    p = sub.add_parser("ai-action-list", help="list provider-independent AI actions")
+    p.set_defaults(func=cmd_ai_action_list)
+
+    p = sub.add_parser("ai-action-prepare", help="persist a bounded AI request bundle")
+    p.add_argument("--action-id", required=True)
+    p.add_argument("--target-kind", required=True)
+    p.add_argument("--target-id", required=True)
+    p.add_argument("--provider", default="manual-bundle")
+    p.add_argument("--expected-snapshot", default=None)
+    p.add_argument("--request-id", default=None)
+    p.add_argument("--confirm-job-export", action="store_true")
+    p.set_defaults(func=cmd_ai_action_prepare)
+
+    p = sub.add_parser("ai-action-import-delivery",
+                       help="import and validate an approved delivery directory")
+    p.add_argument("path")
+    p.set_defaults(func=cmd_ai_action_import_delivery)
+
+    p = sub.add_parser("ai-action-validate-delivery",
+                       help="validate one imported delivery without applying it")
+    p.add_argument("delivery_id")
+    p.set_defaults(func=cmd_ai_action_validate_delivery)
+
+    p = sub.add_parser("ai-action-apply-delivery",
+                       help="atomically apply one approved, validated delivery")
+    p.add_argument("delivery_id")
+    p.set_defaults(func=cmd_ai_action_apply_delivery)
+
+    p = sub.add_parser("ai-action-status", help="show one prepared request status")
+    p.add_argument("request_id")
+    p.set_defaults(func=cmd_ai_action_status)
+
     p = sub.add_parser("capture",
                        help="drop text or a file into work/inbox/ (no routing)")
     p.add_argument("--text", default=None, help="capture this text (else stdin)")
@@ -1736,6 +1832,12 @@ def main() -> int:
     args = parser.parse_args()
     try:
         return args.func(args)
+    except StaleDeliveryError as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 3
+    except AIActionError as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 1
     except WriteRefused as exc:
         # Nothing was changed: _atomic_text cleans up its temp file and
         # _write_transaction rolls the set back before re-raising.
