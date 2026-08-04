@@ -492,6 +492,10 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     inbox_items = len([
         item for item in inbox_dir.iterdir() if not item.name.startswith(".")
     ]) if inbox_dir.is_dir() else 0
+    # Additive feature contract: AI action state is projected by the core and
+    # remains optional for older consumers of manifest contract v2.
+    from learning_os.ai_actions import manifest_ai_projection
+    ai_projection = manifest_ai_projection(repo.root)
     return {
         "_generated": generated_meta,
         "records": records,
@@ -519,6 +523,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         "stages": stages_v2,
         "module_source_maps": source_maps_v2,
         "resume_pointer": dict(repo.resume_pointer or {}),
+        "garden_entries": ai_projection["garden_entries"],
+        "ai_actions": ai_projection["ai_actions"],
         "quarantine_boundaries": [
             {k: program.get(k) for k in
              ("id", "title", "kind", "status", "description", "boundary_action")}
@@ -553,6 +559,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
                 len(stage.get("source_feedback", []) or []) for stage in stages_v2),
             "units_needing_map": sum(1 for unit in units_v2 if unit.get("status") == "needs-map"),
             "inbox_items": inbox_items,
+            "garden_entries": len(ai_projection["garden_entries"]),
+            "ai_action_requests": len(ai_projection["ai_actions"]["requests"]),
             "relations": len(repo.relations),
             "notes_reviewed": ad["notes_reviewed"],
             "notes_with_evidence": ad["notes_with_evidence"],

@@ -621,7 +621,10 @@ def load_repo(root: Path | str) -> Repo:
     garden_dir = root / "knowledge" / "garden"
     if garden_dir.is_dir():
         for f in sorted(garden_dir.rglob("*.md")):
-            if f.name.startswith((".", "_")) or f.stem.lower() == "readme":
+            rel_parts = f.relative_to(garden_dir).parts
+            if (f.name.startswith((".", "_")) or f.stem.lower() == "readme"
+                    or any(part in {"transcriptions", "syntheses"}
+                           or part.startswith((".", "_")) for part in rel_parts[:-1])):
                 continue
             text = f.read_text(encoding="utf-8", errors="replace")
             tags = sorted(set(GARDEN_TAG_RE.findall(_strip_code(text))))

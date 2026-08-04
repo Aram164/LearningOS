@@ -35,6 +35,7 @@ The rest of this file is the full manual; the four commands are under
 
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
 - **How the operator behaves:** `system/CLAUDE.md` — the single canonical contract; root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to it
+- **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed same day (`migration/final-report.md`). This repository is the operational root; the legacy `semestercontext/` tree is frozen history (banners point here).
 - **Legacy:** the frozen pre-v3 tree is `semestercontext/` (tag `pre-v3-baseline`); this folder is designed to be moved beside it after cutover.
 - **Roots:** materials → `../materials/` (`material://<source-id>/…` resolves there), code projects → `../projects/` — both outside the authored tree by design (materials move in Stage 2, Step 8).
@@ -111,8 +112,11 @@ make            # list the one-word commands
 
 Interface layers (the Obsidian UI project, scripts, other agents) use the
 stable CLI gateway instead of parsing YAML — `python tools/los.py status
---json | validate | generate | capture` (ADR-006). The loader stays the single
-authority; the CLI only delegates.
+--json | validate | generate | capture` (ADR-006). Provider-independent AI
+actions use the same gateway through `ai-action-list`, `ai-action-prepare`,
+`ai-action-import-delivery`, `ai-action-validate-delivery`,
+`ai-action-apply-delivery`, and `ai-action-status`; see `system/AI-ACTIONS.md`.
+The loader stays the single authority; the CLI only delegates.
 
 `make setup` creates a project-local virtual environment at `.venv/` (gitignored)
 from `requirements-dev.txt`, so the tooling never touches your system Python —

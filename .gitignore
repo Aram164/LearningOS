@@ -11,3 +11,10 @@ generated/*
 # Project-local virtual environment (created by `make setup`); never committed —
 # it is platform-specific and each contributor builds their own.
 .venv/
+# AI request/delivery bundles are operational handoff state. Receipts and
+# approved canonical artifacts remain tracked.
+operations/ai-actions/requests/*
+!operations/ai-actions/requests/.gitkeep
+operations/ai-actions/deliveries/*
+!operations/ai-actions/deliveries/.gitkeep
+
