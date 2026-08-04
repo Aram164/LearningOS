@@ -137,8 +137,8 @@ The contract declares a `writes:` allowlist per capability, and CLAUDE.md hard r
 
 | Check | Before | After |
 |---|---|---|
-| `tests/test_ai_actions.py` | 6 passed | **13 passed** (7 regression tests added) |
-| Full core suite | 122 passed | **129 passed in 26s** |
+| `tests/test_ai_actions.py` | 6 passed | **14 passed** (8 regression tests added) |
+| Full core suite | 122 passed | **130 passed in 29s** |
 | `los.py validate` | 0 errors, 0 warnings | **0 errors, 0 warnings** |
 | UI `npm test` | all passed | all passed (unchanged) |
 | UI `node tests/test-ai-actions.js` | 10 passed | 10 passed (unchanged) |
@@ -169,7 +169,36 @@ One behavioural change is worth stating plainly: a delivery prepared under the o
 
 ---
 
-## 6. Recommended next steps
+## 6. Follow-up clean-up (commit `66d50ce`)
+
+A redundancy pass over the slice, measured by instrumenting a real transaction rather than by reading.
+
+**Dead code.** `FilesystemAIActionRepository.save_receipt` was never called — `apply_delivery` wrote the receipt inline. Replaced by a `receipt_path` helper the live path actually uses.
+
+**Duplicate transaction reads.** `apply_delivery` called `validate_delivery`, which loaded the delivery, the request and the target, then loaded all three again. Validation now hands back what it already read. The two *freshness* guards deliberately still re-read — that is the whole point of checking twice, once at validation and once immediately before the write window.
+
+| Per `apply_delivery` | Before | After |
+|---|---|---|
+| `delivery.yaml` parsed | 2 | 1 |
+| `request.yaml` parsed | 2 | 1 |
+| Garden tree walked and hashed | 4 | 3 |
+| `capabilities.yaml` parsed | once per staged path | 1 |
+
+The three remaining Garden walks are two intentional guards plus the manifest projection; removing any of them would weaken the staleness check.
+
+**An authored file was being rewritten for nothing.** The apply staged `knowledge/relationships.yaml` whenever the registry was non-empty — not whenever the delivery added a relation. Once you have a single relation on file, every later shelving would re-serialise your hand-written YAML, reformatting it and destroying comments. Now it is written only when a `relationship.create` operation actually adds one, pinned by a test that puts a comment in the file and asserts the bytes are unchanged.
+
+**Structure.** The parallel `staged` / `origin` dictionaries became one map of path → (content, authorising capability), and the manifest's AI shape is defined in exactly one place instead of being duplicated in the fallback.
+
+Line lengths were left alone: the repository has no linter config and its own modules run to 127 characters, so reflowing to 100 would have been my preference imposed as churn.
+
+**Not deleted, flagged instead.** The untracked `system/skills/` holds three pre-v3 skill files (`lecture-unit-builder`, `promotion-ritual`, `semester-kickoff`). All three reference the retired `Masters-Planning/` tree — `check_system.py`, `CONCEPT-INDEX.md`, `DEGREE-WIRING.md` — which v3 replaced and which the installed v3 `lecture-unit-builder` skill explicitly calls retired. `lecture-unit-builder` is a superseded duplicate of a skill you already have installed; the other two have no v3 successor anywhere. They are untracked, so deleting them is unrecoverable, and §5 of the operating contract puts deletion of authored material behind explicit approval. They need either a v3 rewrite or a deliberate goodbye.
+
+The three empty `Untitled*.canvas` files (each literally `{}`) and four stray `__pycache__` directories were removed.
+
+---
+
+## 7. Recommended next steps
 
 1. Run the suite on your own machine — the checked-in `.venv` is stale and macOS-specific, so `make setup` first.
 2. Decide whether `feature/ai-garden-shelve-v1` merges into `codex/module-curriculum-redesign-v2` or stays a branch until Phase 2.
