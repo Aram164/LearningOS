@@ -17,4 +17,7 @@ operations/ai-actions/requests/*
 !operations/ai-actions/requests/.gitkeep
 operations/ai-actions/deliveries/*
 !operations/ai-actions/deliveries/.gitkeep
+# Quarantine for untrusted provider output awaiting validation; a leftover
+# directory here only ever means an import was interrupted.
+operations/ai-actions/incoming/
 
