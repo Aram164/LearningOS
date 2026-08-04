@@ -17,9 +17,10 @@ import os
 import re
 import shutil
 import tempfile
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
-from typing import Any, Callable
+from typing import Any
 from uuid import uuid4
 
 import yaml
@@ -184,7 +185,7 @@ class ActionDefinition:
     confidentiality_policy: dict[str, Any]
 
     @classmethod
-    def from_mapping(cls, value: dict[str, Any]) -> "ActionDefinition":
+    def from_mapping(cls, value: dict[str, Any]) -> ActionDefinition:
         return cls(
             id=str(value["id"]),
             title=str(value["title"]),
@@ -227,7 +228,7 @@ class AdapterDefinition:
     supports_attachments: bool
 
     @classmethod
-    def from_mapping(cls, value: dict[str, Any]) -> "AdapterDefinition":
+    def from_mapping(cls, value: dict[str, Any]) -> AdapterDefinition:
         return cls(
             id=str(value["id"]),
             provider=str(value.get("provider", value["id"])),
@@ -378,12 +379,10 @@ class FilesystemAIActionRepository:
         if not source.is_dir() or not (source / "delivery.yaml").is_file():
             raise DeliveryValidationError(
                 "delivery import requires a directory containing delivery.yaml")
-        entries = 0
         total_bytes = 0
-        for path in source.rglob("*"):
+        for entries, path in enumerate(source.rglob("*"), start=1):
             if path.is_symlink():
                 raise DeliveryValidationError("delivery bundles may not contain symbolic links")
-            entries += 1
             if entries > MAX_DELIVERY_ENTRIES:
                 raise DeliveryValidationError(
                     f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries")
@@ -429,12 +428,8 @@ class FilesystemAIActionRepository:
             raise TargetNotFoundError(f"AI delivery not found: {delivery_id}")
         return delivery, directory
 
-    def save_receipt(self, receipt: dict[str, Any]) -> Path:
-        path = self.receipts / f"{self._id(str(receipt['id']))}.yaml"
-        if path.exists():
-            raise DeliveryValidationError(f"receipt already exists: {receipt['id']}")
-        _atomic_text(path, _dump_yaml(receipt))
-        return path
+    def receipt_path(self, transaction_id: str) -> Path:
+        return self.receipts / f"{self._id(transaction_id)}.yaml"
 
     def request_projections(self) -> list[dict[str, Any]]:
         rows = []
@@ -499,13 +494,14 @@ class AIActionService:
                 scopes[str(capability)] = tuple(str(w) for w in writes)
         return scopes
 
-    def _assert_in_scope(self, capability: str, path: Path) -> None:
+    def _assert_in_scope(self, capability: str, path: Path,
+                         scopes: dict[str, tuple[str, ...]] | None = None) -> None:
         rel = path.relative_to(self.root).as_posix()
         # Gateway bookkeeping is exchange state, not canonical knowledge; it is
         # always in scope and is kept separate from the canonical tree by design.
         if rel.startswith("operations/ai-actions/"):
             return
-        allowed = self.capability_writes().get(capability, ())
+        allowed = (scopes if scopes is not None else self.capability_writes()).get(capability, ())
         if not allowed:
             raise DeliveryValidationError(
                 f"capability {capability} declares no write scope; refusing to write {rel}"
@@ -690,7 +686,9 @@ class AIActionService:
 
     def validate_delivery(self, delivery_id: str) -> dict[str, Any]:
         delivery, directory = self.repository.get_delivery(delivery_id)
-        return self._validate(delivery, directory)
+        outcome = self._validate(delivery, directory)
+        return {"ok": True, "delivery_id": outcome["delivery_id"],
+                "request_id": outcome["request_id"]}
 
     def _validate(self, delivery: dict[str, Any], directory: Path) -> dict[str, Any]:
         delivery_id = str(delivery.get("id", ""))
@@ -730,10 +728,16 @@ class AIActionService:
         # delivery because an unrelated note moved (feature specification §20.4
         # scopes staleness to *the target*) makes the workflow unusable in a
         # live repository and tempts users to re-prepare blindly.
-        self._assert_target_unchanged(request)
-        return {"ok": True, "delivery_id": delivery_id, "request_id": request["id"]}
+        target = self._assert_target_unchanged(request)
+        return {"delivery_id": delivery_id, "request_id": request["id"],
+                "request": request, "target": target}
 
-    def _assert_target_unchanged(self, request: dict[str, Any]) -> None:
+    def _assert_target_unchanged(self, request: dict[str, Any]) -> dict[str, Any]:
+        """Re-read the target, refuse if it moved, and hand back the fresh row.
+
+        Returning the row is what lets callers stop re-walking the Garden tree:
+        the read has to happen anyway for the guard to mean anything.
+        """
         target_id = str((request.get("target") or {}).get("id", ""))
         target, _ = self._target(target_id)
         expected_revision = (request.get("preconditions") or {}).get(
@@ -744,13 +748,16 @@ class AIActionService:
             path = _inside(self.root, str(original["canonical_path"]))
             if not path.is_file() or _sha256_file(path) != original.get("checksum"):
                 raise DeliveryValidationError("original artifact changed after request preparation")
+        return target
 
     def apply_delivery(self, delivery_id: str) -> dict[str, Any]:
-        self.validate_delivery(delivery_id)
         delivery, directory = self.repository.get_delivery(delivery_id)
-        request = self.repository.get_request(str(delivery["request_id"]))
+        # Validation already read the delivery, the request and the target; reuse
+        # them rather than parsing the same three files a second time.
+        outcome = self._validate(delivery, directory)
+        request = outcome["request"]
+        target = outcome["target"]
         target_id = str(request["target"]["id"])
-        target, _source = self._target(target_id)
         state_path = self.repository.state_path(target_id)
         state = _read_yaml(state_path, {})
         if not isinstance(state, dict):
@@ -763,11 +770,12 @@ class AIActionService:
         if not isinstance(rows, list):
             raise DeliveryValidationError("knowledge/relationships.yaml has an invalid relationships list")
 
-        staged: dict[Path, str] = {}
-        origin: dict[Path, str] = {}
+        # path -> (content, the capability that authorised writing it)
+        staged: dict[Path, tuple[str, str]] = {}
         created_ids: list[str] = []
         updated_ids: list[str] = []
         superseded_ids: list[str] = []
+        relations_added = False
         for operation in delivery["operations"]:
             capability = operation["capability"]
             if capability == "garden.add-transcription":
@@ -786,8 +794,7 @@ class AIActionService:
                             + f"; set supersedes: {transcription_id} to replace it"
                         )
                     superseded_ids.append(transcription_id)
-                origin[destination] = capability
-                staged[destination] = (
+                staged[destination] = ((
                     "---\n"
                     f"id: {transcription_id}\n"
                     "type: garden-transcription\n"
@@ -796,7 +803,7 @@ class AIActionService:
                     f"request_id: {request['id']}\n"
                     f"delivery_id: {delivery_id}\n"
                     "---\n\n" + body.rstrip() + "\n"
-                )
+                ), capability)
                 state["transcription_path"] = destination.relative_to(self.root).as_posix()
                 created_ids.append(transcription_id)
             elif capability == "garden.update":
@@ -809,7 +816,6 @@ class AIActionService:
                         f"garden.update contains forbidden fields: {sorted(illegal)}"
                     )
                 state.update(patch)
-                origin.setdefault(state_path, capability)
             elif capability == "relationship.create":
                 payload = operation.get("payload") or {}
                 relation_id = str(payload.get("id") or f"relationship-{uuid4().hex[:12]}")
@@ -831,7 +837,7 @@ class AIActionService:
                 if not any(isinstance(row, dict) and row.get("id") == relation_id for row in rows):
                     rows.append(relation)
                     created_ids.append(relation_id)
-                origin.setdefault(relationship_path, capability)
+                    relations_added = True
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")
 
@@ -844,21 +850,23 @@ class AIActionService:
             "revision": int(state.get("revision", 0)) + 1,
             "last_ai_request_id": request["id"],
         })
-        staged[state_path] = _dump_yaml(state)
-        origin.setdefault(state_path, "garden.update")
-        if rows:
-            staged[relationship_path] = _dump_yaml(relationships)
-            origin.setdefault(relationship_path, "relationship.create")
+        staged[state_path] = (_dump_yaml(state), "garden.update")
+        # Only rewrite the authored relationship registry when this delivery
+        # actually added a relation — re-serialising an untouched file would
+        # reformat the user's own YAML for nothing.
+        if relations_added:
+            staged[relationship_path] = (_dump_yaml(relationships), "relationship.create")
         updated_ids.append(target_id)
 
         # Post-action scope check (operating contract, hard rule 12): every
         # canonical destination must fall inside the write scope its capability
         # declares in system/contracts/capabilities.yaml.
-        for path in staged:
-            self._assert_in_scope(origin.get(path, "unknown"), path)
+        scopes = self.capability_writes()
+        for path, (_content, capability) in staged.items():
+            self._assert_in_scope(capability, path, scopes)
 
         transaction_id = f"transaction-{self.clock():%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
-        receipt_path = self.repository.receipts / f"{transaction_id}.yaml"
+        receipt_path = self.repository.receipt_path(transaction_id)
         request_path = self.repository.request_path(str(request["id"]))
         all_destinations = [*staged, request_path, receipt_path]
         backups: dict[Path, bytes | None] = {
@@ -870,7 +878,7 @@ class AIActionService:
         # business, a changed target is.
         self._assert_target_unchanged(request)
         try:
-            for path, content in staged.items():
+            for path, (content, _capability) in staged.items():
                 _atomic_text(path, content)
 
             from learning_os.loader import load_repo
@@ -947,15 +955,26 @@ class AIActionService:
         }
 
     def manifest_projection(self) -> dict[str, Any]:
-        return {
-            "garden_entries": self.list_garden_targets(),
-            "ai_actions": {
-                "contract_version": 1,
-                "available": self.list_actions(),
-                "provider_adapters": [a.project() for a in self.adapters.list()],
-                "requests": self.repository.request_projections(),
-            },
-        }
+        return _projection(
+            garden_entries=self.list_garden_targets(),
+            available=self.list_actions(),
+            adapters=[a.project() for a in self.adapters.list()],
+            requests=self.repository.request_projections(),
+        )
+
+
+def _projection(*, garden_entries: list[dict[str, Any]], available: list[dict[str, Any]],
+                adapters: list[dict[str, Any]], requests: list[dict[str, Any]]) -> dict[str, Any]:
+    """The one place the manifest's AI shape is defined."""
+    return {
+        "garden_entries": garden_entries,
+        "ai_actions": {
+            "contract_version": 1,
+            "available": available,
+            "provider_adapters": adapters,
+            "requests": requests,
+        },
+    }
 
 
 def manifest_ai_projection(root: Path) -> dict[str, Any]:
@@ -963,14 +982,7 @@ def manifest_ai_projection(root: Path) -> dict[str, Any]:
     try:
         return AIActionService(root).manifest_projection()
     except (OSError, ValueError, yaml.YAMLError, AIActionError):
-        return {
-            "garden_entries": [],
-            "ai_actions": {
-                "contract_version": 1,
-                "available": [],
-                "provider_adapters": [
-                    AdapterDefinition.from_mapping(dict(DEFAULT_ADAPTERS[0])).project()
-                ],
-                "requests": [],
-            },
-        }
+        return _projection(
+            garden_entries=[], available=[], requests=[],
+            adapters=[AdapterDefinition.from_mapping(dict(DEFAULT_ADAPTERS[0])).project()],
+        )

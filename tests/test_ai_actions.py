@@ -12,8 +12,8 @@ import pytest
 import yaml
 
 from learning_os.ai_actions import (
-    AIActionService,
     ActionPolicyError,
+    AIActionService,
     ConfidentialityError,
     DeliveryValidationError,
     StaleDeliveryError,
@@ -227,7 +227,7 @@ def test_garden_identity_does_not_depend_on_sibling_files(ai_repo: Path):
 
 def test_unrelated_repository_edit_does_not_invalidate_a_delivery(ai_repo: Path, tmp_path: Path):
     """Staleness is scoped to the target, not to the whole repository."""
-    app, request, source = make_delivery(ai_repo, tmp_path)
+    app, _request, source = make_delivery(ai_repo, tmp_path)
     note = ai_repo / "knowledge/notes/mathematics/note-demo.md"
     note.write_text(note.read_text(encoding="utf-8") + "\nAn unrelated sentence.\n",
                     encoding="utf-8")
@@ -307,6 +307,44 @@ def test_rejected_delivery_never_lands_in_the_deliveries_directory(ai_repo: Path
     assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
     assert list(app.repository.deliveries.glob("*")) == []
     assert not any(app.repository.quarantine.glob("*"))
+
+
+def test_a_delivery_without_relations_leaves_the_registry_byte_identical(
+        ai_repo: Path, tmp_path: Path):
+    """An untouched authored file must not be re-serialised by an unrelated apply."""
+    registry = ai_repo / "knowledge/relationships.yaml"
+    registry.write_text(
+        "schema_version: 1\n"
+        "# hand-written comment that a YAML round-trip would destroy\n"
+        "relationships:\n"
+        "  - id: relationship-authored-by-hand\n"
+        "    from: {kind: note, id: note-demo}\n"
+        "    relation: supports\n"
+        "    to: {kind: module, id: module-demo}\n",
+        encoding="utf-8")
+    before = registry.read_bytes()
+
+    app = service(ai_repo)
+    tid = target_id(ai_repo)
+    request = app.prepare(action_id="garden.shelve", target_kind="garden-note",
+                          target_id=tid, provider="manual-bundle",
+                          request_id="ai-request-no-relations")
+    source = tmp_path / "no-relation-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    (source / "artifacts/t.md").write_text("Transcribed.\n", encoding="utf-8")
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1, "id": "ai-delivery-no-relations",
+        "type": "ai-action-delivery", "request_id": request["id"],
+        "action_id": "garden.shelve", "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {"user_approved": True, "approved_at": "2026-08-04T01:00:00+00:00"},
+        "operations": [{"capability": "garden.add-transcription", "target_id": tid,
+                        "artifact_ref": "artifacts/t.md"}],
+        "preconditions": request["preconditions"],
+    })
+    receipt = app.apply_delivery(app.import_delivery(source)["id"])
+    assert receipt["status"] == "committed"
+    assert registry.read_bytes() == before
 
 
 def test_capability_write_scope_is_enforced_from_the_contract(ai_repo: Path, tmp_path: Path):
