@@ -7,6 +7,9 @@ target_kinds:
 interaction_mode: discussion
 approval_required: true
 context_selection: exact
+# implemented | planned — the service refuses anything not yet built instead of
+# hard-coding the pilot's id, so the registry stays independently updatable.
+status: implemented
 supported_providers:
   - manual-bundle
   - claude
