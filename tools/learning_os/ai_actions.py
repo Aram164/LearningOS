@@ -410,10 +410,15 @@ class FilesystemAIActionRepository:
 
     def publish_delivery(self, staged: Path, delivery_id: str) -> Path:
         destination = self.delivery_dir(delivery_id)
-        if destination.exists():
-            raise DeliveryValidationError(f"delivery already exists: {delivery_id}")
-        destination.parent.mkdir(parents=True, exist_ok=True)
-        os.replace(staged, destination)
+        try:
+            if destination.exists():
+                raise DeliveryValidationError(f"delivery already exists: {delivery_id}")
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            os.replace(staged, destination)
+        except Exception:
+            # Never leave quarantined bytes behind, whatever went wrong.
+            shutil.rmtree(staged.parent, ignore_errors=True)
+            raise
         shutil.rmtree(staged.parent, ignore_errors=True)
         return destination
 
