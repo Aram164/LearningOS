@@ -1,5 +1,9 @@
 # Migrated from legacy LEARNING-RESOURCES.md §5 (KW 24–29 curation).
 title: Papers shelf
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
 description: >-
   Course-cited and project-grounding papers. The Algo-2 primary texts
   (Pagh cuckoo hashing, Sleator/Tarjan splay trees) sit in the

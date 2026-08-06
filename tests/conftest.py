@@ -29,8 +29,8 @@ def mini_repo(tmp_path: Path) -> Path:
               "archive/workspaces", "tools", "tests"):
         (root / d).mkdir(parents=True)
     (los / "materials").mkdir()
-    (los / "projects").mkdir()
     shutil.copytree(REPO_ROOT / "system" / "schema", root / "system" / "schema")
+    shutil.copytree(REPO_ROOT / "system" / "contracts", root / "system" / "contracts")
 
     (root / "knowledge" / "concepts.yaml").write_text(yaml.safe_dump({
         "concepts": [

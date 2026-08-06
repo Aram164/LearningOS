@@ -35,6 +35,9 @@ attempts:
 type: module
 kind: academic
 area_id: program-bachelors
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
 source_map: source-map.yaml
 unit_order:
 - unit-amls-l03

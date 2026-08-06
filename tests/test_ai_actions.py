@@ -30,7 +30,11 @@ def write_yaml(path: Path, value) -> None:
 
 @pytest.fixture()
 def ai_repo(mini_repo: Path) -> Path:
-    shutil.copytree(ROOT / "system" / "contracts", mini_repo / "system" / "contracts")
+    shutil.copytree(
+        ROOT / "system" / "contracts",
+        mini_repo / "system" / "contracts",
+        dirs_exist_ok=True,
+    )
     for rel in (
         "operations/ai-actions/requests",
         "operations/ai-actions/deliveries",

@@ -23,6 +23,7 @@ from pathlib import Path, PurePosixPath
 
 from . import __version__
 from .loader import Repo
+from .transactions import load_revisions
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
@@ -150,7 +151,7 @@ def _material_location(repo: Repo, ref) -> dict:
 def _source_fingerprint(repo: Repo) -> str:
     """Content identity of every authored input used by the projection."""
     digest = hashlib.sha256()
-    roots = ("knowledge", "sources", "records", "work", "curriculum", "system/schema")
+    roots = ("knowledge", "sources", "records", "work", "curriculum", "projects", "system/schema", "system/contracts")
     for rel_root in roots:
         base = repo.root / rel_root
         if not base.exists():
@@ -180,6 +181,85 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
         return None, False
 
 
+
+_UNIT_NOTE_MARKER = re.compile(r"^<!-- learningos:unit-note (\{.*\}) -->\s*$", re.MULTILINE)
+
+
+def _unit_note_sections(text: str) -> list[dict]:
+    """Project session sections so interfaces never parse unit-note Markdown."""
+    matches = list(_UNIT_NOTE_MARKER.finditer(text or ""))
+    sections: list[dict] = []
+    for index, match in enumerate(matches):
+        try:
+            metadata = json.loads(match.group(1))
+        except json.JSONDecodeError:
+            continue
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        body = text[match.end():end].strip()
+        heading = ""
+        lines = body.splitlines()
+        if lines and lines[0].startswith("## "):
+            heading = lines[0][3:].strip()
+            body = "\n".join(lines[1:]).strip()
+        sections.append({
+            "recorded_at": metadata.get("recorded_at"),
+            "title": metadata.get("title") or heading or "Learning session note",
+            "stage_ids": list(metadata.get("stage_ids") or []),
+            "attachments": list(metadata.get("attachments") or []),
+            "text": body,
+            "summary": _first_para(body)[:400],
+        })
+    return sections
+
+def _ordered_thematic_group_ids(repo: Repo, values) -> list[str]:
+    """Return unique group ids in the canonical registry order.
+
+    Authored records own membership; the registry owns display order. Unknown
+    ids remain at the end so a generated snapshot does not silently erase an
+    invalid authored reference before validation reports it.
+    """
+    unique = {str(value) for value in (values or []) if value}
+    order = {
+        gid: (int(group.get("order", 0)), gid)
+        for gid, group in repo.thematic_groups.items()
+    }
+    return sorted(unique, key=lambda gid: order.get(gid, (10**9, gid)))
+
+
+def _source_thematic_groups(repo: Repo) -> dict[str, list[str]]:
+    """Project source placement from explicit canonical relationships.
+
+    This is deliberately a core projection rule: interfaces receive resolved
+    group ids and never infer placement from a source title, path or id. A
+    source can be placed directly, through a curated collection, or through a
+    module source map whose module has explicit thematic membership.
+    """
+    grouped: dict[str, set[str]] = {
+        sid: set(source.get("thematic_group_ids", []) or [])
+        for sid, source in repo.sources.items()
+    }
+    for doc in repo.collections.values():
+        group_ids = set(doc.get("thematic_group_ids", []) or [])
+        for entry in doc.get("entries", []) or []:
+            if not isinstance(entry, dict):
+                continue
+            sid = entry.get("source")
+            if sid in grouped:
+                grouped[sid].update(group_ids)
+    for mid, source_map in repo.module_source_maps.items():
+        group_ids = set((repo.modules.get(mid) or {}).get("thematic_group_ids", []) or [])
+        for entry in source_map.get("sources", []) or []:
+            if not isinstance(entry, dict):
+                continue
+            sid = entry.get("source_id")
+            if sid in grouped:
+                grouped[sid].update(group_ids)
+    return {
+        sid: _ordered_thematic_group_ids(repo, group_ids)
+        for sid, group_ids in grouped.items()
+    }
+
+
 def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None) -> dict:
     """The COMPLETE machine-readable projection of the repository (ADR-001):
     every canonical record (notes incl. attachments/evidence/contexts, concepts,
@@ -200,6 +280,32 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     `exam_spine` key (2026-08-03), and `stages` is the flat by-id index for
     stage lookup while `study_maps[].stages` stays the ordering authority —
     an index plus an ordered list, never two copies of the same access path."""
+    artifact_revisions = load_revisions(repo.root)
+
+    def projected_revision(record_id: str, data: dict | None = None) -> int:
+        embedded = (data or {}).get("revision", 0)
+        return artifact_revisions.get(record_id, embedded if isinstance(embedded, int) else 0)
+
+    source_thematic_groups = _source_thematic_groups(repo)
+    unit_to_projects: dict[str, list[str]] = {}
+    for project_id, project in sorted(repo.projects.items()):
+        for unit_id in project.data.get("unit_ids", []) or []:
+            unit_to_projects.setdefault(unit_id, []).append(project_id)
+    for unit_id in unit_to_projects:
+        unit_to_projects[unit_id] = sorted(set(unit_to_projects[unit_id]))
+
+    thematic_groups = [
+        {
+            "id": gid,
+            "title": group.get("title", gid),
+            "description": " ".join(str(group.get("description", "")).split()),
+            "order": group.get("order", 0),
+        }
+        for gid, group in sorted(
+            repo.thematic_groups.items(),
+            key=lambda item: (int(item[1].get("order", 0)), item[0]),
+        )
+    ]
     records = []
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
         rel = note.path.relative_to(repo.root)
@@ -233,9 +339,11 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         s = repo.sources[sid]
         records.append({
             "id": sid, "type": "source", "title": s.get("title", ""),
+            "revision": projected_revision(sid, s),
             "path": str(repo.source_origins.get(sid, "").relative_to(repo.root))
             if repo.source_origins.get(sid) else "sources/sources.yaml",
             "source_type": s.get("type", ""),
+            "thematic_group_ids": source_thematic_groups.get(sid, []),
             # interface fields: everything needed to SHOW and OPEN a source.
             # `material_path` is resolved HERE (material:// → the .flat farm is
             # a business rule, loader.materials_root) so no interface has to
@@ -268,13 +376,39 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
                 for ev in (s.get("evaluations") or []) if isinstance(ev, dict)
             ],
         })
+    for project_id in sorted(repo.projects):
+        project = repo.projects[project_id]
+        data = project.data
+        records.append({
+            **dict(data),
+            "revision": projected_revision(project_id, data),
+            "path": str(project.path.relative_to(repo.root)),
+            "relationship_ids": [
+                relation.get("id") for relation in repo.project_relations
+                if relation.get("from_project_id") == project_id
+            ],
+        })
+    for relation in sorted(repo.project_relations, key=lambda row: str(row.get("id"))):
+        records.append({**dict(relation), "type": "project-relationship",
+                        "path": "projects/relations/project-relations.yaml"})
+    for old_id, target_id in sorted(repo.project_aliases.items()):
+        records.append({
+            "id": old_id, "type": "compatibility-alias",
+            "target_id": target_id, "target_type": "project",
+            "path": "projects/aliases.yaml",
+        })
     for mid in sorted(repo.modules):
         m = repo.modules[mid]
+        if m.get("compatibility_only"):
+            continue
         origin = repo.module_origins.get(mid)
         records.append({
             "id": mid, "type": "module", "title": m.get("title", ""),
+            "revision": projected_revision(mid, m),
             "path": str(origin.relative_to(repo.root)) if origin else "records/modules.yaml",
             "kind": m.get("kind", "academic"), "area_id": m.get("area_id"),
+            "thematic_group_ids": _ordered_thematic_group_ids(
+                repo, m.get("thematic_group_ids", []) or []),
             "status": m.get("status", ""),
             "institution": m.get("institution"), "code": m.get("code"),
             "credits": m.get("credits"), "semester": m.get("semester"),
@@ -288,16 +422,24 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     for name in sorted(repo.collections):
         doc = repo.collections[name]
         entries = [e for e in doc.get("entries", []) or [] if isinstance(e, dict)]
+        collection_kind = doc.get("collection_kind", "catalogue")
         records.append({
-            "id": name, "type": "collection",
+            "id": name,
+            "type": "topic-pack" if collection_kind == "topic-pack" else "collection",
+            "revision": projected_revision(name, doc),
+            "collection_kind": collection_kind,
             "title": doc.get("title", name),
             "path": f"sources/collections/{name}.yaml",
+            "thematic_group_ids": _ordered_thematic_group_ids(
+                repo, doc.get("thematic_group_ids", []) or []),
+            "purpose": " ".join(str(doc.get("purpose", "")).split()) or None,
             "sources": [str(e.get("source", "")) for e in entries],
             # A shelf is curation, not a bag of ids: its rationale, its domain and
             # each entry's group + role are what make it browsable. Projected here
             # so no interface re-parses the collection YAML (ADR-006).
             "summary": " ".join(str(doc.get("description", "")).split()),
             "domain": ATLAS_COLLECTION_DOMAIN.get(name, "cross-domain"),
+            # File order is canonical for topic packs and catalogues alike.
             "entries": [{"source": str(e.get("source", "")),
                          "group": str(e.get("group", "")) or None,
                          "why": " ".join(str(e.get("why", "")).split()) or None}
@@ -306,6 +448,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
         records.append({
             "id": ws.id, "type": "workspace", "title": ws.meta.get("title", ""),
+            "revision": projected_revision(ws.id, ws.meta),
             "path": str(ws.path.relative_to(repo.root)),
             "status": ws.status, "standing": ws.standing, "archived": ws.archived,
             "deadline": ws.meta.get("deadline"),
@@ -319,6 +462,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "program_ids": sorted(ws.meta.get("program_ids", []) or []),
             "module_ids": sorted(ws.meta.get("module_ids", []) or []),
             "unit_ids": sorted(ws.meta.get("unit_ids", []) or []),
+            "project_id": ws.meta.get("project_id"),
         })
     for learning_path in sorted(repo.learning_paths.values(), key=lambda p: p.id):
         data = learning_path.data
@@ -338,6 +482,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             projected_stages.append(projected)
         records.append({
             "id": learning_path.id, "type": "learning-path",
+            "revision": projected_revision(learning_path.id, data),
             "title": data.get("title", ""),
             "path": str(learning_path.path.relative_to(repo.root)),
             "workspace_id": learning_path.workspace_id,
@@ -355,13 +500,28 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     for program in sorted(repo.programs.values(), key=lambda p: p.id):
         records.append({
             **dict(program.data),
+            "revision": projected_revision(program.id, program.data),
             "path": str(program.path.relative_to(repo.root)),
         })
     for unit in sorted(repo.units.values(), key=lambda u: u.id):
         data = unit.data
+        note_ref = data.get("working_note")
+        note_file = repo.root / str(note_ref) if note_ref else None
+        note_text = note_file.read_text(encoding="utf-8", errors="replace") \
+            if note_file and note_file.is_file() else ""
         records.append({
             **dict(data),
+            "revision": projected_revision(unit.id, data),
             "path": str(unit.path.relative_to(repo.root)),
+            # Projects own units explicitly in the Project record. The legacy
+            # module_id remains for compatibility until Gate F, while interfaces
+            # receive the first-class ownership edge directly from the core.
+            "project_ids": unit_to_projects.get(unit.id, []),
+            "notes_text": note_text,
+            "note_sections": _unit_note_sections(note_text),
+            "notes_updated": _git_last_commit(
+                repo.root, note_file.relative_to(repo.root).as_posix())
+                if note_file and note_file.is_file() else None,
         })
     for study_map in sorted(repo.study_maps.values(), key=lambda sm: sm.id):
         data = study_map.data
@@ -381,15 +541,18 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             projected_stages.append(projected)
         records.append({
             **{k: v for k, v in data.items() if k != "stages"},
+            "revision": projected_revision(study_map.id, data),
             "module_id": study_map.module_id,
             "path": str(study_map.path.relative_to(repo.root)),
             "stages": projected_stages,
         })
     for mid in sorted(repo.module_source_maps):
         source_map = repo.module_source_maps[mid]
+        source_map_id = f"source-map-{mid.removeprefix('module-')}"
         records.append({
-            "id": f"source-map-{mid.removeprefix('module-')}",
+            "id": source_map_id,
             **dict(source_map),
+            "revision": projected_revision(source_map_id, source_map),
             "path": str(repo.module_source_map_origins[mid].relative_to(repo.root)),
         })
     if repo.coordination is not None:
@@ -417,10 +580,15 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         "source_dirty": dirty,
     })
     programs_v2 = [r for r in records if r.get("type") == "program"]
+    projects_v2 = [r for r in records if r.get("type") == "project"]
+    project_relationships_v2 = [
+        r for r in records if r.get("type") == "project-relationship"
+    ]
     modules_v2 = [r for r in records if r.get("type") == "module"]
     units_v2 = [r for r in records if r.get("type") == "unit"]
     study_maps_v2 = [r for r in records if r.get("type") == "study-map"]
     source_maps_v2 = [r for r in records if r.get("type") == "module-source-map"]
+    topic_packs_v2 = [r for r in records if r.get("type") == "topic-pack"]
     stages_v2 = [
         {**stage, "study_map_id": study_map["id"],
          "unit_id": study_map["unit_id"], "module_id": study_map["module_id"]}
@@ -439,6 +607,19 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     source_to_units: dict[str, list[str]] = {}
     workspace_to_modules: dict[str, list[str]] = {}
     workspace_to_units: dict[str, list[str]] = {}
+    project_to_units: dict[str, list[str]] = {
+        project["id"]: list(project.get("unit_ids", []) or []) for project in projects_v2
+    }
+    project_to_workspaces: dict[str, list[str]] = {
+        project["id"]: list(project.get("workspace_ids", []) or []) for project in projects_v2
+    }
+    project_to_relationships: dict[str, list[str]] = {
+        project["id"]: [
+            relation["id"] for relation in project_relationships_v2
+            if relation.get("from_project_id") == project["id"]
+        ]
+        for project in projects_v2
+    }
     for unit in units_v2:
         if unit.get("component_id"):
             component_to_units.setdefault(unit["component_id"], []).append(unit["id"])
@@ -466,7 +647,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         workspace_to_modules[workspace["id"]] = list(workspace.get("module_ids", []) or [])
         workspace_to_units[workspace["id"]] = list(workspace.get("unit_ids", []) or [])
     for table in (component_to_units, source_to_modules, source_to_units,
-                  workspace_to_modules, workspace_to_units):
+                  workspace_to_modules, workspace_to_units, project_to_units,
+                  project_to_workspaces, project_to_relationships):
         for key in table:
             table[key] = sorted(set(table[key]))
     progress = {}
@@ -515,6 +697,12 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         # the same facts. `_exam_spine` survives as the internal helper behind
         # the Markdown views and `los.py status --json` (ADR-006, 2026-08-03).
         "academic_deadlines": _academic_deadlines(repo),
+        "thematic_groups": thematic_groups,
+        "topic_packs": topic_packs_v2,
+        "projects": projects_v2,
+        "project_relationships": project_relationships_v2,
+        "project_aliases": dict(sorted(repo.project_aliases.items())),
+        "artifact_revisions": dict(sorted(artifact_revisions.items())),
         "programs": programs_v2,
         "semesters": semesters_v2,
         "modules": modules_v2,
@@ -539,12 +727,19 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "source_to_units": dict(sorted(source_to_units.items())),
             "workspace_to_modules": dict(sorted(workspace_to_modules.items())),
             "workspace_to_units": dict(sorted(workspace_to_units.items())),
+            "project_to_units": dict(sorted(project_to_units.items())),
+            "project_to_workspaces": dict(sorted(project_to_workspaces.items())),
+            "project_to_relationships": dict(sorted(project_to_relationships.items())),
+            "project_aliases": dict(sorted(repo.project_aliases.items())),
         },
         "progress": progress,
         "counts": {
             "notes": len(repo.notes), "concepts": len(repo.concepts),
             "sources": len(repo.sources), "collections": len(repo.collections),
-            "modules": len(repo.modules),
+            "topic_packs": len(topic_packs_v2),
+            "thematic_groups": len(thematic_groups),
+            "projects": len(projects_v2),
+            "modules": len(modules_v2),
             "workspaces_active": len(repo.active_workspaces()),
             "workspaces_archived": len(repo.archived_workspaces()),
             "learning_paths": len(repo.learning_paths),

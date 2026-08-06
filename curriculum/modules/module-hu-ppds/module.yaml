@@ -11,6 +11,9 @@ examination:
 type: module
 kind: academic
 area_id: program-bachelors
+thematic_group_ids:
+  - thematic-group-data-systems
+  - thematic-group-machine-learning
 source_map: source-map.yaml
 unit_order:
 - unit-ppds-mlprov-submission

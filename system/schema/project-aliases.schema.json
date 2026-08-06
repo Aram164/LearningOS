@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/project-aliases.schema.json",
+  "title": "Compatibility aliases for migrated projects",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["aliases"],
+  "properties": {
+    "aliases": {
+      "type": "object",
+      "propertyNames": {"pattern": "^(module|project)-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+      "additionalProperties": {"type": "string", "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+    }
+  }
+}

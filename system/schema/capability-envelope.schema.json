@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/capability-envelope.schema.json",
+  "title": "LearningOS capability request/result envelope",
+  "oneOf": [
+    {"$ref": "#/$defs/request"},
+    {"$ref": "#/$defs/result"}
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "capability", "payload"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "capability": {"type": "string", "minLength": 1},
+        "payload": {"type": "object"},
+        "expected_snapshot": {"type": ["string", "null"]},
+        "expected_revisions": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "capability", "ok"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "capability": {"type": "string", "minLength": 1},
+        "ok": {"type": "boolean"},
+        "transaction_id": {"type": ["string", "null"]},
+        "receipt_path": {"type": ["string", "null"]},
+        "result": {"type": "object"},
+        "error": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

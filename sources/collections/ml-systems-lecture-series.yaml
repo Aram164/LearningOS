@@ -1,5 +1,9 @@
 # Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
 title: ML systems — lecture series & video courses (AMLS)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
 description: >-
   The SS26 course page is THE spine (slides + tubcloud mp4 for every held
   lecture); everything else is depth or fallback.

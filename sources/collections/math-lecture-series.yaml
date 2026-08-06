@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
 title: Math — lecture series & video courses (statistics + analysis)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-mathematics
 description: >-
   Statistics rule: pick ONE rigorous-probability course (STAT110x / 18.650 /
   6.041SC), don't stack. Analysis rule: layer 1 (Leonard/3B1B) BEFORE the

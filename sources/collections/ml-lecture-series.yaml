@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24–29 curation).
 title: ML — lecture series & video courses
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
 description: >-
   The AML video/course spine (Aram's pick, KW 26) is CS229 2022 + MIT 6.036 —
   everything else is supplementary. Rule for supplements: pull the matching

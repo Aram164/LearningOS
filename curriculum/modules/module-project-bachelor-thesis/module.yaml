@@ -2,9 +2,17 @@ id: module-project-bachelor-thesis
 type: module
 kind: project
 area_id: program-thesis-projects
+thematic_group_ids:
+- thematic-group-machine-learning
+- thematic-group-data-systems
 title: Bachelor thesis
 status: active
 source_map: source-map.yaml
 unit_order:
 - unit-thesis-landscape
 - unit-thesis-experiments
+compatibility_only: true
+migrated_to: project-bachelor-thesis
+migrated_at: '2026-08-06T04:04:58+00:00'
+migration: projects-v1
+source_sha256: 36e7794a93591ae62a9c70e6a5b1b310ebabec6caebef9041e540e76c67f6ff7

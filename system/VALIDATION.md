@@ -29,6 +29,8 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **W** Two source records share title+author or identical URL/identifier (duplicate candidates).
 - **E** Concept records contain no body/explanation fields beyond short description.
 - **E** Every `sources/collections/*.yaml` file validates against `collections.schema.json`; filename is kebab-case; every entry's `source` resolves to a registered source.
+- **E** Every thematic-group reference on a module, source or collection resolves in `curriculum/thematic-groups.yaml`.
+- **E** Every `topic-pack` collection has one explicit non-empty `purpose`; file order remains its manual item order.
 - **W** A source is listed more than once within the same collection.
 
 ## Ownership boundaries
@@ -125,3 +127,12 @@ never accumulates into an audit session; they nag, never block.
 - **E** Regeneration after deleting `generated/` reproduces byte-identical outputs except timestamp fields.
 - **E** Every generated file carries a generated-file warning header.
 - **E** Manifest covers every canonical record; index entries resolve; backlinks equal the inverse of canonical forward references.
+
+## Transaction and Project validation
+
+Validation checks first-class Project records, project aliases, project
+relationships, capability contracts, and append-only transaction receipts.
+A project relationship must resolve to a supported projected target. A
+transaction receipt must conform to schema version 1 and have a unique ID.
+The revision ledger is operational metadata and is not interpreted as a
+receipt.

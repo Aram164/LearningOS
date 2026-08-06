@@ -1,0 +1,88 @@
+schema_version: 1
+id: project-bachelor-thesis
+type: project
+revision: 0
+title: Bachelor thesis
+project_type: thesis
+status: active
+root_uri: github://Aram164/LearningOS
+objective: 'Scope, run and improve machine-learning-engineering (MLE) agents on medical tasks. Working
+  title (Aram, 2026-07-20): *"Exploring and optimizing MLE agents for medical use cases."* The supervisor''s
+  brief has four threads: (1) survey MLE-bench and its variants; (2) isolate the medical subset of those
+  benchmarks and the openly available use-cases of MLE in medicine; (3) an exploration phase to adjust
+  the agents to the specific medical use-case; (4) start testing the given baseline setup, "AID" = AIDE
+  (the tree-search reference agent from MLE-bench). Study winning-solution write-ups to understand what
+  strong solutions look like.'
+milestone_ids:
+- milestone-thesis-scope
+- milestone-thesis-baseline
+linked_module_ids:
+- module-hu-aml
+- module-hu-amls
+- module-hu-ppds
+unit_ids:
+- unit-thesis-landscape
+- unit-thesis-experiments
+workspace_ids:
+- workspace-thesis-mle-medical
+thematic_group_ids:
+- thematic-group-machine-learning
+- thematic-group-data-systems
+boundaries:
+  confidentiality: private
+  external_code_access: approved
+  notes: Employer code and Job/ remain outside this project record.
+structure:
+  kind: parallel
+  nodes:
+  - id: workstream-thesis-landscape
+    title: Landscape and scope
+    kind: workstream
+    status: active
+    children:
+    - id: step-thesis-scope
+      title: Confirm scope and compute budget
+      kind: step
+      status: active
+    - id: step-thesis-survey
+      title: Map MLE-agent and medical benchmark landscape
+      kind: step
+      status: active
+  - id: workstream-thesis-experiments
+    title: Baseline and optimization experiments
+    kind: workstream
+    status: planned
+    children:
+    - id: step-map-thesis-baseline
+      title: Baseline reproduction map
+      kind: step-map
+      status: planned
+      children:
+      - id: step-thesis-aide-baseline
+        title: Reproduce the AIDE baseline
+        kind: step
+        status: planned
+      - id: step-thesis-optimization
+        title: Run bounded optimization comparisons
+        kind: step
+        status: planned
+files:
+- label: Original thesis brief
+  path: work/active/workspace-thesis-mle-medical/inputs/original-thesis-brief.md
+  kind: input
+- label: Landscape and experiment plan
+  path: work/active/workspace-thesis-mle-medical/outputs/thesis-landscape-and-plan.md
+  kind: output
+decisions:
+- id: decision-thesis-scope-boundary
+  title: Benchmark scope
+  status: open
+  summary: Decide whether the thesis stays within the MLE-bench medical subset or includes BioML-bench/ReX-MLE.
+- id: decision-thesis-compute-budget
+  title: Compute budget
+  status: open
+  summary: Confirm GPU access, wall-clock limits, and allowed model/API budget before experiments.
+migrated_from: module-project-bachelor-thesis
+migrated_at: '2026-08-06T04:04:58+00:00'
+migration: projects-v1
+source_sha256: 36e7794a93591ae62a9c70e6a5b1b310ebabec6caebef9041e540e76c67f6ff7

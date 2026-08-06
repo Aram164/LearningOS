@@ -77,11 +77,15 @@ Choose a module and unit. The unit has at most one current study map. Work in
 ordered stages while preserving independent state for every other unit.
 
 ```bash
-python tools/los.py stage-note UNIT_ID STAGE_ID --replace --text "..." --expected-snapshot SNAPSHOT
+python tools/los.py unit-note UNIT_ID --text "..." --stage-id STAGE_ID --expected-snapshot SNAPSHOT
 python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot SNAPSHOT
 python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
 python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
 ```
+
+`unit-note` appends one session-level section after the learner finishes the
+relevant stages. `stage-note` remains a compatibility command for existing
+stage-owned scratch files.
 
 When confirmed lecture scope requires a module-wide batch (new units, current
 study maps, source routing, and workspace joins), follow

@@ -1,5 +1,9 @@
 # Migrated from legacy LEARNING-RESOURCES.md §3 (KW 27 curation).
 title: ML systems — bookshelf (AMLS)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
 description: >-
   Chapter-pick via the AMLS crosswalk note's book layer, never linear. The
   2025/26 free web books closed the parallelism/LLM gap no print book covered.

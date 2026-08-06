@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/project-relations.schema.json",
+  "title": "Project linked-material relationships",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "relations"
+  ],
+  "properties": {
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "from_project_id",
+          "to_id",
+          "to_type",
+          "relation_type",
+          "reason",
+          "contribution"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^relationship-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "from_project_id": {
+            "type": "string",
+            "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "to_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to_type": {
+            "enum": [
+              "module",
+              "source",
+              "topic-pack",
+              "note",
+              "file"
+            ]
+          },
+          "relation_type": {
+            "enum": [
+              "uses",
+              "informs",
+              "depends-on",
+              "produces",
+              "related"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contribution": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

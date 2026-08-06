@@ -2,6 +2,8 @@ id: module-skill-python
 type: module
 kind: skill
 area_id: program-skills
+thematic_group_ids:
+  - thematic-group-programming-languages
 title: Python
 status: active
 source_map: source-map.yaml

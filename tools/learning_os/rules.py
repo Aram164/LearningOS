@@ -27,6 +27,8 @@ from .loader import (
     ID_RE,
     PATH_ID_RE,
     PROGRAM_ID_RE,
+    PROJECT_ID_RE,
+    PROJECT_RELATION_ID_RE,
     RELATION_TYPES,
     Repo,
     STUDY_MAP_ID_RE,
@@ -56,7 +58,7 @@ GENERATED_ALLOWED = {
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 
-CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum")
+CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum", "projects")
 
 # File extensions that are legitimately authored text under knowledge/ (notes and
 # registries). Anything else there (PDFs, slides, images) is a misplaced binary
@@ -175,6 +177,9 @@ class Validator:
         if family == "program":
             p = r.programs.get(rec_id)
             return self._rel(p.path) if p else ""
+        if family == "project":
+            project = r.projects.get(rec_id)
+            return self._rel(project.path) if project else ""
         if family == "unit":
             u = r.units.get(rec_id)
             return self._rel(u.path) if u else ""
@@ -200,6 +205,8 @@ class Validator:
         self.check_ownership()
         self.check_modules()
         self.check_curriculum()
+        self.check_projects()
+        self.check_transaction_receipts()
         self.check_files()
         self.check_workspaces()
         self.check_learning_paths()
@@ -253,6 +260,24 @@ class Validator:
             self._schema_check("coordination", r.coordination.meta, "work/COORDINATION.md")
         for name, doc in r.collections.items():
             self._schema_check("collections", doc, f"sources/collections/{name}.yaml")
+        if r.thematic_groups_path is not None:
+            self._schema_check(
+                "thematic-groups",
+                {"thematic_groups": list(r.thematic_groups.values())},
+                self._rel(r.thematic_groups_path),
+            )
+        for project in r.projects.values():
+            self._schema_check("project", project.data, self._rel(project.path))
+        if r.project_aliases_path is not None:
+            self._schema_check(
+                "project-aliases", {"aliases": dict(r.project_aliases)},
+                self._rel(r.project_aliases_path),
+            )
+        if r.project_relations_path is not None:
+            self._schema_check(
+                "project-relations", {"relations": list(r.project_relations)},
+                self._rel(r.project_relations_path),
+            )
 
     def check_identity(self):
         families = {
@@ -275,6 +300,18 @@ class Validator:
                               f"{family} id '{rec_id}' carries a numeric suffix without a "
                               f"collision counterpart '{m.group('base')}' (suffixes are collision-only)",
                               where)
+        for project_id in self.repo.projects:
+            if not PROJECT_ID_RE.match(project_id):
+                self.err("ID-PATTERN",
+                         f"project id '{project_id}' does not match the ID pattern",
+                         self._origin_for("project", project_id))
+        for relation in self.repo.project_relations:
+            relation_id = relation.get("id")
+            if not isinstance(relation_id, str) or not PROJECT_RELATION_ID_RE.match(relation_id):
+                self.err("ID-PATTERN",
+                         f"project relationship id '{relation_id}' does not match the ID pattern",
+                         self._rel(self.repo.project_relations_path)
+                         if self.repo.project_relations_path else "projects/relations/project-relations.yaml")
         for pid in self.repo.programs:
             if not PROGRAM_ID_RE.match(pid):
                 self.err("ID-PATTERN", f"program id '{pid}' does not match the ID pattern",
@@ -334,11 +371,22 @@ class Validator:
             for mid in ws.meta.get("module_ids", []) or []:
                 if mid not in r.modules:
                     self.err("REF-MODULE", f"workspace '{ws.id}' references unknown module '{mid}'", where)
+            project_id = ws.meta.get("project_id")
+            if project_id and project_id not in r.projects:
+                self.err("REF-PROJECT",
+                         f"workspace '{ws.id}' references unknown project '{project_id}'", where)
             for uid in ws.meta.get("unit_ids", []) or []:
                 if uid not in r.units:
                     self.err("REF-UNIT", f"workspace '{ws.id}' references unknown unit '{uid}'", where)
         for mid, module in r.modules.items():
             where = self._origin_for("module", mid)
+            for gid in module.get("thematic_group_ids", []) or []:
+                if gid not in r.thematic_groups:
+                    self.err(
+                        "REF-THEMATIC-GROUP",
+                        f"module '{mid}' references unknown thematic group '{gid}'",
+                        where,
+                    )
             area_id = module.get("area_id")
             if area_id and area_id not in r.programs:
                 self.err("REF-PROGRAM", f"module '{mid}' references unknown program '{area_id}'", where)
@@ -371,6 +419,20 @@ class Validator:
                 self.err("UNIT-OWNER",
                          f"unit '{uid}' declares module '{data.get('module_id')}' but lives under '{unit.module_id}'",
                          where)
+            working_note = data.get("working_note")
+            if working_note:
+                target = r.root / str(working_note)
+                expected_parent = unit.path.parent.resolve()
+                try:
+                    owned = target.resolve().is_relative_to(expected_parent)
+                except OSError:
+                    owned = False
+                if not owned:
+                    self.err("UNIT-NOTE-OWNER",
+                             f"unit '{uid}' working note must live inside its unit directory", where)
+                elif not target.is_file():
+                    self.err("REF-UNIT-NOTE",
+                             f"unit '{uid}' declares missing working note '{working_note}'", where)
             for scoped in data.get("scope_sources", []) or []:
                 sid = scoped.get("source_id") if isinstance(scoped, dict) else None
                 if sid and sid not in r.sources:
@@ -481,6 +543,14 @@ class Validator:
                 self.err("REF-REPLACED-BY",
                          f"concept '{concept.get('id')}' replaced_by unknown concept '{rb}'")
         for source in r.sources.values():
+            sid = source.get("id")
+            for gid in source.get("thematic_group_ids", []) or []:
+                if gid not in r.thematic_groups:
+                    self.err(
+                        "REF-THEMATIC-GROUP",
+                        f"source '{sid}' references unknown thematic group '{gid}'",
+                        self._origin_for("source", str(sid)),
+                    )
             mat = source.get("material")
             if mat:
                 self._check_uri(mat, f"sources registry ({source.get('id')})")
@@ -586,6 +656,13 @@ class Validator:
         name_re = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
         for name, doc in self.repo.collections.items():
             where = f"sources/collections/{name}.yaml"
+            for gid in doc.get("thematic_group_ids", []) or []:
+                if gid not in self.repo.thematic_groups:
+                    self.err(
+                        "REF-THEMATIC-GROUP",
+                        f"collection '{name}' references unknown thematic group '{gid}'",
+                        where,
+                    )
             if not name_re.match(name):
                 self.err("COLLECTION-NAME",
                          f"collection filename '{name}' is not kebab-case", where)
@@ -846,6 +923,98 @@ class Validator:
                     if detour.get(field) not in stage_ids:
                         self.err("DETOUR-STAGE",
                                  f"detour '{did}' {field} does not resolve to a stage", where)
+
+    def check_projects(self):
+        r = self.repo
+        relation_ids: set[str] = set()
+        for project_id, project in r.projects.items():
+            data = project.data
+            where = self._rel(project.path)
+            for module_id in data.get("linked_module_ids", []) or []:
+                if module_id not in r.modules or r.modules[module_id].get("compatibility_only"):
+                    self.err("REF-MODULE",
+                             f"project '{project_id}' references unknown active module '{module_id}'", where)
+            for unit_id in data.get("unit_ids", []) or []:
+                if unit_id not in r.units:
+                    self.err("REF-UNIT",
+                             f"project '{project_id}' references unknown unit '{unit_id}'", where)
+            for workspace_id in data.get("workspace_ids", []) or []:
+                if workspace_id not in r.workspaces:
+                    self.err("REF-WORKSPACE",
+                             f"project '{project_id}' references unknown workspace '{workspace_id}'", where)
+            for group_id in data.get("thematic_group_ids", []) or []:
+                if group_id not in r.thematic_groups:
+                    self.err("REF-THEMATIC-GROUP",
+                             f"project '{project_id}' references unknown thematic group '{group_id}'", where)
+            root_uri = str(data.get("root_uri", ""))
+            if root_uri:
+                self._check_uri(root_uri, where)
+            for row in data.get("files", []) or []:
+                path = row.get("path") if isinstance(row, dict) else None
+                if isinstance(path, str) and not path.startswith(("project://", "github://")):
+                    candidate = (r.root / path).resolve()
+                    try:
+                        candidate.relative_to(r.root.resolve())
+                    except ValueError:
+                        self.err("PROJECT-FILE",
+                                 f"project '{project_id}' file path escapes the repository: '{path}'", where)
+                    else:
+                        if not candidate.exists():
+                            self.warn("PROJECT-FILE",
+                                      f"project '{project_id}' file does not exist: '{path}'", where)
+
+        for old_id, project_id in r.project_aliases.items():
+            where = self._rel(r.project_aliases_path) if r.project_aliases_path else "projects/aliases.yaml"
+            if project_id not in r.projects:
+                self.err("REF-PROJECT",
+                         f"project alias '{old_id}' targets unknown project '{project_id}'", where)
+            if old_id in r.projects:
+                self.err("PROJECT-ALIAS",
+                         f"project alias '{old_id}' shadows a canonical project", where)
+
+        resolvers = {
+            "module": lambda value: value in r.modules and not r.modules[value].get("compatibility_only"),
+            "source": lambda value: value in r.sources,
+            "topic-pack": lambda value: value in r.collections
+                and r.collections[value].get("collection_kind") == "topic-pack",
+            "note": lambda value: value in r.notes,
+            "file": lambda value: (r.root / str(value)).exists(),
+        }
+        for relation in r.project_relations:
+            relation_id = relation.get("id")
+            where = self._rel(r.project_relations_path) if r.project_relations_path else "projects/relations/project-relations.yaml"
+            if relation_id in relation_ids:
+                self.err("PROJECT-REL-DUP", f"duplicate project relationship '{relation_id}'", where)
+            relation_ids.add(str(relation_id))
+            project_id = relation.get("from_project_id")
+            if project_id not in r.projects:
+                self.err("REF-PROJECT",
+                         f"relationship '{relation_id}' references unknown project '{project_id}'", where)
+            to_type = relation.get("to_type")
+            target = relation.get("path") if to_type == "file" and relation.get("path") else relation.get("to_id")
+            resolver = resolvers.get(to_type)
+            if resolver is None or not resolver(target):
+                self.err("PROJECT-REL-ENDPOINT",
+                         f"relationship '{relation_id}' target does not resolve: {to_type} '{target}'", where)
+
+    def check_transaction_receipts(self):
+        directory = self.repo.root / "operations" / "transactions"
+        if not directory.is_dir():
+            return
+        seen: set[str] = set()
+        for path in sorted(directory.glob("transaction-*.yaml")):
+            try:
+                import yaml
+                data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            except Exception as exc:  # noqa: BLE001 - report as validation issue
+                self.err("TRANSACTION-RECEIPT", f"cannot parse receipt: {exc}", self._rel(path))
+                continue
+            self._schema_check("transaction-receipt", data, self._rel(path))
+            transaction_id = data.get("id") if isinstance(data, dict) else None
+            if transaction_id in seen:
+                self.err("TRANSACTION-RECEIPT",
+                         f"duplicate transaction receipt id '{transaction_id}'", self._rel(path))
+            seen.add(transaction_id)
 
     def check_files(self):
         r = self.repo

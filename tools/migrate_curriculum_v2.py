@@ -467,7 +467,12 @@ def run(root: Path, apply: bool) -> Migration:
     source_map_defs = source_maps(source_ids)
 
     for program in PROGRAMS:
-        migration.write(f"curriculum/programs/{program['id']}.yaml", dump_yaml(program))
+        # Programs may acquire later compatibility states (for example a
+        # project-only programme becoming metadata-only). The curriculum-v2
+        # migrator must not roll those forward migrations back on a rerun.
+        existing = before.programs.get(program["id"])
+        rendered = copy.deepcopy(existing.data if existing else program)
+        migration.write(f"curriculum/programs/{program['id']}.yaml", dump_yaml(rendered))
 
     modules: dict[str, dict] = {}
     units_by_module: dict[str, list[tuple[dict, dict | None]]] = {}
@@ -653,6 +658,25 @@ def run(root: Path, apply: bool) -> Migration:
                   {"ultimate_reference": "note-aml-sad-master-wiring"},
                   related=["module-hu-aml", "module-hu-m2-statistik-analysis"]),
     ]
+
+    # The compatibility migrator owns the original curriculum partition, not
+    # later navigation metadata. Preserve explicit fields introduced after the
+    # first migration so a dry run remains idempotent instead of silently
+    # deleting core-owned thematic placement.
+    for mid, module in modules.items():
+        existing = before.modules.get(mid)
+        if not existing:
+            continue
+        for field in (
+            "thematic_group_ids",
+            "compatibility_only",
+            "migrated_to",
+            "migrated_at",
+            "migration",
+            "source_sha256",
+        ):
+            if field in existing:
+                module[field] = copy.deepcopy(existing[field])
 
     for mid, module in sorted(modules.items()):
         pairs = units_by_module.get(mid, [])

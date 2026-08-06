@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §1 (KW 24–29 curation).
 title: ML — blogs, essays & interactive explainers
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
 description: >-
   Written and interactive supplements for the AML/SaD arc — the video-adjacent
   layer under the lecture-series collections. Point-of-use StatQuest sets stay

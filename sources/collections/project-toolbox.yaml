@@ -1,6 +1,12 @@
 # Migrated from legacy LEARNING-RESOURCES.md §4 (KW 24–29 curation).
 # The legacy skrub + Stratum rows are quarantined with Job/ (CLAUDE.md §13).
 title: Project toolbox — tools, docs & data
+collection_kind: topic-pack
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-data-systems
+  - thematic-group-programming-languages
+purpose: "Provide point-of-use implementation references for the active ML projects without turning the pack into a complete module resource set."
 description: >-
   Implementation references for the AMLS project and mlprov, plus dataset
   indexes and meta-lists. Read at point of use, not ahead of it.

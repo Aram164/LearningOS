@@ -571,6 +571,73 @@ def test_session_end_reports_warnings_without_blocking(mini_repo):
     assert "warning(s)" in payload["validation"]
 
 
+
+def test_unit_note_is_session_scoped_and_projected(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    write_outputs(load_repo(mini_repo), generate_all(load_repo(mini_repo), "T0"))
+    manifest = json.loads((mini_repo / "generated/manifest.json").read_text(encoding="utf-8"))
+    snapshot = manifest["_generated"]["snapshot_id"]
+    attachment = tmp_path / "handwritten.png"
+    attachment.write_bytes(b"fixture-image")
+
+    saved = run_los(
+        mini_repo, "unit-note", "unit-demo-l01",
+        "--title", "Expected value session",
+        "--text", "I connected linearity to the indicator-variable argument.",
+        "--stage-id", "stage-demo",
+        "--attachment", str(attachment),
+        "--expected-snapshot", snapshot,
+    )
+    assert saved.returncode == 0, saved.stderr
+    payload = json.loads(saved.stdout)
+    assert payload["stage_ids"] == ["stage-demo"]
+    assert len(payload["attachments"]) == 1
+
+    unit = yaml.safe_load(
+        (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml")
+        .read_text(encoding="utf-8")
+    )
+    assert unit["working_note"].endswith("/notes.md")
+    note = mini_repo / unit["working_note"]
+    text = note.read_text(encoding="utf-8")
+    assert "learningos:unit-note" in text
+    assert "Expected value session" in text
+    assert "indicator-variable" in text
+
+    projected = json.loads((mini_repo / "generated/manifest.json").read_text(encoding="utf-8"))
+    unit_row = next(row for row in projected["units"] if row["id"] == "unit-demo-l01")
+    assert unit_row["notes_text"] == text
+    assert unit_row["note_sections"][0]["title"] == "Expected value session"
+    assert unit_row["note_sections"][0]["stage_ids"] == ["stage-demo"]
+    assert unit_row["note_sections"][0]["attachments"][0]["path"].endswith("handwritten.png")
+    assert "indicator-variable" in unit_row["note_sections"][0]["summary"]
+    # The legacy selected stage is not required by the command envelope.
+    assert "stage_id" not in payload
+
+
+def test_unit_note_rejects_foreign_stage_and_preserves_state(mini_repo):
+    add_curriculum(mini_repo)
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    before = unit_path.read_text(encoding="utf-8")
+    refused = run_los(
+        mini_repo, "unit-note", "unit-demo-l01", "--text", "Do not write this",
+        "--stage-id", "stage-foreign",
+    )
+    assert refused.returncode == 2
+    assert "does not belong" in refused.stderr
+    assert unit_path.read_text(encoding="utf-8") == before
+    assert not (unit_path.parent / "notes.md").exists()
+
+
+def test_unit_note_snapshot_guard_keeps_note_unchanged(mini_repo):
+    add_curriculum(mini_repo)
+    refused = run_los(
+        mini_repo, "unit-note", "unit-demo-l01", "--text", "stale",
+        "--expected-snapshot", "sha256:stale",
+    )
+    assert refused.returncode == 3
+    assert not (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/notes.md").exists()
+
 def test_live_migration_is_idempotent_in_dry_run(repo_root):
     proc = subprocess.run([sys.executable, str(MIGRATE), "--root", str(repo_root), "--report"],
                           capture_output=True, text=True, timeout=120)

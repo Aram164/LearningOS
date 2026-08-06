@@ -1,30 +1,203 @@
+contract_version: 1
+cli_protocol: 3
+queries:
+  project.list:
+    handler: project_list
+    result: project-list
+  project.inspect:
+    handler: inspect
+    result: record
+commands:
+  capture.create:
+    handler: capture
+    cli_command: capture
+    writes:
+    - work/inbox/**
+    invariants:
+    - no automatic routing
+    - original input is preserved
+  module.plan.import:
+    handler: module_plan_import
+    cli_command: module-plan-import
+    writes:
+    - curriculum/modules/**
+    - work/active/**
+    invariants:
+    - bounded to one module
+    - preflight required
+  note.revise:
+    handler: note_revise
+    cli_command: note-revise
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - id and role remain stable
+    - explicit approval
+  unit.map.import:
+    handler: unit_map_import
+    cli_command: unit-map-import
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - bounded to one unit
+  unit.note.append:
+    handler: unit_note
+    cli_command: unit-note
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - session-level append
+    - failed save preserves caller draft
+  stage.note.write:
+    handler: stage_note
+    cli_command: stage-note
+    writes:
+    - curriculum/modules/**/units/**/stages/**
+    invariants:
+    - compatibility capability only
+  stage.progress.update:
+    handler: stage_progress
+    cli_command: stage-progress
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - one active stage
+  stage.attachment.add:
+    handler: stage_attach
+    cli_command: stage-attach
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - source file is copied
+    - never moved
+  source.feedback.record:
+    handler: source_feedback
+    cli_command: source-feedback
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - feedback is contextual
+    - source identity is unchanged
+  detour.create:
+    handler: detour_create
+    cli_command: detour-create
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - return stage is explicit
+  detour.resolve:
+    handler: detour_resolve
+    cli_command: detour-resolve
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - returns to originating stage
+  review.prepare:
+    handler: shelving_prepare
+    cli_command: shelving-prepare
+    writes:
+    - curriculum/modules/**/units/**
+    invariants:
+    - preparation never applies proposed canonical changes
+  review.apply:
+    handler: shelving_apply
+    cli_command: shelving-apply
+    writes:
+    - knowledge/notes/**
+    - knowledge/garden/**
+    - curriculum/modules/**/units/**
+    invariants:
+    - explicit approval
+    - selected proposal is atomic
+  path.note.write:
+    handler: path_note
+    cli_command: path-note
+    writes:
+    - work/active/**
+    invariants:
+    - workspace-owned scratch only
+  path.progress.update:
+    handler: path_progress
+    cli_command: path-progress
+    writes:
+    - work/active/**
+    invariants:
+    - one active stage
+  path.attachment.add:
+    handler: path_attach
+    cli_command: path-attach
+    writes:
+    - work/active/**
+    invariants:
+    - source file is copied
+    - never moved
+  project.create:
+    handler: project_create
+    cli_command: project-create
+    writes:
+    - projects/registry/project-*.yaml
+    invariants:
+    - new id only
+    - project schema v1
+    - no module mutation
+  project.update:
+    handler: project_update
+    cli_command: project-update
+    writes:
+    - projects/registry/project-*.yaml
+    invariants:
+    - id and type remain stable
+    - revision guarded
+internal_commands:
+  project.migrate:
+    handler: projects_migration_apply
+    writes:
+    - projects/**
+    - curriculum/**
+    - work/active/**
+    invariants:
+    - one compatibility module becomes one project
+    - idempotent
+  project.migrate.rollback:
+    handler: projects_migration_rollback
+    writes:
+    - projects/**
+    - curriculum/**
+    - work/active/**
+    invariants:
+    - restores migration backup atomically
+forbidden:
+- direct interface filesystem writes
+- writes under Job/
+- partial application of a validated transaction
+- deletion of transaction receipts
+- repository.read-job
+- repository.write-arbitrary
+- artifact.delete
 schema_version: 1
 contract: learningos-capabilities
-queries:
+domain_capabilities:
+  garden.add-transcription:
+    writes:
+    - knowledge/garden/transcriptions/
+    invariants:
+    - original-remains-immutable
+    - provenance-is-ai-derived
+  garden.update:
+    writes:
+    - operations/ai-actions/garden-state/
+    allowed_fields:
+    - title
+    - state
+  relationship.create:
+    writes:
+    - knowledge/relationships.yaml
+ai_action_interface:
+  queries:
   - ai_action.list
   - ai_action.status
-commands:
+  commands:
   - ai_action.prepare
   - ai_action.import_delivery
   - ai_action.validate_delivery
   - ai_action.apply_delivery
-domain_capabilities:
-  garden.add-transcription:
-    writes:
-      - knowledge/garden/transcriptions/
-    invariants:
-      - original-remains-immutable
-      - provenance-is-ai-derived
-  garden.update:
-    writes:
-      - operations/ai-actions/garden-state/
-    allowed_fields:
-      - title
-      - state
-  relationship.create:
-    writes:
-      - knowledge/relationships.yaml
-forbidden:
-  - repository.read-job
-  - repository.write-arbitrary
-  - artifact.delete

@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LearningOS transaction receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "id", "type", "status", "capability", "committed_at",
+    "snapshot_before", "snapshot_after", "expected_revisions",
+    "artifact_revisions", "writes", "metadata"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"},
+    "type": {"const": "transaction-receipt"},
+    "status": {"const": "committed"},
+    "capability": {"type": "string", "minLength": 1},
+    "committed_at": {"type": "string", "format": "date-time"},
+    "snapshot_before": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "snapshot_after": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "expected_revisions": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "artifact_revisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["before", "after"],
+        "properties": {
+          "before": {"type": "integer", "minimum": 0},
+          "after": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "writes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256_before", "sha256_after", "created"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256_before": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+          "sha256_after": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+          "created": {"type": "boolean"}
+        }
+      }
+    },
+    "metadata": {"type": "object"}
+  }
+}

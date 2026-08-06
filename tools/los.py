@@ -42,16 +42,24 @@ import tempfile
 from pathlib import Path
 
 import yaml
+from jsonschema import Draft202012Validator
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from learning_os import __version__  # noqa: E402
+from learning_os.contracts.capability_catalog import (  # noqa: E402
+    CapabilityCatalogError, command_definitions, load_capability_catalog,
+)
 from learning_os.genout import (  # noqa: E402
     _exam_spine, _source_fingerprint, adoption_counts, build_backlinks,
     build_manifest, generate_all, stable_generated_at, write_outputs,
 )
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 from learning_os.rules import validate  # noqa: E402
+from learning_os.transactions import (  # noqa: E402
+    TransactionConflict, TransactionFailure, TransactionService,
+    artifact_revision, load_revisions, parse_expected_revisions,
+)
 from learning_os.ai_actions import (  # noqa: E402
     AIActionError, AIActionService, StaleDeliveryError,
 )
@@ -162,6 +170,7 @@ def cmd_status(args) -> int:
             "sources": len(repo.sources),
             "programs": len(repo.programs),
             "modules": len(repo.modules),
+            "projects": len(repo.projects),
             "modules_enrolled": sum(
                 1 for m in repo.modules.values() if m.get("status") == "enrolled"),
             "active_workspaces": len(active),
@@ -190,7 +199,7 @@ def cmd_status(args) -> int:
     print(f"  notes {c['notes']} · concepts {c['concepts']} · "
           f"relations {c['concept_relations']} · sources {c['sources']}")
     print(f"  programs {c['programs']} · modules {c['modules']} "
-          f"({c['modules_enrolled']} enrolled) · units {c['units']} · "
+          f"({c['modules_enrolled']} enrolled) · projects {c['projects']} · units {c['units']} · "
           f"study maps {c['study_maps']} · "
           f"workspaces {c['active_workspaces']} active "
           f"({c['standing_workspaces']} standing), "
@@ -212,23 +221,21 @@ def cmd_status(args) -> int:
 
 # ---------------------------------------------------- machine discovery/read
 def _capabilities(root: Path) -> dict:
+    """Return the executable capability catalogue, not a duplicated list."""
+    catalogue = load_capability_catalog(root)
     return {
         "contract_version": CONTRACT_VERSION,
+        "capability_contract_version": catalogue["contract_version"],
+        "cli_protocol": catalogue.get("cli_protocol", 3),
         "gateway": "tools/los.py",
         "projection": "generated/manifest.json",
         "operator_contract": "system/OPERATOR.md",
-        "commands": {
-            "read": ["status", "capabilities", "bootstrap", "search", "inspect", "related",
-                     "program-list", "module-list", "unit-list", "ai-action-list",
-                     "ai-action-status", "ai-action-validate-delivery"],
-            "safe_writes": ["capture", "module-plan-import", "unit-map-import", "stage-note", "stage-progress",
-                            "stage-attach", "source-feedback", "detour-create",
-                            "detour-resolve", "shelving-prepare", "generate", "session-end",
-                            "ai-action-prepare", "ai-action-import-delivery"],
-            "approval_gated": ["note-revise", "shelving-apply", "ai-action-apply-delivery"],
-        },
+        "queries": catalogue.get("queries", {}),
+        "commands": catalogue.get("commands", {}),
         "rules": {
-            "canonical_writes_require_operator": True,
+            "canonical_writes_are_transactional": True,
+            "successful_writes_have_receipts": True,
+            "artifact_revision_conflicts_fail_closed": True,
             "shelving_requires_explicit_approval": True,
             "job_quarantine": True,
             "interfaces_read_projection_only": True,
@@ -254,8 +261,8 @@ def cmd_capabilities(args) -> int:
               [f"LearningOS operator contract v{payload['contract_version']}",
                f"  gateway: {payload['gateway']}",
                f"  projection: {payload['projection']}",
-               "  writes: " + ", ".join(payload["commands"]["safe_writes"]),
-               "  shelving: explicit approval required"]))
+               "  transactional commands: " + ", ".join(sorted(payload["commands"])),
+               "  every successful canonical write has one receipt"]))
     return 0
 
 
@@ -267,6 +274,7 @@ def cmd_bootstrap(args) -> int:
         "snapshot": manifest.get("_generated", {}),
         "programs": manifest.get("programs", []),
         "modules": manifest.get("modules", []),
+        "projects": manifest.get("projects", []),
         "units": manifest.get("units", []),
         "active_study_maps": [m for m in manifest.get("study_maps", [])
                               if m.get("status") in {"active", "paused", "ready"}],
@@ -294,18 +302,23 @@ def cmd_search(args) -> int:
 
 def cmd_inspect(args) -> int:
     manifest = _fresh_manifest(_root(args))
-    rec = next((r for r in manifest["records"] if r.get("id") == args.id), None)
+    resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
+    rec = next((r for r in manifest["records"] if r.get("id") == resolved_id), None)
     if rec is None:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    print(json.dumps(rec, indent=2, sort_keys=True, ensure_ascii=False))
+    payload = dict(rec)
+    if resolved_id != args.id:
+        payload["resolved_from"] = args.id
+    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
     return 0
 
 
 def cmd_related(args) -> int:
     manifest = _fresh_manifest(_root(args))
     by_id = {r.get("id"): r for r in manifest["records"]}
-    rec = by_id.get(args.id)
+    resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
+    rec = by_id.get(resolved_id)
     if rec is None:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
@@ -326,8 +339,13 @@ def cmd_related(args) -> int:
     for relation in manifest.get("relations", []):
         if relation.get("from") == args.id:
             ids.add(relation.get("to"))
-        if relation.get("to") == args.id:
+        if relation.get("to") == resolved_id:
             ids.add(relation.get("from"))
+    for relation in manifest.get("project_relationships", []):
+        if relation.get("from_project_id") == resolved_id:
+            ids.add(relation.get("to_id"))
+        if relation.get("to_id") == resolved_id:
+            ids.add(relation.get("from_project_id"))
     out = [{k: by_id[rid].get(k) for k in ("id", "type", "title", "path")}
            for rid in sorted(ids) if rid in by_id]
     print(json.dumps(out, indent=2, sort_keys=True, ensure_ascii=False))
@@ -364,6 +382,175 @@ def cmd_unit_list(args) -> int:
     if args.status:
         rows = [row for row in rows if row.get("status") == args.status]
     return _print_rows(rows)
+
+
+def cmd_project_list(args) -> int:
+    manifest = _fresh_manifest(_root(args))
+    rows = manifest.get("projects", [])
+    if getattr(args, "status", None):
+        rows = [row for row in rows if row.get("status") == args.status]
+    return _print_rows(rows)
+
+
+def _read_structured_file(path_value: str) -> dict:
+    path = Path(path_value).expanduser().resolve()
+    if not path.is_file():
+        raise WriteRefused(f"no such file: {path}")
+    try:
+        if path.suffix.lower() == ".json":
+            data = json.loads(path.read_text(encoding="utf-8"))
+        else:
+            data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError, yaml.YAMLError) as exc:
+        raise WriteRefused(f"cannot parse {path}: {exc}") from exc
+    if not isinstance(data, dict):
+        raise WriteRefused(f"structured input must be an object: {path}")
+    return data
+
+
+def _project_write(root: Path, data: dict, *, capability: str,
+                   expected_revisions: dict[str, int]) -> tuple[int, dict]:
+    project_id = data.get("id")
+    if not isinstance(project_id, str) or not re.fullmatch(r"project-[a-z0-9]+(?:-[a-z0-9]+)*", project_id):
+        raise WriteRefused("project id must match project-<slug>")
+    if data.get("type") != "project":
+        raise WriteRefused("project type must be 'project'")
+    target = root / "projects" / "registry" / f"{project_id}.yaml"
+    exists = target.is_file()
+    if capability == "project.create" and exists:
+        raise WriteRefused(f"project already exists: {project_id}")
+    if capability == "project.update" and not exists:
+        raise WriteRefused(f"project not found: {project_id}")
+    if exists:
+        current = yaml.safe_load(target.read_text(encoding="utf-8")) or {}
+        if current.get("id") != project_id or current.get("type") != data.get("type"):
+            raise WriteRefused("project update cannot change id or type")
+    data = copy.deepcopy(data)
+    data.setdefault("schema_version", 1)
+    data.setdefault("revision", 0)
+    rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
+    code, errors = _write_transaction(
+        root, {target: rendered}, capability=capability,
+        expected_revisions=expected_revisions, artifact_ids=[project_id],
+    )
+    if code:
+        return code, {"errors": [str(issue) for issue in errors]}
+    return 0, {"project_id": project_id, **_transaction_confirmation()}
+
+
+def cmd_project_create(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, getattr(args, "expected_snapshot", None)):
+            return 3
+        code, result = _project_write(
+            root, _read_structured_file(args.file), capability="project.create",
+            expected_revisions=_expected_revisions_from_args(args),
+        )
+    if code:
+        print(json.dumps(result, ensure_ascii=False), file=sys.stderr)
+        return code
+    print(json.dumps({"ok": True, **result}, ensure_ascii=False))
+    return 0
+
+
+def cmd_project_update(args) -> int:
+    root = _root(args)
+    data = _read_structured_file(args.file)
+    if data.get("id") != args.project_id:
+        raise WriteRefused("project file id does not match command project_id")
+    with _operator_lock(root):
+        if not _expected_ok(root, getattr(args, "expected_snapshot", None)):
+            return 3
+        code, result = _project_write(
+            root, data, capability="project.update",
+            expected_revisions=_expected_revisions_from_args(args),
+        )
+    if code:
+        print(json.dumps(result, ensure_ascii=False), file=sys.stderr)
+        return code
+    print(json.dumps({"ok": True, **result}, ensure_ascii=False))
+    return 0
+
+
+def _capability_handlers() -> dict[str, str]:
+    """Public command capability -> concrete gateway handler name."""
+    return {
+        "capture.create": "capture",
+        "module.plan.import": "module_plan_import",
+        "note.revise": "note_revise",
+        "unit.map.import": "unit_map_import",
+        "unit.note.append": "unit_note",
+        "stage.note.write": "stage_note",
+        "stage.progress.update": "stage_progress",
+        "stage.attachment.add": "stage_attach",
+        "source.feedback.record": "source_feedback",
+        "detour.create": "detour_create",
+        "detour.resolve": "detour_resolve",
+        "review.prepare": "shelving_prepare",
+        "review.apply": "shelving_apply",
+        "path.note.write": "path_note",
+        "path.progress.update": "path_progress",
+        "path.attachment.add": "path_attach",
+        "project.create": "project_create",
+        "project.update": "project_update",
+    }
+
+
+def _validate_capability_envelope(root: Path, envelope: dict) -> None:
+    schema = json.loads((root / "system/schema/capability-envelope.schema.json").read_text(encoding="utf-8"))
+    errors = sorted(Draft202012Validator(schema).iter_errors(envelope), key=lambda error: list(error.path))
+    if errors:
+        raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
+
+
+def cmd_capability(args) -> int:
+    root = _root(args)
+    definitions = command_definitions(root)
+    if args.name not in definitions or args.name not in _capability_handlers():
+        print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
+        return 2
+    envelope = _read_structured_file(args.payload_file)
+    _validate_capability_envelope(root, envelope)
+    if envelope.get("capability") != args.name:
+        print("los: envelope capability does not match requested capability", file=sys.stderr)
+        return 2
+    payload = envelope.get("payload", {})
+    request_id = envelope["request_id"]
+    try:
+        if args.name in {"project.create", "project.update"}:
+            project = payload.get("project")
+            if not isinstance(project, dict):
+                raise WriteRefused("project capability payload requires a project object")
+            with _operator_lock(root):
+                expected_snapshot = envelope.get("expected_snapshot")
+                if not _expected_ok(root, expected_snapshot):
+                    code, result = 3, {"error": "snapshot conflict"}
+                else:
+                    code, detail = _project_write(
+                        root, project, capability=args.name,
+                        expected_revisions=envelope.get("expected_revisions", {}),
+                    )
+                    result = detail if code == 0 else {"error": "; ".join(detail.get("errors", []))}
+        else:
+            raise WriteRefused(
+                f"generic envelope dispatch is not yet defined for {args.name}; use its named CLI command"
+            )
+    except WriteRefused as exc:
+        code, result = 2, {"error": str(exc)}
+    confirmation = _transaction_confirmation() if code == 0 else {}
+    response = {
+        "request_id": request_id,
+        "capability": args.name,
+        "ok": code == 0,
+        "transaction_id": confirmation.get("transaction_id"),
+        "receipt_path": confirmation.get("receipt_path"),
+        "result": result if code == 0 else {},
+        "error": None if code == 0 else result.get("error", "capability failed"),
+    }
+    _validate_capability_envelope(root, response)
+    print(json.dumps(response, indent=2, ensure_ascii=False))
+    return code
 
 
 # ---------------------------------------------------- validate / generate
@@ -446,8 +633,7 @@ def cmd_ai_action_status(args) -> int:
 
 # ---------------------------------------------------------------- capture
 def cmd_capture(args) -> int:
-    """Judgment-free capture into work/inbox/ (ARCHITECTURE §3.3: no naming,
-    no filing — the operator routes later)."""
+    """Judgment-free capture into work/inbox/ with a transaction receipt."""
     root = _root(args)
     with _operator_lock(root):
         inbox = root / "work" / "inbox"
@@ -462,7 +648,7 @@ def cmd_capture(args) -> int:
             target = inbox / src.name
             if target.exists():
                 target = inbox / f"{stamp}-{src.name}"
-            shutil.copy2(src, target)
+            content: str | bytes = src.read_bytes()
         else:
             capture_text = args.text if args.text is not None else sys.stdin.read()
             if not capture_text.strip():
@@ -471,23 +657,27 @@ def cmd_capture(args) -> int:
             slug = re.sub(r"[^a-z0-9]+", "-",
                           (args.title or capture_text).lower()).strip("-")[:40] or "capture"
             target = inbox / f"{stamp}-{slug}.md"
-            # The stamp is second-precision, so two captures with the same title
-            # inside one second collided and the second silently overwrote the
-            # first. The --file branch already guarded this; text now does too.
             serial = 2
             while target.exists():
                 target = inbox / f"{stamp}-{slug}-{serial}.md"
                 serial += 1
-            body = (f"# {args.title}\n\n{capture_text}\n" if args.title
-                    else capture_text.rstrip() + "\n")
-            _atomic_text(target, body)
+            content = (f"# {args.title}\n\n{capture_text}\n" if args.title
+                       else capture_text.rstrip() + "\n")
 
-    relative = target.relative_to(root).as_posix()
-    _record_touched(root, [target])
+        relative = target.relative_to(root).as_posix()
+        code, errors = _write_transaction(
+            root, {target: content}, capability="capture.create",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[f"capture:{relative}"],
+        )
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+
     if getattr(args, "json", False):
-        # The app needs a structural confirmation; a human at a terminal keeps
-        # the prose.
-        print(json.dumps({"ok": True, "captured": relative}, ensure_ascii=False))
+        print(json.dumps({"ok": True, "captured": relative,
+                          **_transaction_confirmation()}, ensure_ascii=False))
         return 0
     print(f"captured -> {relative}")
     print("routing is the operator's job (WORKFLOWS §21); the inbox trends "
@@ -520,46 +710,89 @@ def _record_touched(root: Path, paths) -> None:
     _atomic_text(ledger, json.dumps(sorted(current), indent=2) + "\n")
 
 
-def _write_transaction(root: Path, writes: dict[Path, str], touched_extra=(),
-                       *, prevalidated: bool = False) -> tuple[int, list]:
-    """Apply authored writes atomically enough to validate and roll back as a set."""
-    backups: dict[Path, str | None] = {
-        path: path.read_text(encoding="utf-8") if path.is_file() else None
-        for path in writes
-    }
+def _write_transaction(root: Path, writes: dict[Path, str | bytes],
+                       *, prevalidated: bool = False,
+                       capability: str = "legacy.write",
+                       expected_revisions: dict[str, int] | None = None,
+                       artifact_ids=()) -> tuple[int, list]:
+    """Commit one named, receipt-producing canonical transaction.
 
-    def _rollback() -> None:
-        for path, old in backups.items():
-            try:
-                if old is None:
-                    # Only remove what this transaction could have created; a
-                    # path that was never a regular file is not ours to delete.
-                    if path.is_file():
-                        path.unlink()
-                else:
-                    _atomic_text(path, old)
-            except (OSError, WriteRefused) as exc:
-                print(f"los: could not roll back {path} ({exc}) — inspect it by hand",
-                      file=sys.stderr)
+    Existing command bodies keep their small ``(code, errors)`` contract while
+    all staging, rollback, revision checks, projection publication and receipt
+    persistence are owned by :class:`TransactionService`.
+    """
+    globals().pop("_LAST_TRANSACTION_RESULT", None)
+    service = TransactionService(root)
+    for path in writes:
+        if path.exists() and not path.is_file():
+            return 2, [f"cannot write {path}: target is not a regular file"]
+    baseline_errors = {
+        str(issue) for issue in validate(load_repo(root), online=False)
+        if issue.severity == "E"
+    } if not prevalidated else set()
 
-    # Rolling back only on validation error left a real split-brain: if the
-    # second file's write raised, the first stayed applied and validate saw
-    # nothing wrong. A failed write must undo the whole set.
+    def validation_errors():
+        if prevalidated:
+            return []
+        return [
+            issue for issue in validate(load_repo(root), online=False)
+            if issue.severity == "E" and str(issue) not in baseline_errors
+        ]
+
     try:
-        for path, content in writes.items():
-            _atomic_text(path, content)
-    except (WriteRefused, OSError):
-        _rollback()
-        raise
-    if not prevalidated:
-        errors = [issue for issue in validate(load_repo(root), online=False)
-                  if issue.severity == "E"]
-        if errors:
-            _rollback()
-            return 1, errors
-    _publish(root)
-    _record_touched(root, [*writes, *touched_extra])
+        result = service.commit(
+            capability=capability,
+            writes=writes,
+            artifact_ids=artifact_ids,
+            expected_revisions=expected_revisions or {},
+            validate_state=validation_errors,
+            publish=lambda: _publish(root),
+            touched=lambda paths: _record_touched(root, paths),
+        )
+    except TransactionConflict as exc:
+        print("los: artifact revision conflict — reload the affected record before writing",
+              file=sys.stderr)
+        print(json.dumps({
+            "conflicts": {artifact: {"expected": expected, "actual": actual}
+                          for artifact, (expected, actual) in exc.conflicts.items()}
+        }, ensure_ascii=False), file=sys.stderr)
+        return 3, []
+    except TransactionFailure as exc:
+        # Canonical write refusal is a handled operator error, not an internal
+        # process failure. Preserve the gateway's established exit-code 2.
+        return 2, [str(exc)]
+    globals()["_LAST_TRANSACTION_RESULT"] = result
     return 0, []
+
+
+def _expected_revisions_from_args(args) -> dict[str, int]:
+    try:
+        return parse_expected_revisions(getattr(args, "expected_revision", None))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+
+
+def _add_expected_revision_argument(parser) -> None:
+    parser.add_argument(
+        "--expected-revision", action="append", default=[],
+        help="artifact-level concurrency token <artifact-id>=<revision>; repeatable",
+    )
+
+
+def _transaction_confirmation() -> dict:
+    result = globals().get("_LAST_TRANSACTION_RESULT")
+    if result is None:
+        return {}
+    parts = result.receipt_path.parts
+    try:
+        relative = Path(*parts[parts.index("operations"):]).as_posix()
+    except ValueError:
+        relative = result.receipt_path.name
+    return {
+        "transaction_id": result.transaction_id,
+        "receipt_path": relative,
+        "artifact_revisions": dict(result.revisions),
+    }
 
 
 def _unit_map_or_error(root: Path, unit_id: str):
@@ -944,7 +1177,11 @@ def cmd_module_plan_import(args) -> int:
                       "units_checked": sorted(seen_units), "files_checked": len(writes),
                       "canonical_files_written": 0}
         else:
-            code, errors = _write_transaction(root, writes, prevalidated=True)
+            code, errors = _write_transaction(
+                root, writes, prevalidated=True, capability="module.plan.import",
+                expected_revisions=_expected_revisions_from_args(args),
+                artifact_ids=[args.module_id, *sorted(seen_units)],
+            )
             if code:  # Defensive: prevalidated transactions do not normally reach this branch.
                 print("los: module plan import failed", file=sys.stderr)
                 for issue in errors[:12]:
@@ -991,7 +1228,12 @@ def cmd_note_revise(args) -> int:
         if meta.get("role") != note.meta.get("role"):
             print("los: note-revise cannot change a note role", file=sys.stderr)
             return 2
-        code, errors = _write_transaction(root, {note.path: content.rstrip() + "\n"})
+        code, errors = _write_transaction(
+            root, {note.path: content.rstrip() + "\n"},
+            capability="note.revise",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.note_id],
+        )
         if code:
             print("los: note revision rejected by validation", file=sys.stderr)
             for issue in errors[:12]:
@@ -1044,7 +1286,11 @@ def cmd_unit_map_import(args) -> int:
                 note = root / str(note_ref)
                 if not note.exists():
                     writes[note] = ""
-        code, errors = _write_transaction(root, writes)
+        code, errors = _write_transaction(
+            root, writes, capability="unit.map.import",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, str(data.get("id") or f"study-map:{args.unit_id}")],
+        )
         if code:
             print("los: study map import rejected by validation", file=sys.stderr)
             for issue in errors[:12]:
@@ -1054,6 +1300,124 @@ def cmd_unit_map_import(args) -> int:
                       "study_map_id": data.get("id")}, ensure_ascii=False))
     return 0
 
+
+
+def _unit_note_marker(metadata: dict) -> str:
+    return "<!-- learningos:unit-note " + json.dumps(
+        metadata, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ) + " -->"
+
+
+def _unit_note_target(root: Path, unit) -> tuple[Path, str]:
+    declared = str(unit.data.get("working_note") or "").strip()
+    target = root / declared if declared else unit.path.parent / "notes.md"
+    try:
+        rel = target.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError as exc:
+        raise WriteRefused("unit working note must stay inside the repository") from exc
+    return target, rel
+
+
+def cmd_unit_note(args) -> int:
+    """Append one session-level section to the unit working note.
+
+    The note belongs to the unit/session context, never to one selected stage.
+    Referenced stage ids are evidence/context only and must belong to the unit's
+    current study map. Existing stage notes remain readable compatibility data.
+    """
+    root = _root(args)
+    value = args.text if args.text is not None else sys.stdin.read()
+    if not value.strip():
+        print("los: refusing to write an empty unit note — pass real text", file=sys.stderr)
+        return 2
+    sources = [Path(raw).expanduser().resolve() for raw in (args.attachment or [])]
+    missing = [source for source in sources if not source.is_file()]
+    if missing:
+        print(f"los: no such attachment: {missing[0]}", file=sys.stderr)
+        return 2
+
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo, unit, study_map = _unit_map_or_error(root, args.unit_id)
+        if unit is None or study_map is None:
+            return 2
+        stage_ids = list(dict.fromkeys(args.stage_id or []))
+        allowed = {row.get("id") for row in study_map.data.get("stages", []) or []}
+        unknown = [stage_id for stage_id in stage_ids if stage_id not in allowed]
+        if unknown:
+            print(f"los: stage does not belong to unit '{args.unit_id}': {unknown[0]}", file=sys.stderr)
+            return 2
+
+        unit_data = copy.deepcopy(unit.data)
+        try:
+            target, rel = _unit_note_target(root, unit)
+        except WriteRefused as exc:
+            print(f"los: {exc}", file=sys.stderr)
+            return 2
+        old = target.read_text(encoding="utf-8") if target.is_file() else ""
+        recorded_at = _dt.datetime.now().astimezone().replace(microsecond=0).isoformat()
+        title = " ".join((args.title or "Learning session note").split()) or "Learning session note"
+
+        attachments: list[dict] = []
+        attachment_writes: dict[Path, bytes] = {}
+        stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        attachment_dir = unit.path.parent / "attachments" / f"unit-note-{stamp}"
+        try:
+            for source in sources:
+                target_file = attachment_dir / source.name
+                suffix = 2
+                while target_file.exists() or target_file in attachment_writes:
+                    target_file = attachment_dir / f"{suffix}-{source.name}"
+                    suffix += 1
+                attachment_writes[target_file] = source.read_bytes()
+                attachments.append({
+                    "path": target_file.relative_to(root).as_posix(),
+                    "label": source.stem,
+                })
+
+            metadata = {
+                "recorded_at": recorded_at,
+                "title": title,
+                "stage_ids": stage_ids,
+                "attachments": attachments,
+            }
+            lines = [_unit_note_marker(metadata), f"## {title}", "", value.rstrip()]
+            if attachments:
+                lines.extend(["", "### Attachments", ""] + [
+                    f"- [{item['label']}]({Path(item['path']).relative_to(unit.path.parent.relative_to(root)).as_posix()})"
+                    for item in attachments
+                ])
+            section = "\n".join(lines).rstrip() + "\n"
+            divider = "\n" if old and not old.endswith("\n\n") else ""
+            updated = old + divider + section
+            if not unit_data.get("working_note"):
+                unit_data["working_note"] = rel
+            writes: dict[Path, str | bytes] = {
+                target: updated,
+                unit.path: _dump_yaml(unit_data),
+                **attachment_writes,
+            }
+            code, errors = _write_transaction(
+                root, writes, capability="unit.note.append",
+                expected_revisions=_expected_revisions_from_args(args),
+                artifact_ids=[args.unit_id],
+            )
+            if code:
+                for issue in errors[:12]:
+                    print(issue, file=sys.stderr)
+                return code
+        except (OSError, WriteRefused) as exc:
+            print(f"los: cannot write unit note: {exc}", file=sys.stderr)
+            return 2
+
+
+    print(json.dumps({
+        "ok": True, "unit_id": args.unit_id, "working_note": rel,
+        "recorded_at": recorded_at, "stage_ids": stage_ids,
+        "attachments": attachments,
+    }, ensure_ascii=False))
+    return 0
 
 def cmd_stage_note(args) -> int:
     root = _root(args)
@@ -1085,7 +1449,11 @@ def cmd_stage_note(args) -> int:
         else:
             divider = "\n" if old and not old.endswith("\n\n") else ""
             updated = old + divider + value.rstrip() + "\n"
-        code, errors = _write_transaction(root, {target: updated})
+        code, errors = _write_transaction(
+            root, {target: updated}, capability="stage.note.write",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1145,8 +1513,12 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
-        code, errors = _write_transaction(root, {
-            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        code, errors = _write_transaction(
+            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            capability="stage.progress.update",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1180,13 +1552,15 @@ def cmd_stage_attach(args) -> int:
         if target.exists():
             stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
             target = attachment_dir / f"{stamp}-{source.name}"
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
-        code, errors = _write_transaction(root, {study_map.path: _dump_yaml(data)}, [target])
+        code, errors = _write_transaction(
+            root, {study_map.path: _dump_yaml(data), target: source.read_bytes()},
+            capability="stage.attachment.add",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
-            target.unlink(missing_ok=True)
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
             return code
@@ -1216,7 +1590,12 @@ def cmd_source_feedback(args) -> int:
         if args.note:
             entry["note"] = args.note
         stage.setdefault("source_feedback", []).append(entry)
-        code, errors = _write_transaction(root, {study_map.path: _dump_yaml(data)})
+        code, errors = _write_transaction(
+            root, {study_map.path: _dump_yaml(data)},
+            capability="source.feedback.record",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1259,8 +1638,12 @@ def cmd_detour_create(args) -> int:
             unit_data["status"] = "paused"
         else:
             unit_data = unit.data
-        code, errors = _write_transaction(root, {
-            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        code, errors = _write_transaction(
+            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            capability="detour.create",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1295,8 +1678,12 @@ def cmd_detour_resolve(args) -> int:
         data["status"] = "active"
         unit_data = copy.deepcopy(unit.data)
         unit_data["status"] = "active"
-        code, errors = _write_transaction(root, {
-            study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)})
+        code, errors = _write_transaction(
+            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            capability="detour.resolve",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1340,9 +1727,15 @@ def cmd_shelving_prepare(args) -> int:
                           "summary": args.summary or "Review stage notes and attachments without rewriting learner wording."})
         if items:
             shelving["items"] = items
-        code, errors = _write_transaction(root, {
-            proposal_path: "\n".join(lines).rstrip() + "\n",
-            study_map.path: _dump_yaml(data)})
+        code, errors = _write_transaction(
+            root, {
+                proposal_path: "\n".join(lines).rstrip() + "\n",
+                study_map.path: _dump_yaml(data),
+            },
+            capability="review.prepare",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id],
+        )
         if code:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
@@ -1396,7 +1789,11 @@ def cmd_shelving_apply(args) -> int:
             writes[target] = content.rstrip() + "\n"
         shelving["state"] = "applied"
         writes[study_map.path] = _dump_yaml(data)
-        code, errors = _write_transaction(root, writes)
+        code, errors = _write_transaction(
+            root, writes, capability="review.apply",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id, study_map.id, *sorted(selected)],
+        )
         if code:
             print("los: approved shelving changes failed validation and were rolled back",
                   file=sys.stderr)
@@ -1497,11 +1894,18 @@ def cmd_path_note(args) -> int:
         else:
             divider = "\n" if old and not old.endswith("\n\n") else ""
             updated = old + divider + text_value.rstrip() + "\n"
-        _atomic_text(target, updated)
-        _publish(root)
+        code, errors = _write_transaction(
+            root, {target: updated}, capability="path.note.write",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.path_id],
+        )
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
     print(json.dumps({"ok": True, "path_id": args.path_id,
-                      "stage_id": args.stage_id, "notes_path": note_ref},
-                     ensure_ascii=False))
+                      "stage_id": args.stage_id, "notes_path": note_ref,
+                      **_transaction_confirmation()}, ensure_ascii=False))
     return 0
 
 
@@ -1546,22 +1950,22 @@ def cmd_path_progress(args) -> int:
                 shelving = data.setdefault("shelving", {})
                 shelving["state"] = "draft"
         data["updated"] = _dt.date.today().isoformat()
-        original = learning_path.path.read_text(encoding="utf-8")
         rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
-        _atomic_text(learning_path.path, rendered)
-        repo_after = load_repo(root)
-        errors = [i for i in validate(repo_after, online=False) if i.severity == "E"]
-        if errors:
-            _atomic_text(learning_path.path, original)
+        code, errors = _write_transaction(
+            root, {learning_path.path: rendered}, capability="path.progress.update",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.path_id],
+        )
+        if code:
             print("los: path update rejected by validation", file=sys.stderr)
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
-            return 1
-        _publish(root)
+            return code
     print(json.dumps({"ok": True, "path_id": args.path_id,
                       "stage_id": args.stage_id, "status": args.status,
                       "path_status": data["status"],
-                      "current_stage": data["current_stage"]}, ensure_ascii=False))
+                      "current_stage": data["current_stage"],
+                      **_transaction_confirmation()}, ensure_ascii=False))
     return 0
 
 
@@ -1590,26 +1994,27 @@ def cmd_path_attach(args) -> int:
         if target.exists():
             stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
             target = attachment_dir / f"{stamp}-{source.name}"
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({
             "path": rel, "label": args.label or source.stem})
         data["updated"] = _dt.date.today().isoformat()
-        original = learning_path.path.read_text(encoding="utf-8")
-        _atomic_text(learning_path.path,
-                     yaml.safe_dump(data, sort_keys=False, allow_unicode=True))
-        errors = [i for i in validate(load_repo(root), online=False) if i.severity == "E"]
-        if errors:
-            _atomic_text(learning_path.path, original)
-            target.unlink(missing_ok=True)
+        code, errors = _write_transaction(
+            root, {
+                learning_path.path: yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
+                target: source.read_bytes(),
+            },
+            capability="path.attachment.add",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.path_id],
+        )
+        if code:
             print("los: attachment rejected by validation", file=sys.stderr)
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
-            return 1
-        _publish(root)
+            return code
     print(json.dumps({"ok": True, "path_id": args.path_id,
-                      "stage_id": args.stage_id, "attachment": rel}, ensure_ascii=False))
+                      "stage_id": args.stage_id, "attachment": rel,
+                      **_transaction_confirmation()}, ensure_ascii=False))
     return 0
 
 
@@ -1661,6 +2066,29 @@ def main() -> int:
     p.add_argument("--status", default=None)
     p.set_defaults(func=cmd_unit_list)
 
+
+    p = sub.add_parser("project-list", help="list first-class projects")
+    p.add_argument("--status", default=None)
+    p.set_defaults(func=cmd_project_list)
+
+    p = sub.add_parser("project-create", help="create one first-class project transactionally")
+    p.add_argument("--file", required=True)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_project_create)
+
+    p = sub.add_parser("project-update", help="replace one project with revision protection")
+    p.add_argument("project_id")
+    p.add_argument("--file", required=True)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_project_update)
+
+    p = sub.add_parser("capability", help="execute a declared capability request envelope")
+    p.add_argument("name")
+    p.add_argument("--payload-file", required=True)
+    p.set_defaults(func=cmd_capability)
+
     p = sub.add_parser("validate", help="delegate to tools/validate.py")
     p.add_argument("--online", action="store_true", help="also audit external URLs")
     p.set_defaults(func=cmd_validate)
@@ -1707,6 +2135,7 @@ def main() -> int:
     p.add_argument("--title", default=None, help="optional title for text captures")
     p.add_argument("--json", action="store_true",
                    help="confirm structurally instead of in prose (used by the app)")
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_capture)
 
     p = sub.add_parser("unit-map-import",
@@ -1715,6 +2144,7 @@ def main() -> int:
     p.add_argument("--file", required=True)
     p.add_argument("--replace", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_unit_map_import)
 
     p = sub.add_parser("module-plan-import",
@@ -1724,6 +2154,7 @@ def main() -> int:
     p.add_argument("--check", action="store_true",
                    help="run contract, routing, and shadow-repository validation without writing")
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_module_plan_import)
 
     p = sub.add_parser("note-revise",
@@ -1732,7 +2163,21 @@ def main() -> int:
     p.add_argument("--file", required=True)
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_note_revise)
+
+
+    p = sub.add_parser("unit-note", help="append one session-level section to a unit working note")
+    p.add_argument("unit_id")
+    p.add_argument("--title", default=None)
+    p.add_argument("--text", default=None)
+    p.add_argument("--stage-id", action="append", default=[],
+                   help="completed stage context; repeat for multiple stages")
+    p.add_argument("--attachment", action="append", default=[],
+                   help="copy one file into the unit note attachments; repeatable")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_unit_note)
 
     p = sub.add_parser("stage-note", help="save or append a unit-stage working note")
     p.add_argument("unit_id")
@@ -1740,6 +2185,7 @@ def main() -> int:
     p.add_argument("--text", default=None)
     p.add_argument("--replace", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_note)
 
     p = sub.add_parser("stage-progress", help="activate, pause, complete, skip, or revisit a unit stage")
@@ -1747,6 +2193,7 @@ def main() -> int:
     p.add_argument("stage_id")
     p.add_argument("status", choices=("active", "paused", "complete", "skipped", "revisit"))
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_progress)
 
     p = sub.add_parser("stage-attach", help="attach a file inside a unit stage")
@@ -1755,6 +2202,7 @@ def main() -> int:
     p.add_argument("--file", required=True)
     p.add_argument("--label", default=None)
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_attach)
 
     p = sub.add_parser("source-feedback", help="record stage-local evidence about source usefulness")
@@ -1765,6 +2213,7 @@ def main() -> int:
                                         "useful-for-derivation", "useful-for-review", "skipped"))
     p.add_argument("--note", default=None)
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_source_feedback)
 
     p = sub.add_parser("detour-create", help="record a prerequisite detour with a return stage")
@@ -1774,6 +2223,7 @@ def main() -> int:
     p.add_argument("--classification", required=True,
                    choices=("required-now", "helpful-now", "deferred", "reference-only"))
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_detour_create)
 
     p = sub.add_parser("detour-resolve", help="resolve a detour and return to its originating stage")
@@ -1781,6 +2231,7 @@ def main() -> int:
     p.add_argument("detour_id")
     p.add_argument("--resolution", default=None)
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_detour_resolve)
 
     p = sub.add_parser("shelving-prepare", help="prepare a review packet; never applies canonical changes")
@@ -1789,6 +2240,7 @@ def main() -> int:
                    help="optional JSON proposal items produced with explicit unit context")
     p.add_argument("--summary", default=None)
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_shelving_prepare)
 
     p = sub.add_parser("shelving-apply", help="apply only explicitly approved proposal IDs")
@@ -1796,6 +2248,7 @@ def main() -> int:
     p.add_argument("--selected", nargs="+", required=True)
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_shelving_apply)
 
     p = sub.add_parser("session-end", help="validate, show exact session-owned files, optionally commit/push")
@@ -1810,6 +2263,7 @@ def main() -> int:
     p.add_argument("--replace", action="store_true", help="replace this stage note")
     p.add_argument("--expected-snapshot", default=None,
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_note)
 
     p = sub.add_parser("path-progress", help="advance or activate a learning path stage")
@@ -1818,6 +2272,7 @@ def main() -> int:
     p.add_argument("status", choices=("active", "complete", "skipped"))
     p.add_argument("--expected-snapshot", default=None,
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_progress)
 
     p = sub.add_parser("path-attach", help="copy handwriting/media into a stage-owned attachment folder")
@@ -1827,6 +2282,7 @@ def main() -> int:
     p.add_argument("--label", default=None)
     p.add_argument("--expected-snapshot", default=None,
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_attach)
 
     args = parser.parse_args()

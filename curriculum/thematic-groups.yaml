@@ -1,0 +1,21 @@
+thematic_groups:
+  - id: thematic-group-machine-learning
+    title: Machine Learning
+    description: Models, statistical learning, deep learning and ML systems.
+    order: 10
+  - id: thematic-group-mathematics
+    title: Mathematics
+    description: Probability, statistics, algebra and analysis foundations.
+    order: 20
+  - id: thematic-group-cs-theory
+    title: CS Theory
+    description: Algorithms, logic, complexity and formal reasoning.
+    order: 30
+  - id: thematic-group-programming-languages
+    title: Programming Languages
+    description: Python, language mechanics, compilers and runtime concepts.
+    order: 40
+  - id: thematic-group-data-systems
+    title: Data Systems
+    description: Databases, data pipelines, provenance and distributed systems.
+    order: 50

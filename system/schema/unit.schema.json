@@ -47,6 +47,7 @@
       }
     },
     "current_study_map": { "type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "working_note": { "type": "string", "pattern": "^curriculum/modules/.+/units/.+/notes\\.md$" },
     "artifacts": {
       "type": "object",
       "additionalProperties": false,

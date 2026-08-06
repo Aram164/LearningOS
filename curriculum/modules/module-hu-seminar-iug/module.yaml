@@ -11,6 +11,8 @@ examination:
 type: module
 kind: academic
 area_id: program-bachelors
+thematic_group_ids:
+  - thematic-group-cs-theory
 source_map: source-map.yaml
 unit_order:
 - unit-seminar-iug-portfolio
