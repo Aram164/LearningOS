@@ -707,3 +707,370 @@ def test_live_migration_preserves_rollback_evidence(repo_root):
             "curriculum/quarantine/masters-planning/sources/degree-module-anchors.yaml") in pairs
     assert "codex/learning-path-app-v1" in report
     assert "revert" in report.casefold()
+
+
+# MATERIAL RESOURCE PROJECTION REGRESSION MATRIX
+#
+# These tests define the core-owned interface contract for exact local stage
+# resources. They intentionally precede the generator implementation.
+#
+# They use only mini_repo/tmp_path data and never inspect the real materials
+# tree, real generated manifest, canary, or user vault.
+
+
+def _material_projection_fixture(
+        mini_repo,
+        *,
+        source_material,
+        resources,
+        existing_files=()):
+    """Project one synthetic study-map resource set through the real core."""
+    from learning_os.genout import build_manifest
+    from learning_os.loader import load_repo
+
+    add_curriculum(mini_repo)
+
+    registry = mini_repo / "sources" / "sources.yaml"
+    registry_data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    source = next(
+        row for row in registry_data["sources"]
+        if row["id"] == "source-demo-book"
+    )
+    source["material"] = source_material
+    write_yaml(registry, registry_data)
+
+    repo = load_repo(mini_repo)
+    study_map = next(iter(repo.study_maps.values()))
+    map_data = study_map.data
+
+    assert map_data["stages"], "synthetic curriculum has no stage"
+    stage = map_data["stages"][0]
+    stage_id = stage["id"]
+    stage["resources"] = resources
+    write_yaml(study_map.path, map_data)
+
+    for relative in existing_files:
+        target = repo.materials_root / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(
+            f"fixture material: {relative}\n",
+            encoding="utf-8",
+        )
+
+    repo = load_repo(mini_repo)
+    manifest = build_manifest(
+        repo,
+        "2026-08-06T20:00:00+00:00",
+    )
+
+    nested_map = next(
+        row for row in manifest["study_maps"]
+        if row["id"] == study_map.id
+    )
+    nested_stage = next(
+        row for row in nested_map["stages"]
+        if row["id"] == stage_id
+    )
+    flat_stage = next(
+        row for row in manifest["stages"]
+        if row["id"] == stage_id
+    )
+
+    return repo, nested_stage["resources"], flat_stage["resources"]
+
+
+def _expected_material_path(repo, material_uri):
+    target = (
+        repo.materials_root
+        / material_uri.removeprefix("material://")
+    )
+    return str(
+        target.resolve().relative_to(
+            repo.learningos_root.resolve()
+        )
+    )
+
+
+def _assert_projected_resource(
+        repo,
+        nested,
+        flat,
+        index,
+        *,
+        material_uri,
+        exists):
+    projected = nested[index]
+
+    assert projected["material_uri"] == material_uri
+    assert projected["material_path"] == _expected_material_path(
+        repo,
+        material_uri,
+    )
+    assert projected["material_exists"] is exists
+
+    assert flat[index]["material_uri"] == projected["material_uri"]
+    assert flat[index]["material_path"] == projected["material_path"]
+    assert flat[index]["material_exists"] is projected["material_exists"]
+
+    return projected
+
+
+def test_material_resource_projection_preserves_authored_uri(mini_repo):
+    material_uri = (
+        "material://source-demo-book/"
+        "lecture-slides/01_Introduction.pdf"
+    )
+
+    repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=(
+            "material://source-demo-book/lecture-slides"
+        ),
+        resources=[{
+            "source_id": "source-demo-book",
+            "label": "Lecture 01",
+            "locator": "lecture-slides/01_Introduction.pdf",
+            "vault_path": material_uri,
+        }],
+        existing_files=[
+            "source-demo-book/lecture-slides/01_Introduction.pdf",
+        ],
+    )
+
+    projected = _assert_projected_resource(
+        repo,
+        nested,
+        flat,
+        0,
+        material_uri=material_uri,
+        exists=True,
+    )
+
+    assert projected["vault_path"] == material_uri
+    assert "lecture-slides/lecture-slides" not in projected[
+        "material_path"
+    ]
+
+
+def test_material_resource_projection_handles_single_file_source(
+        mini_repo):
+    material_uri = "material://source-demo-book/demo-book.pdf"
+
+    repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=material_uri,
+        resources=[{
+            "source_id": "source-demo-book",
+            "label": "Complete book",
+            "locator": "demo-book.pdf",
+            "vault_path": material_uri,
+        }],
+        existing_files=["source-demo-book/demo-book.pdf"],
+    )
+
+    projected = _assert_projected_resource(
+        repo,
+        nested,
+        flat,
+        0,
+        material_uri=material_uri,
+        exists=True,
+    )
+
+    assert projected["material_path"].endswith(
+        "source-demo-book/demo-book.pdf"
+    )
+    assert "demo-book.pdf/demo-book.pdf" not in projected[
+        "material_path"
+    ]
+
+
+def test_material_resource_projection_derives_file_locators(
+        mini_repo):
+    locators = [
+        "Primer_Linear_Algebra.pdf",
+        "lecture-slides/02_Regression.pdf",
+        "older-lecture-slides/08_Neural_Networks.pdf",
+    ]
+    resources = [
+        {
+            "source_id": "source-demo-book",
+            "label": locator,
+            "locator": locator,
+        }
+        for locator in locators
+    ]
+
+    repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=(
+            "material://source-demo-book/lecture-slides"
+        ),
+        resources=resources,
+        existing_files=[
+            f"source-demo-book/{locator}"
+            for locator in locators
+        ],
+    )
+
+    for index, locator in enumerate(locators):
+        material_uri = (
+            f"material://source-demo-book/{locator}"
+        )
+        projected = _assert_projected_resource(
+            repo,
+            nested,
+            flat,
+            index,
+            material_uri=material_uri,
+            exists=True,
+        )
+        assert projected["locator"] == locator
+        assert "vault_path" not in projected
+
+
+def test_material_resource_projection_ignores_descriptive_and_unsafe_locators(
+        mini_repo):
+    resources = [
+        {
+            "source_id": "source-demo-book",
+            "label": "Reading guidance",
+            "locator": "Chapter 9, selected sections",
+        },
+        {
+            "source_id": "source-demo-book",
+            "label": "Traversal attempt",
+            "locator": "../../Job/secret.pdf",
+        },
+        {
+            "source_id": "source-demo-book",
+            "label": "Absolute path attempt",
+            "locator": "/tmp/secret.pdf",
+        },
+    ]
+
+    _repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=(
+            "material://source-demo-book/lecture-slides"
+        ),
+        resources=resources,
+    )
+
+    for index in range(len(resources)):
+        assert nested[index].get("material_uri") is None
+        assert nested[index].get("material_path") is None
+        assert nested[index].get("material_exists") in {
+            None,
+            False,
+        }
+
+        assert flat[index].get("material_uri") is None
+        assert flat[index].get("material_path") is None
+        assert flat[index].get("material_exists") in {
+            None,
+            False,
+        }
+
+
+def test_material_resource_projection_keeps_missing_material_nonfatal(
+        mini_repo):
+    locator = "lecture-slides/offline.pdf"
+    material_uri = f"material://source-demo-book/{locator}"
+
+    repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=(
+            "material://source-demo-book/lecture-slides"
+        ),
+        resources=[{
+            "source_id": "source-demo-book",
+            "label": "Offline lecture",
+            "locator": locator,
+        }],
+    )
+
+    _assert_projected_resource(
+        repo,
+        nested,
+        flat,
+        0,
+        material_uri=material_uri,
+        exists=False,
+    )
+
+
+def test_material_resource_projection_uses_source_material_authority(
+        mini_repo):
+    """A source may intentionally delegate material identity to another ID."""
+    material_uri = (
+        "material://source-shared-slides/"
+        "exercise-slides/UE4.pdf"
+    )
+
+    repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material=(
+            "material://source-shared-slides/exercise-slides"
+        ),
+        resources=[{
+            "source_id": "source-demo-book",
+            "label": "Shared exercise deck",
+            "locator": "exercise-slides/UE4.pdf",
+        }],
+        existing_files=[
+            "source-shared-slides/exercise-slides/UE4.pdf",
+        ],
+    )
+
+    projected = _assert_projected_resource(
+        repo,
+        nested,
+        flat,
+        0,
+        material_uri=material_uri,
+        exists=True,
+    )
+
+    assert projected["source_id"] == "source-demo-book"
+    assert projected["material_uri"].startswith(
+        "material://source-shared-slides/"
+    )
+
+
+def test_material_resource_projection_refuses_compound_and_unsafe_uris(
+        mini_repo):
+    resources = [
+        {
+            "source_id": "source-demo-book",
+            "label": "Compound locator",
+            "locator": "first.pdf; second.pdf",
+        },
+        {
+            "source_id": "source-demo-book",
+            "label": "Unsafe authored URI",
+            "vault_path": (
+                "material://source-demo-book/"
+                "../../../repository/secret.pdf"
+            ),
+        },
+    ]
+
+    _repo, nested, flat = _material_projection_fixture(
+        mini_repo,
+        source_material="material://source-demo-book",
+        resources=resources,
+        existing_files=[
+            "source-demo-book/first.pdf",
+            "source-demo-book/second.pdf",
+        ],
+    )
+
+    for collection in (nested, flat):
+        for resource in collection:
+            assert resource.get("material_uri") is None
+            assert resource.get("material_path") is None
+            assert resource.get("material_exists") in {
+                None,
+                False,
+            }
