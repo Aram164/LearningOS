@@ -146,6 +146,97 @@ def _material_location(repo: Repo, ref) -> dict:
         except ValueError:
             return {"material_path": None, "material_exists": False}
     return {"material_path": str(rel), "material_exists": target.exists()}
+_MATERIAL_RESOURCE_SUFFIXES = frozenset({
+    ".ipynb",
+    ".md",
+    ".pdf",
+    ".ppt",
+    ".pptx",
+})
+
+
+def _material_uri_authority(ref) -> str | None:
+    """Return the safe identity authority of a material URI."""
+    if not isinstance(ref, str) or not ref.startswith("material://"):
+        return None
+
+    payload = ref[len("material://"):]
+
+    if not payload or payload.startswith("/") or "\\" in payload:
+        return None
+
+    material_path = PurePosixPath(payload)
+
+    if material_path.is_absolute() or any(
+            part in {"", ".", ".."}
+            for part in material_path.parts):
+        return None
+
+    return material_path.parts[0] if material_path.parts else None
+
+
+def _safe_material_locator(value) -> str | None:
+    """Accept only one safe, file-shaped POSIX locator."""
+    if not isinstance(value, str):
+        return None
+
+    locator = value.strip()
+
+    if (
+        not locator
+        or "\\" in locator
+        or ";" in locator
+        or "\n" in locator
+    ):
+        return None
+
+    locator_path = PurePosixPath(locator)
+
+    if locator_path.is_absolute() or any(
+            part in {"", ".", ".."}
+            for part in locator_path.parts):
+        return None
+
+    if locator_path.suffix.lower() not in _MATERIAL_RESOURCE_SUFFIXES:
+        return None
+
+    return locator_path.as_posix()
+
+
+def _project_material_resource(repo: Repo, resource: dict) -> dict:
+    """Add one core-resolved local target to a stage resource."""
+    projected = dict(resource)
+
+    if projected.get("material_path"):
+        return projected
+
+    material_uri = None
+    vault_path = projected.get("vault_path")
+
+    if isinstance(vault_path, str) and vault_path:
+        if not vault_path.startswith("material://"):
+            return projected
+        if _material_uri_authority(vault_path):
+            material_uri = vault_path
+    else:
+        locator = _safe_material_locator(projected.get("locator"))
+        source = repo.sources.get(projected.get("source_id"))
+        source_material = (
+            source.get("material")
+            if isinstance(source, dict)
+            else None
+        )
+        authority = _material_uri_authority(source_material)
+
+        if locator and authority:
+            material_uri = f"material://{authority}/{locator}"
+
+    if not material_uri:
+        return projected
+
+    projected["material_uri"] = material_uri
+    projected.update(_material_location(repo, material_uri))
+    return projected
 
 
 def _source_fingerprint(repo: Repo) -> str:
@@ -469,6 +560,13 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         projected_stages = []
         for stage in data.get("stages", []) or []:
             projected = dict(stage)
+            if isinstance(stage, dict) and isinstance(
+                    stage.get("resources"), list):
+                projected["resources"] = [
+                    _project_material_resource(repo, resource)
+                    if isinstance(resource, dict) else resource
+                    for resource in stage["resources"]
+                ]
             note_ref = stage.get("notes_path") if isinstance(stage, dict) else None
             note_file = repo.root / str(note_ref) if note_ref else None
             if note_file and note_file.is_file():
@@ -528,6 +626,13 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         projected_stages = []
         for stage in data.get("stages", []) or []:
             projected = dict(stage)
+            if isinstance(stage, dict) and isinstance(
+                    stage.get("resources"), list):
+                projected["resources"] = [
+                    _project_material_resource(repo, resource)
+                    if isinstance(resource, dict) else resource
+                    for resource in stage["resources"]
+                ]
             note_ref = stage.get("working_note") if isinstance(stage, dict) else None
             note_file = repo.root / str(note_ref) if note_ref else None
             if note_file and note_file.is_file():
