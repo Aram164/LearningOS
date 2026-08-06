@@ -1,5 +1,11 @@
 # Migrated from legacy LEARNING-RESOURCES.md §6 (KW 24–29 curation).
 title: Exam-practice banks — solved material per module
+collection_kind: topic-pack
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-mathematics
+  - thematic-group-cs-theory
+purpose: "Prepare for concrete module examinations with manually ordered solved material and practice banks."
 description: >-
   No HU-internal Altklausuren are public for any module — this bank is solved
   material matched to each course's blocks. The real Altklausur channels

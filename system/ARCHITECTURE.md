@@ -158,6 +158,7 @@ repository/
 │   └── concept-relations.yaml
 │
 ├── curriculum/
+│   ├── thematic-groups.yaml      ← stable UI routing neighborhoods
 │   ├── programs/                 ← active areas and quarantine boundaries
 │   ├── resume.yaml               ← convenience pointer only
 │   ├── modules/<module-id>/
@@ -207,13 +208,15 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Concept registry | `knowledge/concepts.yaml` (partitionable to `knowledge/concepts/*.yaml`) | fixed |
 | Relation registry | `knowledge/concept-relations.yaml` | fixed |
 | Source registry | `sources/sources.yaml` (partitionable to `sources/registry/*.yaml`) | fixed |
-| Source collections (reading lists) | `sources/collections/<name>.yaml` | kebab-case |
+| Source collections (catalogues or topic packs) | `sources/collections/<name>.yaml` | kebab-case; `collection_kind` distinguishes broad catalogues from narrow packs |
+| Thematic navigation groups | `curriculum/thematic-groups.yaml` | fixed registry; stable IDs and explicit display order |
 | Program/area record | `curriculum/programs/<program-id>.yaml` | filename = program ID |
 | Module record | `curriculum/modules/<module-id>/module.yaml` | one partition per module |
 | Module source map | `curriculum/modules/<module-id>/source-map.yaml` | fixed inside module |
 | Unit | `curriculum/modules/<module-id>/units/<unit-id>/unit.yaml` | one owning module |
 | Current study map | beside its unit as `study-map.yaml` | at most one current map per unit |
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
+| Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
@@ -245,6 +248,10 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Concept → concept semantics | `knowledge/concept-relations.yaml` |
 | Source identity | `sources/sources.yaml` |
 | Contextual source evaluation (incl. crosswalk judgments) | The source record |
+| Thematic group identity and display order | `curriculum/thematic-groups.yaml` |
+| Module thematic placement | Owning partitioned `module.yaml` (`thematic_group_ids`) |
+| Source thematic placement | Explicit source metadata plus canonical module/collection relationships, resolved once in the generated manifest |
+| Collection kind, thematic placement, order and topic-pack purpose | Owning `sources/collections/<name>.yaml` |
 | Module identity, kind, area, unit order, components | Owning partitioned `module.yaml` |
 | **Exam dates, registrations, withdrawals, sittings, grades** | Academic module's `module.yaml` (`attempts`) |
 | Unit scope, component, status, current map, artifact references | Owning `unit.yaml` |
@@ -262,6 +269,17 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Deliberate semantic review date | Note `reviewed` field |
 
 A canonical fact has exactly one owner.
+
+**Thematic navigation rule:** thematic groups are routing neighborhoods, not a
+second concept ontology. The registry owns group identity/order; modules and
+collections declare membership explicitly. Source placement is projected by
+the core from direct source metadata and those canonical relationships. A UI
+reads the resolved IDs and never guesses from titles, paths or identifiers.
+
+**Collection-kind rule:** a `catalogue` is a broad Library source view. A
+`topic-pack` is a narrow, manually ordered collection with one explicit
+`purpose`; it is not a source type and must not clone a complete module source
+set.
 
 **The deadline rule:** exam dates exist canonically *only* in the owning
 academic module's `module.yaml`. A workspace `deadline` is for non-exam
@@ -575,3 +593,27 @@ Learning OS v3 will not implement:
 - mandatory `updated` timestamps;
 - a database or server;
 - dependence on Obsidian or another proprietary interface.
+
+## Gate B — transactional canonical writes
+
+Every declared canonical mutation now passes through `TransactionService`.
+The service applies one bounded write set, checks artifact-level expected
+revisions, validates the resulting repository, republishes disposable views,
+and records exactly one append-only receipt under
+`operations/transactions/`. A failed stage rolls the complete write set back.
+Interfaces discover the executable catalogue in
+`system/contracts/capabilities.yaml`; they do not invent write paths.
+
+Artifact revisions are coordination tokens, not replacements for Git history.
+Revision zero is implicit for authored records that have not yet been changed
+through the transaction service.
+
+## First-class Projects
+
+Projects live under `projects/registry/` and are independent from curriculum
+modules. A project may have no fixed structure, a linear structure, parallel
+workstreams, or nested steps. Project relationships are explicit records under
+`projects/relations/`; aliases preserve old deep links during compatibility
+gates. The current manifest-v2 projection exposes Projects additively. The
+manifest-v3 contract bump remains deferred until the required canonical
+families are ready together.

@@ -1,5 +1,9 @@
 # Migrated from legacy LEARNING-RESOURCES.md §8 (KW 24; links verified live then).
 title: Python — OOP, scope & interpreter internals
+collection_kind: topic-pack
+thematic_group_ids:
+  - thematic-group-programming-languages
+purpose: "Deepen the specific Python object-model, scope and interpreter concepts needed by current implementation work."
 description: >-
   Requested KW 24 when inheritance/scope/interpreter felt vague during mlprov
   subclassing work. Complements — doesn't replace — Fluent Python: FP Ch 6

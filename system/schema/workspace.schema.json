@@ -19,6 +19,7 @@
     "deadline": { "type": "string", "format": "date" },
     "program_ids": { "type": "array", "items": { "type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
     "module_ids": { "type": "array", "items": { "type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "project_id": { "type": "string", "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$" },
     "unit_ids": { "type": "array", "items": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true }
   }
 }

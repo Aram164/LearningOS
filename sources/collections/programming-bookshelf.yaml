@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29) + registered job-track texts.
 title: Programming — bookshelf
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-programming-languages
 description: >-
   The Python track spine + practical companions; deeper OOP/interpreter
   material lives in the python-internals-shelf collection.

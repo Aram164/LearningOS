@@ -186,7 +186,7 @@ is the whole learning interface.
 - [ ] UI fixture tests use several modules, components, units and maps; the app
   renders offline and contains no direct canonical parser or writer.
 - [ ] The real nested Obsidian vault loads the bundled plugin, renders Home,
-  navigates module → unit → stage, performs a guarded stage-note mutation,
+  navigates module → unit → stage, performs a guarded unit-note mutation after the relevant stages,
   survives reload, and remains usable in light/dark and narrow/wide layouts.
 - [ ] `los session-end` shows exact owned/unrelated files, commits only its
   ledger, and never stages the three protected Canvas files.

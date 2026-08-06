@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29 curation).
 title: ML — bookshelf (AML + deep learning)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-machine-learning
 description: >-
   Reading order and per-concept scoping live in the AML book-crosswalk note
   (every L02–L10 concept mapped to exact sections with in-scope/optional/beyond

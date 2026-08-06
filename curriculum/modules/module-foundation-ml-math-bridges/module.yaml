@@ -2,6 +2,9 @@ id: module-foundation-ml-math-bridges
 type: module
 kind: foundation
 area_id: program-skills
+thematic_group_ids:
+  - thematic-group-machine-learning
+  - thematic-group-mathematics
 title: ML & mathematics bridges
 status: active
 source_map: source-map.yaml

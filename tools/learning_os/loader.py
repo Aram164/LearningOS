@@ -12,6 +12,9 @@ depend on registry partitioning):
   - units:     curriculum/modules/<module-id>/units/<unit-id>/unit.yaml
   - study maps: one optional study-map.yaml beside each unit.yaml
   - module source maps: curriculum/modules/<module-id>/source-map.yaml
+  - projects:  projects/registry/project-*.yaml
+  - project relations: projects/relations/project-relations.yaml
+  - project aliases: projects/aliases.yaml
   - notes:     knowledge/notes/**/*.md            (Markdown frontmatter)
   - garden:    knowledge/garden/**/*.md           (free-form, no schema — §14)
   - workspaces: work/active/*/CONTEXT.md, archive/workspaces/*/*/CONTEXT.md
@@ -34,6 +37,8 @@ PATH_ID_RE = re.compile(r"^path-[a-z0-9]+(?:-[a-z0-9]+)*$")
 PROGRAM_ID_RE = re.compile(r"^program-[a-z0-9]+(?:-[a-z0-9]+)*$")
 UNIT_ID_RE = re.compile(r"^unit-[a-z0-9]+(?:-[a-z0-9]+)*$")
 STUDY_MAP_ID_RE = re.compile(r"^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$")
+PROJECT_ID_RE = re.compile(r"^project-[a-z0-9]+(?:-[a-z0-9]+)*$")
+PROJECT_RELATION_ID_RE = re.compile(r"^relationship-[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 # Inline #tags in Garden notes (CLAUDE.md §14). Conservative: a tag starts with
 # a lowercase letter (so ATX headings "# H", shebangs, "#1" issue refs and hex
@@ -323,6 +328,14 @@ class StudyMap:
 
 
 @dataclass
+class Project:
+    """A first-class thesis, research, software, writing, or other project."""
+    id: str
+    path: Path
+    data: dict
+
+
+@dataclass
 class Coordination:
     path: Path
     meta: dict
@@ -342,6 +355,14 @@ class Repo:
     source_origins: dict[str, Path] = field(default_factory=dict)
     collections: dict[str, dict] = field(default_factory=dict)
     collection_origins: dict[str, Path] = field(default_factory=dict)
+    thematic_groups: dict[str, dict] = field(default_factory=dict)
+    thematic_groups_path: Path | None = None
+    projects: dict[str, Project] = field(default_factory=dict)
+    project_origins: dict[str, Path] = field(default_factory=dict)
+    project_aliases: dict[str, str] = field(default_factory=dict)
+    project_aliases_path: Path | None = None
+    project_relations: list[dict] = field(default_factory=list)
+    project_relations_path: Path | None = None
     programs: dict[str, Program] = field(default_factory=dict)
     modules: dict[str, dict] = field(default_factory=dict)
     module_origins: dict[str, Path] = field(default_factory=dict)
@@ -379,7 +400,13 @@ class Repo:
 
     @property
     def projects_root(self) -> Path:
+        """External project working trees addressed by ``project://`` URIs."""
         return self.learningos_root / "projects"
+
+    @property
+    def project_registry_root(self) -> Path:
+        """Canonical first-class project records inside the repository."""
+        return self.root / "projects"
 
     def active_workspaces(self) -> list[Workspace]:
         return [w for w in self.workspaces.values() if not w.archived]
@@ -459,6 +486,98 @@ def load_repo(root: Path | str) -> Repo:
                 continue
             repo.collections[f.stem] = doc
             repo.collection_origins[f.stem] = f
+
+    # Thematic navigation groups are stable routing neighborhoods shared by
+    # Modules, Learning Sources and Topic Packs. They are explicit canonical
+    # metadata; interfaces never infer them from titles, paths or identifiers.
+    thematic_groups_file = root / "curriculum" / "thematic-groups.yaml"
+    if thematic_groups_file.is_file():
+        try:
+            thematic_doc = _load_yaml(thematic_groups_file)
+        except LoaderError as exc:
+            repo.parse_failures.append((thematic_groups_file, str(exc)))
+        else:
+            repo.thematic_groups_path = thematic_groups_file
+            groups = thematic_doc.get("thematic_groups", [])
+            if not isinstance(groups, list):
+                repo.parse_failures.append(
+                    (thematic_groups_file,
+                     f"{thematic_groups_file}: 'thematic_groups' must be a list"))
+            else:
+                for group in groups:
+                    if not isinstance(group, dict):
+                        repo.parse_failures.append(
+                            (thematic_groups_file,
+                             f"{thematic_groups_file}: thematic group is not a mapping — skipped"))
+                        continue
+                    gid = _record_id(group)
+                    if gid is None:
+                        repo.parse_failures.append(
+                            (thematic_groups_file,
+                             f"{thematic_groups_file}: thematic group with missing or empty id — skipped"))
+                        continue
+                    _register(repo, repo.thematic_groups, gid, group,
+                              thematic_groups_file, "thematic-group")
+
+    # First-class Projects. The registry is canonical metadata; the external
+    # ``LearningOS/projects`` tree remains the optional working-file location
+    # addressed by project:// URIs.
+    projects_dir = root / "projects" / "registry"
+    if projects_dir.is_dir():
+        for f in sorted(projects_dir.glob("project-*.yaml")):
+            try:
+                data = _load_yaml(f)
+            except LoaderError as exc:
+                repo.parse_failures.append((f, str(exc)))
+                continue
+            pid = _record_id(data)
+            if pid is None:
+                repo.parse_failures.append(
+                    (f, f"{f}: project with missing or empty id — skipped"))
+                continue
+            project = Project(pid, f, data)
+            _register(repo, repo.projects, pid, project, f, "project")
+            repo.project_origins.setdefault(pid, f)
+
+    aliases_file = root / "projects" / "aliases.yaml"
+    if aliases_file.is_file():
+        try:
+            aliases_data = _load_yaml(aliases_file)
+        except LoaderError as exc:
+            repo.parse_failures.append((aliases_file, str(exc)))
+        else:
+            repo.project_aliases_path = aliases_file
+            aliases = aliases_data.get("aliases", {})
+            if not isinstance(aliases, dict):
+                repo.parse_failures.append(
+                    (aliases_file, f"{aliases_file}: 'aliases' must be a mapping"))
+            else:
+                for old_id, project_id in aliases.items():
+                    if isinstance(old_id, str) and isinstance(project_id, str):
+                        repo.project_aliases[old_id] = project_id
+                    else:
+                        repo.parse_failures.append(
+                            (aliases_file, f"{aliases_file}: project aliases must map strings to strings"))
+
+    relations_file = root / "projects" / "relations" / "project-relations.yaml"
+    if relations_file.is_file():
+        try:
+            relations_data = _load_yaml(relations_file)
+        except LoaderError as exc:
+            repo.parse_failures.append((relations_file, str(exc)))
+        else:
+            repo.project_relations_path = relations_file
+            rows = relations_data.get("relations", [])
+            if not isinstance(rows, list):
+                repo.parse_failures.append(
+                    (relations_file, f"{relations_file}: 'relations' must be a list"))
+            else:
+                for index, row in enumerate(rows):
+                    if isinstance(row, dict):
+                        repo.project_relations.append(row)
+                    else:
+                        repo.parse_failures.append(
+                            (relations_file, f"{relations_file}: relations[{index}] is not a mapping"))
 
     # Curriculum programs / areas. Quarantined content is deliberately not
     # traversed: only the small boundary records under curriculum/programs are

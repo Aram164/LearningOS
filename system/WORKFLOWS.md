@@ -414,8 +414,11 @@ no-write preflight, snapshot guard, and acceptance gates are mandatory.
    unit. Preserve provenance to the original Mini Plan. Git preserves prior
    versions; never create several competing current scripts.
 7. **Work stage by stage.** Exact actions and locators, done-when criteria,
-   working note, attachments, feedback and optional detours stay with the
-   stage. Handwritten work remains faithful and stage-owned until shelving.
+   exact resources, feedback and optional detours stay with the stage. Existing
+   stage working notes and attachments remain compatibility inputs. The app's
+   primary note action appends one learner-authored session section to the
+   unit's `notes.md` after the relevant stages; the note is never required to
+   complete a stage. Handwritten originals remain faithful until shelving.
 8. **Shelve by review.** Optional stages may remain; apply only selected
    durable changes and preserve stage provenance.
 9. **Validate, regenerate, test, and diff-review** against the coverage audit.

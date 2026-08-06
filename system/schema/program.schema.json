@@ -10,7 +10,7 @@
     "type": { "const": "program" },
     "title": { "type": "string", "minLength": 1 },
     "kind": { "enum": ["academic", "skills", "projects", "quarantine", "boundary"] },
-    "status": { "enum": ["active", "quarantined", "boundary-only", "archived"] },
+    "status": { "enum": ["active", "quarantined", "boundary-only", "metadata-only", "archived"] },
     "default": { "type": "boolean" },
     "semester_bound": { "type": "boolean" },
     "description": { "type": "string" },

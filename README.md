@@ -136,3 +136,12 @@ Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings
 print but never block); **post-commit** rebuilds `generated/` so the local
 dashboards are never stale.
+
+## Transactional writes and Projects
+
+Canonical UI/CLI mutations are declared in
+`system/contracts/capabilities.yaml` and committed atomically through the
+shared transaction service. Successful writes produce receipts and increment
+only the affected artifact revisions. The Bachelor thesis is the first
+first-class Project; its former module ID remains a compatibility alias while
+manifest v2 is still supported.

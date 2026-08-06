@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §2 (KW 24 curation).
 title: Algorithms — lecture series & primary texts (Algo 2)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-cs-theory
 description: >-
   Mapped pulls only — dormant until post-Jul 23 (mündliche Prüfung prep,
   2. PZ). Written companions are the proof layer before the oral exam.

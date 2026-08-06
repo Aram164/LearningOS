@@ -1,5 +1,8 @@
 # Migrated from legacy LEARNING-RESOURCES.md §3 (KW 24–29 curation).
 title: Math — bookshelf (statistics + analysis)
+collection_kind: catalogue
+thematic_group_ids:
+  - thematic-group-mathematics
 description: >-
   SaD reading books by role: Fahrmeir = exam notation, Blitzstein = the why,
   OpenIntro = gentle first pass, then the softer-probability ladder

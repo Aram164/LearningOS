@@ -412,6 +412,7 @@ sources:
   - id: source-prisma-method
     title: PRISMA — systematic review reporting method
     type: website
+    thematic_group_ids: [thematic-group-machine-learning]
     url: https://www.prisma-statement.org/
     evaluations:
       - roles: [reference]
@@ -553,6 +554,7 @@ sources:
   - id: source-slatkin-effective-python
     title: Slatkin — Effective Python
     type: book
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Brett Slatkin]
     year: 2024
     material: material://source-slatkin-effective-python/effective-python.pdf
@@ -573,6 +575,7 @@ sources:
   - id: source-cosmicpython-architecture-patterns
     title: Percival & Gregory — Architecture Patterns with Python
     type: book
+    thematic_group_ids: [thematic-group-programming-languages, thematic-group-data-systems]
     authors: [Harry Percival, Bob Gregory]
     url: https://www.cosmicpython.com/
     evaluations:
@@ -587,6 +590,7 @@ sources:
   - id: source-viafore-robust-python
     title: Viafore — Robust Python
     type: book
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Patrick Viafore]
     evaluations:
       - concepts: [concept-python]
@@ -600,6 +604,7 @@ sources:
   - id: source-beazley-python-distilled
     title: Beazley — Python Distilled
     type: book
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [David Beazley]
     evaluations:
       - concepts: [concept-python]
@@ -611,6 +616,7 @@ sources:
   - id: source-beazley-generator-tricks
     title: Beazley — Generator Tricks for Systems Programmers
     type: course
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [David Beazley]
     url: https://www.dabeaz.com/generators/
     evaluations:
@@ -623,6 +629,7 @@ sources:
   - id: source-hunner-iterator-protocol
     title: Trey Hunner — The Iterator Protocol / Loop Better
     type: website
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Trey Hunner]
     url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
     identifiers:
@@ -636,6 +643,7 @@ sources:
   - id: source-coghlan-import-traps
     title: Coghlan — Traps for the Unwary in Python's Import System
     type: website
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Alyssa Coghlan]
     url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
     evaluations:
@@ -647,6 +655,7 @@ sources:
   - id: source-rhodes-python-patterns
     title: Brandon Rhodes — python-patterns.guide
     type: website
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Brandon Rhodes]
     url: https://python-patterns.guide/
     evaluations:
@@ -659,6 +668,7 @@ sources:
   - id: source-powell-python-expert
     title: James Powell — So you want to be a Python expert?
     type: video
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [James Powell]
     url: https://www.youtube.com/watch?v=cKPlPJyQrt4
     evaluations:
@@ -671,6 +681,7 @@ sources:
   - id: source-hettinger-class-toolkit
     title: Hettinger — Python's Class Development Toolkit
     type: video
+    thematic_group_ids: [thematic-group-programming-languages]
     authors: [Raymond Hettinger]
     url: https://www.youtube.com/watch?v=HTLu2DFOdTg
     evaluations:
@@ -683,6 +694,7 @@ sources:
   - id: source-pytest-docs
     title: pytest — official documentation
     type: documentation
+    thematic_group_ids: [thematic-group-programming-languages]
     organization: pytest-dev
     url: https://docs.pytest.org/en/stable/getting-started.html
     evaluations:
@@ -694,6 +706,7 @@ sources:
   - id: source-hypothesis-docs
     title: Hypothesis — property-based testing for Python
     type: documentation
+    thematic_group_ids: [thematic-group-programming-languages]
     organization: Hypothesis
     url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
     evaluations:

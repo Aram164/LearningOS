@@ -1,0 +1,7 @@
+schema_version: 1
+type: artifact-revision-ledger
+revisions:
+  module-project-bachelor-thesis: 1
+  program-thesis-projects: 1
+  project-bachelor-thesis: 1
+  workspace-thesis-mle-medical: 1

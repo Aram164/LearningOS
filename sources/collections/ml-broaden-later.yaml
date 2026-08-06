@@ -2,6 +2,10 @@
 # broaden later" (KW 26 save from MIT Open Learning's "7 free online MIT
 # courses to grasp machine learning") + the other for-later courses.
 title: ML — broaden later (general depth, DL1 & job prep)
+collection_kind: topic-pack
+thematic_group_ids:
+  - thematic-group-machine-learning
+purpose: "Preserve a deliberately deferred, manually ordered route for broadening ML depth after active course obligations."
 description: >-
   NOT tied to the AML exam — general ML depth for after July: DL1 prep and the
   BIFOLD/DEEM job. The 6.036 catalog entry from the MIT list is omitted here

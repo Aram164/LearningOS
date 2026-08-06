@@ -1,0 +1,1 @@
+"""Versioned LearningOS capability contracts."""

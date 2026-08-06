@@ -149,6 +149,8 @@ sources:
 
   # ============================================================= Degree admin
   - id: source-stupo-2015
+    thematic_group_ids:
+      - thematic-group-cs-theory
     title: StuPO 2015 MSc Computer Science (TU Berlin) + Modullisten SoSe 2026
     type: documentation
     organization: TU Berlin
