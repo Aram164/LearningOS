@@ -193,6 +193,12 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "evidence": list(note.meta.get("evidence", []) or []),
             "supersedes": sorted(note.meta.get("supersedes", []) or []),
             "reviewed": note.meta.get("reviewed"),
+            # The note-life axis: how the text got here and whether its meaning
+            # has been checked. Both are schema fields (v3) and both are
+            # authored today; omitting them meant the provenance of a
+            # transcribed note stopped at the repository boundary.
+            "transcription": note.meta.get("transcription"),
+            "semantic_review": note.meta.get("semantic_review"),
         })
     for cid in sorted(repo.concepts):
         c = repo.concepts[cid]
@@ -229,11 +235,21 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             # `useful_sections` is where the reading plan actually lives ("read
             # ch. 3 for X") — projected with its concept links so an interface
             # can turn a source into a navigable table of contents.
+            # Every field the evaluation schema allows is projected. It is a
+            # closed schema (`additionalProperties: false`), so this list and
+            # that one are the same list by construction — a projection that
+            # emitted a subset silently held pedagogical judgment inside the
+            # repository, and one that emitted an extra ("verdict", which the
+            # schema has never allowed) shipped a field that could only ever
+            # be null.
             "evaluations": [
                 {"roles": list(ev.get("roles", []) or []),
+                 "level": ev.get("level"),
+                 "audience": list(ev.get("audience", []) or []),
+                 "prerequisites": list(ev.get("prerequisites", []) or []),
                  "strengths": list(ev.get("strengths", []) or []),
                  "weaknesses": list(ev.get("weaknesses", []) or []),
-                 "verdict": ev.get("verdict"),
+                 "reviewed": ev.get("reviewed"),
                  "concepts": sorted(ev.get("concepts", []) or []),
                  "useful_sections": [
                      {"section": str(k), "note": str(v)}
