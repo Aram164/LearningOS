@@ -108,6 +108,22 @@ def _print_rows(rows: list[dict]) -> int:
 
 
 def _read_structured_file(path_value: str) -> dict:
+    """Read a JSON/YAML object from a path, or from stdin when given ``-``.
+
+    Stdin matters for callers that build an envelope in memory: writing it to
+    a temp file first means a real file holding canonical intent has to be
+    created, found, and cleaned up on every write path, including the ones
+    that fail. ``-`` removes that lifecycle entirely.
+    """
+    if path_value == "-":
+        raw = sys.stdin.read()
+        try:
+            data = json.loads(raw)
+        except ValueError as exc:
+            raise WriteRefused(f"cannot parse structured input from stdin: {exc}") from exc
+        if not isinstance(data, dict):
+            raise WriteRefused("structured input must be an object")
+        return data
     path = Path(path_value).expanduser().resolve()
     if not path.is_file():
         raise WriteRefused(f"no such file: {path}")
