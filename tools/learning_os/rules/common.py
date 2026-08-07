@@ -12,28 +12,10 @@ Scope notes (documented decisions):
 
 from __future__ import annotations
 
-import datetime as _dt
-import json
 import re
-import subprocess
-import time
 from dataclasses import dataclass
 from pathlib import Path
 
-import jsonschema
-
-from ..loader import (
-    EVIDENCE_SCHEMES,
-    ID_RE,
-    PATH_ID_RE,
-    PROGRAM_ID_RE,
-    PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE,
-    RELATION_TYPES,
-    Repo,
-    STUDY_MAP_ID_RE,
-    UNIT_ID_RE,
-)
 
 ISO_DATE_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
 MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")

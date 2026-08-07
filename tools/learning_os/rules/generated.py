@@ -2,9 +2,10 @@
 
 from __future__ import annotations
 
+import json
 from .common import (
     CANONICAL_TREES, GENERATED_ALLOWED, GENERATED_REPORT_PREFIXES, MD_LINK_RE, _in_garden,
-    _in_quarantine, json
+    _in_quarantine
 )
 
 

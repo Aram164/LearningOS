@@ -2,10 +2,9 @@
 
 from __future__ import annotations
 
-from .common import (
-    CANONICAL_TREES, EVIDENCE_SCHEMES, MD_LINK_RE, Path, WORKSPACE_TOKEN_RE, _in_garden,
-    _in_quarantine
-)
+from ..loader import EVIDENCE_SCHEMES
+from pathlib import Path
+from .common import CANONICAL_TREES, MD_LINK_RE, WORKSPACE_TOKEN_RE, _in_garden, _in_quarantine
 
 
 class ChecksReferences:

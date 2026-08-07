@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
-from .common import (
-    ID_RE, KNOWLEDGE_TEXT_SUFFIXES, PATH_ID_RE, PROGRAM_ID_RE, PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE, STUDY_MAP_ID_RE, SUFFIX_RE, UNIT_ID_RE, time
+from ..loader import (
+    ID_RE, PATH_ID_RE, PROGRAM_ID_RE, PROJECT_ID_RE, PROJECT_RELATION_ID_RE,
+    STUDY_MAP_ID_RE, UNIT_ID_RE
 )
+import time
+from .common import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
 
 
 class ChecksStructure:

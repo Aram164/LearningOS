@@ -6,7 +6,7 @@ import yaml
 from pathlib import Path
 from typing import Any
 from .errors import AIActionError
-from .registry import AdapterDefinition
+from .registry import DEFAULT_ADAPTERS, AdapterDefinition
 from .service import AIActionService
 from .support import _projection
 
