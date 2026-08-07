@@ -89,6 +89,13 @@ class AdapterDefinition:
         }
 
 
+DEFAULT_ADAPTERS: tuple[dict[str, Any], ...] = (
+    {"id": "manual-bundle", "provider": "manual-bundle", "available": True,
+     "supported_modes": ["discussion"], "supports_direct_delivery": True,
+     "supports_attachments": True},
+)
+
+
 class AdapterRegistry:
     """Adapter availability is contract data read by the core.
 

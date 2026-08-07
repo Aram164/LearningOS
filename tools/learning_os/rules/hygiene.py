@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from ..githistory import last_commit_timestamp
 
-from .common import (
-    Path, SHADOW_MTIME_SLACK_S, SHADOW_ROOTS, STALE_LOCK_AGE_S, json, subprocess, time
-)
+from pathlib import Path
+import json
+import subprocess
+import time
+from .common import SHADOW_MTIME_SLACK_S, SHADOW_ROOTS, STALE_LOCK_AGE_S
 
 
 class ChecksHygiene:

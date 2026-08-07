@@ -2,9 +2,8 @@
 
 from __future__ import annotations
 
-from .common import (
-    REQUIRED_WORKSPACE_SECTIONS, time
-)
+import time
+from .common import REQUIRED_WORKSPACE_SECTIONS
 
 
 class ChecksProjects:

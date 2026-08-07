@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+from ..loader import RELATION_TYPES
+import re
 from .common import (
-    CANONICAL_TREES, COORDINATION_SECTIONS, ISO_DATE_RE, JUDGMENT_HEADERS, RELATION_TYPES,
-    _in_garden, _in_quarantine, re
+    CANONICAL_TREES, COORDINATION_SECTIONS, ISO_DATE_RE, JUDGMENT_HEADERS, _in_garden,
+    _in_quarantine
 )
 
 

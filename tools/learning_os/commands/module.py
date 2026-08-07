@@ -11,7 +11,8 @@ import yaml
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from pathlib import Path
-from .support import _atomic_text, _dump_yaml, _expected_ok, _expected_revisions_from_args, _fresh_manifest, _operator_lock, _print_rows, _render_frontmatter, _replace_h2_section, _replace_registry_list_record, _root, _write_transaction
+from learning_os.render import replace_h2_section as _replace_h2_section
+from .support import _atomic_text, _dump_yaml, _expected_ok, _expected_revisions_from_args, _fresh_manifest, _operator_lock, _print_rows, _render_frontmatter, _replace_registry_list_record, _root, _write_transaction
 
 _PLAN_COMPLETENESS_CHECKS = (
     "local_inventory_complete",
