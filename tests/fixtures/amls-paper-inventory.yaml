@@ -1,0 +1,109 @@
+# Generated from the external AMLS reading list on 2026-08-07.
+# Regenerate with: python tools/refresh_amls_fixture.py
+# CI asserts the study maps match this file; the drift test asserts this
+# file still matches the external reading list when materials/ is present.
+source: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+captured: '2026-08-07'
+totals:
+  curated: 60
+  bibliography: 283
+lectures:
+  '01':
+    curated:
+    - Data Management in ML Systems
+    - Hidden Technical Debt in Machine Learning Systems
+    bibliography: 2
+  '02':
+    curated:
+    - From Data Mining to Knowledge Discovery in Databases
+    - Hidden Technical Debt in ML Systems
+    - 'Auto-WEKA: Combined Selection and Hyperparameter Optimization'
+    - MLPerf Training Benchmark
+    bibliography: 26
+  '03':
+    curated:
+    - 'SystemML: Declarative Machine Learning on Spark'
+    - 'SPOOF: Sum-Product Optimization and Operator Fusion'
+    - 'SPORES: Sum-Product Optimization via Relational Equality Saturation'
+    - 'TASO: Optimizing DL Computation with Automatic Generation of Graph Substitutions'
+    bibliography: 17
+  '04':
+    curated:
+    - On Optimizing Operator Fusion Plans for Large-Scale ML in SystemML
+    - 'MLIR: Scaling Compiler Infrastructure for Domain-Specific Computation'
+    - Attention Is All You Need
+    - 'FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness'
+    bibliography: 13
+  '05':
+    curated:
+    - Resilient Distributed Datasets (RDD / Spark)
+    - Hybrid Parallelization Strategies for Large-Scale ML in SystemML
+    - 'Cerebro: A Data System for Optimized Deep Learning Model Selection'
+    - 'Modin: Towards Scalable Dataframe Systems'
+    bibliography: 12
+  '06':
+    curated:
+    - Large Scale Distributed Deep Networks (DistBelief)
+    - Scaling Distributed ML with the Parameter Server
+    - 'Hogwild!: A Lock-Free Approach to Parallelizing SGD'
+    - More Effective Distributed ML via a Stale Synchronous Parallel Parameter Server
+    - 'Adam: A Method for Stochastic Optimization'
+    - Communication-Efficient Learning from Decentralized Data (FedAvg)
+    bibliography: 31
+  '07':
+    curated:
+    - Attention Is All You Need
+    - Language Models are Few-Shot Learners (GPT-3)
+    - Scaling Laws for Neural Language Models
+    - Training Compute-Optimal LLMs (Chinchilla)
+    - 'LoRA: Low-Rank Adaptation of Large Language Models'
+    - Neural Machine Translation of Rare Words with Subword Units (BPE)
+    bibliography: 16
+  08:
+    curated:
+    - 'Roofline: An Insightful Visual Performance Model'
+    - In-Datacenter Performance Analysis of a TPU
+    - 'TVM: An Automated End-to-End Optimizing Compiler for Deep Learning'
+    - A Graph Placement Methodology for Fast Chip Design
+    bibliography: 24
+  09:
+    curated:
+    - Compressed Linear Algebra for Large-Scale ML
+    - 'ZipML: Training Linear Models with End-to-End Low Precision'
+    - 'AWARE: Workload-aware, Redundancy-exploiting Linear Algebra'
+    - 'Milvus: A Purpose-Built Vector Data Management System'
+    bibliography: 22
+  '10':
+    curated:
+    - Automating Large-Scale Data Quality Verification (Deequ)
+    - Data Validation for Machine Learning (TFX/TFDV)
+    - Efficient Estimation of Word Representations (word2vec)
+    - 'SAGA: A Scalable Framework for Optimizing Data Cleaning Pipelines for ML'
+    - 'CatDB: Data-catalog-guided, LLM-based Generation of Data-centric ML Pipelines'
+    bibliography: 26
+  '11':
+    curated:
+    - ImageNet Classification with Deep CNNs (AlexNet)
+    - 'Snorkel: Rapid Training Data Creation with Weak Supervision'
+    - 'Hyperband: A Novel Bandit-Based Approach to HPO'
+    - 'Auto-sklearn: Efficient and Robust Automated ML'
+    - Neural Architecture Search with Reinforcement Learning
+    - Accelerating the ML Lifecycle with MLflow
+    - 'LIMA: Fine-grained Lineage Tracing and Reuse in ML Systems'
+    bibliography: 42
+  '12':
+    curated:
+    - '"Why Should I Trust You?" Explaining the Predictions of Any Classifier (LIME)'
+    - A Unified Approach to Interpreting Model Predictions (SHAP)
+    - 'SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging'
+    - Visualizing and Understanding Convolutional Networks
+    - Fairness Through Awareness
+    bibliography: 27
+  '13':
+    curated:
+    - 'Clipper: A Low-Latency Online Prediction Serving System'
+    - 'PRETZEL: Opening the Black Box of ML Prediction Serving Systems'
+    - A Tensor Compiler for Unified ML Prediction Serving (Hummingbird)
+    - Distilling the Knowledge in a Neural Network
+    - 'NoScope: Optimizing Deep CNN-Based Queries over Video Streams'
+    bibliography: 25

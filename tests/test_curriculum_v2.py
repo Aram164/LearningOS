@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 from learning_os.genout import _source_fingerprint, generate_all, write_outputs
@@ -645,52 +646,71 @@ def test_live_migration_is_idempotent_in_dry_run(repo_root):
     assert "dry-run: 0 action(s)" in proc.stdout
 
 
-def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
-    reading_list = (
-        repo_root.parent
-        / "materials/ML/AMLS/course/amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md"
-    )
-    curated = {f"{i:02d}": [] for i in range(1, 14)}
-    bibliography = {f"{i:02d}": 0 for i in range(1, 14)}
-    part, lecture = 0, None
-    for line in reading_list.read_text(encoding="utf-8").splitlines():
-        if line.startswith("# Part 1"):
-            part = 1
-        elif line.startswith("# Part 2"):
-            part = 2
-        elif line.startswith("## ") and line[3:5].isdigit():
-            lecture = line[3:5]
-        elif line.startswith("- ") and lecture and part == 1:
-            assert line.startswith("- **") and "**" in line[4:]
-            curated[lecture].append(line[4:].split("**", 1)[0])
-        elif line.startswith("- ") and lecture and part == 2:
-            bibliography[lecture] += 1
+# AMLS PAPER INVENTORY
+#
+# The reading list this inventory describes lives outside the authored tree,
+# under ../materials/ (CLAUDE.md §11), so a CI checkout of this repository
+# alone cannot see it. Splitting the old single test keeps every wiring
+# assertion running everywhere:
+#
+#   * the wiring test reads the checked-in fixture — hermetic, runs in CI;
+#   * the drift test proves the fixture still matches the external list —
+#     local only, skipped where materials/ is not present.
+#
+# Regenerate the fixture with tools/refresh_amls_fixture.py.
 
-    assert sum(map(len, curated.values())) == 60
-    assert sum(bibliography.values()) == 283
+AMLS_INVENTORY = Path(__file__).resolve().parent / "fixtures" / "amls-paper-inventory.yaml"
+AMLS_READING_LIST = (
+    ROOT.parent
+    / "materials/ML/AMLS/course/amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md"
+)
+
+
+def _amls_inventory() -> dict:
+    return yaml.safe_load(AMLS_INVENTORY.read_text(encoding="utf-8"))
+
+
+def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
+    inventory = _amls_inventory()
+    assert inventory["totals"]["curated"] == 60
+    assert inventory["totals"]["bibliography"] == 283
+
     repo = load_repo(repo_root)
     source = repo.sources["source-amls-ss26-lectures"]
     assert source["material"] == "material://source-amls-ss26-lectures"
     assert source["identifiers"]["paper-reading-list"].endswith(
         "/AMLS-Source-Papers-Reading-List.md")
 
-    for lecture in curated:
-        uid = f"unit-amls-l{lecture}"
+    for lecture, expected in inventory["lectures"].items():
         study_map = repo.study_maps[f"study-map-amls-l{lecture}"].data
         stage = next(row for row in study_map["stages"]
                      if row["id"] == f"stage-amls-l{lecture}-integrate")
         selected = [row for row in stage["resources"]
                     if row.get("locator") ==
                     f"AMLS paper reading list, Part 1, Lecture {lecture}"]
-        assert [row["label"].removeprefix("Primary paper — ") for row in selected] == curated[lecture]
+        assert [row["label"].removeprefix("Primary paper — ")
+                for row in selected] == expected["curated"]
         assert all(row.get("url") and row.get("vault_path") for row in selected)
         complete = [row for row in stage["resources"]
                     if row.get("locator") ==
                     f"AMLS paper reading list, Part 2, Lecture {lecture}; reference-only"]
         assert len(complete) == 1
         assert complete[0]["kind"] == "reference"
-        assert f"({bibliography[lecture]} entries)" in complete[0]["label"]
+        assert f"({expected['bibliography']} entries)" in complete[0]["label"]
         assert any("Every curated paper is marked" in item for item in stage["done_when"])
+
+
+def test_amls_reading_list_still_matches_checked_in_inventory():
+    if not AMLS_READING_LIST.exists():
+        pytest.skip(f"materials/ not checked out: {AMLS_READING_LIST}")
+    sys.path.insert(0, str(ROOT / "tools"))
+    from refresh_amls_fixture import parse_reading_list
+
+    assert parse_reading_list(AMLS_READING_LIST) == _amls_inventory()["lectures"], (
+        "the external AMLS reading list has drifted from "
+        "tests/fixtures/amls-paper-inventory.yaml — rerun "
+        "tools/refresh_amls_fixture.py, then re-wire the affected study maps"
+    )
 
 
 def test_live_migration_preserves_rollback_evidence(repo_root):
