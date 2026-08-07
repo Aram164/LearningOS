@@ -33,6 +33,15 @@ commands:
     invariants:
     - id and role remain stable
     - explicit approval
+  note.evidence.add:
+    handler: note_evidence
+    cli_command: note-evidence
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - note body is never modified
+    - evidence is append-only
+    - existing entries are never rewritten or removed
   unit.map.import:
     handler: unit_map_import
     cli_command: unit-map-import

@@ -31,7 +31,7 @@
         "required": ["type", "ref"],
         "additionalProperties": false,
         "properties": {
-          "type": { "enum": ["derivation", "implementation", "exercise", "exam", "external"] },
+          "type": { "enum": ["derivation", "explanation", "implementation", "exercise", "exam", "external"] },
           "ref": { "type": "string", "minLength": 1 }
         }
       }

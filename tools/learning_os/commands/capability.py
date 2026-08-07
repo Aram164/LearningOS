@@ -18,6 +18,7 @@ def _capability_handlers() -> dict[str, str]:
         "capture.create": "capture",
         "module.plan.import": "module_plan_import",
         "note.revise": "note_revise",
+        "note.evidence.add": "note_evidence",
         "unit.map.import": "unit_map_import",
         "unit.note.append": "unit_note",
         "stage.note.write": "stage_note",
