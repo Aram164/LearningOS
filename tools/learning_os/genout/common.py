@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import re
 import subprocess
-from functools import lru_cache
 from .. import __version__
+from ..githistory import last_commit_date
 from pathlib import Path
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
@@ -87,51 +87,8 @@ def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
     return lines
 
 
-@lru_cache(maxsize=4)
-def _last_commit_dates(root: str) -> dict[str, str]:
-    """One history walk: repository-relative path -> last commit date (%cs).
-
-    Previously each caller shelled out to ``git log -1 -- <path>``. Generation
-    asks about every note from four different builders, which meant ~230
-    subprocesses and roughly 6.8 of the 10.6 seconds a full rebuild took — a
-    cost paid on every canonical write. Git can answer for the whole tree in
-    one pass, and since ``git log`` walks newest-first, the first time a path
-    appears is its most recent commit.
-
-    Cached per process. The CLI is one-shot per command and a transaction
-    never commits mid-run, so the map cannot go stale while it is in use.
-    """
-    try:
-        out = subprocess.run(
-            ["git", "log", "--format=%x00%cs", "--name-only", "--no-renames"],
-            cwd=root, capture_output=True, text=True, timeout=120)
-    except Exception:  # noqa: BLE001
-        return {}
-    dates: dict[str, str] = {}
-    current = ""
-    for line in out.stdout.split("\n"):
-        if line.startswith("\x00"):
-            current = line[1:].strip()
-        elif line and current:
-            dates.setdefault(line, current)
-    return dates
-
-
 def _git_last_commit(root: Path, rel: str) -> str:
-    """Last commit date touching ``rel``, which may be a file or a directory.
-
-    Directories matter: the coordination view asks when a whole workspace
-    folder last changed. ``git log --name-only`` never emits directory names,
-    so a directory is answered by the newest date among the paths beneath it —
-    which is what ``git log -- <dir>`` reported before.
-    """
-    dates = _last_commit_dates(str(root))
-    exact = dates.get(rel)
-    if exact is not None:
-        return exact
-    prefix = rel.rstrip("/") + "/"
-    beneath = [date for path, date in dates.items() if path.startswith(prefix)]
-    return max(beneath) if beneath else ""
+    return last_commit_date(root, rel)
 
 
 def stable_generated_at(root: Path) -> str:

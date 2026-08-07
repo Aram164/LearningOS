@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from ..githistory import last_commit_timestamp
+
 from .common import (
     Path, SHADOW_MTIME_SLACK_S, SHADOW_ROOTS, STALE_LOCK_AGE_S, json, subprocess, time
 )
@@ -127,6 +129,6 @@ class ChecksHygiene:
             return ""
 
     def _git_last_commit_ts(self, path: Path) -> float | None:
-        out = self._git(["log", "-1", "--format=%ct", "--", str(path.relative_to(self.repo.root))])
-        out = out.strip()
-        return float(out) if out else None
+        """One batched history walk serves every path; see learning_os.githistory."""
+        return last_commit_timestamp(
+            self.repo.root, str(path.relative_to(self.repo.root)))
