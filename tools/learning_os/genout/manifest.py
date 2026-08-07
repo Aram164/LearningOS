@@ -14,7 +14,18 @@ from .materials import _material_location, _project_material_resource
 from .modules_view import _academic_deadlines
 
 def _source_fingerprint(repo: Repo) -> str:
-    """Content identity of every authored input used by the projection."""
+    """Content identity of every authored input used by the projection.
+
+    Memoised on the ``Repo``. A ``Repo`` is the result of one ``load_repo``
+    walk and is never mutated afterwards, so every caller holding the same
+    instance is asking about the same bytes. Publishing alone asked twice —
+    once for backlinks, once for the manifest — and each answer costs a full
+    read-and-hash of every authored file. A write that changes the repository
+    loads it again, which produces a new instance and therefore a new answer.
+    """
+    cached = getattr(repo, "_source_fingerprint_cache", None)
+    if cached is not None:
+        return cached
     digest = hashlib.sha256()
     roots = ("knowledge", "sources", "records", "work", "curriculum", "projects", "system/schema", "system/contracts")
     for rel_root in roots:
@@ -30,7 +41,12 @@ def _source_fingerprint(repo: Repo) -> str:
             digest.update(b"\0")
             digest.update(path.read_bytes())
             digest.update(b"\0")
-    return digest.hexdigest()
+    result = digest.hexdigest()
+    try:
+        repo._source_fingerprint_cache = result
+    except (AttributeError, TypeError):
+        pass          # a frozen or slotted Repo simply recomputes
+    return result
 
 
 _UNIT_NOTE_MARKER = re.compile(r"^<!-- learningos:unit-note (\{.*\}) -->\s*$", re.MULTILINE)
