@@ -138,6 +138,35 @@ Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 print but never block); **post-commit** rebuilds `generated/` so the local
 dashboards are never stale.
 
+## Changing a schema (the data contract)
+
+Every record schema is `additionalProperties: false`, and canonical records carry
+no per-record version. That is strict by design, but it means editing a schema
+silently redefines what "valid" means for data already on disk — and years later
+there is no way to ask "what format was this note written under, and what brings
+it forward?"
+
+`system/contracts/data-contract.yaml` records the current format version and a
+fingerprint over `system/schema/*.schema.json` (the schemas governing stored
+records; capability payload schemas are excluded — they validate requests, not
+data at rest). `make check` compares them, so a schema edit cannot land without a
+deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
+
+1. **Does existing data still validate?** `tests/fixtures/formats/v<N>/` holds a
+   frozen snapshot of each historical format and is loaded against the *current*
+   schemas. If those tests still pass, the change is backward-compatible.
+2. **If not, write the migration** under `tools/migrations/` — idempotent,
+   dry-run by default, in the style of `curriculum_v2.py`.
+3. **Bump the contract:**
+   `python tools/schema_contract.py --bump --note "…" [--migration …]`
+4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
+   it to `FORMATS` in `tests/test_format_fixtures.py`.
+
+Never edit or regenerate an existing fixture — see
+`tests/fixtures/formats/README.md`. A fixture that tracks current code can never
+fail, and one that gets edited to pass destroys the record of the format it was
+supposed to preserve.
+
 ## Materials durability
 
 `materials/` is the one part of the system Git does not protect. It sits outside

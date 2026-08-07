@@ -11,6 +11,7 @@ from pathlib import Path
 import json
 import jsonschema
 from .common import Issue
+from .contract import ChecksContract
 from .curriculum import ChecksCurriculum
 from .generated import ChecksGenerated
 from .hygiene import ChecksHygiene
@@ -21,7 +22,7 @@ from .registries import ChecksRegistries
 from .structure import ChecksStructure
 
 
-class Validator(ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
+class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
 
     def __init__(self, repo: Repo, online: bool = False):
         self.repo = repo
@@ -106,6 +107,7 @@ class Validator(ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterial
     # ------------------------------------------------------------------ run
     def run(self) -> list[Issue]:
         self.check_parse_failures()
+        self.check_data_contract()
         self.check_schemas()
         self.check_identity()
         self.check_references()

@@ -1,0 +1,9 @@
+concepts:
+- aliases:
+  - Erwartungswert
+  id: concept-expected-value
+  label: Expected value
+- aliases:
+  - Varianz
+  id: concept-variance
+  label: Variance
