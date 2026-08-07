@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/note.revise.schema.json",
+  "title": "payload for capability note.revise",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "note_id"
+  ],
+  "properties": {
+    "approve": {
+      "type": "boolean"
+    },
+    "file": {
+      "type": "string"
+    },
+    "note_id": {
+      "type": "string"
+    }
+  }
+}

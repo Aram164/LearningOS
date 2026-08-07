@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/stage.note.write.schema.json",
+  "title": "payload for capability stage.note.write",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "stage_id",
+    "unit_id"
+  ],
+  "properties": {
+    "replace": {
+      "type": "boolean"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "text": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}

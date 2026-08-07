@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/project.update.schema.json",
+  "title": "payload for capability project.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "project_id"
+  ],
+  "properties": {
+    "file": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    }
+  }
+}

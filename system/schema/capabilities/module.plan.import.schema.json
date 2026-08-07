@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.plan.import.schema.json",
+  "title": "payload for capability module.plan.import",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "module_id"
+  ],
+  "properties": {
+    "check": {
+      "type": "boolean"
+    },
+    "file": {
+      "type": "string"
+    },
+    "module_id": {
+      "type": "string"
+    }
+  }
+}

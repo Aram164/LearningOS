@@ -81,8 +81,15 @@ from learning_os.commands.unit import (  # noqa: E402
 )
 
 
-# ------------------------------------------------------------------- main
-def main() -> int:
+# --------------------------------------------------------- parser / main
+def build_parser() -> argparse.ArgumentParser:
+    """The complete CLI surface.
+
+    Factored out of ``main`` so the capability gateway can introspect it:
+    a capability's payload schema is derived from the very parser that
+    defines its named command, which makes the two provably the same
+    surface instead of two hand-maintained copies that drift.
+    """
     parser = argparse.ArgumentParser(
         prog="los", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -348,7 +355,11 @@ def main() -> int:
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_attach)
 
-    args = parser.parse_args()
+    return parser
+
+
+def main() -> int:
+    args = build_parser().parse_args()
     try:
         return args.func(args)
     except StaleDeliveryError as exc:
