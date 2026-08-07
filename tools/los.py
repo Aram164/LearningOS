@@ -429,13 +429,13 @@ def _project_write(root: Path, data: dict, *, capability: str,
     data.setdefault("schema_version", 1)
     data.setdefault("revision", 0)
     rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=100)
-    code, errors = _write_transaction(
+    code, errors, confirmation = _write_transaction(
         root, {target: rendered}, capability=capability,
         expected_revisions=expected_revisions, artifact_ids=[project_id],
     )
     if code:
         return code, {"errors": [str(issue) for issue in errors]}
-    return 0, {"project_id": project_id, **_transaction_confirmation()}
+    return 0, {"project_id": project_id, **confirmation}
 
 
 def cmd_project_create(args) -> int:
@@ -538,7 +538,9 @@ def cmd_capability(args) -> int:
             )
     except WriteRefused as exc:
         code, result = 2, {"error": str(exc)}
-    confirmation = _transaction_confirmation() if code == 0 else {}
+    # _project_write already folded its own receipt facts into `result`, so the
+    # response reads them from there rather than re-deriving them.
+    confirmation = result if code == 0 else {}
     response = {
         "request_id": request_id,
         "capability": args.name,
@@ -665,7 +667,7 @@ def cmd_capture(args) -> int:
                        else capture_text.rstrip() + "\n")
 
         relative = target.relative_to(root).as_posix()
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {target: content}, capability="capture.create",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[f"capture:{relative}"],
@@ -677,7 +679,7 @@ def cmd_capture(args) -> int:
 
     if getattr(args, "json", False):
         print(json.dumps({"ok": True, "captured": relative,
-                          **_transaction_confirmation()}, ensure_ascii=False))
+                          **confirmation}, ensure_ascii=False))
         return 0
     print(f"captured -> {relative}")
     print("routing is the operator's job (WORKFLOWS §21); the inbox trends "
@@ -714,18 +716,20 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, prevalidated: bool = False,
                        capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
-                       artifact_ids=()) -> tuple[int, list]:
+                       artifact_ids=()) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
 
-    Existing command bodies keep their small ``(code, errors)`` contract while
-    all staging, rollback, revision checks, projection publication and receipt
-    persistence are owned by :class:`TransactionService`.
+    Returns ``(code, errors, confirmation)``. The confirmation travels back to
+    the caller explicitly rather than through module state: a command reports
+    the receipt for *its own* transaction, and a module global could not
+    express that — it outlived the operator lock and was read after release.
+    On any failure the confirmation is empty, so a caller cannot accidentally
+    report a receipt for a write that did not happen.
     """
-    globals().pop("_LAST_TRANSACTION_RESULT", None)
     service = TransactionService(root)
     for path in writes:
         if path.exists() and not path.is_file():
-            return 2, [f"cannot write {path}: target is not a regular file"]
+            return 2, [f"cannot write {path}: target is not a regular file"], {}
     baseline_errors = {
         str(issue) for issue in validate(load_repo(root), online=False)
         if issue.severity == "E"
@@ -756,13 +760,12 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             "conflicts": {artifact: {"expected": expected, "actual": actual}
                           for artifact, (expected, actual) in exc.conflicts.items()}
         }, ensure_ascii=False), file=sys.stderr)
-        return 3, []
+        return 3, [], {}
     except TransactionFailure as exc:
         # Canonical write refusal is a handled operator error, not an internal
         # process failure. Preserve the gateway's established exit-code 2.
-        return 2, [str(exc)]
-    globals()["_LAST_TRANSACTION_RESULT"] = result
-    return 0, []
+        return 2, [str(exc)], {}
+    return 0, [], _confirmation_from(result)
 
 
 def _expected_revisions_from_args(args) -> dict[str, int]:
@@ -779,8 +782,8 @@ def _add_expected_revision_argument(parser) -> None:
     )
 
 
-def _transaction_confirmation() -> dict:
-    result = globals().get("_LAST_TRANSACTION_RESULT")
+def _confirmation_from(result) -> dict:
+    """Receipt facts a command reports after its own successful transaction."""
     if result is None:
         return {}
     parts = result.receipt_path.parts
@@ -1177,7 +1180,7 @@ def cmd_module_plan_import(args) -> int:
                       "units_checked": sorted(seen_units), "files_checked": len(writes),
                       "canonical_files_written": 0}
         else:
-            code, errors = _write_transaction(
+            code, errors, confirmation = _write_transaction(
                 root, writes, prevalidated=True, capability="module.plan.import",
                 expected_revisions=_expected_revisions_from_args(args),
                 artifact_ids=[args.module_id, *sorted(seen_units)],
@@ -1228,7 +1231,7 @@ def cmd_note_revise(args) -> int:
         if meta.get("role") != note.meta.get("role"):
             print("los: note-revise cannot change a note role", file=sys.stderr)
             return 2
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {note.path: content.rstrip() + "\n"},
             capability="note.revise",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1286,7 +1289,7 @@ def cmd_unit_map_import(args) -> int:
                 note = root / str(note_ref)
                 if not note.exists():
                     writes[note] = ""
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, writes, capability="unit.map.import",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, str(data.get("id") or f"study-map:{args.unit_id}")],
@@ -1398,7 +1401,7 @@ def cmd_unit_note(args) -> int:
                 unit.path: _dump_yaml(unit_data),
                 **attachment_writes,
             }
-            code, errors = _write_transaction(
+            code, errors, confirmation = _write_transaction(
                 root, writes, capability="unit.note.append",
                 expected_revisions=_expected_revisions_from_args(args),
                 artifact_ids=[args.unit_id],
@@ -1449,7 +1452,7 @@ def cmd_stage_note(args) -> int:
         else:
             divider = "\n" if old and not old.endswith("\n\n") else ""
             updated = old + divider + value.rstrip() + "\n"
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {target: updated}, capability="stage.note.write",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id],
@@ -1513,7 +1516,7 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
             capability="stage.progress.update",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1554,7 +1557,7 @@ def cmd_stage_attach(args) -> int:
             target = attachment_dir / f"{stamp}-{source.name}"
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_yaml(data), target: source.read_bytes()},
             capability="stage.attachment.add",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1590,7 +1593,7 @@ def cmd_source_feedback(args) -> int:
         if args.note:
             entry["note"] = args.note
         stage.setdefault("source_feedback", []).append(entry)
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_yaml(data)},
             capability="source.feedback.record",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1638,7 +1641,7 @@ def cmd_detour_create(args) -> int:
             unit_data["status"] = "paused"
         else:
             unit_data = unit.data
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
             capability="detour.create",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1678,7 +1681,7 @@ def cmd_detour_resolve(args) -> int:
         data["status"] = "active"
         unit_data = copy.deepcopy(unit.data)
         unit_data["status"] = "active"
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
             capability="detour.resolve",
             expected_revisions=_expected_revisions_from_args(args),
@@ -1727,7 +1730,7 @@ def cmd_shelving_prepare(args) -> int:
                           "summary": args.summary or "Review stage notes and attachments without rewriting learner wording."})
         if items:
             shelving["items"] = items
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {
                 proposal_path: "\n".join(lines).rstrip() + "\n",
                 study_map.path: _dump_yaml(data),
@@ -1789,7 +1792,7 @@ def cmd_shelving_apply(args) -> int:
             writes[target] = content.rstrip() + "\n"
         shelving["state"] = "applied"
         writes[study_map.path] = _dump_yaml(data)
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, writes, capability="review.apply",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id, *sorted(selected)],
@@ -1894,7 +1897,7 @@ def cmd_path_note(args) -> int:
         else:
             divider = "\n" if old and not old.endswith("\n\n") else ""
             updated = old + divider + text_value.rstrip() + "\n"
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {target: updated}, capability="path.note.write",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.path_id],
@@ -1905,7 +1908,7 @@ def cmd_path_note(args) -> int:
             return code
     print(json.dumps({"ok": True, "path_id": args.path_id,
                       "stage_id": args.stage_id, "notes_path": note_ref,
-                      **_transaction_confirmation()}, ensure_ascii=False))
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -1951,7 +1954,7 @@ def cmd_path_progress(args) -> int:
                 shelving["state"] = "draft"
         data["updated"] = _dt.date.today().isoformat()
         rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {learning_path.path: rendered}, capability="path.progress.update",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.path_id],
@@ -1965,7 +1968,7 @@ def cmd_path_progress(args) -> int:
                       "stage_id": args.stage_id, "status": args.status,
                       "path_status": data["status"],
                       "current_stage": data["current_stage"],
-                      **_transaction_confirmation()}, ensure_ascii=False))
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -1998,7 +2001,7 @@ def cmd_path_attach(args) -> int:
         stage.setdefault("attachments", []).append({
             "path": rel, "label": args.label or source.stem})
         data["updated"] = _dt.date.today().isoformat()
-        code, errors = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root, {
                 learning_path.path: yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
                 target: source.read_bytes(),
@@ -2014,7 +2017,7 @@ def cmd_path_attach(args) -> int:
             return code
     print(json.dumps({"ok": True, "path_id": args.path_id,
                       "stage_id": args.stage_id, "attachment": rel,
-                      **_transaction_confirmation()}, ensure_ascii=False))
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
