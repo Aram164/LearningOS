@@ -9,8 +9,16 @@ from pathlib import Path
 from learning_os.contracts.capability_catalog import command_definitions
 
 
+GATEWAY = "tools/learning_os/commands/capability.py"
+
+
 def _handler_mapping(repo_root: Path) -> dict[str, str]:
-    tree = ast.parse((repo_root / "tools/los.py").read_text(encoding="utf-8"))
+    """Read the gateway's handler table without importing the CLI.
+
+    Parsed rather than imported so the assertion stays a statement about the
+    declared catalogue, not about whatever a live import happens to produce.
+    """
+    tree = ast.parse((repo_root / GATEWAY).read_text(encoding="utf-8"))
     fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_capability_handlers")
     returned = next(node.value for node in ast.walk(fn) if isinstance(node, ast.Return))
     return ast.literal_eval(returned)
