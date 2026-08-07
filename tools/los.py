@@ -52,7 +52,7 @@ from learning_os.commands.module import (  # noqa: E402
     cmd_module_list, cmd_module_plan_import,
 )
 from learning_os.commands.note import (  # noqa: E402
-    cmd_note_revise,
+    cmd_note_evidence, cmd_note_revise,
 )
 from learning_os.commands.path import (  # noqa: E402
     cmd_path_attach, cmd_path_note, cmd_path_progress,
@@ -235,6 +235,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_note_revise)
+
+    p = sub.add_parser("note-evidence",
+                       help="record one evidence trail on a note; the body is never touched")
+    p.add_argument("note_id")
+    p.add_argument("evidence_type", choices=("derivation", "explanation", "implementation",
+                                             "exercise", "exam", "external"))
+    p.add_argument("ref", help="typed URI for the trail, e.g. material://…, note://…, https://…")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_evidence)
 
 
     p = sub.add_parser("unit-note", help="append one session-level section to a unit working note")
