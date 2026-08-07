@@ -1,0 +1,84 @@
+# Method & Administration — research method, degree regulations, dataset catalogues.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-awesome-ml-books
+    thematic_group_ids: [thematic-group-method-admin]
+    title: awesome-machine-learning — community books list
+    type: website
+    url: https://github.com/josephmisiti/awesome-machine-learning/blob/master/books.md
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Community meta-index of ML books, for filling prereq gaps beyond the registered bank"
+
+  - id: source-cs229-project-archive
+    thematic_group_ids: [thematic-group-method-admin, thematic-group-machine-learning]
+    title: Stanford CS229 project archive (+ CS230 past projects)
+    type: website
+    organization: Stanford
+    url: https://cs229.stanford.edu/projects.html
+    identifiers:
+      cs230: https://cs230.stanford.edu/past-projects/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing"
+
+  - id: source-data-gov
+    thematic_group_ids: [thematic-group-method-admin]
+    title: data.gov + DataUSA — US public data
+    type: website
+    url: https://www.data.gov/
+    identifiers:
+      datausa: https://datausa.io/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "US public data (raw + visualized) — extra project data sources"
+
+  - id: source-google-dataset-search
+    thematic_group_ids: [thematic-group-method-admin]
+    title: Google Dataset Search
+    type: website
+    organization: Google
+    url: https://datasetsearch.research.google.com/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Cross-web dataset index (URL modernized from the old toolbox.google.com link)"
+
+  - id: source-kaggle-datasets
+    thematic_group_ids: [thematic-group-method-admin]
+    title: Kaggle Datasets
+    type: website
+    organization: Kaggle
+    url: https://www.kaggle.com/datasets
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The largest public dataset + notebook hub — project data + baselines"
+
+  - id: source-prisma-method
+    title: PRISMA — systematic review reporting method
+    type: website
+    thematic_group_ids: [thematic-group-method-admin]
+    url: https://www.prisma-statement.org/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Structured literature-review method — used for the IuG seminar; reusable for any future lit review/thesis"
+
+  - id: source-stupo-2015
+    thematic_group_ids: [thematic-group-method-admin]
+    title: StuPO 2015 MSc Computer Science (TU Berlin) + Modullisten SoSe 2026
+    type: documentation
+    organization: TU Berlin
+    material: material://source-stupo-2015

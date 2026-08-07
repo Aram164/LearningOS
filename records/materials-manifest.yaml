@@ -11,773 +11,225 @@
 schema_version: 1
 captured: '2026-08-07'
 totals:
-  files: 1136
-  bytes: 2022670742
+  files: 1117
+  bytes: 2022646753
 files:
-  CS-Theory/Algo2/BayerM1970_OrganizationAndMaintenanceOfLargeOrderedIndices.pdf:
-    size: 639369
-    sha256: 69826c036d7948fe5b02f7498620c90cc6a8de2504251a57994d13dc7b14e470
-  CS-Theory/Algo2/ChenKLPPS22_MaximumFlowAndMinimumCostFlowInAlmostLinearTime.pdf:
-    size: 3414937
-    sha256: b5e782fed9b74714427321aa3f28bda6295730eaa9aab464718a107f0c83481e
-  CS-Theory/Algo2/Pagh06_CuckooHashingForUndergraduates.pdf:
-    size: 173484
-    sha256: 359b74aa873c1acc58d60b1e88ca21f9981c07382baa6da3a924fb755acf1885
-  CS-Theory/Algo2/SleatorT1985_SelfAdjustingBinarySearchTrees.pdf:
-    size: 2392998
-    sha256: 419b7a1ebbe56ad5e6dbc1b17a7878de6ecec4b1ea628d97e3b6217d2c71fba2
-  CS-Theory/Algo2/Thorup1999_UndirectedSingleSourceShortestPathsWithPositiveIntegerWeightsInLinearTime.pdf:
-    size: 284003
-    sha256: df57615ac5f13357e870c456ee625f417aedb64a879f044811d4349292237896
-  CS-Theory/Algo2/Vazirani20_AProofOfTheMVMatchingAlgorithm.pdf:
-    size: 864622
-    sha256: 05f3cfcc51c12eea0537cb9892a9bc832f8f175fc507b2b0f8228b68e922996c
-  CS-Theory/Algo2/ad2_amortizedanalysis.pdf:
-    size: 460087
-    sha256: 8079413ec36ebe21be881abfc95998a23f00ec5cfd3d55dd4b7297a6e048946d
-  CS-Theory/Algo2/ad2_bipartitematching.pdf:
-    size: 513719
-    sha256: 66fe7e2a2f44d527898b040a5226294ff5e0ae3981efc472f947bc40c116f6b4
-  CS-Theory/Algo2/ad2_btrees.pdf:
-    size: 428359
-    sha256: 6cefe0f6190656cbff4f20d41002458daf542fcc27819d8e1c3b921130f24400
-  CS-Theory/Algo2/ad2_computationalgeometry.pdf:
-    size: 461202
-    sha256: 6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff
-  CS-Theory/Algo2/ad2_fastfouriertransform.pdf:
-    size: 577996
-    sha256: 7266924ecd46b0a6c34d1a15593988d4db6b8ed4c5044a6e0807408b2c048aef
-  CS-Theory/Algo2/ad2_fastmultiplication.pdf:
-    size: 313582
-    sha256: 207158287b209baafcf9a6e8b15fa75a0cc3dc276529292e851eeb5bd029175b
-  CS-Theory/Algo2/ad2_fibonacciheap.pdf:
-    size: 501744
-    sha256: 78734a20781acd35e10ad56a532046cfc4766f667cd86faf91e2497299345fcb
-  CS-Theory/Algo2/ad2_hashing.pdf:
-    size: 456116
-    sha256: a8187d7327bd1c48252d139150beab5d3d000403955eb606b67dae72880787d7
-  CS-Theory/Algo2/ad2_maximumflow.pdf:
-    size: 546959
-    sha256: 4498e92c87830c9f5c8763336907bf0a7531a89b74f9951940fca793126057b7
-  CS-Theory/Algo2/ad2_shortestpaths.pdf:
-    size: 540014
-    sha256: cc2a43da6a215c3415fb73a285f73e3f2948cddf5a997b657d88187b1b015271
-  CS-Theory/Algo2/ad2_splaytrees.pdf:
-    size: 460523
-    sha256: 5de9a81453572253186353a66544d5ca1b409adf08177888b0896e76fc57820b
-  CS-Theory/Algo2/ad2_stablematching.pdf:
-    size: 357966
-    sha256: f5165b3face7787b1c85c817c5705436edf10e2f9193af83d19b6f8c976e0f93
-  CS-Theory/Algo2/stable matching aufgaben.pdf:
-    size: 368338
-    sha256: fd2da9ebd9a0dd3768d93cd5f7ca07550a288958a5192ad81f85057d087b7328
-  Foundations/CS-Books/Clean Architecture A Craftsman Guide to Software Structure and Design.pdf:
-    size: 8414896
-    sha256: eb3885d72fdb7c27a6a3531b06d69ae71c90f4c9c7a0e79f517654bad402baf5
-  Foundations/CS-Books/CleanCode.pdf:
-    size: 2404614
-    sha256: 204736f1d59c4195ec228a8fb56f0c044ac78e48f4e15b09a4166dd7052b8846
-  Foundations/CS-Books/Design Patterns Elements of Reusable Object-Oriented Software.pdf:
-    size: 4254073
-    sha256: a3fed01e753d2a4afe6479ab2f361f5645ad137a83b35c1eff0c04b6f1a3d0ee
-  Foundations/CS-Books/Designing Data Intensive Applications - Martin Kleppmann.pdf:
-    size: 24975901
-    sha256: 3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394
-  Foundations/CS-Books/Functional-Programming-in-Scala.pdf:
-    size: 11334404
-    sha256: 67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44
-  Foundations/CS-Books/LogInf-Skript.pdf:
-    size: 5209149
-    sha256: b2d98c9a69da9aa33ad52ceacaaa66a20f9a99c7b3e189be17323761e30f3066
-  Foundations/CS-Books/Software-Qualität.pdf:
-    size: 9834184
-    sha256: 99d19d3bcfc9323269477d0c955272faf465441a24984579829ca91ebd5fa4f9
-  Foundations/CS-Books/Structure and Interpretation of Computer Programs.pdf:
-    size: 7416886
-    sha256: 08709a87567d8311d6fd29c4f4a5386801153e71450e628c4a5a5d7e85feda8b
-  Foundations/CS-Books/Write_Great_Code_Volume_01_Understanding.pdf:
-    size: 5540388
-    sha256: ce381ca20b8f0788d39a5269346cbe0f08ce1e6ab531b26fb9af9831506f35bd
-  Foundations/Compilers/(Book 1 )Compilers - Principles, Techniques, and Tools (2006).pdf:
-    size: 6060190
-    sha256: 92646e7788a17653fbcd9aaf16724ae62e67b4990f4289ee39ca55e5fb9ab62a
-  Foundations/Compilers/Compiler Bau Nwirth 1986.pdf:
-    size: 41423142
-    sha256: 6384b17c3ce62ab73f0ffd8e51eb61b00a0c4ea65e5afb50f9f1b15b48716471
-  Foundations/Compilers/Compiler.pdf:
-    size: 1003810
-    sha256: a2e8cb4744254674e3e0eda6bec733ec70c7545ec01df465cf1742a12a3da198
-  Foundations/Compilers/CompilerBau Skript.pdf:
-    size: 466335
-    sha256: 90441203b14cefbe16ef40b8b1f6dfcab51c9860e1f72627e5ba912409be8dd3
-  Foundations/Compilers/Compilerbau .pdf:
-    size: 2798282
-    sha256: e8a7a5cf713d4b8ddeabf8b5035050206620e7f4cae1b5e6903ddb43b97a0d75
-  Foundations/Git/Git.txt:
-    size: 75
-    sha256: bc39cd81aa8e3d4c1198b03b7f79b0c1236c7e33a2acbb5396e9a431df58dbd9
-  Foundations/Git/git-handbook/README.txt:
-    size: 506
-    sha256: ad1abd10d5279ccc1cd7ffafdf482d5b145b5dccc99161f59bb13537335d34db
-  Foundations/Git/git-handbook/assets/style.css:
-    size: 4273
-    sha256: 6a5f4ac46ea119b8ddecb32a434ccdac991db6a3843d4203e1f9af6137e16e85
-  Foundations/Git/git-handbook/index.html:
-    size: 6755
-    sha256: 1f7be7899586fc1dc6ead5eaec56d19d7d21c3ec3c81a12c90aeb114acc155cf
-  Foundations/Git/git-handbook/intentions/collab-conflicts.html:
-    size: 3560
-    sha256: 900857dbe0abdfaf2f6a60d65d45b58c3e48e01a996bc5a4bdaac50a0918542b
-  Foundations/Git/git-handbook/intentions/collab-gitignore.html:
-    size: 2847
-    sha256: 78b78620bdb6dbb06584c3857ecd2793233cf0dbe96c11530bc5ec64b575cbc6
-  Foundations/Git/git-handbook/intentions/collab-inspect.html:
-    size: 2566
-    sha256: 14e514bf6173e8db0e51ac26f4b06e99331cd50ff5ce3d383bd5ee3fdf928499
-  Foundations/Git/git-handbook/intentions/collab-pr.html:
-    size: 5645
-    sha256: 717becc6e5def69f2714a93324833fe03d18282d21a668e3486a41245cb025d3
-  Foundations/Git/git-handbook/intentions/collab-safety.html:
-    size: 3177
-    sha256: 5db171d504cbaf1cb85b896913da0ccbbebf72d525cbead3fb5700c9864011da
-  Foundations/Git/git-handbook/intentions/collab-stash.html:
-    size: 3220
-    sha256: c0e624ac51ab0995a23bfdcc99a9dbcacd78ce9fa65f51ce1605aae89aec2bbe
-  Foundations/Git/git-handbook/intentions/collab-tags.html:
-    size: 2740
-    sha256: 925f2fbcff09d4bea49c448640c822a6865820786746ca2708fb2f2a014cacd2
-  Foundations/Git/git-handbook/intentions/idx-review-diffs.html:
-    size: 4215
-    sha256: 7bcb624151777c79ab5626f4cc2e85a8701505dbc374fc3de783952d00433efc
-  Foundations/Git/git-handbook/intentions/idx-review.html:
-    size: 5956
-    sha256: 3114b1bf351d33ff9575c8ab1a8fd53493b8787e71ef176f5cdfdbba9d824f76
-  Foundations/Git/git-handbook/intentions/idx-stage-hunks.html:
-    size: 4844
-    sha256: 34284ff2bd3d1f16ae2038f9a0ae1e5b18100d44ee253659cef19a43610ca20c
-  Foundations/Git/git-handbook/intentions/idx-stage.html:
-    size: 5490
-    sha256: 146b7e7bcfa8a2954fdb3ebfb6c2394f554ab2c4d8e40eaa140fa47b23536a2a
-  Foundations/Git/git-handbook/intentions/idx-stop-tracking.html:
-    size: 5941
-    sha256: 78a30ffd2cbd04e9e1013279c454b1a3ab7445e308b4fa75beffad03f1663f77
-  Foundations/Git/git-handbook/intentions/idx-unstage.html:
-    size: 4797
-    sha256: a37cbcac61537a4481f3fd88b2db11dbb9812e7e34369900d7216d1f5d03c900
-  Foundations/Git/git-handbook/intentions/local-amend.html:
-    size: 6498
-    sha256: 5cd193219ee21cafdeb672607c438cc8ef00a6dc9cd370afbde09ccb920f0e61
-  Foundations/Git/git-handbook/intentions/local-branch-switch.html:
-    size: 8774
-    sha256: d608ab01a25ae14fd4a5483424bdc77dcfdefda9e9d1641306fa458cdf7227b1
-  Foundations/Git/git-handbook/intentions/local-commit.html:
-    size: 7002
-    sha256: 945ae3d07a7a32964fd65feca28f80c0684d07a919d5f453c8eb262ab967b7c9
-  Foundations/Git/git-handbook/intentions/local-merge.html:
-    size: 6948
-    sha256: a234732b3a3d9a70b3547da408af4761e2cab1b288c61129c8d0ddfe70d75671
-  Foundations/Git/git-handbook/intentions/local-rebase.html:
-    size: 7541
-    sha256: 13a5fab3a2c52a46b72278d91d518dc8a8011466c57e8c03f278b6923c6500cd
-  Foundations/Git/git-handbook/intentions/local-undo.html:
-    size: 6857
-    sha256: 9f658f9c5a1a080dcb6b7c5ddba16ec51e66f0139aecc2a7147cc369f501a71a
-  Foundations/Git/git-handbook/intentions/remote-add-origin.html:
-    size: 3190
-    sha256: c40b29b262d341b10bf710a521adb34a3c594adbfa35fc84fd534d5542fa6907
-  Foundations/Git/git-handbook/intentions/remote-clone-init.html:
-    size: 6134
-    sha256: 86672c343fdc762ceba57400afb34952743e3f883e86defbd8d2e6e30ab9e800
-  Foundations/Git/git-handbook/intentions/remote-clone.html:
-    size: 3400
-    sha256: 76ec1b72355929224305673698814ee7f2a1cadfc3bca32dca89a0ea33f42eed
-  Foundations/Git/git-handbook/intentions/remote-fetch-pull.html:
-    size: 5533
-    sha256: c3ef3a3aa75c4dd67d8e2a83361c729e682ea9f3ff6cd641c17a1f18fbf155b6
-  Foundations/Git/git-handbook/intentions/remote-fetch.html:
-    size: 5888
-    sha256: 1bd9e9b7a678b9f601d39b2b8df2e9dace864844b15eadbea124d85002d1fcc7
-  Foundations/Git/git-handbook/intentions/remote-model.html:
-    size: 6301
-    sha256: c7c30d979846c7bd330b3f84207fc2eb13620b0fe34391197705e394f7ebbbcb
-  Foundations/Git/git-handbook/intentions/remote-pull.html:
-    size: 6193
-    sha256: e0a817a8f66abf3629d2b4a126047eea50b30fab408330589e4cb578ac556cfd
-  Foundations/Git/git-handbook/intentions/remote-push.html:
-    size: 6013
-    sha256: a1e6ef1de8682249c882ba4c7c846edc2c9c39092b65871e35290c4df049f922
-  Foundations/Git/git-handbook/intentions/remote-upstream.html:
-    size: 3701
-    sha256: 39880160bfe0c1489c974dcfa6e063bbc7f6ce4ec24ffce4c2f6fef0caff5c40
-  Foundations/Git/git-handbook/intentions/wt-discard-unstaged.html:
-    size: 5457
-    sha256: 73d87116750527a272e04cb756cd4acc2564fcdf170a8db78c3e3e7c91a187e8
-  Foundations/Git/git-handbook/intentions/wt-ignore.html:
-    size: 3222
-    sha256: a94292691a933aca82483d5a0e120ae51986a552e23cb355f52dd3c67a8e8dee
-  Foundations/Git/git-handbook/intentions/wt-inspect.html:
-    size: 5602
-    sha256: 98483754cbd3e05360a3b3bf3311d57f1d496e0bb4a6840e324b68b7d7de637e
-  Foundations/Git/git-handbook/intentions/wt-rename-delete.html:
-    size: 5225
-    sha256: 8da4cbd440947887149ffc28f69f8d47c466089e9bb313d43db6ef77fa8e71c7
-  Foundations/Git/git-handbook/intentions/wt-stash.html:
-    size: 5263
-    sha256: c36486e6aabf6290781c80ecfab9c561d097c56a8b985333293caad5d1ca7996
-  Foundations/Git/git-handbook-v5.zip:
-    size: 28983
-    sha256: 00c017abe91d512eea0cd7a161b707b64c6e993ee35d79e27b2cea7391cef8e9
-  Foundations/Git/git-handbook.zip:
-    size: 72081
-    sha256: cb030ef41fb6e505dab6480bdadb885a308afdde96fad0b5dc99393baa0990de
-  Foundations/MachineLearning/Machine Learning_ An Algorithmic Perspective (2nd ed.) [Marsland 2014-10-08].pdf:
-    size: 6967995
-    sha256: 0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05
-  ? Foundations/Math/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und
-    Mathematiker. Rechenverfahren der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
+  ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker.
+    Rechenverfahren der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
   : size: 12924459
     sha256: c2477c3c50d425df8fadbf9af92ba2b61c33fe16ed4bbabc8fe7144bc11282fb
-  Foundations/Math/Diskrete Mathematik .pdf:
+  _unsorted/Diskrete Mathematik .pdf:
     size: 3233992
     sha256: 7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63
-  Foundations/Math/Lina/LA/ KLAUSUR ZUR LINEAREN ALGEBRA I .pdf:
-    size: 214103
-    sha256: ee87190a4db7711c5c4e646441ce1cc54c2194ddffae776030c121bfd19aef8a
-  Foundations/Math/Lina/LA/Everything You Need to Know About Modular Arithmetic....pdf:
-    size: 58461
-    sha256: 267b5920b601524347b74dfd7577774ceedb5c72531304d0ac972bc1036be153
-  Foundations/Math/Lina/LA/Klausur31-07-23 2.pdf:
-    size: 222725
-    sha256: eda37bbd1148073c6b2bb4ba0e05742443b8e6a1a19fa90f51f83d7e88521d1e
-  Foundations/Math/Lina/LA/Klausur31-07-23-Losungen 2.pdf:
-    size: 202325
-    sha256: 63f16911a709ca0449c23e0c0a259b0accf8f55da3760edbdded628560f48752
-  Foundations/Math/Lina/LA/LA skript.pdf:
-    size: 611697
-    sha256: 6203291c29314a8497e43c787221f7df3829993e1096b1163d8279733c62a9cd
-  Foundations/Math/Lina/LA/LA.pdf:
-    size: 781852
-    sha256: f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c
-  Foundations/Math/Lina/LA/Lineare Abbildungen.pdf:
-    size: 197000
-    sha256: 90af05de5f6b67326b79b61b58dc8c2e41cb2dad56ac44983a35495c30aab05f
-  Foundations/Math/Lina/LA/Lineare Abbildungenblatt .pdf:
-    size: 208540
-    sha256: de4411ec2176f28053c69466674e04564b28773bacf9f8a4ff2c69a07d72d0e2
-  Foundations/Math/Lina/LA/Lineare Algebra f ü r die Informatik.pdf:
-    size: 1652667
-    sha256: 6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8
-  Foundations/Math/Lina/LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf:
-    size: 143461
-    sha256: 0b0bd3015ff867fe14f95aea66f20f46dbc587d361b83e4dccda1750dd9348a9
-  Foundations/Math/Lina/LA/Mathe/BeweisUFGAben.pdf:
-    size: 319396
-    sha256: af782356e47c55d45a9b52177c8276e6a691188f85bfa40a35c61b6028fa44f8
-  Foundations/Math/Lina/LA/Mathe/Bijektivität usw.pdf:
-    size: 87913
-    sha256: 6e2f114ab6c59ad510fa8f1e3d23accdec29324e732e97a67b51cff9d0bbec11
-  Foundations/Math/Lina/LA/Mathe/FormelsammlungVorkursWS22.pdf:
-    size: 162507
-    sha256: 031c3e0259e8e2891e0406a8935422117cddb3a61ca23ccf6998c9cd7737f0d9
-  Foundations/Math/Lina/LA/Mathe/Gute aufgaben mit Lösungen mathe.pdf:
-    size: 168352
-    sha256: 9e2419330f16d56abd32c8f2bd3ddd2567dc718456843add451f5b86cae9fc12
-  Foundations/Math/Lina/LA/Mathe/Gute beweis aufgaben.pdf:
-    size: 319557
-    sha256: 7ef763361d44d263de23203e5309a061c06461b84fc8190bb99c65607dc55bad
-  Foundations/Math/Lina/LA/Mathe/Mengenlehre.pdf:
-    size: 457306
-    sha256: 3800fa00c7bfd9e624ed5ab4f56d78b3cf3e52a6d49d6f576d813803d5e64787
-  Foundations/Math/Lina/LA/Mathe/Modulo gesetze.pdf:
-    size: 3170860
-    sha256: 3de32301c3c77bb682d49a944a7b86a4275322cb84c9f662cb3c107abd7e656d
-  Foundations/Math/Lina/LA/Mathe/Relationen und funktionen.pdf:
-    size: 111437
-    sha256: 20d7944b48bd9e7f52dc5ee2d6dd8e2b02b64bf69d79f65618eab48a2705a817
-  Foundations/Math/Lina/LA/Mathe/Unserer Skript.pdf:
-    size: 1926493
-    sha256: 5a0e17ef6c01913d34759f87e535a2ea573fac826f9436e127b30ba0e432db83
-  Foundations/Math/Lina/LA/Mathe/ÜB TUM Bijektivität surjektivität.pdf:
-    size: 282617
-    sha256: 58838dfd80e76a5f2420e8ba05972ad7a07ba1fba475e12eec30ef27469b58d3
-  Foundations/Math/Lina/LA/Mathe/Zahlentheorie im Z.pdf:
-    size: 383712
-    sha256: 491600985b4263c8fb02196d24570ff5b56a49bf423174b36c35bb3ffcb35eb6
-  Foundations/Math/Lina/LA/Mathe/beweis das eine äquivalenzrelation auch eine partition ist.pdf:
-    size: 103066
-    sha256: 6dde5207b9a01736ebd19285e55c6ea04a7a6cf8ad94b4a8b95edb7805ed376b
-  Foundations/Math/Lina/LA/Mathe/beweise für sätze .pdf:
-    size: 296553
-    sha256: df329190bdf51c5f93c5f19d0c932a98b8e78928281b32e8e45df7773857b7eb
-  Foundations/Math/Lina/LA/Mathe/gutes skript maathe.pdf:
-    size: 1923357
-    sha256: dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65
-  Foundations/Math/Lina/LA/Mathe/induktion-aufgaben-loesungen.pdf:
-    size: 856786
-    sha256: 34fbcccedaf3ef03bae83d07cc2fb8f0dd4efd1d5faae2c4a32d847f3037adae
-  Foundations/Math/Lina/LA/Mathe/mfi1.pdf:
-    size: 1195808
-    sha256: c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab
-  Foundations/Math/Lina/LA/Mathe/unterschiedliche beweise zur abzählbarkeit von mengen.pdf:
-    size: 81684
-    sha256: dc5b1f9efe4010269dbafa9ad22b44652f1e5e75511422bbebb0924d465af584
-  Foundations/Math/Lina/LA/Mathe/wunderbarer skript zu graphentheorie.pdf:
-    size: 1730097
-    sha256: 477bcb138e73e10f7155cbcaad34fa93a027df061b4821bd035071ef41edbc89
-  Foundations/Math/Lina/LA/Mathematik für Informatike.pdf:
-    size: 5082068
-    sha256: e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c
-  Foundations/Math/Lina/LA/Probeklausur 2.pdf:
-    size: 229546
-    sha256: 32201d4e7dcce8dd2df2c60c73b0292caa7f591278880d68e6e5c9299d2ccee0
-  Foundations/Math/Lina/LA/Probeklausur zur Linearen Algebra fu ̈r Informatiker und Ingenieure.pdf:
-    size: 165482
-    sha256: c57119e735fb694a40be90c238311e98b2bb59b234e2c2e7ed7afb1413610549
-  Foundations/Math/Lina/LA/Probeklausur.pdf:
-    size: 251614
-    sha256: 65e6591cb208c449a311975abe94c15ffeec6843c914fd39a797877512af15c0
-  Foundations/Math/Lina/LA/Probeklausur_ Lösundsvorschlagen 2.pdf:
-    size: 12717102
-    sha256: 547f3df4d8862f6ecf85fb536a070fb1281490095b7b2c34402c8d591948ef3b
-  Foundations/Math/Lina/LA/Übungen mit lösungen.pdf:
-    size: 10499959
-    sha256: 42861a8131378195a69806d8afbf7ec58fef0b8525101f06c129cfd845e5d6a5
-  Foundations/Math/Lina/LA/Übungsblatt mit lösungen.pdf:
-    size: 103941
-    sha256: 25fd0962844c0a6fd0a95c4bb0a25f2ce0a0b78cf673af80dc366718d72b6fe6
-  Foundations/Math/Lina/LA/gute notizen von kern vorlesung .pdf:
-    size: 2910560
-    sha256: b074c45e660fdddc15476231fcb0b70f9d71e5fb00c4c9fe1e5960c485e71209
-  Foundations/Math/Lina/LA/guter skript .pdf:
-    size: 16397675
-    sha256: ac12dd2e7911319dfdb7dd334a387703c14d2ed81c5925e96c075bf2b696bd55
-  Foundations/Math/Lina/LA/gutes skript.pdf:
-    size: 2382359
-    sha256: c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52
-  Foundations/Math/Lina/Lineare Algebra.pdf:
-    size: 100882530
-    sha256: 2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2
-  Foundations/Math/Lina/LineareAlgebraSkript2022.pdf:
-    size: 1244904
-    sha256: c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c
-  Foundations/Math/Lina/lineare-algebra-fr-informatiker-i-grundlagen-diskrete-mathematik-ii-lineare-algebra_compress.pdf:
-    size: 8657701
-    sha256: 43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e
-  Foundations/Math/Mathe Vorkurse/VK_A1_BruchGleichung_WS22.pdf:
-    size: 109025
-    sha256: 560174e2ac123f7f02b83ac80c708905491854091121f5ddafc6dcfedf46753b
-  Foundations/Math/Mathe Vorkurse/VK_A2_PotenzenWurzeln_WS22.pdf:
-    size: 115750
-    sha256: 0550c8d7c2d910252d7926e35403f46639b9671cca3977d13f76f28dbac0d4a1
-  Foundations/Math/Mathe Vorkurse/VK_A3_PolynomeLGS_WS22.pdf:
-    size: 72865
-    sha256: e019e46055301374b074cf633d4cff21562f4724c848900d11920b120a8796be
-  Foundations/Math/Mathe Vorkurse/VK_A4_GeometrieTrigo_WS22.pdf:
-    size: 234656
-    sha256: 513341f00c37136da69505f74eecfc663e6bd139d843848d2f57322a4874eaff
-  Foundations/Math/Mathe Vorkurse/VK_A7_Integralrechnung_WS22.pdf:
-    size: 105891
-    sha256: 6a324272a09d08b98c652a121ef698efe6de0275c907e00acfad880769943dd6
-  Foundations/Math/Mathe Vorkurse/VK_A8_Vektoren_WS22.pdf:
-    size: 75031
-    sha256: baecfcf8e88b4c66fed3068c5b0822ea99f64e8a6fbe52232bfe04a27167a8ba
-  Foundations/Math/Mathe Vorkurse/VK_Ergebnisse_WS22 (1).pdf:
-    size: 121630
-    sha256: f4dceebe1ab362802c36a28260d6e90cd61d74f5cdf03c664ee9870fe6ba9152
-  Foundations/Math/Mathe Vorkurse/VK_VektorrechnungSelbstlernen_WS22.pdf:
-    size: 139043
-    sha256: 727a6a291d3fc4c080fc1acd179ec889b26ce174a542040cc94297e9124f2305
-  Foundations/Math/Mathe Vorkurse/tzjXHT-VK22-HU-Tag1voll.pdf:
-    size: 637648
-    sha256: ad41b4385ab32c45f2f6bbe89a41730b749008d0381d17a8e49d6de78a1d43de
-  Foundations/Math/Vorkurs Mathe/tag02_handout.pdf:
-    size: 303372
-    sha256: 117a8e45fb9ffab87ed40e02d10f0b2eec887f2f18a3d2868fb7f722ed1a0af7
-  Foundations/Math/Vorkurs Mathe/tag03_handout.pdf:
-    size: 598472
-    sha256: 0bba68bb74fcf458b0384b6693fff21e67b49b9715103021ed9eb0cadab5b3e3
-  Foundations/Math/Vorkurs Mathe/tag04_handout.pdf:
-    size: 347117
-    sha256: a20bca92d03c3629c2276dfb2bb634f5ccfbb32c48a808174cac4db7b0131ed5
-  Foundations/Math/Vorkurs Mathe/tag05_handout.pdf:
-    size: 498374
-    sha256: ce9c508324ddc61b6457694e4479574698b055c4b4c384b80d9053d1cb8093d3
-  Foundations/Math/Vorkurs Mathe/tag06_handout.pdf:
-    size: 470178
-    sha256: cb9aea9b83e1a9dc0f242892f06958ba4b70b115881c085b0c6aa7991723548b
-  Foundations/Math/Vorkurs Mathe/tag07_handout.pdf:
-    size: 431975
-    sha256: 0e4a99c712725521754fcdd2c3d71a310bddc5bd47e2cc021f747f7f11dcb1a6
-  Foundations/Math/Vorkurs Mathe/tag08_handout.pdf:
-    size: 594006
-    sha256: da05f368e1efb0dad934de8fa42593b326c50be6044f09dae928e162e9aa221f
-  Foundations/Math/Vorkurs Mathe/tag09_handout.pdf:
-    size: 494905
-    sha256: 5a24bfda837760a16aad0f4e1025c915e1b29fddb39d51771a274a58c8247c2c
-  Foundations/Math/Vorkurs Mathe/tag10_handout.pdf:
-    size: 488424
-    sha256: 4e02f5de897900329c263a2c1ae0b1c20300bb2a035d8c9aa6ae39be255d8d79
-  Foundations/Math/Vorkurs Mathe/tag11_handout.pdf:
-    size: 505864
-    sha256: ae0842e7109a16548d7891fbcc6643916d7ceddccf3408b7794ba50692e68ee4
-  Foundations/Math/Vorkurs Mathe/tag12_handout.pdf:
-    size: 565511
-    sha256: 376ea878326b297b4663ebf8d3d88db6c5e81f3f23b0b1e04aeba09386060c8b
-  Foundations/Math/Vorkurs Mathe/tag13_handout.pdf:
-    size: 654621
-    sha256: 5fd3cbc67f0b916909eed2e1e0d17114a01666801399cd98ff199838fcb6af9b
-  Foundations/Math/Vorkurs Mathe/tag14_handout.pdf:
-    size: 412627
-    sha256: bd52f63b8b818243f544887b2b341fea32e892c2909f9c8ceece143eb429a891
-  Foundations/Math/Vorkurs Mathe/tag15_handout.pdf:
-    size: 468628
-    sha256: db5d064223918b8f918fe88663e39727f4764401ce7da17f49878089558bf25b
-  Foundations/Math/Vorkurs Mathe/tag16_handout.pdf:
-    size: 370166
-    sha256: f6f965c9033fa4733339cc8d326e96d06fcef9c85a319426fec52a319a5c184b
-  Foundations/Math/Vorkurs Mathe/tag17_handout.pdf:
-    size: 379834
-    sha256: 8790301c29923de10508e711bce8d4d7872a8c884c1033d08af9a7bdef8a18c4
-  Foundations/Math/Vorkurs Mathe/tag18_handout.pdf:
-    size: 361706
-    sha256: a472058edb6c9e325381f493f74dd335a3ae0441f6aa59598f129ecd0afee4f2
-  Foundations/Math/Vorkurs Mathe/tag19_handout.pdf:
-    size: 419160
-    sha256: 2db664694a841f304f5e3fb61777dd6c528aa6b241c95c550de4f8a352496908
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB01.pdf:
-    size: 353934
-    sha256: 459ad211ab4790895d59611e6c3326bb20e1bf3241946ee4657120baa300ecac
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB02.pdf:
-    size: 308474
-    sha256: 111520497dddcec3c0427f7e0bc65dd1d479cef66a2c0acd3ca23e4b183d8442
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB03.pdf:
-    size: 350923
-    sha256: cc8c89e234318ddc62cbd7aedf76d1c582cd9940be0261a3bb3b753ff689acce
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB04.pdf:
-    size: 323370
-    sha256: f5c8dcff634cae1435e29330dc0aee618c516fa70030ea476b57160d4114f3f5
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB05.pdf:
-    size: 325086
-    sha256: f490492496e4477c82a25e95e0cc2082c65d03d4ff3b007f639d948875dbfb5b
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB06.pdf:
-    size: 349780
-    sha256: 3f0056bd17e5a49eb85303511f834e9de2694c11a5ab0ceb103ebd4154f009ce
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB07.pdf:
-    size: 314100
-    sha256: 12fa08163dc08e072701cda223a2b5a56260481e4e97a76c0148a352b01555a6
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB08.pdf:
-    size: 340357
-    sha256: eec87cf4d307002de4bb8546432f1f3a248aaffe67fa1abd77a4107ce5d749fb
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB09.pdf:
-    size: 345402
-    sha256: 652735951ca75a4823fd460ce939cfe19ec7df6a808a7dfa13c2539f12cca1c6
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB10.pdf:
-    size: 364184
-    sha256: c8466b0e516f4ff7b6a2e3724b4e95cbff5dacb28b31bc9314d94e4854fe5d9a
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB11.pdf:
-    size: 335732
-    sha256: 9e046a849a1ed5fbbfe9c6c466731ad3faa0b06e53b696144b5242d12312eb36
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB12.pdf:
-    size: 334565
-    sha256: 7c4d933829530715fd590869d8b99c748230f5ea8cb664ca4df029df9a5ce6d1
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB13.pdf:
-    size: 368650
-    sha256: a6fd9022ae81b2dba9c528f3b0edbab0b59b4a9d2930d20dc8992ffc5ac59ee2
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB14.pdf:
-    size: 341457
-    sha256: cf7ff80f9a828f3e0142d462f0fee62aef0ca7b6b31a06a436e59ee63492c313
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB15.pdf:
-    size: 333893
-    sha256: 68619b89b097ed5bd543a37a69ddaa6bb326b31b1591ca13d2e94449d28c8ee0
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB16.pdf:
-    size: 313820
-    sha256: e74f01a104434c8db1433f3d31c55df043db0657f07c0f7774a1de06a38dde0c
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB17.pdf:
-    size: 368214
-    sha256: 8f31dac7f1b3b6839c7beef5f5ba3df988a0b425fc3ac97f2792d49045759f18
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB18.pdf:
-    size: 297135
-    sha256: 15433bf2b69f97392075738e225f701b7e4aa58d6b0b6651673570080fbccd97
-  Foundations/Math/Vorkurs Mathe/vkma2022_AgB19.pdf:
-    size: 309912
-    sha256: bf8fae339416baa76377c6770b3b0b51117b26b90b367a7c63142d86950dc3b4
-  Foundations/Math/crashkurse mathematik .pdf:
-    size: 23051136
-    sha256: 28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba
-  Foundations/Programming/C++ books/Accelerated C++ Practical Programming by Example ( PDFDrive ) (1).pdf:
-    size: 1760439
-    sha256: 89e005b53188b086a026519bc43de54df80abf26c9c64c31132308a3b8601044
-  Foundations/Programming/C++ books/C++ Primer.pdf:
-    size: 3303365
-    sha256: bcea546192050ef28f92047a5e0f33db7b6994c5de5dce712d8e78694decf693
-  Foundations/Programming/C++ books/C++ crashcourse .pdf:
-    size: 7714781
-    sha256: 2092ed1253e7d14738eaaf1342e82560d32ce0223341f367ef4da22d244cad5e
-  Foundations/Programming/C++ books/C++.Primer.Plus.6th.Edition.Oct.2011.pdf:
-    size: 8084854
-    sha256: ebcb10776dbd2ffb5b0b0e45f19afe9acc4a4de6880f2980ff77c0f9c994bc99
-  Foundations/Programming/C++ books/Effective-Modern-C++.pdf:
-    size: 3111349
-    sha256: 24117bd8b7b9a71be4fa352d180bd859af47932f41b40be5e9493af05d650a47
-  Foundations/Programming/C++ books/Scott_Meyers_Effective_Modern_C++.pdf:
-    size: 5052121
-    sha256: 4dadbc045fd6d3275cf21fe485fa8e86d4a877915cadbfec9131c7b06e14313a
-  Foundations/Programming/C++ books/The C++ Programming Language, 4th Edition by Stroustrup B..pdf:
-    size: 4324096
-    sha256: 5e9faeb830a41bcc0745a436be863f2f8a2a7093c5dfdfd72f1a6c4aeb6a64fc
-  Foundations/Programming/C-Books/C Primer Plus, Fifth Edition.pdf:
-    size: 5631433
-    sha256: 475c46847ec02201042bbbf8a6072e496a07e084858570f1c5af8a716da1bc51
-  Foundations/Programming/C-Books/C The Complete Reference 4th Ed Herbert Schildt.pdf:
-    size: 5797785
-    sha256: 3c61cc4aeebf9ceb68d935aa016b7c4fe8a912afaac90b9f227b4e0a606b216a
-  Foundations/Programming/C-Books/Fluent C.pdf:
-    size: 7621336
-    sha256: 932077cd0ae2775ef8544d67f49cd5be8d6cd22c10e7c767ed009bce2de54256
-  ? Foundations/Programming/C-Books/Learn C programming   a beginner's guide to learning
-    C programming in easy and disciplined way.pdf
-  : size: 7693141
-    sha256: 64c53e59d6a6510adacb8fdd4e6a9cb19acfdc5f68f1d292e2591bd49a55d555
-  Foundations/Programming/C-Books/Structured Computer Organization.pdf:
-    size: 6982244
-    sha256: b213692a064ad0273e2099d62df9bbcdd2b71643afdb279adc008a9f14b3bd5d
-  Foundations/Programming/C-Books/effektiv Programmieren in C.pdf:
-    size: 16501394
-    sha256: 01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5
-  Foundations/Programming/C-Books/von java zu c.pdf:
-    size: 8047706
-    sha256: 501e754eaf88c4b699508481fbdcaf893444afc92da7a67b3011e5a4d5954400
-  Foundations/Programming/Java/ Programmierung, Algorithmen und Datenstrukturen.pdf:
-    size: 6042628
-    sha256: 5690dae8accbf04a4294d95960fac45b05f5c03367459b7f546a2014f5892db8
-  Foundations/Programming/Java/Introduction to Programming in Java.... (Z-Library).pdf:
-    size: 13123951
-    sha256: 07e54dc6f68ecd2adceb2a581a715013bf86ab00fe565d966c687b3dec1aa80f
-  Foundations/Programming/Java/Java book.pdf:
-    size: 3980659
-    sha256: e15aec62f0bb4f2af77efd9f1b3a7cb4be77648c996f5b466d0e7df2e9e0cfe7
-  Foundations/Programming/Java/good java book .pdf:
-    size: 7689227
-    sha256: cedd518dd04a752c8466523077adf35fbbb01aaff7f711fd4c0cbfd6ca4b3bcb
-  Foundations/Programming/Java/java exercises for aliens.pdf:
-    size: 17902298
-    sha256: c39b4433b1029138c8576a4c48be36e04bb1d45a285a663c702fc4476a12d30e
-  Foundations/README.md:
+  _unsorted/README.md:
     size: 2875
     sha256: 40a232f6d1f8437d4f234eb0d4f5b032d87ab8629e072e809c64db95d4f8a89b
-  'Foundations/Systems/DigitaleSysteme/ Computer Architecture: A Quantitative Approach.pdf':
-    size: 7148140
-    sha256: f2e337be53b22977f08c11f1cf071569a70b0db8d491766e382542b8075a7841
-  Foundations/Systems/DigitaleSysteme/Digitale systeme .pdf:
-    size: 3347331
-    sha256: 5c968eec16fc069a88f36c41d5865c1a4a67f0d8d3e29498507ac302ee049128
-  Foundations/Systems/DigitaleSysteme/Logischer Entwurf digitaler Systeme.pdf:
-    size: 7005061
-    sha256: a9482a518ac3689d8159317faefe9cb6c1f49cfd592bbe7986d30e24a0050f74
-  Foundations/Systems/Netzwerke/UNIX Network Programming(Volume1,3rd).pdf:
-    size: 12377649
-    sha256: 4835f27481ec8f7cd138cdf0779ed644f503bec42fd04f16fcacf96005525309
-  Foundations/TheoInfo/Grundbegriffe der theoretischen Info.pdf:
-    size: 31392144
-    sha256: 3555e16e82fbffaaa816f5939ae2eb8c02e26ea15af9a2f3a37074dc4abb89fc
-  Foundations/TheoInfo/Lösungen/Blatt01.pdf:
-    size: 962993
-    sha256: 7d6b5547e4b2a0ce62ff7afbf3ca7753ea21a57d7db64b6a7b2d88cdb399801f
-  Foundations/TheoInfo/Lösungen/Blatt02.pdf:
-    size: 2188353
-    sha256: 3b505035f3a8845ec0fb06a330ebfe50fa140e260151f3b9a260a944ade0cda6
-  Foundations/TheoInfo/Lösungen/Blatt03.pdf:
-    size: 4063267
-    sha256: 8cc1be4459f0198e7b1e1d0588beb62f2b03aa899ce3fb548ebf7f0d210de2d5
-  Foundations/TheoInfo/Lösungen/Blatt04.pdf:
-    size: 4293080
-    sha256: 3852e766a1fdbae1ed1a0b7984d044a049ad6590c0e18418bed89337fd2fafaa
-  Foundations/TheoInfo/Lösungen/Blatt05.pdf:
-    size: 3875149
-    sha256: da08a9de99e3d265554ef21708f6b3429ce9d3f4cb47e225ccb4c974cb6f02a4
-  Foundations/TheoInfo/Lösungen/Blatt06.pdf:
-    size: 4697407
-    sha256: 7f3879ea9efa19510f0f52860ad448810dcebea759b8dd4a81935e70dafe957b
-  Foundations/TheoInfo/Theo Info/1 Endliche Automaten oder Rabin-Scott-Automaten.pdf:
-    size: 199183
-    sha256: c8ba9bdad4de8dd0ae7220bd1ed49226810dded8e411c0218c2b504bf4cd71c6
-  Foundations/TheoInfo/Theo Info/12-pumping-lemma LMU.pdf:
-    size: 359361
-    sha256: 0f14a4bbc0a8360410c3ad676fcd67c2749fc1e126fad218669f3c0d39ec8591
-  Foundations/TheoInfo/Theo Info/13-myhill-nerode.pdf(gut).pdf:
-    size: 337843
-    sha256: ce5c89a61137a81efe17a922959e8bc912d9e3e536d6cd29ce9a9657a30115ee
-  Foundations/TheoInfo/Theo Info/18-pumping-lemma-cfl.pdf:
-    size: 281004
-    sha256: cec5c7e26e711c672c724d5ccae52aa9be9146c62add5acd33786f9a4735a924
-  Foundations/TheoInfo/Theo Info/Aufgaben mit lösungen zu DFAs und NFAs.pdf:
-    size: 607042
-    sha256: 39b47d310c083d6228ccbe5f00c2141ff52270cead1ec0a5665cad06919e7e4f
-  Foundations/TheoInfo/Theo Info/Aufgaben zu Äquivalenzrelationen .pdf:
-    size: 275410
-    sha256: 76271353ae6d5cbeece44b7592dad7e7fd829246acd980be5df912838329462b
-  Foundations/TheoInfo/Theo Info/Automaten, Formale Sprachen und Berechenbarkeit I.pdf:
-    size: 1056010
-    sha256: 50f2437e9b738614fe303189f4e8d0a6d7d6cc88e34f47f350725b26e8f80a8a
-  Foundations/TheoInfo/Theo Info/Berechenbarkeit .pdf:
-    size: 2369299
-    sha256: e8b311a045367f2db9b9a5dd99877a3305e2bf14fa8ac1eb18048ab4a6f24942
-  Foundations/TheoInfo/Theo Info/Blatt 12.pdf:
-    size: 2338567
-    sha256: 744cd5e4a3ddbf902afb69e1800f763c0ad5879db516f1289d62f1ec7f4859bf
-  Foundations/TheoInfo/Theo Info/Blatt04 copy.pdf:
-    size: 284374
-    sha256: 27e45e34f68f31a3912445e4d7ecffa5a8f3e8af4ac704a91a9087bd616593de
-  Foundations/TheoInfo/Theo Info/CNF + KellerAut..pdf:
-    size: 54067
-    sha256: 07acfe3db688a1fb25f3544fd44cb85eeb224b60d020684f1be5bfee853f2d5a
-  Foundations/TheoInfo/Theo Info/Chomskynormalform + CYK.pdf:
-    size: 155998
-    sha256: 6651b19da69fa1d6f3fd7aff244bd30054acc2a0eb358d697b4df339df530853
-  Foundations/TheoInfo/Theo Info/Ethi ganz guter Skript.pdf:
-    size: 1023323
-    sha256: 33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271
-  Foundations/TheoInfo/Theo Info/Formale Sprachen, abstrakte Automaten  copy.pdf:
-    size: 7776197
-    sha256: a3af51f8634e5551429fe2ca21cb0b2cfa66fb58e43c6968b825223b0f18bd42
-  Foundations/TheoInfo/Theo Info/Formale Sprachen, abstrakte Automaten .pdf:
-    size: 4706997
-    sha256: a4aaf6cb07c33ac6a0c15a5ccbbe16ea6983248ffb87de9fe77c096f1aa73ac5
-  Foundations/TheoInfo/Theo Info/Formale Sprachen, abstrakte Automaten und Compiler.pdf:
-    size: 12055243
-    sha256: 38d535781454b05e7eabc67d5f74004297ce4c482d82b8e45fe3130b4dc74014
-  Foundations/TheoInfo/Theo Info/Grundkurs Theoretische Informatik.pdf:
-    size: 10050499
-    sha256: ab5e64828dd0cd7d4bcd4ad7f8cbc9b65d97763ba5197d9f128f5404cea181a6
-  'Foundations/TheoInfo/Theo Info/Gute Übungen zu DFA : NFA.pdf':
-    size: 348129
-    sha256: eed169360724948f583079c68d058ce849d8723b687526c0560c41d7f2c8af28
-  Foundations/TheoInfo/Theo Info/HU Theo info .pdf:
-    size: 825441
-    sha256: d92a10084bce3de96b25b152741f9634dddb3d043a9fee8c88984f6c1f380cb4
-  Foundations/TheoInfo/Theo Info/Kellerautomaten gute aufgaben .pdf:
-    size: 202556
-    sha256: 37bf8978c893ebc902f407d34ff4555edb94d6e166b2090054a01cfc8016a8ba
-  Foundations/TheoInfo/Theo Info/NFAs beweisaufgaben.pdf:
-    size: 138782
-    sha256: 38bb89f8ec16698e729e99538925f9cc8f60db01d21e7053c8e9a0606f1a4fa9
-  Foundations/TheoInfo/Theo Info/Probeklausur-slides.pdf:
-    size: 396537
-    sha256: a27842e61db89f45c97f5c57e120cc5970a35f13e3c5a336a269793754ee3f07
-  Foundations/TheoInfo/Theo Info/Sei L eine reguläre Sprache. Es gibt einen endlichen Automaten, der L akzeptiert..pdf:
-    size: 103257
-    sha256: 908b132c4a91682e04d6e06386f33cb08de7c0297812dcd75b862206dc0f9c64
-  Foundations/TheoInfo/Theo Info/Theoretische Informatik Eine umfassende Einführung.pdf:
-    size: 6221647
-    sha256: 89215e1b5f3653cb9bc0e1cc57723c8499a09efe057c0800bf3873fb6924b79a
-  Foundations/TheoInfo/Theo Info/Theoretische Informatik Grundlagen mit Übungsaufgaben und Lösungen.pdf:
-    size: 5841756
-    sha256: a4986c12626ec7ac7ef0dc5617da557fdb5f81065b737af8b3c60d00a51e5e2e
-  Foundations/TheoInfo/Theo Info/beweis der mächtigkeit der potenzmrenge.pdf:
-    size: 142551
-    sha256: b6740aef9acd9211d4158f9d53c515a033c04b37947219eef1561df40226ffd3
-  Foundations/TheoInfo/Theo Info/beweise zu Äquivalenzrelationen.pdf:
-    size: 143110
-    sha256: 6b4da4395b3ee3d7c2add7f09ff562928421c7f16ea8f3866d3154a2fcc8dda3
-  Foundations/TheoInfo/Theo Info/ethi-skript14.pdf:
-    size: 1054513
-    sha256: 145d5096c6f8522a43d78f5734ba10a9ec3cf4fe301e21d3c067901e8d0c7283
-  Foundations/TheoInfo/Theo Info/gute Aufgaben zu ersten Kapitel.pdf:
-    size: 317304
-    sha256: 5d966bea5d450597e8e2bfb3677aa3a97223cac613e08e477f50f44cea5c4544
-  Foundations/TheoInfo/Theo Info/gute beweisaufgaben Nerode usw.pdf:
-    size: 156755
-    sha256: 8cc84fb8360c587bfca0131ae98f4a68fd7896f7440f60cc8a1148df732d9b0e
-  Foundations/TheoInfo/Theo Info/gute beweise.pdf:
-    size: 363655
-    sha256: 214de77414c4a44f5fa04558030beaf1678493f0998dc5e02e323513dd876554
-  Foundations/TheoInfo/Theo Info/introduction-to-the-theory-of-computation_compress.pdf:
-    size: 25049032
-    sha256: 0fb7040841681f9cefb4590c00630a88a23b63941e5742ea560d1994fcccc216
-  Foundations/TheoInfo/Theo Info/kellerautomaten aufgaben.pdf:
-    size: 114687
-    sha256: 47de0ca8e23987e61391cad64bf84c9cafe2b24aff53011712f85f3e856c6a0c
-  Foundations/TheoInfo/Theo Info/kombination von automaten.pdf:
-    size: 514720
-    sha256: 7d0fd7bf0cc4242fda26682914f3f836bccc6814a3fb5beec1498c4c70eae0d6
-  Foundations/TheoInfo/Theo Info/pumping lemma lösungen.pdf:
-    size: 132735
-    sha256: d483d82c1db7f2ae663be169651369433a3eb02eafeae393b237e16533f81ac7
-  Foundations/TheoInfo/Theo Info/reguläre sprachen.pdf:
-    size: 1302012
-    sha256: 6393facd6ef0016dede53575c98409563eb285e61a20593d82fdff09bd179919
-  Foundations/TheoInfo/Theo Info/sehr gut aufgaben zu automaten.pdf:
-    size: 144576
-    sha256: 1ad1437db2bd6a8edc9058de138db28d6b9fffa99f072d8461344e3434eae4fe
-  Foundations/TheoInfo/Theo Info/theo info.pdf:
-    size: 689374
-    sha256: 2618d4ea051162c3168c70aa4328d394a607abdec7313d69ec395dcf8c669fd4
-  Foundations/TheoInfo/Theo Info/turingmaschiene aufgaben.pdf:
-    size: 150531
-    sha256: 7b7b977988a3eb08f6933ed64e2db660fc1517abae1f2e0624142185852e91b8
-  Foundations/TheoInfo/einftheo-probeklausur-WS0708.pdf:
-    size: 62191
-    sha256: 9ce98da4f58023edcf49591f044e23a39a0069201acce253708bfdbeebc92480
-  Foundations/TheoInfo/einftheo-probeklausur-WS0809-loesung.pdf:
-    size: 332729
-    sha256: 7353628f8fdd7e3cb366900a08c9d8909c8a9dee5cbb0759e6ec09b2f80fd58f
-  Foundations/TheoInfo/einftheo-probeklausur-WS0809.pdf:
-    size: 56139
-    sha256: 6729aa2a718221a3d47bb01667dd3482be8444fabe8eff1b88995608ec2baadd
-  Foundations/TheoInfo/einftheo-probeklausur-WS0910-loesung.pdf:
-    size: 328057
-    sha256: ec641a9a58f3da9d72c487600bd199f44407908b3c5d52e40b6cacd646f468d3
-  Foundations/TheoInfo/einftheo-probeklausur-WS0910.pdf:
-    size: 278276
-    sha256: 57e3400184d025371cb2d3743865f5bb283893cd1638507ad0d840792fe9ba96
-  Foundations/TheoInfo/einftheo-probeklausur-WS1112.pdf:
-    size: 202385
-    sha256: 19f7c4208b37856516b43dceee76c8f692debde3ab6c04cf6f4e8623c96547e0
-  Foundations/TheoInfo/einftheo-probeklausur-WS1213.pdf:
-    size: 234654
-    sha256: 26ca187d21e032f7e12cfd0b7a338e95f09eea64db444c241b6c0aad45bc2834
-  Foundations/TheoInfo/einftheo-probeklausur-WS1314.pdf:
-    size: 234727
-    sha256: f588e9e02486bfb7dda0561eabdfcf70508491318eb1d0dcb17aa2a81d6293ad
-  Foundations/TheoInfo/einftheo-probeklausur-WS1415.pdf:
-    size: 246817
-    sha256: 5e63e9c23b38cea4770e50f9b580e01f98815f9ecb6d119ef0ad44cb42755e8f
-  Foundations/TheoInfo/einftheo-probeklausur-WS1516-loesung.pdf:
-    size: 348320
-    sha256: d320cb15193f61525d7990b03cb80619d7ab1094ca4e793a15177014dbf11dd6
-  Foundations/TheoInfo/einftheo-probeklausur-WS1516.pdf:
-    size: 272915
-    sha256: 9ec534c2d15b99ae267b1f1026c5cf0fd316d6ccdc4b074d6f470fe217c9bccb
-  Foundations/TheoInfo/einftheo-probeklausur-WS1617.pdf:
-    size: 244090
-    sha256: e5a774d3024ace09ddc6a4983c824e101f52e0550bb724862b574fb2e00c6eab
-  Foundations/TheoInfo/einftheo-probeklausur-WS1718-loesung.pdf:
-    size: 290948
-    sha256: 8561e2c9bf27ec140301d4e7295165d8e23fcaceec52f7e265f82540e5a518e2
-  Foundations/TheoInfo/einftheo-probeklausur-WS1718.pdf:
-    size: 250127
-    sha256: b58599679570cbc20d08d94789e14bcde27497a0e9c45f6af23f557fae24b64e
-  Foundations/TheoInfo/einftheo-probeklausur-WS1819.pdf:
-    size: 263214
-    sha256: e9c406d1f2b2d06579a824829bc14ad15f00f0f8b4b6e7e756543106904d14b7
-  Foundations/TheoInfo/einftheo-probeklausur-WS2021.pdf:
-    size: 249828
-    sha256: 3c604e39e7303da80950c9aace267c6d58cad6d1fed9bf4f353ba26ac369976b
-  Foundations/Ultimate-Index.md:
+  _unsorted/Ultimate-Index.md:
     size: 23776
     sha256: aa54661b023349fdf1c95ca9e010f2bc28713a601165adc825b801f93e8f41c4
-  Foundations/_misc/VS Code shortcute.pdf:
+  _unsorted/VS Code shortcute.pdf:
     size: 207283
     sha256: cfb2c08dd2a743e1204bb57b052f2ce5d2dcea94e258ed11dc13971b575a4f46
-  Foundations/_misc/pg_list_essential_macros_reference_v2.txt:
-    size: 15568
-    sha256: 0708fc59d88db819b15ac90cbd9507224ac05d082ee96d3f3411b5a8e8b22e7a
-  Foundations/_misc/primitive_node_map.txt:
-    size: 38903
-    sha256: 3410d3563d48dcac252f207d1ea3f548711f727a796c61f30f3859250915f0e7
-  Foundations/_shelving-manifest-2026-07-18.md:
+  _unsorted/_shelving-manifest-2026-07-18.md:
     size: 29308
     sha256: f8496bd7342735cb365c3023ad0bd60d5bf2200c073ce452bf6e651b289831ac
+  _unsorted/crashkurse mathematik .pdf:
+    size: 23051136
+    sha256: 28a229479dd42d4d26b824fe8837fad9f66f6563c8c6d9cda70dc2e7882151ba
+  _unsorted/pg_list_essential_macros_reference_v2.txt:
+    size: 15568
+    sha256: 0708fc59d88db819b15ac90cbd9507224ac05d082ee96d3f3411b5a8e8b22e7a
+  _unsorted/primitive_node_map.txt:
+    size: 38903
+    sha256: 3410d3563d48dcac252f207d1ea3f548711f727a796c61f30f3859250915f0e7
+  algorithms/complexity/theoinfo-hu-archive/Grundbegriffe der theoretischen Info.pdf:
+    size: 31392144
+    sha256: 3555e16e82fbffaaa816f5939ae2eb8c02e26ea15af9a2f3a37074dc4abb89fc
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt01.pdf:
+    size: 962993
+    sha256: 7d6b5547e4b2a0ce62ff7afbf3ca7753ea21a57d7db64b6a7b2d88cdb399801f
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt02.pdf:
+    size: 2188353
+    sha256: 3b505035f3a8845ec0fb06a330ebfe50fa140e260151f3b9a260a944ade0cda6
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt03.pdf:
+    size: 4063267
+    sha256: 8cc1be4459f0198e7b1e1d0588beb62f2b03aa899ce3fb548ebf7f0d210de2d5
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt04.pdf:
+    size: 4293080
+    sha256: 3852e766a1fdbae1ed1a0b7984d044a049ad6590c0e18418bed89337fd2fafaa
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt05.pdf:
+    size: 3875149
+    sha256: da08a9de99e3d265554ef21708f6b3429ce9d3f4cb47e225ccb4c974cb6f02a4
+  algorithms/complexity/theoinfo-hu-archive/Lösungen/Blatt06.pdf:
+    size: 4697407
+    sha256: 7f3879ea9efa19510f0f52860ad448810dcebea759b8dd4a81935e70dafe957b
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/1 Endliche Automaten oder Rabin-Scott-Automaten.pdf:
+    size: 199183
+    sha256: c8ba9bdad4de8dd0ae7220bd1ed49226810dded8e411c0218c2b504bf4cd71c6
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/12-pumping-lemma LMU.pdf:
+    size: 359361
+    sha256: 0f14a4bbc0a8360410c3ad676fcd67c2749fc1e126fad218669f3c0d39ec8591
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/13-myhill-nerode.pdf(gut).pdf:
+    size: 337843
+    sha256: ce5c89a61137a81efe17a922959e8bc912d9e3e536d6cd29ce9a9657a30115ee
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/18-pumping-lemma-cfl.pdf:
+    size: 281004
+    sha256: cec5c7e26e711c672c724d5ccae52aa9be9146c62add5acd33786f9a4735a924
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Aufgaben mit lösungen zu DFAs und NFAs.pdf:
+    size: 607042
+    sha256: 39b47d310c083d6228ccbe5f00c2141ff52270cead1ec0a5665cad06919e7e4f
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Aufgaben zu Äquivalenzrelationen .pdf:
+    size: 275410
+    sha256: 76271353ae6d5cbeece44b7592dad7e7fd829246acd980be5df912838329462b
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Automaten, Formale Sprachen und Berechenbarkeit I.pdf:
+    size: 1056010
+    sha256: 50f2437e9b738614fe303189f4e8d0a6d7d6cc88e34f47f350725b26e8f80a8a
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Berechenbarkeit .pdf:
+    size: 2369299
+    sha256: e8b311a045367f2db9b9a5dd99877a3305e2bf14fa8ac1eb18048ab4a6f24942
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Blatt 12.pdf:
+    size: 2338567
+    sha256: 744cd5e4a3ddbf902afb69e1800f763c0ad5879db516f1289d62f1ec7f4859bf
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Blatt04 copy.pdf:
+    size: 284374
+    sha256: 27e45e34f68f31a3912445e4d7ecffa5a8f3e8af4ac704a91a9087bd616593de
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/CNF + KellerAut..pdf:
+    size: 54067
+    sha256: 07acfe3db688a1fb25f3544fd44cb85eeb224b60d020684f1be5bfee853f2d5a
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Chomskynormalform + CYK.pdf:
+    size: 155998
+    sha256: 6651b19da69fa1d6f3fd7aff244bd30054acc2a0eb358d697b4df339df530853
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Ethi ganz guter Skript.pdf:
+    size: 1023323
+    sha256: 33f7d0088b39c20e65362b4c16e8e8ee3e4e33dced53d1e27fb83c17b9fcc271
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Formale Sprachen, abstrakte Automaten  copy.pdf:
+    size: 7776197
+    sha256: a3af51f8634e5551429fe2ca21cb0b2cfa66fb58e43c6968b825223b0f18bd42
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Formale Sprachen, abstrakte Automaten .pdf:
+    size: 4706997
+    sha256: a4aaf6cb07c33ac6a0c15a5ccbbe16ea6983248ffb87de9fe77c096f1aa73ac5
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Formale Sprachen, abstrakte Automaten und Compiler.pdf:
+    size: 12055243
+    sha256: 38d535781454b05e7eabc67d5f74004297ce4c482d82b8e45fe3130b4dc74014
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Grundkurs Theoretische Informatik.pdf:
+    size: 10050499
+    sha256: ab5e64828dd0cd7d4bcd4ad7f8cbc9b65d97763ba5197d9f128f5404cea181a6
+  'algorithms/complexity/theoinfo-hu-archive/Theo Info/Gute Übungen zu DFA : NFA.pdf':
+    size: 348129
+    sha256: eed169360724948f583079c68d058ce849d8723b687526c0560c41d7f2c8af28
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/HU Theo info .pdf:
+    size: 825441
+    sha256: d92a10084bce3de96b25b152741f9634dddb3d043a9fee8c88984f6c1f380cb4
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Kellerautomaten gute aufgaben .pdf:
+    size: 202556
+    sha256: 37bf8978c893ebc902f407d34ff4555edb94d6e166b2090054a01cfc8016a8ba
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/NFAs beweisaufgaben.pdf:
+    size: 138782
+    sha256: 38bb89f8ec16698e729e99538925f9cc8f60db01d21e7053c8e9a0606f1a4fa9
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Probeklausur-slides.pdf:
+    size: 396537
+    sha256: a27842e61db89f45c97f5c57e120cc5970a35f13e3c5a336a269793754ee3f07
+  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Sei L eine reguläre Sprache.
+    Es gibt einen endlichen Automaten, der L akzeptiert..pdf
+  : size: 103257
+    sha256: 908b132c4a91682e04d6e06386f33cb08de7c0297812dcd75b862206dc0f9c64
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/Theoretische Informatik Eine umfassende Einführung.pdf:
+    size: 6221647
+    sha256: 89215e1b5f3653cb9bc0e1cc57723c8499a09efe057c0800bf3873fb6924b79a
+  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Theoretische Informatik Grundlagen
+    mit Übungsaufgaben und Lösungen.pdf
+  : size: 5841756
+    sha256: a4986c12626ec7ac7ef0dc5617da557fdb5f81065b737af8b3c60d00a51e5e2e
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/beweis der mächtigkeit der potenzmrenge.pdf:
+    size: 142551
+    sha256: b6740aef9acd9211d4158f9d53c515a033c04b37947219eef1561df40226ffd3
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/beweise zu Äquivalenzrelationen.pdf:
+    size: 143110
+    sha256: 6b4da4395b3ee3d7c2add7f09ff562928421c7f16ea8f3866d3154a2fcc8dda3
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/ethi-skript14.pdf:
+    size: 1054513
+    sha256: 145d5096c6f8522a43d78f5734ba10a9ec3cf4fe301e21d3c067901e8d0c7283
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/gute Aufgaben zu ersten Kapitel.pdf:
+    size: 317304
+    sha256: 5d966bea5d450597e8e2bfb3677aa3a97223cac613e08e477f50f44cea5c4544
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/gute beweisaufgaben Nerode usw.pdf:
+    size: 156755
+    sha256: 8cc84fb8360c587bfca0131ae98f4a68fd7896f7440f60cc8a1148df732d9b0e
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/gute beweise.pdf:
+    size: 363655
+    sha256: 214de77414c4a44f5fa04558030beaf1678493f0998dc5e02e323513dd876554
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/introduction-to-the-theory-of-computation_compress.pdf:
+    size: 25049032
+    sha256: 0fb7040841681f9cefb4590c00630a88a23b63941e5742ea560d1994fcccc216
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/kellerautomaten aufgaben.pdf:
+    size: 114687
+    sha256: 47de0ca8e23987e61391cad64bf84c9cafe2b24aff53011712f85f3e856c6a0c
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/kombination von automaten.pdf:
+    size: 514720
+    sha256: 7d0fd7bf0cc4242fda26682914f3f836bccc6814a3fb5beec1498c4c70eae0d6
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/pumping lemma lösungen.pdf:
+    size: 132735
+    sha256: d483d82c1db7f2ae663be169651369433a3eb02eafeae393b237e16533f81ac7
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/reguläre sprachen.pdf:
+    size: 1302012
+    sha256: 6393facd6ef0016dede53575c98409563eb285e61a20593d82fdff09bd179919
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/sehr gut aufgaben zu automaten.pdf:
+    size: 144576
+    sha256: 1ad1437db2bd6a8edc9058de138db28d6b9fffa99f072d8461344e3434eae4fe
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/theo info.pdf:
+    size: 689374
+    sha256: 2618d4ea051162c3168c70aa4328d394a607abdec7313d69ec395dcf8c669fd4
+  algorithms/complexity/theoinfo-hu-archive/Theo Info/turingmaschiene aufgaben.pdf:
+    size: 150531
+    sha256: 7b7b977988a3eb08f6933ed64e2db660fc1517abae1f2e0624142185852e91b8
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS0708.pdf:
+    size: 62191
+    sha256: 9ce98da4f58023edcf49591f044e23a39a0069201acce253708bfdbeebc92480
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS0809-loesung.pdf:
+    size: 332729
+    sha256: 7353628f8fdd7e3cb366900a08c9d8909c8a9dee5cbb0759e6ec09b2f80fd58f
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS0809.pdf:
+    size: 56139
+    sha256: 6729aa2a718221a3d47bb01667dd3482be8444fabe8eff1b88995608ec2baadd
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS0910-loesung.pdf:
+    size: 328057
+    sha256: ec641a9a58f3da9d72c487600bd199f44407908b3c5d52e40b6cacd646f468d3
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS0910.pdf:
+    size: 278276
+    sha256: 57e3400184d025371cb2d3743865f5bb283893cd1638507ad0d840792fe9ba96
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1112.pdf:
+    size: 202385
+    sha256: 19f7c4208b37856516b43dceee76c8f692debde3ab6c04cf6f4e8623c96547e0
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1213.pdf:
+    size: 234654
+    sha256: 26ca187d21e032f7e12cfd0b7a338e95f09eea64db444c241b6c0aad45bc2834
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1314.pdf:
+    size: 234727
+    sha256: f588e9e02486bfb7dda0561eabdfcf70508491318eb1d0dcb17aa2a81d6293ad
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1415.pdf:
+    size: 246817
+    sha256: 5e63e9c23b38cea4770e50f9b580e01f98815f9ecb6d119ef0ad44cb42755e8f
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1516-loesung.pdf:
+    size: 348320
+    sha256: d320cb15193f61525d7990b03cb80619d7ab1094ca4e793a15177014dbf11dd6
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1516.pdf:
+    size: 272915
+    sha256: 9ec534c2d15b99ae267b1f1026c5cf0fd316d6ccdc4b074d6f470fe217c9bccb
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1617.pdf:
+    size: 244090
+    sha256: e5a774d3024ace09ddc6a4983c824e101f52e0550bb724862b574fb2e00c6eab
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1718-loesung.pdf:
+    size: 290948
+    sha256: 8561e2c9bf27ec140301d4e7295165d8e23fcaceec52f7e265f82540e5a518e2
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1718.pdf:
+    size: 250127
+    sha256: b58599679570cbc20d08d94789e14bcde27497a0e9c45f6af23f557fae24b64e
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS1819.pdf:
+    size: 263214
+    sha256: e9c406d1f2b2d06579a824829bc14ad15f00f0f8b4b6e7e756543106904d14b7
+  algorithms/complexity/theoinfo-hu-archive/einftheo-probeklausur-WS2021.pdf:
+    size: 249828
+    sha256: 3c604e39e7303da80950c9aace267c6d58cad6d1fed9bf4f353ba26ac369976b
   algorithms/structures/algo2-frankfurt-klausuren/ALGO2-2021-02-23-solutions.pdf:
     size: 331352
     sha256: 0fbf1d385b2cddb36425ef2b468da6c83f8fda9c4444801d0e321c8e93982842
@@ -802,6 +254,63 @@ files:
   algorithms/structures/algo2-frankfurt-klausuren/ALGO2-2024-03-26-solutions.pdf:
     size: 317455
     sha256: 95021edcb44ecad10ed8e2e70ed91bc4d03a385b0bb8dd073d5c6d3be60b3f7e
+  algorithms/structures/algo2-hu-materials/BayerM1970_OrganizationAndMaintenanceOfLargeOrderedIndices.pdf:
+    size: 639369
+    sha256: 69826c036d7948fe5b02f7498620c90cc6a8de2504251a57994d13dc7b14e470
+  algorithms/structures/algo2-hu-materials/ChenKLPPS22_MaximumFlowAndMinimumCostFlowInAlmostLinearTime.pdf:
+    size: 3414937
+    sha256: b5e782fed9b74714427321aa3f28bda6295730eaa9aab464718a107f0c83481e
+  algorithms/structures/algo2-hu-materials/Pagh06_CuckooHashingForUndergraduates.pdf:
+    size: 173484
+    sha256: 359b74aa873c1acc58d60b1e88ca21f9981c07382baa6da3a924fb755acf1885
+  algorithms/structures/algo2-hu-materials/SleatorT1985_SelfAdjustingBinarySearchTrees.pdf:
+    size: 2392998
+    sha256: 419b7a1ebbe56ad5e6dbc1b17a7878de6ecec4b1ea628d97e3b6217d2c71fba2
+  ? algorithms/structures/algo2-hu-materials/Thorup1999_UndirectedSingleSourceShortestPathsWithPositiveIntegerWeightsInLinearTime.pdf
+  : size: 284003
+    sha256: df57615ac5f13357e870c456ee625f417aedb64a879f044811d4349292237896
+  algorithms/structures/algo2-hu-materials/Vazirani20_AProofOfTheMVMatchingAlgorithm.pdf:
+    size: 864622
+    sha256: 05f3cfcc51c12eea0537cb9892a9bc832f8f175fc507b2b0f8228b68e922996c
+  algorithms/structures/algo2-hu-materials/ad2_amortizedanalysis.pdf:
+    size: 460087
+    sha256: 8079413ec36ebe21be881abfc95998a23f00ec5cfd3d55dd4b7297a6e048946d
+  algorithms/structures/algo2-hu-materials/ad2_bipartitematching.pdf:
+    size: 513719
+    sha256: 66fe7e2a2f44d527898b040a5226294ff5e0ae3981efc472f947bc40c116f6b4
+  algorithms/structures/algo2-hu-materials/ad2_btrees.pdf:
+    size: 428359
+    sha256: 6cefe0f6190656cbff4f20d41002458daf542fcc27819d8e1c3b921130f24400
+  algorithms/structures/algo2-hu-materials/ad2_computationalgeometry.pdf:
+    size: 461202
+    sha256: 6d5379a7f96b5f7aa80f919589d3c45fd6eb612b3cd190292966404d6736f0ff
+  algorithms/structures/algo2-hu-materials/ad2_fastfouriertransform.pdf:
+    size: 577996
+    sha256: 7266924ecd46b0a6c34d1a15593988d4db6b8ed4c5044a6e0807408b2c048aef
+  algorithms/structures/algo2-hu-materials/ad2_fastmultiplication.pdf:
+    size: 313582
+    sha256: 207158287b209baafcf9a6e8b15fa75a0cc3dc276529292e851eeb5bd029175b
+  algorithms/structures/algo2-hu-materials/ad2_fibonacciheap.pdf:
+    size: 501744
+    sha256: 78734a20781acd35e10ad56a532046cfc4766f667cd86faf91e2497299345fcb
+  algorithms/structures/algo2-hu-materials/ad2_hashing.pdf:
+    size: 456116
+    sha256: a8187d7327bd1c48252d139150beab5d3d000403955eb606b67dae72880787d7
+  algorithms/structures/algo2-hu-materials/ad2_maximumflow.pdf:
+    size: 546959
+    sha256: 4498e92c87830c9f5c8763336907bf0a7531a89b74f9951940fca793126057b7
+  algorithms/structures/algo2-hu-materials/ad2_shortestpaths.pdf:
+    size: 540014
+    sha256: cc2a43da6a215c3415fb73a285f73e3f2948cddf5a997b657d88187b1b015271
+  algorithms/structures/algo2-hu-materials/ad2_splaytrees.pdf:
+    size: 460523
+    sha256: 5de9a81453572253186353a66544d5ca1b409adf08177888b0896e76fc57820b
+  algorithms/structures/algo2-hu-materials/ad2_stablematching.pdf:
+    size: 357966
+    sha256: f5165b3face7787b1c85c817c5705436edf10e2f9193af83d19b6f8c976e0f93
+  algorithms/structures/algo2-hu-materials/stable matching aufgaben.pdf:
+    size: 368338
+    sha256: fd2da9ebd9a0dd3768d93cd5f7ca07550a288958a5192ad81f85057d087b7328
   algorithms/structures/clrs/clrs-de.pdf:
     size: 8774407
     sha256: ba67e17d65fc3ae2ed0f2b374cc7b50940847fb2c1b8e88f7f24b033e1df7445
@@ -817,6 +326,21 @@ files:
   algorithms/structures/ottmann-widmayer/ow.pdf:
     size: 6186269
     sha256: dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf
+  'data-systems/architecture/systems-architecture-shelf/DigitaleSysteme/ Computer Architecture: A Quantitative Approach.pdf':
+    size: 7148140
+    sha256: f2e337be53b22977f08c11f1cf071569a70b0db8d491766e382542b8075a7841
+  data-systems/architecture/systems-architecture-shelf/DigitaleSysteme/Digitale systeme .pdf:
+    size: 3347331
+    sha256: 5c968eec16fc069a88f36c41d5865c1a4a67f0d8d3e29498507ac302ee049128
+  data-systems/architecture/systems-architecture-shelf/DigitaleSysteme/Logischer Entwurf digitaler Systeme.pdf:
+    size: 7005061
+    sha256: a9482a518ac3689d8159317faefe9cb6c1f49cfd592bbe7986d30e24a0050f74
+  data-systems/architecture/systems-architecture-shelf/Netzwerke/UNIX Network Programming(Volume1,3rd).pdf:
+    size: 12377649
+    sha256: 4835f27481ec8f7cd138cdf0779ed644f503bec42fd04f16fcacf96005525309
+  data-systems/databases/kleppmann-ddia/Designing Data Intensive Applications - Martin Kleppmann.pdf:
+    size: 24975901
+    sha256: 3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394
   machine-learning/classical/aml-ss26-lectures/Primer_Linear_Algebra.pdf:
     size: 534719
     sha256: 26dd4a53d52d6c04e4f0f68ea132c87d3770474f6ade9b7e1e97261ff1849313
@@ -1312,6 +836,10 @@ files:
   machine-learning/classical/kroese-dsml/kroese.pdf:
     size: 21072005
     sha256: 841e4441ec94f39c3f70967ba1c9198c0ec3d3323d98c786f677e5a913be66b3
+  ? machine-learning/classical/marsland-ml-algorithmic/Machine Learning_ An Algorithmic
+    Perspective (2nd ed.) [Marsland 2014-10-08].pdf
+  : size: 6967995
+    sha256: 0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05
   machine-learning/classical/murphy-pml1/pml1.pdf:
     size: 92323940
     sha256: 89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf
@@ -2677,6 +2205,269 @@ files:
   mathematics/general/labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf:
     size: 16665465
     sha256: c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450
+  mathematics/general/mathe-vorkurse/VK_A1_BruchGleichung_WS22.pdf:
+    size: 109025
+    sha256: 560174e2ac123f7f02b83ac80c708905491854091121f5ddafc6dcfedf46753b
+  mathematics/general/mathe-vorkurse/VK_A2_PotenzenWurzeln_WS22.pdf:
+    size: 115750
+    sha256: 0550c8d7c2d910252d7926e35403f46639b9671cca3977d13f76f28dbac0d4a1
+  mathematics/general/mathe-vorkurse/VK_A3_PolynomeLGS_WS22.pdf:
+    size: 72865
+    sha256: e019e46055301374b074cf633d4cff21562f4724c848900d11920b120a8796be
+  mathematics/general/mathe-vorkurse/VK_A4_GeometrieTrigo_WS22.pdf:
+    size: 234656
+    sha256: 513341f00c37136da69505f74eecfc663e6bd139d843848d2f57322a4874eaff
+  mathematics/general/mathe-vorkurse/VK_A7_Integralrechnung_WS22.pdf:
+    size: 105891
+    sha256: 6a324272a09d08b98c652a121ef698efe6de0275c907e00acfad880769943dd6
+  mathematics/general/mathe-vorkurse/VK_A8_Vektoren_WS22.pdf:
+    size: 75031
+    sha256: baecfcf8e88b4c66fed3068c5b0822ea99f64e8a6fbe52232bfe04a27167a8ba
+  mathematics/general/mathe-vorkurse/VK_Ergebnisse_WS22 (1).pdf:
+    size: 121630
+    sha256: f4dceebe1ab362802c36a28260d6e90cd61d74f5cdf03c664ee9870fe6ba9152
+  mathematics/general/mathe-vorkurse/VK_VektorrechnungSelbstlernen_WS22.pdf:
+    size: 139043
+    sha256: 727a6a291d3fc4c080fc1acd179ec889b26ce174a542040cc94297e9124f2305
+  mathematics/general/mathe-vorkurse/tzjXHT-VK22-HU-Tag1voll.pdf:
+    size: 637648
+    sha256: ad41b4385ab32c45f2f6bbe89a41730b749008d0381d17a8e49d6de78a1d43de
+  mathematics/general/vorkurs-mathe-2022/tag02_handout.pdf:
+    size: 303372
+    sha256: 117a8e45fb9ffab87ed40e02d10f0b2eec887f2f18a3d2868fb7f722ed1a0af7
+  mathematics/general/vorkurs-mathe-2022/tag03_handout.pdf:
+    size: 598472
+    sha256: 0bba68bb74fcf458b0384b6693fff21e67b49b9715103021ed9eb0cadab5b3e3
+  mathematics/general/vorkurs-mathe-2022/tag04_handout.pdf:
+    size: 347117
+    sha256: a20bca92d03c3629c2276dfb2bb634f5ccfbb32c48a808174cac4db7b0131ed5
+  mathematics/general/vorkurs-mathe-2022/tag05_handout.pdf:
+    size: 498374
+    sha256: ce9c508324ddc61b6457694e4479574698b055c4b4c384b80d9053d1cb8093d3
+  mathematics/general/vorkurs-mathe-2022/tag06_handout.pdf:
+    size: 470178
+    sha256: cb9aea9b83e1a9dc0f242892f06958ba4b70b115881c085b0c6aa7991723548b
+  mathematics/general/vorkurs-mathe-2022/tag07_handout.pdf:
+    size: 431975
+    sha256: 0e4a99c712725521754fcdd2c3d71a310bddc5bd47e2cc021f747f7f11dcb1a6
+  mathematics/general/vorkurs-mathe-2022/tag08_handout.pdf:
+    size: 594006
+    sha256: da05f368e1efb0dad934de8fa42593b326c50be6044f09dae928e162e9aa221f
+  mathematics/general/vorkurs-mathe-2022/tag09_handout.pdf:
+    size: 494905
+    sha256: 5a24bfda837760a16aad0f4e1025c915e1b29fddb39d51771a274a58c8247c2c
+  mathematics/general/vorkurs-mathe-2022/tag10_handout.pdf:
+    size: 488424
+    sha256: 4e02f5de897900329c263a2c1ae0b1c20300bb2a035d8c9aa6ae39be255d8d79
+  mathematics/general/vorkurs-mathe-2022/tag11_handout.pdf:
+    size: 505864
+    sha256: ae0842e7109a16548d7891fbcc6643916d7ceddccf3408b7794ba50692e68ee4
+  mathematics/general/vorkurs-mathe-2022/tag12_handout.pdf:
+    size: 565511
+    sha256: 376ea878326b297b4663ebf8d3d88db6c5e81f3f23b0b1e04aeba09386060c8b
+  mathematics/general/vorkurs-mathe-2022/tag13_handout.pdf:
+    size: 654621
+    sha256: 5fd3cbc67f0b916909eed2e1e0d17114a01666801399cd98ff199838fcb6af9b
+  mathematics/general/vorkurs-mathe-2022/tag14_handout.pdf:
+    size: 412627
+    sha256: bd52f63b8b818243f544887b2b341fea32e892c2909f9c8ceece143eb429a891
+  mathematics/general/vorkurs-mathe-2022/tag15_handout.pdf:
+    size: 468628
+    sha256: db5d064223918b8f918fe88663e39727f4764401ce7da17f49878089558bf25b
+  mathematics/general/vorkurs-mathe-2022/tag16_handout.pdf:
+    size: 370166
+    sha256: f6f965c9033fa4733339cc8d326e96d06fcef9c85a319426fec52a319a5c184b
+  mathematics/general/vorkurs-mathe-2022/tag17_handout.pdf:
+    size: 379834
+    sha256: 8790301c29923de10508e711bce8d4d7872a8c884c1033d08af9a7bdef8a18c4
+  mathematics/general/vorkurs-mathe-2022/tag18_handout.pdf:
+    size: 361706
+    sha256: a472058edb6c9e325381f493f74dd335a3ae0441f6aa59598f129ecd0afee4f2
+  mathematics/general/vorkurs-mathe-2022/tag19_handout.pdf:
+    size: 419160
+    sha256: 2db664694a841f304f5e3fb61777dd6c528aa6b241c95c550de4f8a352496908
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB01.pdf:
+    size: 353934
+    sha256: 459ad211ab4790895d59611e6c3326bb20e1bf3241946ee4657120baa300ecac
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB02.pdf:
+    size: 308474
+    sha256: 111520497dddcec3c0427f7e0bc65dd1d479cef66a2c0acd3ca23e4b183d8442
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB03.pdf:
+    size: 350923
+    sha256: cc8c89e234318ddc62cbd7aedf76d1c582cd9940be0261a3bb3b753ff689acce
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB04.pdf:
+    size: 323370
+    sha256: f5c8dcff634cae1435e29330dc0aee618c516fa70030ea476b57160d4114f3f5
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB05.pdf:
+    size: 325086
+    sha256: f490492496e4477c82a25e95e0cc2082c65d03d4ff3b007f639d948875dbfb5b
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB06.pdf:
+    size: 349780
+    sha256: 3f0056bd17e5a49eb85303511f834e9de2694c11a5ab0ceb103ebd4154f009ce
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB07.pdf:
+    size: 314100
+    sha256: 12fa08163dc08e072701cda223a2b5a56260481e4e97a76c0148a352b01555a6
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB08.pdf:
+    size: 340357
+    sha256: eec87cf4d307002de4bb8546432f1f3a248aaffe67fa1abd77a4107ce5d749fb
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB09.pdf:
+    size: 345402
+    sha256: 652735951ca75a4823fd460ce939cfe19ec7df6a808a7dfa13c2539f12cca1c6
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB10.pdf:
+    size: 364184
+    sha256: c8466b0e516f4ff7b6a2e3724b4e95cbff5dacb28b31bc9314d94e4854fe5d9a
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB11.pdf:
+    size: 335732
+    sha256: 9e046a849a1ed5fbbfe9c6c466731ad3faa0b06e53b696144b5242d12312eb36
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB12.pdf:
+    size: 334565
+    sha256: 7c4d933829530715fd590869d8b99c748230f5ea8cb664ca4df029df9a5ce6d1
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB13.pdf:
+    size: 368650
+    sha256: a6fd9022ae81b2dba9c528f3b0edbab0b59b4a9d2930d20dc8992ffc5ac59ee2
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB14.pdf:
+    size: 341457
+    sha256: cf7ff80f9a828f3e0142d462f0fee62aef0ca7b6b31a06a436e59ee63492c313
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB15.pdf:
+    size: 333893
+    sha256: 68619b89b097ed5bd543a37a69ddaa6bb326b31b1591ca13d2e94449d28c8ee0
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB16.pdf:
+    size: 313820
+    sha256: e74f01a104434c8db1433f3d31c55df043db0657f07c0f7774a1de06a38dde0c
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB17.pdf:
+    size: 368214
+    sha256: 8f31dac7f1b3b6839c7beef5f5ba3df988a0b425fc3ac97f2792d49045759f18
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB18.pdf:
+    size: 297135
+    sha256: 15433bf2b69f97392075738e225f701b7e4aa58d6b0b6651673570080fbccd97
+  mathematics/general/vorkurs-mathe-2022/vkma2022_AgB19.pdf:
+    size: 309912
+    sha256: bf8fae339416baa76377c6770b3b0b51117b26b90b367a7c63142d86950dc3b4
+  mathematics/linear-algebra/lineare-algebra-archive/LA/ KLAUSUR ZUR LINEAREN ALGEBRA I .pdf:
+    size: 214103
+    sha256: ee87190a4db7711c5c4e646441ce1cc54c2194ddffae776030c121bfd19aef8a
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Everything You Need to Know About Modular Arithmetic....pdf:
+    size: 58461
+    sha256: 267b5920b601524347b74dfd7577774ceedb5c72531304d0ac972bc1036be153
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Klausur31-07-23 2.pdf:
+    size: 222725
+    sha256: eda37bbd1148073c6b2bb4ba0e05742443b8e6a1a19fa90f51f83d7e88521d1e
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Klausur31-07-23-Losungen 2.pdf:
+    size: 202325
+    sha256: 63f16911a709ca0449c23e0c0a259b0accf8f55da3760edbdded628560f48752
+  mathematics/linear-algebra/lineare-algebra-archive/LA/LA skript.pdf:
+    size: 611697
+    sha256: 6203291c29314a8497e43c787221f7df3829993e1096b1163d8279733c62a9cd
+  mathematics/linear-algebra/lineare-algebra-archive/LA/LA.pdf:
+    size: 781852
+    sha256: f39afb8c5c197f518e709bd263ab97014ea28ea8a8905ca759477dee536b9c1c
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Lineare Abbildungen.pdf:
+    size: 197000
+    sha256: 90af05de5f6b67326b79b61b58dc8c2e41cb2dad56ac44983a35495c30aab05f
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Lineare Abbildungenblatt .pdf:
+    size: 208540
+    sha256: de4411ec2176f28053c69466674e04564b28773bacf9f8a4ff2c69a07d72d0e2
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Lineare Algebra f ü r die Informatik.pdf:
+    size: 1652667
+    sha256: 6e6a5a0b2bf34def7f9b3e44372b8d040c4562ae91c28a572470428dbc191dc8
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf:
+    size: 143461
+    sha256: 0b0bd3015ff867fe14f95aea66f20f46dbc587d361b83e4dccda1750dd9348a9
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/BeweisUFGAben.pdf:
+    size: 319396
+    sha256: af782356e47c55d45a9b52177c8276e6a691188f85bfa40a35c61b6028fa44f8
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Bijektivität usw.pdf:
+    size: 87913
+    sha256: 6e2f114ab6c59ad510fa8f1e3d23accdec29324e732e97a67b51cff9d0bbec11
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/FormelsammlungVorkursWS22.pdf:
+    size: 162507
+    sha256: 031c3e0259e8e2891e0406a8935422117cddb3a61ca23ccf6998c9cd7737f0d9
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Gute aufgaben mit Lösungen mathe.pdf:
+    size: 168352
+    sha256: 9e2419330f16d56abd32c8f2bd3ddd2567dc718456843add451f5b86cae9fc12
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Gute beweis aufgaben.pdf:
+    size: 319557
+    sha256: 7ef763361d44d263de23203e5309a061c06461b84fc8190bb99c65607dc55bad
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Mengenlehre.pdf:
+    size: 457306
+    sha256: 3800fa00c7bfd9e624ed5ab4f56d78b3cf3e52a6d49d6f576d813803d5e64787
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Modulo gesetze.pdf:
+    size: 3170860
+    sha256: 3de32301c3c77bb682d49a944a7b86a4275322cb84c9f662cb3c107abd7e656d
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Relationen und funktionen.pdf:
+    size: 111437
+    sha256: 20d7944b48bd9e7f52dc5ee2d6dd8e2b02b64bf69d79f65618eab48a2705a817
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Unserer Skript.pdf:
+    size: 1926493
+    sha256: 5a0e17ef6c01913d34759f87e535a2ea573fac826f9436e127b30ba0e432db83
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/ÜB TUM Bijektivität surjektivität.pdf:
+    size: 282617
+    sha256: 58838dfd80e76a5f2420e8ba05972ad7a07ba1fba475e12eec30ef27469b58d3
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Zahlentheorie im Z.pdf:
+    size: 383712
+    sha256: 491600985b4263c8fb02196d24570ff5b56a49bf423174b36c35bb3ffcb35eb6
+  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/beweis das eine äquivalenzrelation
+    auch eine partition ist.pdf
+  : size: 103066
+    sha256: 6dde5207b9a01736ebd19285e55c6ea04a7a6cf8ad94b4a8b95edb7805ed376b
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/beweise für sätze .pdf:
+    size: 296553
+    sha256: df329190bdf51c5f93c5f19d0c932a98b8e78928281b32e8e45df7773857b7eb
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/gutes skript maathe.pdf:
+    size: 1923357
+    sha256: dd2346f040f744af11700434b8b6845cec02e52e5ddf0048065f9352b1104f65
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/induktion-aufgaben-loesungen.pdf:
+    size: 856786
+    sha256: 34fbcccedaf3ef03bae83d07cc2fb8f0dd4efd1d5faae2c4a32d847f3037adae
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/mfi1.pdf:
+    size: 1195808
+    sha256: c9b0e071acba5760d362f96c811eecf126521eba8d52cf68e31862d0a6e88bab
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/unterschiedliche beweise zur abzählbarkeit von mengen.pdf:
+    size: 81684
+    sha256: dc5b1f9efe4010269dbafa9ad22b44652f1e5e75511422bbebb0924d465af584
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/wunderbarer skript zu graphentheorie.pdf:
+    size: 1730097
+    sha256: 477bcb138e73e10f7155cbcaad34fa93a027df061b4821bd035071ef41edbc89
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Mathematik für Informatike.pdf:
+    size: 5082068
+    sha256: e7c7a1a501e163ec46091b394b93f4036ce2008a738ac7492c3a775ed3fa2e5c
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur 2.pdf:
+    size: 229546
+    sha256: 32201d4e7dcce8dd2df2c60c73b0292caa7f591278880d68e6e5c9299d2ccee0
+  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur zur Linearen
+    Algebra fu ̈r Informatiker und Ingenieure.pdf
+  : size: 165482
+    sha256: c57119e735fb694a40be90c238311e98b2bb59b234e2c2e7ed7afb1413610549
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur.pdf:
+    size: 251614
+    sha256: 65e6591cb208c449a311975abe94c15ffeec6843c914fd39a797877512af15c0
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur_ Lösundsvorschlagen 2.pdf:
+    size: 12717102
+    sha256: 547f3df4d8862f6ecf85fb536a070fb1281490095b7b2c34402c8d591948ef3b
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Übungen mit lösungen.pdf:
+    size: 10499959
+    sha256: 42861a8131378195a69806d8afbf7ec58fef0b8525101f06c129cfd845e5d6a5
+  mathematics/linear-algebra/lineare-algebra-archive/LA/Übungsblatt mit lösungen.pdf:
+    size: 103941
+    sha256: 25fd0962844c0a6fd0a95c4bb0a25f2ce0a0b78cf673af80dc366718d72b6fe6
+  mathematics/linear-algebra/lineare-algebra-archive/LA/gute notizen von kern vorlesung .pdf:
+    size: 2910560
+    sha256: b074c45e660fdddc15476231fcb0b70f9d71e5fb00c4c9fe1e5960c485e71209
+  mathematics/linear-algebra/lineare-algebra-archive/LA/guter skript .pdf:
+    size: 16397675
+    sha256: ac12dd2e7911319dfdb7dd334a387703c14d2ed81c5925e96c075bf2b696bd55
+  mathematics/linear-algebra/lineare-algebra-archive/LA/gutes skript.pdf:
+    size: 2382359
+    sha256: c4082bb19b05479a78aa7d914e72a9749eaa9fc99abf83ac3d5a9a6e97246b52
+  mathematics/linear-algebra/lineare-algebra-archive/Lineare Algebra.pdf:
+    size: 100882530
+    sha256: 2e9e6db72c474de6a4b72753019b027bb26fd20de49a2c148cf5d9dcc7886cd2
+  mathematics/linear-algebra/lineare-algebra-archive/LineareAlgebraSkript2022.pdf:
+    size: 1244904
+    sha256: c4772d5fb8bd4a1f9fcce499dbe56829ee8e6c8906f4f2eff6cde706340cf13c
+  ? mathematics/linear-algebra/lineare-algebra-archive/lineare-algebra-fr-informatiker-i-grundlagen-diskrete-mathematik-ii-lineare-algebra_compress.pdf
+  : size: 8657701
+    sha256: 43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e
   mathematics/probability-statistics/blitzstein-hwang/blitzstein.pdf:
     size: 9624399
     sha256: 822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf
@@ -2923,9 +2714,107 @@ files:
   ml-systems/scale/mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf:
     size: 18733188
     sha256: 7670d4ed7ee9c210e5da61988be2c9f68bbd6205e9c8b029db72c0f75f5a33bf
+  software/engineering/cs-classics-shelf/Clean Architecture A Craftsman Guide to Software Structure and Design.pdf:
+    size: 8414896
+    sha256: eb3885d72fdb7c27a6a3531b06d69ae71c90f4c9c7a0e79f517654bad402baf5
+  software/engineering/cs-classics-shelf/CleanCode.pdf:
+    size: 2404614
+    sha256: 204736f1d59c4195ec228a8fb56f0c044ac78e48f4e15b09a4166dd7052b8846
+  software/engineering/cs-classics-shelf/Design Patterns Elements of Reusable Object-Oriented Software.pdf:
+    size: 4254073
+    sha256: a3fed01e753d2a4afe6479ab2f361f5645ad137a83b35c1eff0c04b6f1a3d0ee
+  software/engineering/cs-classics-shelf/Functional-Programming-in-Scala.pdf:
+    size: 11334404
+    sha256: 67125d6fe1521b92ac1b7998f34c79ef0e46080092408b32daefeb0eae114a44
+  software/engineering/cs-classics-shelf/LogInf-Skript.pdf:
+    size: 5209149
+    sha256: b2d98c9a69da9aa33ad52ceacaaa66a20f9a99c7b3e189be17323761e30f3066
+  software/engineering/cs-classics-shelf/Software-Qualität.pdf:
+    size: 9834184
+    sha256: 99d19d3bcfc9323269477d0c955272faf465441a24984579829ca91ebd5fa4f9
+  software/engineering/cs-classics-shelf/Structure and Interpretation of Computer Programs.pdf:
+    size: 7416886
+    sha256: 08709a87567d8311d6fd29c4f4a5386801153e71450e628c4a5a5d7e85feda8b
+  software/engineering/cs-classics-shelf/Write_Great_Code_Volume_01_Understanding.pdf:
+    size: 5540388
+    sha256: ce381ca20b8f0788d39a5269346cbe0f08ce1e6ab531b26fb9af9831506f35bd
+  software/languages/compiler-construction-shelf/(Book 1 )Compilers - Principles, Techniques, and Tools (2006).pdf:
+    size: 6060190
+    sha256: 92646e7788a17653fbcd9aaf16724ae62e67b4990f4289ee39ca55e5fb9ab62a
+  software/languages/compiler-construction-shelf/Compiler Bau Nwirth 1986.pdf:
+    size: 41423142
+    sha256: 6384b17c3ce62ab73f0ffd8e51eb61b00a0c4ea65e5afb50f9f1b15b48716471
+  software/languages/compiler-construction-shelf/Compiler.pdf:
+    size: 1003810
+    sha256: a2e8cb4744254674e3e0eda6bec733ec70c7545ec01df465cf1742a12a3da198
+  software/languages/compiler-construction-shelf/CompilerBau Skript.pdf:
+    size: 466335
+    sha256: 90441203b14cefbe16ef40b8b1f6dfcab51c9860e1f72627e5ba912409be8dd3
+  software/languages/compiler-construction-shelf/Compilerbau .pdf:
+    size: 2798282
+    sha256: e8a7a5cf713d4b8ddeabf8b5035050206620e7f4cae1b5e6903ddb43b97a0d75
   software/languages/comprehensive-rust/Comprehensive-Rust-Google.pdf:
     size: 1807839
     sha256: d5c0277179dbf350302d8c425949af915cd49f87dcb391dd3a954357a2ca6611
+  ? software/languages/programming-language-books/C++ books/Accelerated C++ Practical
+    Programming by Example ( PDFDrive ) (1).pdf
+  : size: 1760439
+    sha256: 89e005b53188b086a026519bc43de54df80abf26c9c64c31132308a3b8601044
+  software/languages/programming-language-books/C++ books/C++ Primer.pdf:
+    size: 3303365
+    sha256: bcea546192050ef28f92047a5e0f33db7b6994c5de5dce712d8e78694decf693
+  software/languages/programming-language-books/C++ books/C++ crashcourse .pdf:
+    size: 7714781
+    sha256: 2092ed1253e7d14738eaaf1342e82560d32ce0223341f367ef4da22d244cad5e
+  software/languages/programming-language-books/C++ books/C++.Primer.Plus.6th.Edition.Oct.2011.pdf:
+    size: 8084854
+    sha256: ebcb10776dbd2ffb5b0b0e45f19afe9acc4a4de6880f2980ff77c0f9c994bc99
+  software/languages/programming-language-books/C++ books/Effective-Modern-C++.pdf:
+    size: 3111349
+    sha256: 24117bd8b7b9a71be4fa352d180bd859af47932f41b40be5e9493af05d650a47
+  software/languages/programming-language-books/C++ books/Scott_Meyers_Effective_Modern_C++.pdf:
+    size: 5052121
+    sha256: 4dadbc045fd6d3275cf21fe485fa8e86d4a877915cadbfec9131c7b06e14313a
+  software/languages/programming-language-books/C++ books/The C++ Programming Language, 4th Edition by Stroustrup B..pdf:
+    size: 4324096
+    sha256: 5e9faeb830a41bcc0745a436be863f2f8a2a7093c5dfdfd72f1a6c4aeb6a64fc
+  software/languages/programming-language-books/C-Books/C Primer Plus, Fifth Edition.pdf:
+    size: 5631433
+    sha256: 475c46847ec02201042bbbf8a6072e496a07e084858570f1c5af8a716da1bc51
+  software/languages/programming-language-books/C-Books/C The Complete Reference 4th Ed Herbert Schildt.pdf:
+    size: 5797785
+    sha256: 3c61cc4aeebf9ceb68d935aa016b7c4fe8a912afaac90b9f227b4e0a606b216a
+  software/languages/programming-language-books/C-Books/Fluent C.pdf:
+    size: 7621336
+    sha256: 932077cd0ae2775ef8544d67f49cd5be8d6cd22c10e7c767ed009bce2de54256
+  ? software/languages/programming-language-books/C-Books/Learn C programming   a
+    beginner's guide to learning C programming in easy and disciplined way.pdf
+  : size: 7693141
+    sha256: 64c53e59d6a6510adacb8fdd4e6a9cb19acfdc5f68f1d292e2591bd49a55d555
+  software/languages/programming-language-books/C-Books/Structured Computer Organization.pdf:
+    size: 6982244
+    sha256: b213692a064ad0273e2099d62df9bbcdd2b71643afdb279adc008a9f14b3bd5d
+  software/languages/programming-language-books/C-Books/effektiv Programmieren in C.pdf:
+    size: 16501394
+    sha256: 01b16f0241bab04953410aec6e3ad00c7cf1c7ad63c0db4eef9fdf4e395bdda5
+  software/languages/programming-language-books/C-Books/von java zu c.pdf:
+    size: 8047706
+    sha256: 501e754eaf88c4b699508481fbdcaf893444afc92da7a67b3011e5a4d5954400
+  software/languages/programming-language-books/Java/ Programmierung, Algorithmen und Datenstrukturen.pdf:
+    size: 6042628
+    sha256: 5690dae8accbf04a4294d95960fac45b05f5c03367459b7f546a2014f5892db8
+  software/languages/programming-language-books/Java/Introduction to Programming in Java.... (Z-Library).pdf:
+    size: 13123951
+    sha256: 07e54dc6f68ecd2adceb2a581a715013bf86ab00fe565d966c687b3dec1aa80f
+  software/languages/programming-language-books/Java/Java book.pdf:
+    size: 3980659
+    sha256: e15aec62f0bb4f2af77efd9f1b3a7cb4be77648c996f5b466d0e7df2e9e0cfe7
+  software/languages/programming-language-books/Java/good java book .pdf:
+    size: 7689227
+    sha256: cedd518dd04a752c8466523077adf35fbbb01aaff7f711fd4c0cbfd6ca4b3bcb
+  software/languages/programming-language-books/Java/java exercises for aliens.pdf:
+    size: 17902298
+    sha256: c39b4433b1029138c8576a4c48be36e04bb1d45a285a663c702fc4476a12d30e
   software/languages/rust-book/The-Rust-Programming-Language.epub:
     size: 444867
     sha256: 4329197d445942bcbae6a28dacecfb627cab754ad5263e28da171f0ea4137399
@@ -2938,63 +2827,6 @@ files:
   software/python/fluent-python/fluent-python.pdf:
     size: 16456139
     sha256: db97c77518c68ce3db19da8f65e9f8dd8f9494fcbba59dddb0ed1796973f7e35
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/HEAD:
-    size: 23
-    sha256: f6f2b945f6c411b02ba3da9c7ace88dcf71b6af65ba2e0d89aa82900042b5a10
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/config:
-    size: 211
-    sha256: 347e81423e1c3991d7f8c225647b910b1e3c965b329e4f724c42611b49a01f2c
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/config.lock:
-    size: 0
-    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/description:
-    size: 73
-    sha256: 85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/applypatch-msg.sample:
-    size: 478
-    sha256: 0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/commit-msg.sample:
-    size: 896
-    sha256: 1f74d5e9292979b573ebd59741d46cb93ff391acdd083d340b94370753d92437
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/fsmonitor-watchman.sample:
-    size: 4655
-    sha256: f3c0228d8e827f1c5260ac59fdd92c3d425c46e54711ef713c5a54ae0a4db2b4
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/post-update.sample:
-    size: 189
-    sha256: 81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-applypatch.sample:
-    size: 424
-    sha256: e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-commit.sample:
-    size: 1643
-    sha256: f9af7d95eb1231ecf2eba9770fedfa8d4797a12b02d7240e98d568201251244a
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-merge-commit.sample:
-    size: 416
-    sha256: d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-push.sample:
-    size: 1374
-    sha256: ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-rebase.sample:
-    size: 4898
-    sha256: 4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/pre-receive.sample:
-    size: 544
-    sha256: a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/prepare-commit-msg.sample:
-    size: 1492
-    sha256: e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/push-to-checkout.sample:
-    size: 2783
-    sha256: a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/hooks/update.sample:
-    size: 3650
-    sha256: 8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/info/exclude:
-    size: 240
-    sha256: 6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1
-  software/python/pydata-handbook/PythonDataScienceHandbook/.git/tdpjNHK:
-    size: 0
-    sha256: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
   software/python/pydata-handbook/PythonDataScienceHandbook/README.md:
     size: 3699
     sha256: 3b0013eeaa84fb1a77078d898e50e24f827ed9443ee8e832979a9f5361459466
@@ -3418,6 +3250,123 @@ files:
   software/python/slatkin-effective-python/effective-python.pdf:
     size: 12800688
     sha256: c6049c8b5985ef7449740fb4bc30f7a157dff1baef8feca2b7ad414734467de6
+  software/tooling/git-handbook-archive/Git.txt:
+    size: 75
+    sha256: bc39cd81aa8e3d4c1198b03b7f79b0c1236c7e33a2acbb5396e9a431df58dbd9
+  software/tooling/git-handbook-archive/git-handbook/README.txt:
+    size: 506
+    sha256: ad1abd10d5279ccc1cd7ffafdf482d5b145b5dccc99161f59bb13537335d34db
+  software/tooling/git-handbook-archive/git-handbook/assets/style.css:
+    size: 4273
+    sha256: 6a5f4ac46ea119b8ddecb32a434ccdac991db6a3843d4203e1f9af6137e16e85
+  software/tooling/git-handbook-archive/git-handbook/index.html:
+    size: 6755
+    sha256: 1f7be7899586fc1dc6ead5eaec56d19d7d21c3ec3c81a12c90aeb114acc155cf
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-conflicts.html:
+    size: 3560
+    sha256: 900857dbe0abdfaf2f6a60d65d45b58c3e48e01a996bc5a4bdaac50a0918542b
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-gitignore.html:
+    size: 2847
+    sha256: 78b78620bdb6dbb06584c3857ecd2793233cf0dbe96c11530bc5ec64b575cbc6
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-inspect.html:
+    size: 2566
+    sha256: 14e514bf6173e8db0e51ac26f4b06e99331cd50ff5ce3d383bd5ee3fdf928499
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-pr.html:
+    size: 5645
+    sha256: 717becc6e5def69f2714a93324833fe03d18282d21a668e3486a41245cb025d3
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-safety.html:
+    size: 3177
+    sha256: 5db171d504cbaf1cb85b896913da0ccbbebf72d525cbead3fb5700c9864011da
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-stash.html:
+    size: 3220
+    sha256: c0e624ac51ab0995a23bfdcc99a9dbcacd78ce9fa65f51ce1605aae89aec2bbe
+  software/tooling/git-handbook-archive/git-handbook/intentions/collab-tags.html:
+    size: 2740
+    sha256: 925f2fbcff09d4bea49c448640c822a6865820786746ca2708fb2f2a014cacd2
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-review-diffs.html:
+    size: 4215
+    sha256: 7bcb624151777c79ab5626f4cc2e85a8701505dbc374fc3de783952d00433efc
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-review.html:
+    size: 5956
+    sha256: 3114b1bf351d33ff9575c8ab1a8fd53493b8787e71ef176f5cdfdbba9d824f76
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage-hunks.html:
+    size: 4844
+    sha256: 34284ff2bd3d1f16ae2038f9a0ae1e5b18100d44ee253659cef19a43610ca20c
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-stage.html:
+    size: 5490
+    sha256: 146b7e7bcfa8a2954fdb3ebfb6c2394f554ab2c4d8e40eaa140fa47b23536a2a
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-stop-tracking.html:
+    size: 5941
+    sha256: 78a30ffd2cbd04e9e1013279c454b1a3ab7445e308b4fa75beffad03f1663f77
+  software/tooling/git-handbook-archive/git-handbook/intentions/idx-unstage.html:
+    size: 4797
+    sha256: a37cbcac61537a4481f3fd88b2db11dbb9812e7e34369900d7216d1f5d03c900
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-amend.html:
+    size: 6498
+    sha256: 5cd193219ee21cafdeb672607c438cc8ef00a6dc9cd370afbde09ccb920f0e61
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-branch-switch.html:
+    size: 8774
+    sha256: d608ab01a25ae14fd4a5483424bdc77dcfdefda9e9d1641306fa458cdf7227b1
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-commit.html:
+    size: 7002
+    sha256: 945ae3d07a7a32964fd65feca28f80c0684d07a919d5f453c8eb262ab967b7c9
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-merge.html:
+    size: 6948
+    sha256: a234732b3a3d9a70b3547da408af4761e2cab1b288c61129c8d0ddfe70d75671
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-rebase.html:
+    size: 7541
+    sha256: 13a5fab3a2c52a46b72278d91d518dc8a8011466c57e8c03f278b6923c6500cd
+  software/tooling/git-handbook-archive/git-handbook/intentions/local-undo.html:
+    size: 6857
+    sha256: 9f658f9c5a1a080dcb6b7c5ddba16ec51e66f0139aecc2a7147cc369f501a71a
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-add-origin.html:
+    size: 3190
+    sha256: c40b29b262d341b10bf710a521adb34a3c594adbfa35fc84fd534d5542fa6907
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone-init.html:
+    size: 6134
+    sha256: 86672c343fdc762ceba57400afb34952743e3f883e86defbd8d2e6e30ab9e800
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-clone.html:
+    size: 3400
+    sha256: 76ec1b72355929224305673698814ee7f2a1cadfc3bca32dca89a0ea33f42eed
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch-pull.html:
+    size: 5533
+    sha256: c3ef3a3aa75c4dd67d8e2a83361c729e682ea9f3ff6cd641c17a1f18fbf155b6
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-fetch.html:
+    size: 5888
+    sha256: 1bd9e9b7a678b9f601d39b2b8df2e9dace864844b15eadbea124d85002d1fcc7
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-model.html:
+    size: 6301
+    sha256: c7c30d979846c7bd330b3f84207fc2eb13620b0fe34391197705e394f7ebbbcb
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-pull.html:
+    size: 6193
+    sha256: e0a817a8f66abf3629d2b4a126047eea50b30fab408330589e4cb578ac556cfd
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-push.html:
+    size: 6013
+    sha256: a1e6ef1de8682249c882ba4c7c846edc2c9c39092b65871e35290c4df049f922
+  software/tooling/git-handbook-archive/git-handbook/intentions/remote-upstream.html:
+    size: 3701
+    sha256: 39880160bfe0c1489c974dcfa6e063bbc7f6ce4ec24ffce4c2f6fef0caff5c40
+  software/tooling/git-handbook-archive/git-handbook/intentions/wt-discard-unstaged.html:
+    size: 5457
+    sha256: 73d87116750527a272e04cb756cd4acc2564fcdf170a8db78c3e3e7c91a187e8
+  software/tooling/git-handbook-archive/git-handbook/intentions/wt-ignore.html:
+    size: 3222
+    sha256: a94292691a933aca82483d5a0e120ae51986a552e23cb355f52dd3c67a8e8dee
+  software/tooling/git-handbook-archive/git-handbook/intentions/wt-inspect.html:
+    size: 5602
+    sha256: 98483754cbd3e05360a3b3bf3311d57f1d496e0bb4a6840e324b68b7d7de637e
+  software/tooling/git-handbook-archive/git-handbook/intentions/wt-rename-delete.html:
+    size: 5225
+    sha256: 8da4cbd440947887149ffc28f69f8d47c466089e9bb313d43db6ef77fa8e71c7
+  software/tooling/git-handbook-archive/git-handbook/intentions/wt-stash.html:
+    size: 5263
+    sha256: c36486e6aabf6290781c80ecfab9c561d097c56a8b985333293caad5d1ca7996
+  software/tooling/git-handbook-archive/git-handbook-v5.zip:
+    size: 28983
+    sha256: 00c017abe91d512eea0cd7a161b707b64c6e993ee35d79e27b2cea7391cef8e9
+  software/tooling/git-handbook-archive/git-handbook.zip:
+    size: 72081
+    sha256: cb030ef41fb6e505dab6480bdadb885a308afdde96fad0b5dc99393baa0990de
   software/tooling/hu-git-intro/HU-intro-to-git.pdf:
     size: 809967
     sha256: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c

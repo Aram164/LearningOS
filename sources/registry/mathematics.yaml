@@ -1,0 +1,918 @@
+# Mathematics — probability and statistics, analysis, linear algebra, proof craft.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-3b1b-essence-of-calculus
+    thematic_group_ids: [thematic-group-mathematics]
+    title: 3Blue1Brown — Essence of Calculus
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr
+    evaluations:
+      - concepts: [concept-differentiation, concept-chain-rule, concept-taylor-series,
+                   concept-riemann-integral, concept-limits-continuity]
+        roles: [intuition]
+        level: introductory
+        strengths: ["Derivative/chain-rule/Taylor/integral PICTURES before the ε-δ versions"]
+
+  - id: source-abbott-understanding-analysis
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Understanding Analysis
+    type: book
+    authors: [Stephen Abbott]
+    material: material://source-abbott-understanding-analysis/abbott.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-uniform-convergence, concept-riemann-integral]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The most readable EN rigor text: Ch 2 → Folgen/Reihen, Ch 4 → Stetigkeit, Ch 5 → Ableitung, Ch 6 → glm. Konvergenz, Ch 7 → Integral; pick ONE book per stuck proof"
+
+  - id: source-ableitinger-musterloesungen
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Ableitinger/Herrmann — Lernen aus Musterlösungen zur Analysis und Linearen Algebra
+    type: book
+    authors: [Christoph Ableitinger, Angela Herrmann]
+    material: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    evaluations:
+      - concepts: [concept-proof-technique]
+        roles: [review, exercise]
+        audience: [German readers]
+        strengths:
+          - "Proof-WRITING technique: how to read/dissect/reproduce Musterlösungen — exactly the kleine_beweise skill for AN.X; pull the Analysis half only (the book is half LA); not a first-pass drill source"
+
+  - id: source-analysis-drill-blaetter-extern
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Analysis-Drillblätter mit Lösungen — externe Sammlung (KIT, IngMath, Tutorien u.a.)
+    type: other
+    material: material://source-analysis-drill-blaetter-extern
+
+  - id: source-analysis-grundlagen-handouts
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Analysis-Grundlagen — gemischte Handouts (Mengen/Abbildungen, Relationen, Maths220 Proofs)
+    type: other
+    material: material://source-analysis-grundlagen-handouts
+
+  - id: source-analysis-klausuren-extern
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Analysis external Klausur bank (local)
+    type: other
+    material: material://source-analysis-klausuren-extern
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-taylor-series, concept-riemann-integral,
+                   concept-proof-technique]
+        roles: [mock-exam]
+        audience: [German readers]
+        strengths:
+          - "All local since Jul 2: Marburg 3× (ε-N + rekursive Folgen archetypes; Reihen classification; Stetigkeitsparameter/ZWS), Regensburg (IVT proof, MVT contradiction task, Hauptsatz state-and-prove + partielle Integration), Darmstadt (solved), Paderborn 2023 (Lösungsvorschlag), Leipzig, Ulm (Aufgaben only — the timed mock), TUM Ferienkurs-Skriptum, MIT 18.100C set (Final+Solutions, practice mids/final)"
+
+  - id: source-analysis-skript
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Analysis Skript (M2.1, HU — 'unser skript', 258 pp) + kleine_beweise"
+    type: documentation
+    organization: HU Berlin
+    material: material://source-analysis-skript
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-uniform-convergence, concept-differentiation,
+                   concept-taylor-series, concept-riemann-integral]
+        roles: [first-learning, review, derivation]
+        level: intermediate
+        strengths:
+          - "THE exam-defining source: definitions, theorem statements, notation — the Klausur comes from here; page map per study block lives in the legacy Chat8 plan"
+          - "kleine_beweise.pdf = the HU tutors' own exam-prep proof list — EVERY proof in it is AN.X material"
+      - concepts: [concept-proof-technique]
+        roles: [mock-exam]
+        strengths:
+          - "kleine_beweise + ana_inf_serieWV: state-and-prove drill in exactly the exam's format"
+
+  - id: source-baertl-statistik-buch
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Bärtl — Statistik Schritt für Schritt
+    type: book
+    authors: [Mathias Bärtl]
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Companion book to the Kurzes Tutorium Statistik channel — cheap (~€20) German written twin of the DE video layer, same everyday-problem style and Klausur vocabulary. 💰 buy decision pending"
+
+  - id: source-blitzstein-hwang
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Introduction to Probability (2nd ed.)
+    type: book
+    authors: [Joseph K. Blitzstein, Jessica Hwang]
+    year: 2019
+    material: material://source-blitzstein-hwang/blitzstein.pdf
+    evaluations:
+      - roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "Rigorous but story-driven — the written companion to the Stat 110 videos; famous for intuition ('story proofs'): the WHY behind Fahrmeir's WHAT"
+        weaknesses:
+          - "Goes past SaD in places (moment generating functions, story proofs galore) — pull the named chapters only"
+      - concepts: [concept-probability, concept-conditional-probability, concept-bayes-theorem]
+        roles: [first-learning]
+        strengths: ["Ch 1–2: the best conditioning/Bayes intuition in print"]
+      - concepts: [concept-combinatorics]
+        roles: [first-learning]
+        strengths: ["Ch 1 counting — the clearest treatment, with story proofs"]
+      - concepts: [concept-random-variable, concept-expected-value, concept-discrete-distributions]
+        roles: [review]
+        useful_sections:
+          - "Ch 3–4": "RVs + discrete distributions + expectation (depth layer for SaD 06–07)"
+      - concepts: [concept-normal-distribution, concept-central-limit-theorem]
+        roles: [review]
+        useful_sections:
+          - "Ch 5 + Ch 10": "continuous/Normal; Chebyshev, LLN, CLT"
+
+  - id: source-brandon-foltz
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Brandon Foltz — Statistics 101 (YouTube channel)
+    type: video
+    authors: [Brandon Foltz]
+    url: https://www.youtube.com/@BrandonFoltz
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Long-form calm walkthroughs with every step written out (20–40 min per topic): descriptive → SaD 01–02; CIs/tests → 09–10; simple regression → 03 — the 'slow twin' of jbstatistics, use when a jb video is too fast"
+
+  - id: source-daniel-jung
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Daniel Jung — Mathe-Lernvideos (YouTube channel, DE)
+    type: video
+    authors: [Daniel Jung]
+    evaluations:
+      - roles: [review]
+        level: introductory
+        strengths:
+          - "5-min German single-topic explainers (ε-N, Konvergenzkriterien, l'Hospital, partielle Integration) — quick unblocks in Klausur vocabulary, not systematic study"
+
+  - id: source-deitmar-uebungsbuch
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Deitmar — Übungsbuch zur Analysis
+    type: book
+    authors: [Anton Deitmar]
+    year: 2021
+    material: material://source-deitmar-uebungsbuch/deitmar.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series]
+        roles: [exercise]
+        audience: [German readers]
+        strengths:
+          - "Second solved-problem bank (257 pp, standard Analysis-1 order: Kap 1–2 → AN.0, Kap 3.1 → Konvergenz, Kap 3.2 → Reihen) — for FRESH problems once Forster/Fritzsche sets are exhausted; verify later chapters' sections on first use"
+
+  - id: source-dekking-mips
+    thematic_group_ids: [thematic-group-mathematics]
+    title: A Modern Introduction to Probability and Statistics
+    type: book
+    authors: [Frederik Dekking, Cornelis Kraaikamp, Hendrik Lopuhaä, Ludolf Meester]
+    year: 2005
+    material: material://source-dekking-mips/dekking.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-random-variable, concept-central-limit-theorem,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [review, exercise]
+        level: intermediate
+        strengths:
+          - "ONE book = the whole SaD stats arc (probability → RVs → LLN/CLT → estimation → testing → regression) + ~300 exercises WITH short answers — book AND testing source in one"
+
+  - id: source-fahrmeir-arbeitsbuch
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Arbeitsbuch Statistik (Fahrmeir et al.)
+    type: book
+    authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
+    material: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-statistical-estimation,
+                   concept-hypothesis-testing]
+        roles: [exercise]
+        audience: [German readers]
+        strengths:
+          - "Chapter-matched drill for the course-notation text: Ch 2 → SaD L02, Ch 3 → L03, Ch 9 → L09, Ch 10–11 → L10"
+
+  - id: source-fahrmeir-statistik
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Statistik: Der Weg zur Datenanalyse (9. Aufl.)"
+    type: book
+    authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
+    material: material://source-fahrmeir-statistik/statistik.pdf
+    evaluations:
+      - roles: [review, first-learning]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "Same notation as the lectures — the exam-layer text; the rigor home for every stats lecture"
+        weaknesses:
+          - "NOT the officially-named course text (that is Teschl & Teschl, per L01 slide 40) — a strong notation-matched alternative"
+          - "TOC is image-based (no pdftotext) — verify section numbers on first use for Ch 2–3"
+        useful_sections:
+          - "Chapter map (verified in the deep plan)": "Ch 2 deskriptiv → L01–02; Ch 3 multivariat → L03; Ch 4 Wahrscheinlichkeit/Kombinatorik → L04–05; Ch 5–7 → L06–08; Ch 9 → L09; Ch 10/11 → L10"
+      - concepts: [concept-descriptive-statistics]
+        roles: [first-learning, review]
+        useful_sections:
+          - "Ch 2 (univariat deskriptiv)": "SaD L01–L02"
+      - concepts: [concept-probability, concept-conditional-probability, concept-combinatorics]
+        roles: [review]
+        useful_sections:
+          - "Ch 4": "probability + Kombinatorik; the 04/05 prerequisite layer"
+      - concepts: [concept-random-variable, concept-discrete-distributions,
+                   concept-normal-distribution, concept-central-limit-theorem]
+        roles: [review]
+        useful_sections:
+          - "Ch 5–7": "RVs, distributions, Normal/CLT (mapped per-lecture in the deep plan)"
+      - concepts: [concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [review]
+        useful_sections:
+          - "Ch 9 (estimation), Ch 10/11 (testing)": "SaD L09–L10"
+
+  - id: source-fau-klausur-ws1415
+    thematic_group_ids: [thematic-group-mathematics]
+    title: FAU Erlangen Statistik-Klausur WS14/15 (mit Lösungen)
+    type: other
+    organization: FAU Erlangen-Nürnberg
+    material: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+    url: https://www.statistik.rw.fau.de/files/2019/10/WS_14_15.pdf
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-conditional-probability,
+                   concept-bayes-theorem, concept-discrete-distributions,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [mock-exam]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "TWO complete German Klausuren with FULL solutions in one PDF — the top Klausur-tier pick for the SaD half of M2"
+          - "Content-verified: descriptive + independence/4-Feldertafel/Bayes + Binomial + proportion-CI + t-tests + p-values + correlation test = exam-prep clusters N1–N4 in German exam format"
+
+  - id: source-forster-wessoly
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Forster/Wessoly — Übungsbuch zur Analysis 1
+    type: book
+    authors: [Otto Forster, Rüdiger Wessoly]
+    material: material://source-forster-wessoly/forster-wessoly.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-riemann-integral]
+        roles: [exercise]
+        audience: [German readers]
+        strengths: ["The German solved-exercise standard — terse but complete solutions; the exam points live here"]
+
+  - id: source-fpp-statistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Freedman, Pisani & Purves — Statistics (Norton, 4th ed.)
+    type: book
+    authors: [David Freedman, Robert Pisani, Roger Purves]
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "The classic intuition-first statistics book — box models, chance errors, tests in words before formulas. Where Fahrmeir gives the formula and Blitzstein the proof, FPP gives the picture; read a chapter when a concept computes but doesn't click. 💰 ~€60 / used cheap — buy decision pending"
+
+  - id: source-fritzsche-trainingsbuch
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Fritzsche — Trainingsbuch zur Analysis 1
+    type: book
+    authors: [Klaus Fritzsche]
+    year: 2013
+    material: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-uniform-convergence, concept-differentiation,
+                   concept-taylor-series, concept-riemann-integral]
+        roles: [exercise, first-learning]
+        level: introductory
+        audience: [German readers]
+        strengths:
+          - "Tutorial-style drill WITH explained solutions (342 pp, triaged Jul 4) — the gentlest drill tier, between Forster (terse) and Leonard (video). Kap 1 → AN.0, Kap 2 → Folgen/Reihen/Grenzwerte, Kap 3 → Diff/MWS/Integration, Kap 4 → glm. Konvergenz/Taylor/uneigentliche Integrale"
+
+  - id: source-gallager-stochastic-processes
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Gallager — Stochastic Processes: Theory for Applications (+ MIT 6.262 OCW)"
+    type: book
+    authors: [Robert Gallager]
+    identifiers:
+      mit-6262: https://ocw.mit.edu/courses/6-262-discrete-stochastic-processes-spring-2011/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Markov chains, large deviations, convergence notions with exactly the rigor/intuition mix oral exams reward; the 6.262 OCW run has videos + psets/quizzes WITH solutions — the best free lecture track for FoSP"
+
+  - id: source-grieser-analysis1
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Grieser — Analysis I: Eine Einführung in die Mathematik des Kontinuums"
+    type: book
+    authors: [Daniel Grieser]
+    material: material://source-grieser-analysis1/grieser.pdf
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-limits-continuity, concept-differentiation,
+                   concept-riemann-integral]
+        roles: [review]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "The DE Abbott (353 pp, triaged Jul 4): heavy motivation, exercises with Hinweise+Lösungen — the German second voice in Klausur vocabulary when a skript proof needs one"
+
+  - id: source-grinstead-snell
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Grinstead & Snell — Introduction to Probability (AMS, open access)
+    type: book
+    authors: [Charles Grinstead, J. Laurie Snell]
+    url: https://www.math.dartmouth.edu/~prob/prob/prob.pdf
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The gentle, computation-flavored free book — lots of worked examples + simulation; completes the softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still an open pull"
+
+  - id: source-henze-stochastik
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Henze — Stochastik für Einsteiger (Springer, DE)
+    type: book
+    authors: [Norbert Henze]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "German rigor alternative for the probability half (SaD 04–08) with exercises + Lösungen; use if Fahrmeir's probability chapters feel thin. Springer campus-license route — pull pending"
+
+  - id: source-jbstatistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: jbstatistics (YouTube)
+    type: video
+    authors: [Jeremy Balka]
+    url: https://www.youtube.com/@jbstatistics
+    evaluations:
+      - concepts: [concept-discrete-distributions, concept-normal-distribution,
+                   concept-central-limit-theorem, concept-statistical-estimation,
+                   concept-hypothesis-testing]
+        roles: [first-learning, review]
+        level: introductory
+        strengths:
+          - "Short, calm, calculation-exact — closest to SaD exam tasks: Binomial/Poisson, Normal/z-score/CLT, confidence intervals/t-distribution, the hypothesis-testing set"
+
+  - id: source-kelleher-fmlpda
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Fundamentals of Machine Learning for Predictive Data Analytics
+    type: book
+    authors: [John D. Kelleher, Brian Mac Namee, Aoife D'Arcy]
+    year: 2015
+    material: material://source-kelleher-fmlpda/kelleher.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        level: introductory
+        strengths:
+          - "The SaD ML-half source text — its four learning families map 1:1 onto SaD 12–15 (TOC-verified Jul 2, 2026)"
+          - "Worked toy examples in exam style"
+      - concepts: [concept-decision-trees, concept-information-gain, concept-entropy]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 4 Information-based Learning (§4.2.3 information gain)": "SaD 12's native text"
+      - concepts: [concept-k-nearest-neighbors]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 5 Similarity-based Learning (§5.2.2 distance metrics)": "SaD 13"
+      - concepts: [concept-naive-bayes, concept-gaussian-naive-bayes]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 6 Probability-based Learning (§6.4.2 continuous features/PDFs)": "SaD 14, incl. Gaussian NB"
+      - concepts: [concept-neural-network, concept-gradient-descent, concept-linear-regression]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 7 Error-based Learning": "error surfaces, learning rates, weight decay — SaD 15/03 framing; the rent worked example pairs with SaD L03"
+
+  - id: source-kurzes-tutorium-statistik
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Kurzes Tutorium Statistik (Bärtl, YouTube)
+    type: video
+    authors: [Marco Bärtl]
+    url: https://www.youtube.com/@KurzesTutoriumStatistik
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [first-learning, intuition]
+        level: introductory
+        audience: [German readers]
+        strengths:
+          - "GERMAN — same vocabulary as the Klausur; everyday-problem style; the DE default before any EN channel (SaD 01–02, 04–05, 09, 10)"
+
+  - id: source-labs-schreyer-mathe-informatiker
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Mathematik für Informatiker (Teil 1–3)
+    type: book
+    authors: [Oliver Labs, Frank-Olaf Schreyer]
+    material: material://source-labs-schreyer-mathe-informatiker
+
+  - id: source-lebl-basic-analysis
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Lebl — Basic Analysis I + II
+    type: book
+    authors: [Jiří Lebl]
+    url: https://www.jirka.org/ra/
+    material: material://source-lebl-basic-analysis
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-differentiation, concept-taylor-series,
+                   concept-riemann-integral, concept-uniform-convergence]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "The free EN text-twin of the skript: Ch 0–1 → AN.0, Ch 2 → Folgen (§2.5–2.6 Reihen), Ch 3 → Stetigkeit, Ch 4 → Ableitung (§4.3 Taylor), Ch 5 → Integral, §6.1–6.2 → glm. Konvergenz"
+
+  - id: source-mathepeter
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MathePeter (YouTube channel, DE)
+    type: video
+    authors: [Peter Mathematiker]
+    evaluations:
+      - roles: [review]
+        level: introductory
+        strengths:
+          - "German single-topic explainers alongside Daniel Jung — quick unblocks in Klausur vocabulary, not systematic study"
+
+  - id: source-mfnf-analysis1
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Mathe für Nicht-Freaks — Analysis 1 (Wikibook PDF)
+    type: book
+    organization: Mathe für Nicht-Freaks / Serlo
+    url: https://de.wikibooks.org/wiki/Mathe_f%C3%BCr_Nicht-Freaks:_Analysis_1
+    material: material://source-mfnf-analysis1
+
+  - id: source-mit-1805
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MIT 18.05 Introduction to Probability and Statistics (OCW)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/
+    evaluations:
+      - concepts: [concept-probability, concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [exercise, mock-exam]
+        strengths:
+          - "Solved psets + exams with per-topic class notes — the practice-nearest source for SaD 04–10 (z/CLT problems, CI construction, full test setups)"
+
+  - id: source-mit-18100a
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MIT 18.100A — Real Analysis (Rodriguez, Fall 2020)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-100a-real-analysis-fall-2020/
+    material: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    evaluations:
+      - concepts: [concept-real-numbers, concept-sequences-convergence, concept-series,
+                   concept-limits-continuity, concept-differentiation, concept-taylor-series,
+                   concept-riemann-integral, concept-uniform-convergence]
+        roles: [derivation, review]
+        level: advanced
+        strengths:
+          - "The rigor/proof-technique video layer, lecture-mapped (watch mapped lectures ONLY): L1 sets/induction, L4–L5 ℝ/Archimedean/|x|, L7–L9 sequences (squeeze, limsup, Bolzano-Weierstrass), L10–L12 series (completeness, comparison, ratio/root/alternating), L13–L14+L16 limits/continuity (Min/Max+IVT), L17+L19 derivative (rules+Rolle+MVT), L20–L22 Taylor+Riemann+FTC, L23–L24 pointwise vs uniform + M-test (the xⁿ-on-[0,1] counterexample is the exam's favorite trap). Skip L2/L3/L6/L18/L25"
+          - "Full lecture notes PDF local, same numbering; the MIT 18.100C exam set (Final+Solutions, practice mids/final) is in the external Klausur bank"
+
+  - id: source-mit-18650
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MIT 18.650 — Statistics for Applications (Rigollet, OCW)
+    type: course
+    authors: [Philippe Rigollet]
+    organization: MIT
+    year: 2016
+    url: https://ocw.mit.edu/courses/18-650-statistics-for-applications-fall-2016/
+    evaluations:
+      - roles: [first-learning, derivation]
+        level: advanced
+        strengths:
+          - "Rigorous twin of SaD 09–10; high-ROI pulls: L4–5 MLE, L7–10 testing, L13–16 regression-as-inference (full mapping in the probability-inference deep plan)"
+        weaknesses:
+          - "A SaD fit, NOT an AML fit"
+
+  - id: source-mit-6041sc
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MIT 6.041SC — Probabilistic Systems Analysis and Applied Probability (Tsitsiklis, OCW)
+    type: course
+    authors: [John Tsitsiklis]
+    organization: MIT
+    year: 2013
+    url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Probability axioms, conditioning, Bayes → SaD Block F; RVs, expectation → C+G; limit theorems → G; full OCW recitations + problem solutions"
+        weaknesses:
+          - "Third rigorous-probability option besides STAT110x/18.650 — pick ONE, don't stack"
+
+  - id: source-mitzenmacher-upfal
+    thematic_group_ids: [thematic-group-mathematics, thematic-group-algorithms]
+    title: Mitzenmacher & Upfal — Probability and Computing (2nd ed.)
+    type: book
+    authors: [Michael Mitzenmacher, Eli Upfal]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The modern standard for Randomized Algorithmics: Chernoff, balls-into-bins, Markov chains, martingales"
+
+  - id: source-ohlbach-eisinger-beweise
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Design Patterns für mathematische Beweise — Ein Leitfaden insbesondere für Informatiker
+    type: book
+    authors: [Hans Jürgen Ohlbach, Norbert Eisinger]
+    material: material://source-ohlbach-eisinger-beweise
+
+  - id: source-openintro-statistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: OpenIntro Statistics (4th ed.)
+    type: book
+    authors: [David Diez, Mine Çetinkaya-Rundel, Christopher Barr]
+    year: 2019
+    material: material://source-openintro-statistics/openintro.pdf
+    url: https://www.openintro.org/book/os/
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "The gentle first-pass layer — clean one-evening reads, free, with slides/videos per section"
+      - concepts: [concept-descriptive-statistics]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 1–2": "data + descriptive → SaD 01–02"
+      - concepts: [concept-probability]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 3": "SaD 04"
+      - concepts: [concept-normal-distribution]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 4": "gentle z-tables → SaD 07–08"
+      - concepts: [concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [first-learning]
+        useful_sections:
+          - "Ch 5–7": "foundations for inference, CIs, tests → SaD 09–10"
+
+  - id: source-papoulis-pillai
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Papoulis & Pillai — Probability, Random Variables and Stochastic Processes (4th ed.)
+    type: book
+    authors: [Athanasios Papoulis, S. Unnikrishna Pillai]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The EE classic whose chapter order matches FoSP's module outline; MMSE + orthogonality principle + spectral representation are Papoulis heartland (Caire school)"
+
+  - id: source-pitman-probability
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Pitman — Probability
+    type: book
+    authors: [Jim Pitman]
+    material: material://source-pitman-probability/pitman.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-random-variable,
+                   concept-discrete-distributions, concept-normal-distribution, concept-correlation]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The MIDDLE rung (🟡) of the SaD probability ladder for L04–L08: clearer/more visual than Ross, less terse than Blitzstein; Ch 1 prob/Bayes, Ch 2 Binomial/Normal-approx/Poisson, Ch 3 RVs/E[X]/SD, Ch 4–5 continuous/joint, Ch 6 covariance/correlation"
+        weaknesses: ["No inference (L09–L10), no descriptive (L01–L02), no ML (L11–L15)"]
+
+  - id: source-professor-leonard
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Professor Leonard — Calculus 1 + 2 (YouTube)
+    type: video
+    authors: [Professor Leonard]
+    url: https://www.youtube.com/playlist?list=PLF797E961509B4EB5
+    identifiers:
+      calculus-1-playlist: https://www.youtube.com/playlist?list=PLF797E961509B4EB5
+      channel: https://www.youtube.com/@ProfessorLeonard
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-taylor-series, concept-riemann-integral]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "The intuition/calc-fluency layer — watch BEFORE the skript when a topic is new, never as a substitute. Key picks: Intro to Sequences (~50 min), Intro to Series + Geometric Series, Intro to Limits + Continuity, Definition of Derivative + MVT (one of his best), Taylor Polynomials + Lagrange Error Bound, FTC (non-negotiable before the skript's integral section)"
+
+  - id: source-ross-elementary-analysis
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Elementary Analysis: The Theory of Calculus (2nd ed.)"
+    type: book
+    authors: [Kenneth A. Ross]
+    year: 2013
+    material: material://source-ross-elementary-analysis
+
+  - id: source-ross-first-course
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Ross — A First Course in Probability
+    type: book
+    authors: [Sheldon Ross]
+    material: material://source-ross-first-course/ross.pdf
+    evaluations:
+      - concepts: [concept-combinatorics, concept-probability, concept-bayes-theorem,
+                   concept-random-variable, concept-discrete-distributions,
+                   concept-normal-distribution, concept-central-limit-theorem, concept-entropy]
+        roles: [review, derivation]
+        level: advanced
+        strengths:
+          - "The RIGOROUS rung (🔴, 🟡 for counting) for L04–L08: Ch 1 counting, Ch 2 axioms, Ch 3 Bayes/independence, Ch 4–5 RVs/distributions, Ch 8 Chebyshev/LLN/CLT, Ch 9 entropy"
+        weaknesses: ["Formula-heavy; no inference, descriptive or ML coverage"]
+
+  - id: source-rudin-principles
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Principles of Mathematical Analysis (3rd ed.)
+    type: book
+    authors: [Walter Rudin]
+    year: 1976
+    material: material://source-rudin-principles
+
+  - id: source-sad-2025-recordings
+    thematic_group_ids: [thematic-group-mathematics]
+    title: SaD 2025 lecture recordings (WiSe 2025 run)
+    type: video
+    organization: HU Berlin
+    year: 2025
+    material: material://source-sad-2025-recordings
+    evaluations:
+      - roles: [review, first-learning]
+        strengths:
+          - "Same course, one year older — always the FIRST video pick when 2026 slides alone don't click; recordings exist for lectures 01–13"
+        weaknesses:
+          - "Numbering differs from 2026 (stats core 04–10 nearly identical; ML lectures reorganized)"
+      - concepts: [concept-expected-value, concept-random-variable]
+        roles: [first-learning]
+        strengths:
+          - "2025 splits E[X] over two lectures (L05+L06) — more depth than 2026's single L06"
+      - concepts: [concept-neural-network, concept-backpropagation]
+        roles: [first-learning]
+        strengths:
+          - "2025 L14+L15: two full NN lectures vs one in 2026 — the best local depth for SaD 15, significantly more on backprop"
+
+  - id: source-sad-klausuren-extern
+    thematic_group_ids: [thematic-group-mathematics]
+    title: SaD external German Klausur bank (local)
+    type: other
+    material: material://source-sad-klausuren-extern
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability,
+                   concept-statistical-estimation, concept-hypothesis-testing]
+        roles: [mock-exam]
+        audience: [German readers]
+        strengths:
+          - "The non-FAU German solved-Klausur tier (all local since Jul 2): Köln (Musterlösung), Regensburg-Löh (W-Theorie+Statistik mit Lösungen), HS-Harz (Probeklausur mit Lösungen), Leuphana-Merz (Übungsbuch mit Klausur). FAU WS14/15 is the ⭐ pick and has its own record"
+
+  - id: source-sad-ss26-lectures
+    thematic_group_ids: [thematic-group-mathematics]
+    title: SaD — Statistik und Datenanalyse, lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Ulf Leser, Alan Akbik]
+    organization: HU Berlin
+    year: 2026
+    material: material://source-sad-ss26-lectures/lecture-slides
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-classification-metrics]
+        roles: [first-learning]
+        useful_sections:
+          - "L01–L02 — Introduction, basic concepts": "mean/median/mode, histograms, TP/FP/FN/TN via contingency tables (L01); population/sample, scale types, x̄, s², quantiles, boxplots, Simpson (L02)"
+      - concepts: [concept-linear-regression, concept-normal-equation, concept-gradient-descent]
+        roles: [first-learning]
+        strengths:
+          - "The normal equation appears HERE first (k=(AᵀA)⁻¹Aᵀy, sl. 17–37) — AML L04 renames it; GD introduced as an 'alternative' (sl. 29–37) before AML L06 makes it everything"
+        useful_sections:
+          - "L03 — Correlation & regression": "covariance, Pearson r, k = r·s_y/s_x, MLR, GD intro"
+      - concepts: [concept-probability, concept-conditional-probability, concept-bayes-theorem,
+                   concept-naive-bayes]
+        roles: [first-learning]
+        weaknesses:
+          - "Slide 47 Bayes example misprint: the correct answer is 0.91, not 0.99 (verified during the L04 unit build, KW 28)"
+        useful_sections:
+          - "L04 — Probability, Bayes, Naive Bayes": "axioms, conditional P, Bayes' theorem, independence, NB spam example (~sl. 40+)"
+      - concepts: [concept-combinatorics]
+        roles: [first-learning]
+        useful_sections:
+          - "L05 — Combinatorics": "permutations, variations, combinations — 6 cases + hypergeometric"
+      - concepts: [concept-random-variable, concept-expected-value, concept-variance]
+        roles: [first-learning]
+        useful_sections:
+          - "L06 — Random variables": "RV, CDF/PDF, E[X], Var, rules, Tschebyscheff, IID, LLN"
+      - concepts: [concept-discrete-distributions]
+        roles: [first-learning]
+        useful_sections:
+          - "L07 — Discrete distributions": "Binomial, hypergeometric, Poisson"
+      - concepts: [concept-normal-distribution, concept-central-limit-theorem,
+                   concept-maximum-likelihood, concept-feature-scaling]
+        roles: [first-learning, derivation]
+        strengths:
+          - "The MLE→MSE derivation (sl. 29–36) — Gaussian noise + MLE ⟹ MSE; the engine AML L05 re-runs with Bernoulli for cross-entropy; a mock-exam staple"
+        useful_sections:
+          - "L08 — Normal distribution, CLT, MLE→MSE": "N(μ,σ²), z-scores/z-normalization, CLT"
+      - concepts: [concept-statistical-estimation]
+        roles: [first-learning]
+        useful_sections:
+          - "L09 — Estimation": "unbiased/consistent/efficient point estimators, CIs, t-distribution"
+      - concepts: [concept-hypothesis-testing]
+        roles: [first-learning]
+        useful_sections:
+          - "L10 — Testing": "H₀/H₁, p-values, Type I/II, z/t-tests, non-parametric"
+      - concepts: [concept-bias-variance-tradeoff, concept-bootstrap, concept-classification-metrics]
+        roles: [first-learning, review]
+        useful_sections:
+          - "L11 — Data science intro (126 slides)": "losses, train/test, eval metrics (sl. 23–38), pipelines, inductive bias, bias-variance, bootstrapping"
+      - concepts: [concept-entropy, concept-information-gain, concept-decision-trees,
+                   concept-random-forest, concept-bootstrap]
+        roles: [first-learning]
+        strengths:
+          - "Includes regression trees (variance as split criterion), stacking and boosting beyond ID3/RF — UE7-relevant, easy to miss"
+        useful_sections:
+          - "L12 — Tree-based learning": "entropy → information gain → ID3 → pruning → bagging/boosting/stacking → Random Forests"
+      - concepts: [concept-k-nearest-neighbors, concept-feature-scaling]
+        roles: [first-learning]
+        strengths:
+          - "Includes indexing structures (kd-trees, LSH) and the metric axioms (symmetry, non-negativity, identity, triangle inequality) — Leser-flavored, plausibly exam-relevant"
+        useful_sections:
+          - "L13 — Similarity-based learning": "k-NN, distance measures, Voronoi, scaling, indexing"
+      - concepts: [concept-naive-bayes, concept-laplace-smoothing, concept-gaussian-naive-bayes]
+        roles: [first-learning, derivation]
+        useful_sections:
+          - "L14 — Probability-based learning": "Laplace smoothing (sl. 8–10), Gaussian NB (sl. 14–18), multinomial NB + log-space trick (sl. 19–23), Bayes-net outlook"
+      - concepts: [concept-neural-network, concept-perceptron, concept-softmax,
+                   concept-backpropagation]
+        roles: [first-learning]
+        strengths:
+          - "The 'Remember MLR?' / drop-φ slide — per the Master Wiring the most important slide in SaD: a 1-layer ANN with identity activation IS multivariate linear regression"
+          - "Softmax introduced as the differentiable argmax — the NB decision rule living on inside every classifier net"
+          - "Parameter-counting formula n·l + (k−1)·l² + l·m — a SaD exam target"
+        useful_sections:
+          - "L15 — Neural networks": "perceptron as 1-neuron ANN (sl. 1–12), MLP, backprop overview (read BEFORE AML L09's full machinery)"
+
+  - id: source-sad-uebungen
+    thematic_group_ids: [thematic-group-mathematics]
+    title: SaD exercise sheets UE1–UE7 (SoSe 2026)
+    type: other
+    organization: HU Berlin
+    material: material://source-sad-ss26-lectures/exercise-slides
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-linear-regression,
+                   concept-probability, concept-combinatorics, concept-random-variable,
+                   concept-normal-distribution, concept-statistical-estimation,
+                   concept-hypothesis-testing, concept-naive-bayes, concept-decision-trees]
+        roles: [exercise]
+        strengths:
+          - "The course's own exercise sheets — solutions are walked through in the Übung (collect them there; no official solution PDFs)"
+          - "Map: UE2 → L03, UE3 → L04/05, UE4 → L06/07, UE5 → L08/09, UE6 → L10+L14, UE7 → L12/13 + k-means"
+
+  - id: source-schaums-probability
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Schaum's Outline of Probability
+    type: book
+    material: material://source-schaums-probability/schaums-probability.pdf
+    evaluations:
+      - concepts: [concept-combinatorics, concept-probability, concept-conditional-probability,
+                   concept-random-variable, concept-discrete-distributions, concept-central-limit-theorem]
+        roles: [exercise]
+        strengths:
+          - "The DRILL rung (🧮) for L04–L08: terse theory, many worked problems — problem practice once a concept clicks, not a first teacher"
+
+  - id: source-stat110
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Harvard Stat 110 — Probability (Blitzstein)
+    type: course
+    organization: Harvard
+    url: https://projects.iq.harvard.edu/stat110
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-combinatorics,
+                   concept-random-variable, concept-discrete-distributions, concept-normal-distribution]
+        roles: [review, derivation]
+        level: advanced
+        strengths:
+          - "The rigorous-course video tier for SaD 04–08 (pick ONE from this tier, per the legacy rule); strategic-practice problem sets; the written companion is Blitzstein & Hwang"
+
+  - id: source-statquest
+    thematic_group_ids: [thematic-group-mathematics, thematic-group-machine-learning]
+    title: StatQuest with Josh Starmer (YouTube)
+    type: video
+    authors: [Josh Starmer]
+    url: https://www.youtube.com/@statquest
+    evaluations:
+      - concepts: [concept-logistic-regression, concept-maximum-likelihood, concept-naive-bayes,
+                   concept-gaussian-naive-bayes, concept-decision-trees, concept-random-forest,
+                   concept-gradient-descent, concept-classification-metrics]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "Short, surgical intuition videos; the MLE video is worth a SECOND watch with Bernoulli in mind (cross-wire #5: MLE → cross-entropy)"
+
+      - concepts: [concept-regularization]
+        roles: [intuition, first-learning]
+        strengths:
+          - "The regularization trilogy (Ridge → Lasso → Elastic Net) — the best video entry for AML L04's shrinkage half"
+      - concepts: [concept-kernel-trick, concept-neural-network, concept-backpropagation]
+        roles: [intuition]
+        strengths:
+          - "The Kernel Trick; Neural Networks Pt. 1; Backpropagation Main Ideas; Stochastic Gradient Descent — per-topic surgical intuition"
+
+  - id: source-stewart-calculus
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Stewart — Calculus: Early Transcendentals (8th ed.)"
+    type: book
+    authors: [James Stewart]
+    year: 2016
+    material: material://source-stewart-calculus
+
+  - id: source-strang-calculus
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Strang — Calculus (MIT OCW)
+    type: book
+    authors: [Gilbert Strang]
+    url: https://ocw.mit.edu/courses/res-18-001-calculus-fall-2023/
+    material: material://source-strang-calculus
+    evaluations:
+      - concepts: [concept-riemann-integral, concept-taylor-series]
+        roles: [intuition]
+        level: introductory
+        strengths: ["Per-chapter PDFs local (downloaded OCW site); Riemann-sum intuition (Ch 5) and series chapter as the gentle layer"]
+
+  - id: source-swanson-principles-probability
+    thematic_group_ids: [thematic-group-mathematics]
+    title: The Principles of Probability — From Formal Logic to Measure Theory (Springer LNM 2384)
+    type: book
+    authors: [Jason Swanson]
+    material: material://source-swanson-principles-probability
+
+  - id: source-teschl-mathe-informatiker
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Mathematik für Informatiker (Band 2)
+    type: book
+    authors: [Gerald Teschl, Susanne Teschl]
+    year: 2007
+    evaluations:
+      - concepts: [concept-descriptive-statistics, concept-probability]
+        roles: [first-learning]
+        level: introductory
+        strengths:
+          - "The OFFICIALLY-NAMED primary stats text of the SaD course (L01 slide 40) — correction of the earlier Fahrmeir assumption (KW 28)"
+
+  - id: source-thomas-calculus
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Thomas' Calculus: Early Transcendentals"
+    type: book
+    authors: [George B. Thomas, Joel Hass, Christopher Heil, Maurice D. Weir]
+    material: material://source-thomas-calculus
+
+  - id: source-tijms-understanding-probability
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Tijms — Understanding Probability (2e)
+    type: book
+    authors: [Henk Tijms]
+    material: material://source-tijms-understanding-probability/tijms.pdf
+    evaluations:
+      - concepts: [concept-probability, concept-conditional-probability, concept-expected-value,
+                   concept-normal-distribution, concept-central-limit-theorem]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "The GENTLE escape hatch (🟢 Part 1) when Blitzstein stalls: everyday-life, simulation-first; the best LLN/CLT intuition on the shelf (Ch 5 CLT, Ch 6 Bayes trees)"
+        weaknesses: ["No inference, descriptive or ML coverage"]
+
+  - id: source-velleman-how-to-prove-it
+    thematic_group_ids: [thematic-group-mathematics]
+    title: How To Prove It — A Structured Approach
+    type: book
+    authors: [Daniel J. Velleman]
+    material: material://source-velleman-how-to-prove-it
+
+  - id: source-vershynin-hdp
+    thematic_group_ids: [thematic-group-mathematics, thematic-group-optimization]
+    title: "Vershynin — High-Dimensional Probability: An Introduction with Applications in Data Science"
+    type: book
+    authors: [Roman Vershynin]
+    url: https://www.math.uci.edu/~rvershyn/papers/HDP-book/HDP-book.html
+    evaluations:
+      - roles: [derivation]
+        level: advanced
+        strengths:
+          - "THE text for concentration inequalities + suprema of empirical processes; Ch 10 covers compressive sensing — two MathML blocks from one free source"
+
+  - id: source-zedstatistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: zedstatistics (Justin Zeltzer, YouTube channel)
+    type: video
+    authors: [Justin Zeltzer]
+    url: https://www.youtube.com/@zedstatistics
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "Test-framework-first explanations (what H₀ *means*): p-values, hypothesis-test framework, distributions → SaD 08–10 — the conceptual complement to jb/Foltz's calculations"
+  - id: source-lineare-algebra-archive
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Lineare Algebra — Skript, Blätter and Klausuren with solutions (HU/extern)"
+    type: other
+    material: material://source-lineare-algebra-archive
+  - id: source-mathe-vorkurse
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Mathematik-Vorkurse — assorted preparatory course material"
+    type: other
+    material: material://source-mathe-vorkurse
+  - id: source-vorkurs-mathe-2022
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Vorkurs Mathematik 2022 — daily handouts and exercise groups"
+    type: other
+    material: material://source-vorkurs-mathe-2022

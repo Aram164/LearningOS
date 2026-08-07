@@ -1,0 +1,133 @@
+# Data Systems — databases, distributed systems, provenance, reliability.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-abedjan-data-profiling
+    thematic_group_ids: [thematic-group-data-systems]
+    title: Abedjan, Golab, Naumann & Papenbrock — Data Profiling (Synthesis Lectures)
+    type: book
+    authors: [Ziawasch Abedjan, Lukasz Golab, Felix Naumann, Thorsten Papenbrock]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "By the DI:AS module owner himself (UCCs, FDs/INDs, discovery algorithms incl. TANE) — carries both DI:AS and Abedjan's Forschungsseminar; knowing the examiner's book leads the oral exam"
+
+  - id: source-bermbach-csb
+    thematic_group_ids: [thematic-group-data-systems]
+    title: "Bermbach, Wittern & Tai — Cloud Service Benchmarking: Measuring Quality of Cloud Services from a Client Perspective"
+    type: book
+    authors: [David Bermbach, Erik Wittern, Stefan Tai]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The CSB module's own book by the lecturer — the module as prose; the Bermbach measurement rules are also the quality bar for thesis evaluations"
+
+  - id: source-buneman-why-where
+    thematic_group_ids: [thematic-group-data-systems]
+    title: "Why and Where: A Characterization of Data Provenance"
+    type: paper
+    authors: [Peter Buneman, Sanjeev Khanna, Wang-Chiew Tan]
+    year: 2001
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Foundational why/where-provenance paper — the conceptual base for the mlprov library (PDF kept with the ppds-mlprov project)"
+
+  - id: source-cmu-15445
+    thematic_group_ids: [thematic-group-data-systems]
+    title: CMU 15-445/645 — Intro to Database Systems (Pavlo)
+    type: course
+    authors: [Andy Pavlo]
+    organization: CMU
+    url: https://15445.courses.cs.cmu.edu/
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "THE reference lecture for exactly the DBT material (storage, buffer pool, indexing, query execution, transactions, recovery), all on YouTube; past midterm/final archives match the DBT Klausur format"
+
+  - id: source-duckdb-python-docs
+    thematic_group_ids: [thematic-group-data-systems, thematic-group-software]
+    title: DuckDB Python API documentation
+    type: documentation
+    organization: DuckDB
+    url: https://duckdb.org/docs/api/python/overview
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "mlprov Phase 5 (DuckDB optimization — CUT KW 24, stretch only)"
+
+  - id: source-google-sre-book
+    thematic_group_ids: [thematic-group-data-systems]
+    title: Google SRE Book (Site Reliability Engineering)
+    type: book
+    organization: Google
+    url: https://sre.google/books/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Free; load balancing, overload handling, cascading failures — the operations perspective for Scalability Engineering"
+
+  - id: source-hogan-knowledge-graphs
+    thematic_group_ids: [thematic-group-data-systems]
+    title: Hogan et al. — Knowledge Graphs (ACM Computing Surveys / Synthesis Lectures)
+    type: book
+    url: https://aidanhogan.com/docs/knowledge-graphs-computing-surveys.pdf
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Free survey-book covering the KG&AI blocks almost one-to-one (models, query, embeddings) — doubly usable for Research Data Infrastructures"
+
+  - id: source-jain-performance-analysis
+    thematic_group_ids: [thematic-group-data-systems]
+    title: Jain — The Art of Computer Systems Performance Analysis
+    type: book
+    authors: [Raj Jain]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The timeless methodology bible (metric choice, workload design, experiment design, common pitfalls) — named as part of the methodological canon for CSB, ROC, AE II and the thesis evaluation"
+
+  - id: source-kleppmann-ddia
+    material: material://source-kleppmann-ddia
+    thematic_group_ids: [thematic-group-data-systems, thematic-group-software]
+    title: Kleppmann — Designing Data-Intensive Applications (DDIA)
+    type: book
+    authors: [Martin Kleppmann]
+    url: https://dataintensive.net/
+    evaluations:
+      - roles: [first-learning, reference]
+        strengths:
+          - "THE one book for distributed data systems (replication, partitioning, consistency, batch, streams) — named as the shared knowledge base for LDE, MDS, CSB, Scalability Engineering and Cloud Native"
+
+  - id: source-mit-6824
+    thematic_group_ids: [thematic-group-data-systems]
+    title: MIT 6.824/6.5840 — Distributed Systems
+    type: course
+    organization: MIT
+    url: https://pdos.csail.mit.edu/6.824/
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "Notes, papers, videos + Go labs (MapReduce, Raft, sharded KV) — the infrastructure foundations under every large-scale pipeline (LDE) and the practical counterpart to MTDA's theory"
+
+  - id: source-redbook
+    thematic_group_ids: [thematic-group-data-systems]
+    title: Bailis, Hellerstein & Stonebraker (eds.) — Readings in Database Systems (Red Book, 5th ed.)
+    type: book
+    url: http://www.redbook.io/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Completely free curated commentary on the DB canon — the reading spine for ROC's paper cycles"
+  - id: source-systems-architecture-shelf
+    thematic_group_ids: [thematic-group-data-systems]
+    title: "Computer architecture and networks — Hennessy & Patterson, Digitale Systeme, UNIX Network Programming"
+    type: book
+    material: material://source-systems-architecture-shelf
