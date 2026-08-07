@@ -2,9 +2,9 @@
 title: Exam-practice banks — solved material per module
 collection_kind: topic-pack
 thematic_group_ids:
-  - thematic-group-machine-learning
   - thematic-group-mathematics
-  - thematic-group-cs-theory
+  - thematic-group-machine-learning
+  - thematic-group-algorithms
 purpose: "Prepare for concrete module examinations with manually ordered solved material and practice banks."
 description: >-
   No HU-internal Altklausuren are public for any module — this bank is solved

@@ -10,6 +10,7 @@
 sources:
   # ==================================================== §3 books — SaD gaps
   - id: source-henze-stochastik
+    thematic_group_ids: [thematic-group-mathematics]
     title: Henze — Stochastik für Einsteiger (Springer, DE)
     type: book
     authors: [Norbert Henze]
@@ -19,6 +20,7 @@ sources:
           - "German rigor alternative for the probability half (SaD 04–08) with exercises + Lösungen; use if Fahrmeir's probability chapters feel thin. Springer campus-license route — pull pending"
 
   - id: source-grinstead-snell
+    thematic_group_ids: [thematic-group-mathematics]
     title: Grinstead & Snell — Introduction to Probability (AMS, open access)
     type: book
     authors: [Charles Grinstead, J. Laurie Snell]
@@ -29,6 +31,7 @@ sources:
           - "The gentle, computation-flavored free book — lots of worked examples + simulation; completes the softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still an open pull"
 
   - id: source-fpp-statistics
+    thematic_group_ids: [thematic-group-mathematics]
     title: Freedman, Pisani & Purves — Statistics (Norton, 4th ed.)
     type: book
     authors: [David Freedman, Robert Pisani, Roger Purves]
@@ -38,6 +41,7 @@ sources:
           - "The classic intuition-first statistics book — box models, chance errors, tests in words before formulas. Where Fahrmeir gives the formula and Blitzstein the proof, FPP gives the picture; read a chapter when a concept computes but doesn't click. 💰 ~€60 / used cheap — buy decision pending"
 
   - id: source-baertl-statistik-buch
+    thematic_group_ids: [thematic-group-mathematics]
     title: Bärtl — Statistik Schritt für Schritt
     type: book
     authors: [Mathias Bärtl]
@@ -48,6 +52,7 @@ sources:
 
   # ==================================================== §3 books — ML / DL
   - id: source-nielsen-nndl
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Nielsen — Neural Networks and Deep Learning (free web book)
     type: book
     authors: [Michael Nielsen]
@@ -59,6 +64,7 @@ sources:
           - "Ch 2": "backprop rigor for AML L09"
 
   - id: source-goodfellow-dl
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Goodfellow, Bengio & Courville — Deep Learning (MIT Press, free web book)
     type: book
     authors: [Ian Goodfellow, Yoshua Bengio, Aaron Courville]
@@ -74,6 +80,7 @@ sources:
           - "Part II (MLPs, regularization, optimization, CNNs, RNNs)": "the theory layer under AML L08–L11 and the AMLS project"
 
   - id: source-bishop-prml
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Bishop — Pattern Recognition and Machine Learning (PRML)
     type: book
     authors: [Christopher Bishop]
@@ -90,6 +97,7 @@ sources:
 
   # =============================================== §3 books — AMLS / job
   - id: source-huyen-ai-engineering
+    thematic_group_ids: [thematic-group-ml-systems]
     title: Huyen — AI Engineering (O'Reilly, 2025)
     type: book
     authors: [Chip Huyen]
@@ -101,6 +109,7 @@ sources:
 
   # ================================= §4 tools & docs — AMLS project (P)
   - id: source-torchvision-transforms-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: torchvision.transforms v2 documentation
     type: documentation
     organization: PyTorch
@@ -111,6 +120,7 @@ sources:
           - "Task 1.3 augmentation implementation reference (AMLS project)"
 
   - id: source-captum
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: Captum — model interpretability for PyTorch (tutorials)
     type: documentation
     organization: PyTorch
@@ -121,6 +131,7 @@ sources:
           - "Saliency + occlusion ready-made for AMLS-project Task 1.4"
 
   - id: source-albumentations-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: Albumentations documentation
     type: documentation
     url: https://albumentations.ai/docs/
@@ -130,6 +141,7 @@ sources:
           - "Alternative augmentation library (salvaged from the deleted April master plan)"
 
   - id: source-timm
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: timm — pytorch-image-models (Hugging Face)
     type: software
     organization: Hugging Face
@@ -140,6 +152,7 @@ sources:
           - "Reference model zoo for image classification"
 
   - id: source-pytorch-tutorials
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: PyTorch official tutorials
     type: documentation
     organization: PyTorch
@@ -150,6 +163,7 @@ sources:
           - "Grad-CAM via hooks; general training loops"
 
   - id: source-docker-get-started
+    thematic_group_ids: [thematic-group-software]
     title: Docker — Get Started guide
     type: documentation
     organization: Docker
@@ -160,6 +174,7 @@ sources:
           - "AMLS project submission requirement"
 
   - id: source-google-colab
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: Google Colab
     type: software
     organization: Google
@@ -171,6 +186,7 @@ sources:
 
   # ======================================= §4 tools & docs — mlprov (M)
   - id: source-duckdb-python-docs
+    thematic_group_ids: [thematic-group-data-systems, thematic-group-software]
     title: DuckDB Python API documentation
     type: documentation
     organization: DuckDB
@@ -181,6 +197,7 @@ sources:
           - "mlprov Phase 5 (DuckDB optimization — CUT KW 24, stretch only)"
 
   - id: source-fairlearn-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
     title: fairlearn — MetricFrame assessment guide
     type: documentation
     url: https://fairlearn.org/main/user_guide/assessment/index.html
@@ -191,6 +208,7 @@ sources:
 
   # ============================== §4 — meta-indexes & project idea banks
   - id: source-cs229-project-archive
+    thematic_group_ids: [thematic-group-method-admin, thematic-group-machine-learning]
     title: Stanford CS229 project archive (+ CS230 past projects)
     type: website
     organization: Stanford
@@ -203,6 +221,7 @@ sources:
           - "Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing"
 
   - id: source-awesome-ml-books
+    thematic_group_ids: [thematic-group-method-admin]
     title: awesome-machine-learning — community books list
     type: website
     url: https://github.com/josephmisiti/awesome-machine-learning/blob/master/books.md
@@ -213,6 +232,7 @@ sources:
 
   # ==================================================== §4 — datasets
   - id: source-google-dataset-search
+    thematic_group_ids: [thematic-group-method-admin]
     title: Google Dataset Search
     type: website
     organization: Google
@@ -223,6 +243,7 @@ sources:
           - "Cross-web dataset index (URL modernized from the old toolbox.google.com link)"
 
   - id: source-kaggle-datasets
+    thematic_group_ids: [thematic-group-method-admin]
     title: Kaggle Datasets
     type: website
     organization: Kaggle
@@ -233,6 +254,7 @@ sources:
           - "The largest public dataset + notebook hub — project data + baselines"
 
   - id: source-data-gov
+    thematic_group_ids: [thematic-group-method-admin]
     title: data.gov + DataUSA — US public data
     type: website
     url: https://www.data.gov/
@@ -245,6 +267,7 @@ sources:
 
   # ======================================================== §5 papers
   - id: source-zeiler-fergus-occlusion
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Visualizing and Understanding Convolutional Networks (occlusion)
     type: paper
     authors: [Matthew Zeiler, Rob Fergus]
@@ -255,6 +278,7 @@ sources:
           - "Origin of occlusion analysis — skim figures; one good figure for the AMLS-project report"
 
   - id: source-grad-cam
+    thematic_group_ids: [thematic-group-machine-learning]
     title: "Grad-CAM: Visual Explanations from Deep Networks"
     type: paper
     year: 2016
@@ -265,6 +289,7 @@ sources:
           - "Explainability upgrade path beyond saliency/occlusion (AMLS project + DL1)"
 
   - id: source-augmix
+    thematic_group_ids: [thematic-group-machine-learning]
     title: "AugMix: A Simple Data Processing Method to Improve Robustness"
     type: paper
     year: 2019
@@ -275,6 +300,7 @@ sources:
           - "Augmentation robustness — Task 1.3 report ammunition"
 
   - id: source-belkin-double-descent
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Reconciling modern machine-learning practice and the bias-variance trade-off (double descent)
     type: paper
     authors: [Mikhail Belkin, Daniel Hsu, Siyuan Ma, Soumik Mandal]
@@ -285,6 +311,7 @@ sources:
           - "Cited in AML L09 — the modern correction to the bias-variance U-curve (PNAS)"
 
   - id: source-buneman-why-where
+    thematic_group_ids: [thematic-group-data-systems]
     title: "Why and Where: A Characterization of Data Provenance"
     type: paper
     authors: [Peter Buneman, Sanjeev Khanna, Wang-Chiew Tan]
@@ -295,6 +322,7 @@ sources:
           - "Foundational why/where-provenance paper — the conceptual base for the mlprov library (PDF kept with the ppds-mlprov project)"
 
   - id: source-mlinspect-debugging
+    thematic_group_ids: [thematic-group-ml-systems, thematic-group-data-systems]
     title: Data Distribution Debugging in Machine Learning Pipelines (mlinspect family)
     type: paper
     evaluations:
@@ -303,6 +331,7 @@ sources:
           - "Motivation paper for instrumenting ML pipelines — directly the mlprov project's problem statement (PDF kept with the ppds-mlprov project)"
 
   - id: source-pouyanfar-dl-survey
+    thematic_group_ids: [thematic-group-machine-learning]
     title: "A Survey on Deep Learning: Algorithms, Techniques, and Applications (ACM CSUR)"
     type: paper
     year: 2019
@@ -314,6 +343,7 @@ sources:
 
   # ==================== §6 solved practice — web tier (local banks have records)
   - id: source-cs229-problem-sets
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Stanford CS229 — problem sets & practice midterms
     type: other
     organization: Stanford
@@ -327,6 +357,7 @@ sources:
           - "Derivation-style problems with solutions: normal equation, logistic/MLE, GDA vs logistic, bias-variance, kernels — harder than the AML exam; use for the proofs you must reproduce (β̂, cross-entropy gradient)"
 
   - id: source-islp-community-solutions
+    thematic_group_ids: [thematic-group-machine-learning]
     title: ISLP community exercise solutions (botlnec / a-martyn / applied-only)
     type: website
     url: https://botlnec.github.io/islp/
@@ -341,6 +372,7 @@ sources:
           - "Quality varies — cross-check derivations against the book"
 
   - id: source-mit-6006
+    thematic_group_ids: [thematic-group-algorithms]
     title: MIT 6.006 — Introduction to Algorithms (OCW, exams + psets with solutions)
     type: course
     organization: MIT
@@ -354,6 +386,7 @@ sources:
           - "Easier tier: shortest-paths (Bellman-Ford/Dijkstra) and DS problems with solutions — warm-up volume before the 6.046 tier (AL.G)"
 
   - id: source-frankfurt-algo2-course
+    thematic_group_ids: [thematic-group-algorithms]
     title: Goethe Frankfurt ALGO2 — course page (weekly videos + Übungsblätter)
     type: course
     organization: Goethe-Universität Frankfurt
@@ -365,6 +398,7 @@ sources:
           - "Short German flipped-classroom topic videos (8–25 min) — the splay-tree video + the 4-part flow series are the highest-value pulls; Übungsblätter (APSP, Netzwerkfluss I+II, Amortisiert+Splay) add German exam-language drill (unsolved; the weekly videos walk solutions). Pairs with the solved Frankfurt Klausuren record"
 
   - id: source-kit-algorithmen2
+    thematic_group_ids: [thematic-group-algorithms]
     title: KIT Algorithmen 2 — Sanders, WS17/18 (YouTube, German)
     type: course
     authors: [Peter Sanders]
@@ -377,6 +411,7 @@ sources:
           - "⭐ Full recorded semester by the co-author of the DMS book the HU course uses for Kap. 1 — vocabulary matches the exam language; flows & matchings → AL.H/I, computational geometry → AL.J"
 
   - id: source-cmu-15451-splay-notes
+    thematic_group_ids: [thematic-group-algorithms]
     title: CMU 15-451 — splay tree lecture notes (Sleator's course)
     type: documentation
     organization: CMU
@@ -387,6 +422,7 @@ sources:
           - "The inventor's home-course telling of the access-lemma potential argument — cleaner than Ottmann/Widmayer for the proof part of AL.E2"
 
   - id: source-wayne-kt-slides
+    thematic_group_ids: [thematic-group-algorithms]
     title: Kevin Wayne (Princeton) — Kleinberg-Tardos slide decks
     type: website
     authors: [Kevin Wayne]
@@ -398,6 +434,7 @@ sources:
           - "Polished official KT decks — stable matching (Gale-Shapley) for the AL.I3 gap (HU Kap. 10 not posted at the time), network-flow decks for AL.H"
 
   - id: source-tuwien-ad2-fibonacci
+    thematic_group_ids: [thematic-group-algorithms]
     title: TU Wien AD2 — Fibonacci-Heaps & Amortisierte Analyse (chapter text)
     type: documentation
     organization: TU Wien
@@ -412,7 +449,7 @@ sources:
   - id: source-prisma-method
     title: PRISMA — systematic review reporting method
     type: website
-    thematic_group_ids: [thematic-group-machine-learning]
+    thematic_group_ids: [thematic-group-method-admin]
     url: https://www.prisma-statement.org/
     evaluations:
       - roles: [reference]
@@ -421,6 +458,7 @@ sources:
 
   # ==================== §8 Python OOP, scope & interpreter internals
   - id: source-hettinger-super
+    thematic_group_ids: [thematic-group-software]
     title: Hettinger — Python's super() considered super!
     type: website
     authors: [Raymond Hettinger]
@@ -432,6 +470,7 @@ sources:
           - "⭐ THE inheritance/MRO mental model (~45 min): the LoggingDict example is structurally identical to ProvDataFrame.__getitem__; MRO linearization, cooperative classes, kwargs-stripping __init__ chains, adapter classes for non-cooperative parents (the sklearn-skeleton pattern)"
 
   - id: source-batchelder-names
+    thematic_group_ids: [thematic-group-software]
     title: Ned Batchelder — Facts and myths about Python names and values
     type: website
     authors: [Ned Batchelder]
@@ -444,6 +483,7 @@ sources:
           - "⭐ Names are references; assignment never copies; mutation vs rebinding (~40 min). The written twin of Fluent Python Ch 6 — explains why a shared provenance DataFrame bites"
 
   - id: source-realpython-legb
+    thematic_group_ids: [thematic-group-software]
     title: Real Python — Python Scope & the LEGB Rule
     type: website
     organization: Real Python
@@ -454,6 +494,7 @@ sources:
           - "The missing scope piece: Local→Enclosing→Global→Builtin, global/nonlocal, why assignment inside a function creates a local name (the C++ intuition trap). Read §LEGB + §functions, skim the rest"
 
   - id: source-python-tutor
+    thematic_group_ids: [thematic-group-software]
     title: Python Tutor (visualization tool)
     type: software
     url: https://pythontutor.com
@@ -463,6 +504,7 @@ sources:
           - "Visualizes frames, names→object arrows, and mutation step-by-step — Ned's diagrams, live, on your own code; paste mlprov-style snippets and watch"
 
   - id: source-corey-schafer-oop
+    thematic_group_ids: [thematic-group-software]
     title: Corey Schafer — Python OOP playlist
     type: video
     authors: [Corey Schafer]
@@ -474,6 +516,7 @@ sources:
           - "Calm video walk of classes/inheritance/dunders if Hettinger's post moves too fast (#4 inheritance, #5 dunder methods; skip #1–2)"
 
   - id: source-numpy-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
     title: NumPy — subclassing ndarray (official guide)
     type: documentation
     organization: NumPy
@@ -484,6 +527,7 @@ sources:
           - "__array_finalize__ — why ndarray needs it instead of __init__. Read AFTER Hettinger (assumes the MRO model)"
 
   - id: source-pandas-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
     title: pandas — subclassing pandas data structures (official guide)
     type: documentation
     organization: pandas
@@ -494,6 +538,7 @@ sources:
           - "_metadata/_constructor — how provenance survives pandas ops. Read AFTER Hettinger (assumes the MRO model)"
 
   - id: source-python-docs-classes-mro
+    thematic_group_ids: [thematic-group-software]
     title: Python docs — Classes tutorial §9.5–9.8 + the official MRO write-up
     type: documentation
     organization: Python Software Foundation
@@ -506,6 +551,7 @@ sources:
           - "Canonical reference for inheritance + C3 linearization — the MRO howto is the formal version of Hettinger's 'children precede parents' rules"
 
   - id: source-kaptur-byterun
+    thematic_group_ids: [thematic-group-software]
     title: Allison Kaptur — A Python Interpreter Written in Python (Byterun, 500 Lines essay)
     type: website
     authors: [Allison Kaptur]
@@ -516,6 +562,7 @@ sources:
           - "⭐ A working bytecode VM in 500 lines (~1.5h) — frames, value stack, dispatch, why scope IS the frame structure; C++ background is an asset. Appetizer: dis.dis() and watch LOAD_FAST vs LOAD_GLOBAL"
 
   - id: source-guo-cpython-internals
+    thematic_group_ids: [thematic-group-software]
     title: Philip Guo — CPython internals (10-hour lecture series)
     type: video
     authors: [Philip Guo]
@@ -531,6 +578,7 @@ sources:
   # Level-Up competency map, the Intermediate Roadmap and the OOP/Scope Repair Plan;
   # the job-specific anchors deliberately stay in Job/ (CLAUDE.md §13).
   - id: source-python-depth-drills
+    thematic_group_ids: [thematic-group-software]
     title: Python Depth Drills — nine stages (guides + notebooks, authored)
     type: other
     authors: [Aram Aljanadi]
@@ -554,7 +602,7 @@ sources:
   - id: source-slatkin-effective-python
     title: Slatkin — Effective Python
     type: book
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Brett Slatkin]
     year: 2024
     material: material://source-slatkin-effective-python/effective-python.pdf
@@ -575,7 +623,7 @@ sources:
   - id: source-cosmicpython-architecture-patterns
     title: Percival & Gregory — Architecture Patterns with Python
     type: book
-    thematic_group_ids: [thematic-group-programming-languages, thematic-group-data-systems]
+    thematic_group_ids: [thematic-group-software, thematic-group-data-systems]
     authors: [Harry Percival, Bob Gregory]
     url: https://www.cosmicpython.com/
     evaluations:
@@ -590,7 +638,7 @@ sources:
   - id: source-viafore-robust-python
     title: Viafore — Robust Python
     type: book
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Patrick Viafore]
     evaluations:
       - concepts: [concept-python]
@@ -604,7 +652,7 @@ sources:
   - id: source-beazley-python-distilled
     title: Beazley — Python Distilled
     type: book
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [David Beazley]
     evaluations:
       - concepts: [concept-python]
@@ -616,7 +664,7 @@ sources:
   - id: source-beazley-generator-tricks
     title: Beazley — Generator Tricks for Systems Programmers
     type: course
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [David Beazley]
     url: https://www.dabeaz.com/generators/
     evaluations:
@@ -629,7 +677,7 @@ sources:
   - id: source-hunner-iterator-protocol
     title: Trey Hunner — The Iterator Protocol / Loop Better
     type: website
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Trey Hunner]
     url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
     identifiers:
@@ -643,7 +691,7 @@ sources:
   - id: source-coghlan-import-traps
     title: Coghlan — Traps for the Unwary in Python's Import System
     type: website
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Alyssa Coghlan]
     url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
     evaluations:
@@ -655,7 +703,7 @@ sources:
   - id: source-rhodes-python-patterns
     title: Brandon Rhodes — python-patterns.guide
     type: website
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Brandon Rhodes]
     url: https://python-patterns.guide/
     evaluations:
@@ -668,7 +716,7 @@ sources:
   - id: source-powell-python-expert
     title: James Powell — So you want to be a Python expert?
     type: video
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [James Powell]
     url: https://www.youtube.com/watch?v=cKPlPJyQrt4
     evaluations:
@@ -681,7 +729,7 @@ sources:
   - id: source-hettinger-class-toolkit
     title: Hettinger — Python's Class Development Toolkit
     type: video
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     authors: [Raymond Hettinger]
     url: https://www.youtube.com/watch?v=HTLu2DFOdTg
     evaluations:
@@ -694,7 +742,7 @@ sources:
   - id: source-pytest-docs
     title: pytest — official documentation
     type: documentation
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     organization: pytest-dev
     url: https://docs.pytest.org/en/stable/getting-started.html
     evaluations:
@@ -706,7 +754,7 @@ sources:
   - id: source-hypothesis-docs
     title: Hypothesis — property-based testing for Python
     type: documentation
-    thematic_group_ids: [thematic-group-programming-languages]
+    thematic_group_ids: [thematic-group-software]
     organization: Hypothesis
     url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
     evaluations:

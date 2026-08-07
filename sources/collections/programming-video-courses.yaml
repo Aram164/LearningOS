@@ -2,7 +2,7 @@
 title: Programming — tool & library video courses
 collection_kind: catalogue
 thematic_group_ids:
-  - thematic-group-programming-languages
+  - thematic-group-software
 description: >-
   sklearn/PyTorch/Python courses serving mlprov, the AMLS project, and the
   BIFOLD/DEEM job.

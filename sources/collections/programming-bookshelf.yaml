@@ -2,7 +2,7 @@
 title: Programming — bookshelf
 collection_kind: catalogue
 thematic_group_ids:
-  - thematic-group-programming-languages
+  - thematic-group-software
 description: >-
   The Python track spine + practical companions; deeper OOP/interpreter
   material lives in the python-internals-shelf collection.

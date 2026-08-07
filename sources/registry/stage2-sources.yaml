@@ -4,6 +4,7 @@
 sources:
   # ==================================================================== AMLS
   - id: source-amls-ss26-lectures
+    thematic_group_ids: [thematic-group-ml-systems]
     title: AMLS — Architecture of ML Systems, slides, recordings, and source papers (SS26)
     type: lecture
     authors:
@@ -95,6 +96,7 @@ sources:
       paper-reading-list: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
 
   - id: source-dmmls-boehm
+    thematic_group_ids: [thematic-group-ml-systems]
     title: Data Management in Machine Learning Systems
     type: book
     authors: [Matthias Boehm, Arun Kumar, Jun Yang]
@@ -110,6 +112,7 @@ sources:
           - "Not yet downloaded — pull via the Springer campus license (same route as Forster/Abbott); chapter names cited by theme, verify against the PDF TOC on first open"
 
   - id: source-mlsysbook-vol1
+    thematic_group_ids: [thematic-group-ml-systems]
     title: "MLSysBook Vol 1 — Introduction to Machine Learning Systems"
     type: book
     authors: [Vijay Janapa Reddi]
@@ -127,6 +130,7 @@ sources:
           - "Volume discipline: chapter-pick per the lecture map, never read linearly; Vol 1 chapter names verify-on-first-open"
 
   - id: source-mlsysbook-vol2
+    thematic_group_ids: [thematic-group-ml-systems]
     title: "MLSysBook Vol 2 — Machine Learning Systems at Scale"
     type: book
     authors: [Vijay Janapa Reddi]
@@ -143,6 +147,7 @@ sources:
           - "The written twin for the parallelism/LLM half (1170 pp, TOC verified Jul 4): Distributed Training, Collective Communication, Compute Infrastructure, Data Storage, Inference at Scale = the previously bookless lectures 05–08 + 13"
 
   - id: source-ultrascale-playbook
+    thematic_group_ids: [thematic-group-ml-systems]
     title: HF Ultra-Scale Playbook
     type: website
     organization: Hugging Face (nanotron)
@@ -155,6 +160,7 @@ sources:
           - "5D parallelism (DP/TP/PP/EP/CP), ZeRO, GPU kernels from 4000+ real scaling runs — the best single read for the L05–L07 written drill; for L07 'the whole book is this lecture'"
 
   - id: source-htsym-scaling-book
+    thematic_group_ids: [thematic-group-ml-systems]
     title: How to Scale Your Model
     type: website
     organization: Google DeepMind
@@ -167,6 +173,7 @@ sources:
           - "Roofline/arithmetic-intensity math, accelerator internals, transformer training+inference FLOP accounting — pairs with 6.172-style quiz questions"
 
   - id: source-mlc-book
+    thematic_group_ids: [thematic-group-ml-systems]
     title: "MLC — Machine Learning Compilation"
     type: website
     authors: [Tianqi Chen]
@@ -178,6 +185,7 @@ sources:
           - "Compilation as DO: executable Jupyter chapters (TVM) — tensor program abstraction, graph rewrites, operator fusion, automatic optimization; the 10-414 companion for lectures 03–04"
 
   - id: source-huyen-dmls
+    thematic_group_ids: [thematic-group-ml-systems]
     title: Designing Machine Learning Systems
     type: book
     authors: [Chip Huyen]
@@ -193,6 +201,7 @@ sources:
           - "MLOps framing is job-relevant, not exam-critical"
 
   - id: source-cmu-10414
+    thematic_group_ids: [thematic-group-ml-systems, thematic-group-machine-learning]
     title: CMU 10-414/714 — Deep Learning Systems
     type: course
     organization: CMU
@@ -210,6 +219,7 @@ sources:
           - "The same stack taught build-first (Needle): autodiff/graphs → AMLS 03/04 (and AML L09 synergy), parallel → 05/06, GPU → 08; HW1 autodiff parts are testing material"
 
   - id: source-mit-6172
+    thematic_group_ids: [thematic-group-ml-systems, thematic-group-algorithms]
     title: MIT 6.172 — Performance Engineering of Software Systems
     type: course
     organization: MIT
@@ -222,6 +232,7 @@ sources:
           - "The written-drill anchor for the AMLS A-part: quizzes on caching/locality (L09), parallelism+races (L05), vectorization/ILP (L04) — closest external match to written-exam format"
 
   - id: source-stanford-cs149
+    thematic_group_ids: [thematic-group-ml-systems]
     title: Stanford CS149 — Parallel Computing
     type: course
     organization: Stanford
@@ -238,6 +249,7 @@ sources:
 
   # ================================================================ Analysis
   - id: source-analysis-skript
+    thematic_group_ids: [thematic-group-mathematics]
     title: "Analysis Skript (M2.1, HU — 'unser skript', 258 pp) + kleine_beweise"
     type: documentation
     organization: HU Berlin
@@ -257,6 +269,7 @@ sources:
           - "kleine_beweise + ana_inf_serieWV: state-and-prove drill in exactly the exam's format"
 
   - id: source-abbott-understanding-analysis
+    thematic_group_ids: [thematic-group-mathematics]
     title: Understanding Analysis
     type: book
     authors: [Stephen Abbott]
@@ -270,6 +283,7 @@ sources:
           - "The most readable EN rigor text: Ch 2 → Folgen/Reihen, Ch 4 → Stetigkeit, Ch 5 → Ableitung, Ch 6 → glm. Konvergenz, Ch 7 → Integral; pick ONE book per stuck proof"
 
   - id: source-grieser-analysis1
+    thematic_group_ids: [thematic-group-mathematics]
     title: "Grieser — Analysis I: Eine Einführung in die Mathematik des Kontinuums"
     type: book
     authors: [Daniel Grieser]
@@ -284,6 +298,7 @@ sources:
           - "The DE Abbott (353 pp, triaged Jul 4): heavy motivation, exercises with Hinweise+Lösungen — the German second voice in Klausur vocabulary when a skript proof needs one"
 
   - id: source-lebl-basic-analysis
+    thematic_group_ids: [thematic-group-mathematics]
     title: Lebl — Basic Analysis I + II
     type: book
     authors: [Jiří Lebl]
@@ -299,6 +314,7 @@ sources:
           - "The free EN text-twin of the skript: Ch 0–1 → AN.0, Ch 2 → Folgen (§2.5–2.6 Reihen), Ch 3 → Stetigkeit, Ch 4 → Ableitung (§4.3 Taylor), Ch 5 → Integral, §6.1–6.2 → glm. Konvergenz"
 
   - id: source-forster-wessoly
+    thematic_group_ids: [thematic-group-mathematics]
     title: Forster/Wessoly — Übungsbuch zur Analysis 1
     type: book
     authors: [Otto Forster, Rüdiger Wessoly]
@@ -311,6 +327,7 @@ sources:
         strengths: ["The German solved-exercise standard — terse but complete solutions; the exam points live here"]
 
   - id: source-fritzsche-trainingsbuch
+    thematic_group_ids: [thematic-group-mathematics]
     title: Fritzsche — Trainingsbuch zur Analysis 1
     type: book
     authors: [Klaus Fritzsche]
@@ -327,6 +344,7 @@ sources:
           - "Tutorial-style drill WITH explained solutions (342 pp, triaged Jul 4) — the gentlest drill tier, between Forster (terse) and Leonard (video). Kap 1 → AN.0, Kap 2 → Folgen/Reihen/Grenzwerte, Kap 3 → Diff/MWS/Integration, Kap 4 → glm. Konvergenz/Taylor/uneigentliche Integrale"
 
   - id: source-deitmar-uebungsbuch
+    thematic_group_ids: [thematic-group-mathematics]
     title: Deitmar — Übungsbuch zur Analysis
     type: book
     authors: [Anton Deitmar]
@@ -340,6 +358,7 @@ sources:
           - "Second solved-problem bank (257 pp, standard Analysis-1 order: Kap 1–2 → AN.0, Kap 3.1 → Konvergenz, Kap 3.2 → Reihen) — for FRESH problems once Forster/Fritzsche sets are exhausted; verify later chapters' sections on first use"
 
   - id: source-ableitinger-musterloesungen
+    thematic_group_ids: [thematic-group-mathematics]
     title: Ableitinger/Herrmann — Lernen aus Musterlösungen zur Analysis und Linearen Algebra
     type: book
     authors: [Christoph Ableitinger, Angela Herrmann]
@@ -352,6 +371,7 @@ sources:
           - "Proof-WRITING technique: how to read/dissect/reproduce Musterlösungen — exactly the kleine_beweise skill for AN.X; pull the Analysis half only (the book is half LA); not a first-pass drill source"
 
   - id: source-mit-18100a
+    thematic_group_ids: [thematic-group-mathematics]
     title: MIT 18.100A — Real Analysis (Rodriguez, Fall 2020)
     type: course
     organization: MIT
@@ -368,6 +388,7 @@ sources:
           - "Full lecture notes PDF local, same numbering; the MIT 18.100C exam set (Final+Solutions, practice mids/final) is in the external Klausur bank"
 
   - id: source-professor-leonard
+    thematic_group_ids: [thematic-group-mathematics]
     title: Professor Leonard — Calculus 1 + 2 (YouTube)
     type: video
     authors: [Professor Leonard]
@@ -384,6 +405,7 @@ sources:
           - "The intuition/calc-fluency layer — watch BEFORE the skript when a topic is new, never as a substitute. Key picks: Intro to Sequences (~50 min), Intro to Series + Geometric Series, Intro to Limits + Continuity, Definition of Derivative + MVT (one of his best), Taylor Polynomials + Lagrange Error Bound, FTC (non-negotiable before the skript's integral section)"
 
   - id: source-3b1b-essence-of-calculus
+    thematic_group_ids: [thematic-group-mathematics]
     title: 3Blue1Brown — Essence of Calculus
     type: video
     authors: [Grant Sanderson]
@@ -396,6 +418,7 @@ sources:
         strengths: ["Derivative/chain-rule/Taylor/integral PICTURES before the ε-δ versions"]
 
   - id: source-analysis-klausuren-extern
+    thematic_group_ids: [thematic-group-mathematics]
     title: Analysis external Klausur bank (local)
     type: other
     material: material://source-analysis-klausuren-extern
@@ -409,6 +432,7 @@ sources:
           - "All local since Jul 2: Marburg 3× (ε-N + rekursive Folgen archetypes; Reihen classification; Stetigkeitsparameter/ZWS), Regensburg (IVT proof, MVT contradiction task, Hauptsatz state-and-prove + partielle Integration), Darmstadt (solved), Paderborn 2023 (Lösungsvorschlag), Leipzig, Ulm (Aufgaben only — the timed mock), TUM Ferienkurs-Skriptum, MIT 18.100C set (Final+Solutions, practice mids/final)"
 
   - id: source-strang-calculus
+    thematic_group_ids: [thematic-group-mathematics]
     title: Strang — Calculus (MIT OCW)
     type: book
     authors: [Gilbert Strang]
@@ -422,6 +446,7 @@ sources:
 
   # ================================================= SaD probability ladder
   - id: source-pitman-probability
+    thematic_group_ids: [thematic-group-mathematics]
     title: Pitman — Probability
     type: book
     authors: [Jim Pitman]
@@ -436,6 +461,7 @@ sources:
         weaknesses: ["No inference (L09–L10), no descriptive (L01–L02), no ML (L11–L15)"]
 
   - id: source-ross-first-course
+    thematic_group_ids: [thematic-group-mathematics]
     title: Ross — A First Course in Probability
     type: book
     authors: [Sheldon Ross]
@@ -451,6 +477,7 @@ sources:
         weaknesses: ["Formula-heavy; no inference, descriptive or ML coverage"]
 
   - id: source-tijms-understanding-probability
+    thematic_group_ids: [thematic-group-mathematics]
     title: Tijms — Understanding Probability (2e)
     type: book
     authors: [Henk Tijms]
@@ -465,6 +492,7 @@ sources:
         weaknesses: ["No inference, descriptive or ML coverage"]
 
   - id: source-schaums-probability
+    thematic_group_ids: [thematic-group-mathematics]
     title: Schaum's Outline of Probability
     type: book
     material: material://source-schaums-probability/schaums-probability.pdf
@@ -477,6 +505,7 @@ sources:
 
   # ================================================================== Algo 2
   - id: source-clrs
+    thematic_group_ids: [thematic-group-algorithms]
     title: "Cormen/Leiserson/Rivest/Stein — Algorithmen (4. Aufl. DE = EN 3rd ed)"
     type: book
     authors: [Thomas Cormen, Charles Leiserson, Ronald Rivest, Clifford Stein]
@@ -492,6 +521,7 @@ sources:
           - "'Das Buch' of the Moodle-verified Algo-2 literature: Kap 17 amortisierte Analyse, 18 B-Bäume, 19 Fibonacci-Heaps, 24–25 kürzeste Wege, 26.1–26.2 max flow; Kap 30 FFT + 33 Geometrie expected for the unposted topics"
 
   - id: source-dms-grundwerkzeuge
+    thematic_group_ids: [thematic-group-algorithms]
     title: "Dietzfelbinger/Mehlhorn/Sanders — Algorithmen und Datenstrukturen: Die Grundwerkzeuge"
     type: book
     authors: [Martin Dietzfelbinger, Kurt Mehlhorn, Peter Sanders]
@@ -503,6 +533,7 @@ sources:
         strengths: ["Kap 1 = schnellere Multiplikation (Karatsuba) — the course's chosen source for topic A, NOT CLRS"]
 
   - id: source-ottmann-widmayer
+    thematic_group_ids: [thematic-group-algorithms]
     title: Ottmann/Widmayer — Algorithmen und Datenstrukturen
     type: book
     authors: [Thomas Ottmann, Peter Widmayer]
@@ -515,6 +546,7 @@ sources:
 
   # ============================================== video / practice additions
   - id: source-eecs498
+    thematic_group_ids: [thematic-group-machine-learning]
     title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson, FA2020)
     type: course
     organization: University of Michigan
@@ -531,6 +563,7 @@ sources:
           - "L7's batch-norm part is beyond the 2026 AML deck"
 
   - id: source-karpathy-micrograd
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Karpathy — micrograd (spelled-out backpropagation)
     type: video
     authors: [Andrej Karpathy]
@@ -542,6 +575,7 @@ sources:
           - "~2.5h: builds computation graphs + loss.backward() from scratch — the deepest self-checking backprop test; doubles as AMLS compilation-lecture synergy (autodiff)"
 
   - id: source-rohrer-e2eml
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Brandon Rohrer — End-to-End Machine Learning blog/courses
     type: website
     authors: [Brandon Rohrer]
@@ -572,6 +606,7 @@ sources:
           - "Ch 31 (CIFAR-10 case study)": "same task family as the AMLS project CNN"
 
   - id: source-geron-handson
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Géron — Hands-On Machine Learning (local)
     type: book
     authors: [Aurélien Géron]
@@ -586,6 +621,7 @@ sources:
           - "NOT a systems book — project/AML support only; don't keyword-match it into AMLS prep"
 
   - id: source-caltech-lfd
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Caltech Learning From Data (Abu-Mostafa) — homework sets
     type: course
     organization: Caltech
@@ -599,6 +635,7 @@ sources:
         weaknesses: ["The SVM sets are out of AML scope — skip"]
 
   - id: source-ng-coursera
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Ng — Machine Learning (Coursera)
     type: course
     authors: [Andrew Ng]
@@ -616,6 +653,7 @@ sources:
           - "The gentler Ng-taught twin: Wk 1–2 regression, Wk 3 logistic + regularization, GD-in-Practice I/II (feature scaling + learning rate — matches the AML slides exactly), Wk 7 Kernels I/II (the landmark/similarity construction of AML L07 sl. 68–73 IS Ng's)"
 
   - id: source-jbstatistics
+    thematic_group_ids: [thematic-group-mathematics]
     title: jbstatistics (YouTube)
     type: video
     authors: [Jeremy Balka]
@@ -630,6 +668,7 @@ sources:
           - "Short, calm, calculation-exact — closest to SaD exam tasks: Binomial/Poisson, Normal/z-score/CLT, confidence intervals/t-distribution, the hypothesis-testing set"
 
   - id: source-kurzes-tutorium-statistik
+    thematic_group_ids: [thematic-group-mathematics]
     title: Kurzes Tutorium Statistik (Bärtl, YouTube)
     type: video
     authors: [Marco Bärtl]
@@ -644,6 +683,7 @@ sources:
           - "GERMAN — same vocabulary as the Klausur; everyday-problem style; the DE default before any EN channel (SaD 01–02, 04–05, 09, 10)"
 
   - id: source-stat110
+    thematic_group_ids: [thematic-group-mathematics]
     title: Harvard Stat 110 — Probability (Blitzstein)
     type: course
     organization: Harvard
@@ -657,6 +697,7 @@ sources:
           - "The rigorous-course video tier for SaD 04–08 (pick ONE from this tier, per the legacy rule); strategic-practice problem sets; the written companion is Blitzstein & Hwang"
 
   - id: source-sad-klausuren-extern
+    thematic_group_ids: [thematic-group-mathematics]
     title: SaD external German Klausur bank (local)
     type: other
     material: material://source-sad-klausuren-extern
@@ -669,6 +710,7 @@ sources:
           - "The non-FAU German solved-Klausur tier (all local since Jul 2): Köln (Musterlösung), Regensburg-Löh (W-Theorie+Statistik mit Lösungen), HS-Harz (Probeklausur mit Lösungen), Leuphana-Merz (Übungsbuch mit Klausur). FAU WS14/15 is the ⭐ pick and has its own record"
 
   - id: source-algo2-frankfurt-klausuren
+    thematic_group_ids: [thematic-group-algorithms]
     title: Frankfurt Algo-2 Klausuren with solutions (2021-2024, local)
     type: other
     material: material://source-algo2-frankfurt-klausuren

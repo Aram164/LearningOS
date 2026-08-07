@@ -2,8 +2,7 @@
 title: ML systems — bookshelf (AMLS)
 collection_kind: catalogue
 thematic_group_ids:
-  - thematic-group-machine-learning
-  - thematic-group-data-systems
+  - thematic-group-ml-systems
 description: >-
   Chapter-pick via the AMLS crosswalk note's book layer, never linear. The
   2025/26 free web books closed the parallelism/LLM gap no print book covered.

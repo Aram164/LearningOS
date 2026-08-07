@@ -3,7 +3,7 @@ type: module
 kind: skill
 area_id: program-skills
 thematic_group_ids:
-  - thematic-group-programming-languages
+  - thematic-group-software
 title: Python
 status: active
 source_map: source-map.yaml

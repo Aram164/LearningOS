@@ -124,12 +124,17 @@ def test_real_repository_navigation_projection_is_complete(repo_root):
     manifest = json.loads(
         generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"]
     )
+    # ADR-007: eight subject groups, ordered so a reader meets the foundations
+    # before what is built on them. No group names an era, a module or a format.
     assert [group["title"] for group in manifest["thematic_groups"]] == [
-        "Machine Learning",
         "Mathematics",
-        "CS Theory",
-        "Programming Languages",
+        "Optimization & Learning Theory",
+        "Machine Learning",
+        "ML Systems",
         "Data Systems",
+        "Algorithms & Computation",
+        "Software & Languages",
+        "Method & Administration",
     ]
     assert all(module["thematic_group_ids"] for module in manifest["modules"])
     sources = [row for row in manifest["records"] if row.get("type") == "source"]
