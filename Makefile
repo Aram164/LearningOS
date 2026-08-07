@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views materials inventory verify-materials test all setup garden status
+.PHONY: help check views materials inventory verify-materials contract test all setup garden status
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -23,6 +23,7 @@ help:
 	@echo "make inventory - rebuild records/materials-manifest.yaml (checksums of the"
 	@echo "                external materials tree; run after adding or moving sources)"
 	@echo "make verify-materials - sha256-verify the materials tree against the manifest"
+	@echo "make contract - report the data-format contract version (schema_contract.py)"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test   - run the test suite"
 	@echo "make all    - check + views + materials + test"
@@ -45,6 +46,9 @@ inventory:
 
 verify-materials:
 	$(PY) tools/materials_manifest.py --deep
+
+contract:
+	$(PY) tools/schema_contract.py
 
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"

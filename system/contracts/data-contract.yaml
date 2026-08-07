@@ -1,0 +1,27 @@
+# The repository's data-format contract.
+#
+# `contract_version` is the format canonical records are written in. The
+# fingerprint is a sha256 over system/schema/*.schema.json — the schemas that
+# govern stored records (capability payload schemas are excluded: they validate
+# requests, not data at rest).
+#
+# `make check` fails when the schemas change and this file does not, so a schema
+# edit cannot silently redefine what "valid" means for data already on disk.
+# When that fires, the fix is a decision, not a rubber stamp:
+#
+#   1. does existing data still validate?  tests/fixtures/formats/ answers this
+#   2. if not, write the migration under tools/migrations/
+#   3. python tools/schema_contract.py --bump --note "…" [--migration …]
+#   4. freeze the new shape as tests/fixtures/formats/v<N>/
+#
+# Rebuild with: python tools/schema_contract.py --bump
+contract_version: 1
+schema_fingerprint: sha256:2d6122da8ae8ca1b40e30f83479611c09a1fb278e9465737b231469209d65ecb
+record_schemas: 21
+history:
+- version: 1
+  adopted: '2026-08-07'
+  note: baseline — the canonical record format as it stands at the v3 cutover (module-first
+    curriculum, manifest v2, projects)
+  migration: null
+  fixture: tests/fixtures/formats/v1/
