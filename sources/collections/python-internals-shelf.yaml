@@ -2,7 +2,7 @@
 title: Python — OOP, scope & interpreter internals
 collection_kind: topic-pack
 thematic_group_ids:
-  - thematic-group-programming-languages
+  - thematic-group-software
 purpose: "Deepen the specific Python object-model, scope and interpreter concepts needed by current implementation work."
 description: >-
   Requested KW 24 when inheritance/scope/interpreter felt vague during mlprov

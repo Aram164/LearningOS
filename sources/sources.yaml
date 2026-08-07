@@ -7,6 +7,7 @@
 sources:
   # ================================================== lecture-series sources
   - id: source-aml-ss26-lectures
+    thematic_group_ids: [thematic-group-machine-learning]
     title: AML — Angewandtes Maschinelles Lernen, lecture slides (SoSe 2026)
     type: lecture
     authors: [Patrick Schäfer]
@@ -71,6 +72,7 @@ sources:
           - "L09 — Backprop, computation graphs, regularization, double descent": "vanishing/exploding gradients (λ⁷ argument, sl. 71–74)"
 
   - id: source-sad-ss26-lectures
+    thematic_group_ids: [thematic-group-mathematics]
     title: SaD — Statistik und Datenanalyse, lecture slides (SoSe 2026)
     type: lecture
     authors: [Ulf Leser, Alan Akbik]
@@ -154,6 +156,7 @@ sources:
           - "L15 — Neural networks": "perceptron as 1-neuron ANN (sl. 1–12), MLP, backprop overview (read BEFORE AML L09's full machinery)"
 
   - id: source-sad-2025-recordings
+    thematic_group_ids: [thematic-group-mathematics]
     title: SaD 2025 lecture recordings (WiSe 2025 run)
     type: video
     organization: HU Berlin
@@ -176,6 +179,7 @@ sources:
 
   # ============================================================== books (ML)
   - id: source-islp
+    thematic_group_ids: [thematic-group-machine-learning]
     title: "An Introduction to Statistical Learning (Python edition)"
     type: book
     authors: [Gareth James, Daniela Witten, Trevor Hastie, Robert Tibshirani, Jonathan Taylor]
@@ -245,6 +249,7 @@ sources:
           - "§7.1 Polynomial Regression (p.290), §6.2.1–6.2.2 Ridge/Lasso": "basis expansion THIS SECTION ONLY (no splines/subset selection — beyond AML L04); the diamond-vs-circle geometry"
 
   - id: source-esl
+    thematic_group_ids: [thematic-group-machine-learning]
     title: The Elements of Statistical Learning
     type: book
     authors: [Trevor Hastie, Robert Tibshirani, Jerome Friedman]
@@ -292,6 +297,7 @@ sources:
           - "No modern CNN treatment"
 
   - id: source-murphy-pml1
+    thematic_group_ids: [thematic-group-machine-learning]
     title: "Probabilistic Machine Learning: An Introduction"
     type: book
     authors: [Kevin P. Murphy]
@@ -352,6 +358,7 @@ sources:
           - "§15.2 RNNs (p.503)": "for the L11 deck once posted"
 
   - id: source-cs229-notes
+    thematic_group_ids: [thematic-group-machine-learning]
     title: CS229 Lecture Notes (Stanford)
     type: documentation
     authors: [Andrew Ng, Tengyu Ma]
@@ -405,6 +412,7 @@ sources:
           - "§8.1 (p.105), §9.3 (p.129)": "decomposition; model selection via CV"
 
   - id: source-mml
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Mathematics for Machine Learning
     type: book
     authors: [Marc Peter Deisenroth, A. Aldo Faisal, Cheng Soon Ong]
@@ -431,6 +439,7 @@ sources:
           - "§5.6 is the chain-rule/matrix-calculus math UNDER the four layer rules — best for 'I can apply the rules but don't see why they're true'"
 
   - id: source-kroese-dsml
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Data Science and Machine Learning
     type: book
     authors: [Dirk P. Kroese, Zdravko Botev, Thomas Taimre, Radislav Vaisman]
@@ -463,6 +472,7 @@ sources:
           - "§7.6 (p.268), §2.5.2 (p.38)": "statistical phrasing of k-NN and CV"
 
   - id: source-csc411-notes
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Machine Learning and Data Mining — CSC 411 notes (Toronto)
     type: documentation
     organization: University of Toronto
@@ -488,6 +498,7 @@ sources:
           - "§2 (p.5)": "concise; derives gradient descent for linear regression inline — useful pre-L06"
 
   - id: source-kelleher-fmlpda
+    thematic_group_ids: [thematic-group-mathematics]
     title: Fundamentals of Machine Learning for Predictive Data Analytics
     type: book
     authors: [John D. Kelleher, Brian Mac Namee, Aoife D'Arcy]
@@ -518,6 +529,7 @@ sources:
 
   # ============================================================ books (stats)
   - id: source-teschl-mathe-informatiker
+    thematic_group_ids: [thematic-group-mathematics]
     title: Mathematik für Informatiker (Band 2)
     type: book
     authors: [Gerald Teschl, Susanne Teschl]
@@ -530,6 +542,7 @@ sources:
           - "The OFFICIALLY-NAMED primary stats text of the SaD course (L01 slide 40) — correction of the earlier Fahrmeir assumption (KW 28)"
 
   - id: source-fahrmeir-statistik
+    thematic_group_ids: [thematic-group-mathematics]
     title: "Statistik: Der Weg zur Datenanalyse (9. Aufl.)"
     type: book
     authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
@@ -564,6 +577,7 @@ sources:
           - "Ch 9 (estimation), Ch 10/11 (testing)": "SaD L09–L10"
 
   - id: source-blitzstein-hwang
+    thematic_group_ids: [thematic-group-mathematics]
     title: Introduction to Probability (2nd ed.)
     type: book
     authors: [Joseph K. Blitzstein, Jessica Hwang]
@@ -592,6 +606,7 @@ sources:
           - "Ch 5 + Ch 10": "continuous/Normal; Chebyshev, LLN, CLT"
 
   - id: source-openintro-statistics
+    thematic_group_ids: [thematic-group-mathematics]
     title: OpenIntro Statistics (4th ed.)
     type: book
     authors: [David Diez, Mine Çetinkaya-Rundel, Christopher Barr]
@@ -621,6 +636,7 @@ sources:
           - "Ch 5–7": "foundations for inference, CIs, tests → SaD 09–10"
 
   - id: source-dekking-mips
+    thematic_group_ids: [thematic-group-mathematics]
     title: A Modern Introduction to Probability and Statistics
     type: book
     authors: [Frederik Dekking, Cornelis Kraaikamp, Hendrik Lopuhaä, Ludolf Meester]
@@ -636,6 +652,7 @@ sources:
 
   # ===================================================== exercise / exam tier
   - id: source-fau-klausur-ws1415
+    thematic_group_ids: [thematic-group-mathematics]
     title: FAU Erlangen Statistik-Klausur WS14/15 (mit Lösungen)
     type: other
     organization: FAU Erlangen-Nürnberg
@@ -653,6 +670,7 @@ sources:
           - "Content-verified: descriptive + independence/4-Feldertafel/Bayes + Binomial + proportion-CI + t-tests + p-values + correlation test = exam-prep clusters N1–N4 in German exam format"
 
   - id: source-fahrmeir-arbeitsbuch
+    thematic_group_ids: [thematic-group-mathematics]
     title: Arbeitsbuch Statistik (Fahrmeir et al.)
     type: book
     authors: [Ludwig Fahrmeir, Christian Heumann, Rita Künstler, Iris Pigeot, Gerhard Tutz]
@@ -666,6 +684,7 @@ sources:
           - "Chapter-matched drill for the course-notation text: Ch 2 → SaD L02, Ch 3 → L03, Ch 9 → L09, Ch 10–11 → L10"
 
   - id: source-sad-uebungen
+    thematic_group_ids: [thematic-group-mathematics]
     title: SaD exercise sheets UE1–UE7 (SoSe 2026)
     type: other
     organization: HU Berlin
@@ -681,6 +700,7 @@ sources:
           - "Map: UE2 → L03, UE3 → L04/05, UE4 → L06/07, UE5 → L08/09, UE6 → L10+L14, UE7 → L12/13 + k-means"
 
   - id: source-mit-1805
+    thematic_group_ids: [thematic-group-mathematics]
     title: MIT 18.05 Introduction to Probability and Statistics (OCW)
     type: course
     organization: MIT
@@ -692,6 +712,7 @@ sources:
           - "Solved psets + exams with per-topic class notes — the practice-nearest source for SaD 04–10 (z/CLT problems, CI construction, full test setups)"
 
   - id: source-cs4780-homeworks
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Cornell CS4780 homework sets (local copies)
     type: other
     organization: Cornell
@@ -703,6 +724,7 @@ sources:
           - "2018Fall HW4 P3: gradient of the logistic log-likelihood — the exact AML L05 derivation drill"
 
   - id: source-mit-6036
+    thematic_group_ids: [thematic-group-machine-learning]
     title: MIT 6.036 Introduction to Machine Learning (Open Learning Library)
     type: course
     organization: MIT
@@ -721,6 +743,7 @@ sources:
           - "Unit names cited from documentation, not yet click-verified on first login (legacy Open Loop #7)"
 
   - id: source-mit-6034-quizzes
+    thematic_group_ids: [thematic-group-machine-learning]
     title: MIT 6.034 Artificial Intelligence quizzes
     type: other
     organization: MIT
@@ -733,6 +756,7 @@ sources:
 
   # ============================================================ video sources
   - id: source-statquest
+    thematic_group_ids: [thematic-group-mathematics, thematic-group-machine-learning]
     title: StatQuest with Josh Starmer (YouTube)
     type: video
     authors: [Josh Starmer]
@@ -756,6 +780,7 @@ sources:
           - "The Kernel Trick; Neural Networks Pt. 1; Backpropagation Main Ideas; Stochastic Gradient Descent — per-topic surgical intuition"
 
   - id: source-3b1b-neural-networks
+    thematic_group_ids: [thematic-group-machine-learning]
     title: 3Blue1Brown — Neural Networks playlist (4 videos)
     type: video
     authors: [Grant Sanderson]
@@ -769,6 +794,7 @@ sources:
           - "What is a NN → GD → backprop → backprop calculus: the single best preparation for AML L08–L09"
 
   - id: source-cs229-2022-videos
+    thematic_group_ids: [thematic-group-machine-learning]
     title: Stanford CS229 Machine Learning (Spring 2022 lectures)
     type: video
     authors: [Tengyu Ma, Christopher Ré]
@@ -786,6 +812,7 @@ sources:
           - "Taught by Ma & Ré, NOT Ng (the Ng run is the 2018 mirror) — corrected KW 27; skip the SVM half of L7"
 
   - id: source-fluent-python
+    thematic_group_ids: [thematic-group-software]
     title: Fluent Python (2nd ed.)
     type: book
     authors: [Luciano Ramalho]
