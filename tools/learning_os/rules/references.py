@@ -272,9 +272,15 @@ class ChecksReferences:
             if wid not in r.workspaces and wid not in r.quarantined_workspace_ids:
                 self.err("URI-WORKSPACE", f"'{ref}' does not resolve", where)
         elif ref.startswith("material://"):
-            rest = ref[len("material://"):]
-            if not (r.materials_root / rest).exists():
-                self.warn("URI-MATERIAL", f"'{ref}' does not resolve on disk (media may be offline)", where)
+            # When the whole tree is unmounted every reference "fails", which is
+            # noise, not information — check_materials() reports that situation
+            # once. Per-reference warnings are only meaningful against a tree
+            # that is actually present.
+            if (r.learningos_root / "materials").is_dir():
+                rest = ref[len("material://"):]
+                if not (r.materials_root / rest).exists():
+                    self.warn("URI-MATERIAL",
+                              f"'{ref}' does not resolve on disk", where)
         elif ref.startswith("project://"):
             rest = ref[len("project://"):]
             if not (r.projects_root / rest).exists():

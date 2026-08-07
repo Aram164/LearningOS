@@ -40,6 +40,20 @@ GENERATED_ALLOWED = {
 }
 GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 
+# Warnings about the environment *around* the authored content — a stale
+# generated view, an unmounted drive, an inventory that needs rebuilding — as
+# opposed to warnings about the content itself. A preflight asking "does this
+# proposed change introduce a problem?" must ignore them: they are true before
+# and after the change, so treating them as blockers makes an unrelated command
+# fail because a drive happens to be offline. Errors always block regardless.
+ENVIRONMENTAL_WARNINGS = frozenset({
+    "HYGIENE-VIEWS",
+    "MATERIALS-MANIFEST",
+    "MATERIALS-OFFLINE",
+    "MATERIALS-DRIFT",
+    "MATERIAL-URI-FORM",
+})
+
 CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum", "projects")
 
 # File extensions that are legitimately authored text under knowledge/ (notes and

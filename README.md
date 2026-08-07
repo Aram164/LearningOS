@@ -106,6 +106,7 @@ make setup      # once per clone/move: create .venv, install deps, install both 
 make check      # validate (schemas + VALIDATION.md rules)
 make views      # rebuild everything under the gitignored output tree
 make status     # one-screen repository state
+make inventory  # rebuild the materials manifest (see "Materials durability")
 make test       # test suite
 make            # list the one-word commands
 ```
@@ -136,6 +137,46 @@ Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings
 print but never block); **post-commit** rebuilds `generated/` so the local
 dashboards are never stale.
+
+## Materials durability
+
+`materials/` is the one part of the system Git does not protect. It sits outside
+the authored tree by design (~1.9 GB of PDFs, slides and notebooks) and is
+tracked by no repository, yet hundreds of `material://` references resolve into
+it. A lost drive would therefore turn a large part of the knowledge base into
+dangling pointers, and nothing would say so.
+
+`records/materials-manifest.yaml` is the repository's own durable record of that
+tree — every file's path, size and SHA-256. It is version-controlled, so the
+inventory survives even when the files do not. With it, `make check`
+distinguishes cases that otherwise look identical:
+
+| situation | what you get |
+|---|---|
+| drive unmounted | one `MATERIALS-OFFLINE` warning — not data loss |
+| file moved or removed on purpose | `MATERIALS-DRIFT` warning — run `make inventory` |
+| file a canonical record points at is gone | `MATERIAL-MISSING` **error** |
+| reference to a file never inventoried | `MATERIAL-UNREGISTERED` **error** |
+
+Presence and size are checked on every `make check` (a few hundred
+milliseconds); content is not, because hashing 1.9 GB does not belong in a
+pre-commit hook. `make verify-materials` does the full SHA-256 pass.
+
+**Backup, and proving a restore worked.** Copy `materials/` wherever you keep
+backups — it is ordinary files, so any tool will do. What the manifest adds is
+the ability to *check* a restore instead of hoping:
+
+```bash
+python tools/materials_manifest.py --against /Volumes/backup/materials --deep
+```
+
+That reports every file missing from the copy, every file whose contents differ,
+and every file present in the copy but unknown to the inventory — exit code 1 if
+the restore is incomplete. Run it after restoring, and occasionally against the
+backup itself; a backup nobody has ever verified is a guess.
+
+Rebuild the manifest with `make inventory` after deliberately adding, moving or
+removing sources, and commit it with the change that caused it.
 
 ## Transactional writes and Projects
 
