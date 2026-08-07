@@ -15,7 +15,7 @@ from learning_os.rules import validate
 
 ROOT = Path(__file__).resolve().parent.parent
 LOS = ROOT / "tools" / "los.py"
-MIGRATE = ROOT / "tools" / "migrate_curriculum_v2.py"
+MIGRATE = ROOT / "tools" / "migrations" / "curriculum_v2.py"
 
 
 def run_los(root: Path, *args: str):
