@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/path.progress.update.schema.json",
+  "title": "payload for capability path.progress.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "path_id",
+    "stage_id",
+    "status"
+  ],
+  "properties": {
+    "path_id": {
+      "type": "string"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

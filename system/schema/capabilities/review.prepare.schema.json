@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/review.prepare.schema.json",
+  "title": "payload for capability review.prepare",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit_id"
+  ],
+  "properties": {
+    "items_file": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}

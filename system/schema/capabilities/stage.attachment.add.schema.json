@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/stage.attachment.add.schema.json",
+  "title": "payload for capability stage.attachment.add",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "file",
+    "stage_id",
+    "unit_id"
+  ],
+  "properties": {
+    "file": {
+      "type": "string"
+    },
+    "label": {
+      "type": "string"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}

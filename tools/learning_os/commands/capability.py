@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 import sys
 from jsonschema import Draft202012Validator
@@ -32,6 +34,75 @@ def _capability_handlers() -> dict[str, str]:
         "project.create": "project_create",
         "project.update": "project_update",
     }
+
+
+def _payload_schema_path(root: Path, name: str) -> Path:
+    return root / "system" / "schema" / "capabilities" / f"{name}.schema.json"
+
+
+def _validate_payload(root: Path, name: str, payload: dict) -> None:
+    """Refuse a payload the capability never declared.
+
+    A missing schema is itself a refusal: an undeclared payload surface means
+    the capability is not actually specified, and guessing would let the
+    gateway accept fields no contract describes.
+    """
+    path = _payload_schema_path(root, name)
+    if not path.is_file():
+        raise WriteRefused(f"no declared payload schema for capability {name}")
+    schema = json.loads(path.read_text(encoding="utf-8"))
+    errors = sorted(Draft202012Validator(schema).iter_errors(payload),
+                    key=lambda error: list(error.path))
+    if errors:
+        detail = "; ".join(f"{'/'.join(str(p) for p in e.path) or '<payload>'}: {e.message}"
+                           for e in errors[:4])
+        raise WriteRefused(f"invalid payload for {name}: {detail}")
+
+
+def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[int, dict]:
+    """Run one capability through the same handler its named CLI command uses.
+
+    There is deliberately no second implementation here. The envelope is
+    translated into the arguments the command already accepts, so the two
+    interfaces cannot diverge in behaviour — only in how they are called.
+    """
+    from learning_os.contracts.payloads import payload_to_namespace, subparsers
+
+    import los  # local: los imports this module, so the cycle must stay lazy
+
+    _validate_payload(root, definition.name, payload)
+    commands = subparsers(los.build_parser())
+    command_parser = commands.get(definition.cli_command or "")
+    if command_parser is None:
+        raise WriteRefused(f"capability {definition.name} declares no CLI command to dispatch to")
+    handler = command_parser.get_default("func")
+    if handler is None:
+        raise WriteRefused(f"capability {definition.name} has no bound handler")
+
+    namespace = payload_to_namespace(
+        command_parser, payload,
+        root=str(root),
+        expected_snapshot=envelope.get("expected_snapshot"),
+        expected_revisions=envelope.get("expected_revisions", {}),
+    )
+    # Handlers that can report either prose or JSON must report JSON here.
+    if hasattr(namespace, "json"):
+        namespace.json = True
+
+    captured, errors = io.StringIO(), io.StringIO()
+    with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
+        code = handler(namespace)
+
+    text, complaint = captured.getvalue().strip(), errors.getvalue().strip()
+    if code:
+        return code, {"error": complaint or text or f"{definition.name} failed"}
+    try:
+        result = json.loads(text) if text else {}
+    except json.JSONDecodeError:
+        result = {"output": text}
+    if not isinstance(result, dict):
+        result = {"output": result}
+    return 0, result
 
 
 def _validate_capability_envelope(root: Path, envelope: dict) -> None:
@@ -70,13 +141,11 @@ def cmd_capability(args) -> int:
                     )
                     result = detail if code == 0 else {"error": "; ".join(detail.get("errors", []))}
         else:
-            raise WriteRefused(
-                f"generic envelope dispatch is not yet defined for {args.name}; use its named CLI command"
-            )
+            code, result = _dispatch(root, definitions[args.name], envelope, payload)
     except WriteRefused as exc:
         code, result = 2, {"error": str(exc)}
-    # _project_write already folded its own receipt facts into `result`, so the
-    # response reads them from there rather than re-deriving them.
+    # Both paths fold their own receipt facts into `result`, so the response
+    # reads them from there rather than re-deriving them.
     confirmation = result if code == 0 else {}
     response = {
         "request_id": request_id,

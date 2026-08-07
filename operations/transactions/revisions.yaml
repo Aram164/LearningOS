@@ -1,6 +1,7 @@
 schema_version: 1
 type: artifact-revision-ledger
 revisions:
+  capture:work/inbox/20260807-053214-stage-3-smoke.md: 1
   module-project-bachelor-thesis: 1
   program-thesis-projects: 1
   project-bachelor-thesis: 1

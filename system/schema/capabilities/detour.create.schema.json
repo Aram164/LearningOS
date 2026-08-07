@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/detour.create.schema.json",
+  "title": "payload for capability detour.create",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "classification",
+    "stage_id",
+    "title",
+    "unit_id"
+  ],
+  "properties": {
+    "classification": {
+      "type": "string"
+    },
+    "stage_id": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}

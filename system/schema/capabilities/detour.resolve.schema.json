@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/detour.resolve.schema.json",
+  "title": "payload for capability detour.resolve",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "detour_id",
+    "unit_id"
+  ],
+  "properties": {
+    "detour_id": {
+      "type": "string"
+    },
+    "resolution": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}
