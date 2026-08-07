@@ -1,0 +1,92 @@
+"""The capability envelope gateway — the machine-facing write surface (ADR-006)."""
+
+from __future__ import annotations
+
+import json
+import sys
+from jsonschema import Draft202012Validator
+from learning_os.contracts.capability_catalog import command_definitions
+from pathlib import Path
+from .project import _project_write
+from .support import WriteRefused, _expected_ok, _operator_lock, _read_structured_file, _root
+
+def _capability_handlers() -> dict[str, str]:
+    """Public command capability -> concrete gateway handler name."""
+    return {
+        "capture.create": "capture",
+        "module.plan.import": "module_plan_import",
+        "note.revise": "note_revise",
+        "unit.map.import": "unit_map_import",
+        "unit.note.append": "unit_note",
+        "stage.note.write": "stage_note",
+        "stage.progress.update": "stage_progress",
+        "stage.attachment.add": "stage_attach",
+        "source.feedback.record": "source_feedback",
+        "detour.create": "detour_create",
+        "detour.resolve": "detour_resolve",
+        "review.prepare": "shelving_prepare",
+        "review.apply": "shelving_apply",
+        "path.note.write": "path_note",
+        "path.progress.update": "path_progress",
+        "path.attachment.add": "path_attach",
+        "project.create": "project_create",
+        "project.update": "project_update",
+    }
+
+
+def _validate_capability_envelope(root: Path, envelope: dict) -> None:
+    schema = json.loads((root / "system/schema/capability-envelope.schema.json").read_text(encoding="utf-8"))
+    errors = sorted(Draft202012Validator(schema).iter_errors(envelope), key=lambda error: list(error.path))
+    if errors:
+        raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
+
+
+def cmd_capability(args) -> int:
+    root = _root(args)
+    definitions = command_definitions(root)
+    if args.name not in definitions or args.name not in _capability_handlers():
+        print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
+        return 2
+    envelope = _read_structured_file(args.payload_file)
+    _validate_capability_envelope(root, envelope)
+    if envelope.get("capability") != args.name:
+        print("los: envelope capability does not match requested capability", file=sys.stderr)
+        return 2
+    payload = envelope.get("payload", {})
+    request_id = envelope["request_id"]
+    try:
+        if args.name in {"project.create", "project.update"}:
+            project = payload.get("project")
+            if not isinstance(project, dict):
+                raise WriteRefused("project capability payload requires a project object")
+            with _operator_lock(root):
+                expected_snapshot = envelope.get("expected_snapshot")
+                if not _expected_ok(root, expected_snapshot):
+                    code, result = 3, {"error": "snapshot conflict"}
+                else:
+                    code, detail = _project_write(
+                        root, project, capability=args.name,
+                        expected_revisions=envelope.get("expected_revisions", {}),
+                    )
+                    result = detail if code == 0 else {"error": "; ".join(detail.get("errors", []))}
+        else:
+            raise WriteRefused(
+                f"generic envelope dispatch is not yet defined for {args.name}; use its named CLI command"
+            )
+    except WriteRefused as exc:
+        code, result = 2, {"error": str(exc)}
+    # _project_write already folded its own receipt facts into `result`, so the
+    # response reads them from there rather than re-deriving them.
+    confirmation = result if code == 0 else {}
+    response = {
+        "request_id": request_id,
+        "capability": args.name,
+        "ok": code == 0,
+        "transaction_id": confirmation.get("transaction_id"),
+        "receipt_path": confirmation.get("receipt_path"),
+        "result": result if code == 0 else {},
+        "error": None if code == 0 else result.get("error", "capability failed"),
+    }
+    _validate_capability_envelope(root, response)
+    print(json.dumps(response, indent=2, ensure_ascii=False))
+    return code
