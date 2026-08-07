@@ -14,6 +14,7 @@ import sys
 import tempfile
 import yaml
 from learning_os.genout import _source_fingerprint, build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
+from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService, parse_expected_revisions
@@ -263,15 +264,6 @@ def _render_frontmatter(meta: dict, body: str) -> str:
     return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
 
-def _replace_h2_section(body: str, heading: str, content: str) -> str:
-    """Replace one required workspace section without disturbing its neighbours."""
-    pattern = re.compile(
-        rf"(?ms)^## {re.escape(heading)}\s*\n.*?(?=^## |\Z)"
-    )
-    if not pattern.search(body):
-        raise ValueError(f"workspace section not found: {heading}")
-    replacement = f"## {heading}\n\n{content.strip()}\n\n"
-    return pattern.sub(replacement, body, count=1).rstrip() + "\n"
 
 
 def _replace_registry_list_record(content: str, record_id: str, record: dict) -> str:
