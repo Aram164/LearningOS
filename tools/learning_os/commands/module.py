@@ -10,6 +10,7 @@ import tempfile
 import yaml
 from learning_os.loader import load_repo
 from learning_os.rules import validate
+from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
 from pathlib import Path
 from learning_os.render import replace_h2_section as _replace_h2_section
 from .support import _atomic_text, _dump_yaml, _expected_ok, _expected_revisions_from_args, _fresh_manifest, _operator_lock, _print_rows, _render_frontmatter, _replace_registry_list_record, _root, _write_transaction
@@ -170,7 +171,8 @@ def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
             _atomic_text(shadow / rel, content)
         return [issue for issue in validate(load_repo(shadow), online=False)
                 if issue.severity == "E"
-                or (issue.severity == "W" and issue.code != "HYGIENE-VIEWS")]
+                or (issue.severity == "W"
+                    and issue.code not in ENVIRONMENTAL_WARNINGS)]
 
 
 def cmd_module_plan_import(args) -> int:
