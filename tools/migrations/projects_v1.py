@@ -14,7 +14,6 @@ import datetime as dt
 import fcntl
 import hashlib
 import json
-import os
 import shutil
 import sys
 import tempfile

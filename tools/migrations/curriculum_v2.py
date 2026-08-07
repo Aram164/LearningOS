@@ -14,15 +14,19 @@ import argparse
 import copy
 import re
 import shutil
+import sys
 import unicodedata
 from pathlib import Path
 
 import yaml
 
-from learning_os.loader import FRONTMATTER_RE, load_repo, parse_frontmatter
+# This lives one level below tools/, so put tools/ on the path before the
+# package import — the same shape tools/migrations/projects_v1.py uses.
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "tools"))
 
+from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 
-ROOT = Path(__file__).resolve().parent.parent
 TODAY = "2026-08-03"
 
 PROGRAMS = [
