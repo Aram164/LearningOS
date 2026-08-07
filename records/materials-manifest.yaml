@@ -6,13 +6,13 @@
 # offline" apart from "a referenced file is actually gone", and
 # `--against <path>` uses it to prove a restored backup is complete.
 #
-# Excludes symlinks (.flat/), .DS_Store, and the generated catalogue
-# (README.md, FILES.txt, INDEX.html).
+# Excludes symlinks (.flat/), .DS_Store, the generated catalogue
+# (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
 captured: '2026-08-07'
 totals:
-  files: 1141
-  bytes: 2022676664
+  files: 1136
+  bytes: 2022670742
 files:
   Books/algorithms/clrs/clrs-de.pdf:
     size: 8774407
@@ -1361,9 +1361,6 @@ files:
   CS-Theory/Algo2/Pagh06_CuckooHashingForUndergraduates.pdf:
     size: 173484
     sha256: 359b74aa873c1acc58d60b1e88ca21f9981c07382baa6da3a924fb755acf1885
-  CS-Theory/Algo2/SOURCES.md:
-    size: 653
-    sha256: 0315b1e7ed3ca9fb5056dd6efb5dc46fc7267b53dbe4481a0822d8b377152905
   CS-Theory/Algo2/SleatorT1985_SelfAdjustingBinarySearchTrees.pdf:
     size: 2392998
     sha256: 419b7a1ebbe56ad5e6dbc1b17a7878de6ecec4b1ea628d97e3b6217d2c71fba2
@@ -2152,9 +2149,6 @@ files:
   Foundations/_shelving-manifest-2026-07-18.md:
     size: 29308
     sha256: f8496bd7342735cb365c3023ad0bd60d5bf2200c073ce452bf6e651b289831ac
-  ML/AML/SOURCES.md:
-    size: 1049
-    sha256: 5b4cdc139ab5c5c04e8e24bd7d563e8ea057c74512b1822291a4e8ba24ca27b9
   ML/AML/course/aml-ss26-lectures/Primer_Linear_Algebra.pdf:
     size: 534719
     sha256: 26dd4a53d52d6c04e4f0f68ea132c87d3770474f6ade9b7e1e97261ff1849313
@@ -2626,9 +2620,6 @@ files:
   ML/AML/practice-extern/cs4780-homeworks/README.md:
     size: 2293
     sha256: fbcba86a6471fea3b6c52b8a008b7510b922bde1d306b445b1682b76e6d0ae91
-  ML/AMLS/SOURCES.md:
-    size: 508
-    sha256: 173369fcd27ea789ad9898224c51d14655083f045ccbf4c5a3ed5dc6c0f63006
   ML/AMLS/course/amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md:
     size: 49485
     sha256: 78ca0f8eff7e56ea10e75a9c35918dabe81dddf1a05f54dc750c49ac96f990f8
@@ -2671,9 +2662,6 @@ files:
   ML/AMLS/course/amls-ss26-lectures/lecture-slides/13_ModelDeployment.pdf:
     size: 2985849
     sha256: 15bc9d87a4836e73d537581b97d6350e10bdce9fd876754faa0106185013d0ad
-  Math/Analysis/SOURCES.md:
-    size: 2267
-    sha256: e61bab0daa9bdb14eb6745445a9e9bc973cf1eef0441ecf776da4f5c8927ae45
   Math/Analysis/course/analysis-skript/Pd3szO-ana_inf_serie08.pdf:
     size: 243032
     sha256: 1de0ba39a82d26aea6e25aeeb437261a5225e62bc2dff59bae1124c5fbe76d37
@@ -2785,9 +2773,6 @@ files:
   Math/Analysis/practice-extern/analysis-klausuren-extern/Ulm_Analysis-fuer-Informatiker_Klausur-SS10_nur-Aufgaben.pdf:
     size: 101474
     sha256: c5647cfe26c1215f82f019d0d36bf7bdee2ed4ebc34a2c85a76513eb3cea55d4
-  Math/SaD/SOURCES.md:
-    size: 1445
-    sha256: 5a7b89b52684fd813d79eefefcdf51b962984a02d6bb2ca43dba8e573f98c391
   Math/SaD/course/sad-2025-recordings/04_probability_with_notes (1).pdf:
     size: 2072320
     sha256: a60b0290379e3c97a1af58e5c042ce33ff6492bfdd1bd1ace19b7b3f9548a209
