@@ -1,0 +1,765 @@
+# External-shelf partition — migration of legacy LEARNING-RESOURCES.md
+# §3 (books & texts) + §4 (tools, docs & repos) + §5 (papers) + §6 (solved
+# practice, web tier — the local Klausur banks already have records) + §7
+# (seminar) + §8 (Python OOP/scope/interpreter internals). Intake of Jul 17
+# 2026. Partitioning does not change semantics (same registry as
+# sources/sources.yaml). Evaluations preserve the legacy file's recorded
+# judgments (Aram's curation, KW 24–29) — nothing invented.
+# NOTE: the legacy §4 skrub + Stratum rows are deliberately NOT registered —
+# Job/ quarantine, CLAUDE.md §13 (job knowledge stays out of the registries).
+sources:
+  # ==================================================== §3 books — SaD gaps
+  - id: source-henze-stochastik
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Henze — Stochastik für Einsteiger (Springer, DE)
+    type: book
+    authors: [Norbert Henze]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "German rigor alternative for the probability half (SaD 04–08) with exercises + Lösungen; use if Fahrmeir's probability chapters feel thin. Springer campus-license route — pull pending"
+
+  - id: source-grinstead-snell
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Grinstead & Snell — Introduction to Probability (AMS, open access)
+    type: book
+    authors: [Charles Grinstead, J. Laurie Snell]
+    url: https://www.math.dartmouth.edu/~prob/prob/prob.pdf
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The gentle, computation-flavored free book — lots of worked examples + simulation; completes the softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still an open pull"
+
+  - id: source-fpp-statistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Freedman, Pisani & Purves — Statistics (Norton, 4th ed.)
+    type: book
+    authors: [David Freedman, Robert Pisani, Roger Purves]
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "The classic intuition-first statistics book — box models, chance errors, tests in words before formulas. Where Fahrmeir gives the formula and Blitzstein the proof, FPP gives the picture; read a chapter when a concept computes but doesn't click. 💰 ~€60 / used cheap — buy decision pending"
+
+  - id: source-baertl-statistik-buch
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Bärtl — Statistik Schritt für Schritt
+    type: book
+    authors: [Mathias Bärtl]
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Companion book to the Kurzes Tutorium Statistik channel — cheap (~€20) German written twin of the DE video layer, same everyday-problem style and Klausur vocabulary. 💰 buy decision pending"
+
+  # ==================================================== §3 books — ML / DL
+  - id: source-nielsen-nndl
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Nielsen — Neural Networks and Deep Learning (free web book)
+    type: book
+    authors: [Michael Nielsen]
+    url: http://neuralnetworksanddeeplearning.com/
+    evaluations:
+      - roles: [first-learning, derivation]
+        useful_sections:
+          - "Ch 1–3 + 6": "phased in the DL-AMLS learning plan"
+          - "Ch 2": "backprop rigor for AML L09"
+
+  - id: source-goodfellow-dl
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Goodfellow, Bengio & Courville — Deep Learning (MIT Press, free web book)
+    type: book
+    authors: [Ian Goodfellow, Yoshua Bengio, Aaron Courville]
+    year: 2016
+    url: https://www.deeplearningbook.org/
+    evaluations:
+      - roles: [reference]
+        level: advanced
+        strengths:
+          - "⭐ The canonical DL reference — the main gap this fills; depth reference, not a read-through"
+        useful_sections:
+          - "Part I (lin-alg/prob/numerical)": "backs AML L06/L09"
+          - "Part II (MLPs, regularization, optimization, CNNs, RNNs)": "the theory layer under AML L08–L11 and the AMLS project"
+
+  - id: source-bishop-prml
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Bishop — Pattern Recognition and Machine Learning (PRML)
+    type: book
+    authors: [Christopher Bishop]
+    year: 2006
+    url: https://www.microsoft.com/en-us/research/publication/pattern-recognition-machine-learning/
+    identifiers:
+      exercise-solutions: https://www.microsoft.com/en-us/research/wp-content/uploads/2016/05/prml-web-sol-2009-09-08.pdf
+    evaluations:
+      - roles: [reference]
+        level: advanced
+        strengths:
+          - "Listed so nobody buys it by accident: this classic has a legal free PDF (Microsoft). Murphy & ESL cover the same ground in the current stack"
+          - "Degree-planning anchor (KW 25 axis files): 'the most Bishop-shaped catalog' — Ch 8 PGM + 7 SVM + 14 ensembles carry ML 2-X; Ch 3–5/6.4/9/12 carry MI I + ML 1-X gaps; Ch 9/12/13 (EM, PCA, HMM) nearly cover MI II; official exercise solutions free"
+
+  # =============================================== §3 books — AMLS / job
+  - id: source-huyen-ai-engineering
+    thematic_group_ids: [thematic-group-ml-systems]
+    title: Huyen — AI Engineering (O'Reilly, 2025)
+    type: book
+    authors: [Chip Huyen]
+    year: 2025
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "LLM inference-optimization + serving chapters only (AMLS 07/13) — optional depth, job-relevant, not exam-critical. 💰/🏛️ O'Reilly — access decision pending"
+
+  # ================================= §4 tools & docs — AMLS project (P)
+  - id: source-torchvision-transforms-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: torchvision.transforms v2 documentation
+    type: documentation
+    organization: PyTorch
+    url: https://pytorch.org/vision/stable/transforms.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Task 1.3 augmentation implementation reference (AMLS project)"
+
+  - id: source-captum
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: Captum — model interpretability for PyTorch (tutorials)
+    type: documentation
+    organization: PyTorch
+    url: https://captum.ai/tutorials/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Saliency + occlusion ready-made for AMLS-project Task 1.4"
+
+  - id: source-albumentations-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: Albumentations documentation
+    type: documentation
+    url: https://albumentations.ai/docs/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Alternative augmentation library (salvaged from the deleted April master plan)"
+
+  - id: source-timm
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: timm — pytorch-image-models (Hugging Face)
+    type: software
+    organization: Hugging Face
+    url: https://github.com/huggingface/pytorch-image-models
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Reference model zoo for image classification"
+
+  - id: source-pytorch-tutorials
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: PyTorch official tutorials
+    type: documentation
+    organization: PyTorch
+    url: https://pytorch.org/tutorials/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Grad-CAM via hooks; general training loops"
+
+  - id: source-docker-get-started
+    thematic_group_ids: [thematic-group-software]
+    title: Docker — Get Started guide
+    type: documentation
+    organization: Docker
+    url: https://docs.docker.com/get-started/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "AMLS project submission requirement"
+
+  - id: source-google-colab
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: Google Colab
+    type: software
+    organization: Google
+    url: https://colab.research.google.com/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Free hosted GPU notebooks — for AMLS/DL experiments without local CUDA"
+
+  # ======================================= §4 tools & docs — mlprov (M)
+  - id: source-duckdb-python-docs
+    thematic_group_ids: [thematic-group-data-systems, thematic-group-software]
+    title: DuckDB Python API documentation
+    type: documentation
+    organization: DuckDB
+    url: https://duckdb.org/docs/api/python/overview
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "mlprov Phase 5 (DuckDB optimization — CUT KW 24, stretch only)"
+
+  - id: source-fairlearn-docs
+    thematic_group_ids: [thematic-group-machine-learning, thematic-group-software]
+    title: fairlearn — MetricFrame assessment guide
+    type: documentation
+    url: https://fairlearn.org/main/user_guide/assessment/index.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "For mlprov sprint step M.4.x (Fairness — graded, has a test). Read when reaching it, not before"
+
+  # ============================== §4 — meta-indexes & project idea banks
+  - id: source-cs229-project-archive
+    thematic_group_ids: [thematic-group-method-admin, thematic-group-machine-learning]
+    title: Stanford CS229 project archive (+ CS230 past projects)
+    type: website
+    organization: Stanford
+    url: https://cs229.stanford.edu/projects.html
+    identifiers:
+      cs230: https://cs230.stanford.edu/past-projects/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Hundreds of short project reports — idea/scoping bank for the AMLS project and seminar-style writing"
+
+  - id: source-awesome-ml-books
+    thematic_group_ids: [thematic-group-method-admin]
+    title: awesome-machine-learning — community books list
+    type: website
+    url: https://github.com/josephmisiti/awesome-machine-learning/blob/master/books.md
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Community meta-index of ML books, for filling prereq gaps beyond the registered bank"
+
+  # ==================================================== §4 — datasets
+  - id: source-google-dataset-search
+    thematic_group_ids: [thematic-group-method-admin]
+    title: Google Dataset Search
+    type: website
+    organization: Google
+    url: https://datasetsearch.research.google.com/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Cross-web dataset index (URL modernized from the old toolbox.google.com link)"
+
+  - id: source-kaggle-datasets
+    thematic_group_ids: [thematic-group-method-admin]
+    title: Kaggle Datasets
+    type: website
+    organization: Kaggle
+    url: https://www.kaggle.com/datasets
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The largest public dataset + notebook hub — project data + baselines"
+
+  - id: source-data-gov
+    thematic_group_ids: [thematic-group-method-admin]
+    title: data.gov + DataUSA — US public data
+    type: website
+    url: https://www.data.gov/
+    identifiers:
+      datausa: https://datausa.io/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "US public data (raw + visualized) — extra project data sources"
+
+  # ======================================================== §5 papers
+  - id: source-zeiler-fergus-occlusion
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Visualizing and Understanding Convolutional Networks (occlusion)
+    type: paper
+    authors: [Matthew Zeiler, Rob Fergus]
+    year: 2014
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Origin of occlusion analysis — skim figures; one good figure for the AMLS-project report"
+
+  - id: source-grad-cam
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: "Grad-CAM: Visual Explanations from Deep Networks"
+    type: paper
+    year: 2016
+    url: https://arxiv.org/abs/1610.02391
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Explainability upgrade path beyond saliency/occlusion (AMLS project + DL1)"
+
+  - id: source-augmix
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: "AugMix: A Simple Data Processing Method to Improve Robustness"
+    type: paper
+    year: 2019
+    url: https://arxiv.org/abs/1912.02781
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Augmentation robustness — Task 1.3 report ammunition"
+
+  - id: source-belkin-double-descent
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Reconciling modern machine-learning practice and the bias-variance trade-off (double descent)
+    type: paper
+    authors: [Mikhail Belkin, Daniel Hsu, Siyuan Ma, Soumik Mandal]
+    year: 2019
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Cited in AML L09 — the modern correction to the bias-variance U-curve (PNAS)"
+
+  - id: source-buneman-why-where
+    thematic_group_ids: [thematic-group-data-systems]
+    title: "Why and Where: A Characterization of Data Provenance"
+    type: paper
+    authors: [Peter Buneman, Sanjeev Khanna, Wang-Chiew Tan]
+    year: 2001
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Foundational why/where-provenance paper — the conceptual base for the mlprov library (PDF kept with the ppds-mlprov project)"
+
+  - id: source-mlinspect-debugging
+    thematic_group_ids: [thematic-group-ml-systems, thematic-group-data-systems]
+    title: Data Distribution Debugging in Machine Learning Pipelines (mlinspect family)
+    type: paper
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Motivation paper for instrumenting ML pipelines — directly the mlprov project's problem statement (PDF kept with the ppds-mlprov project)"
+
+  - id: source-pouyanfar-dl-survey
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: "A Survey on Deep Learning: Algorithms, Techniques, and Applications (ACM CSUR)"
+    type: paper
+    year: 2019
+    url: https://dl.acm.org/doi/10.1145/3234150
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Broad DL survey (CNNs, RNNs, autoencoders, GANs, DRL + applications) — a single-read landscape map for DL1"
+
+  # ==================== §6 solved practice — web tier (local banks have records)
+  - id: source-cs229-problem-sets
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Stanford CS229 — problem sets & practice midterms
+    type: other
+    organization: Stanford
+    url: https://cs229.stanford.edu/
+    identifiers:
+      community-solutions: https://github.com/maxim5/cs229-2018-autumn
+    evaluations:
+      - roles: [exercise, derivation]
+        level: advanced
+        strengths:
+          - "Derivation-style problems with solutions: normal equation, logistic/MLE, GDA vs logistic, bias-variance, kernels — harder than the AML exam; use for the proofs you must reproduce (β̂, cross-entropy gradient)"
+
+  - id: source-islp-community-solutions
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: ISLP community exercise solutions (botlnec / a-martyn / applied-only)
+    type: website
+    url: https://botlnec.github.io/islp/
+    identifiers:
+      a-martyn: https://github.com/a-martyn/ISL-python
+      applied-only: https://github.com/KarimABOUSSELHAM/ISLP-applied-solutions
+    evaluations:
+      - roles: [exercise]
+        strengths:
+          - "Community-solved conceptual + applied exercises for every ISLP chapter in the plan — turns each ISLP reading into checked practice"
+        weaknesses:
+          - "Quality varies — cross-check derivations against the book"
+
+  - id: source-mit-6006
+    thematic_group_ids: [thematic-group-algorithms]
+    title: MIT 6.006 — Introduction to Algorithms (OCW, exams + psets with solutions)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/
+    identifiers:
+      f2011: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/
+    evaluations:
+      - roles: [exercise]
+        level: introductory
+        strengths:
+          - "Easier tier: shortest-paths (Bellman-Ford/Dijkstra) and DS problems with solutions — warm-up volume before the 6.046 tier (AL.G)"
+
+  - id: source-frankfurt-algo2-course
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Goethe Frankfurt ALGO2 — course page (weekly videos + Übungsblätter)
+    type: course
+    organization: Goethe-Universität Frankfurt
+    url: https://tcs.uni-frankfurt.de/algo2/
+    evaluations:
+      - roles: [first-learning, exercise]
+        audience: [German readers]
+        strengths:
+          - "Short German flipped-classroom topic videos (8–25 min) — the splay-tree video + the 4-part flow series are the highest-value pulls; Übungsblätter (APSP, Netzwerkfluss I+II, Amortisiert+Splay) add German exam-language drill (unsolved; the weekly videos walk solutions). Pairs with the solved Frankfurt Klausuren record"
+
+  - id: source-kit-algorithmen2
+    thematic_group_ids: [thematic-group-algorithms]
+    title: KIT Algorithmen 2 — Sanders, WS17/18 (YouTube, German)
+    type: course
+    authors: [Peter Sanders]
+    organization: KIT
+    url: https://www.youtube.com/playlist?list=PLfk0Dfh13pBNyD4E0lUbTe3o4nvRwexRv
+    evaluations:
+      - roles: [first-learning]
+        audience: [German readers]
+        strengths:
+          - "⭐ Full recorded semester by the co-author of the DMS book the HU course uses for Kap. 1 — vocabulary matches the exam language; flows & matchings → AL.H/I, computational geometry → AL.J"
+
+  - id: source-cmu-15451-splay-notes
+    thematic_group_ids: [thematic-group-algorithms]
+    title: CMU 15-451 — splay tree lecture notes (Sleator's course)
+    type: documentation
+    organization: CMU
+    url: https://www.cs.cmu.edu/~15451-f23/lectures/lecture08-splay-trees.pdf
+    evaluations:
+      - roles: [derivation]
+        strengths:
+          - "The inventor's home-course telling of the access-lemma potential argument — cleaner than Ottmann/Widmayer for the proof part of AL.E2"
+
+  - id: source-wayne-kt-slides
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Kevin Wayne (Princeton) — Kleinberg-Tardos slide decks
+    type: website
+    authors: [Kevin Wayne]
+    organization: Princeton
+    url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Polished official KT decks — stable matching (Gale-Shapley) for the AL.I3 gap (HU Kap. 10 not posted at the time), network-flow decks for AL.H"
+
+  - id: source-tuwien-ad2-fibonacci
+    thematic_group_ids: [thematic-group-algorithms]
+    title: TU Wien AD2 — Fibonacci-Heaps & Amortisierte Analyse (chapter text)
+    type: documentation
+    organization: TU Wien
+    url: https://www.ac.tuwien.ac.at/files/teaching/ss12/AD2/kapitel_fibonacci.pdf
+    evaluations:
+      - roles: [review]
+        audience: [German readers]
+        strengths:
+          - "German chapter with worked Fib-heap operation examples — second telling of AL.B→AL.D with figures to hand-run against"
+
+  # ======================================================== §7 seminar
+  - id: source-prisma-method
+    title: PRISMA — systematic review reporting method
+    type: website
+    thematic_group_ids: [thematic-group-method-admin]
+    url: https://www.prisma-statement.org/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Structured literature-review method — used for the IuG seminar; reusable for any future lit review/thesis"
+
+  # ==================== §8 Python OOP, scope & interpreter internals
+  - id: source-hettinger-super
+    thematic_group_ids: [thematic-group-software]
+    title: Hettinger — Python's super() considered super!
+    type: website
+    authors: [Raymond Hettinger]
+    year: 2011
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ THE inheritance/MRO mental model (~45 min): the LoggingDict example is structurally identical to ProvDataFrame.__getitem__; MRO linearization, cooperative classes, kwargs-stripping __init__ chains, adapter classes for non-cooperative parents (the sklearn-skeleton pattern)"
+
+  - id: source-batchelder-names
+    thematic_group_ids: [thematic-group-software]
+    title: Ned Batchelder — Facts and myths about Python names and values
+    type: website
+    authors: [Ned Batchelder]
+    url: https://nedbatchelder.com/text/names.html
+    identifiers:
+      pycon-talk: https://nedbatchelder.com/text/names1.html
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ Names are references; assignment never copies; mutation vs rebinding (~40 min). The written twin of Fluent Python Ch 6 — explains why a shared provenance DataFrame bites"
+
+  - id: source-realpython-legb
+    thematic_group_ids: [thematic-group-software]
+    title: Real Python — Python Scope & the LEGB Rule
+    type: website
+    organization: Real Python
+    url: https://realpython.com/python-scope-legb-rule/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The missing scope piece: Local→Enclosing→Global→Builtin, global/nonlocal, why assignment inside a function creates a local name (the C++ intuition trap). Read §LEGB + §functions, skim the rest"
+
+  - id: source-python-tutor
+    thematic_group_ids: [thematic-group-software]
+    title: Python Tutor (visualization tool)
+    type: software
+    url: https://pythontutor.com
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "Visualizes frames, names→object arrows, and mutation step-by-step — Ned's diagrams, live, on your own code; paste mlprov-style snippets and watch"
+
+  - id: source-corey-schafer-oop
+    thematic_group_ids: [thematic-group-software]
+    title: Corey Schafer — Python OOP playlist
+    type: video
+    authors: [Corey Schafer]
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Calm video walk of classes/inheritance/dunders if Hettinger's post moves too fast (#4 inheritance, #5 dunder methods; skip #1–2)"
+
+  - id: source-numpy-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
+    title: NumPy — subclassing ndarray (official guide)
+    type: documentation
+    organization: NumPy
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "__array_finalize__ — why ndarray needs it instead of __init__. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-pandas-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
+    title: pandas — subclassing pandas data structures (official guide)
+    type: documentation
+    organization: pandas
+    url: https://pandas.pydata.org/docs/development/extending.html#subclassing-pandas-data-structures
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "_metadata/_constructor — how provenance survives pandas ops. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-python-docs-classes-mro
+    thematic_group_ids: [thematic-group-software]
+    title: Python docs — Classes tutorial §9.5–9.8 + the official MRO write-up
+    type: documentation
+    organization: Python Software Foundation
+    url: https://docs.python.org/3/tutorial/classes.html#inheritance
+    identifiers:
+      mro-howto: https://docs.python.org/3/howto/mro.html
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Canonical reference for inheritance + C3 linearization — the MRO howto is the formal version of Hettinger's 'children precede parents' rules"
+
+  - id: source-kaptur-byterun
+    thematic_group_ids: [thematic-group-software]
+    title: Allison Kaptur — A Python Interpreter Written in Python (Byterun, 500 Lines essay)
+    type: website
+    authors: [Allison Kaptur]
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "⭐ A working bytecode VM in 500 lines (~1.5h) — frames, value stack, dispatch, why scope IS the frame structure; C++ background is an asset. Appetizer: dis.dis() and watch LOAD_FAST vs LOAD_GLOBAL"
+
+  - id: source-guo-cpython-internals
+    thematic_group_ids: [thematic-group-software]
+    title: Philip Guo — CPython internals (10-hour lecture series)
+    type: video
+    authors: [Philip Guo]
+    url: https://pgbovine.net/cpython-internals.htm
+    evaluations:
+      - roles: [first-learning]
+        level: advanced
+        strengths:
+          - "Line-by-line C walkthrough of CPython — cherry-pick L1 overview, L3 frames/calls/scope, L8 user-defined classes. Old (Py 2.7) but the architecture stands; Guo says watch Kaptur first"
+
+  # ============================================ §8b Python depth drills (Aug 2026)
+  # Authored ladder + the books it added to the shelf. Built 2026-08-02 from the
+  # Level-Up competency map, the Intermediate Roadmap and the OOP/Scope Repair Plan;
+  # the job-specific anchors deliberately stay in Job/ (CLAUDE.md §13).
+  - id: source-python-depth-drills
+    thematic_group_ids: [thematic-group-software]
+    title: Python Depth Drills — nine stages (guides + notebooks, authored)
+    type: other
+    authors: [Aram Aljanadi]
+    year: 2026
+    material: material://source-python-depth-drills
+    evaluations:
+      - concepts: [concept-python]
+        roles: [exercise, first-learning, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The ladder form of the Python middle band: 9 stages × ~20 predict-then-run questions (165 total), each stage = one guide (claim → ranked reading → drills → done-when → traps checklist) + one notebook with folded solutions. Every code cell verified to execute; claimed outputs diffed against real output"
+          - "Stages 0/6/7/8 exist to close the four gaps the Level-Up competency map rated needs 4–5 / currently 2–3 and the original five-stage plan didn't reach: identity+mutation (rated the widest gap), the data model, generators, and interfaces/dispatch"
+          - "Complements rather than duplicates the other two Python docs: the Roadmap is symptom→step lookup, the Repair Plan is five drill sessions, this is the ordered gated ladder. Guides cite Roadmap steps and Repair Plan sessions instead of restating them"
+        weaknesses:
+          - "Questions tagged [Stratum] are anchored to a query-optimizer codebase (renamed and re-shaped, answerable without access to it). The file-level anchors live outside this tree in Job/python-drills/STRATUM-ANCHORS.md"
+        useful_sections:
+          - "Stage 0 — names, identity & mutation": "the prerequisite the older plans skipped; Stages 2/4/5 are this same rule in three costumes"
+          - "Stage 8 — interfaces & dispatch": "tag-dispatch vs subclass polymorphism (the expression problem), the one stage that is mostly judgement"
+          - "SHELF.md": "cross-cutting sources no stage owns — testing (pytest/Hypothesis), debugging (pdb, PDSH 01.06), performance (PDSH 01.07, cProfile, tracemalloc), style"
+
+  - id: source-slatkin-effective-python
+    title: Slatkin — Effective Python
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [Brett Slatkin]
+    year: 2024
+    material: material://source-slatkin-effective-python/effective-python.pdf
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best complement to Fluent Python at the intermediate band: 125 short items, four minutes each, telling you what to DO where FP explains how the language works. Per-stage item mapping is in the depth-drills SHELF.md §1a"
+          - "3e Item 21 'Be Defensive when Iterating over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+          - "3e Item 49 'Prefer Object-Oriented Polymorphism over functools.singledispatch' is depth-drills Stage 8's expression-problem judgement stated outright — the 3rd ed. is the only edition that has it"
+          - "3e Items 92–96, 99, 108–115 are the only local coverage of the three cross-cutting topics no depth-drills stage owns (testing, debugging, performance) — SHELF.md §3a/3b/3c. Items 94–96 (replacing Python with C, ctypes, extension modules) also feed the Rust/PyO3 track, Roadmap Step 25"
+        weaknesses:
+          - "⚠️ TWO FILES, ONE RECORD. Citations throughout the depth drills use 3rd-ed numbering, taken from effective-python-3e-toc-sample.pdf — an 80-page publisher sample that carries the complete 125-item table of contents but NO item body text. The readable full text on the shelf (effective-python.pdf, the `material:` path above) is the 2nd ed., 90 items, Python 3.8-era. To read a cited item in the 2e copy, use the 3e→2e crosswalk in SHELF.md §1a"
+          - "~35 items are 3rd-ed-only and have no 2e text on the shelf at all — including 3e 20, 22, 30, 39, 46, 49, 50, 51, 65, 89, 93. SHELF.md §1a marks which stage citations fall in that set"
+          - "Concurrency (3e Items 67–79) and asyncio are deliberately out of scope for the depth ladder — Roadmap Step 19"
+
+  - id: source-cosmicpython-architecture-patterns
+    title: Percival & Gregory — Architecture Patterns with Python
+    type: book
+    thematic_group_ids: [thematic-group-software, thematic-group-data-systems]
+    authors: [Harry Percival, Bob Gregory]
+    url: https://www.cosmicpython.com/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: advanced
+        strengths:
+          - "Free online. Ch 2–4 are the judgement half of interfaces: dependency inversion, ports and adapters, WHY you declare an interface at a layer boundary — the design reading behind depth-drills Stage 8"
+        weaknesses:
+          - "Later chapters (repository, unit of work, message bus) are web-app-shaped; skippable unless building that"
+
+  - id: source-viafore-robust-python
+    title: Viafore — Robust Python
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [Patrick Viafore]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        level: intermediate
+        strengths:
+          - "Book-length treatment of depth-drills Stage 8: type hints, Protocol, ABCs, Enum, dataclass, designing interfaces that fail loudly. Targets the Level-Up note 'implements an implicit interface, never declares one'"
+        weaknesses:
+          - "The mypy docs cover ~80% of it free; buy only if the typing half of Stage 8 is where the gap turns out to be"
+
+  - id: source-beazley-python-distilled
+    title: Beazley — Python Distilled
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [David Beazley]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "Same ground as Fluent Python in a fifth of the words, systems-flavoured — a revision pass AFTER a stage rather than a first read. Ch 5 (functions), 7 (classes), 8 (modules) map onto depth-drills Stages 1–5"
+
+  - id: source-beazley-generator-tricks
+    title: Beazley — Generator Tricks for Systems Programmers
+    type: course
+    thematic_group_ids: [thematic-group-software]
+    authors: [David Beazley]
+    url: https://www.dabeaz.com/generators/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, implementation]
+        level: intermediate
+        strengths:
+          - "⭐ Slides + code, ~2h. Builds generator PIPELINES over log files — the closest public analogue to a pass pipeline over a graph. The best single resource for depth-drills Stage 7; Parts 1–4 if short on time"
+
+  - id: source-hunner-iterator-protocol
+    title: Trey Hunner — The Iterator Protocol / Loop Better
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Trey Hunner]
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+    identifiers:
+      loop-better: https://treyhunner.com/2019/06/loop-better-a-deeper-look-at-iteration-in-python/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        strengths:
+          - "The clean iterable-vs-iterator distinction (~20 min), and why returning self from __iter__ makes an object un-re-iterable. Depth-drills Q7.5 in article form"
+
+  - id: source-coghlan-import-traps
+    title: Coghlan — Traps for the Unwary in Python's Import System
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Alyssa Coghlan]
+    url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        strengths:
+          - "⭐ Core-dev explanation of the double-import trap (python pkg/mod.py vs python -m pkg.mod), name shadowing, stale bytecode. The 'works from the project root but not here' bug, diagnosed properly. Depth-drills Q5.16"
+
+  - id: source-rhodes-python-patterns
+    title: Brandon Rhodes — python-patterns.guide
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Brandon Rhodes]
+    url: https://python-patterns.guide/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best writing on WHEN to reach for each design mechanism in Python. Read 'Composition Over Inheritance' first; the Decorator entry distinguishes the GoF pattern from Python's @, which are routinely conflated"
+
+  - id: source-powell-python-expert
+    title: James Powell — So you want to be a Python expert?
+    type: video
+    thematic_group_ids: [thematic-group-software]
+    authors: [James Powell]
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, intuition]
+        level: intermediate
+        strengths:
+          - "⭐ First ~25 min: derives the data model from first principles instead of listing dunders — why the protocols are shaped the way they are. The best entry point to depth-drills Stage 6"
+
+  - id: source-hettinger-class-toolkit
+    title: Hettinger — Python's Class Development Toolkit
+    type: video
+    thematic_group_ids: [thematic-group-software]
+    authors: [Raymond Hettinger]
+    url: https://www.youtube.com/watch?v=HTLu2DFOdTg
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        level: intermediate
+        strengths:
+          - "Builds a class from scratch adding @classmethod (alternative constructors), @staticmethod, @property and __slots__ one at a time, each with a stated reason. The 'why', where Schafer gives the 'how'"
+
+  - id: source-pytest-docs
+    title: pytest — official documentation
+    type: documentation
+    thematic_group_ids: [thematic-group-software]
+    organization: pytest-dev
+    url: https://docs.pytest.org/en/stable/getting-started.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        strengths:
+          - "assert introspection, fixtures, and @parametrize — parametrize is the highest-value feature for drill work (one test, twenty cases). Also 'good integration practices' for where tests sit and how conftest.py changes sys.path"
+
+  - id: source-hypothesis-docs
+    title: Hypothesis — property-based testing for Python
+    type: documentation
+    thematic_group_ids: [thematic-group-software]
+    organization: Hypothesis
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [implementation]
+        level: intermediate
+        strengths:
+          - "Turns invariants into tests: 'a == b implies hash(a) == hash(b)' and 'copying then mutating the copy never changes the original' are properties a fuzzer can falsify. ~30 min to the basics; pairs with depth-drills Stages 0 and 6"

@@ -104,8 +104,18 @@ def main():
     else:
         stale = MATERIALS / "INDEX.html"
         if stale.exists():
-            stale.unlink()
-            print("  removed stale materials/INDEX.html (retired 2026-08-03)")
+            # Tidying a retired artifact must never abort the rebuild. materials/
+            # is routinely reached through mounts that allow writes but forbid
+            # unlink, and the file can also be held open by a viewer; an
+            # unhandled error here kills the catalogue *before* README.md and
+            # FILES.txt are written, so the fix silently ages out the very index
+            # that tells you what is unregistered.
+            try:
+                stale.unlink()
+                print("  removed stale materials/INDEX.html (retired 2026-08-03)")
+            except OSError as exc:
+                print(f"  NOTE could not remove stale materials/INDEX.html "
+                      f"({exc.strerror}) — delete it by hand; continuing")
     (MATERIALS / "README.md").write_text(
         build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
                      missing_by_domain, roots_by_name, len(local_ids), n_online,

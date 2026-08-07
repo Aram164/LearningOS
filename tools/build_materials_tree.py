@@ -125,6 +125,19 @@ PLACEMENT = {
     "progit":                            "software/tooling",
     # ------------------------------------------------------ method-admin
     "stupo-2015":                        "method-admin",
+    # ------------------------------- registered from Foundations/ (ADR-007 step 3)
+    "algo2-hu-materials":                "algorithms/structures",
+    "kleppmann-ddia":                    "data-systems/databases",
+    "compiler-construction-shelf":       "software/languages",
+    "cs-classics-shelf":                 "software/engineering",
+    "git-handbook-archive":              "software/tooling",
+    "lineare-algebra-archive":           "mathematics/linear-algebra",
+    "marsland-ml-algorithmic":           "machine-learning/classical",
+    "mathe-vorkurse":                    "mathematics/general",
+    "programming-language-books":        "software/languages",
+    "systems-architecture-shelf":        "data-systems/architecture",
+    "theoinfo-hu-archive":               "algorithms/complexity",
+    "vorkurs-mathe-2022":                "mathematics/general",
 }
 
 # Cross-subject reading pointers for each folder's SOURCES.md.

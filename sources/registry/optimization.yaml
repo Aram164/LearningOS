@@ -1,0 +1,139 @@
+# Optimization & Learning Theory — convex, numerical and combinatorial optimization, statistical learning theory, kernels.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-bertsimas-tsitsiklis-lp
+    thematic_group_ids: [thematic-group-optimization, thematic-group-algorithms]
+    title: Bertsimas & Tsitsiklis — Introduction to Linear Optimization
+    type: book
+    authors: [Dimitris Bertsimas, John Tsitsiklis]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The standard for ADM II's first half: simplex variants, polyhedral geometry, duality, ellipsoid, interior point — with the geometric intuition that earns points in oral exams"
+
+  - id: source-boyd-convex-optimization
+    thematic_group_ids: [thematic-group-optimization, thematic-group-mathematics]
+    title: Boyd & Vandenberghe — Convex Optimization
+    type: book
+    authors: [Stephen Boyd, Lieven Vandenberghe]
+    url: https://web.stanford.edu/~boyd/cvxbook/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "Free book + EE364a videos + published psets/finals with solutions; Ch 5 duality/KKT is the tool the SVM derivation stands on — one investment carries OptAlgos AND ML 2-X"
+
+  - id: source-korte-vygen
+    thematic_group_ids: [thematic-group-optimization, thematic-group-algorithms]
+    title: "Korte & Vygen — Combinatorial Optimization: Theory and Algorithms"
+    type: book
+    authors: [Bernhard Korte, Jens Vygen]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The 'Bonn bible': matchings, matroids, flows, integer programs — covers ADM II's second half completely, and its approximation chapters are the bridge to ADM III"
+
+  - id: source-mit-18657
+    thematic_group_ids: [thematic-group-optimization, thematic-group-mathematics]
+    title: MIT 18.657 — Mathematics of Machine Learning (Rigollet, OCW F2015)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/18-657-mathematics-of-machine-learning-fall-2015/
+    evaluations:
+      - roles: [exercise]
+        strengths:
+          - "Name-identical to the TU MathML module: full lecture notes + problem sets on VC, uniform convergence, concentration — no closer external material exists"
+
+  - id: source-mohri-foundations-ml
+    thematic_group_ids: [thematic-group-optimization, thematic-group-machine-learning]
+    title: Mohri, Rostamizadeh & Talwalkar — Foundations of Machine Learning (2nd ed.)
+    type: book
+    authors: [Mehryar Mohri, Afshin Rostamizadeh, Ameet Talwalkar]
+    url: https://cs.nyu.edu/~mohri/mlbook/
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The Rademacher-complexity perspective SSBD treats briefly; cleanest generalization bounds for kernel methods. Free PDF"
+
+  - id: source-mueller-kernel-tutorial
+    thematic_group_ids: [thematic-group-optimization, thematic-group-machine-learning]
+    title: Müller, Mika, Rätsch, Tsuda, Schölkopf — An Introduction to Kernel-Based Learning Algorithms (IEEE TNN)
+    type: paper
+    year: 2001
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "By the ML 2-X examiner himself — the canonical kernel tutorial of his group; the TU lecture notation and exam idioms come directly from this school. Read before ML 2-X"
+
+  - id: source-nocedal-wright
+    thematic_group_ids: [thematic-group-optimization, thematic-group-mathematics]
+    title: Nocedal & Wright — Numerical Optimization (2nd ed.)
+    type: book
+    authors: [Jorge Nocedal, Stephen Wright]
+    evaluations:
+      - roles: [reference, derivation]
+        strengths:
+          - "The standard work whose chapters (Wolfe line search, Newton, BFGS, KKT, augmented Lagrangian, interior point) cover OptAlgos parts 1+2 one-to-one — the written-out derivations where Toussaint's slides are telegraphic"
+
+  - id: source-schoelkopf-smola-lwk
+    thematic_group_ids: [thematic-group-optimization, thematic-group-machine-learning]
+    title: Schölkopf & Smola — Learning with Kernels (MIT Press)
+    type: book
+    authors: [Bernhard Schölkopf, Alexander Smola]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "The full kernel theory (RKHS, representer theorem, kernels for strings/graphs) — exactly the 'structured data' lecture material standard books lack (ML 2-X)"
+
+  - id: source-schrijver-combinatorial-notes
+    thematic_group_ids: [thematic-group-optimization, thematic-group-algorithms]
+    title: Schrijver — A Course in Combinatorial Optimization (lecture notes)
+    type: book
+    authors: [Alexander Schrijver]
+    url: https://homepages.cwi.nl/~lex/files/dict.pdf
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "~250 pages of condensed notes from the grandmaster (LP duality, matchings, matroids, TU matrices) — ideal pre-oral-exam compression for ADM II"
+
+  - id: source-ssbd-understanding-ml
+    thematic_group_ids: [thematic-group-optimization, thematic-group-machine-learning]
+    title: "Shalev-Shwartz & Ben-David — Understanding Machine Learning: From Theory to Algorithms"
+    type: book
+    authors: [Shai Shalev-Shwartz, Shai Ben-David]
+    url: https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "The MathML module's topic list reads like this book's TOC (uniform convergence, bias-complexity, nonuniform learnability, runtime of learning are literally chapter titles); also carries MI I's learning-theory half. Free from the authors"
+
+  - id: source-toussaint-optimization-script
+    thematic_group_ids: [thematic-group-optimization, thematic-group-machine-learning]
+    title: Toussaint — Optimization Algorithms (complete TU lecture script + exercises)
+    type: lecture
+    authors: [Marc Toussaint]
+    organization: TU Berlin
+    url: https://www.user.tu-berlin.de/mtoussai/teaching/Lecture-Optimization.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "The module IS fully studyable in advance: the lecturer's own indexed script incl. all exercises ('to help prepare for exams') — the included exercises ARE the Klausur training"
+
+  - id: source-williamson-shmoys
+    thematic_group_ids: [thematic-group-optimization, thematic-group-algorithms]
+    title: Williamson & Shmoys — The Design of Approximation Algorithms
+    type: book
+    authors: [David Williamson, David Shmoys]
+    url: https://www.designofapproxalgs.com/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "Nearly congruent with the ADM III module profile (LP rounding in all variants, primal-dual, local ratio, SDP/MAX CUT — Williamson co-authored Goemans-Williamson); completely free"
+

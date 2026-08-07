@@ -1,0 +1,260 @@
+# Algorithms & Computation — algorithms and data structures, complexity, approximation.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-algo2-frankfurt-klausuren
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Frankfurt Algo-2 Klausuren with solutions (2021-2024, local)
+    type: other
+    material: material://source-algo2-frankfurt-klausuren
+    evaluations:
+      - concepts: [concept-amortized-analysis, concept-shortest-paths, concept-max-flow,
+                   concept-fibonacci-heaps, concept-b-trees]
+        roles: [mock-exam, exercise]
+        audience: [German readers]
+        strengths:
+          - "Eight solved Frankfurt ALGO2 exams (2021-2024, two sittings/year) — written format, but the worked solutions double as explain-aloud drill for the oral exam"
+  - id: source-arora-barak
+    thematic_group_ids: [thematic-group-algorithms]
+    title: "Arora & Barak — Computational Complexity: A Modern Approach"
+    type: book
+    authors: [Sanjeev Arora, Boaz Barak]
+    url: https://theory.cs.princeton.edu/complexity/
+    evaluations:
+      - roles: [first-learning, reference]
+        strengths:
+          - "Free draft PDF; carries the Computational Complexity module AND ADM III's PCP/hardness block AND the RP/BPP/ZPP material in Randomized Algorithmics"
+
+  - id: source-clrs
+    thematic_group_ids: [thematic-group-algorithms]
+    title: "Cormen/Leiserson/Rivest/Stein — Algorithmen (4. Aufl. DE = EN 3rd ed)"
+    type: book
+    authors: [Thomas Cormen, Charles Leiserson, Ronald Rivest, Clifford Stein]
+    material: material://source-clrs/clrs-de.pdf
+    evaluations:
+      - concepts: [concept-amortized-analysis, concept-b-trees, concept-fibonacci-heaps,
+                   concept-shortest-paths, concept-max-flow, concept-fft,
+                   concept-computational-geometry]
+        roles: [first-learning, review]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "'Das Buch' of the Moodle-verified Algo-2 literature: Kap 17 amortisierte Analyse, 18 B-Bäume, 19 Fibonacci-Heaps, 24–25 kürzeste Wege, 26.1–26.2 max flow; Kap 30 FFT + 33 Geometrie expected for the unposted topics"
+
+  - id: source-cmu-15451-splay-notes
+    thematic_group_ids: [thematic-group-algorithms]
+    title: CMU 15-451 — splay tree lecture notes (Sleator's course)
+    type: documentation
+    organization: CMU
+    url: https://www.cs.cmu.edu/~15451-f23/lectures/lecture08-splay-trees.pdf
+    evaluations:
+      - roles: [derivation]
+        strengths:
+          - "The inventor's home-course telling of the access-lemma potential argument — cleaner than Ottmann/Widmayer for the proof part of AL.E2"
+
+  - id: source-cygan-parameterized
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Cygan et al. — Parameterized Algorithms
+    type: book
+    authors: [Marek Cygan, Fedor Fomin, Łukasz Kowalik, Daniel Lokshtanov, Dániel Marx, Marcin Pilipczuk, Michał Pilipczuk, Saket Saurabh]
+    url: https://www.mimuw.edu.pl/~malcin/book/parameterized-algorithms.pdf
+    evaluations:
+      - roles: [first-learning, exercise]
+        strengths:
+          - "The free FPT standard text (Berlin school territory — Nichterlein examines all AKT modules); per-chapter exercises with difficulty grades and hints double as the drill bank"
+
+  - id: source-dms-grundwerkzeuge
+    thematic_group_ids: [thematic-group-algorithms]
+    title: "Dietzfelbinger/Mehlhorn/Sanders — Algorithmen und Datenstrukturen: Die Grundwerkzeuge"
+    type: book
+    authors: [Martin Dietzfelbinger, Kurt Mehlhorn, Peter Sanders]
+    material: material://source-dms-grundwerkzeuge/dms.pdf
+    evaluations:
+      - concepts: [concept-fast-multiplication]
+        roles: [first-learning]
+        audience: [German readers]
+        strengths: ["Kap 1 = schnellere Multiplikation (Karatsuba) — the course's chosen source for topic A, NOT CLRS"]
+
+  - id: source-fiset-graph-theory
+    thematic_group_ids: [thematic-group-algorithms]
+    title: William Fiset — Graph Theory playlist
+    type: video
+    authors: [William Fiset]
+    url: https://www.youtube.com/playlist?list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P
+    evaluations:
+      - roles: [intuition]
+        level: introductory
+        strengths:
+          - "Layer-1 visual walkthroughs: Bellman-Ford → AL.G; Ford-Fulkerson/max-flow → AL.H; bipartite matching → AL.I"
+
+  - id: source-frankfurt-algo2-course
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Goethe Frankfurt ALGO2 — course page (weekly videos + Übungsblätter)
+    type: course
+    organization: Goethe-Universität Frankfurt
+    url: https://tcs.uni-frankfurt.de/algo2/
+    evaluations:
+      - roles: [first-learning, exercise]
+        audience: [German readers]
+        strengths:
+          - "Short German flipped-classroom topic videos (8–25 min) — the splay-tree video + the 4-part flow series are the highest-value pulls; Übungsblätter (APSP, Netzwerkfluss I+II, Amortisiert+Splay) add German exam-language drill (unsolved; the weekly videos walk solutions). Pairs with the solved Frankfurt Klausuren record"
+
+  - id: source-jeff-erickson-algorithms
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Jeff Erickson — Algorithms (free book + extended notes)
+    type: book
+    authors: [Jeff Erickson]
+    url: https://jeffe.cs.illinois.edu/teaching/algorithms/
+    evaluations:
+      - roles: [derivation, review]
+        strengths:
+          - "Cleaner second telling of proofs before the mündliche Prüfung: Ch 8 SSSP → AL.G; Ch 9 APSP → AL.G; Ch 10 Flows → AL.H; Ch 11 Flow applications/matching → AL.I; extended notes on amortization → AL.B, scapegoat/splay → AL.E"
+
+  - id: source-kit-algorithmen2
+    thematic_group_ids: [thematic-group-algorithms]
+    title: KIT Algorithmen 2 — Sanders, WS17/18 (YouTube, German)
+    type: course
+    authors: [Peter Sanders]
+    organization: KIT
+    url: https://www.youtube.com/playlist?list=PLfk0Dfh13pBNyD4E0lUbTe3o4nvRwexRv
+    evaluations:
+      - roles: [first-learning]
+        audience: [German readers]
+        strengths:
+          - "⭐ Full recorded semester by the co-author of the DMS book the HU course uses for Kap. 1 — vocabulary matches the exam language; flows & matchings → AL.H/I, computational geometry → AL.J"
+
+  - id: source-kleinberg-tardos
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Algorithm Design
+    type: book
+    authors: [Jon Kleinberg, Éva Tardos]
+    year: 2006
+    material: material://source-kleinberg-tardos
+
+  - id: source-mcgeoch-experimental-algorithmics
+    thematic_group_ids: [thematic-group-algorithms]
+    title: McGeoch — A Guide to Experimental Algorithmics
+    type: book
+    authors: [Catherine McGeoch]
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "THE methodology reference for clean algorithm experiments (instance selection, measurement, statistics) — carries Algorithm Engineering II and ROC's reproducibility block"
+
+  - id: source-mit-6006
+    thematic_group_ids: [thematic-group-algorithms]
+    title: MIT 6.006 — Introduction to Algorithms (OCW, exams + psets with solutions)
+    type: course
+    organization: MIT
+    url: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/
+    identifiers:
+      f2011: https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-fall-2011/
+    evaluations:
+      - roles: [exercise]
+        level: introductory
+        strengths:
+          - "Easier tier: shortest-paths (Bellman-Ford/Dijkstra) and DS problems with solutions — warm-up volume before the 6.046 tier (AL.G)"
+
+  - id: source-mit-6046j
+    thematic_group_ids: [thematic-group-algorithms]
+    title: MIT 6.046J — Design and Analysis of Algorithms (OCW, Spring 2015)
+    type: course
+    organization: MIT
+    year: 2015
+    url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/
+    identifiers:
+      exams: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/pages/exams/
+      assignments: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/pages/assignments/
+    evaluations:
+      - roles: [first-learning, derivation]
+        strengths:
+          - "Algo-2 rigor/intuition layer — mapped pulls only: L3 FFT → AL.K; L5 Amortization → AL.B; L11 APSP (incl. Johnson) → AL.G; L13 Max-Flow/Min-Cut → AL.H; L14 Matching → AL.I"
+      # practice tier, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
+      - roles: [exercise]
+        strengths:
+          - "Quiz 1+2, Final and 10 psets ALL with solutions — EN, slightly harder than needed; good 'explain why' training for the oral (AL.A/B/G/H/I/K)"
+
+  - id: source-ottmann-widmayer
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Ottmann/Widmayer — Algorithmen und Datenstrukturen
+    type: book
+    authors: [Thomas Ottmann, Peter Widmayer]
+    material: material://source-ottmann-widmayer/ow.pdf
+    evaluations:
+      - concepts: [concept-splay-trees, concept-bipartite-matching]
+        roles: [first-learning]
+        audience: [German readers]
+        strengths: ["§5.4 Splay-Bäume (with the Sleator/Tarjan paper as depth), §9.8 bipartites Matching — the course's sources for the starred topics"]
+
+  - id: source-pagh-cuckoo-hashing
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Cuckoo Hashing for Undergraduates
+    type: paper
+    authors: [Rasmus Pagh]
+    year: 2006
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "THE primary text for AL.F per the course itself — short, readable original (on Algo2-Moodle, also public)"
+
+  - id: source-reducible-fft
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Reducible — The Fast Fourier Transform (video)
+    type: video
+    url: https://www.youtube.com/watch?v=h7apO7q16V0
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "The best single intuition video for the FFT recursion + point-value representation → AL.K1 before any text"
+
+  - id: source-sleator-tarjan-splay
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Self-Adjusting Binary Search Trees (splay trees)
+    type: paper
+    authors: [Daniel Sleator, Robert Tarjan]
+    year: 1985
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "THE primary text for AL.E2 per the course itself — short, readable original (on Algo2-Moodle, also public)"
+
+  - id: source-tuwien-ad2-fibonacci
+    thematic_group_ids: [thematic-group-algorithms]
+    title: TU Wien AD2 — Fibonacci-Heaps & Amortisierte Analyse (chapter text)
+    type: documentation
+    organization: TU Wien
+    url: https://www.ac.tuwien.ac.at/files/teaching/ss12/AD2/kapitel_fibonacci.pdf
+    evaluations:
+      - roles: [review]
+        audience: [German readers]
+        strengths:
+          - "German chapter with worked Fib-heap operation examples — second telling of AL.B→AL.D with figures to hand-run against"
+
+  - id: source-wayne-kt-slides
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Kevin Wayne (Princeton) — Kleinberg-Tardos slide decks
+    type: website
+    authors: [Kevin Wayne]
+    organization: Princeton
+    url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/
+    evaluations:
+      - roles: [review]
+        strengths:
+          - "Polished official KT decks — stable matching (Gale-Shapley) for the AL.I3 gap (HU Kap. 10 not posted at the time), network-flow decks for AL.H"
+  - id: source-algo2-hu-materials
+    thematic_group_ids: [thematic-group-algorithms]
+    title: "AlgoDat II — lecture notes (splay trees, B-trees, amortized analysis) and the flow/shortest-path papers"
+    type: other
+    material: material://source-algo2-hu-materials
+  - id: source-theoinfo-hu-archive
+    thematic_group_ids: [thematic-group-algorithms]
+    title: "Theoretische Informatik — HU course archive (scripts, Kellerautomaten/Automaten exercises, Probeklausuren with solutions)"
+    type: other
+    material: material://source-theoinfo-hu-archive

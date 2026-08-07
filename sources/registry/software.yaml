@@ -1,0 +1,492 @@
+# Software & Languages — Python craft, CPython internals, engineering practice, languages, tooling.
+#
+# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
+# arrived — the previous partitions were named after migration batches
+# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
+# degree-anchors), which are archived verbatim under
+# migration/adr-007/originals/.
+#
+# Partitioning does not change semantics: this is the same registry as
+# sources/sources.yaml, and source ids are unchanged, so no reference moved.
+sources:
+  - id: source-automate-boring-stuff
+    thematic_group_ids: [thematic-group-software]
+    title: Automate the Boring Stuff with Python
+    type: book
+    authors: [Al Sweigart]
+    url: https://automatetheboringstuff.com/
+    material: material://source-automate-boring-stuff
+
+  - id: source-batchelder-names
+    thematic_group_ids: [thematic-group-software]
+    title: Ned Batchelder — Facts and myths about Python names and values
+    type: website
+    authors: [Ned Batchelder]
+    url: https://nedbatchelder.com/text/names.html
+    identifiers:
+      pycon-talk: https://nedbatchelder.com/text/names1.html
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ Names are references; assignment never copies; mutation vs rebinding (~40 min). The written twin of Fluent Python Ch 6 — explains why a shared provenance DataFrame bites"
+
+  - id: source-beazley-generator-tricks
+    title: Beazley — Generator Tricks for Systems Programmers
+    type: course
+    thematic_group_ids: [thematic-group-software]
+    authors: [David Beazley]
+    url: https://www.dabeaz.com/generators/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, implementation]
+        level: intermediate
+        strengths:
+          - "⭐ Slides + code, ~2h. Builds generator PIPELINES over log files — the closest public analogue to a pass pipeline over a graph. The best single resource for depth-drills Stage 7; Parts 1–4 if short on time"
+
+  - id: source-beazley-python-distilled
+    title: Beazley — Python Distilled
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [David Beazley]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review]
+        level: intermediate
+        strengths:
+          - "Same ground as Fluent Python in a fifth of the words, systems-flavoured — a revision pass AFTER a stage rather than a first read. Ch 5 (functions), 7 (classes), 8 (modules) map onto depth-drills Stages 1–5"
+
+  - id: source-calmcode-sklearn
+    thematic_group_ids: [thematic-group-software]
+    title: calmcode — scikit-learn (micro-video course)
+    type: course
+    url: https://calmcode.io/course/scikit-learn/introduction
+    evaluations:
+      - roles: [intuition, implementation]
+        strengths:
+          - "10 micro-videos; #3–5 (models/scale/pipeline) = fastest visual intro to estimator + Pipeline mechanics"
+
+  - id: source-coghlan-import-traps
+    title: Coghlan — Traps for the Unwary in Python's Import System
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Alyssa Coghlan]
+    url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        strengths:
+          - "⭐ Core-dev explanation of the double-import trap (python pkg/mod.py vs python -m pkg.mod), name shadowing, stale bytecode. The 'works from the project root but not here' bug, diagnosed properly. Depth-drills Q5.16"
+
+  - id: source-comprehensive-rust
+    thematic_group_ids: [thematic-group-software]
+    title: Comprehensive Rust (Google Android team course)
+    type: course
+    organization: Google
+    url: https://google.github.io/comprehensive-rust/
+    material: material://source-comprehensive-rust
+
+  - id: source-corey-schafer-oop
+    thematic_group_ids: [thematic-group-software]
+    title: Corey Schafer — Python OOP playlist
+    type: video
+    authors: [Corey Schafer]
+    url: https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc
+    evaluations:
+      - roles: [first-learning]
+        level: introductory
+        strengths:
+          - "Calm video walk of classes/inheritance/dunders if Hettinger's post moves too fast (#4 inheritance, #5 dunder methods; skip #1–2)"
+
+  - id: source-cornell-cs6120
+    thematic_group_ids: [thematic-group-software, thematic-group-algorithms]
+    title: Cornell CS 6120 — Advanced Compilers (Sampson, self-guided)
+    type: course
+    authors: [Adrian Sampson]
+    organization: Cornell
+    url: https://www.cs.cornell.edu/courses/cs6120/2020fa/self-guided/
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "Free self-guided course with videos + Bril-IR implementation tasks (community solutions) — carries both Compiling Techniques (Steuwer) and Compiler Design (Juurlink)"
+
+  - id: source-cosmicpython-architecture-patterns
+    title: Percival & Gregory — Architecture Patterns with Python
+    type: book
+    thematic_group_ids: [thematic-group-software, thematic-group-data-systems]
+    authors: [Harry Percival, Bob Gregory]
+    url: https://www.cosmicpython.com/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: advanced
+        strengths:
+          - "Free online. Ch 2–4 are the judgement half of interfaces: dependency inversion, ports and adapters, WHY you declare an interface at a layer boundary — the design reading behind depth-drills Stage 8"
+        weaknesses:
+          - "Later chapters (repository, unit of work, message bus) are web-app-shaped; skippable unless building that"
+
+  - id: source-data-school-sklearn
+    thematic_group_ids: [thematic-group-software]
+    title: Data School — Machine Learning in Python with scikit-learn (playlist)
+    type: video
+    authors: [Kevin Markham]
+    url: https://www.youtube.com/playlist?list=PL5-da3qGB5ICeMbQuqbbCOQWcS6OYBr5A
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "11-video sklearn API course; only the fit/predict-contract videos needed for mlprov (embedded in the sklearn crash plan)"
+
+  - id: source-docker-get-started
+    thematic_group_ids: [thematic-group-software]
+    title: Docker — Get Started guide
+    type: documentation
+    organization: Docker
+    url: https://docs.docker.com/get-started/
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "AMLS project submission requirement"
+
+  - id: source-fluent-python
+    thematic_group_ids: [thematic-group-software]
+    title: Fluent Python (2nd ed.)
+    type: book
+    authors: [Luciano Ramalho]
+    year: 2022
+    material: material://source-fluent-python/fluent-python.pdf
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The skeleton of the Python roadmap; reading order (legacy): 1→6→2→3→7→17→11→14→5→9→13→8→15→18; done so far: Ch 1, 5, 6, 11, 14"
+  - id: source-guo-cpython-internals
+    thematic_group_ids: [thematic-group-software]
+    title: Philip Guo — CPython internals (10-hour lecture series)
+    type: video
+    authors: [Philip Guo]
+    url: https://pgbovine.net/cpython-internals.htm
+    evaluations:
+      - roles: [first-learning]
+        level: advanced
+        strengths:
+          - "Line-by-line C walkthrough of CPython — cherry-pick L1 overview, L3 frames/calls/scope, L8 user-defined classes. Old (Py 2.7) but the architecture stands; Guo says watch Kaptur first"
+
+  - id: source-hettinger-class-toolkit
+    title: Hettinger — Python's Class Development Toolkit
+    type: video
+    thematic_group_ids: [thematic-group-software]
+    authors: [Raymond Hettinger]
+    url: https://www.youtube.com/watch?v=HTLu2DFOdTg
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        level: intermediate
+        strengths:
+          - "Builds a class from scratch adding @classmethod (alternative constructors), @staticmethod, @property and __slots__ one at a time, each with a stated reason. The 'why', where Schafer gives the 'how'"
+
+  - id: source-hettinger-super
+    thematic_group_ids: [thematic-group-software]
+    title: Hettinger — Python's super() considered super!
+    type: website
+    authors: [Raymond Hettinger]
+    year: 2011
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    evaluations:
+      - roles: [first-learning, intuition]
+        strengths:
+          - "⭐ THE inheritance/MRO mental model (~45 min): the LoggingDict example is structurally identical to ProvDataFrame.__getitem__; MRO linearization, cooperative classes, kwargs-stripping __init__ chains, adapter classes for non-cooperative parents (the sklearn-skeleton pattern)"
+
+  - id: source-hu-git-intro
+    thematic_group_ids: [thematic-group-software]
+    title: HU Berlin — Intro to Git (course handout)
+    type: lecture
+    organization: HU Berlin
+    material: material://source-hu-git-intro
+
+  - id: source-hunner-iterator-protocol
+    title: Trey Hunner — The Iterator Protocol / Loop Better
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Trey Hunner]
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+    identifiers:
+      loop-better: https://treyhunner.com/2019/06/loop-better-a-deeper-look-at-iteration-in-python/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning]
+        strengths:
+          - "The clean iterable-vs-iterator distinction (~20 min), and why returning self from __iter__ makes an object un-re-iterable. Depth-drills Q7.5 in article form"
+
+  - id: source-hypothesis-docs
+    title: Hypothesis — property-based testing for Python
+    type: documentation
+    thematic_group_ids: [thematic-group-software]
+    organization: Hypothesis
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [implementation]
+        level: intermediate
+        strengths:
+          - "Turns invariants into tests: 'a == b implies hash(a) == hash(b)' and 'copying then mutating the copy never changes the original' are properties a fuzzer can falsify. ~30 min to the basics; pairs with depth-drills Stages 0 and 6"
+  - id: source-kaptur-byterun
+    thematic_group_ids: [thematic-group-software]
+    title: Allison Kaptur — A Python Interpreter Written in Python (Byterun, 500 Lines essay)
+    type: website
+    authors: [Allison Kaptur]
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+    evaluations:
+      - roles: [first-learning, implementation]
+        strengths:
+          - "⭐ A working bytecode VM in 500 lines (~1.5h) — frames, value stack, dispatch, why scope IS the frame structure; C++ background is an asset. Appetizer: dis.dis() and watch LOAD_FAST vs LOAD_GLOBAL"
+
+  - id: source-numpy-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
+    title: NumPy — subclassing ndarray (official guide)
+    type: documentation
+    organization: NumPy
+    url: https://numpy.org/doc/stable/user/basics.subclassing.html
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "__array_finalize__ — why ndarray needs it instead of __init__. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-pandas-subclassing-docs
+    thematic_group_ids: [thematic-group-software]
+    title: pandas — subclassing pandas data structures (official guide)
+    type: documentation
+    organization: pandas
+    url: https://pandas.pydata.org/docs/development/extending.html#subclassing-pandas-data-structures
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "_metadata/_constructor — how provenance survives pandas ops. Read AFTER Hettinger (assumes the MRO model)"
+
+  - id: source-patrick-loeber-pytorch-cnn
+    thematic_group_ids: [thematic-group-software]
+    title: Patrick Loeber — PyTorch CNN tutorial (CIFAR-10)
+    type: video
+    authors: [Patrick Loeber]
+    url: https://www.youtube.com/watch?v=pDdP0TFzsoQ
+    identifiers:
+      code: https://github.com/patrickloeber/pytorchTutorial
+    evaluations:
+      - roles: [implementation]
+        strengths:
+          - "Same task structure as the AMLS project CNN"
+
+  - id: source-pierce-tapl
+    thematic_group_ids: [thematic-group-software, thematic-group-algorithms]
+    title: Pierce — Types and Programming Languages (TAPL)
+    type: book
+    authors: [Benjamin Pierce]
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The TPS module carries the book's title (operational semantics, STLC, System F); also carries Lambda-Kalkül und Typsysteme — one investment, two oral-exam modules"
+
+  - id: source-powell-python-expert
+    title: James Powell — So you want to be a Python expert?
+    type: video
+    thematic_group_ids: [thematic-group-software]
+    authors: [James Powell]
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+    evaluations:
+      - concepts: [concept-python]
+        roles: [first-learning, intuition]
+        level: intermediate
+        strengths:
+          - "⭐ First ~25 min: derives the data model from first principles instead of listing dunders — why the protocols are shaped the way they are. The best entry point to depth-drills Stage 6"
+
+  - id: source-progit
+    thematic_group_ids: [thematic-group-software]
+    title: Pro Git (2nd ed.)
+    type: book
+    authors: [Scott Chacon, Ben Straub]
+    url: https://git-scm.com/book
+    material: material://source-progit
+
+  - id: source-pydata-handbook
+    thematic_group_ids: [thematic-group-software]
+    title: Python Data Science Handbook (notebook edition)
+    type: book
+    authors: [Jake VanderPlas]
+    url: https://github.com/jakevdp/PythonDataScienceHandbook
+    material: material://source-pydata-handbook
+
+  - id: source-pytest-docs
+    title: pytest — official documentation
+    type: documentation
+    thematic_group_ids: [thematic-group-software]
+    organization: pytest-dev
+    url: https://docs.pytest.org/en/stable/getting-started.html
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        strengths:
+          - "assert introspection, fixtures, and @parametrize — parametrize is the highest-value feature for drill work (one test, twenty cases). Also 'good integration practices' for where tests sit and how conftest.py changes sys.path"
+
+  - id: source-python-cheatsheets
+    thematic_group_ids: [thematic-group-software]
+    title: Python/DS cheatsheet bundle (NumPy, Pandas, Scikit-Learn, Keras, DataCamp)
+    type: documentation
+    material: material://source-python-cheatsheets
+
+  # Authored ladder + the books it added to the shelf. Built 2026-08-02 from the
+  # Level-Up competency map, the Intermediate Roadmap and the OOP/Scope Repair Plan;
+  # the job-specific anchors deliberately stay in Job/ (CLAUDE.md §13).
+  - id: source-python-depth-drills
+    thematic_group_ids: [thematic-group-software]
+    title: Python Depth Drills — nine stages (guides + notebooks, authored)
+    type: other
+    authors: [Aram Aljanadi]
+    year: 2026
+    material: material://source-python-depth-drills
+    evaluations:
+      - concepts: [concept-python]
+        roles: [exercise, first-learning, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The ladder form of the Python middle band: 9 stages × ~20 predict-then-run questions (165 total), each stage = one guide (claim → ranked reading → drills → done-when → traps checklist) + one notebook with folded solutions. Every code cell verified to execute; claimed outputs diffed against real output"
+          - "Stages 0/6/7/8 exist to close the four gaps the Level-Up competency map rated needs 4–5 / currently 2–3 and the original five-stage plan didn't reach: identity+mutation (rated the widest gap), the data model, generators, and interfaces/dispatch"
+          - "Complements rather than duplicates the other two Python docs: the Roadmap is symptom→step lookup, the Repair Plan is five drill sessions, this is the ordered gated ladder. Guides cite Roadmap steps and Repair Plan sessions instead of restating them"
+        weaknesses:
+          - "Questions tagged [Stratum] are anchored to a query-optimizer codebase (renamed and re-shaped, answerable without access to it). The file-level anchors live outside this tree in Job/python-drills/STRATUM-ANCHORS.md"
+        useful_sections:
+          - "Stage 0 — names, identity & mutation": "the prerequisite the older plans skipped; Stages 2/4/5 are this same rule in three costumes"
+          - "Stage 8 — interfaces & dispatch": "tag-dispatch vs subclass polymorphism (the expression problem), the one stage that is mostly judgement"
+          - "SHELF.md": "cross-cutting sources no stage owns — testing (pytest/Hypothesis), debugging (pdb, PDSH 01.06), performance (PDSH 01.07, cProfile, tracemalloc), style"
+
+  - id: source-python-docs-classes-mro
+    thematic_group_ids: [thematic-group-software]
+    title: Python docs — Classes tutorial §9.5–9.8 + the official MRO write-up
+    type: documentation
+    organization: Python Software Foundation
+    url: https://docs.python.org/3/tutorial/classes.html#inheritance
+    identifiers:
+      mro-howto: https://docs.python.org/3/howto/mro.html
+    evaluations:
+      - roles: [reference]
+        strengths:
+          - "Canonical reference for inheritance + C3 linearization — the MRO howto is the formal version of Hettinger's 'children precede parents' rules"
+
+  - id: source-python-tutor
+    thematic_group_ids: [thematic-group-software]
+    title: Python Tutor (visualization tool)
+    type: software
+    url: https://pythontutor.com
+    evaluations:
+      - roles: [intuition]
+        strengths:
+          - "Visualizes frames, names→object arrows, and mutation step-by-step — Ned's diagrams, live, on your own code; paste mlprov-style snippets and watch"
+
+  - id: source-realpython-legb
+    thematic_group_ids: [thematic-group-software]
+    title: Real Python — Python Scope & the LEGB Rule
+    type: website
+    organization: Real Python
+    url: https://realpython.com/python-scope-legb-rule/
+    evaluations:
+      - roles: [first-learning]
+        strengths:
+          - "The missing scope piece: Local→Enclosing→Global→Builtin, global/nonlocal, why assignment inside a function creates a local name (the C++ intuition trap). Read §LEGB + §functions, skim the rest"
+
+  - id: source-rhodes-python-patterns
+    title: Brandon Rhodes — python-patterns.guide
+    type: website
+    thematic_group_ids: [thematic-group-software]
+    authors: [Brandon Rhodes]
+    url: https://python-patterns.guide/
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best writing on WHEN to reach for each design mechanism in Python. Read 'Composition Over Inheritance' first; the Decorator entry distinguishes the GoF pattern from Python's @, which are routinely conflated"
+
+  - id: source-rust-book
+    thematic_group_ids: [thematic-group-software]
+    title: The Rust Programming Language ("the book")
+    type: book
+    authors: [Steve Klabnik, Carol Nichols]
+    url: https://doc.rust-lang.org/book/
+    material: material://source-rust-book
+
+  - id: source-slatkin-effective-python
+    title: Slatkin — Effective Python
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [Brett Slatkin]
+    year: 2024
+    material: material://source-slatkin-effective-python/effective-python.pdf
+    evaluations:
+      - concepts: [concept-python]
+        roles: [review, reference]
+        level: intermediate
+        strengths:
+          - "⭐ The best complement to Fluent Python at the intermediate band: 125 short items, four minutes each, telling you what to DO where FP explains how the language works. Per-stage item mapping is in the depth-drills SHELF.md §1a"
+          - "3e Item 21 'Be Defensive when Iterating over Arguments' is the one-shot-iterator hazard stated as an API-design rule — the single best four pages on it anywhere"
+          - "3e Item 49 'Prefer Object-Oriented Polymorphism over functools.singledispatch' is depth-drills Stage 8's expression-problem judgement stated outright — the 3rd ed. is the only edition that has it"
+          - "3e Items 92–96, 99, 108–115 are the only local coverage of the three cross-cutting topics no depth-drills stage owns (testing, debugging, performance) — SHELF.md §3a/3b/3c. Items 94–96 (replacing Python with C, ctypes, extension modules) also feed the Rust/PyO3 track, Roadmap Step 25"
+        weaknesses:
+          - "⚠️ TWO FILES, ONE RECORD. Citations throughout the depth drills use 3rd-ed numbering, taken from effective-python-3e-toc-sample.pdf — an 80-page publisher sample that carries the complete 125-item table of contents but NO item body text. The readable full text on the shelf (effective-python.pdf, the `material:` path above) is the 2nd ed., 90 items, Python 3.8-era. To read a cited item in the 2e copy, use the 3e→2e crosswalk in SHELF.md §1a"
+          - "~35 items are 3rd-ed-only and have no 2e text on the shelf at all — including 3e 20, 22, 30, 39, 46, 49, 50, 51, 65, 89, 93. SHELF.md §1a marks which stage citations fall in that set"
+          - "Concurrency (3e Items 67–79) and asyncio are deliberately out of scope for the depth ladder — Roadmap Step 19"
+
+  - id: source-software-foundations
+    thematic_group_ids: [thematic-group-software, thematic-group-algorithms]
+    title: Pierce et al. — Software Foundations (Vol. 1–2, Coq)
+    type: book
+    url: https://softwarefoundations.cis.upenn.edu/
+    evaluations:
+      - roles: [exercise, implementation]
+        strengths:
+          - "TAPL material as machine-checked Coq exercises with automatic verification — effectively self-grading problem sheets for TPS/Lambda; free"
+
+  - id: source-tu-python-ml-course
+    thematic_group_ids: [thematic-group-software]
+    title: TU Python-for-ML course (exercise sheets)
+    type: course
+    organization: TU Berlin
+    url: https://github.com/mahmutoezmen/Python-for-ML-Course
+    evaluations:
+      - roles: [exercise, implementation]
+        useful_sections:
+          - "Sheet 2": "mlprov / job"
+          - "Sheet 3": "AMLS-project Task 1.1"
+          - "Sheet 4": "AML Block E lin-alg"
+          - "Sheet 5": "autograd/Numba/Cython (Block L, job)"
+
+  - id: source-viafore-robust-python
+    title: Viafore — Robust Python
+    type: book
+    thematic_group_ids: [thematic-group-software]
+    authors: [Patrick Viafore]
+    evaluations:
+      - concepts: [concept-python]
+        roles: [reference, implementation]
+        level: intermediate
+        strengths:
+          - "Book-length treatment of depth-drills Stage 8: type hints, Protocol, ABCs, Enum, dataclass, designing interfaces that fail loudly. Targets the Level-Up note 'implements an implicit interface, never declares one'"
+        weaknesses:
+          - "The mypy docs cover ~80% of it free; buy only if the typing half of Stage 8 is where the gap turns out to be"
+  - id: source-compiler-construction-shelf
+    thematic_group_ids: [thematic-group-software, thematic-group-algorithms]
+    title: "Compiler construction shelf — Dragon Book, Wirth, Compilerbau Skripte"
+    type: book
+    material: material://source-compiler-construction-shelf
+  - id: source-cs-classics-shelf
+    thematic_group_ids: [thematic-group-software]
+    title: "CS classics shelf — SICP, Functional Programming in Scala, Write Great Code, Software-Qualität"
+    type: book
+    material: material://source-cs-classics-shelf
+  - id: source-git-handbook-archive
+    thematic_group_ids: [thematic-group-software]
+    title: "Git handbook — authored handbook sources, intentions notes and rendered HTML"
+    type: other
+    material: material://source-git-handbook-archive
+  - id: source-programming-language-books
+    thematic_group_ids: [thematic-group-software]
+    title: "C, C++ and Java book shelf (bachelor-era language texts)"
+    type: book
+    material: material://source-programming-language-books
