@@ -15,11 +15,36 @@ different answers to the same question.
 from __future__ import annotations
 
 import argparse
+import json
 
 # Owned by the envelope, never by the payload.
 ENVELOPE_OWNED = frozenset({"expected_snapshot", "expected_revision"})
 # Argparse bookkeeping that is not part of any capability's surface.
 NOT_A_PAYLOAD_FIELD = frozenset({"help", "func", "command", "root", "json"})
+
+
+def json_object(value: str) -> dict:
+    """argparse converter for an argument that IS a structured record.
+
+    Most command arguments are scalars, and a record-shaped one used to be
+    passed by writing a file and naming the path. That works from a shell and is
+    hostile to the gateway: an agent holding a project object in memory had to
+    invent a temporary file to send it. The alternative taken previously was
+    worse — a gateway-only branch that accepted an inline object no schema
+    described, and skipped payload validation to do it (engineering audit
+    2026-08-08, finding 2).
+
+    Declaring the shape here keeps one surface: the CLI accepts JSON text, the
+    gateway sends a real object, and both are described by the same generated
+    schema.
+    """
+    try:
+        parsed = json.loads(value)
+    except json.JSONDecodeError as exc:
+        raise argparse.ArgumentTypeError(f"expected a JSON object: {exc}") from exc
+    if not isinstance(parsed, dict):
+        raise argparse.ArgumentTypeError("expected a JSON object")
+    return parsed
 
 
 def _json_type(action: argparse.Action) -> dict:
@@ -29,9 +54,33 @@ def _json_type(action: argparse.Action) -> dict:
         return {"type": "array", "items": {"type": "string"}}
     if action.nargs in ("*", "+"):
         return {"type": "array", "items": {"type": "string"}}
+    if action.type is json_object:
+        return {"type": "object"}
     if action.type is int:
         return {"type": "integer"}
     return {"type": "string"}
+
+
+def _exclusive_choices(command_parser: argparse.ArgumentParser) -> list[dict]:
+    """`oneOf` branches for each REQUIRED mutually exclusive argument group.
+
+    Without this the generated schema would say both alternatives are optional
+    and stay silent about the fact that exactly one is needed — a contract that
+    accepts a payload the handler will refuse. The gateway is the deterministic
+    boundary around probabilistic agents, so its machine-readable contract has
+    to be the trustworthy part.
+    """
+    out = []
+    for group in command_parser._mutually_exclusive_groups:
+        if not group.required:
+            continue
+        names = sorted(
+            action.dest for action in group._group_actions
+            if action.dest not in NOT_A_PAYLOAD_FIELD and action.dest not in ENVELOPE_OWNED
+        )
+        if len(names) > 1:
+            out.append({"oneOf": [{"required": [name]} for name in names]})
+    return out
 
 
 def subparsers(parser: argparse.ArgumentParser) -> dict[str, argparse.ArgumentParser]:
@@ -57,7 +106,7 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         properties[action.dest] = _json_type(action)
         if action.required or not action.option_strings:
             required.append(action.dest)
-    return {
+    schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": f"capabilities/{name}.schema.json",
         "title": f"payload for capability {name}",
@@ -71,6 +120,12 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         "required": sorted(required),
         "properties": dict(sorted(properties.items())),
     }
+    choices = _exclusive_choices(command_parser)
+    if len(choices) == 1:
+        schema["oneOf"] = choices[0]["oneOf"]
+    elif choices:
+        schema["allOf"] = choices
+    return schema
 
 
 def all_payload_schemas(parser: argparse.ArgumentParser, definitions) -> dict[str, dict]:

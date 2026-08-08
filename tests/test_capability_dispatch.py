@@ -94,7 +94,7 @@ def test_an_undeclared_field_is_refused(repo_root: Path, tmp_path: Path):
 
 @pytest.mark.parametrize("name", sorted(
     n for n, d in command_definitions(Path(__file__).resolve().parent.parent).items()
-    if d.cli_command and n not in {"project.create", "project.update"}
+    if d.cli_command
 ))
 def test_every_capability_dispatches_rather_than_refusing(repo_root: Path, tmp_path: Path, name: str):
     """An empty payload must fail on *its own* validation, never on dispatch.
@@ -109,3 +109,59 @@ def test_every_capability_dispatches_rather_than_refusing(repo_root: Path, tmp_p
     assert "not yet defined" not in combined, f"{name} is still a facade"
     assert "declares no CLI command" not in combined, f"{name} has no route"
     assert "has no bound handler" not in combined, f"{name} has no handler"
+
+
+# --------------------------------------------------------------------------
+# The project capabilities had a gateway-only branch until 2026-08-08: it
+# accepted `{"project": {...}}`, a shape no schema declared, and skipped
+# `_validate_payload` to do so. An agent obeying the published contract was
+# refused; an agent sending the undeclared shape was obeyed. These tests hold
+# the boundary to the contract it publishes.
+# --------------------------------------------------------------------------
+
+def test_the_gateway_has_no_capability_special_cases(repo_root: Path):
+    gateway = (repo_root / "tools/learning_os/commands/capability.py").read_text(encoding="utf-8")
+    assert 'args.name in {"project.create", "project.update"}' not in gateway
+    assert "_project_write" not in gateway, "the gateway must not reach past the handler"
+
+
+@pytest.mark.parametrize("name", ["project.create", "project.update"])
+def test_project_payload_shape_is_declared(repo_root: Path, name: str):
+    """The inline object the gateway accepts is in the schema, not just the code."""
+    schema = json.loads((repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
+    assert schema["properties"]["project"] == {"type": "object"}
+    assert schema["oneOf"] == [{"required": ["file"]}, {"required": ["project"]}], (
+        "exactly one record source must be required, and the schema must say so"
+    )
+
+
+def test_project_create_without_a_record_source_is_refused(repo_root: Path, tmp_path: Path):
+    result = _run_capability(repo_root, tmp_path, {
+        "request_id": "req-project-no-source",
+        "capability": "project.create",
+        "payload": {},
+    })
+    assert result.returncode != 0
+    assert "invalid payload" in json.loads(result.stdout)["error"]
+
+
+def test_project_create_rejects_an_undeclared_field(repo_root: Path, tmp_path: Path):
+    """The regression proper: payload validation must not be skipped here."""
+    result = _run_capability(repo_root, tmp_path, {
+        "request_id": "req-project-extra-field",
+        "capability": "project.create",
+        "payload": {"project": {"id": "project-x", "type": "project"},
+                    "not_a_real_field": "x"},
+    })
+    assert result.returncode != 0
+    assert "invalid payload" in json.loads(result.stdout)["error"]
+
+
+def test_project_create_refuses_both_record_sources_at_once(repo_root: Path, tmp_path: Path):
+    result = _run_capability(repo_root, tmp_path, {
+        "request_id": "req-project-two-sources",
+        "capability": "project.create",
+        "payload": {"file": "somewhere.yaml", "project": {"id": "project-x", "type": "project"}},
+    })
+    assert result.returncode != 0
+    assert "invalid payload" in json.loads(result.stdout)["error"]

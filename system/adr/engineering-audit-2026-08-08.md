@@ -540,3 +540,95 @@ the feedback-vocabulary menu (#13). Pure defect fixes that do not change layout
 **Cold-start next session:** items 1–2 first (manifest contract v3, then the
 project capability path). Both are verifiable by the existing test suites, and
 item 1 is the release blocker.
+
+---
+
+# Remediation log
+
+Findings above are preserved as written. This section records what was done
+about them, and — where it matters — what has not yet been proven.
+
+## Items 1–2 — 2026-08-08, **VERIFIED — both repositories green simultaneously**
+
+The sandbox was wedged again in the following session (identical
+`No space left on device` at VM boot), so both items were authored with no shell
+at all — no `git`, no `pytest`, no `validate.py`, no `npm` — and then run by
+Aram on his own machine.
+
+| | result |
+|---|---|
+| `tools/manifest_contract.py` (real repository, not the fixture) | v3 matches 26 top-level keys |
+| `tools/validate.py` | **0 errors, 0 warnings** |
+| Core `pytest` | **259 passed**, 1 skipped (was 240) |
+| UI `npm run check` | **green** — build, typecheck ×2, contract check, 22 module tests, full dashboard + AI-action suites, host surface, deterministic build |
+| new cross-repo check | `contract: mirror of core v3 verified` |
+
+That clears the release blocker: UI CI is no longer red, and the manifest
+contract is consistent across both repositories.
+
+One correction landed on the way: the hand-written `history` entry used a plain
+YAML scalar containing `": "`, which does not parse. Bumps go through
+`yaml.safe_dump`, so the tool would not have produced it — only the
+hand-authored baseline had the flaw.
+
+Two claims that were made and should NOT be read as verified: the `git diff
+--stat` "generator is a no-op" check was mis-specified (it diffs against HEAD,
+so it cannot answer that question). What does hold is
+`test_payload_schemas_match_the_cli_parser` plus the new assertion on the exact
+`oneOf` shape, both of which passed.
+
+**Item 1 — manifest contract v3.** The projection contract now has a producer-side
+owner, which is the actual root cause the finding names.
+
+- `system/contracts/manifest-contract.yaml` — new. Declares v3 and the exact
+  key sets, with a history entry recording the v2 baseline retroactively.
+- `learning_os/contracts/manifest_contract.py` — new. `build_manifest` calls
+  `enforce()` on every build and refuses to publish a shape the contract does
+  not declare, so drift fails in Core's own run rather than downstream.
+  `_generated.contract_version` is now *read* from the contract, never
+  hardcoded: one source for the version announced and the shape declared.
+- `tools/manifest_contract.py` — new CLI: check, `--show`, `--bump --note`.
+  `--bump` builds with enforcement off, which is the escape hatch the
+  chicken-and-egg otherwise creates.
+- `tests/test_manifest_contract.py` — new, including a reproduction of this
+  finding: add a top-level key without bumping, and the build refuses.
+- Validator gained `MANIFEST-CONTRACT-UNREADABLE` — deliberately shallow, since
+  proving a *match* means building a manifest, which does not belong in a
+  pre-commit hook.
+- UI mirrored: `contracts/manifest-v3.lock.json`, `CONTRACT_VERSION`,
+  `MANIFEST_CONTRACT_VERSION`, `ManifestV2.topics`, fixture vault, and the two
+  fail-closed tests. `check-contract.mjs` now also verifies the mirror against
+  Core's declaration when Core is checked out beside it — a partial answer to
+  finding #18, not a replacement for it.
+
+Two things surfaced that the finding did not mention. The UI lock never listed
+`workspace_to_modules` / `workspace_to_units`, which Core has emitted since the
+v2 baseline — nothing had ever compared the lock against a real Core build, so
+the omission survived. And three separate contracts share the field name
+`contract_version` (operator v2, record format v4, manifest v3); that collision
+is a plausible contributor to the original mistake and is now commented at each
+site.
+
+`src/contracts/manifest-v2.ts` keeps its filename at v3. Renaming it touches
+~20 import sites and belongs to remediation item 12, which must not precede the
+behavioral fixes.
+
+**Item 2 — project capability path.** The gateway special case is gone;
+`project.create` / `project.update` dispatch like every other capability.
+
+The finding leaves open which side to move. Making the gateway file-based would
+force an agent holding a project record to invent a temporary file, so the
+inline object was kept and *declared* instead: `project-create` / `project-update`
+now take `--file` or `--project` as a required mutually exclusive group, and
+the generated schema says so. That needed two small extensions to the schema
+generator — an object-typed argument (`json_object`) and `oneOf` emission for
+required mutually exclusive groups. No other command uses such a group, so no
+other generated schema changes.
+
+The payload schemas were hand-written to match what the generator should
+produce; running `tools/generate_capability_schemas.py` must be a no-op, and
+`git diff` afterwards is the check on that.
+
+`test_capability_dispatch.py` no longer excludes the two project capabilities
+from the round-trip assertion — that exclusion was the finding's own footprint
+in the test suite.

@@ -23,7 +23,9 @@ help:
 	@echo "make inventory - rebuild records/materials-manifest.yaml (checksums of the"
 	@echo "                external materials tree; run after adding or moving sources)"
 	@echo "make verify-materials - sha256-verify the materials tree against the manifest"
-	@echo "make contract - report the data-format contract version (schema_contract.py)"
+	@echo "make contract - report BOTH contract versions: the stored-record format"
+	@echo "                (schema_contract.py) and the published manifest shape"
+	@echo "                (manifest_contract.py) - different contracts, different consumers"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test   - run the test suite"
 	@echo "make all    - check + views + materials + test"
@@ -49,6 +51,7 @@ verify-materials:
 
 contract:
 	$(PY) tools/schema_contract.py
+	$(PY) tools/manifest_contract.py
 
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"

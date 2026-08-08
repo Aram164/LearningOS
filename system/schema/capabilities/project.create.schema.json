@@ -5,12 +5,25 @@
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "file"
-  ],
+  "required": [],
   "properties": {
     "file": {
       "type": "string"
+    },
+    "project": {
+      "type": "object"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "project"
+      ]
+    }
+  ]
 }

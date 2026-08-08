@@ -167,6 +167,42 @@ Never edit or regenerate an existing fixture — see
 fail, and one that gets edited to pass destroys the record of the format it was
 supposed to preserve.
 
+## Changing the manifest (the interface contract)
+
+The data contract above governs what this repository *stores*. What it
+*publishes* is a separate contract with separate consumers:
+`generated/manifest.json` is the one shape every interface reads, and
+`system/contracts/manifest-contract.yaml` declares its version and its exact key
+sets.
+
+They are versioned independently and deliberately: a record can gain an optional
+field without changing the projection, and the projection can be reshaped
+without touching a single stored record.
+
+| what | contract | version |
+|---|---|---|
+| canonical record format | `system/contracts/data-contract.yaml` | 4 |
+| published manifest shape | `system/contracts/manifest-contract.yaml` | 3 |
+
+`build_manifest` checks itself against that declaration on every build, so a
+change to the published shape fails here rather than downstream. That is the
+point: until 2026-08-08 only the consumer declared the version (in the Obsidian
+UI's lock file), so Core could add a top-level key, pass its own tests, push —
+and break the other repository. It happened, with `topics`.
+
+When `MANIFEST-CONTRACT-DRIFT` fires:
+
+1. **Bump:** `python tools/manifest_contract.py --bump --note "…"` — it rebuilds
+   with enforcement off, adopts the shape actually produced, and records the
+   history entry. `--show` prints the current shape without changing anything.
+2. **Mirror into the UI in the same change** — `contracts/manifest-v<N>.lock.json`,
+   `MANIFEST_CONTRACT_VERSION`, `ManifestV<N>`, and the fixture vault manifest.
+   Core and the UI release together; a bump that lands alone is the exact bug
+   this contract exists to prevent.
+
+Additive still bumps. Consumers declare an exact version and fail closed, so
+"only added a key" is not "invisible".
+
 ## Materials durability
 
 `materials/` is the one part of the system Git does not protect. It sits outside

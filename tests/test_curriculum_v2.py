@@ -123,7 +123,7 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     repo = load_repo(mini_repo)
     assert not [issue for issue in validate(repo) if issue.severity == "E"]
     manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
-    assert manifest["_generated"]["contract_version"] == 2
+    assert manifest["_generated"]["contract_version"] == 3
     assert manifest["programs"][0]["id"] == "program-bachelors"
     assert manifest["modules"][0]["id"] == "module-demo"
     assert manifest["units"][0]["source_selections"][0]["locator"] == "§1 Erwartungswert"

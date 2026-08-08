@@ -40,6 +40,25 @@ def _project_write(root: Path, data: dict, *, capability: str,
     return 0, {"project_id": project_id, **confirmation}
 
 
+def _project_record(args) -> dict:
+    """The project record, from wherever this invocation carried it.
+
+    One command, two ways in: a path for a person at a shell, an inline object
+    for a caller that already holds the record. The parser declares both as one
+    required mutually exclusive group, so the generated capability schema says
+    exactly this — which is the whole point. The gateway used to accept the
+    inline form through a branch of its own, undeclared and unvalidated.
+    """
+    record = getattr(args, "project", None)
+    if record is not None:
+        if not isinstance(record, dict):
+            raise WriteRefused("project must be an object")
+        return record
+    if not getattr(args, "file", None):
+        raise WriteRefused("project record required: pass --file or --project")
+    return _read_structured_file(args.file)
+
+
 def cmd_project_list(args) -> int:
     manifest = _fresh_manifest(_root(args))
     rows = manifest.get("projects", [])
@@ -54,7 +73,7 @@ def cmd_project_create(args) -> int:
         if not _expected_ok(root, getattr(args, "expected_snapshot", None)):
             return 3
         code, result = _project_write(
-            root, _read_structured_file(args.file), capability="project.create",
+            root, _project_record(args), capability="project.create",
             expected_revisions=_expected_revisions_from_args(args),
         )
     if code:
@@ -66,7 +85,7 @@ def cmd_project_create(args) -> int:
 
 def cmd_project_update(args) -> int:
     root = _root(args)
-    data = _read_structured_file(args.file)
+    data = _project_record(args)
     if data.get("id") != args.project_id:
         raise WriteRefused("project file id does not match command project_id")
     with _operator_lock(root):

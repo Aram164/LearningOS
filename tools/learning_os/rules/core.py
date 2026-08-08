@@ -108,6 +108,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
     def run(self) -> list[Issue]:
         self.check_parse_failures()
         self.check_data_contract()
+        self.check_manifest_contract()
         self.check_schemas()
         self.check_identity()
         self.check_references()
