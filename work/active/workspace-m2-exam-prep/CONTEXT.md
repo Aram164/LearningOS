@@ -110,11 +110,13 @@ with Analysis proof blocks, do not run two parallel tracks.
 
 ## Current Scope
 
-Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after AML on 30.09 switch to AN.X and combined M2 mocks for the 09.10 sitting.
+Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after the AML 2. Termin switch to AN.X and combined M2 mocks for the M2 sitting. (All three dates live in the owning module records — `module-hu-amls`, `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never restated here.)
 
 ## Open Questions
 
-- 2.-PZ Anmeldung (31.08–10.09): calendar reminder set?
+- 2.-PZ Anmeldung: calendar reminder set? (Window dates:
+  `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml` →
+  `registration_windows`.)
 - Where do the Analysis blocks slot around the AMLS sitting (last slot,
   confirmed) and the AML 2. Termin — sequencing decision pending (legacy Open
   Loop #2). With AMLS in late August, the M2 deep-prep window is September.

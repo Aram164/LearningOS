@@ -110,7 +110,8 @@ until a current deck or syllabus confirmation appears.
 
 ## Open Questions
 
-- 2.-PZ Anmeldung (31.08–10.09) for the 2. Termin — set the reminder.
+- 2.-PZ Anmeldung for the 2. Termin — set the reminder. (Window dates:
+  `curriculum/modules/module-hu-aml/module.yaml` → `registration_windows`.)
 - Fine-grained sequencing: AMLS sits in the last August slot (confirmed
   2026-07-17), so serious AML hours start right after it — how do they interleave
   with M2 prep through September?

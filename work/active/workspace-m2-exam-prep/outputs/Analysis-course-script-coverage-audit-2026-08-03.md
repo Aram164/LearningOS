@@ -186,7 +186,7 @@ recorded above even when file hashes differ.
 | Current lecture decks/recordings | `unresolved` | none exist in the declared local Analysis root | script notes it does not exactly reproduce lecture scope; learner explicitly chose it as main authority | reconcile if decks/recordings become available |
 | Springer Arens and Weitz pages | `unresolved` | robots/internal fetch failures on 2026-08-03 | bibliography only, not selected | retry only if selected |
 | Private HU Moodle and Rabus LA script | `unresolved` | no public/authenticated locator available | prerequisite backup only | inspect after user provides access/file |
-| Rudin, Lebl II, Strang multivariable chapters | `deferred`/`off-scope` | opened contents exceed one-variable script boundary | unnecessary depth before 09.10 | post-exam study |
+| Rudin, Lebl II, Strang multivariable chapters | `deferred`/`off-scope` | opened contents exceed one-variable script boundary | unnecessary depth before the M2 sitting | post-exam study |
 
 ## Unit and stage coverage matrix
 
