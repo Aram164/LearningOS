@@ -53,6 +53,70 @@ def _source_fingerprint(repo: Repo) -> str:
 _UNIT_NOTE_MARKER = re.compile(r"^<!-- learningos:unit-note (\{.*\}) -->\s*$", re.MULTILINE)
 
 
+# `module.status` mixes two state machines. `planned / enrolled / awaiting-grade
+# / completed / dropped / archived` answer "what does the university think?";
+# `active / paused` answer "am I working on this?". They are independent — Algo 2
+# is administratively enrolled and operationally paused, PPDS is submitted with a
+# grade pending and operationally paused — so any consumer reading one field for
+# both questions has to guess. Home guessed wrong: it treated everything except
+# `complete`/`archived` as current work, which put dropped Algo 2 and finished
+# PPDS in "Continue elsewhere".
+#
+# Splitting the field itself is the right long-term fix and a breaking change to
+# every stored module record. Projecting both axes plus the answer the interface
+# actually wants costs nothing and removes the guessing today (engineering audit
+# 2026-08-08, finding 4).
+_ADMINISTRATIVE_STATUSES = frozenset({
+    "planned", "enrolled", "awaiting-grade", "completed", "dropped", "archived",
+})
+# Nothing is expected of you for these, whatever the units say.
+_SETTLED_ADMINISTRATIVE = frozenset({"awaiting-grade", "completed", "dropped", "archived"})
+# Unit states that mean there is something to pick up. `not-started` counts:
+# unstarted work is still work. `ready-to-shelve` does not — it is a review
+# decision, which Review surfaces, not a study session.
+_LIVE_UNIT_STATUSES = frozenset({"needs-map", "not-started", "ready", "active"})
+
+
+def _module_lifecycle(module: dict, unit_statuses: list[str]) -> dict:
+    """Administrative state, operational state, and whether work is available.
+
+    Operational state is derived from the units rather than read from
+    `module.status`, because the units are where work actually lives — a module
+    cannot be operationally active while every unit under it is paused, no
+    matter what its own field says.
+    """
+    status = str(module.get("status", "") or "")
+    if status in _ADMINISTRATIVE_STATUSES:
+        administrative = status
+    elif module.get("kind", "academic") == "academic":
+        # `active`/`paused` on an academic module says nothing administrative,
+        # but you cannot be working on one you are not enrolled in.
+        administrative = "enrolled"
+    else:
+        # Skill, foundation and project modules have no registrar.
+        administrative = None
+
+    if not unit_statuses:
+        operational = "none"
+    elif all(s == "complete" for s in unit_statuses):
+        operational = "complete"
+    elif any(s in _LIVE_UNIT_STATUSES for s in unit_statuses):
+        operational = "active"
+    else:
+        operational = "paused"
+
+    actionable = (
+        operational == "active"
+        and administrative not in _SETTLED_ADMINISTRATIVE
+        and status != "paused"
+    )
+    return {
+        "administrative_status": administrative,
+        "operational_state": operational,
+        "is_actionable": actionable,
+    }
+
+
 def _unit_note_sections(text: str) -> list[dict]:
     """Project session sections so interfaces never parse unit-note Markdown."""
     matches = list(_UNIT_NOTE_MARKER.finditer(text or ""))
@@ -313,6 +377,12 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
             "thematic_group_ids": _ordered_thematic_group_ids(
                 repo, m.get("thematic_group_ids", []) or []),
             "status": m.get("status", ""),
+            # `status` stays exactly as authored for anything that needs the raw
+            # field; the three derived keys below are what interfaces should read.
+            **_module_lifecycle(m, [
+                str(unit.data.get("status", ""))
+                for unit in repo.units.values() if unit.module_id == mid
+            ]),
             "institution": m.get("institution"), "code": m.get("code"),
             "credits": m.get("credits"), "semester": m.get("semester"),
             "components": list(m.get("components", []) or []),

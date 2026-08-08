@@ -78,7 +78,10 @@ per-topic literature).
 ## Next Action
 
 None — dropped from the autumn cycle (Aram, 2026-07-25). No registration, no
-slot booking, no study. To reinstate: restore `status: active`, register/book in
+slot booking, no study. To reinstate: set this workspace, `unit-algo2-exam-prep`
+and `study-map-algo2-exam-prep` back to `active` **together** (they were moved to
+`paused` on 2026-08-08 so no layer could claim this work was ready while another
+said it was dropped — a validator invariant now enforces that), register/book in
 the Anmeldung window, and resume the AL.X study chain below.
 
 ## Deferred

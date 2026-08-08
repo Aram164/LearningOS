@@ -5,7 +5,12 @@ kind: exam-block
 title: Algo 2 oral exam preparation
 order: 1
 scope: Existing Algo 2 plan, retained as the unit's source plan.
-status: ready
+# Operationally paused since 2026-08-08, not dropped: the module stays
+# administratively `enrolled` (no formal Abmeldung) while the autumn-cycle drop
+# decision holds. Was `ready` until the engineering audit found this unit, its
+# study map and its workspace disagreeing — do nothing / ready / ready /
+# required-now, all at once.
+status: paused
 scope_sources: []
 source_selections: []
 artifacts: {}

@@ -1,7 +1,11 @@
 id: study-map-algo2-exam-prep
 type: study-map
 unit_id: unit-algo2-exam-prep
-status: ready
+# Paused with the unit (2026-08-08). The stage below is deliberately left as it
+# was — `pending` and `required-now` — because it is the reinstatement plan, not
+# live work: it says what comes first WHEN this resumes. Inside a paused map
+# that reads correctly; it was only contradictory while the map claimed `ready`.
+status: paused
 current_stage: stage-01-algo2-exam-prep
 source_plan:
   path: work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md

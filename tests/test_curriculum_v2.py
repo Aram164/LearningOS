@@ -118,6 +118,64 @@ def add_curriculum(root: Path) -> None:
                        "\n---\n\n" + body.lstrip(), encoding="utf-8")
 
 
+def _set_workspace_status(root: Path, status: str, workspace: str = "workspace-demo") -> None:
+    ws_path = root / f"work/active/{workspace}/CONTEXT.md"
+    meta, body = parse_frontmatter(ws_path.read_text(encoding="utf-8"), ws_path)
+    meta["status"] = status
+    ws_path.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() +
+                       "\n---\n\n" + body.lstrip(), encoding="utf-8")
+
+
+def _lifecycle_errors(root: Path) -> set[str]:
+    return {issue.code for issue in validate(load_repo(root))
+            if issue.severity == "E" and issue.code.startswith("LIFECYCLE-")}
+
+
+# Algo 2 was, on 2026-08-08, a blocked workspace ("no study, next action none")
+# over a ready unit, a ready study map and a required-now stage. Every file was
+# individually valid; nothing compared them, so the repository asserted "do
+# nothing" and "do this now" at the same time (engineering audit, finding 3).
+
+def test_a_blocked_sole_workspace_cannot_leave_its_unit_ready(mini_repo):
+    add_curriculum(mini_repo)
+    _set_workspace_status(mini_repo, "blocked")
+    assert _lifecycle_errors(mini_repo) == {"LIFECYCLE-BLOCKED-UNIT", "LIFECYCLE-BLOCKED-MAP"}
+
+
+def test_pausing_the_unit_and_map_with_the_workspace_is_coherent(mini_repo):
+    add_curriculum(mini_repo)
+    _set_workspace_status(mini_repo, "blocked")
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    for name in ("unit.yaml", "study-map.yaml"):
+        data = yaml.safe_load((unit_dir / name).read_text(encoding="utf-8"))
+        data["status"] = "paused"
+        write_yaml(unit_dir / name, data)
+    assert _lifecycle_errors(mini_repo) == set()
+
+
+def test_one_blocked_workspace_among_several_is_not_a_sole_context(mini_repo):
+    """Scope check: only the *last* execution context pauses the work."""
+    import shutil
+
+    add_curriculum(mini_repo)
+    _set_workspace_status(mini_repo, "blocked")
+    second = mini_repo / "work/active/workspace-demo-two"
+    shutil.copytree(mini_repo / "work/active/workspace-demo", second)
+    meta, body = parse_frontmatter((second / "CONTEXT.md").read_text(encoding="utf-8"),
+                                   second / "CONTEXT.md")
+    meta.update({"id": "workspace-demo-two", "status": "active"})
+    (second / "CONTEXT.md").write_text(
+        "---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() + "\n---\n\n" + body.lstrip(),
+        encoding="utf-8")
+    assert _lifecycle_errors(mini_repo) == set()
+
+
+def test_an_unblocked_workspace_leaves_a_ready_unit_alone(mini_repo):
+    """The rule must not fire on the ordinary case it was written beside."""
+    add_curriculum(mini_repo)
+    assert _lifecycle_errors(mini_repo) == set()
+
+
 def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     add_curriculum(mini_repo)
     repo = load_repo(mini_repo)
