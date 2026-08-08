@@ -1,4 +1,9 @@
-"""The data-format contract gate.
+"""The contract gates: what this repository stores, and what it publishes.
+
+Two different contracts with two different consumers, checked here together
+because they fail for the same kind of reason — a shape changed and nothing
+recorded that it had.
+
 
 Every record schema is ``additionalProperties: false`` and no canonical record
 carries a version, so editing a schema silently redefines what "valid" means for
@@ -54,3 +59,22 @@ class ChecksContract:
             # One error, multi-line: the message names the exact next step.
             self.err("SCHEMA-CONTRACT-DRIFT", message.replace("\n", " "),
                      "system/contracts/data-contract.yaml")
+
+    def check_manifest_contract(self):
+        """The published projection has a declared version, and it is readable.
+
+        Deliberately shallow. Proving the manifest still *matches* the contract
+        means building it — too slow for a pre-commit hook, and already enforced
+        where it belongs: `build_manifest` refuses to publish a drifted shape,
+        so every generate, every `los.py --json`, and the whole test suite hit
+        it. What is worth checking cheaply on every run is that the declaration
+        itself has not gone missing or unparseable, because that is the one
+        failure mode which would turn enforcement off everywhere at once.
+        """
+        from ..contracts.manifest_contract import ManifestContractError, load_contract
+
+        try:
+            load_contract(self.repo.root)
+        except ManifestContractError as exc:
+            self.err("MANIFEST-CONTRACT-UNREADABLE", str(exc).replace("\n", " "),
+                     "system/contracts/manifest-contract.yaml")

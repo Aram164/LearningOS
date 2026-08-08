@@ -9,8 +9,7 @@ import sys
 from jsonschema import Draft202012Validator
 from learning_os.contracts.capability_catalog import command_definitions
 from pathlib import Path
-from .project import _project_write
-from .support import WriteRefused, _expected_ok, _operator_lock, _read_structured_file, _root
+from .support import WriteRefused, _read_structured_file, _root
 
 def _capability_handlers() -> dict[str, str]:
     """Public command capability -> concrete gateway handler name."""
@@ -126,26 +125,19 @@ def cmd_capability(args) -> int:
         return 2
     payload = envelope.get("payload", {})
     request_id = envelope["request_id"]
+    # Every capability takes the same path: declared payload schema, then the
+    # handler its named CLI command already uses. `project.create` and
+    # `project.update` were special-cased here until 2026-08-08 — the branch
+    # accepted a `{"project": {...}}` shape no schema declared, and skipped
+    # `_validate_payload` to do it, so an agent obeying the published contract
+    # was rejected while an agent sending the undeclared shape was accepted.
+    # A gateway is only worth having if its machine-readable contract is the
+    # trustworthy part.
     try:
-        if args.name in {"project.create", "project.update"}:
-            project = payload.get("project")
-            if not isinstance(project, dict):
-                raise WriteRefused("project capability payload requires a project object")
-            with _operator_lock(root):
-                expected_snapshot = envelope.get("expected_snapshot")
-                if not _expected_ok(root, expected_snapshot):
-                    code, result = 3, {"error": "snapshot conflict"}
-                else:
-                    code, detail = _project_write(
-                        root, project, capability=args.name,
-                        expected_revisions=envelope.get("expected_revisions", {}),
-                    )
-                    result = detail if code == 0 else {"error": "; ".join(detail.get("errors", []))}
-        else:
-            code, result = _dispatch(root, definitions[args.name], envelope, payload)
+        code, result = _dispatch(root, definitions[args.name], envelope, payload)
     except WriteRefused as exc:
         code, result = 2, {"error": str(exc)}
-    # Both paths fold their own receipt facts into `result`, so the response
+    # The handler folds its own receipt facts into `result`, so the response
     # reads them from there rather than re-deriving them.
     confirmation = result if code == 0 else {}
     response = {

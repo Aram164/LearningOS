@@ -13,6 +13,13 @@ from learning_os.rules import validate
 from pathlib import Path
 from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
 
+# The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
+# announces about the gateway itself. This is a third, independent version:
+#   operator/gateway contract  here                              v2
+#   canonical record format    system/contracts/data-contract.yaml       v4
+#   published manifest shape   system/contracts/manifest-contract.yaml   v3
+# Three contracts sharing the name "contract_version" is how the manifest came
+# to be published as v2 after its shape had already changed (2026-08-08).
 CONTRACT_VERSION = 2
 
 # ----------------------------------------------------------------- status

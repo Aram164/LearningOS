@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from ..contracts.manifest_contract import declared_version, enforce
 from ..loader import Repo
 from ..transactions import load_revisions
 from .atlas import ATLAS_COLLECTION_DOMAIN
@@ -128,7 +129,8 @@ def _source_thematic_groups(repo: Repo) -> dict[str, list[str]]:
     }
 
 
-def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None) -> dict:
+def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
+                   enforce_contract: bool = True) -> dict:
     """The COMPLETE machine-readable projection of the repository (ADR-001):
     every canonical record (notes incl. attachments/evidence/contexts, concepts,
     sources, modules incl. attempts, workspaces, coordination) plus all
@@ -488,7 +490,9 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     revision, dirty = _git_state(repo.root)
     generated_meta = _json_header(generated_at)
     generated_meta.update({
-        "contract_version": 2,
+        # Read from system/contracts/manifest-contract.yaml, never hardcoded:
+        # the version announced and the shape declared must have one source.
+        "contract_version": declared_version(repo.root),
         "snapshot_id": f"sha256:{fingerprint}",
         "source_fingerprint": fingerprint,
         "source_revision": revision,
@@ -593,7 +597,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
     # remains optional for older consumers of manifest contract v2.
     from learning_os.ai_actions import manifest_ai_projection
     ai_projection = manifest_ai_projection(repo.root)
-    return {
+    payload = {
         "_generated": generated_meta,
         "records": records,
         "relations": relations,
@@ -680,3 +684,11 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "notes_with_evidence": ad["notes_with_evidence"],
         },
     }
+    # The published shape is a versioned interface, so the producer proves it
+    # still matches what it announced. Adding a top-level key while continuing
+    # to call the projection v2 is what turned UI CI red on 2026-08-08; that
+    # class of mistake now fails here, in Core's own test run, instead of in a
+    # downstream repository after the push.
+    if enforce_contract:
+        enforce(payload, repo.root)
+    return payload

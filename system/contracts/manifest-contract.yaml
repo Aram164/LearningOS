@@ -1,0 +1,112 @@
+# The manifest/projection contract — the PUBLIC interface Core publishes.
+#
+# This is a different contract from system/contracts/data-contract.yaml:
+#
+#     canonical record format        data-contract.yaml       (currently v4)
+#     manifest/interface projection  this file                (currently v3)
+#
+# Canonical records are what Core stores. The manifest is what Core *publishes*
+# to consumers (the Obsidian UI, los.py --json, any future interface). The two
+# move independently: a record can gain an optional field without changing the
+# projection, and the projection can be reshaped without touching a single
+# stored record.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# Until 2026-08-08 the projection contract was owned on the CONSUMER side, in
+# the UI repository's contracts/manifest-v2.lock.json. That meant Core could add
+# a top-level key, pass its own CI, push — and only then have the UI discover
+# the incompatibility. It happened: Core began publishing `topics` (ADR-009)
+# while still declaring contract_version 2, and UI CI went red. The rule
+# LearningOS had adopted — versioned interface, consumer fails closed — was
+# violated by the producer, not the consumer.
+#
+# So the producer now owns the contract. `build_manifest` enforces this file on
+# every build (learning_os/contracts/manifest_contract.py), which means any
+# change to the published shape fails Core's own tests until the contract is
+# deliberately bumped. The UI lock is a mirror of this file, not the original.
+#
+# WHEN MANIFEST-CONTRACT-DRIFT FIRES
+# ----------------------------------
+#   1. Is the change additive (a new key consumers may ignore) or breaking
+#      (a removed or reshaped key)? Additive still bumps — consumers declare an
+#      exact version and fail closed, so "additive" is not "invisible".
+#   2. Bump:  python tools/manifest_contract.py --bump --note "<what changed>"
+#   3. Mirror into the UI in the SAME change: contracts/manifest-v<N>.lock.json,
+#      MANIFEST_CONTRACT_VERSION, ManifestV<N>, and the fixture vault manifest.
+#      Core and UI are released together; a bump that lands alone is the bug
+#      this file was written to prevent.
+#
+# Rebuild with: python tools/manifest_contract.py --bump --note "…"
+contract_version: 3
+top_level_keys:
+- _generated
+- academic_deadlines
+- ai_actions
+- artifact_revisions
+- backlinks
+- counts
+- garden_entries
+- indexes
+- module_source_maps
+- modules
+- programs
+- progress
+- project_aliases
+- project_relationships
+- projects
+- quarantine_boundaries
+- records
+- relations
+- resume_pointer
+- semesters
+- stages
+- study_maps
+- thematic_groups
+- topic_packs
+- topics
+- units
+generated_keys:
+- contract_version
+- generated_at
+- generator
+- snapshot_id
+- source_dirty
+- source_fingerprint
+- source_revision
+- warning
+index_keys:
+- component_to_units
+- module_to_units
+- project_aliases
+- project_to_relationships
+- project_to_units
+- project_to_workspaces
+- source_to_modules
+- source_to_units
+- unit_to_study_map
+- workspace_to_modules
+- workspace_to_units
+# Keys that were once published and must never come back under this name.
+# `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
+# the same facts (ADR-006, 2026-08-03).
+forbidden_top_level_keys:
+- exam_spine
+history:
+- version: 2
+  adopted: '2026-08-03'
+  note: 'baseline — the projection as ADR-006 froze it: one atomic manifest carrying
+    records, relations, backlinks, academic_deadlines and the interface indexes, with
+    exam_spine retired in favour of academic_deadlines. Recorded retroactively on
+    2026-08-08; before that the shape was described only by the UI-side lock file.'
+  mirrored_in_ui: contracts/manifest-v2.lock.json
+- version: 3
+  adopted: '2026-08-08'
+  note: 'the projection gained a top-level `topics` collection and every projected
+    source gained `topics: [...]` (ADR-009 topic facet). Core had already been publishing
+    this shape while declaring v2, which is what turned UI CI red; v3 makes the declared
+    version match the shape actually emitted. The same bump also records two index
+    tables — workspace_to_modules and workspace_to_units — that Core has emitted since
+    the v2 baseline but that the UI-side lock never listed, because nothing compared
+    the lock against a real Core build.'
+  mirrored_in_ui: contracts/manifest-v3.lock.json

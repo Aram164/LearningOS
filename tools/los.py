@@ -60,6 +60,7 @@ from learning_os.commands.path import (  # noqa: E402
 from learning_os.commands.project import (  # noqa: E402
     cmd_project_create, cmd_project_list, cmd_project_update,
 )
+from learning_os.contracts.payloads import json_object  # noqa: E402
 from learning_os.commands.query import (  # noqa: E402
     cmd_bootstrap, cmd_capabilities, cmd_generate, cmd_inspect, cmd_program_list,
     cmd_related, cmd_search, cmd_status, cmd_validate,
@@ -141,15 +142,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--status", default=None)
     p.set_defaults(func=cmd_project_list)
 
+    # `--file` for humans, `--project` for callers already holding the record.
+    # Both are declared, so the generated payload schema describes the surface
+    # the gateway actually accepts (engineering audit 2026-08-08, finding 2).
     p = sub.add_parser("project-create", help="create one first-class project transactionally")
-    p.add_argument("--file", required=True)
+    source = p.add_mutually_exclusive_group(required=True)
+    source.add_argument("--file")
+    source.add_argument("--project", type=json_object, help="the project record as inline JSON")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_project_create)
 
     p = sub.add_parser("project-update", help="replace one project with revision protection")
     p.add_argument("project_id")
-    p.add_argument("--file", required=True)
+    source = p.add_mutually_exclusive_group(required=True)
+    source.add_argument("--file")
+    source.add_argument("--project", type=json_object, help="the project record as inline JSON")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_project_update)

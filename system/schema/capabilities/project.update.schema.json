@@ -6,15 +6,29 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "file",
     "project_id"
   ],
   "properties": {
     "file": {
       "type": "string"
     },
+    "project": {
+      "type": "object"
+    },
     "project_id": {
       "type": "string"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "project"
+      ]
+    }
+  ]
 }
