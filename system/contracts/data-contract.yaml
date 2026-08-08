@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 2
-schema_fingerprint: sha256:fafebf24219caca2399a145d49fd4162b53410c3044f6fe86dd18f3dca138d3f
+contract_version: 4
+schema_fingerprint: sha256:3909440ce8469f1a812306a770473177ed795c236e1a2df6b57cffa6cff13eeb
 record_schemas: 21
 history:
 - version: 1
@@ -33,3 +33,20 @@ history:
     unranked, which is what every v1 record carries.'
   migration: null
   fixture: tests/fixtures/formats/v2/
+- version: 3
+  adopted: '2026-08-08'
+  note: study-map stage resources gained an optional stable 'id' (resource identity),
+    and source_feedback gained an optional 'resource_id' alongside the still-required
+    source_id. Lets a judgment name one paper inside a bundled course instead of collapsing
+    onto the whole bundle. Additive and backward-compatible — absent ids mean source_id
+    + locator addressing, which is what every v1/v2 record carries.
+  migration: null
+  fixture: tests/fixtures/formats/v3/
+- version: 4
+  adopted: '2026-08-08'
+  note: sources gained an optional 'topics' array over the closed vocabulary in sources/topics.yaml
+    (ADR-009 topic facet). Independent of thematic_group_ids so one source can be
+    classified along several dimensions. Additive and backward-compatible — absent
+    means not yet classified, and population is on-use rather than a bulk backfill.
+  migration: null
+  fixture: tests/fixtures/formats/v4/

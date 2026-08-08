@@ -24,7 +24,8 @@ stages:
   - concept-ml-systems
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-sample-blueprint
+    kind: read
     label: Official AMLS sample exam blueprint
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 36–48; mask answers during setup
@@ -47,7 +48,8 @@ stages:
   - concept-ml-systems
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-exam
+    kind: practise
     label: Official AMLS 90-minute 100-point sample
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 36–48

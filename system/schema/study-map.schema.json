@@ -94,6 +94,11 @@
               "required": ["kind", "label"],
               "additionalProperties": false,
               "properties": {
+                "id": {
+                  "description": "Optional stable identity for a resource that is reused across plans or judged independently — a paper, chapter, lecture, exercise sheet, problem set, video, notebook or mock exam. NOT for pages, paragraphs or formulas; those stay locators. Its purpose is to let feedback and reuse attach to the exact item rather than to the whole source, which matters most for bundled sources (one source id backing dozens of papers). Absent means the resource is addressed only by source_id + locator, which is what every pre-v3 record carries.",
+                  "type": "string",
+                  "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
                 "kind": { "enum": ["watch", "read", "practise", "reference"] },
                 "label": { "type": "string", "minLength": 1 },
                 "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
@@ -121,6 +126,7 @@
             }
           },
           "source_feedback": {
+            "description": "Judgments recorded while using this stage's material. `source_id` stays REQUIRED so every judgment keeps its provenance; adding `resource_id` narrows the claim to one item inside that source. Without it, four opinions about four different papers in the same bundled course all collapse onto one source id and cannot be told apart. Kept under its original key so v1/v2 records stay valid — the shape widened, it did not change.",
             "type": "array",
             "items": {
               "type": "object",
@@ -128,6 +134,11 @@
               "additionalProperties": false,
               "properties": {
                 "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                "resource_id": {
+                  "description": "Optional. Narrows the judgment to one identified resource within source_id — e.g. one paper in a course bundle, one chapter of a book. Must match the `id` of a resource on this same stage.",
+                  "type": "string",
+                  "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
                 "feedback": { "enum": ["helpful", "too-advanced", "wrong-perspective", "useful-for-derivation", "useful-for-review", "skipped"] },
                 "note": { "type": "string" },
                 "recorded": { "type": "string", "format": "date" }

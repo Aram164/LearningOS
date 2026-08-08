@@ -24,7 +24,8 @@ stages:
   - concept-data-parallelism
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l06-deck
+    kind: watch
     label: SS26 Lecture 06 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 06; 06_ParameterServers.pdf
@@ -52,49 +53,56 @@ stages:
   - concept-parameter-servers
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-distbelief
+    kind: read
     label: Primary paper — Large Scale Distributed Deep Networks (DistBelief)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/4687-large-scale-distributed-deep-networks
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-scaling-distributed-ml-parameter-server
+    kind: read
     label: Primary paper — Scaling Distributed ML with the Parameter Server
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/conference/osdi14/technical-sessions/presentation/li_mu
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-hogwild
+    kind: read
     label: 'Primary paper — Hogwild!: A Lock-Free Approach to Parallelizing SGD'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1106.5730
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-more-effective-distributed-ml-stale-synchronous
+    kind: read
     label: Primary paper — More Effective Distributed ML via a Stale Synchronous Parallel Parameter Server
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/4894-more-effective-distributed-ml-via-a-stale-synchronous-parallel-parameter-server
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-adam
+    kind: read
     label: 'Primary paper — Adam: A Method for Stochastic Optimization'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1412.6980
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-fedavg
+    kind: read
     label: Primary paper — Communication-Efficient Learning from Decentralized Data (FedAvg)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 06
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://proceedings.mlr.press/v54/mcmahan17a.html
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l06-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 06 (31 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 06; reference-only
@@ -132,7 +140,8 @@ stages:
   - concept-parameter-servers
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-task-1
+    kind: practise
     label: Official AMLS sample — Task 1 Parameter Servers
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 37–38

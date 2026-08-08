@@ -1127,3 +1127,124 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
                 None,
                 False,
             }
+
+
+# RESOURCE IDENTITY (ADR-009)
+
+
+def test_amls_bundle_resources_carry_stable_ids(repo_root):
+    """A bundled source must be addressable item by item, not just as a bundle.
+
+    `source-amls-ss26-lectures` backs ~96 stage resources. Without per-resource
+    identity, every judgment about any of them files under one source id, so
+    "SystemML was excellent" and "TASO was unnecessary" become the same record.
+    """
+    repo = load_repo(repo_root)
+    ided, bare = [], []
+    for study_map in repo.study_maps.values():
+        if not str(study_map.data.get("id", "")).startswith("study-map-amls"):
+            continue
+        for stage in study_map.data.get("stages", []) or []:
+            for resource in stage.get("resources", []) or []:
+                if resource.get("source_id") != "source-amls-ss26-lectures":
+                    continue
+                (ided if resource.get("id") else bare).append(resource["label"])
+
+    assert len(ided) >= 90, f"only {len(ided)} AMLS bundle resources carry ids"
+    for label in bare:
+        # Restraint (ADR-009): activities are not teaching objects. An
+        # explain-back drill is something you DO, not something to judge or
+        # reuse, so it deliberately has no identity.
+        assert "Explain-back" in label, (
+            f"un-identified AMLS bundle resource that is not an activity: {label}")
+
+
+def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
+    """Identity belongs to the paper, not to the citation.
+
+    AMLS cites "Attention Is All You Need" from both L04 and L07, and the
+    Hidden Technical Debt paper from both L01 and L02. If each citation minted
+    its own id, feedback would scatter across the plans that happen to mention
+    a paper instead of accumulating on the paper — which is the reuse ADR-009
+    is for. This test fails if someone "fixes" the duplicate ids.
+    """
+    repo = load_repo(repo_root)
+    by_id = {}
+    for study_map in repo.study_maps.values():
+        for stage in study_map.data.get("stages", []) or []:
+            for resource in stage.get("resources", []) or []:
+                if resource.get("id"):
+                    by_id.setdefault(resource["id"], []).append(resource)
+
+    shared = {rid: rs for rid, rs in by_id.items() if len(rs) > 1}
+    assert "resource-amls-attention-is-all-you-need" in shared, (
+        "the paper cited by AMLS L04 and L07 no longer shares one resource id")
+
+    for rid, uses in shared.items():
+        urls = {r.get("url") for r in uses if r.get("url")}
+        assert len(urls) <= 1, f"resource id {rid} spans different urls: {urls}"
+
+
+# FACETED LIBRARY (ADR-009)
+
+
+def test_topics_are_a_closed_vocabulary(repo_root):
+    """An unlisted topic must be an error, or the facet decays into tag soup.
+
+    The whole reason `topics` is a controlled vocabulary rather than free tags is
+    that free tags reliably produce deep-learning / DL / neural-networks / NN
+    within a year. That only holds if the validator actually refuses unknown
+    values.
+    """
+    from learning_os.rules import validate as _validate
+    repo = load_repo(repo_root)
+    assert repo.topics, "sources/topics.yaml did not load"
+    for tid in repo.topics:
+        assert tid.startswith("topic-")
+    # every topic used by a source must exist in the vocabulary
+    for source in repo.sources.values():
+        for tid in source.get("topics", []) or []:
+            assert tid in repo.topics, f"{source['id']} uses unknown topic {tid}"
+    assert not [i for i in _validate(repo) if i.severity == "E"]
+
+
+def test_topics_are_independent_of_thematic_groups(repo_root):
+    """One identity, many classifications — the point of the facet.
+
+    If topics could only come from a source's own domain, the polyhierarchy
+    would collapse back into the single-placement tree ADR-009 exists to escape.
+    This asserts at least one source carries a topic whose display domain is not
+    among that source's own thematic groups.
+    """
+    repo = load_repo(repo_root)
+    crossing = []
+    for source in repo.sources.values():
+        groups = set(source.get("thematic_group_ids", []) or [])
+        for tid in source.get("topics", []) or []:
+            domain = repo.topics.get(tid, {}).get("domain")
+            if domain and domain not in groups:
+                crossing.append((source["id"], tid, domain))
+    assert crossing, (
+        "no source carries a topic outside its own domain — either the seed data "
+        "regressed to one-domain-per-source, or the facet is being used as a "
+        "second name for thematic_group_ids")
+
+
+def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
+    """Sparse is the honest state under on-use population, so it must be visible.
+
+    A faceted browser that showed only classified sources would silently imply
+    the Library is smaller than it is, and would create pressure to bulk-backfill
+    topics — the exact judgment-inventing pass ADR-005 forbids.
+    """
+    from learning_os.genout import build_library
+    repo = load_repo(repo_root)
+    view = build_library(repo, "T1")
+    assert "## By topic" in view and "## By domain" in view
+    assert "## By purpose" in view and "## By form" in view
+    assert "## By current use" in view
+    assert "Not yet classified by topic" in view
+    # enumerate, don't count: buckets must list their members
+    assert "## Members" in view
+    for sid in list(repo.sources)[:3]:
+        assert f"`{sid}`" in view, f"{sid} appears in no bucket listing"

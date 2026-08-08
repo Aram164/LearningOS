@@ -24,7 +24,8 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l01-deck
+    kind: watch
     label: SS26 Lecture 01 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 01; 01_Introduction.pdf
@@ -52,21 +53,24 @@ stages:
   - concept-ml-systems
   scope_triage: helpful-now
   resources:
-  - kind: read
+  - id: resource-amls-data-management-ml-systems
+    kind: read
     label: Primary paper — Data Management in ML Systems
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 01
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://link.springer.com/book/10.1007/978-3-031-01869-5
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-hidden-technical-debt-machine-learning-systems
+    kind: read
     label: Primary paper — Hidden Technical Debt in Machine Learning Systems
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 01
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l01-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 01 (2 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 01; reference-only

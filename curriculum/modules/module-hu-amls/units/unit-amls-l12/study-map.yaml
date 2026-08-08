@@ -24,7 +24,8 @@ stages:
   - concept-ml-fairness-explainability
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l12-deck
+    kind: watch
     label: SS26-listed Lecture 12 recording and local deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 12; 12_ModelDebugging.pdf
@@ -52,42 +53,48 @@ stages:
   - concept-ml-fairness-explainability
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-lime
+    kind: read
     label: Primary paper — "Why Should I Trust You?" Explaining the Predictions of Any Classifier (LIME)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1602.04938
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-shap
+    kind: read
     label: Primary paper — A Unified Approach to Interpreting Model Predictions (SHAP)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1705.07874
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-sliceline
+    kind: read
     label: 'Primary paper — SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-visualizing-understanding-convolutional-networks
+    kind: read
     label: Primary paper — Visualizing and Understanding Convolutional Networks
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1311.2901
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-fairness-through-awareness
+    kind: read
     label: Primary paper — Fairness Through Awareness
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dwork.seas.harvard.edu/publications/fairness-through-awareness
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l12-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 12 (27 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 12; reference-only
@@ -124,7 +131,8 @@ stages:
   - concept-ml-fairness-explainability
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-task-4
+    kind: practise
     label: Official AMLS sample — Task 4 Model Debugging
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 43–44

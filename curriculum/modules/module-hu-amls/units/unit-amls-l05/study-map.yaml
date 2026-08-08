@@ -24,7 +24,8 @@ stages:
   - concept-data-parallelism
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l05-deck
+    kind: watch
     label: SS26 Lecture 05 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 05; 05_ExecutionStrategies.pdf
@@ -52,35 +53,40 @@ stages:
   - concept-data-parallelism
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-rdd-spark
+    kind: read
     label: Primary paper — Resilient Distributed Datasets (RDD / Spark)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 05
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/conference/nsdi12/technical-sessions/presentation/zaharia
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-hybrid-parallelization-strategies-large-scale-ml
+    kind: read
     label: Primary paper — Hybrid Parallelization Strategies for Large-Scale ML in SystemML
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 05
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dl.acm.org/doi/10.14778/2732286.2732292
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-cerebro
+    kind: read
     label: 'Primary paper — Cerebro: A Data System for Optimized Deep Learning Model Selection'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 05
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.vldb.org/pvldb/vol13/p2159-nakandala.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-modin
+    kind: read
     label: 'Primary paper — Modin: Towards Scalable Dataframe Systems'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 05
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.vldb.org/pvldb/vol13/p2033-petersohn.pdf
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l05-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 05 (12 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 05; reference-only

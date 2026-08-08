@@ -25,6 +25,7 @@ from .manifest import build_manifest
 from .materials import _project_material_resource
 from .modules_view import _exam_spine, build_module_view
 from .reading_room import build_reading_room
+from .library import build_library
 from .sources import build_collection_view, build_source_index
 from .outputs import generate_all, write_outputs
 
@@ -39,6 +40,6 @@ __all__ = [
     "build_collection_view", "build_concept_canvas", "build_concept_index",
     "build_concept_map", "build_coordination_view", "build_dependency_report",
     "build_domain_atlas", "build_health", "build_manifest", "build_module_view",
-    "build_nebula", "build_reading_room", "build_source_index", "generate_all",
+    "build_library", "build_nebula", "build_reading_room", "build_source_index", "generate_all",
     "mermaid_node_ids", "stable_generated_at", "write_outputs",
 ]

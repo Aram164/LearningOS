@@ -12,6 +12,7 @@ from .common import stable_generated_at
 from .concepts import build_backlinks, build_concept_index, build_concept_map, build_dependency_report
 from .coordination import build_coordination_view, build_health
 from .garden import build_nebula
+from .library import build_library
 from .manifest import build_manifest
 from .modules_view import build_module_view
 from .reading_room import build_reading_room
@@ -31,6 +32,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "backlinks.json": json.dumps(backlinks, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
         "concept-index.md": build_concept_index(repo, backlinks, generated_at) + "\n",
         "source-index.md": build_source_index(repo, generated_at) + "\n",
+        "library.md": build_library(repo, generated_at) + "\n",
         "module-view.md": build_module_view(repo, generated_at) + "\n",
         "coordination-view.md": build_coordination_view(repo, generated_at) + "\n",
         "dependency-report.md": build_dependency_report(repo, backlinks, generated_at) + "\n",

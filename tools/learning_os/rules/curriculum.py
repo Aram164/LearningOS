@@ -138,6 +138,42 @@ class ChecksCurriculum:
                          f"({names}); stages are indexed by id alone",
                          self._rel(maps[0].path))
 
+        # Resource identity (ADR-009). A resource id names a teaching object, NOT
+        # one citation of it. The same paper legitimately appears on several
+        # stages — AMLS cites "Attention Is All You Need" from both L04 and L07 —
+        # and that reuse is the point: feedback accumulates on the paper instead
+        # of scattering across the plans that happen to mention it. So repeated
+        # ids are legal; what must not vary is WHAT the id denotes. An id that
+        # pointed at two different papers would make every judgment filed under
+        # it ambiguous.
+        #
+        # Labels are deliberately excluded from the identity check: the same
+        # paper is cited as "Hidden Technical Debt in Machine Learning Systems"
+        # in L01 and "…in ML Systems" in L02. Same object, different wording —
+        # normalizing that would be rewriting Aram's prose to satisfy a linter.
+        res_uses: dict[str, list[tuple]] = {}
+        for study_map in self.repo.study_maps.values():
+            for stage in study_map.data.get("stages", []) or []:
+                if not isinstance(stage, dict):
+                    continue
+                for resource in stage.get("resources", []) or []:
+                    if isinstance(resource, dict) and resource.get("id"):
+                        res_uses.setdefault(str(resource["id"]), []).append(
+                            (study_map, stage.get("id"), resource))
+        for resource_id, uses in sorted(res_uses.items()):
+            if len(uses) < 2:
+                continue
+            where_list = ", ".join(sorted(
+                f"{m.data.get('id')}/{sid}" for m, sid, _ in uses))
+            for field in ("source_id", "url", "vault_path"):
+                seen = {str(r.get(field)) for _, _, r in uses if r.get(field)}
+                if len(seen) > 1:
+                    self.err("RESOURCE-ID-CONFLICT",
+                             f"resource id '{resource_id}' is used {len(uses)} times "
+                             f"({where_list}) with different {field}: "
+                             f"{', '.join(sorted(seen))}; one id must denote one object",
+                             self._rel(uses[0][0].path))
+
         for study_map in self.repo.study_maps.values():
             where = self._rel(study_map.path)
             data = study_map.data
@@ -175,6 +211,34 @@ class ChecksCurriculum:
                 if stage.get("completed") and stage.get("status") != "complete":
                     self.err("MAP-COMPLETED-DATE",
                              f"stage '{stage.get('id')}' has a completion date but is not complete", where)
+
+                # A resource_id on feedback must resolve to a resource on the SAME
+                # stage, and agree with the source that resource belongs to.
+                # Otherwise the narrowing is a dangling pointer: it looks more
+                # precise than source-level feedback while actually saying less
+                # (ADR-009).
+                stage_resources = {
+                    str(r["id"]): r for r in (stage.get("resources", []) or [])
+                    if isinstance(r, dict) and r.get("id")
+                }
+                for entry in stage.get("source_feedback", []) or []:
+                    if not isinstance(entry, dict):
+                        continue
+                    rid = entry.get("resource_id")
+                    if not rid:
+                        continue
+                    resource = stage_resources.get(str(rid))
+                    if resource is None:
+                        self.err("FEEDBACK-RESOURCE",
+                                 f"stage '{stage.get('id')}' records feedback for resource "
+                                 f"'{rid}', which is not a resource on that stage", where)
+                        continue
+                    declared = resource.get("source_id")
+                    if declared and declared != entry.get("source_id"):
+                        self.err("FEEDBACK-RESOURCE-SOURCE",
+                                 f"stage '{stage.get('id')}' feedback for '{rid}' claims source "
+                                 f"'{entry.get('source_id')}' but the resource belongs to "
+                                 f"'{declared}'", where)
             stage_ids = set(ids)
             detour_ids: set[str] = set()
             for detour in data.get("detours", []) or []:

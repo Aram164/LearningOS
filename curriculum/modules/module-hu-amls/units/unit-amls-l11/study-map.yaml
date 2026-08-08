@@ -23,7 +23,8 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l11-deck
+    kind: watch
     label: SS26 Lecture 11 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 11; 11_ModelSelection.pdf
@@ -51,56 +52,64 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-alexnet
+    kind: read
     label: Primary paper — ImageNet Classification with Deep CNNs (AlexNet)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-snorkel
+    kind: read
     label: 'Primary paper — Snorkel: Rapid Training Data Creation with Weak Supervision'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1711.10160
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-hyperband
+    kind: read
     label: 'Primary paper — Hyperband: A Novel Bandit-Based Approach to HPO'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1603.06560
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-auto-sklearn
+    kind: read
     label: 'Primary paper — Auto-sklearn: Efficient and Robust Automated ML'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5872-efficient-and-robust-automated-machine-learning
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-neural-architecture-search-reinforcement-learning
+    kind: read
     label: Primary paper — Neural Architecture Search with Reinforcement Learning
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1611.01578
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-accelerating-ml-lifecycle-mlflow
+    kind: read
     label: Primary paper — Accelerating the ML Lifecycle with MLflow
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://people.eecs.berkeley.edu/~matei/papers/2018/ieee_mlflow.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-lima
+    kind: read
     label: 'Primary paper — LIMA: Fine-grained Lineage Tracing and Reuse in ML Systems'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2021a_lima.pdf
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l11-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 11 (42 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 11; reference-only
@@ -138,7 +147,8 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-task-3
+    kind: practise
     label: Official AMLS sample — Task 3 Model Selection
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 41–42
