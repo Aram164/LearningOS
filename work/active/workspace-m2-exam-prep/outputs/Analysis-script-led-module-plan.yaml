@@ -1214,7 +1214,8 @@ workspace_updates:
   sections:
     Current Scope: 'Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD
       N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses;
-      after AML on 30.09 switch to AN.X and combined M2 mocks for the 09.10 sitting.'
+      after the AML 2. Termin switch to AN.X and combined M2 mocks for the M2 sitting
+      (dates in the owning module records, never restated here).'
     Next Action: 'Start stage-m2-analysis-calibrate (60 min): read the script''s course contract, take
       one cold WV sample, and create the five-class error ledger. Then begin AN.0 with unser skript Chapters
       1-2.'

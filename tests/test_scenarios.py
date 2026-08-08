@@ -47,7 +47,7 @@ def test_scenario_7_on_real_repo(repo_root):
     assert has_withdrawal, "no module with a withdrawal (Ruecktritt) recorded"
     has_kombimodul = any(m.get("components") for m in repo.modules.values())
     assert has_kombimodul, "no Kombimodul (components list) recorded"
-    # exam dates appear canonically only in records/modules.yaml
+    # exam dates appear canonically only in the owning module.yaml
     attempt_dates = {str(a["date"]) for m in repo.modules.values()
                      for a in m.get("attempts", []) or [] if a.get("date")}
     for tree in ("knowledge", "work", "sources"):
@@ -57,6 +57,85 @@ def test_scenario_7_on_real_repo(repo_root):
                 text = path.read_text(encoding="utf-8", errors="replace")
                 for d in attempt_dates:
                     assert d not in text, f"exam date {d} duplicated in {path}"
+
+
+def _owned_admin_dates(repo_root):
+    """Every administrative date the partitioned module records own.
+
+    The older check above sees `attempts` only, so sitting dates and Anmeldung
+    windows — the facts most likely to be restated in a plan — were never
+    covered.
+    """
+    import yaml
+    iso = set()
+    for path in (repo_root / "curriculum" / "modules").glob("*/module.yaml"):
+        data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+        exam = data.get("examination") or {}
+        for sitting in exam.get("sittings") or []:
+            for key in ("date", "end_date"):
+                if sitting.get(key):
+                    iso.add(str(sitting[key]))
+        for window in exam.get("registration_windows") or []:
+            for key in ("opens", "closes"):
+                if window.get(key):
+                    iso.add(str(window[key]))
+        for attempt in data.get("attempts") or []:
+            if attempt.get("date"):
+                iso.add(str(attempt["date"]))
+    forms = {}
+    for value in iso:
+        year, month, day = value.split("-")
+        # Aram writes German dates; an ISO-only scan misses every one of them.
+        forms[value] = {value, f"{day}.{month}.{year}", f"{day}.{month}."}
+    return forms
+
+
+def test_admin_dates_are_not_restated_in_live_operational_prose(repo_root):
+    """Hard rule #2 applies to prose that *directs current work*.
+
+    Deliberately scoped. Two trees legitimately contain these dates and are NOT
+    scanned:
+
+    * `work/active/*/inputs/` — preserved pre-migration plans. CLAUDE.md §5
+      forbids rewriting migration content; a preserved original that said
+      "Klausur Mo 27.07" is evidence of what was planned, not a competing
+      owner.
+    * `knowledge/notes/` — durable notes. Hard rule #3 forbids rewriting a note
+      body, and a note recording *"slide 39 said the exam is probably 27.7.26,
+      later confirmed"* is provenance, not a restatement.
+
+    What IS scanned is everything that tells you what to do now: coordination,
+    workspace CONTEXT files, and workspace outputs. Those must defer to the
+    owning module record, because when a date moves they are what goes stale.
+    """
+    forms = _owned_admin_dates(repo_root)
+    assert forms, "no owned admin dates found — the collector is broken"
+
+    targets = [repo_root / "work" / "COORDINATION.md"]
+    for workspace in (repo_root / "work" / "active").glob("*"):
+        if not workspace.is_dir():
+            continue
+        targets.append(workspace / "CONTEXT.md")
+        for path in (workspace / "outputs").rglob("*"):
+            if path.is_file() and path.suffix in (".md", ".yaml"):
+                targets.append(path)
+
+    offences = []
+    for path in targets:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for iso, variants in forms.items():
+            for form in sorted(variants):
+                if form in text:
+                    line = text[:text.index(form)].count("\n") + 1
+                    offences.append(
+                        f"{path.relative_to(repo_root)}:{line} restates {iso} "
+                        f"as '{form}'")
+    assert not offences, (
+        "administrative dates restated in live operational prose — they belong "
+        "only in the owning curriculum/modules/<id>/module.yaml:\n  "
+        + "\n  ".join(sorted(offences)))
 
 
 def test_scenario_4_file_move_keeps_id(mini_repo):

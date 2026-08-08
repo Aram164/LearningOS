@@ -98,6 +98,46 @@ Six changes. Nothing was deleted; educational content was preserved verbatim.
   unranked resource, because unranked is what every v1 record carries and the
   loader must keep accepting it.
 
+## Follow-up (same day, after review of commit `e2e26be`)
+
+A review of the landed commit found the authority rule enforced in the *pointers*
+but not in the *dates themselves*: live workspace prose still restated
+administrative facts the module records own — `after AML on 30.09`, `the 09.10
+sitting`, `2.-PZ Anmeldung (31.08–10.09)`, `unnecessary depth before 09.10`.
+Five lines across `workspace-aml-exam-prep/CONTEXT.md`,
+`workspace-m2-exam-prep/CONTEXT.md`, and two M2 workspace outputs. All now name
+the owning record instead.
+
+This slipped past `test_scenario_7` for two compounding reasons, both fixed:
+
+1. it collected dates from `attempts` only, so **sitting dates and Anmeldung
+   windows were never covered** — precisely the facts a plan restates;
+2. it matched ISO strings only, and Aram writes German dates, so `30.09` and
+   `31.08–10.09` were invisible to it.
+
+`test_admin_dates_are_not_restated_in_live_operational_prose` now collects every
+owned sitting, `end_date`, registration window and attempt, expands each into its
+ISO and German forms, and scans coordination, workspace `CONTEXT.md` files and
+workspace `outputs/`. It was negative-tested both ways — reintroducing `31.08.`
+and `2026-09-30` each fail it — because a hygiene test that cannot fail is worse
+than none.
+
+**Scope of the rule, stated so it is not re-flagged.** Eight further occurrences
+exist and are correct:
+
+- `work/active/*/inputs/` — preserved pre-migration plans. CLAUDE.md §5 forbids
+  rewriting migration content; a preserved plan reading "Klausur Mo 27.07" is
+  evidence of what was planned, not a competing owner.
+- `knowledge/notes/` — durable notes. Hard rule #3 forbids rewriting a note body,
+  and a note recording *"slide 39 said probably 27.7.26, later confirmed"* is
+  provenance.
+
+Hard rule #2 governs prose that **directs current work** — that is what goes
+stale when a date moves. It does not reach into the historical record, and a
+rule that did would be in direct conflict with §5 and hard rule #3.
+
+`make check`: 0 errors, 0 warnings. Suite: 229 passed, 1 skipped.
+
 ## Deliberately not done
 
 - **The faceted-library proposal** (source-ID-only physical storage, five facets,
