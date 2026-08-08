@@ -29,6 +29,7 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 03; 03_Compilation.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/03_Compilation.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-scope/notes.md
   attachments: []
   source_feedback: []
@@ -36,12 +37,15 @@ stages:
   title: Integrate lecturer prose and an executable compiler view
   status: pending
   objective: Use DMMLS for exam-near language and MLC for one concrete rewrite without expanding beyond
-    the deck. Triage every curated primary paper for this lecture and anchor its useful claim, mechanism
-    or result back to the deck.
+    the deck. Read the lecture's primary paper closely and anchor its mechanism and key result back to
+    the deck; treat the other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - The stage note maps each useful source point back to a deck concept
   - One MLC rewrite is hand-traced or executed
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 90
   exam_critical: true
   concepts:
@@ -54,37 +58,44 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.vldb.org/pvldb/vol9/p1425-boehm.pdf
+    scope_triage: required-now
   - kind: read
     label: 'Primary paper — SPOOF: Sum-Product Optimization and Operator Fusion'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.cidrdb.org/cidr2017/papers/p3-elgamal-cidr17.pdf
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — SPORES: Sum-Product Optimization via Relational Equality Saturation'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2002.07951
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — TASO: Optimizing DL Computation with Automatic Generation of Graph Substitutions'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://theory.stanford.edu/~aiken/publications/papers/sosp19.pdf
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 03 (17 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 03; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: DMMLS — rewrites and compilation sections
     source_id: source-dmmls-boehm
     locator: Verify TOC after campus-license acquisition
+    scope_triage: helpful-now
   - kind: practise
     label: MLC — tensor programs, graph rewrites and automatic optimization
     source_id: source-mlc-book
     locator: Matching executable chapters
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -106,14 +117,17 @@ stages:
     label: CMU 10-414 — HW1 autodiff/computation-graph parts
     source_id: source-cmu-10414
     locator: HW1 selected parts
+    scope_triage: required-now
   - kind: practise
     label: MIT 6.172 — selected compiler/performance quiz items
     source_id: source-mit-6172
     locator: Question first; solution after attempt
+    scope_triage: required-now
   - kind: practise
     label: Official AMLS sample — Task 5 CSE and matrix-chain optimization
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 45–46
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l03/stages/stage-amls-l03-evidence/notes.md
   attachments: []
   source_feedback: []

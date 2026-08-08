@@ -17,7 +17,7 @@ stages:
     solution `𝐰 = (XᵀX)⁻¹Xᵀ𝐲`, when `XᵀX` is singular, and `pinv`.'
   done_when:
   - Explain and apply Multivariate regression & the normal equation without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -29,8 +29,8 @@ stages:
     label: 🔗 **Eli Bendersky — "Derivation of the Normal Equation"** ⭐ — [link](https://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression/)
       — derives `𝐰 = (XᵀX)⁻¹Xᵀ𝐲` in *exactly* Ng's notation; fills the proof AML leaves out.
   - kind: read
-    label: '📖 **ISLP §3.2 "Multiple Linear Regression"** — readable now (you did Ch 3 for L03). Local:
-      `…/Bücher/Introduction to Statistical Learning .pdf`. · **Toronto CSC411 Ch 2** (concise).'
+    label: 📖 **ISLP §3.2 "Multiple Linear Regression"** — readable now (you did Ch 3 for L03). · **Toronto
+      CSC411 Ch 2** (concise).
     source_id: source-islp
   - kind: read
     label: 📝 Reference §1–§5 (multivariate, gradient, normal equation, singular `XᵀX`, NE vs GD).
@@ -47,7 +47,7 @@ stages:
     regression.*'
   done_when:
   - Explain and apply Non-linear / polynomial regression without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -67,8 +67,8 @@ stages:
       3. **Skip §7.3 Basis Functions / §7.4 Splines (beyond L04).**
     source_id: source-islp
   - kind: read
-    label: '📖 **Toronto CSC411 §3 "Nonlinear Regression"** — best-scoped book match. Local: `…/Bücher/Machine
-      Learning and Data Mining…CSC 411…pdf`.'
+    label: 📖 **Toronto CSC411 §3 "Nonlinear Regression"** — best-scoped book match.
+    source_id: source-csc411-notes
   - kind: read
     label: 📕 *Skip for now:* **ESL Ch 5** is graduate-level (splines/wavelets) — well beyond L04.
   - kind: read
@@ -85,7 +85,7 @@ stages:
     / polynomial degree.'
   done_when:
   - Explain and apply Overfitting & bias–variance without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise
@@ -117,7 +117,7 @@ stages:
     L1 zeros weights".)*
   done_when:
   - 'Explain and apply Regularization: Ridge & Lasso without relying on the study map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -157,10 +157,10 @@ stages:
       · **Toronto CSC411 §3.2** (p.11).
     source_id: source-islp
   - kind: watch
-    label: '📖 **CS229 Lecture Notes §9.1 "Regularization"** ⭐ — `…/Bücher/CS229 Lecture Notes.pdf` (p.125)
-      — **the cleanest L04 treatment**: the regularized loss `Jλ = J + λR(θ)`, **L2 = weight decay** (with
-      the `θ ← (1−λη)θ − η∇J` gradient derivation — *why* the weights shrink), and **L1 = ‖θ‖₁ = Lasso/sparsity**.
-      Companion to your video spine. *(Feature-maps view of polynomial features: §5.1–5.2.)*'
+    label: '📖 **CS229 Lecture Notes §9.1 "Regularization"** ⭐ (p.125) — **the cleanest L04 treatment**:
+      the regularized loss `Jλ = J + λR(θ)`, **L2 = weight decay** (with the `θ ← (1−λη)θ − η∇J` gradient
+      derivation — *why* the weights shrink), and **L1 = ‖θ‖₁ = Lasso/sparsity**. Companion to your video
+      spine. *(Feature-maps view of polynomial features: §5.1–5.2.)*'
     source_id: source-cs229-notes
   - kind: read
     label: 📕 *Optional depth:* **ESL §3.4 Shrinkage** (rigorous) · **Murphy PML1** ridge (in Ch 11, dense).
@@ -177,12 +177,13 @@ stages:
   objective: Work through Practice & self-test within this unit's scope.
   done_when:
   - Explain and apply Practice & self-test without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise
-    label: '**Bonusblatt 2** (`…/Bonus-exercises/zusatz-blatt02.pdf`) — regression + decision-boundary/classification
-      (Aufgabe 3). ✓ **solution key**: `../lect03 linear regression/AML_BonusSheet02_Solution.md`.'
+    label: '**Bonusblatt 2** — regression + decision-boundary/classification (Aufgabe 3). ✓ **solution
+      key**: `../lect03 linear regression/AML_BonusSheet02_Solution.md`.'
+    source_id: source-aml-ss26-lectures
   - kind: read
     label: '**ISLP exercises** — **Ch 3** (multiple regression) + **§7.1** (polynomial) + **Ch 6** (Ridge/Lasso);
       solutions on [botlnec Ch 3](https://botlnec.github.io/islp/sols/chapter3/exercise1/) / [Ch 6](https://botlnec.github.io/islp/sols/chapter6/exercise1/)
@@ -199,9 +200,9 @@ stages:
     label: '**MIT 6.036 (OLL)** regularization unit — auto-graded; **Ng Coursera ex1** (multivariate/normal-equation)
       + **ex2/ex3** (regularization).'
   - kind: reference
-    label: ✓ **CS4780 HW (local)** — `…/CS4780-homeworks/2018Spring/HW6/` **Problem 1 (GD) + Problem 2
-      (Linear Regression) + Problem 3 (Weighted Ridge)** and `2018Fall/HW6/` **Problem 1 (l2/ridge)**,
-      with full solutions. ⭐
+    label: ✓ **CS4780 HW (local)** — **Problem 1 (GD) + Problem 2 (Linear Regression) + Problem 3 (Weighted
+      Ridge)** and `2018Fall/HW6/` **Problem 1 (l2/ridge)**, with full solutions. ⭐
+    source_id: source-cs4780-homeworks
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-05-practice-self-test-aml-l04/notes.md
   attachments: []
   source_feedback: []

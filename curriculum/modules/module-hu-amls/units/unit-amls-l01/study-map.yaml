@@ -29,18 +29,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 01; 01_Introduction.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/01_Introduction.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l01-integrate
   title: Integrate one foundation chapter and course overview
   status: pending
-  objective: Use Vol 1 and CMU only to stabilize the course vocabulary. Triage every curated primary paper
-    for this lecture and anchor its useful claim, mechanism or result back to the deck.
+  objective: Use Vol 1 and CMU only to stabilize the course vocabulary. Read the lecture's primary paper
+    closely and anchor its mechanism and key result back to the deck; treat the other curated papers as
+    depth you may draw on, not a checklist to clear.
   done_when:
   - A five-layer mental model is written
   - Source differences are recorded without adding new scope
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 60
   exam_critical: false
   concepts:
@@ -53,25 +58,30 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 01
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://link.springer.com/book/10.1007/978-3-031-01869-5
+    scope_triage: required-now
   - kind: read
     label: Primary paper — Hidden Technical Debt in Machine Learning Systems
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 01
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 01 (2 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 01; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: MLSysBook Vol 1 — Chapters 1–2 selected sections
     source_id: source-mlsysbook-vol1
     locator: Defining ML systems lifecycle and deployment paradigms
+    scope_triage: helpful-now
   - kind: reference
     label: CMU 10-414 — Lecture 1 overview
     source_id: source-cmu-10414
     locator: Systems/build-first overview
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -92,6 +102,7 @@ stages:
     label: MLSysBook Vol 1 chapter checkpoints
     source_id: source-mlsysbook-vol1
     locator: Chapters 1–2 selected checks
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l01/stages/stage-amls-l01-evidence/notes.md
   attachments: []
   source_feedback: []

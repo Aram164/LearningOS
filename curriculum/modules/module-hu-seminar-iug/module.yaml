@@ -12,7 +12,14 @@ type: module
 kind: academic
 area_id: program-bachelors
 thematic_group_ids:
-  - thematic-group-algorithms
+  # Was thematic-group-algorithms — a mechanical artifact of the ADR-007 bulk
+  # migration. This seminar is Informatik und Gesellschaft (Plattformregulierung:
+  # DSA/DMA, Big Tech); it contains no algorithms content and filing it under
+  # "Algorithms & Computation" made the group meaningless. Corrected 2026-08-08.
+  # method-admin is the closest existing home, not a good one. Open question for
+  # Aram: the taxonomy has no Computing & Society / policy group — adding one is
+  # an ADR-007 amendment, so it is proposed rather than done here.
+  - thematic-group-method-admin
 source_map: source-map.yaml
 unit_order:
 - unit-seminar-iug-portfolio

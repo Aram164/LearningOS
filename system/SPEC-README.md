@@ -19,7 +19,7 @@
 ## What changed vs. the original package
 
 - **Coordination layer** — `work/COORDINATION.md` owns commitments, explicit priorities, cross-workspace dependencies, and deferrals — and nothing else. The dashboard is a *generated* view (`generated/coordination-view.md`). Exam dates and workspace statuses are never restated in it.
-- **Module records** — `records/modules.yaml` owns administrative facts: module identity, credits, examination attempts (including withdrawals and second sittings), Kombimodul components, grades. Dashboards over it are generated.
+- **Module records** — administrative facts (module identity, credits, examination attempts including withdrawals and second sittings, Kombimodul components, grades) are owned by one module record; dashboards over them are generated. ⚠️ **Superseded in detail:** this bullet originally named `records/modules.yaml` as that owner. Since the curriculum v2 cutover (2026-07-17) the owner is the partitioned `curriculum/modules/<module-id>/module.yaml`, and `records/modules.yaml` is a frozen compatibility snapshot that owns nothing. The *principle* — one owner per administrative fact — is unchanged.
 - **Note roles** — optional `role` field (default `synthesis`): exercise banks, mock exams, and crosswalks stay durable, retrievable notes instead of being archived.
 - **Crosswalk ownership resolved** — contextual source judgments are canonical only in source records; crosswalk notes keep narrative; generated views reproduce the per-lecture/per-concept selector tables.
 - **Machine-validatable schemas** — `schema/*.schema.json` replace the informal SCHEMA.yaml for structure; cross-file semantic rules live in `VALIDATION.md`.
@@ -37,7 +37,7 @@
 
 ## Scope
 
-Learning OS v3 replaces the existing Masters-Planning architecture and the SoSe-2026 semester system. Operational information survives through `records/modules.yaml`, `work/COORDINATION.md`, active workspaces, and archived workspaces. No previous operational file remains a parallel canonical system.
+Learning OS v3 replaces the existing Masters-Planning architecture and the SoSe-2026 semester system. Operational information survives through the partitioned `curriculum/modules/<module-id>/module.yaml` records (originally `records/modules.yaml`, superseded at the curriculum v2 cutover), `work/COORDINATION.md`, active workspaces, and archived workspaces. No previous operational file remains a parallel canonical system.
 
 ## Contract
 

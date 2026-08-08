@@ -29,19 +29,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 02; 02_SystemArchitecture.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/02_SystemArchitecture.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l02-integrate
   title: Integrate lecturer landscape and build-first architecture
   status: pending
-  objective: Use DMMLS, Vol 1 and CMU to clarify categories already present in the deck. Triage every
-    curated primary paper for this lecture and anchor its useful claim, mechanism or result back to the
-    deck.
+  objective: Use DMMLS, Vol 1 and CMU to clarify categories already present in the deck. Read the lecture's
+    primary paper closely and anchor its mechanism and key result back to the deck; treat the other curated
+    papers as depth you may draw on, not a checklist to clear.
   done_when:
   - A single landscape table reconciles all three sources with the slides
   - No book taxonomy replaces the taught system categories
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 75
   exam_critical: false
   concepts:
@@ -54,41 +58,49 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://ojs.aaai.org/aimagazine/index.php/aimagazine/article/view/1230
+    scope_triage: required-now
   - kind: read
     label: Primary paper — Hidden Technical Debt in ML Systems
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — Auto-WEKA: Combined Selection and Hyperparameter Optimization'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1208.3719
+    scope_triage: deferred
   - kind: read
     label: Primary paper — MLPerf Training Benchmark
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1910.01500
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 02 (26 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 02; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: DMMLS — system landscape
     source_id: source-dmmls-boehm
     locator: Verify TOC after acquisition
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 1 — ML Systems and ML Frameworks
     source_id: source-mlsysbook-vol1
     locator: Chapters 2 and 7 selected sections
+    scope_triage: helpful-now
   - kind: reference
     label: CMU 10-414 — Needle design lectures
     source_id: source-cmu-10414
     locator: Architecture/design selection
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -109,6 +121,7 @@ stages:
     label: Explain-back against the Lecture 02 deck
     source_id: source-amls-ss26-lectures
     locator: Full lecture scope
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l02/stages/stage-amls-l02-evidence/notes.md
   attachments: []
   source_feedback: []

@@ -5,8 +5,11 @@ component_id: component-m2-sad
 kind: lecture-cluster
 title: SaD L06–L10 — Probability & inference synthesis overview
 order: 17
-scope: Preserved cross-lecture synthesis only. Individual L06, L07, L08, L09, and L10 units are the authoritative
-  executable plans.
+scope: 'NOT A LECTURE — this is a kind: lecture-cluster synthesis view over L06–L10.
+  The individual L06, L07, L08, L09 and L10 units are the authoritative executable
+  plans; study those. Preserved because the cross-lecture probability/inference
+  spine is genuinely useful, but it must never be presented as a peer lecture in
+  the unit sequence (ARCHITECTURE invariant 22a).'
 status: ready
 scope_sources:
 - source_id: source-sad-ss26-lectures

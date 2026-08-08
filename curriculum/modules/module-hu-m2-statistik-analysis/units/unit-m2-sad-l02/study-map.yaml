@@ -16,7 +16,7 @@ stages:
   objective: Descriptive vs inferential vs exploratory; population/sample/instance/feature; why we sample.
   done_when:
   - Explain and apply Statistics types + core vocabulary without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -39,7 +39,7 @@ stages:
     exam value — the "classify each feature" task.**
   done_when:
   - Explain and apply Scale types (Skalenniveaus) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -61,7 +61,7 @@ stages:
   objective: Absolute/relative frequency; binning (equi-width vs equi-depth); why rates don't add.
   done_when:
   - Explain and apply Frequencies, histograms, Simpson's paradox without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -87,7 +87,7 @@ stages:
   done_when:
   - 'Explain and apply Location: mean, median, mode, quantiles, boxplots without relying on the study
     map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -109,7 +109,7 @@ stages:
     — L02's slide inconsistency.
   done_when:
   - Explain and apply Dispersion + the n vs n−1 divisor without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -132,7 +132,7 @@ stages:
     "models."
   done_when:
   - Explain and apply Mind the sample without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
@@ -154,7 +154,7 @@ stages:
     Lösung.'
   done_when:
   - Explain and apply Practice & self-test  (→ exercise bank) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise

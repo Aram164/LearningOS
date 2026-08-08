@@ -18,7 +18,7 @@ stages:
     and logistic (`h=σ(X𝐰)`).
   done_when:
   - Explain and apply The gradient & the GD algorithm without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -29,20 +29,20 @@ stages:
       notes](http://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote07.html).'
   - kind: watch
     label: '🎥 **3B1B — Neural Networks #2** "Gradient descent, how networks learn" ([playlist](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)).'
-    source_id: source-3b1b-linear-algebra
+    source_id: source-3b1b-neural-networks
   - kind: reference
     label: '🔗 **Stanford CS231n — "Optimization: Stochastic Gradient Descent"** ⭐ — [notes](https://cs231n.github.io/optimization-1/)
       — the "walking downhill blindfolded" framing, the gradient as the slope, step-size effects, and
       SGD; course-quality and free.'
   - kind: watch
-    label: '📖 **CS229 Lecture Notes §1.1 "LMS algorithm"** ⭐ — `…/Bücher/CS229 Lecture Notes.pdf` (p.9)
-      — **the written companion to your CS229 video spine**: derives **batch GD**, the LMS update `θ :=
-      θ + α(y − hθ(x))·x` (magnitude ∝ error), and **stochastic gradient descent**, in the lectures''
-      exact notation. The best book match for L06.'
+    label: '📖 **CS229 Lecture Notes §1.1 "LMS algorithm"** ⭐ (p.9) — **the written companion to your CS229
+      video spine**: derives **batch GD**, the LMS update `θ := θ + α(y − hθ(x))·x` (magnitude ∝ error),
+      and **stochastic gradient descent**, in the lectures'' exact notation. The best book match for L06.'
     source_id: source-cs229-notes
   - kind: read
-    label: '📖 **Murphy PML1 Ch 8 §8.1–8.3** (Optimization: local/global, convex, smooth) — `…/Bücher/probabilistic
-      ML.pdf` · **MML Ch 7** ([free](https://mml-book.github.io/)) · **Toronto CSC411 "Gradient Descent"**.'
+    label: '📖 **Murphy PML1 Ch 8 §8.1–8.3** (Optimization: local/global, convex, smooth) · **MML Ch 7**
+      ([free](https://mml-book.github.io/)) · **Toronto CSC411 "Gradient Descent"**.'
+    source_id: source-murphy-pml1
   - kind: read
     label: 📝 Reference §1–§7.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-01-the-gradient-the-gd-algorithm/notes.md
@@ -56,7 +56,7 @@ stages:
     too small → slow; **monitor the loss curve over epochs**.
   done_when:
   - Explain and apply Convexity & the learning rate without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -77,7 +77,7 @@ stages:
     → straight to the minimum. Zero-mean and min-max normalization.
   done_when:
   - Explain and apply Feature scaling without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -96,7 +96,7 @@ stages:
     the practical default). GD cost vs the normal equation. *(Brief outlook: momentum/Adam — optional.)*'
   done_when:
   - Explain and apply Stochastic & mini-batch GD without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
@@ -125,7 +125,7 @@ stages:
   objective: 'See **`AML_L06_Exercise_Bank.md`** (this folder) for the full, scoped list. Highlights:'
   done_when:
   - Explain and apply Practice & self-test without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: reference

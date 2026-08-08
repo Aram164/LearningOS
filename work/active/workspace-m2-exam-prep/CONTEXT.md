@@ -104,9 +104,9 @@ unit_ids:
 Pass module-hu-m2-statistik-analysis: ONE combined 3h Klausur covering both the
 SaD (statistics + ML half) and Analysis components, one shared grade. The sitting
 is deferred to the 2. Termin (deferral in COORDINATION; dates in
-records/modules.yaml) — the July time pressure is off, but the merged-prep rule
-stands: interleave SaD stats clusters with Analysis proof blocks, do not run two
-parallel tracks.
+`curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`) — the July time
+pressure is off, but the merged-prep rule stands: interleave SaD stats clusters
+with Analysis proof blocks, do not run two parallel tracks.
 
 ## Current Scope
 
@@ -121,7 +121,21 @@ Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current S
 
 ## Next Action
 
-Start stage-m2-analysis-calibrate (60 min): read the script's course contract, take one cold WV sample, and create the five-class error ledger. Then begin AN.0 with unser skript Chapters 1-2.
+> **Two different pointers — do not conflate them.** The global resume pointer
+> (`curriculum/resume.yaml`) reports the *last stage left open*:
+> `unit-m2-sad-l04 / stage-event-spaces`. It is convenience state, not a
+> recommendation (ARCHITECTURE §22). The planned next block below is the
+> *decision* about what to do next. Both are correct; they answer different
+> questions. An interface must label them separately — "Resume where you left
+> off" vs "Planned next" — never both as "Continue".
+
+**Planned next block:** start stage-m2-analysis-calibrate (60 min) — read the
+script's course contract, take one cold WV sample, and create the five-class
+error ledger. Then begin AN.0 with unser skript Chapters 1–2.
+
+**Open thread to resume when convenient:** `unit-m2-sad-l04 /
+stage-event-spaces` is still `active` and unfinished; close it out during the
+steady SaD lane rather than leaving it dangling behind the Analysis start.
 
 ## Durable Notes
 

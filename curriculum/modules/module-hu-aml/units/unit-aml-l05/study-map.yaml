@@ -17,7 +17,7 @@ stages:
     the score into `[0,1]`; `h_𝐰(x)=σ(𝐰·𝐱)=P(y=1∣x)`.
   done_when:
   - Explain and apply From classification to the sigmoid hypothesis without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -27,8 +27,7 @@ stages:
   - kind: reference
     label: 📝 **CS4780 lecture notes (written companion)** — [Logistic Regression](http://www.cs.cornell.edu/courses/cs4780/2018fa/lectures/lecturenote06.html).
   - kind: read
-    label: '📖 **ISLP §4.3.1** (the logistic model) — local: `…/Bücher/Introduction to Statistical Learning
-      .pdf`. · **Toronto CSC411 §8.2** (concise).'
+    label: 📖 **ISLP §4.3.1** (the logistic model) · **Toronto CSC411 §8.2** (concise).
     source_id: source-islp
   - kind: read
     label: 📝 Reference §1–§9.
@@ -43,7 +42,7 @@ stages:
     gives non-linear boundaries (e.g. a circle).'
   done_when:
   - Explain and apply The decision boundary without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -61,7 +60,7 @@ stages:
     → log → sum → negate → **binary cross-entropy** `L(𝐰)=−(1/m)Σ[y·ln h + (1−y)·ln(1−h)]`.'
   done_when:
   - Explain and apply Cross-entropy loss & MLE without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -79,11 +78,10 @@ stages:
     label: 📖 **ISLP §4.3.2** (estimating the coefficients — MLE) · **Murphy PML1 §10.2.3** (MLE, dense,
       optional) · *optional depth:* **ESL §4.4**.
   - kind: watch
-    label: 📖 **CS229 Lecture Notes §2.1 (logistic regression) + §3.2.2 (logistic via GLM)** — `…/Bücher/CS229
-      Lecture Notes.pdf` (p.20, p.30) — the sigmoid + the log-likelihood gradient `(y − hθ(x))·x` (same
-      "signed-error × feature" skeleton as L03), and the **GLM derivation of *why* the sigmoid is the
-      right function**; §2.3 adds Newton's method. The written companion to the **CS229 Lecture 3** video
-      above.
+    label: 📖 **CS229 Lecture Notes §2.1 (logistic regression) + §3.2.2 (logistic via GLM)** (p.20, p.30)
+      — the sigmoid + the log-likelihood gradient `(y − hθ(x))·x` (same "signed-error × feature" skeleton
+      as L03), and the **GLM derivation of *why* the sigmoid is the right function**; §2.3 adds Newton's
+      method. The written companion to the **CS229 Lecture 3** video above.
     source_id: source-cs229-notes
   - kind: read
     label: 📝 Reference §11–§14.
@@ -99,7 +97,7 @@ stages:
     up → **L2-regularized logistic regression** (exclude `w₀`).'
   done_when:
   - Explain and apply The gradient, convexity & regularization without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -119,7 +117,7 @@ stages:
   objective: 'See **`AML_L05_Exercise_Bank.md`** (this folder) for the full, scoped list. Highlights:'
   done_when:
   - Explain and apply Practice & self-test without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise

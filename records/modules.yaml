@@ -1,14 +1,24 @@
-# Module records — the single canonical owner of administrative module facts.
-# Exam dates, registrations, withdrawals, sittings and grades live HERE and
-# nowhere else. Dashboards over this registry are generated views.
+# ⛔ FROZEN COMPATIBILITY SNAPSHOT — NOT AN OWNER OF ANY FACT.
 #
-# Pilot scope: the four SoSe-2026 exam-bearing modules. Facts verified from the
-# Prüfungsplan screenshot session of 2026-07-03 (legacy SESSION-LOG) and the
-# deferral decisions recorded 2026-07-16. Items marked "to verify" need an
-# AGNES check by Aram — flagged in migration/pilot-report.md.
-# AML and M2 exam facts re-verified 2026-07-25 against the official Prüfungsplan
-# (pplaninformatik_sose26, Stand 14-07-2026): dates, rooms and the 2.-PZ
-# Anmeldung window all match. AMLS is course-run and NOT on that plan.
+# This file owns nothing. Exam dates, registrations, withdrawals, sittings and
+# grades live ONLY in the owning academic module:
+#
+#     curriculum/modules/<module-id>/module.yaml
+#
+# Read that file. Write that file. Never answer an exam question from here and
+# never edit this file to record a new fact — a change made here is invisible to
+# the system and will silently disagree with the owner (CLAUDE.md hard rule #2).
+#
+# Why it still exists: the loader keeps it as a migration-completeness input so
+# `MODULE-MIGRATION` can prove that every legacy module id is covered by a
+# partitioned record. That is its only remaining job. The values below are a
+# 2026-07-25 snapshot, deliberately not maintained; where they differ from the
+# owning module.yaml, the owning module.yaml is right.
+#
+# Demoted 2026-08-08 (semantic normalization pass, item 1): this header
+# previously claimed ownership of administrative module facts, contradicting
+# CLAUDE.md hard rule #2 and system/ARCHITECTURE.md. Curriculum v2 partitioned
+# records have been authoritative since the 2026-07-17 cutover.
 modules:
   - id: module-hu-m2-statistik-analysis
     institution: HU Berlin

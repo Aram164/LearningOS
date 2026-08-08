@@ -28,19 +28,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 09; 09_DataAccess.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/09_DataAccess.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l09-integrate
   title: Integrate data-management and storage perspectives
   status: pending
-  objective: Use DMMLS and Vol 2 to deepen data-access reasoning while keeping the deck taxonomy. Triage
-    every curated primary paper for this lecture and anchor its useful claim, mechanism or result back
-    to the deck.
+  objective: Use DMMLS and Vol 2 to deepen data-access reasoning while keeping the deck taxonomy. Read
+    the lecture's primary paper closely and anchor its mechanism and key result back to the deck; treat
+    the other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - A decision table compares cache partition index compress and quantize choices
   - Additions are tied to deck pages
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 90
   exam_critical: true
   concepts:
@@ -53,37 +57,44 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://vldb.org/pvldb/vol9/p960-elgohary.pdf
+    scope_triage: required-now
   - kind: read
     label: 'Primary paper — ZipML: Training Linear Models with End-to-End Low Precision'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1611.05402
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — AWARE: Workload-aware, Redundancy-exploiting Linear Algebra'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2023a.pdf
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — Milvus: A Purpose-Built Vector Data Management System'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dl.acm.org/doi/10.1145/3448016.3457550
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 09 (22 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 09; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: DMMLS — data access and compression
     source_id: source-dmmls-boehm
     locator: Verify TOC after acquisition
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 2 — Data Storage
     source_id: source-mlsysbook-vol2
     locator: Data Storage chapter
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -105,10 +116,12 @@ stages:
     label: MIT 6.172 — locality and caching quizzes
     source_id: source-mit-6172
     locator: Selected question-first items
+    scope_triage: required-now
   - kind: practise
     label: Official AMLS sample — Task 6 min-max quantization
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 page 47
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l09/stages/stage-amls-l09-evidence/notes.md
   attachments: []
   source_feedback: []

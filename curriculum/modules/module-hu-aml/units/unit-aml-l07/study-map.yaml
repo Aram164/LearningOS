@@ -16,7 +16,7 @@ stages:
   objective: '[Slides 3–27 · Reference §1–§8]'
   done_when:
   - 'Explain and apply Perceptron: model, loss, update, convergence without relying on the study map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -45,12 +45,12 @@ stages:
   objective: '[Slides 28–42 · Reference §9–§11]'
   done_when:
   - Explain and apply Boolean gates & the XOR wall without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
     label: '🎥 **3B1B NN #1** ("What is a neural network?") — optional warm-up for the neuron picture.'
-    source_id: source-3b1b-linear-algebra
+    source_id: source-3b1b-neural-networks
   - kind: reference
     label: 📝 Verify all three gate tables by hand (30 s each); write the XOR 4-inequality contradiction
       once (mock exam D-material).
@@ -70,7 +70,7 @@ stages:
   objective: '[Slides 44–62 · Reference §12–§16, §19]'
   done_when:
   - Explain and apply Kernel trick without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
@@ -98,7 +98,7 @@ stages:
   objective: '[Slides 63–79 · Reference §17–§18]'
   done_when:
   - Explain and apply RBF kernel & landmarks without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -120,7 +120,7 @@ stages:
   objective: '[Slides 80–94 · Reference §20–§22]'
   done_when:
   - Explain and apply Multi-class without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
@@ -141,7 +141,7 @@ stages:
   objective: 'See **`AML_L07_Exercise_Bank.md`** (this folder) for the full scoped list. Highlights:'
   done_when:
   - Explain and apply Practice & self-test without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: reference

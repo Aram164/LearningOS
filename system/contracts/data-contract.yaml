@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 1
-schema_fingerprint: sha256:2d6122da8ae8ca1b40e30f83479611c09a1fb278e9465737b231469209d65ecb
+contract_version: 2
+schema_fingerprint: sha256:fafebf24219caca2399a145d49fd4162b53410c3044f6fe86dd18f3dca138d3f
 record_schemas: 21
 history:
 - version: 1
@@ -25,3 +25,11 @@ history:
     curriculum, manifest v2, projects)
   migration: null
   fixture: tests/fixtures/formats/v1/
+- version: 2
+  adopted: '2026-08-08'
+  note: 'study-map stage resources gained an optional scope_triage field (same enum
+    as the stage''s own), so a required-now stage can rank its resources: do-this
+    / if-stuck / depth / preserved. Additive and backward-compatible — absent means
+    unranked, which is what every v1 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v2/

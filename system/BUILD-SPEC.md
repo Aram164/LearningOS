@@ -87,7 +87,7 @@ One command may combine validation and generation, but individual commands must 
 
 ## Migration rules
 
-Preserve original semantics; do not polish prose automatically; do not infer mastery; do not convert every old plan into a note; do not convert every module wire into a concept relation; do not treat folder names as identity; do not retain manually maintained indexes as canonical; do not record any exam date outside `records/modules.yaml`; do not delete unresolved files; do not introduce new canonical entity types.
+Preserve original semantics; do not polish prose automatically; do not infer mastery; do not convert every old plan into a note; do not convert every module wire into a concept relation; do not treat folder names as identity; do not retain manually maintained indexes as canonical; do not record any exam date outside the owning `curriculum/modules/<module-id>/module.yaml` (this rule named `records/modules.yaml` before the curriculum v2 cutover; that file is now a frozen compatibility snapshot and must never receive a new fact); do not delete unresolved files; do not introduce new canonical entity types.
 
 ## Stop conditions
 

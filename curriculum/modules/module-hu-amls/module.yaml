@@ -36,6 +36,13 @@ type: module
 kind: academic
 area_id: program-bachelors
 thematic_group_ids:
+  # ML Systems is the primary identity — the group's own description ("training
+  # and serving at scale, ML compilation, performance and parallelism, and data
+  # management for ML") is the AMLS syllabus. It was missing here because the
+  # module predates the group's creation in ADR-007; added 2026-08-08.
+  # Open question for Aram: machine-learning is arguably now redundant under
+  # ml-systems — left in place rather than removed unreviewed.
+  - thematic-group-ml-systems
   - thematic-group-machine-learning
   - thematic-group-data-systems
 source_map: source-map.yaml

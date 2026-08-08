@@ -99,7 +99,11 @@
                 "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
                 "locator": { "type": "string" },
                 "url": { "type": "string", "format": "uri" },
-                "vault_path": { "type": "string" }
+                "vault_path": { "type": "string" },
+                "scope_triage": {
+                  "description": "Priority of THIS resource within its stage, using the same vocabulary as the stage's own scope_triage. Optional: absent means unranked, which is what every pre-v2 record carries. A required-now stage can still hold a reference-only resource — that is the point. Renders as: required-now = do this; helpful-now = if you get stuck; deferred = depth, not now; reference-only = preserved, don't read it for this stage.",
+                  "enum": ["required-now", "helpful-now", "deferred", "reference-only"]
+                }
               }
             }
           },

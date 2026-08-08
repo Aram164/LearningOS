@@ -17,7 +17,7 @@ stages:
     Get this reflexive before any arithmetic.
   done_when:
   - Explain and apply The decision grid without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -41,7 +41,7 @@ stages:
     replacement n!/(n−k); variation with replacement nᵏ.
   done_when:
   - Explain and apply Permutations & variations without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -65,7 +65,7 @@ stages:
     / Gummibärchen proof.
   done_when:
   - Explain and apply Combinations without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -90,7 +90,7 @@ stages:
     without replacement) — previews L07.
   done_when:
   - 'Explain and apply Counting → probability: Laplace + hypergeometric without relying on the study map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -114,7 +114,7 @@ stages:
     for asymptotics/complexity.
   done_when:
   - Explain and apply Binomial identities & Stirling without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
@@ -133,7 +133,7 @@ stages:
     3. **FAU** Binomial/counting items (timed) → then Blitzstein Ch 1 strategic practice for volume.'
   done_when:
   - Explain and apply Practice & self-test  (→ exercise bank) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise
