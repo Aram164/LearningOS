@@ -181,7 +181,7 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     repo = load_repo(mini_repo)
     assert not [issue for issue in validate(repo) if issue.severity == "E"]
     manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
-    assert manifest["_generated"]["contract_version"] == 3
+    assert manifest["_generated"]["contract_version"] == 4
     assert manifest["programs"][0]["id"] == "program-bachelors"
     assert manifest["modules"][0]["id"] == "module-demo"
     assert manifest["units"][0]["source_selections"][0]["locator"] == "§1 Erwartungswert"
@@ -1495,3 +1495,134 @@ def test_source_domain_does_not_inherit_module_or_collection_context(mini_repo):
     assert manifest["indexes"]["source_to_modules"][
         "source-demo-book"
     ] == ["module-demo"]
+
+# --------------------------------------------------------------------------
+# MANIFEST V4 — CONCRETE REVIEW DECISIONS
+# --------------------------------------------------------------------------
+
+def test_review_queue_projects_stable_inbox_decision(mini_repo):
+    add_curriculum(mini_repo)
+
+    capture = mini_repo / "work/inbox/question.md"
+    capture.write_text(
+        "# Where does this belong?\n\nUnrouted thought.\n",
+        encoding="utf-8",
+    )
+
+    first = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T1",
+        )["manifest.json"]
+    )
+    second = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T2",
+        )["manifest.json"]
+    )
+
+    [item] = [
+        row
+        for row in first["review_items"]
+        if row["category"] == "inbox"
+    ]
+    [again] = [
+        row
+        for row in second["review_items"]
+        if row["category"] == "inbox"
+    ]
+
+    assert item["id"] == again["id"]
+    assert item["title"] == "Where does this belong?"
+    assert item["target"]["kind"] == "inbox-item"
+    assert item["target"]["path"] == "work/inbox/question.md"
+    assert item["target"]["revision"].startswith("sha256:")
+    assert "human placement decision" in item["reason"]
+
+
+def test_review_queue_projects_shelving_proposal_with_revision(mini_repo):
+    add_curriculum(mini_repo)
+
+    path = (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    )
+    study_map = yaml.safe_load(
+        path.read_text(encoding="utf-8")
+    )
+    study_map["shelving"] = {
+        "state": "proposed",
+        "summary": "Two things are ready for human review.",
+        "items": [
+            {
+                "id": "proposal-demo-note",
+                "kind": "durable-note",
+                "title": "Expected value synthesis",
+                "destination": "knowledge/notes/mathematics/expected-value.md",
+                "rationale": "The derivation is now stable.",
+            },
+        ],
+    }
+    write_yaml(path, study_map)
+
+    manifest = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T1",
+        )["manifest.json"]
+    )
+
+    [item] = [
+        row
+        for row in manifest["review_items"]
+        if row["category"] == "shelving"
+    ]
+
+    projected_map = next(
+        row
+        for row in manifest["study_maps"]
+        if row["id"] == "study-map-demo-l01"
+    )
+
+    assert item["id"] == "review-shelving-study-map-demo-l01"
+    assert item["target"]["id"] == "study-map-demo-l01"
+    assert item["target"]["unit_id"] == "unit-demo-l01"
+    assert item["target"]["proposal_ids"] == [
+        "proposal-demo-note"
+    ]
+    assert item["target"]["revision"] == projected_map["revision"]
+
+
+def test_review_queue_projects_needs_map_as_planning_decision(mini_repo):
+    add_curriculum(mini_repo)
+
+    path = (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    )
+    unit = yaml.safe_load(
+        path.read_text(encoding="utf-8")
+    )
+    unit["status"] = "needs-map"
+    unit.pop("current_study_map", None)
+    write_yaml(path, unit)
+
+    manifest = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T1",
+        )["manifest.json"]
+    )
+
+    [item] = [
+        row
+        for row in manifest["review_items"]
+        if row["category"] == "planning"
+    ]
+
+    assert item["id"] == "review-planning-unit-demo-l01"
+    assert item["target"]["kind"] == "unit"
+    assert item["target"]["id"] == "unit-demo-l01"
+    assert item["target"]["module_id"] == "module-demo"
+    assert "needs a study map" in item["reason"]

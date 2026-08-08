@@ -11,7 +11,10 @@ from uuid import uuid4
 from .errors import ActionPolicyError, ConfidentialityError, DeliveryValidationError, StaleDeliveryError, TargetNotFoundError
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
-from .support import Clock, _atomic_text, _dump_yaml, _garden_id, _garden_tags, _garden_title, _inside, _iso, _now_utc, _projection, _read_yaml, _sha256_file, _snapshot, parse_frontmatter_request_id
+from learning_os.contracts.manifest_contract import declared_version
+from learning_os.garden import project_garden_entries
+from learning_os.loader import load_repo
+from .support import Clock, _atomic_text, _dump_yaml, _inside, _iso, _now_utc, _projection, _read_yaml, _sha256_file, _snapshot, parse_frontmatter_request_id
 
 class AIActionService:
     """Bounded gateway for AI-proposed canonical writes.
@@ -70,44 +73,8 @@ class AIActionService:
             )
 
     def list_garden_targets(self) -> list[dict[str, Any]]:
-        garden = self.root / "knowledge" / "garden"
-        rows = []
-        seen: dict[str, str] = {}
-        if not garden.is_dir():
-            return rows
-        for path in sorted(garden.rglob("*.md")):
-            rel_parts = path.relative_to(garden).parts
-            if path.name.startswith((".", "_")) or path.name.lower() == "readme.md":
-                continue
-            if any(part in {"transcriptions", "syntheses"} or part.startswith("_")
-                   for part in rel_parts[:-1]):
-                continue
-            body = path.read_text(encoding="utf-8", errors="replace")
-            target_id = _garden_id(garden, path)
-            if target_id in seen:
-                # Loud refusal beats a silent rename: two notes sharing an
-                # identity would let one delivery overwrite the other's state.
-                raise ActionPolicyError(
-                    f"Garden identity collision: {seen[target_id]} and "
-                    f"{path.relative_to(self.root).as_posix()} both resolve to {target_id}"
-                )
-            seen[target_id] = path.relative_to(self.root).as_posix()
-            state = _read_yaml(self.repository.state_path(target_id), {})
-            if not isinstance(state, dict):
-                state = {}
-            rows.append({
-                "id": target_id,
-                "type": "garden-note",
-                "title": state.get("title") or _garden_title(body, path.stem),
-                "path": path.relative_to(self.root).as_posix(),
-                "state": state.get("state", "seed"),
-                "revision": _sha256_file(path),
-                "tags": _garden_tags(body),
-                "job_derived": bool(state.get("job_derived", False)),
-                "transcription_path": state.get("transcription_path"),
-                "last_ai_request_id": state.get("last_ai_request_id"),
-            })
-        return rows
+        """Use the same Garden projection every other Core consumer uses."""
+        return project_garden_entries(load_repo(self.root))
 
     def _target(self, target_id: str) -> tuple[dict[str, Any], Path]:
         for row in self.list_garden_targets():
@@ -218,7 +185,7 @@ class AIActionService:
             "contract-lock.json": (json.dumps({
                 "exchange_bundle_version": 1,
                 "capability_contract_version": 1,
-                "manifest_contract_version": 2,
+                "manifest_contract_version": declared_version(self.root),
                 "action_registry_schema_version": 1,
             }, indent=2) + "\n").encode("utf-8"),
             original["bundle_path"]: source.read_bytes(),

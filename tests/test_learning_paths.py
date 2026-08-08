@@ -66,7 +66,7 @@ def test_path_loads_validates_and_projects_stage_notes(mini_repo):
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     path_rec = next(r for r in manifest["records"] if r["id"] == "path-demo-probability")
     assert path_rec["stages"][0]["notes_text"] == "My uncertain derivation.\n"
-    assert manifest["_generated"]["contract_version"] == 3
+    assert manifest["_generated"]["contract_version"] == 4
     assert manifest["_generated"]["snapshot_id"].startswith("sha256:")
     assert "concept_to_notes" in manifest["backlinks"]
 
