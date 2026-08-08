@@ -117,6 +117,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_ownership()
         self.check_modules()
         self.check_curriculum()
+        self.check_lifecycle_coherence()
         self.check_projects()
         self.check_transaction_receipts()
         self.check_files()

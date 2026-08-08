@@ -119,6 +119,63 @@ class ChecksCurriculum:
                 self.err("UNIT-MAP-UNDECLARED",
                          f"unit '{uid}' has a study-map.yaml but does not declare it", where)
 
+    def check_lifecycle_coherence(self):
+        """A unit cannot be ready while every workspace that would do it is blocked.
+
+        Algo 2 was, on 2026-08-08, four things at once: a `blocked` workspace
+        saying "no study, next action none", a `ready` unit, a `ready` study map,
+        and a `required-now` stage. Each file was individually valid — nothing
+        compared them, so the repository asserted *do nothing* and *do this now*
+        with equal confidence, and the UI could legitimately surface either.
+
+        Administrative and operational state are allowed to disagree: the module
+        stays `enrolled` because there was no university withdrawal. What is not
+        allowed is two *operational* layers disagreeing about the same work.
+
+        Scope is deliberately narrow — this fires only when the unit has at
+        least one active workspace and EVERY one of them is blocked, which is
+        what "sole execution context" means. A unit worked in two workspaces,
+        one blocked, is ordinary and untouched.
+
+        The audit suggested an explicit exception hatch. None is added yet: no
+        real case needs one, and an unused escape route in a lifecycle rule is
+        an invitation to silence the rule rather than fix the state. If one ever
+        appears, an optional `lifecycle_exception` on the unit is the shape to
+        add — with a schema bump, so the exception is itself declared.
+        """
+        r = self.repo
+        active = r.active_workspaces()
+        blocked = {w.id for w in active if w.status == "blocked"}
+        if not blocked or not r.units:
+            return
+        maps_by_unit = {sm.unit_id: sm for sm in r.study_maps.values()}
+        for uid, unit in sorted(r.units.items()):
+            # Read the join from both sides: either declaration is enough to
+            # count as a context, so a one-sided edit can only ever ADD an
+            # unblocked context and relax this rule, never invent a failure.
+            declared = set(unit.data.get("workspace_ids") or [])
+            contexts = {w.id for w in active
+                        if uid in (w.meta.get("unit_ids") or []) or w.id in declared}
+            if not contexts or not contexts.issubset(blocked):
+                continue
+            names = ", ".join(sorted(contexts))
+            if unit.data.get("status") in {"ready", "active"}:
+                self.err("LIFECYCLE-BLOCKED-UNIT",
+                         f"unit '{uid}' is '{unit.data.get('status')}' but every workspace "
+                         f"that would carry it is blocked ({names}) — pause the unit, or "
+                         f"unblock the workspace; the repository must not say both",
+                         self._rel(unit.path))
+            study_map = maps_by_unit.get(uid)
+            # StudyMap is a plain record holder — no status property, unlike
+            # Workspace and LearningPath. Read the field.
+            map_status = study_map.data.get("status") if study_map is not None else None
+            if map_status in {"ready", "active"}:
+                self.err("LIFECYCLE-BLOCKED-MAP",
+                         f"study map '{study_map.id}' is '{map_status}' but its unit's "
+                         f"only execution context is blocked ({names}) — pause the map with "
+                         f"the unit; its stages stay as the reinstatement plan",
+                         self._rel(study_map.path))
+
     def check_study_maps(self):
         # The manifest publishes `stages` as a FLAT by-id index (ADR-006, fifth
         # addendum), so stage ids must be unique across the whole repository and

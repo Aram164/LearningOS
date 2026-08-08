@@ -632,3 +632,85 @@ produce; running `tools/generate_capability_schemas.py` must be a no-op, and
 `test_capability_dispatch.py` no longer excludes the two project capabilities
 from the round-trip assertion — that exclusion was the finding's own footprint
 in the test suite.
+
+**Gap worth naming.** The new manifest contract locks *top-level* keys, the
+`_generated` block and the index tables. It says nothing about the fields inside
+a projected record, so item 4 below adds three fields to every module record
+without tripping it. That is the right granularity for now — locking every
+record shape would duplicate the canonical schemas — but nobody should read the
+contract as protecting record fields, because it does not.
+
+## Items 3–4 — 2026-08-08, **VERIFIED — both repositories green**
+
+Written in the same shell-less session as items 1–2 (fifth identical
+`No space left on device`) and run by Aram on his own machine.
+
+| | result |
+|---|---|
+| `tools/validate.py` before and after regeneration | **0 errors, 0 warnings** |
+| Core `pytest` | **275 passed**, 1 skipped (259 + exactly the 16 added: 4 lifecycle, 12 module-lifecycle) |
+| UI `npm run check` | **green**, including the new non-actionable-module case |
+
+Two corrections on the way, both mine: `StudyMap` is a plain record holder with
+no `status` property (unlike `Workspace` and `LearningPath`), and the migration
+preservation bug below.
+
+**Still unproven:** the intended *behavioural* change. That Algo 2, PPDS and the
+IUG seminar disappear from Home's "Continue elsewhere" while M2, AML, AMLS, the
+thesis, Python and the bridges module remain is a claim about live data, and the
+UI suite only exercises the synthetic fixture. It wants one look in Obsidian.
+
+**Item 3 — Algo2 lifecycle.** The module stays `enrolled`; there was no
+university withdrawal and the record should not pretend otherwise. The
+operational layers move together: `unit-algo2-exam-prep` and
+`study-map-algo2-exam-prep` go `ready` → `paused`, the workspace stays
+`blocked`.
+
+The stage underneath is deliberately untouched — still `pending` with
+`scope_triage: required-now`. Inside a *paused* map that reads correctly: it
+says what comes first when this resumes, which is what the preserved
+reinstatement plan is for. It was only contradictory while the map claimed to be
+ready.
+
+`check_lifecycle_coherence` makes the class of state impossible:
+`LIFECYCLE-BLOCKED-UNIT` and `LIFECYCLE-BLOCKED-MAP` fire when a unit is
+`ready`/`active` while every active workspace attached to it is blocked. The
+join is read from both sides, so a one-sided edit can only add an unblocked
+context and relax the rule, never invent a failure. A unit worked in two
+workspaces, one blocked, is ordinary and untouched.
+
+The audit asked for an explicit exception hatch. **Not added** — no real case
+needs one, and an unused escape route in a lifecycle rule mostly invites
+silencing the rule instead of fixing the state. If one appears, an optional
+`lifecycle_exception` on the unit is the shape, with a schema bump so the
+exception is itself declared. Recorded here as a deliberate deviation.
+
+**Item 4 — the two state machines.** Core now projects
+`administrative_status`, `operational_state` and `is_actionable` on every module
+record; `status` stays exactly as authored. Operational state is derived from
+the units, not from the module's own field, because a module cannot be active
+while everything under it is paused.
+
+Home consumes `is_actionable`. Its old filter was worse than the audit
+recorded: it excluded `'complete'` while module records use `'completed'`, so it
+had never excluded anything at all.
+
+Expected effect on live data — Algo 2 and PPDS and the IUG seminar drop out of
+"Continue elsewhere" (all units paused); M2, AML, AMLS, the thesis, Python and
+the bridges module stay. That is the whole intended behavioural change, and it
+is the thing to eyeball in the UI after the suites pass.
+
+Splitting `status` itself into two fields remains the longer-term fix and a
+breaking change to every stored module record; it is not attempted here.
+
+**A latent bug the pause surfaced — not in the audit.**
+`test_live_migration_is_idempotent_in_dry_run` failed, wanting to write `ready`
+back over the paused Algo 2 unit and map. The cause was in
+`tools/migrations/curriculum_v2.py`: AML, M2 and AMLS are protected by
+`preserve_existing_units` — its docstring states the rule, that partitioned
+units become canonical after the first seed and a re-run must preserve later
+refinement — but **Algo 2, PPDS and the IUG seminar were seeded
+unconditionally**. Any hand refinement of those three would have been silently
+reverted by an `--apply` re-run; nothing would have reported it, because the
+seed and the disk had simply always agreed. They are now preserved like the
+rest. The pause was the first refinement any of them had ever received.

@@ -579,6 +579,19 @@ def run(root: Path, apply: bool) -> Migration:
         "Seminar portfolio and pending grade", 1,
         "Existing portfolio deliverables and administrative follow-up.", "paused", [])]
 
+    # These three were seeded unconditionally while AML, M2 and AMLS above are
+    # preserved — so any later hand refinement of them was quietly reverted by a
+    # re-run, against this migrator's own rule that partitioned units become
+    # canonical after the first seed.
+    #
+    # Pausing Algo 2's unit and study map on 2026-08-08 (engineering audit,
+    # finding 3) is exactly such a refinement, and it is what made the omission
+    # visible: the dry run wanted to write `ready` back over the pause. The
+    # seeds above still run on a genuine first migration, when there is nothing
+    # on disk to preserve.
+    for mid in ("module-hu-algo2", "module-hu-ppds", "module-hu-seminar-iug"):
+        preserve_existing_units(before, units_by_module, source_map_defs, mid)
+
     modules["module-skill-python"] = {
         "id": "module-skill-python", "type": "module", "kind": "skill",
         "area_id": "program-skills", "title": "Python", "status": "active",
