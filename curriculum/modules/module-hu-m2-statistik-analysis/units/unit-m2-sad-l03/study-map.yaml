@@ -17,7 +17,7 @@ stages:
     as cosine of centered vectors (Cauchy–Schwarz).
   done_when:
   - Explain and apply Covariance & Pearson correlation without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -41,7 +41,7 @@ stages:
     = Gaussian MLE); the four scatterplot issues.
   done_when:
   - Explain and apply Simple linear regression + why L2 without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -62,7 +62,7 @@ stages:
     O(m³) cost + numerical issues.
   done_when:
   - 'Explain and apply MLR: the normal equation without relying on the study map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -86,7 +86,7 @@ stages:
     for L2 MLR); the gradient step 2Σ(f(xᵢ)−yᵢ)x_{j,i}; stochastic GD; complexity.
   done_when:
   - Explain and apply Gradient descent without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -111,7 +111,7 @@ stages:
   done_when:
   - Explain and apply Feature scaling, weight interpretation, beyond MLR without relying on the study
     map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -139,7 +139,7 @@ stages:
     4. **FAU** correlation/regression item + **Arbeitsbuch Ch 3** for volume.'
   done_when:
   - Explain and apply Practice & self-test  (→ exercise bank + Bridge) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise

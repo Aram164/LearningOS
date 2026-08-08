@@ -29,6 +29,7 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 13; 13_ModelDeployment.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/13_ModelDeployment.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-scope/notes.md
   attachments: []
   source_feedback: []
@@ -36,12 +37,15 @@ stages:
   title: Integrate inference, serving and operations views
   status: pending
   objective: Use Vol 2, Vol 1 and Huyen to sharpen serving trade-offs without expanding the exam scope.
-    Triage every curated primary paper for this lecture and anchor its useful claim, mechanism or result
-    back to the deck.
+    Read the lecture's primary paper closely and anchor its mechanism and key result back to the deck;
+    treat the other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - A serving decision table covers throughput latency memory monitoring and updates
   - All source details map to deck sections
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 90
   exam_critical: true
   concepts:
@@ -54,47 +58,56 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/conference/nsdi17/nsdi17-crankshaw.pdf
+    scope_triage: required-now
   - kind: read
     label: 'Primary paper — PRETZEL: Opening the Black Box of ML Prediction Serving Systems'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/osdi18-lee.pdf
+    scope_triage: deferred
   - kind: read
     label: Primary paper — A Tensor Compiler for Unified ML Prediction Serving (Hummingbird)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2010.04804
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Distilling the Knowledge in a Neural Network
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1503.02531
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — NoScope: Optimizing Deep CNN-Based Queries over Video Streams'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: http://www.vldb.org/pvldb/vol10/p1586-kang.pdf
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 13 (25 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 13; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: MLSysBook Vol 2 — Inference at Scale
     source_id: source-mlsysbook-vol2
     locator: Inference at Scale chapter
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 1 — Model Serving and ML Operations
     source_id: source-mlsysbook-vol1
     locator: Chapters 13–14 selected sections/checkpoints
+    scope_triage: helpful-now
   - kind: read
     label: Huyen DMLS Chapters 7–9
     source_id: source-huyen-dmls
     locator: Deployment prediction service shifts monitoring continual learning
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -115,6 +128,7 @@ stages:
     label: Official AMLS sample — Task 7 Model Deployment
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 page 48
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l13/stages/stage-amls-l13-evidence/notes.md
   attachments: []
   source_feedback: []

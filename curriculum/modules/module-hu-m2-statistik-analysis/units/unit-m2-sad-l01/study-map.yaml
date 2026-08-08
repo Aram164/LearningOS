@@ -16,7 +16,7 @@ stages:
   objective: The three "centers", the histogram, and why the mean isn't robust to outliers.
   done_when:
   - 'Explain and apply Describing data: mean, median, mode, robustness without relying on the study map.'
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -44,7 +44,7 @@ stages:
     classes. **Exam-relevant.**
   done_when:
   - Explain and apply The confusion matrix + precision/recall without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -72,17 +72,20 @@ stages:
     bridge. **The heart of the lecture and exam-relevant.**'
   done_when:
   - Explain and apply Base-rate neglect & Bayes (counting + formula) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
-    label: 🎥 ⭐ **3Blue1Brown — "The medical test paradox, and redesigning Bayes' rule"** (https://www.youtube.com/watch?v=lG4VkPoG3ko)
-      — literally slide 23–24's example.
-    source_id: source-3b1b-linear-algebra
+    label: 🎥 ⭐ **3Blue1Brown — "The medical test paradox, and redesigning Bayes' rule"**
+      — literally slide 23–24's example. (Standalone 3B1B video, not part of a registered
+      playlist — deliberately no source_id; see the Essence of Linear Algebra / Neural
+      Networks playlists for the registered 3B1B sources.)
+    url: https://www.youtube.com/watch?v=lG4VkPoG3ko
   - kind: watch
-    label: '🎥 ⭐ **3Blue1Brown — "Bayes theorem, the geometry of changing beliefs"** (https://www.youtube.com/watch?v=HZGCoVF3YvM)
-      — the representative-population / areas intuition; core message: *don''t memorize, draw the diagram.*'
-    source_id: source-3b1b-linear-algebra
+    label: '🎥 ⭐ **3Blue1Brown — "Bayes theorem, the geometry of changing beliefs"**
+      — the representative-population / areas intuition; core message: *don''t memorize, draw the diagram.*
+      (Standalone 3B1B video, not part of a registered playlist — deliberately no source_id.)'
+    url: https://www.youtube.com/watch?v=HZGCoVF3YvM
   - kind: read
     label: '📖 **Blitzstein Ch 2** (§2.1 thinking conditionally, §2.2 definition & intuition, §2.3 Bayes
       + total probability, §2.7 conditioning as a tool, §2.8 pitfalls) — local, the best written intuition
@@ -107,6 +110,9 @@ stages:
   done_when:
   - 'Explain and apply Context: the "same distribution?" question + case study without relying on the
     study map.'
+  # Deliberately false: the objective states this stage is non-examinable context.
+  # required-now + exam_critical:false is the correct combination here — read it, but
+  # it will not be tested. (Confirmed during the 2026-08-08 normalization pass.)
   exam_critical: false
   scope_triage: required-now
   resources:
@@ -125,7 +131,7 @@ stages:
   objective: 'Closed-book, then self-grade. Details in `SaD_L01_Exercise_Bank.md`:'
   done_when:
   - Explain and apply Practice & self-test  (→ exercise bank) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: practise

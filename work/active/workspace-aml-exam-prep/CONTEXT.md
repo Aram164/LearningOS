@@ -75,22 +75,34 @@ unit_ids:
 ## Objective
 
 Pass the AML Klausur at the 2. Termin (module-hu-aml; 1. Termin skipped per the
-plan of record — dates and attempt state in records/modules.yaml). Work through
-the remaining Foundations fast path: F.D1/D5 loose ends, then Blocks I→K→L→M
-(L05–L11), using the per-lecture units as study scripts where they exist.
+plan of record — dates and attempt state in
+`curriculum/modules/module-hu-aml/module.yaml`). Work through the remaining
+Foundations fast path: F.D1/D5 loose ends, then Blocks I→K→L→M (L05–L11), using
+the per-lecture units as study scripts where they exist.
 
 ## Current Scope
 
-*Required now* — nothing before mid-August: this workspace remains parked
-behind M2 prep and the AMLS sitting. All current AML L01–L10 lectures now
-have individual plans, so the first real study block can still begin with
-L07 and continue directly into L08–L10 without a planning detour.
+> **Phase A posture (COORDINATION.md, Aram 2026-07-25): synergy lane, not
+> parked.** AMLS is the primary track until its sitting, but AMLS
+> content is understood on top of AML foundations, so the AML concepts AMLS
+> rests on are studied *together with AMLS now* — the shared hours serve both
+> exams. What is deferred is AML **exam-specific** prep, not AML learning.
+> (Until 2026-08-08 this section still read "parked until after the AMLS
+> sitting", the pre-07-25 rule that COORDINATION.md explicitly superseded.)
+
+*Required now* — the AML foundations AMLS builds on, pulled in on demand from
+the AMLS track rather than run as a separate lecture sequence. Concretely:
+computation graphs → backprop (unit-aml-l09) behind AMLS L03/L04 rewriting and
+fusion; the forward pass and activation material (unit-aml-l08) behind AMLS
+hardware and distributed-execution decks. Study these from the AML units when
+AMLS reaches them — do not schedule them as their own block yet.
 
 *Helpful now* — passive cross-wires during M2: SaD L11 supplies workflow
 and metrics; SaD L15 is the deliberate warm-up for AML L08–L09.
 
-*Defer studying* — L08–L10 until after the AMLS sitting. Their plans are
-ready; this does not move their calendar priority.
+*Defer* — AML **exam-specific** preparation until after the AMLS sitting: the
+L07 Mini Plan run, the closed-book mock, and the systematic L05→L11 sweep.
+Their plans are ready; this does not move their calendar priority.
 
 *Reference only* — AML L11 is a conditional prior-year RNN plan. The local
 2026 archive currently stops at L10, so L11 must not become exam scope
@@ -105,9 +117,14 @@ until a current deck or syllabus confirmation appears.
 
 ## Next Action
 
-Parked until after the AMLS sitting (last August slot). Then: run the L07 Mini
-Plan (`inputs/AML_L07_Mini_Plan.md`), self-test with `note-aml-l07-mock-exam`
-(75 min, closed book).
+**Now (synergy):** when the AMLS track reaches computation graphs and rewriting
+(AMLS L03/L04), study `unit-aml-l09` alongside it rather than skimming the AMLS
+deck alone — that is the single highest-shared-value AML block in Phase A.
+
+**After the AMLS sitting, exam-specific prep begins:** run the L07 Mini Plan
+(`inputs/AML_L07_Mini_Plan.md`), self-test with `note-aml-l07-mock-exam`
+(75 min, closed book), then the L08–L10 sweep. (The sitting date lives in
+`curriculum/modules/module-hu-amls/module.yaml` — never restated here.)
 
 ## Durable Notes
 
@@ -119,8 +136,9 @@ web courses/docs, and explicit off-scope shelf dispositions.
 
 ## Deferred
 
-- Studying L08–L10 remains after L07 and the AMLS sitting; only the missing
-  planning work has been completed now.
+- The systematic L08–L10 sweep remains after L07 and the AMLS sitting; only the
+  missing planning work has been completed now. This does not block pulling
+  L08/L09 material in early as AMLS synergy (see Current Scope).
 - L11 RNN execution is deferred until 2026 scope is confirmed.
 - Sutton & Barto remains visible but off-scope for posted AML L01–L10;
   Zacharski is an optional L02 alternative, not a neural-network source.

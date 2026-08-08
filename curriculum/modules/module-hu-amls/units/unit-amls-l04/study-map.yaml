@@ -29,19 +29,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 04; 04_AdvancedCompilation.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/04_AdvancedCompilation.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l04-integrate
   title: Integrate fusion prose and implementation
   status: pending
-  objective: Connect SystemDS fusion decisions to one MLC graph-optimization/fusion example. Triage every
-    curated primary paper for this lecture and anchor its useful claim, mechanism or result back to the
-    deck.
+  objective: Connect SystemDS fusion decisions to one MLC graph-optimization/fusion example. Read the
+    lecture's primary paper closely and anchor its mechanism and key result back to the deck; treat the
+    other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - One fused and unfused dataflow is compared
   - Source additions are explicitly mapped to deck pages
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 90
   exam_critical: true
   concepts:
@@ -54,37 +58,44 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1801.00829
+    scope_triage: required-now
   - kind: read
     label: 'Primary paper — MLIR: Scaling Compiler Infrastructure for Domain-Specific Computation'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2002.11054
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Attention Is All You Need
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1706.03762
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2205.14135
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 04 (13 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 04; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: DMMLS — fusion and code generation
     source_id: source-dmmls-boehm
     locator: Verify TOC on first open
+    scope_triage: helpful-now
   - kind: practise
     label: MLC — graph optimization and fusion notebook
     source_id: source-mlc-book
     locator: Matching executable chapters
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -107,10 +118,12 @@ stages:
     label: MIT 6.172 — vectorization and ILP quiz items
     source_id: source-mit-6172
     locator: Selected question-first items
+    scope_triage: required-now
   - kind: practise
     label: CMU 10-414 — graph/compiler optimization exercise
     source_id: source-cmu-10414
     locator: Smallest matching exercise
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l04/stages/stage-amls-l04-evidence/notes.md
   attachments: []
   source_feedback: []

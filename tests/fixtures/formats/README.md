@@ -35,6 +35,13 @@ module source maps, units, study maps, stage notes, the resume pointer, notes,
 concepts, concept relations, sources, the modules registry, coordination,
 workspaces, and projects (registry, aliases, relations).
 
+`v2` (adopted 2026-08-08) is `v1` plus resource-level `scope_triage` on study-map
+stage resources. Its demo stage deliberately carries one resource of each rank —
+`required-now`, `helpful-now`, `deferred`, `reference-only` — **and one with no
+rank at all**, because unranked is what every v1 record carries and the loader
+must keep accepting it. A v2 fixture that ranked everything would stop proving
+the field is optional.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

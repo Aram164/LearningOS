@@ -697,7 +697,20 @@ def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
         assert len(complete) == 1
         assert complete[0]["kind"] == "reference"
         assert f"({expected['bibliography']} entries)" in complete[0]["label"]
-        assert any("Every curated paper is marked" in item for item in stage["done_when"])
+
+        # The inventory must be PRESERVED (asserted above: every curated paper is a
+        # resource, and the full bibliography is a reference-only entry). It must not
+        # be pushed onto the learner as a study task. Source-completeness is an
+        # operator obligation discharged at plan-creation time (WORKFLOWS.md); a
+        # done_when that says "disposition every curated paper" converts the
+        # operator's bookkeeping into the learner's exam hours. Normalization pass,
+        # 2026-08-08, item 4.
+        assert not any("Every curated paper is marked" in item
+                       for item in stage["done_when"]), (
+            f"lecture {lecture}: the operator's source-completeness gate has leaked "
+            "back into a learner done_when")
+        assert any("primary paper" in item.lower() for item in stage["done_when"]), (
+            f"lecture {lecture}: the learner gate must still name the primary paper")
 
 
 def test_amls_reading_list_still_matches_checked_in_inventory():
@@ -719,7 +732,27 @@ def test_live_migration_preserves_rollback_evidence(repo_root):
     mapping = yaml.safe_load(
         (repo_root / "migration/curriculum-v2/old-to-new.yaml").read_text(encoding="utf-8"))
     report = (repo_root / "migration/curriculum-v2/report.md").read_text(encoding="utf-8")
-    assert backup.read_bytes() == original.read_bytes()
+
+    # Rollback evidence means the DATA has not drifted from the pre-migration
+    # snapshot — not that the deprecated file is forbidden a deprecation banner.
+    # `records/modules.yaml` is a frozen compatibility snapshot (CLAUDE.md hard
+    # rule #2), so its records must stay byte-identical to the backup, while its
+    # comment header is allowed to say loudly that it owns nothing. Byte-equality
+    # on the whole file would forbid exactly that warning. Normalization pass,
+    # 2026-08-08, item 1.
+    def _records_only(path):
+        return [ln for ln in path.read_text(encoding="utf-8").splitlines()
+                if not ln.lstrip().startswith("#")]
+
+    assert yaml.safe_load(original.read_text(encoding="utf-8")) == \
+        yaml.safe_load(backup.read_text(encoding="utf-8")), \
+        "records/modules.yaml data drifted from the rollback snapshot"
+    assert _records_only(original) == _records_only(backup), \
+        "records/modules.yaml changed outside its comment header"
+    assert "FROZEN COMPATIBILITY SNAPSHOT" in original.read_text(encoding="utf-8"), \
+        "the frozen-snapshot banner regressed; the file would again read as an owner"
+    assert "single canonical owner" not in original.read_text(encoding="utf-8"), \
+        "records/modules.yaml is claiming ownership again"
     pairs = {(row["old"], row["new"]) for row in mapping["mappings"]}
     assert ("work/active/workspace-degree-planning",
             "curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning") in pairs

@@ -518,6 +518,20 @@ Source relationships have four distinct owners:
 3. the unit owns exact selected sections against lecture scope;
 4. the stage owns the small watch/read/practise/reference action and locator.
 
+**Resource-level scope triage (data contract v2, 2026-08-08).** A stage resource
+may carry its own optional `scope_triage`, drawn from the same four-value
+vocabulary as the stage's: `required-now`, `helpful-now`, `deferred`,
+`reference-only`. Without it, every resource inside a `required-now` stage reads
+as equally mandatory — the lecture deck, the second-opinion video, the optional
+depth paper and the preserved bibliography all look the same, so a well-stocked
+stage becomes a wall of sources and the triage the architecture already believes
+in stops at the stage boundary. With it, one stage renders as *do this / if you
+get stuck / depth, not now / preserved*. The field is optional on purpose:
+absent means unranked, which is what every v1 record carries, and an unranked
+resource must never be treated as deprioritized. Ranking a resource is a
+presentation decision about *this stage*; it never edits the source's own
+pedagogical evaluation, which stays owned by the source record (owner 1 above).
+
 Stage feedback is personal use evidence. It never silently changes the global
 evaluation. A later evaluation change is an approval-gated proposal.
 
@@ -567,7 +581,20 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 21. A unit has at most one current study map, and every map's current stage is
     one of its own ordered stages.
 22. The resume pointer is optional convenience state and never filters the
-    curriculum.
+    curriculum. It reports the last stage left open — *where you stopped* — and
+    is never, on its own, an answer to *what to do next*. An interface that
+    labels both with one word ("Continue") destroys a distinction the core is
+    careful to keep: show "Resume where you left off" and "Planned next"
+    separately, and let them disagree, because they legitimately do.
+22a. `unit_order` is an ordering, not a claim that every entry is the same kind
+    of thing. Each unit carries `kind` (`lecture`, `topic`, `lecture-cluster`,
+    `milestone`, `exam-block`, `bridge`), the manifest projects it, and
+    interfaces must render it: a `lecture-cluster` such as
+    `unit-m2-sad-l06-l10` is a cross-lecture synthesis over units that are
+    themselves the authoritative plans, and listing it flat between L15 and the
+    Analysis block presents a summary as a sixteenth lecture. Non-`lecture`
+    kinds are shown as what they are or grouped apart — never silently dropped,
+    because a unit that no surface lists is a unit that does not exist.
 23. Workspace-to-module/unit joins are explicit in v2; interfaces never infer
     them from names or prose.
 24. Master's quarantined content and Job content never enter the normal

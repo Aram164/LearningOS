@@ -34,29 +34,41 @@ unit_ids:
 > **Status 2026-07-25 — DROPPED from the autumn cycle (Aram).** Not sitting the
 > 2.-PZ oral, not registering in the Anmeldung window, no study time allocated.
 > Workspace `blocked` by decision, not by dependency. Module record stays
-> `enrolled` in records/modules.yaml (no formal Abmeldung). Reversible — see the
-> Deferrals entry in work/COORDINATION.md. Everything below is preserved for when
-> or if it is reinstated.
+> `enrolled` in `curriculum/modules/module-hu-algo2/module.yaml` (no formal
+> Abmeldung). Reversible — see the Deferrals entry in work/COORDINATION.md.
+>
+> **Everything below the Current Scope heading is the preserved reinstatement
+> plan, not live work.** While this workspace is `blocked` it has no required
+> actions of any kind — including no admin and no registration. Read the plan
+> only if Aram reinstates the module.
 
 ## Objective
 
-Pass the 30-minute oral exam (Zoom) in the October window (dates and Anmeldung
-facts in records/modules.yaml). Übungen are ungraded — all value is in the
-exam. ~40–50h of study, dormant BY DESIGN until the AMLS sitting is done.
+*(Reinstatement plan — not active.)* Pass the 30-minute oral exam (Zoom) in the
+October window (dates and Anmeldung facts in
+`curriculum/modules/module-hu-algo2/module.yaml`). Übungen are ungraded — all
+value is in the exam. ~40–50h of study.
 
 ## Current Scope
 
-*Required now* — nothing but admin: book the Prüfungstermin (AGNES +
-Prüfungs-Moodle) inside the Anmeldung window.
+*Required now* — **nothing.** The module is dropped; there is no admin, no
+registration and no study in scope. (Until 2026-08-08 this section still read
+"book the Prüfungstermin", contradicting the drop decision above and the Next
+Action below — removed in the semantic normalization pass, item 2.)
 
-*Defer* — all study blocks until after the AMLS sitting: chain A→B→{C,D,E,F}→
-G→H→I; J, K independent. Oral-exam prep style: explain sheets, hand-run drill,
-proof rehearsal, mock oral (legacy AL.X pattern).
+## Reinstatement Plan (preserved — inert while `blocked`)
+
+If reinstated: register in the 2.-PZ Anmeldung window and book the
+Prüfungstermin (AGNES + Prüfungs-Moodle), then run the study chain
+A→B→{C,D,E,F}→G→H→I; J, K independent. Oral-exam prep style: explain sheets,
+hand-run drill, proof rehearsal, mock oral (legacy AL.X pattern).
 
 *Reference only* — the legacy Chat9 plan (copy in `inputs/`, Moodle-verified
 per-topic literature).
 
 ## Open Questions
+
+*(Both are dormant — they only matter on reinstatement.)*
 
 - Kap. 10–12 literature not posted on Moodle yet (legacy Open Loop #6) — the
   J/K/I3 topic sources are placeholders until it lands.

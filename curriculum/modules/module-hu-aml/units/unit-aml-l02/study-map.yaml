@@ -17,7 +17,7 @@ stages:
     majority vote, k-NN regression.'
   done_when:
   - Explain and apply k-NN algorithm & distance metrics without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -48,7 +48,7 @@ stages:
   objective: Why k-NN breaks in high dimensions; why features must be scaled before any Lp distance.
   done_when:
   - Explain and apply Curse of dimensionality & feature scaling without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -69,7 +69,7 @@ stages:
   objective: Small k = high variance (overfit), large k = high bias (underfit); the U-shaped test error.
   done_when:
   - Explain and apply Bias–variance & over/underfitting without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -95,10 +95,9 @@ stages:
       bias–variance, the curse of dimensionality, "more data beats a cleverer algorithm." Read once across
       L02–L04.'
   - kind: read
-    label: 📖 **CS229 Lecture Notes §8.1 "Bias-variance tradeoff"** — `…/Bücher/CS229 Lecture Notes.pdf`
-      (p.105) — frames it through the **linear-vs-degree-5-polynomial** example and defines **bias = the
-      test error you'd still have even with infinite training data**; §8.1.1 has the `Bias²+Var+σ²` decomposition.
-      (No k-NN, but the concept is identical.)
+    label: 📖 **CS229 Lecture Notes §8.1 "Bias-variance tradeoff"** (p.105) — frames it through the **linear-vs-degree-5-polynomial**
+      example and defines **bias = the test error you'd still have even with infinite training data**;
+      §8.1.1 has the `Bias²+Var+σ²` decomposition. (No k-NN, but the concept is identical.)
     source_id: source-cs229-notes
   - kind: read
     label: 📝 Reference §8 — incl. §8.1.1 (decoding the slide wording) and **§8.1.2 (flexibility → variance
@@ -114,7 +113,7 @@ stages:
     → k-fold.'
   done_when:
   - Explain and apply Cross-validation & choosing k without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: watch
@@ -146,17 +145,17 @@ stages:
     reach for precision/recall/F under **class imbalance**.
   done_when:
   - Explain and apply Evaluation metrics without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: read
-    label: '📒 **SaD L11 reference (the home for this)** — `…/SaD/notes/lect11 instance-based/SaD_L11_Reference.md`
-      **§8** — the full evaluation toolkit, the worked SPAM example, micro vs macro (and a flagged slide
-      typo: SPAM F = 0.50, not 0.37).'
+    label: '📒 **SaD L11 reference (the home for this)** — **§8** — the full evaluation toolkit, the worked
+      SPAM example, micro vs macro (and a flagged slide typo: SPAM F = 0.50, not 0.37).'
+    source_id: source-sad-ss26-lectures
   - kind: read
-    label: 📖 SaD L11 slides — `…/SaD/SaD-2025/11_instance-based.pdf` (the 126-slide *instance-based* lecture;
-      evaluation is slides 93–124). ⚠️ *Not* `Lecture-slides/13_similarity_based.pdf` — that's a different
-      32-page deck.
+    label: 📖 SaD L11 slides (the 126-slide *instance-based* lecture; evaluation is slides 93–124). ⚠️
+      *Not* `Lecture-slides/13_similarity_based.pdf` — that's a different 32-page deck.
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: 📝 AML L02 Reference §7.1 (train/test error) + the §7.2 pointer into SaD L11 §8.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-05-evaluation-metrics/notes.md
@@ -169,7 +168,7 @@ stages:
   objective: 'Do these closed-book, then self-grade. Full details + links in **`AML_L02_Exercise_Bank.md`**:'
   done_when:
   - Explain and apply Practice & self-test  (→ exercise bank) without relying on the study map.
-  exam_critical: false
+  exam_critical: true
   scope_triage: required-now
   resources:
   - kind: reference

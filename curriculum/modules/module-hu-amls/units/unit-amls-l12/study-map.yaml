@@ -29,6 +29,7 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 12; 12_ModelDebugging.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/12_ModelDebugging.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-scope/notes.md
   attachments: []
   source_feedback: []
@@ -36,12 +37,15 @@ stages:
   title: Integrate responsible and robust ML-system views
   status: pending
   objective: Use both MLSysBook volumes and Huyen only to clarify deck mechanisms and production consequences.
-    Triage every curated primary paper for this lecture and anchor its useful claim, mechanism or result
-    back to the deck.
+    Read the lecture's primary paper closely and anchor its mechanism and key result back to the deck;
+    treat the other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - A comparison connects debugging explainability fairness robustness and shift
   - Every addition remains subordinate to deck scope
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 85
   exam_critical: true
   concepts:
@@ -54,47 +58,56 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1602.04938
+    scope_triage: required-now
   - kind: read
     label: Primary paper — A Unified Approach to Interpreting Model Predictions (SHAP)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1705.07874
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — SliceLine: Fast, Linear-Algebra-based Slice Finding for ML Model Debugging'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2021b_sliceline.pdf
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Visualizing and Understanding Convolutional Networks
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1311.2901
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Fairness Through Awareness
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 12
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dwork.seas.harvard.edu/publications/fairness-through-awareness
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 12 (27 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 12; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: MLSysBook Vol 1 — Responsible AI
     source_id: source-mlsysbook-vol1
     locator: Responsible AI sections/checkpoints
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 2 — Robust AI and Responsible AI
     source_id: source-mlsysbook-vol2
     locator: Matching chapters
+    scope_triage: helpful-now
   - kind: read
     label: Huyen DMLS Chapter 8
     source_id: source-huyen-dmls
     locator: Distribution shifts and monitoring
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -115,6 +128,7 @@ stages:
     label: Official AMLS sample — Task 4 Model Debugging
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 43–44
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l12/stages/stage-amls-l12-evidence/notes.md
   attachments: []
   source_feedback: []

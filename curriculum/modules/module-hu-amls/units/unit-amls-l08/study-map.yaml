@@ -28,19 +28,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 08; 08_HardwareAccelerators.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/08_HardwareAccelerators.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l08-integrate
   title: Integrate acceleration, infrastructure and roofline reasoning
   status: pending
-  objective: Use both MLSysBook volumes and HTSYM to quantify the deck's accelerator choices. Triage every
-    curated primary paper for this lecture and anchor its useful claim, mechanism or result back to the
-    deck.
+  objective: Use both MLSysBook volumes and HTSYM to quantify the deck's accelerator choices. Read the
+    lecture's primary paper closely and anchor its mechanism and key result back to the deck; treat the
+    other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - One roofline/arithmetic-intensity example is worked
   - Each book section is linked to a deck mechanism
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 100
   exam_critical: true
   concepts:
@@ -53,41 +57,49 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dl.acm.org/doi/10.1145/1498765.1498785
+    scope_triage: required-now
   - kind: read
     label: Primary paper — In-Datacenter Performance Analysis of a TPU
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1704.04760
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — TVM: An Automated End-to-End Optimizing Compiler for Deep Learning'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/osdi18-chen.pdf
+    scope_triage: deferred
   - kind: read
     label: Primary paper — A Graph Placement Methodology for Fast Chip Design
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.nature.com/articles/s41586-021-03544-w
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 08 (24 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 08; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: MLSysBook Vol 1 — acceleration/hardware sections
     source_id: source-mlsysbook-vol1
     locator: Acceleration chapters and checkpoints
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 2 — Compute Infrastructure
     source_id: source-mlsysbook-vol2
     locator: Compute Infrastructure chapter
+    scope_triage: helpful-now
   - kind: read
     label: How to Scale Your Model — roofline and accelerator internals
     source_id: source-htsym-scaling-book
     locator: Matching quantitative chapters
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -109,14 +121,17 @@ stages:
     label: CMU 10-414 — GPU exercise
     source_id: source-cmu-10414
     locator: GPU lecture/assignment selection
+    scope_triage: required-now
   - kind: practise
     label: MIT 6.172 — caching and hardware quiz items
     source_id: source-mit-6172
     locator: Question first; solution after attempt
+    scope_triage: required-now
   - kind: practise
     label: Stanford CS149 — GPU assignment
     source_id: source-stanford-cs149
     locator: Selected GPU problems
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l08/stages/stage-amls-l08-evidence/notes.md
   attachments: []
   source_feedback: []

@@ -114,6 +114,15 @@ use the number of registered source IDs as evidence that the underlying source
 inventory is complete; never silently drop a source because it is inconvenient
 to model.
 
+**This gate binds the operator, never the learner (added 2026-08-08).** It is
+discharged once, at plan-creation time, and its output is the *plan*. It must
+never be copied into a stage's `done_when` as a study task — a learner gate that
+says "disposition every curated paper" converts the operator's bookkeeping into
+hours of the learner's exam time, which is exactly the burden this system exists
+to remove. Preserve every source in the plan; ask the learner only for the
+sources the stage's objective actually needs. (Regression fixed in the AMLS
+integrate stages, where all 13 carried this clause verbatim.)
+
 **Wire on use (ADR-005):** whenever an already-registered source is actually
 used, cited, or recommended in a session and still has no concept-linked
 evaluation, add the minimal stub *then* — the concepts it serves, its roles,

@@ -3,6 +3,9 @@ type: module
 kind: project
 area_id: program-thesis-projects
 thematic_group_ids:
+# MLE agents that build and optimize ML pipelines are ML Systems work; the group
+# was missing because this record predates ADR-007. Added 2026-08-08.
+- thematic-group-ml-systems
 - thematic-group-machine-learning
 - thematic-group-data-systems
 title: Bachelor thesis

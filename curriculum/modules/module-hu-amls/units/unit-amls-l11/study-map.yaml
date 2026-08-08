@@ -28,19 +28,23 @@ stages:
     source_id: source-amls-ss26-lectures
     locator: Lecture 11; 11_ModelSelection.pdf
     vault_path: material://source-amls-ss26-lectures/lecture-slides/11_ModelSelection.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-scope/notes.md
   attachments: []
   source_feedback: []
 - id: stage-amls-l11-integrate
   title: Integrate management, benchmarking and evaluation views
   status: pending
-  objective: Add only source detail that sharpens search cost, evaluation or lineage reasoning. Triage
-    every curated primary paper for this lecture and anchor its useful claim, mechanism or result back
-    to the deck.
+  objective: Add only source detail that sharpens search cost, evaluation or lineage reasoning. Read the
+    lecture's primary paper closely and anchor its mechanism and key result back to the deck; treat the
+    other curated papers as depth you may draw on, not a checklist to clear.
   done_when:
   - A source-to-deck comparison distinguishes selection evaluation and management
   - No source chapter becomes a substitute syllabus
-  - Every curated paper is marked read, skimmed, or deferred with a reason and a deck anchor
+  - The lecture's primary paper is read closely enough to state its mechanism and its one result that
+    the deck relies on; the remaining curated papers stay available as depth/reference and need no disposition
+    from you (the operator already triaged them at plan-creation time — WORKFLOWS.md source-completeness
+    gate)
   estimate_minutes: 90
   exam_critical: true
   concepts:
@@ -53,59 +57,70 @@ stages:
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks
+    scope_triage: required-now
   - kind: read
     label: 'Primary paper — Snorkel: Rapid Training Data Creation with Weak Supervision'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1711.10160
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — Hyperband: A Novel Bandit-Based Approach to HPO'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1603.06560
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — Auto-sklearn: Efficient and Robust Automated ML'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5872-efficient-and-robust-automated-machine-learning
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Neural Architecture Search with Reinforcement Learning
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1611.01578
+    scope_triage: deferred
   - kind: read
     label: Primary paper — Accelerating the ML Lifecycle with MLflow
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://people.eecs.berkeley.edu/~matei/papers/2018/ieee_mlflow.pdf
+    scope_triage: deferred
   - kind: read
     label: 'Primary paper — LIMA: Fine-grained Lineage Tracing and Reuse in ML Systems'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 11
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2021a_lima.pdf
+    scope_triage: deferred
   - kind: reference
     label: Complete slide-citation bibliography — Lecture 11 (42 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 11; reference-only
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+    scope_triage: reference-only
   - kind: read
     label: DMMLS — model selection/management
     source_id: source-dmmls-boehm
     locator: Verify TOC after acquisition
+    scope_triage: helpful-now
   - kind: read
     label: MLSysBook Vol 1 — benchmarking and model/data evaluation
     source_id: source-mlsysbook-vol1
     locator: Chapter 12 selected sections/checkpoints
+    scope_triage: helpful-now
   - kind: read
     label: Huyen DMLS Chapter 6
     source_id: source-huyen-dmls
     locator: Model development and offline evaluation
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-integrate/notes.md
   attachments: []
   source_feedback: []
@@ -127,10 +142,12 @@ stages:
     label: Official AMLS sample — Task 3 Model Selection
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 41–42
+    scope_triage: required-now
   - kind: practise
     label: MLSysBook Vol 1 checkpoints
     source_id: source-mlsysbook-vol1
     locator: Selected benchmarking/model-evaluation checks
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-l11/stages/stage-amls-l11-evidence/notes.md
   attachments: []
   source_feedback: []

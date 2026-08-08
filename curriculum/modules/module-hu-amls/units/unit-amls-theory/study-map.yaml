@@ -28,6 +28,7 @@ stages:
     label: Official AMLS sample exam blueprint
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 36–48; mask answers during setup
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-blueprint/notes.md
   attachments: []
   source_feedback: []
@@ -50,6 +51,7 @@ stages:
     label: Official AMLS 90-minute 100-point sample
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 36–48
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-sit/notes.md
   attachments: []
   source_feedback: []
@@ -71,22 +73,27 @@ stages:
     label: MLSysBook Vol 1 — routed checkpoints
     source_id: source-mlsysbook-vol1
     locator: Only chapters named by the failed unit
+    scope_triage: helpful-now
   - kind: practise
     label: MLSysBook Vol 2 — routed checkpoints
     source_id: source-mlsysbook-vol2
     locator: Only chapters named by the failed unit
+    scope_triage: helpful-now
   - kind: practise
     label: CMU 10-414 — selected assignment variant
     source_id: source-cmu-10414
     locator: Compilation or GPU gaps only
+    scope_triage: helpful-now
   - kind: practise
     label: MIT 6.172 — selected quiz variant
     source_id: source-mit-6172
     locator: Performance locality or parallelism gaps only
+    scope_triage: helpful-now
   - kind: practise
     label: Stanford CS149 — selected written problem
     source_id: source-stanford-cs149
     locator: Parallel or GPU gaps only
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-amls/units/unit-amls-theory/stages/stage-amls-mock-remediate/notes.md
   attachments: []
   source_feedback: []

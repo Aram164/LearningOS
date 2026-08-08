@@ -30,7 +30,10 @@ top of both CLAUDE.md copies, and the pre-commit validation gate
 **1. A "Without the operator" section in README.** The manual is entirely
 Claude-mediated ("open this folder in a chat"). A human at a uni PC, on a
 phone, or years from now needs four lines: exam facts → `records/modules.yaml`
-(read it raw, it is commented); "what next" → `python tools/generate.py`, then
+(read it raw, it is commented) — ⚠️ *as implemented in README this reads
+`curriculum/modules/<module-id>/module.yaml`; the partitioned record superseded
+`records/modules.yaml` at the curriculum v2 cutover, after this review was
+written*; "what next" → `python tools/generate.py`, then
 `generated/coordination-view.md`; find knowledge → browse
 `knowledge/notes/<domain>/` or ctrl-F `generated/concept-index.md`; capture →
 drop anything in `work/inbox/`, no naming. This codifies paths that already
