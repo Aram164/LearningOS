@@ -7,7 +7,6 @@ import contextlib
 import datetime as dt
 import hashlib
 import os
-import re
 import yaml
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
@@ -52,10 +51,6 @@ def _iso(value: dt.datetime) -> str:
     return value.isoformat(timespec="seconds")
 
 
-def _slug(value: str) -> str:
-    return re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-") or "garden-seed"
-
-
 def _safe_relative(value: str) -> PurePosixPath:
     rel = PurePosixPath(str(value))
     if rel.is_absolute() or any(part in {"", ".", ".."} for part in rel.parts):
@@ -89,38 +84,6 @@ def parse_frontmatter_request_id(path: Path) -> str | None:
     except OSError:
         return None
     return None
-
-
-def _garden_title(body: str, fallback: str) -> str:
-    for line in body.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("# "):
-            return stripped[2:].strip()
-        if stripped:
-            return stripped.lstrip("#").strip()
-    return fallback
-
-
-def _garden_tags(body: str) -> list[str]:
-    return sorted(set(re.findall(r"(?<![\w/])#([a-zA-Z][\w-]*)", body)))
-
-
-def _garden_id(garden_root: Path, path: Path) -> str:
-    """Stable, sibling-independent identity for one Garden note.
-
-    Identity must never depend on which *other* files exist.  Everything the
-    gateway keys by target id — ``garden-state/<id>.yaml``,
-    ``transcriptions/<id>.md``, receipt ``updated_ids``, relationship endpoints —
-    would be silently orphaned if adding an unrelated note elsewhere in the tree
-    could rename an already-shelved one.  A nested note therefore carries a
-    suffix derived from its own relative path, never from a scan of its
-    neighbours.
-    """
-    rel = path.relative_to(garden_root).with_suffix("").as_posix()
-    base = f"garden-note-{_slug(rel)}"
-    if "/" in rel:
-        base += "-" + hashlib.sha256(rel.encode("utf-8")).hexdigest()[:8]
-    return base
 
 
 Clock = Callable[[], dt.datetime]

@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 from ..contracts.manifest_contract import declared_version, enforce
+from ..garden import project_garden_entries
 from ..loader import Repo
 from ..transactions import load_revisions
 from .atlas import ATLAS_COLLECTION_DOMAIN
@@ -13,6 +14,7 @@ from .common import _first_para, _git_last_commit, _git_state, _json_header, _st
 from .coordination import adoption_counts
 from .materials import _material_location, _project_material_resource
 from .modules_view import _academic_deadlines
+from .review import build_review_items
 
 def _source_fingerprint(repo: Repo) -> str:
     """Content identity of every authored input used by the projection.
@@ -658,8 +660,19 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     inbox_items = len([
         item for item in inbox_dir.iterdir() if not item.name.startswith(".")
     ]) if inbox_dir.is_dir() else 0
-    # Additive feature contract: AI action state is projected by the core and
-    # remains optional for older consumers of manifest contract v2.
+    # Garden existence and basic metadata are Core facts. Optional AI state may
+    # enrich these rows, but cannot own or erase them.
+    garden_entries = project_garden_entries(repo)
+
+    # Review membership is also a Core decision. Interfaces render these
+    # records; they do not reconstruct queues from counts or filesystem walks.
+    review_items = build_review_items(
+        repo,
+        units_v2,
+        study_maps_v2,
+    )
+
+    # AI action state remains an optional additive subsystem.
     from learning_os.ai_actions import manifest_ai_projection
     ai_projection = manifest_ai_projection(repo.root)
     payload = {
@@ -696,7 +709,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         "stages": stages_v2,
         "module_source_maps": source_maps_v2,
         "resume_pointer": dict(repo.resume_pointer or {}),
-        "garden_entries": ai_projection["garden_entries"],
+        "garden_entries": garden_entries,
+        "review_items": review_items,
         "ai_actions": ai_projection["ai_actions"],
         "quarantine_boundaries": [
             {k: program.get(k) for k in
@@ -742,7 +756,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
                 len(stage.get("source_feedback", []) or []) for stage in stages_v2),
             "units_needing_map": sum(1 for unit in units_v2 if unit.get("status") == "needs-map"),
             "inbox_items": inbox_items,
-            "garden_entries": len(ai_projection["garden_entries"]),
+            "garden_entries": len(garden_entries),
             "ai_action_requests": len(ai_projection["ai_actions"]["requests"]),
             "relations": len(repo.relations),
             "notes_reviewed": ad["notes_reviewed"],

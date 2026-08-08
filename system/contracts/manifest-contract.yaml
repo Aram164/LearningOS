@@ -38,7 +38,10 @@
 #      this file was written to prevent.
 #
 # Rebuild with: python tools/manifest_contract.py --bump --note "…"
-contract_version: 3
+# Keys that were once published and must never come back under this name.
+# `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
+# the same facts (ADR-006, 2026-08-03).
+contract_version: 4
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -59,6 +62,7 @@ top_level_keys:
 - records
 - relations
 - resume_pointer
+- review_items
 - semesters
 - stages
 - study_maps
@@ -87,9 +91,6 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-# Keys that were once published and must never come back under this name.
-# `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
-# the same facts (ADR-006, 2026-08-03).
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -110,3 +111,8 @@ history:
     the v2 baseline but that the UI-side lock never listed, because nothing compared
     the lock against a real Core build.'
   mirrored_in_ui: contracts/manifest-v3.lock.json
+- version: 4
+  adopted: '2026-08-08'
+  note: publish concrete review_items and make Garden projection Core-owned independently
+    of optional AI state
+  mirrored_in_ui: contracts/manifest-v4.lock.json

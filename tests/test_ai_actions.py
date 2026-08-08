@@ -362,3 +362,27 @@ def test_capability_write_scope_is_enforced_from_the_contract(ai_repo: Path, tmp
     with pytest.raises(DeliveryValidationError, match="may not write"):
         app.apply_delivery(delivery["id"])
     assert not (ai_repo / f"knowledge/garden/transcriptions/{target_id(ai_repo)}.md").exists()
+
+def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
+    from learning_os.contracts.manifest_contract import declared_version
+
+    app = service(ai_repo)
+    request = app.prepare(
+        action_id="garden.shelve",
+        target_kind="garden-note",
+        target_id=target_id(ai_repo),
+        provider="manual-bundle",
+        request_id="ai-request-contract-lock",
+    )
+
+    lock = json.loads(
+        (
+            app.repository.request_dir(request["id"])
+            / "contract-lock.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert (
+        lock["manifest_contract_version"]
+        == declared_version(ai_repo)
+    )
