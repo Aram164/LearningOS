@@ -76,7 +76,7 @@ def _facet_section(title: str, note: str, buckets: dict[str, list[str]],
 def build_library(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Library — faceted", generated_at)
     lines += [
-        "Same sources, four projections. **The counts overlap on purpose**: a source",
+        "Same sources, five projections. **The counts overlap on purpose**: a source",
         "participates in several domains, topics and purposes rather than living in",
         "one of them. If a number here looks too big to be a folder, that is the",
         "point — it is not a folder.",

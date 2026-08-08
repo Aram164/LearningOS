@@ -292,6 +292,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("feedback", choices=("helpful", "too-advanced", "wrong-perspective",
                                         "useful-for-derivation", "useful-for-review", "skipped"))
     p.add_argument("--note", default=None)
+    # ADR-009: narrow the judgment to one identified resource inside source_id —
+    # one paper in a bundled course, one chapter of a book. Without this the
+    # write path cannot reach the identity the records already carry, so four
+    # opinions about four AMLS papers still collapse into one indistinguishable
+    # set. source_id stays required either way, so provenance is never lost.
+    p.add_argument("--resource-id", default=None,
+                   help="optional resource-* id on the same stage to attach this judgment to")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_source_feedback)
