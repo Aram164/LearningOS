@@ -24,7 +24,8 @@ stages:
   - concept-data-parallelism
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l07-deck
+    kind: watch
     label: SS26 Lecture 07 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 07; 07_LLM_TrainingInference.pdf
@@ -52,49 +53,56 @@ stages:
   - concept-llm-systems
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-attention-is-all-you-need
+    kind: read
     label: Primary paper — Attention Is All You Need
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1706.03762
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-gpt-3
+    kind: read
     label: Primary paper — Language Models are Few-Shot Learners (GPT-3)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2005.14165
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-scaling-laws-neural-language-models
+    kind: read
     label: Primary paper — Scaling Laws for Neural Language Models
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2001.08361
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-chinchilla
+    kind: read
     label: Primary paper — Training Compute-Optimal LLMs (Chinchilla)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2203.15556
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-lora
+    kind: read
     label: 'Primary paper — LoRA: Low-Rank Adaptation of Large Language Models'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2106.09685
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-bpe
+    kind: read
     label: Primary paper — Neural Machine Translation of Rare Words with Subword Units (BPE)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 07
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://aclanthology.org/P16-1162/
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l07-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 07 (16 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 07; reference-only

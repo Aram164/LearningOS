@@ -229,9 +229,31 @@ class ChecksReferences:
                         f"source '{sid}' references unknown thematic group '{gid}'",
                         self._origin_for("source", str(sid)),
                     )
+            # The topic vocabulary is closed on purpose (ADR-009): an unlisted
+            # topic is how tag soup starts, so it is an error rather than an
+            # implicit new topic.
+            for tid in source.get("topics", []) or []:
+                if tid not in r.topics:
+                    self.err(
+                        "REF-TOPIC",
+                        f"source '{sid}' references unknown topic '{tid}' — add it to "
+                        "sources/topics.yaml deliberately, or use an existing one",
+                        self._origin_for("source", str(sid)),
+                    )
             mat = source.get("material")
             if mat:
                 self._check_uri(mat, f"sources registry ({source.get('id')})")
+        # A topic's `domain` is a display grouping for the Library, not a
+        # constraint on which sources may carry it — but it still has to name a
+        # real group, or the browser renders a heading for nothing.
+        for tid, topic in r.topics.items():
+            domain = topic.get("domain")
+            if domain and domain not in r.thematic_groups:
+                self.err(
+                    "REF-TOPIC-DOMAIN",
+                    f"topic '{tid}' declares unknown display domain '{domain}'",
+                    "sources/topics.yaml",
+                )
         for i, rel in enumerate(r.relations):
             frm, to = str(rel.get("from", "")), str(rel.get("to", ""))
             where = "knowledge/concept-relations.yaml"

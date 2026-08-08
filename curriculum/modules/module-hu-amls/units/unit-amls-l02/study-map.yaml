@@ -24,7 +24,8 @@ stages:
   - concept-ml-systems
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l02-deck
+    kind: watch
     label: SS26 Lecture 02 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 02; 02_SystemArchitecture.pdf
@@ -52,35 +53,40 @@ stages:
   - concept-ml-systems
   scope_triage: helpful-now
   resources:
-  - kind: read
+  - id: resource-amls-data-mining-knowledge-discovery-databases
+    kind: read
     label: Primary paper — From Data Mining to Knowledge Discovery in Databases
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://ojs.aaai.org/aimagazine/index.php/aimagazine/article/view/1230
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-hidden-technical-debt-machine-learning-systems
+    kind: read
     label: Primary paper — Hidden Technical Debt in ML Systems
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-auto-weka
+    kind: read
     label: 'Primary paper — Auto-WEKA: Combined Selection and Hyperparameter Optimization'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1208.3719
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-mlperf-training-benchmark
+    kind: read
     label: Primary paper — MLPerf Training Benchmark
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 02
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1910.01500
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l02-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 02 (26 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 02; reference-only

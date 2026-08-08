@@ -23,7 +23,8 @@ stages:
   - concept-hardware-accelerators
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l08-deck
+    kind: watch
     label: SS26 Lecture 08 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 08; 08_HardwareAccelerators.pdf
@@ -51,35 +52,40 @@ stages:
   - concept-hardware-accelerators
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-roofline
+    kind: read
     label: 'Primary paper — Roofline: An Insightful Visual Performance Model'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dl.acm.org/doi/10.1145/1498765.1498785
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-datacenter-performance-analysis-tpu
+    kind: read
     label: Primary paper — In-Datacenter Performance Analysis of a TPU
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1704.04760
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-tvm
+    kind: read
     label: 'Primary paper — TVM: An Automated End-to-End Optimizing Compiler for Deep Learning'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/osdi18-chen.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-graph-placement-methodology-fast-chip-design
+    kind: read
     label: Primary paper — A Graph Placement Methodology for Fast Chip Design
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 08
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.nature.com/articles/s41586-021-03544-w
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l08-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 08 (24 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 08; reference-only

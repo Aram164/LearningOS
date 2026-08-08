@@ -23,7 +23,8 @@ stages:
   - concept-data-access-optimization
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l09-deck
+    kind: watch
     label: SS26 Lecture 09 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 09; 09_DataAccess.pdf
@@ -51,35 +52,40 @@ stages:
   - concept-data-access-optimization
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-compressed-linear-algebra-large-scale-ml
+    kind: read
     label: Primary paper — Compressed Linear Algebra for Large-Scale ML
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://vldb.org/pvldb/vol9/p960-elgohary.pdf
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-zipml
+    kind: read
     label: 'Primary paper — ZipML: Training Linear Models with End-to-End Low Precision'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1611.05402
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-aware
+    kind: read
     label: 'Primary paper — AWARE: Workload-aware, Redundancy-exploiting Linear Algebra'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2023a.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-milvus
+    kind: read
     label: 'Primary paper — Milvus: A Purpose-Built Vector Data Management System'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 09
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://dl.acm.org/doi/10.1145/3448016.3457550
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l09-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 09 (22 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 09; reference-only
@@ -117,7 +123,8 @@ stages:
     source_id: source-mit-6172
     locator: Selected question-first items
     scope_triage: required-now
-  - kind: practise
+  - id: resource-amls-sample-task-6
+    kind: practise
     label: Official AMLS sample — Task 6 min-max quantization
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 page 47

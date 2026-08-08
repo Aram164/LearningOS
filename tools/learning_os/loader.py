@@ -357,6 +357,8 @@ class Repo:
     collection_origins: dict[str, Path] = field(default_factory=dict)
     thematic_groups: dict[str, dict] = field(default_factory=dict)
     thematic_groups_path: Path | None = None
+    topics: dict[str, dict] = field(default_factory=dict)
+    topics_path: Path | None = None
     projects: dict[str, Project] = field(default_factory=dict)
     project_origins: dict[str, Path] = field(default_factory=dict)
     project_aliases: dict[str, str] = field(default_factory=dict)
@@ -518,6 +520,35 @@ def load_repo(root: Path | str) -> Repo:
                         continue
                     _register(repo, repo.thematic_groups, gid, group,
                               thematic_groups_file, "thematic-group")
+
+    # The topic facet (ADR-009). A closed vocabulary, loaded like the thematic
+    # groups it complements: topics are the medium-grained facet, groups the
+    # coarse one, and the concept graph carries everything finer.
+    topics_file = root / "sources" / "topics.yaml"
+    if topics_file.is_file():
+        try:
+            topics_doc = _load_yaml(topics_file)
+        except LoaderError as exc:
+            repo.parse_failures.append((topics_file, str(exc)))
+        else:
+            repo.topics_path = topics_file
+            entries = topics_doc.get("topics", [])
+            if not isinstance(entries, list):
+                repo.parse_failures.append(
+                    (topics_file, f"{topics_file}: 'topics' must be a list"))
+            else:
+                for topic in entries:
+                    if not isinstance(topic, dict):
+                        repo.parse_failures.append(
+                            (topics_file, f"{topics_file}: topic is not a mapping — skipped"))
+                        continue
+                    tid = _record_id(topic)
+                    if tid is None:
+                        repo.parse_failures.append(
+                            (topics_file,
+                             f"{topics_file}: topic with missing or empty id — skipped"))
+                        continue
+                    _register(repo, repo.topics, tid, topic, topics_file, "topic")
 
     # First-class Projects. The registry is canonical metadata; the external
     # ``LearningOS/projects`` tree remains the optional working-file location

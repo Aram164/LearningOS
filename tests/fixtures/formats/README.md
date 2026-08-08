@@ -42,6 +42,16 @@ rank at all**, because unranked is what every v1 record carries and the loader
 must keep accepting it. A v2 fixture that ranked everything would stop proving
 the field is optional.
 
+`v3` (adopted 2026-08-08) is `v2` plus resource identity: an optional stable `id`
+on stage resources, and an optional `resource_id` on `source_feedback`. The demo
+stage carries **two resources with ids and two without**, and three feedback
+entries: one narrowed to `§1`, one narrowed to `Appendix A` with a *contradictory*
+verdict, and one plain source-level entry with no `resource_id`. The
+contradictory pair is the point — under v1/v2 both judgments collapsed onto
+`source-demo-book` and could not be told apart, which is the gap v3 exists to
+close. The id-less resources and the source-level entry keep proving the old
+shape still loads.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

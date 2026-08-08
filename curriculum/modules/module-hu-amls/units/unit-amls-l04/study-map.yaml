@@ -24,7 +24,8 @@ stages:
   - concept-program-rewrites
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l04-deck
+    kind: watch
     label: SS26 Lecture 04 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 04; 04_AdvancedCompilation.pdf
@@ -52,35 +53,40 @@ stages:
   - concept-operator-fusion
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-optimizing-operator-fusion-plans-large-scale
+    kind: read
     label: Primary paper — On Optimizing Operator Fusion Plans for Large-Scale ML in SystemML
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1801.00829
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-mlir
+    kind: read
     label: 'Primary paper — MLIR: Scaling Compiler Infrastructure for Domain-Specific Computation'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2002.11054
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-attention-is-all-you-need
+    kind: read
     label: Primary paper — Attention Is All You Need
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1706.03762
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-flashattention
+    kind: read
     label: 'Primary paper — FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 04
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2205.14135
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l04-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 04 (13 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 04; reference-only

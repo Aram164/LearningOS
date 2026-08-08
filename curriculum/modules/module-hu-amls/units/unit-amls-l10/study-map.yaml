@@ -24,7 +24,8 @@ stages:
   - concept-data-provenance
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l10-deck
+    kind: watch
     label: SS26 Lecture 10 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 10; 10_DataSourcing.pdf
@@ -53,42 +54,48 @@ stages:
   - concept-data-provenance
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-deequ
+    kind: read
     label: Primary paper — Automating Large-Scale Data Quality Verification (Deequ)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 10
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.vldb.org/pvldb/vol11/p1781-schelter.pdf
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-tfx-tfdv
+    kind: read
     label: Primary paper — Data Validation for Machine Learning (TFX/TFDV)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 10
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mlsys.org/Conferences/2019/doc/2019/167.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-word2vec
+    kind: read
     label: Primary paper — Efficient Estimation of Word Representations (word2vec)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 10
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1301.3781
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-saga
+    kind: read
     label: 'Primary paper — SAGA: A Scalable Framework for Optimizing Data Cleaning Pipelines for ML'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 10
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://mboehm7.github.io/resources/sigmod2024a.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-catdb
+    kind: read
     label: 'Primary paper — CatDB: Data-catalog-guided, LLM-based Generation of Data-centric ML Pipelines'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 10
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://fathollahzadeh.github.io/papers/CatDB_VLDB2025.pdf
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l10-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 10 (26 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 10; reference-only
@@ -126,7 +133,8 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-task-2
+    kind: practise
     label: Official AMLS sample — Task 2 Data Preparation
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 39–40

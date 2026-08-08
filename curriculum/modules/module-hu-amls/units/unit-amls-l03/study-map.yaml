@@ -24,7 +24,8 @@ stages:
   - concept-program-rewrites
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l03-deck
+    kind: watch
     label: SS26 Lecture 03 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 03; 03_Compilation.pdf
@@ -52,35 +53,40 @@ stages:
   - concept-program-rewrites
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-systemml
+    kind: read
     label: 'Primary paper — SystemML: Declarative Machine Learning on Spark'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.vldb.org/pvldb/vol9/p1425-boehm.pdf
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-spoof
+    kind: read
     label: 'Primary paper — SPOOF: Sum-Product Optimization and Operator Fusion'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.cidrdb.org/cidr2017/papers/p3-elgamal-cidr17.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-spores
+    kind: read
     label: 'Primary paper — SPORES: Sum-Product Optimization via Relational Equality Saturation'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2002.07951
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-taso
+    kind: read
     label: 'Primary paper — TASO: Optimizing DL Computation with Automatic Generation of Graph Substitutions'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 03
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://theory.stanford.edu/~aiken/publications/papers/sosp19.pdf
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l03-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 03 (17 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 03; reference-only
@@ -123,7 +129,8 @@ stages:
     source_id: source-mit-6172
     locator: Question first; solution after attempt
     scope_triage: required-now
-  - kind: practise
+  - id: resource-amls-sample-task-5
+    kind: practise
     label: Official AMLS sample — Task 5 CSE and matrix-chain optimization
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 pages 45–46

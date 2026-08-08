@@ -1,310 +1,406 @@
-# ML Systems — training and serving at scale, ML compilation, performance, data for ML.
-#
-# Filed by SUBJECT (ADR-007). A record's home says what it is, never when it
-# arrived — the previous partitions were named after migration batches
-# (stage2, stage2b-unsorted-intake, external-shelf, external-supplements,
-# degree-anchors), which are archived verbatim under
-# migration/adr-007/originals/.
-#
-# Partitioning does not change semantics: this is the same registry as
-# sources/sources.yaml, and source ids are unchanged, so no reference moved.
 sources:
-  - id: source-amls-prior-archives
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: AMLS prior-year archives — SS2023 (TU Berlin) + SS2021 (TU Graz), Boehm
-    type: website
-    authors: [Matthias Boehm]
-    url: https://mboehm7.github.io/teaching/ss23_amls/index.htm
-    identifiers:
-      ss21: https://mboehm7.github.io/teaching/ss21_amls/index.htm
-    evaluations:
-      - roles: [review]
-        strengths:
-          - "Same professor, same course, one year prior; the SS23 page DOES link mp4 recordings for all 12 lectures (tubcloud links next to each deck — verified Jun 13). SS23 grading was oral exam 100% with project prerequisite"
-        weaknesses:
-          - "Superseded by the SS26 course page (source-amls-ss26-lectures) for lecture processing — keep as fallback/extra pass"
-
-  - id: source-amls-ss26-lectures
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: AMLS — Architecture of ML Systems, slides, recordings, and source papers (SS26)
-    type: lecture
-    authors:
-    - Matthias Boehm
-    organization: TU Berlin
-    year: 2026
-    url: https://mboehm7.github.io/teaching/ss26_amls/index.htm
-    material: material://source-amls-ss26-lectures
-    evaluations:
-    - roles:
-      - first-learning
-      strengths:
-      - The course scope authority; all 13 SS26 decks are local and reachable, verified 2026-08-03.
-      weaknesses:
-      - 'Lecture 12''s title page says ''Last update: Jul 09, 2025'' while the SS26 course sequence places
-        it on 2026-07-09; treat the year as an unresolved deck-stamp anomaly.'
-    - concepts:
-      - concept-ml-systems
-      roles:
-      - first-learning
-      useful_sections:
-      - 01 — Introduction and Overview: ML-system definitions, lifecycle, SystemDS and DAPHNE overview
-      - 02 — Languages, Architectures, and System Landscape: language abstractions, system stack and landscape
-    - concepts:
-      - concept-program-rewrites
-      roles:
-      - first-learning
-      useful_sections:
-      - 03 — Compilation – Size Inference and Rewrites: size and sparsity inference, rewrite rules, CSE and
-          matrix-chain optimization
-    - concepts:
-      - concept-operator-fusion
-      roles:
-      - first-learning
-      useful_sections:
-      - 04 — Compilation – Adaptation, Fusion, and JIT: dynamic recompilation, fusion/code generation, XLA
-          and MLIR
-    - concepts:
-      - concept-data-parallelism
-      roles:
-      - first-learning
-      useful_sections:
-      - 05 — Data- and Task-Parallel Execution: MapReduce/Spark, distributed matrix operations and parfor
-    - concepts:
-      - concept-parameter-servers
-      roles:
-      - first-learning
-      useful_sections:
-      - 06 — Parameter Servers: data/model parallelism, BSP/ASP/SSP and federated learning
-    - concepts:
-      - concept-llm-systems
-      roles:
-      - first-learning
-      useful_sections:
-      - 07 — LLM Training and Inference: scaling, distributed training, post-training and inference systems
-    - concepts:
-      - concept-hardware-accelerators
-      roles:
-      - first-learning
-      useful_sections:
-      - 08 — Hardware Accelerators: GPUs, Tensor Cores, interconnects, FPGAs, ASICs and TPUs
-    - concepts:
-      - concept-data-access-optimization
-      roles:
-      - first-learning
-      useful_sections:
-      - 09 — Data Access Methods: caching, partitioning, indexing, compression and quantization
-    - concepts:
-      - concept-ml-lifecycle
-      - concept-data-provenance
-      roles:
-      - first-learning
-      useful_sections:
-      - 10 — Data Acquisition and Preparation: acquisition, cleaning, transformation and encoding
-      - 11 — Model Selection and Management: search strategies, AutoML/NAS and model lineage
-    - concepts:
-      - concept-ml-fairness-explainability
-      roles:
-      - first-learning
-      useful_sections:
-      - 12 — Model Debugging, Fairness, and Explainability: SliceLine, LIME/SHAP and fairness constraints
-    - concepts:
-      - concept-model-serving
-      roles:
-      - first-learning
-      useful_sections:
-      - 13 — Model Deployment and Serving: exchange, serving optimization, monitoring, drift and updates
-    identifiers:
-      paper-reading-list: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
-
-  - id: source-cmu-10414
-    thematic_group_ids: [thematic-group-ml-systems, thematic-group-machine-learning]
-    title: CMU 10-414/714 — Deep Learning Systems
-    type: course
-    organization: CMU
-    url: https://dlsyscourse.org/
-    identifiers:
-      # practice channels, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
-      assignments: https://dlsyscourse.org/assignments/
-      community-solutions: https://github.com/YuanchengFang/dlsys_solution
-    evaluations:
-      - concepts: [concept-program-rewrites, concept-operator-fusion, concept-data-parallelism,
-                   concept-hardware-accelerators, concept-backpropagation]
-        roles: [implementation, exercise]
-        level: advanced
-        strengths:
-          - "The same stack taught build-first (Needle): autodiff/graphs → AMLS 03/04 (and AML L09 synergy), parallel → 05/06, GPU → 08; HW1 autodiff parts are testing material"
-
-  - id: source-dmmls-boehm
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: Data Management in Machine Learning Systems
-    type: book
-    authors: [Matthias Boehm, Arun Kumar, Jun Yang]
-    year: 2019
-    evaluations:
-      - concepts: [concept-program-rewrites, concept-operator-fusion, concept-data-parallelism,
-                   concept-parameter-servers, concept-data-access-optimization, concept-ml-lifecycle]
-        roles: [review]
-        level: advanced
-        strengths:
-          - "THE LECTURER'S OWN BOOK (~173 pp Synthesis Lectures survey) — exactly the A-part: rewrites, operator selection/fusion, parallel execution, parameter servers, compression, lifecycle systems; expect exam phrasing to echo it; read by section, never linearly"
-        weaknesses:
-          - "Not yet downloaded — pull via the Springer campus license (same route as Forster/Abbott); chapter names cited by theme, verify against the PDF TOC on first open"
-
-  - id: source-gpu-mode-lectures
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: GPU MODE lecture series (ex CUDA MODE)
-    type: course
-    url: https://github.com/gpu-mode/lectures
-    evaluations:
-      - roles: [implementation]
-        strengths:
-          - "Modern kernel-engineering lecture series (YouTube + repo) — the practice track for GPU Computing and the frontier-lab profiling methodology"
-
-  - id: source-htsym-scaling-book
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: How to Scale Your Model
-    type: website
-    organization: Google DeepMind
-    year: 2025
-    url: https://jax-ml.github.io/scaling-book/
-    evaluations:
-      - concepts: [concept-llm-systems, concept-hardware-accelerators]
-        roles: [review, derivation]
-        strengths:
-          - "Roofline/arithmetic-intensity math, accelerator internals, transformer training+inference FLOP accounting — pairs with 6.172-style quiz questions"
-
-  - id: source-huyen-ai-engineering
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: Huyen — AI Engineering (O'Reilly, 2025)
-    type: book
-    authors: [Chip Huyen]
-    year: 2025
-    evaluations:
-      - roles: [reference]
-        strengths:
-          - "LLM inference-optimization + serving chapters only (AMLS 07/13) — optional depth, job-relevant, not exam-critical. 💰/🏛️ O'Reilly — access decision pending"
-
-  - id: source-huyen-dmls
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: Designing Machine Learning Systems
-    type: book
-    authors: [Chip Huyen]
-    year: 2022
-    material: material://source-huyen-dmls/designing-ml-systems.pdf
-    evaluations:
-      - concepts: [concept-ml-lifecycle, concept-model-serving]
-        roles: [review]
-        level: intermediate
-        strengths:
-          - "Lifecycle prose: Ch 3 data engineering, Ch 4 training data, Ch 6 model dev/offline eval, Ch 7 deployment/prediction service, Ch 8 shifts/monitoring — lectures 10–13"
-        weaknesses:
-          - "MLOps framing is job-relevant, not exam-critical"
-
-  - id: source-kirk-hwu-pmpp
-    thematic_group_ids: [thematic-group-ml-systems, thematic-group-software]
-    title: Kirk & Hwu — Programming Massively Parallel Processors (4th ed.)
-    type: book
-    authors: [David Kirk, Wen-mei Hwu]
-    evaluations:
-      - roles: [first-learning]
-        strengths:
-          - "The standard CUDA/GPU text (tiling, memory coalescing, occupancy) — carries the GPU Computing module AND the frontier-lab self-study path toward ML-systems engineering"
-
-  - id: source-mit-6172
-    thematic_group_ids: [thematic-group-ml-systems, thematic-group-algorithms]
-    title: MIT 6.172 — Performance Engineering of Software Systems
-    type: course
-    organization: MIT
-    url: https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/
-    evaluations:
-      - concepts: [concept-data-access-optimization, concept-data-parallelism,
-                   concept-hardware-accelerators]
-        roles: [exercise, mock-exam]
-        strengths:
-          - "The written-drill anchor for the AMLS A-part: quizzes on caching/locality (L09), parallelism+races (L05), vectorization/ILP (L04) — closest external match to written-exam format"
-
-  - id: source-mlc-book
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: "MLC — Machine Learning Compilation"
-    type: website
-    authors: [Tianqi Chen]
-    url: https://mlc.ai/
-    evaluations:
-      - concepts: [concept-program-rewrites, concept-operator-fusion]
-        roles: [implementation, first-learning]
-        strengths:
-          - "Compilation as DO: executable Jupyter chapters (TVM) — tensor program abstraction, graph rewrites, operator fusion, automatic optimization; the 10-414 companion for lectures 03–04"
-
-  - id: source-mlinspect-debugging
-    thematic_group_ids: [thematic-group-ml-systems, thematic-group-data-systems]
-    title: Data Distribution Debugging in Machine Learning Pipelines (mlinspect family)
-    type: paper
-    evaluations:
-      - roles: [reference]
-        strengths:
-          - "Motivation paper for instrumenting ML pipelines — directly the mlprov project's problem statement (PDF kept with the ppds-mlprov project)"
-
-  - id: source-mlsysbook-vol1
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: "MLSysBook Vol 1 — Introduction to Machine Learning Systems"
-    type: book
-    authors: [Vijay Janapa Reddi]
-    year: 2026
-    url: https://mlsysbook.ai/vol1/
-    material: material://source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf
-    evaluations:
-      - concepts: [concept-ml-systems, concept-hardware-accelerators, concept-ml-lifecycle,
-                   concept-ml-fairness-explainability]
-        roles: [review, exercise]
-        level: intermediate
-        strengths:
-          - "Foundations → building → optimization → deployment (1036 pp, Jun-2026 build); built-in SocratiQ quizzes double as written drill for rows without 6.172/10-414 material"
-        weaknesses:
-          - "Volume discipline: chapter-pick per the lecture map, never read linearly; Vol 1 chapter names verify-on-first-open"
-
-  - id: source-mlsysbook-vol2
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: "MLSysBook Vol 2 — Machine Learning Systems at Scale"
-    type: book
-    authors: [Vijay Janapa Reddi]
-    year: 2026
-    url: https://mlsysbook.ai/vol2/
-    material: material://source-mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf
-    evaluations:
-      - concepts: [concept-data-parallelism, concept-parameter-servers, concept-llm-systems,
-                   concept-hardware-accelerators, concept-data-access-optimization,
-                   concept-model-serving]
-        roles: [review]
-        level: advanced
-        strengths:
-          - "The written twin for the parallelism/LLM half (1170 pp, TOC verified Jul 4): Distributed Training, Collective Communication, Compute Infrastructure, Data Storage, Inference at Scale = the previously bookless lectures 05–08 + 13"
-
-  - id: source-stanford-cs149
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: Stanford CS149 — Parallel Computing
-    type: course
-    organization: Stanford
-    url: https://gfxcourses.stanford.edu/cs149/
-    identifiers:
-      # practice channels, migrated from legacy LEARNING-RESOURCES §6 (KW 24)
-      written-asst1: https://gfxcourses.stanford.edu/cs149/fall22content/static/pdfs/written_asst1.pdf
-      solutions-2020: https://github.com/PKUFlyingPig/CS149-parallel-computing
-    evaluations:
-      - concepts: [concept-data-parallelism, concept-hardware-accelerators]
-        roles: [review, exercise]
-        strengths:
-          - "Parallel abstractions (L05 supplement) + GPU assignment (L08); written assignments as drill"
-
-  - id: source-ultrascale-playbook
-    thematic_group_ids: [thematic-group-ml-systems]
-    title: HF Ultra-Scale Playbook
-    type: website
-    organization: Hugging Face (nanotron)
-    year: 2025
-    url: https://huggingface.co/spaces/nanotron/ultrascale-playbook
-    evaluations:
-      - concepts: [concept-data-parallelism, concept-parameter-servers, concept-llm-systems]
-        roles: [review, first-learning]
-        strengths:
-          - "5D parallelism (DP/TP/PP/EP/CP), ZeRO, GPU kernels from 4000+ real scaling runs — the best single read for the L05–L07 written drill; for L07 'the whole book is this lecture'"
-
+- id: source-amls-prior-archives
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: AMLS prior-year archives — SS2023 (TU Berlin) + SS2021 (TU Graz), Boehm
+  type: website
+  authors:
+  - Matthias Boehm
+  url: https://mboehm7.github.io/teaching/ss23_amls/index.htm
+  identifiers:
+    ss21: https://mboehm7.github.io/teaching/ss21_amls/index.htm
+  evaluations:
+  - roles:
+    - review
+    strengths:
+    - Same professor, same course, one year prior; the SS23 page DOES link mp4 recordings for all 12 lectures
+      (tubcloud links next to each deck — verified Jun 13). SS23 grading was oral exam 100% with project
+      prerequisite
+    weaknesses:
+    - Superseded by the SS26 course page (source-amls-ss26-lectures) for lecture processing — keep as
+      fallback/extra pass
+- id: source-amls-ss26-lectures
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: AMLS — Architecture of ML Systems, slides, recordings, and source papers (SS26)
+  type: lecture
+  authors:
+  - Matthias Boehm
+  organization: TU Berlin
+  year: 2026
+  url: https://mboehm7.github.io/teaching/ss26_amls/index.htm
+  material: material://source-amls-ss26-lectures
+  evaluations:
+  - roles:
+    - first-learning
+    strengths:
+    - The course scope authority; all 13 SS26 decks are local and reachable, verified 2026-08-03.
+    weaknesses:
+    - 'Lecture 12''s title page says ''Last update: Jul 09, 2025'' while the SS26 course sequence places
+      it on 2026-07-09; treat the year as an unresolved deck-stamp anomaly.'
+  - concepts:
+    - concept-ml-systems
+    roles:
+    - first-learning
+    useful_sections:
+    - 01 — Introduction and Overview: ML-system definitions, lifecycle, SystemDS and DAPHNE overview
+    - 02 — Languages, Architectures, and System Landscape: language abstractions, system stack and landscape
+  - concepts:
+    - concept-program-rewrites
+    roles:
+    - first-learning
+    useful_sections:
+    - 03 — Compilation – Size Inference and Rewrites: size and sparsity inference, rewrite rules, CSE
+        and matrix-chain optimization
+  - concepts:
+    - concept-operator-fusion
+    roles:
+    - first-learning
+    useful_sections:
+    - 04 — Compilation – Adaptation, Fusion, and JIT: dynamic recompilation, fusion/code generation, XLA
+        and MLIR
+  - concepts:
+    - concept-data-parallelism
+    roles:
+    - first-learning
+    useful_sections:
+    - 05 — Data- and Task-Parallel Execution: MapReduce/Spark, distributed matrix operations and parfor
+  - concepts:
+    - concept-parameter-servers
+    roles:
+    - first-learning
+    useful_sections:
+    - 06 — Parameter Servers: data/model parallelism, BSP/ASP/SSP and federated learning
+  - concepts:
+    - concept-llm-systems
+    roles:
+    - first-learning
+    useful_sections:
+    - 07 — LLM Training and Inference: scaling, distributed training, post-training and inference systems
+  - concepts:
+    - concept-hardware-accelerators
+    roles:
+    - first-learning
+    useful_sections:
+    - 08 — Hardware Accelerators: GPUs, Tensor Cores, interconnects, FPGAs, ASICs and TPUs
+  - concepts:
+    - concept-data-access-optimization
+    roles:
+    - first-learning
+    useful_sections:
+    - 09 — Data Access Methods: caching, partitioning, indexing, compression and quantization
+  - concepts:
+    - concept-ml-lifecycle
+    - concept-data-provenance
+    roles:
+    - first-learning
+    useful_sections:
+    - 10 — Data Acquisition and Preparation: acquisition, cleaning, transformation and encoding
+    - 11 — Model Selection and Management: search strategies, AutoML/NAS and model lineage
+  - concepts:
+    - concept-ml-fairness-explainability
+    roles:
+    - first-learning
+    useful_sections:
+    - 12 — Model Debugging, Fairness, and Explainability: SliceLine, LIME/SHAP and fairness constraints
+  - concepts:
+    - concept-model-serving
+    roles:
+    - first-learning
+    useful_sections:
+    - 13 — Model Deployment and Serving: exchange, serving optimization, monitoring, drift and updates
+  identifiers:
+    paper-reading-list: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
+  topics:
+  - topic-ml-compilation
+  - topic-distributed-training
+  - topic-model-serving
+  - topic-hardware-accelerators
+  - topic-data-management-for-ml
+  - topic-ml-lifecycle
+- id: source-cmu-10414
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  - thematic-group-machine-learning
+  title: CMU 10-414/714 — Deep Learning Systems
+  type: course
+  organization: CMU
+  url: https://dlsyscourse.org/
+  identifiers:
+    assignments: https://dlsyscourse.org/assignments/
+    community-solutions: https://github.com/YuanchengFang/dlsys_solution
+  evaluations:
+  - concepts:
+    - concept-program-rewrites
+    - concept-operator-fusion
+    - concept-data-parallelism
+    - concept-hardware-accelerators
+    - concept-backpropagation
+    roles:
+    - implementation
+    - exercise
+    level: advanced
+    strengths:
+    - 'The same stack taught build-first (Needle): autodiff/graphs → AMLS 03/04 (and AML L09 synergy),
+      parallel → 05/06, GPU → 08; HW1 autodiff parts are testing material'
+  topics:
+  - topic-deep-learning
+  - topic-ml-compilation
+  - topic-numerical-optimization
+- id: source-dmmls-boehm
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: Data Management in Machine Learning Systems
+  type: book
+  authors:
+  - Matthias Boehm
+  - Arun Kumar
+  - Jun Yang
+  year: 2019
+  evaluations:
+  - concepts:
+    - concept-program-rewrites
+    - concept-operator-fusion
+    - concept-data-parallelism
+    - concept-parameter-servers
+    - concept-data-access-optimization
+    - concept-ml-lifecycle
+    roles:
+    - review
+    level: advanced
+    strengths:
+    - 'THE LECTURER''S OWN BOOK (~173 pp Synthesis Lectures survey) — exactly the A-part: rewrites, operator
+      selection/fusion, parallel execution, parameter servers, compression, lifecycle systems; expect
+      exam phrasing to echo it; read by section, never linearly'
+    weaknesses:
+    - Not yet downloaded — pull via the Springer campus license (same route as Forster/Abbott); chapter
+      names cited by theme, verify against the PDF TOC on first open
+  topics:
+  - topic-ml-compilation
+  - topic-data-management-for-ml
+  - topic-distributed-training
+- id: source-gpu-mode-lectures
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: GPU MODE lecture series (ex CUDA MODE)
+  type: course
+  url: https://github.com/gpu-mode/lectures
+  evaluations:
+  - roles:
+    - implementation
+    strengths:
+    - Modern kernel-engineering lecture series (YouTube + repo) — the practice track for GPU Computing
+      and the frontier-lab profiling methodology
+- id: source-htsym-scaling-book
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: How to Scale Your Model
+  type: website
+  organization: Google DeepMind
+  year: 2025
+  url: https://jax-ml.github.io/scaling-book/
+  evaluations:
+  - concepts:
+    - concept-llm-systems
+    - concept-hardware-accelerators
+    roles:
+    - review
+    - derivation
+    strengths:
+    - Roofline/arithmetic-intensity math, accelerator internals, transformer training+inference FLOP accounting
+      — pairs with 6.172-style quiz questions
+- id: source-huyen-ai-engineering
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: Huyen — AI Engineering (O'Reilly, 2025)
+  type: book
+  authors:
+  - Chip Huyen
+  year: 2025
+  evaluations:
+  - roles:
+    - reference
+    strengths:
+    - LLM inference-optimization + serving chapters only (AMLS 07/13) — optional depth, job-relevant,
+      not exam-critical. 💰/🏛️ O'Reilly — access decision pending
+- id: source-huyen-dmls
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: Designing Machine Learning Systems
+  type: book
+  authors:
+  - Chip Huyen
+  year: 2022
+  material: material://source-huyen-dmls/designing-ml-systems.pdf
+  evaluations:
+  - concepts:
+    - concept-ml-lifecycle
+    - concept-model-serving
+    roles:
+    - review
+    level: intermediate
+    strengths:
+    - 'Lifecycle prose: Ch 3 data engineering, Ch 4 training data, Ch 6 model dev/offline eval, Ch 7 deployment/prediction
+      service, Ch 8 shifts/monitoring — lectures 10–13'
+    weaknesses:
+    - MLOps framing is job-relevant, not exam-critical
+- id: source-kirk-hwu-pmpp
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  - thematic-group-software
+  title: Kirk & Hwu — Programming Massively Parallel Processors (4th ed.)
+  type: book
+  authors:
+  - David Kirk
+  - Wen-mei Hwu
+  evaluations:
+  - roles:
+    - first-learning
+    strengths:
+    - The standard CUDA/GPU text (tiling, memory coalescing, occupancy) — carries the GPU Computing module
+      AND the frontier-lab self-study path toward ML-systems engineering
+- id: source-mit-6172
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  - thematic-group-algorithms
+  title: MIT 6.172 — Performance Engineering of Software Systems
+  type: course
+  organization: MIT
+  url: https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/
+  evaluations:
+  - concepts:
+    - concept-data-access-optimization
+    - concept-data-parallelism
+    - concept-hardware-accelerators
+    roles:
+    - exercise
+    - mock-exam
+    strengths:
+    - 'The written-drill anchor for the AMLS A-part: quizzes on caching/locality (L09), parallelism+races
+      (L05), vectorization/ILP (L04) — closest external match to written-exam format'
+  topics:
+  - topic-performance-scaling
+  - topic-software-engineering
+  - topic-algorithms-data-structures
+- id: source-mlc-book
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: MLC — Machine Learning Compilation
+  type: website
+  authors:
+  - Tianqi Chen
+  url: https://mlc.ai/
+  evaluations:
+  - concepts:
+    - concept-program-rewrites
+    - concept-operator-fusion
+    roles:
+    - implementation
+    - first-learning
+    strengths:
+    - 'Compilation as DO: executable Jupyter chapters (TVM) — tensor program abstraction, graph rewrites,
+      operator fusion, automatic optimization; the 10-414 companion for lectures 03–04'
+  topics:
+  - topic-ml-compilation
+  - topic-languages-compilers
+  - topic-performance-scaling
+- id: source-mlinspect-debugging
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  - thematic-group-data-systems
+  title: Data Distribution Debugging in Machine Learning Pipelines (mlinspect family)
+  type: paper
+  evaluations:
+  - roles:
+    - reference
+    strengths:
+    - Motivation paper for instrumenting ML pipelines — directly the mlprov project's problem statement
+      (PDF kept with the ppds-mlprov project)
+- id: source-mlsysbook-vol1
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: MLSysBook Vol 1 — Introduction to Machine Learning Systems
+  type: book
+  authors:
+  - Vijay Janapa Reddi
+  year: 2026
+  url: https://mlsysbook.ai/vol1/
+  material: material://source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf
+  evaluations:
+  - concepts:
+    - concept-ml-systems
+    - concept-hardware-accelerators
+    - concept-ml-lifecycle
+    - concept-ml-fairness-explainability
+    roles:
+    - review
+    - exercise
+    level: intermediate
+    strengths:
+    - Foundations → building → optimization → deployment (1036 pp, Jun-2026 build); built-in SocratiQ
+      quizzes double as written drill for rows without 6.172/10-414 material
+    weaknesses:
+    - 'Volume discipline: chapter-pick per the lecture map, never read linearly; Vol 1 chapter names verify-on-first-open'
+- id: source-mlsysbook-vol2
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: MLSysBook Vol 2 — Machine Learning Systems at Scale
+  type: book
+  authors:
+  - Vijay Janapa Reddi
+  year: 2026
+  url: https://mlsysbook.ai/vol2/
+  material: material://source-mlsysbook-vol2/MLSysBook-Vol2-AtScale-2026.pdf
+  evaluations:
+  - concepts:
+    - concept-data-parallelism
+    - concept-parameter-servers
+    - concept-llm-systems
+    - concept-hardware-accelerators
+    - concept-data-access-optimization
+    - concept-model-serving
+    roles:
+    - review
+    level: advanced
+    strengths:
+    - 'The written twin for the parallelism/LLM half (1170 pp, TOC verified Jul 4): Distributed Training,
+      Collective Communication, Compute Infrastructure, Data Storage, Inference at Scale = the previously
+      bookless lectures 05–08 + 13'
+- id: source-stanford-cs149
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: Stanford CS149 — Parallel Computing
+  type: course
+  organization: Stanford
+  url: https://gfxcourses.stanford.edu/cs149/
+  identifiers:
+    written-asst1: https://gfxcourses.stanford.edu/cs149/fall22content/static/pdfs/written_asst1.pdf
+    solutions-2020: https://github.com/PKUFlyingPig/CS149-parallel-computing
+  evaluations:
+  - concepts:
+    - concept-data-parallelism
+    - concept-hardware-accelerators
+    roles:
+    - review
+    - exercise
+    strengths:
+    - Parallel abstractions (L05 supplement) + GPU assignment (L08); written assignments as drill
+- id: source-ultrascale-playbook
+  thematic_group_ids:
+  - thematic-group-ml-systems
+  title: HF Ultra-Scale Playbook
+  type: website
+  organization: Hugging Face (nanotron)
+  year: 2025
+  url: https://huggingface.co/spaces/nanotron/ultrascale-playbook
+  evaluations:
+  - concepts:
+    - concept-data-parallelism
+    - concept-parameter-servers
+    - concept-llm-systems
+    roles:
+    - review
+    - first-learning
+    strengths:
+    - 5D parallelism (DP/TP/PP/EP/CP), ZeRO, GPU kernels from 4000+ real scaling runs — the best single
+      read for the L05–L07 written drill; for L07 'the whole book is this lecture'

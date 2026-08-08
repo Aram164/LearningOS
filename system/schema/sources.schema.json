@@ -147,6 +147,15 @@
               "pattern": "^thematic-group-[a-z0-9]+(?:-[a-z0-9]+)*$"
             },
             "uniqueItems": true
+          },
+          "topics": {
+            "description": "Optional medium-grained subject facet, drawn from the closed vocabulary in sources/topics.yaml (ADR-009). Independent of thematic_group_ids: a machine-learning source may carry the optimization topic, which is the whole point — one identity, many classifications. Absent means not yet classified, not 'no topics'; population happens the first time a source is actually used, never as a bulk backfill (ADR-005).",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^topic-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "uniqueItems": true
           }
         }
       }

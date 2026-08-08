@@ -1,0 +1,162 @@
+# The topic facet (ADR-009).
+#
+# Topics are the ONE genuinely new Library facet. The other four already exist:
+# domain = thematic_group_ids (ADR-007), form = a source's `type`, purpose =
+# evaluations[].roles, current use = module source-maps and stage resources.
+#
+# WHY A CLOSED VOCABULARY. Free tags decay — deep-learning / DL / neural-networks
+# / NN / advanced / advanced-reference all arrive within a year and the
+# organization goes with them. Adding a topic here is a deliberate act; adding
+# one on a source is not possible unless it is listed here (the validator
+# enforces it).
+#
+# WHY FLAT. Each topic declares a `domain`, but ONLY so the Library can group
+# them for display. It is not a constraint: a source whose domain is
+# machine-learning may carry the `optimization` topic freely. Nesting topics
+# under domains would reintroduce exactly the single-placement problem this
+# facet exists to remove — Goodfellow is deep learning AND optimization AND
+# generative modelling, and no tree survives that.
+#
+# WHERE THE LINE IS. Topics are for *navigation* — 20–40 of them, medium-grained.
+# Fine intellectual granularity belongs to the concept graph, which already has
+# hundreds of entries. "Deep Learning" is a topic; "batch normalization",
+# "cross-entropy" and "gradient clipping" are concepts. If you find yourself
+# wanting a topic for something a concept already names, use the concept.
+#
+# POPULATION IS ON USE, NEVER BULK (ADR-005). A source gains topics the first
+# time it is actually used, cited or recommended in a session — the same rule as
+# concept-linked evaluations. A one-shot pass over all 239 sources would invent
+# judgments about ~200 sources nobody has opened, which is precisely the failure
+# mode that rule exists to prevent. The Library therefore starts sparse and
+# fills in honestly; sparse is not a bug to be fixed by a backfill script.
+
+topics:
+  # — Mathematics —
+  - id: topic-probability
+    title: Probability
+    domain: thematic-group-mathematics
+  - id: topic-statistics-inference
+    title: Statistics & Inference
+    domain: thematic-group-mathematics
+  - id: topic-analysis-calculus
+    title: Analysis & Calculus
+    domain: thematic-group-mathematics
+  - id: topic-linear-algebra
+    title: Linear Algebra
+    domain: thematic-group-mathematics
+  - id: topic-discrete-math-proofs
+    title: Discrete Mathematics & Proof Craft
+    domain: thematic-group-mathematics
+
+  # — Optimization & Learning Theory —
+  - id: topic-convex-optimization
+    title: Convex Optimization
+    domain: thematic-group-optimization
+  - id: topic-numerical-optimization
+    title: Numerical Optimization
+    domain: thematic-group-optimization
+  - id: topic-learning-theory
+    title: Statistical Learning Theory
+    domain: thematic-group-optimization
+  - id: topic-kernel-methods
+    title: Kernel Methods
+    domain: thematic-group-optimization
+
+  # — Machine Learning —
+  - id: topic-statistical-learning
+    title: Statistical & Classical ML
+    domain: thematic-group-machine-learning
+  - id: topic-deep-learning
+    title: Deep Learning
+    domain: thematic-group-machine-learning
+  - id: topic-probabilistic-ml
+    title: Probabilistic ML
+    domain: thematic-group-machine-learning
+  - id: topic-reinforcement-learning
+    title: Reinforcement Learning
+    domain: thematic-group-machine-learning
+  - id: topic-generative-modeling
+    title: Generative Modelling
+    domain: thematic-group-machine-learning
+  - id: topic-computer-vision
+    title: Computer Vision
+    domain: thematic-group-machine-learning
+  - id: topic-language-models
+    title: NLP & Language Models
+    domain: thematic-group-machine-learning
+  - id: topic-model-evaluation
+    title: Evaluation & Model Selection
+    domain: thematic-group-machine-learning
+  - id: topic-feature-engineering
+    title: Features & Representations
+    domain: thematic-group-machine-learning
+
+  # — ML Systems —
+  - id: topic-ml-compilation
+    title: ML Compilation & Rewrites
+    domain: thematic-group-ml-systems
+  - id: topic-distributed-training
+    title: Distributed & Parallel Training
+    domain: thematic-group-ml-systems
+  - id: topic-model-serving
+    title: Serving & Deployment
+    domain: thematic-group-ml-systems
+  - id: topic-hardware-accelerators
+    title: Hardware & Accelerators
+    domain: thematic-group-ml-systems
+  - id: topic-data-management-for-ml
+    title: Data Management for ML
+    domain: thematic-group-ml-systems
+  - id: topic-ml-lifecycle
+    title: ML Lifecycle & Operations
+    domain: thematic-group-ml-systems
+  - id: topic-performance-scaling
+    title: Performance & Scaling
+    domain: thematic-group-ml-systems
+
+  # — Data Systems —
+  - id: topic-databases
+    title: Databases & Query Processing
+    domain: thematic-group-data-systems
+  - id: topic-distributed-systems
+    title: Distributed Systems
+    domain: thematic-group-data-systems
+  - id: topic-provenance-lineage
+    title: Provenance & Lineage
+    domain: thematic-group-data-systems
+  - id: topic-benchmarking
+    title: Benchmarking & Reliability
+    domain: thematic-group-data-systems
+
+  # — Algorithms & Computation —
+  - id: topic-algorithms-data-structures
+    title: Algorithms & Data Structures
+    domain: thematic-group-algorithms
+  - id: topic-complexity-computability
+    title: Complexity & Computability
+    domain: thematic-group-algorithms
+  - id: topic-graph-algorithms
+    title: Graph Algorithms
+    domain: thematic-group-algorithms
+
+  # — Software & Languages —
+  - id: topic-python-craft
+    title: Python Craft & Internals
+    domain: thematic-group-software
+  - id: topic-software-engineering
+    title: Software Engineering Practice
+    domain: thematic-group-software
+  - id: topic-languages-compilers
+    title: Languages & Compilers
+    domain: thematic-group-software
+  - id: topic-tooling-environments
+    title: Tooling & Environments
+    domain: thematic-group-software
+
+  # — Method & Administration —
+  - id: topic-research-method
+    title: Research Method
+    domain: thematic-group-method-admin
+  - id: topic-dataset-catalogues
+    title: Dataset Catalogues
+    domain: thematic-group-method-admin

@@ -24,7 +24,8 @@ stages:
   - concept-ml-lifecycle
   scope_triage: required-now
   resources:
-  - kind: watch
+  - id: resource-amls-l13-deck
+    kind: watch
     label: SS26 Lecture 13 recording and deck
     source_id: source-amls-ss26-lectures
     locator: Lecture 13; 13_ModelDeployment.pdf
@@ -52,42 +53,48 @@ stages:
   - concept-model-serving
   scope_triage: required-now
   resources:
-  - kind: read
+  - id: resource-amls-clipper
+    kind: read
     label: 'Primary paper — Clipper: A Low-Latency Online Prediction Serving System'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/conference/nsdi17/nsdi17-crankshaw.pdf
     scope_triage: required-now
-  - kind: read
+  - id: resource-amls-pretzel
+    kind: read
     label: 'Primary paper — PRETZEL: Opening the Black Box of ML Prediction Serving Systems'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://www.usenix.org/system/files/osdi18-lee.pdf
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-hummingbird
+    kind: read
     label: Primary paper — A Tensor Compiler for Unified ML Prediction Serving (Hummingbird)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/2010.04804
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-distilling-knowledge-neural-network
+    kind: read
     label: Primary paper — Distilling the Knowledge in a Neural Network
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: https://arxiv.org/abs/1503.02531
     scope_triage: deferred
-  - kind: read
+  - id: resource-amls-noscope
+    kind: read
     label: 'Primary paper — NoScope: Optimizing Deep CNN-Based Queries over Video Streams'
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 1, Lecture 13
     vault_path: material://source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md
     url: http://www.vldb.org/pvldb/vol10/p1586-kang.pdf
     scope_triage: deferred
-  - kind: reference
+  - id: resource-amls-l13-bibliography
+    kind: reference
     label: Complete slide-citation bibliography — Lecture 13 (25 entries)
     source_id: source-amls-ss26-lectures
     locator: AMLS paper reading list, Part 2, Lecture 13; reference-only
@@ -124,7 +131,8 @@ stages:
   - concept-model-serving
   scope_triage: required-now
   resources:
-  - kind: practise
+  - id: resource-amls-sample-task-7
+    kind: practise
     label: Official AMLS sample — Task 7 Model Deployment
     source_id: source-amls-ss26-lectures
     locator: Lecture 13 page 48
