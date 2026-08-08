@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/garden.seed.create.schema.json",
+  "title": "payload for capability garden.seed.create",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "text"
+  ],
+  "properties": {
+    "text": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}

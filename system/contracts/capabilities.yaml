@@ -16,6 +16,15 @@ commands:
     invariants:
     - no automatic routing
     - original input is preserved
+  garden.seed.create:
+    handler: garden_seed_create
+    cli_command: garden-seed-create
+    writes:
+    - knowledge/garden/**
+    invariants:
+    - no automatic classification or routing
+    - original seed text is preserved
+    - no AI is required
   module.plan.import:
     handler: module_plan_import
     cli_command: module-plan-import

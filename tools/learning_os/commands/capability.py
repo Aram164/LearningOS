@@ -15,6 +15,7 @@ def _capability_handlers() -> dict[str, str]:
     """Public command capability -> concrete gateway handler name."""
     return {
         "capture.create": "capture",
+        "garden.seed.create": "garden_seed_create",
         "module.plan.import": "module_plan_import",
         "note.revise": "note_revise",
         "note.evidence.add": "note_evidence",
