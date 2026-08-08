@@ -143,12 +143,12 @@ rule that did would be in direct conflict with §5 and hard rule #3.
 - **The faceted-library proposal** (source-ID-only physical storage, five facets,
   generated views superseding ADR-007's subject folders) is not adopted here. It
   is a real project with a real argument behind it, not a cleanup, and the AMLS
-  sitting is close. Recorded as open.
+  sitting is close. → **now designed and costed in ADR-009 (proposed).**
 - **Stage-resource identity for feedback.** `source_feedback` still targets a
   `source_id`, so two judgments about two different papers inside
   `source-amls-ss26-lectures` cannot be told apart. Registering all 60 papers as
   Library sources would fix it and is the wrong fix; stable resource IDs are the
-  right one. Open.
+  right one. → **now designed and costed in ADR-009 (proposed).**
 - **A Computing & Society thematic group.** The seminar's move to
   `method-admin` is the least-bad existing home, not a good one. Adding a group
   amends ADR-007 and needs Aram.
