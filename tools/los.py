@@ -45,6 +45,9 @@ from learning_os.commands.capability import (  # noqa: E402
 from learning_os.commands.capture import (  # noqa: E402
     cmd_capture,
 )
+from learning_os.commands.garden import (  # noqa: E402
+    cmd_garden_seed_create,
+)
 from learning_os.commands.detour import (  # noqa: E402
     cmd_detour_create, cmd_detour_resolve,
 )
@@ -215,6 +218,29 @@ def build_parser() -> argparse.ArgumentParser:
                    help="confirm structurally instead of in prose (used by the app)")
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_capture)
+
+    p = sub.add_parser(
+        "garden-seed-create",
+        help="plant one free-form Garden seed without classification or AI",
+    )
+    p.add_argument(
+        "--text",
+        required=True,
+        help="the seed text exactly as supplied by the learner",
+    )
+    p.add_argument(
+        "--title",
+        default=None,
+        help="optional explicit title; mechanically prepended as Markdown H1",
+    )
+    p.add_argument(
+        "--json",
+        action="store_true",
+        help="confirm structurally instead of in prose (used by the app)",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_garden_seed_create)
 
     p = sub.add_parser("unit-map-import",
                        help="create/import the single current study map for a unit")
