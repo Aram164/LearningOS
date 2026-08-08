@@ -41,6 +41,19 @@ def _write_navigation_fixture(root):
     ]
     modules_path.write_text(yaml.safe_dump(modules, sort_keys=False), encoding="utf-8")
 
+    # A source's Domain is explicit source-owned classification. Module routing
+    # and collection curation are separate contextual relationships and must
+    # never be folded back into this field by the projection.
+    sources_path = root / "sources" / "sources.yaml"
+    sources = yaml.safe_load(sources_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["thematic_group_ids"] = [
+        "thematic-group-mathematics"
+    ]
+    sources_path.write_text(
+        yaml.safe_dump(sources, sort_keys=False),
+        encoding="utf-8",
+    )
+
     (root / "sources" / "collections" / "demo-reading.yaml").write_text(
         yaml.safe_dump({
             "title": "Demo reading",
@@ -80,10 +93,10 @@ def test_manifest_projects_stable_thematic_navigation_metadata(mini_repo):
     assert module["thematic_group_ids"] == ["thematic-group-machine-learning"]
 
     [source] = [row for row in manifest["records"] if row["id"] == "source-demo-book"]
-    # Source placement is computed in the core from explicit module/collection
-    # membership. Interfaces receive the result and never infer from names/paths.
+    # Source Domain is its own explicit classification. The module's ML
+    # membership and the collections that curate the source remain contextual
+    # projections and therefore do not alter this field.
     assert source["thematic_group_ids"] == [
-        "thematic-group-machine-learning",
         "thematic-group-mathematics",
     ]
 

@@ -1373,3 +1373,125 @@ def test_source_feedback_rejects_a_resource_that_is_not_on_the_stage(mini_repo):
     assert "resource not found" in bad.stderr
     assert "resource-demo-book-ch01" in bad.stderr, \
         "the error must list the ids that DO exist, or it is a dead end"
+
+# --------------------------------------------------------------------------
+# ADR-009 LIBRARY PROJECTION REGRESSIONS
+#
+# Domain/classification belongs to the source. Module/collection context is a
+# separate projection. "Current use" includes both planned module routing and
+# an actual stage citation.
+# --------------------------------------------------------------------------
+
+def test_manifest_current_use_includes_stage_only_source(mini_repo):
+    """A stage citation is Current use even if the module source-map omitted it."""
+    add_curriculum(mini_repo)
+
+    source_map_path = (
+        mini_repo
+        / "curriculum/modules/module-demo/source-map.yaml"
+    )
+    source_map = yaml.safe_load(
+        source_map_path.read_text(encoding="utf-8")
+    )
+    source_map["sources"] = []
+    write_yaml(source_map_path, source_map)
+
+    manifest = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T1",
+        )["manifest.json"]
+    )
+
+    assert manifest["indexes"]["source_to_modules"] == {
+        "source-demo-book": ["module-demo"],
+    }
+    assert manifest["indexes"]["source_to_units"] == {
+        "source-demo-book": ["unit-demo-l01"],
+    }
+
+
+def test_source_domain_does_not_inherit_module_or_collection_context(mini_repo):
+    """Domain says what a source is about, never where it happens to be used."""
+    add_curriculum(mini_repo)
+
+    write_yaml(
+        mini_repo / "curriculum/thematic-groups.yaml",
+        {
+            "thematic_groups": [
+                {
+                    "id": "thematic-group-source-domain",
+                    "title": "Source domain",
+                    "order": 10,
+                },
+                {
+                    "id": "thematic-group-module-context",
+                    "title": "Module context",
+                    "order": 20,
+                },
+                {
+                    "id": "thematic-group-collection-context",
+                    "title": "Collection context",
+                    "order": 30,
+                },
+            ],
+        },
+    )
+
+    source_path = mini_repo / "sources/sources.yaml"
+    source_doc = yaml.safe_load(
+        source_path.read_text(encoding="utf-8")
+    )
+    source_doc["sources"][0]["thematic_group_ids"] = [
+        "thematic-group-source-domain",
+    ]
+    write_yaml(source_path, source_doc)
+
+    module_path = (
+        mini_repo
+        / "curriculum/modules/module-demo/module.yaml"
+    )
+    module_doc = yaml.safe_load(
+        module_path.read_text(encoding="utf-8")
+    )
+    module_doc["thematic_group_ids"] = [
+        "thematic-group-module-context",
+    ]
+    write_yaml(module_path, module_doc)
+
+    write_yaml(
+        mini_repo / "sources/collections/contextual-demo.yaml",
+        {
+            "title": "Contextual demo",
+            "thematic_group_ids": [
+                "thematic-group-collection-context",
+            ],
+            "entries": [
+                {
+                    "source": "source-demo-book",
+                    "why": "Curated here for this context.",
+                },
+            ],
+        },
+    )
+
+    manifest = json.loads(
+        generate_all(
+            load_repo(mini_repo),
+            "T1",
+        )["manifest.json"]
+    )
+
+    source = next(
+        row
+        for row in manifest["records"]
+        if row.get("id") == "source-demo-book"
+    )
+
+    assert source["thematic_group_ids"] == [
+        "thematic-group-source-domain",
+    ]
+
+    assert manifest["indexes"]["source_to_modules"][
+        "source-demo-book"
+    ] == ["module-demo"]

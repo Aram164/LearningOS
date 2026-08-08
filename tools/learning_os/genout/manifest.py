@@ -160,36 +160,23 @@ def _ordered_thematic_group_ids(repo: Repo, values) -> list[str]:
 
 
 def _source_thematic_groups(repo: Repo) -> dict[str, list[str]]:
-    """Project source placement from explicit canonical relationships.
+    """Project the source's own coarse intellectual classification.
 
-    This is deliberately a core projection rule: interfaces receive resolved
-    group ids and never infer placement from a source title, path or id. A
-    source can be placed directly, through a curated collection, or through a
-    module source map whose module has explicit thematic membership.
+    ADR-007/009 keep source identity/classification independent from the
+    contexts that currently use it. A collection may curate a source and a
+    module may route it, but neither relationship changes what the source is
+    about. Those contextual relationships are projected separately — most
+    notably through ``indexes.source_to_modules`` for Library "Current use".
+
+    The interface therefore receives authored source membership here and never
+    has to undo module/collection context that leaked into Domain.
     """
-    grouped: dict[str, set[str]] = {
-        sid: set(source.get("thematic_group_ids", []) or [])
-        for sid, source in repo.sources.items()
-    }
-    for doc in repo.collections.values():
-        group_ids = set(doc.get("thematic_group_ids", []) or [])
-        for entry in doc.get("entries", []) or []:
-            if not isinstance(entry, dict):
-                continue
-            sid = entry.get("source")
-            if sid in grouped:
-                grouped[sid].update(group_ids)
-    for mid, source_map in repo.module_source_maps.items():
-        group_ids = set((repo.modules.get(mid) or {}).get("thematic_group_ids", []) or [])
-        for entry in source_map.get("sources", []) or []:
-            if not isinstance(entry, dict):
-                continue
-            sid = entry.get("source_id")
-            if sid in grouped:
-                grouped[sid].update(group_ids)
     return {
-        sid: _ordered_thematic_group_ids(repo, group_ids)
-        for sid, group_ids in grouped.items()
+        sid: _ordered_thematic_group_ids(
+            repo,
+            source.get("thematic_group_ids", []) or [],
+        )
+        for sid, source in repo.sources.items()
     }
 
 
@@ -627,11 +614,19 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
             for uid in entry.get("unit_routes", []) or []:
                 source_to_units.setdefault(sid, []).append(uid)
     for study_map in study_maps_v2:
+        module_id = study_map.get("module_id")
         for stage in study_map.get("stages", []) or []:
             for resource in stage.get("resources", []) or []:
                 sid = resource.get("source_id")
                 if sid:
                     source_to_units.setdefault(sid, []).append(study_map["unit_id"])
+                    # ADR-009 "Current use" means either the module source-map
+                    # routes the source OR a stage actually uses it. library.py
+                    # already follows that rule; the machine projection must
+                    # publish the same fact instead of forcing the UI to recover
+                    # module identity indirectly through source_to_units.
+                    if module_id:
+                        source_to_modules.setdefault(sid, []).append(module_id)
     for workspace in [r for r in records if r.get("type") == "workspace" and not r.get("archived")]:
         workspace_to_modules[workspace["id"]] = list(workspace.get("module_ids", []) or [])
         workspace_to_units[workspace["id"]] = list(workspace.get("unit_ids", []) or [])
