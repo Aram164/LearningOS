@@ -18,6 +18,9 @@
     "note": {
       "type": "string"
     },
+    "resource_id": {
+      "type": "string"
+    },
     "source_id": {
       "type": "string"
     },

@@ -91,8 +91,17 @@ def add_curriculum(root: Path) -> None:
             "id": "stage-demo", "title": "Derive expected value", "status": "active",
             "objective": "Derive and explain expected value.",
             "done_when": ["Explain the derivation."], "scope_triage": "required-now",
-            "resources": [{"kind": "read", "label": "Demo Book §1",
-                           "source_id": "source-demo-book", "locator": "§1"}],
+            "resources": [
+                {"id": "resource-demo-book-ch01", "kind": "read",
+                 "label": "Demo Book §1", "source_id": "source-demo-book",
+                 "locator": "§1"},
+                {"id": "resource-demo-book-appendix", "kind": "read",
+                 "label": "Demo Book Appendix", "source_id": "source-demo-book",
+                 "locator": "Appendix A"},
+                # no id: the pre-v3 shape must keep working
+                {"kind": "watch", "label": "Demo companion video",
+                 "source_id": "source-demo-book"},
+            ],
             "working_note": note_rel, "attachments": [], "source_feedback": [],
         }],
     })
@@ -1248,3 +1257,61 @@ def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
     assert "## Members" in view
     for sid in list(repo.sources)[:3]:
         assert f"`{sid}`" in view, f"{sid} appears in no bucket listing"
+
+
+def test_source_feedback_can_name_a_resource(mini_repo):
+    """The write path must reach the identity the records already carry.
+
+    ADR-009 gave resources ids and feedback an optional resource_id, but until
+    the CLI accepted one, four opinions about four papers in one bundled course
+    still collapsed into an indistinguishable set — the model expressed the
+    distinction and nothing could record it.
+
+    Runs against `mini_repo`, never the live repository: a test that writes to
+    the real tree leaves transaction receipts and bumped artifact revisions
+    behind, which is state nobody asked for.
+    """
+    add_curriculum(mini_repo)
+    unit, stage, src = "unit-demo-l01", "stage-demo", "source-demo-book"
+
+    ok = run_los(mini_repo, "source-feedback", unit, stage, src, "helpful",
+                 "--resource-id", "resource-demo-book-ch01")
+    assert ok.returncode == 0, ok.stderr
+    assert json.loads(ok.stdout)["feedback"]["resource_id"] \
+        == "resource-demo-book-ch01"
+
+    # a second, CONTRADICTORY judgment about a different resource in the SAME
+    # source — the case that was inexpressible before v3
+    other = run_los(mini_repo, "source-feedback", unit, stage, src,
+                    "too-advanced", "--resource-id", "resource-demo-book-appendix")
+    assert other.returncode == 0, other.stderr
+
+    # and a plain source-level judgment still works, unchanged
+    plain = run_los(mini_repo, "source-feedback", unit, stage, src,
+                    "useful-for-review")
+    assert plain.returncode == 0, plain.stderr
+
+    target = (mini_repo / "curriculum/modules/module-demo/units"
+              / "unit-demo-l01/study-map.yaml")
+    entries = [s for s in yaml.safe_load(target.read_text(encoding="utf-8"))
+               ["stages"] if s["id"] == stage][0]["source_feedback"]
+    by_resource = {e.get("resource_id"): e["feedback"] for e in entries}
+    assert by_resource["resource-demo-book-ch01"] == "helpful"
+    assert by_resource["resource-demo-book-appendix"] == "too-advanced"
+    assert by_resource[None] == "useful-for-review"
+    assert all(e["source_id"] == src for e in entries), \
+        "source_id must survive on every entry — provenance is never traded away"
+
+
+def test_source_feedback_rejects_a_resource_that_is_not_on_the_stage(mini_repo):
+    """A dangling resource_id looks more precise than source-level feedback
+    while actually saying less, so it must fail loudly and name the real ids."""
+    add_curriculum(mini_repo)
+    unit, stage = "unit-demo-l01", "stage-demo"
+
+    bad = run_los(mini_repo, "source-feedback", unit, stage, "source-demo-book",
+                  "helpful", "--resource-id", "resource-does-not-exist")
+    assert bad.returncode == 2
+    assert "resource not found" in bad.stderr
+    assert "resource-demo-book-ch01" in bad.stderr, \
+        "the error must list the ids that DO exist, or it is a dead end"

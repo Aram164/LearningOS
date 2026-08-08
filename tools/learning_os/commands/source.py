@@ -26,6 +26,26 @@ def cmd_source_feedback(args) -> int:
             return 2
         entry = {"source_id": args.source_id, "feedback": args.feedback,
                  "recorded": _dt.date.today().isoformat()}
+        resource_id = getattr(args, "resource_id", None)
+        if resource_id:
+            # Resolve against THIS stage before writing. The validator rejects a
+            # dangling resource_id, but failing here gives the caller the actual
+            # id list instead of a post-hoc validation error, and keeps the
+            # transaction from being attempted at all.
+            resources = {str(r.get("id")): r for r in (stage.get("resources") or [])
+                         if isinstance(r, dict) and r.get("id")}
+            target = resources.get(resource_id)
+            if target is None:
+                known = ", ".join(sorted(resources)) or "(this stage has no identified resources)"
+                print(f"los: resource not found on stage {args.stage_id}: {resource_id}\n"
+                      f"     known: {known}", file=sys.stderr)
+                return 2
+            declared = target.get("source_id")
+            if declared and declared != args.source_id:
+                print(f"los: resource {resource_id} belongs to {declared}, "
+                      f"not {args.source_id}", file=sys.stderr)
+                return 2
+            entry["resource_id"] = resource_id
         if args.note:
             entry["note"] = args.note
         stage.setdefault("source_feedback", []).append(entry)

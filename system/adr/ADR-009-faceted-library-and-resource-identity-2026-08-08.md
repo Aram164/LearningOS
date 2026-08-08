@@ -147,8 +147,14 @@ accumulates on the section rather than on the whole book.
 
 ## Decision
 
-**Both proposals accepted in principle; neither implemented now.** Recorded as
-`proposed` and gated on the AMLS sitting.
+> ⚠️ **SUPERSEDED WITHIN THE DAY — historical.** Everything from here to *What
+> shipped* is the original `proposed` decision, kept because the reasoning is
+> worth reading, **not** because it describes the current state. Aram overrode
+> it the same night and both proposals were built. For what is actually true,
+> read **What shipped** and **Answers to the open questions**.
+
+*(Original decision, superseded.)* Both proposals accepted in principle; neither
+implemented now. Recorded as `proposed` and gated on the AMLS sitting.
 
 ## Sequencing — and a disagreement worth preserving
 
@@ -267,14 +273,38 @@ the judgment-inventing backfill ADR-005 forbids.
    place with a demonstrated need. ISLP chapters and CS229 problem sets are the
    obvious next candidates — when a second real need appears, not before.
 
-## Open questions for implementation
+## Still open
 
-1. Is `topics` flat, or nested under `domains`? Nesting reintroduces the
-   single-placement problem one level down.
-2. Does `lifecycle` become a source field, retiring `ml-broaden-later`?
-3. Which of the 16 collections are computable from facets and should be retired
-   into generated views?
-4. Does `source_feedback` get renamed to `resource_feedback`, or gain
-   `resource_id` alongside the existing shape for compatibility?
-5. Do stage resources get ids everywhere, or only inside bundled sources until a
-   second real need appears?
+Questions 1, 4 and 5 of the original list are **answered above** and are not
+repeated here — a list that restates settled questions as open ones is exactly
+the residue ADR-008 spent a night removing. What genuinely remains:
+
+1. **Does `lifecycle` become a source field, retiring `ml-broaden-later`?**
+   `ml-broaden-later` currently encodes a temporal intention ("study this later")
+   as a curated shelf. It should be a field, generated across all domains. Not
+   done: it touches curated collections, which is deletion-shaped.
+2. **Which of the 16 collections are computable from facets?** The rule holds —
+   keep a collection only when its *ordering* carries human meaning ("AML
+   recommended learning sequence"); "all ML books" is `domain: machine-learning`
+   + `type: book` and should be a projection. Retiring shelves is destructive
+   and wants review.
+3. **Resource ids beyond bundled sources.** ISLP chapters and CS229 problem sets
+   are the obvious next candidates, when a second real need appears.
+
+## Integration status
+
+The Core owning richer state is not the same as the system using it. Tracked
+honestly rather than implied:
+
+| | state |
+|---|---|
+| resource ids in records | ✅ 95 AMLS resources |
+| `resource_id` on feedback (schema) | ✅ contract v3 |
+| `resource_id` on the **write path** (`los source-feedback --resource-id`) | ✅ added 2026-08-08, after review found the model could express what nothing could record |
+| UI sends `resource_id` when rating | ✅ |
+| UI renders `scope_triage` tiers | ✅ |
+| UI Library exposes topic / purpose / form / use facets | ✅ |
+| `generated/library.md` | ✅ — but it is a *human* view; the UI consumes the manifest, never this file |
+
+The lesson worth keeping: a capability is not shipped when the schema accepts
+it. It is shipped when something can write it and something can show it.

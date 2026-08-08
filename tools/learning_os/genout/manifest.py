@@ -174,6 +174,18 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             key=lambda item: (int(item[1].get("order", 0)), item[0]),
         )
     ]
+    # The topic vocabulary itself, so an interface can render titles and group
+    # topics under their display domain instead of showing bare ids. `domain`
+    # is a display grouping only — never a constraint on which sources may
+    # carry a topic (ADR-009).
+    topics_v2 = [
+        {
+            "id": tid,
+            "title": topic.get("title", tid),
+            "domain": topic.get("domain"),
+        }
+        for tid, topic in sorted(repo.topics.items())
+    ]
     records = []
     for note in sorted(repo.notes.values(), key=lambda n: n.id):
         rel = note.path.relative_to(repo.root)
@@ -218,6 +230,11 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             if repo.source_origins.get(sid) else "sources/sources.yaml",
             "source_type": s.get("type", ""),
             "thematic_group_ids": source_thematic_groups.get(sid, []),
+            # ADR-009 topic facet. Projected even when empty, so an interface can
+            # tell "no topics yet" from "this build predates topics" — on-use
+            # population means most sources carry none for a long time, and that
+            # sparsity is a fact to render, not a gap to hide.
+            "topics": list(s.get("topics", []) or []),
             # interface fields: everything needed to SHOW and OPEN a source.
             # `material_path` is resolved HERE (material:// → the .flat farm is
             # a business rule, loader.materials_root) so no interface has to
@@ -596,6 +613,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
         # the Markdown views and `los.py status --json` (ADR-006, 2026-08-03).
         "academic_deadlines": _academic_deadlines(repo),
         "thematic_groups": thematic_groups,
+        "topics": topics_v2,
         "topic_packs": topic_packs_v2,
         "projects": projects_v2,
         "project_relationships": project_relationships_v2,
@@ -636,6 +654,9 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None)
             "sources": len(repo.sources), "collections": len(repo.collections),
             "topic_packs": len(topic_packs_v2),
             "thematic_groups": len(thematic_groups),
+            "topics": len(topics_v2),
+            "sources_with_topics": sum(
+                1 for s in repo.sources.values() if s.get("topics")),
             "projects": len(projects_v2),
             "modules": len(modules_v2),
             "workspaces_active": len(repo.active_workspaces()),
