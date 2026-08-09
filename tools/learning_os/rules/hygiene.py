@@ -49,10 +49,10 @@ class ChecksHygiene:
                       "but the human-fallback path depends on them)")
             return
         try:
-            from ..genout import _source_fingerprint
+            from ..genout import source_fingerprint
             data = json.loads(manifest.read_text(encoding="utf-8"))
             projected = (data.get("_generated") or {}).get("source_fingerprint")
-            current = _source_fingerprint(self.repo)
+            current = source_fingerprint(self.repo)
         except (OSError, json.JSONDecodeError):
             projected, current = None, "unreadable"
         if projected != current:
