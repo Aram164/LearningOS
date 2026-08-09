@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from ..loader import Repo
 from .common import _json_header, _letter_toc, _md_header, mermaid_node_ids
-from .manifest import _source_fingerprint
+from .projection import source_fingerprint
 
 def build_backlinks(repo: Repo, generated_at: str) -> dict:
     concept_to_notes: dict[str, list] = {}
@@ -80,7 +80,7 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
     generated_meta = _json_header(generated_at)
     generated_meta.update({
         "contract_version": 2,
-        "snapshot_id": f"sha256:{_source_fingerprint(repo)}",
+        "snapshot_id": f"sha256:{source_fingerprint(repo)}",
     })
     return {
         "_generated": generated_meta,

@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.genout import _source_fingerprint, generate_all, write_outputs
+from learning_os.genout import source_fingerprint, generate_all, write_outputs
 from learning_os.loader import load_repo, parse_frontmatter
 from learning_os.rules import validate
 
@@ -385,7 +385,7 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     unguarded = run_los(mini_repo, "module-plan-import", "module-demo", "--file",
                         str(package))
     assert unguarded.returncode == 2
-    snapshot = f"sha256:{_source_fingerprint(load_repo(mini_repo))}"
+    snapshot = f"sha256:{source_fingerprint(load_repo(mini_repo))}"
     proc = run_los(mini_repo, "module-plan-import", "module-demo", "--file", str(package),
                    "--expected-snapshot", snapshot)
     assert proc.returncode == 0, proc.stderr

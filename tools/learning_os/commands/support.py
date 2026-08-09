@@ -13,7 +13,7 @@ import subprocess
 import sys
 import tempfile
 import yaml
-from learning_os.genout import _source_fingerprint, build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
+from learning_os.genout import source_fingerprint, build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService, parse_expected_revisions
@@ -71,7 +71,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
         print("los: --expected-snapshot was empty; refusing to write without a "
               "concurrency token", file=sys.stderr)
         return False
-    actual = f"sha256:{_source_fingerprint(load_repo(root))}"
+    actual = f"sha256:{source_fingerprint(load_repo(root))}"
     if actual == expected:
         return True
     print("los: projection conflict — authored files changed since the app loaded; "

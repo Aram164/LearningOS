@@ -31,12 +31,12 @@ from .outputs import generate_all, write_outputs
 
 # Imported by rules.py and ai_actions.py to compare a projection against the
 # repository it claims to describe.
-from .manifest import _source_fingerprint
+from .projection import source_fingerprint
 
 __all__ = [
     "ATLAS_COLLECTION_DOMAIN", "ATLAS_DOMAINS", "LECTURE_KEY_RE", "PREREQ_TYPES",
     "SELECTOR_ROLES", "_exam_spine", "_project_material_resource",
-    "_source_fingerprint", "adoption_counts", "build_backlinks",
+    "source_fingerprint", "adoption_counts", "build_backlinks",
     "build_collection_view", "build_concept_canvas", "build_concept_index",
     "build_concept_map", "build_coordination_view", "build_dependency_report",
     "build_domain_atlas", "build_health", "build_manifest", "build_module_view",
