@@ -40,6 +40,12 @@ WRITABLE_ROOTS = (
     "operations",
 )
 
+#: Aram's standing rule: the Stratum checkout is strictly read-only — nothing
+#: changes there in any shape or form. It is absent from WRITABLE_ROOTS, so the
+#: allowlist already refuses it; this names the rule so that adding "stratum"
+#: later reads as the deliberate violation it would be, and pins it in a test.
+FORBIDDEN_ROOTS = ("stratum",)
+
 #: Digested by the snapshot guard. The authored dashboard is included because a
 #: write that races an edit to it should be visible in the receipt.
 _FINGERPRINTED = ("dashboard.yaml", "notes", "workspace-job-deem", "operations")
@@ -69,6 +75,10 @@ def _writable_path(job_root: Path, relative: str) -> Path:
             f"Job write path escapes the quarantine: {value}"
         ) from exc
     posix = resolved.as_posix()
+    if any(posix == root or posix.startswith(f"{root}/") for root in FORBIDDEN_ROOTS):
+        raise JobDashboardError(
+            f"the Stratum checkout is read-only — refusing to write {posix}"
+        )
     if not any(posix == root or posix.startswith(f"{root}/") for root in WRITABLE_ROOTS):
         raise JobDashboardError(
             f"Job write path is outside the write allowlist: {posix}"

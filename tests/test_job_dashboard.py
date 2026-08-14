@@ -322,6 +322,39 @@ def test_job_track_progress_is_machine_owned_and_leaves_the_dashboard_alone(mini
     assert (job / "dashboard.yaml").read_bytes() == authored
 
 
+def test_the_stratum_checkout_is_never_writable(mini_repo):
+    """Aram's standing rule: Stratum changes in no shape or form.
+
+    Pinned at the guard rather than trusted to the allowlist's silence, so a
+    future edit that adds "stratum" to WRITABLE_ROOTS fails loudly here.
+    """
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+    from learning_os.commands.job import JobDashboardError
+    from learning_os.commands.job_write import (
+        FORBIDDEN_ROOTS, WRITABLE_ROOTS, _writable_path,
+    )
+
+    assert "stratum" in FORBIDDEN_ROOTS
+    assert not any(root.startswith("stratum") for root in WRITABLE_ROOTS)
+
+    job = write_job(mini_repo)
+    for attempt in (
+        "stratum",
+        "stratum/optimizer/ir/_join_ops.py",
+        "notes/../stratum/setup.py",
+    ):
+        with pytest.raises(JobDashboardError) as caught:
+            _writable_path(job, attempt)
+        assert "read-only" in str(caught.value) or "escapes" in str(caught.value)
+
+
+def test_drift_detection_leaves_no_trace_in_the_read_only_checkout(mini_repo):
+    """Even the stat-cache refresh a plain `git diff` performs is a write."""
+    source = (Path(__file__).resolve().parent.parent
+              / "tools/learning_os/commands/job.py").read_text(encoding="utf-8")
+    assert 'GIT_OPTIONAL_LOCKS": "0"' in source
+
+
 def test_job_track_progress_rejects_an_undeclared_track(mini_repo):
     write_job(mini_repo)
     proc = run_los(mini_repo, "job-track-progress", "--confirm-job-access",
