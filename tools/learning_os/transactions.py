@@ -206,6 +206,7 @@ class TransactionService:
         publish: Callable[[], None] | None = None,
         touched: Callable[[Iterable[Path]], None] | None = None,
         metadata: Mapping | None = None,
+        fingerprint: Callable[[], str] | None = None,
     ) -> TransactionResult:
         if not capability or not capability.strip():
             raise TransactionFailure("transaction capability must be named")
@@ -255,7 +256,12 @@ class TransactionService:
         backups: dict[Path, bytes | None] = {
             path: path.read_bytes() if path.is_file() else None for path in all_paths
         }
-        snapshot_before = canonical_fingerprint(self.root)
+        # A transaction rooted somewhere without the canonical roots (the Job
+        # surface, ADR-010) would digest nothing and record a constant snapshot,
+        # which is worse than none: it looks like a guard. Such callers supply
+        # their own digest over the artifacts they actually touch.
+        take_fingerprint = fingerprint or (lambda: canonical_fingerprint(self.root))
+        snapshot_before = take_fingerprint()
         receipt_path: Path | None = None
 
         def rollback() -> None:
@@ -294,7 +300,7 @@ class TransactionService:
             if publish is not None:
                 publish()
 
-            snapshot_after = canonical_fingerprint(self.root)
+            snapshot_after = take_fingerprint()
             now = dt.datetime.now().astimezone().replace(microsecond=0)
             transaction_id, receipt_path = _next_transaction_identity(self.root, now)
             rows = []

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/job.note.stamp.schema.json",
+  "title": "payload for capability job.note.stamp",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "commit",
+    "note"
+  ],
+  "properties": {
+    "commit": {
+      "type": "string"
+    },
+    "confirm_job_access": {
+      "type": "boolean"
+    },
+    "date": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

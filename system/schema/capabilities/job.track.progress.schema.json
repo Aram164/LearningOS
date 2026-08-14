@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/job.track.progress.schema.json",
+  "title": "payload for capability job.track.progress",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "session",
+    "track"
+  ],
+  "properties": {
+    "confirm_job_access": {
+      "type": "boolean"
+    },
+    "session": {
+      "type": "integer"
+    },
+    "track": {
+      "type": "string"
+    }
+  }
+}
