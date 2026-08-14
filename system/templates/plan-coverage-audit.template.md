@@ -13,21 +13,23 @@ that were inventoried. State any inaccessible boundary explicitly.
 One row per file. Duplicate files remain separate rows and point at the same
 hash/group; folders and counts alone are not enough.
 
-| Locator | Version/year | Opened/inspected evidence | Actual contents | Duplicate/version relation | Disposition | Unit/stage route | Reason |
-|---|---|---|---|---|---|---|---|
-| `material://source-id/path/file.pdf` | current | pages 1–40 + rendered formula pages | topic list | unique | selected | `unit-id` / `stage-id` | scope authority |
+| Locator | Version/year | Format | Opened/inspected evidence | Actual contents | Duplicate/version relation | Disposition | Unit route | Lecture-specific angle |
+|---|---|---|---|---|---|---|---|---|
+| `material://source-id/path/file.pdf` | current | course-material | pages 1–40 + rendered formula pages | topic list | unique | current | `unit-id` | scope authority and lecturer notation |
 
-Allowed dispositions: `selected`, `reference-only`, `deferred`, `duplicate`,
-`superseded`, `off-scope`, `unresolved`.
+Allowed inventory dispositions include `current`, `prerequisite`,
+`complementary`, `optional`, `prior-year`, `duplicate`, `superseded`,
+`out-of-scope`, and `unresolved`. Learner selection is recorded separately; it
+must not be used as a synonym for availability or quality.
 
 ## Linked web material inventory
 
 One row per URL named by any authoritative artifact, even if unreachable or
 not selected.
 
-| URL | Named by | Official/primary evidence | Verified on | Actual topic/locator | Disposition | Unit/stage route | Reason |
-|---|---|---|---|---|---|---|---|
-| `https://example.edu/course/topic` | deck L01 p. 4 | official course page | YYYY-MM-DD | exact lecture/section | selected | `unit-id` / `stage-id` | derivation |
+| URL | Named by | Format | Official/primary evidence | Verified on | Actual topic/locator | Disposition | Unit route | Lecture-specific angle |
+|---|---|---|---|---|---|---|---|---|
+| `https://example.edu/course/topic` | deck L01 p. 4 | website | official course page | YYYY-MM-DD | exact lecture/section | complementary | `unit-id` | independent derivation |
 
 ## Current/prior and duplicate reconciliation
 
@@ -43,16 +45,17 @@ Record hashes for suspected duplicates and record numbering mismatches here.
 |---|---|---|---|---|
 | named source with dead link | unresolved | checked YYYY-MM-DD | no reachable primary locator | revisit when course page returns |
 
-“Not selected” without a row and reason is not permitted.
+Omitting a reviewed material without a row and reason is not permitted.
 
-## Unit and stage coverage matrix
+## Unit knowledge and material matrix
 
-| Unit | Authoritative scope | First exposure | Spine/derivation | Practice/exercises | Reference/deferred | Coverage gap |
-|---|---|---|---|---|---|---|
-| `unit-id` | exact deck/recording | exact locator | exact locator | exact sheet/problem | exact locator + reason | none or explicit gap |
+| Unit | Knowledge nodes and edges | Authoritative scope | Course material | Books | Videos/websites/courses | Practice/exercises | Optional/prior-year | Coverage gap |
+|---|---|---|---|---|---|---|---|---|
+| `unit-id` | stable IDs + meaningful `builds_on` edges | exact deck/recording | exact locator + angle | exact section + angle | exact locator + angle | exact sheet/problem + angle | exact locator + status reason | none or explicit gap |
 
 Every ordinary lecture receives its own row. Auxiliary synthesis/topic units do
-not replace those rows.
+not replace those rows. The row describes the complete choice menu, not an
+ordered study sequence.
 
 ## Completeness sign-off
 
@@ -61,7 +64,8 @@ not replace those rows.
 - [ ] Materials were opened; no scope decision came from filenames/counts alone.
 - [ ] Current and prior-year scope were compared by content, not numbering.
 - [ ] Suspected duplicates were hashed or otherwise proven.
-- [ ] Every item has a disposition and every selected item has a unit/stage route.
+- [ ] Every item has a disposition, format, lecture route, and angle.
+- [ ] Every rich route names only knowledge nodes declared by its lecture.
+- [ ] Learner choices are separate from the complete material menu.
 - [ ] Exercise gaps and unreachable sources are explicit.
-- [ ] Every ordinary lecture has an individual unit/map row.
-
+- [ ] Every ordinary lecture has an individual knowledge/material row.

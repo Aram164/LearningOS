@@ -15,6 +15,34 @@
     "order": { "type": "integer", "minimum": 0 },
     "scope": { "type": "string", "minLength": 1 },
     "status": { "enum": ["needs-map", "not-started", "ready", "active", "paused", "ready-to-shelve", "complete"] },
+    "knowledge_map": {
+      "description": "Lecture-level concept map. It defines what the lecture covers without prescribing a study order; rich module source-map routes point to these node ids.",
+      "type": "object",
+      "required": ["summary", "nodes"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 1 },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "summary"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+              "title": { "type": "string", "minLength": 1 },
+              "summary": { "type": "string", "minLength": 1 },
+              "builds_on": {
+                "type": "array",
+                "items": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                "uniqueItems": true
+              }
+            }
+          }
+        }
+      }
+    },
     "scope_sources": {
       "type": "array",
       "items": {

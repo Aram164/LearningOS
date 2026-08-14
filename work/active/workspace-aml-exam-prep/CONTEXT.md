@@ -76,9 +76,9 @@ unit_ids:
 
 Pass the AML Klausur at the 2. Termin (module-hu-aml; 1. Termin skipped per the
 plan of record — dates and attempt state in
-`curriculum/modules/module-hu-aml/module.yaml`). Work through the remaining
-Foundations fast path: F.D1/D5 loose ends, then Blocks I→K→L→M (L05–L11), using
-the per-lecture units as study scripts where they exist.
+`curriculum/modules/module-hu-aml/module.yaml`). Use each lecture unit as a
+knowledge and material overview: inspect the available angles, choose the
+sources that fit the current gap, and only then create a personal study path.
 
 ## Current Scope
 
@@ -101,10 +101,11 @@ AMLS reaches them — do not schedule them as their own block yet.
 and metrics; SaD L15 is the deliberate warm-up for AML L08–L09.
 
 *Defer* — AML **exam-specific** preparation until after the AMLS sitting: the
-L07 Mini Plan run, the closed-book mock, and the systematic L05→L11 sweep.
-Their plans are ready; this does not move their calendar priority.
+L07 material choice and practice session, the closed-book mock, and the
+systematic L05→L11 review. The complete per-lecture material menus are ready;
+this does not move their calendar priority.
 
-*Reference only* — AML L11 is a conditional prior-year RNN plan. The local
+*Reference only* — AML L11 is a conditional prior-year RNN overview. The local
 2026 archive currently stops at L10, so L11 must not become exam scope
 until a current deck or syllabus confirmation appears.
 
@@ -122,23 +123,27 @@ until a current deck or syllabus confirmation appears.
 (AMLS L03/L04), study `unit-aml-l09` alongside it rather than skimming the AMLS
 deck alone — that is the single highest-shared-value AML block in Phase A.
 
-**After the AMLS sitting, exam-specific prep begins:** run the L07 Mini Plan
-(`inputs/AML_L07_Mini_Plan.md`), self-test with `note-aml-l07-mock-exam`
-(75 min, closed book), then the L08–L10 sweep. (The sitting date lives in
-`curriculum/modules/module-hu-amls/module.yaml` — never restated here.)
+**After the AMLS sitting, exam-specific prep begins:** open `unit-aml-l07`,
+choose one explanation and one practice source for each uncovered knowledge
+node, self-test with `note-aml-l07-mock-exam` (75 min, closed book), then use
+the same choose-before-planning workflow for L08–L10. (The sitting date lives
+in `curriculum/modules/module-hu-amls/module.yaml` — never restated here.)
 
 ## Durable Notes
 
-AML now has individual current study maps for L01–L11. L01 and L08–L10
-are grounded in current 2026 decks. L11 preserves the older RNN material
-behind a mandatory scope-check stage. The source map includes every local
-course asset family, the complete local CS4780 bank, shared books, official
-web courses/docs, and explicit off-scope shelf dispositions.
+AML now has individual knowledge maps and complete material menus for L01–L11.
+L01–L10 are grounded in current 2026 decks. L11 preserves the older RNN
+material as visibly prior-year, pending current scope confirmation. Every
+material route states its format, learning angle, covered knowledge nodes,
+depth, scope status, and locator. The source map includes every local course
+asset family, the complete local CS4780 bank, shared books, official web
+courses/docs, and explicit off-scope shelf dispositions. Personal study maps
+remain optional and are created only after sources are chosen.
 
 ## Deferred
 
-- The systematic L08–L10 sweep remains after L07 and the AMLS sitting; only the
-  missing planning work has been completed now. This does not block pulling
+- The systematic L08–L10 sweep remains after L07 and the AMLS sitting; the
+  material inventory and semantic mapping are complete now. This does not block pulling
   L08/L09 material in early as AMLS synergy (see Current Scope).
 - L11 RNN execution is deferred until 2026 scope is confirmed.
 - Sutton & Barto remains visible but off-scope for posted AML L01–L10;

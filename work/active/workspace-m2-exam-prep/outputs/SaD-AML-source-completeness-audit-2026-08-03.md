@@ -1,20 +1,21 @@
 # SaD + AML learning-material completeness audit — 2026-08-03
 
-This is the review record behind:
+This is the review record behind the canonical SaD and AML source maps:
 
-- `SaD-L06-L15-module-plan.yaml`
-- `../../workspace-aml-exam-prep/outputs/AML-L01-L11-gap-module-plan.yaml`
+- `curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml`
+- `curriculum/modules/module-hu-aml/source-map.yaml`
 
-The executable truth is in the imported module source maps, unit records, and
-study maps. This file records the inventory and the non-obvious dispositions so
+The executable truth is in the module source maps and unit records. Both AML
+and SaD deliberately expose a complete source-choice menu rather than a fixed
+study map. This file records the inventory and the non-obvious dispositions so
 that “not selected” is never confused with “not reviewed.”
 
 ## Local AML inventory reviewed
 
 | Family | Count | Disposition |
 |---|---:|---|
-| Current lecture decks | 10 PDFs | L01–L10 are all individual current units. Newly built: L01, L08, L09, L10. Existing L02–L07 maps were used as the structural/content pattern. |
-| Older lecture variants | 11 PDFs | L01–L10 are reference-only second explanations after the current deck. Older L11 RNN is the only L11 asset and therefore sits behind a mandatory current-scope check. |
+| Current lecture decks | 10 PDFs | L01–L10 are all individual current units and course-scope authorities. |
+| Older lecture variants | 11 PDFs | L01–L10 are prior-year alternate explanations. Older L11 RNN is the only L11 asset and is visibly marked prior-year pending current-scope confirmation. |
 | Linear-algebra primer | 1 PDF | L01 prerequisite diagnostic; targeted 3Blue1Brown repair only where the primer exposes a gap. |
 | Bonus sheets | 4 PDFs | Bonus 1 routes to L02/L03; Bonus 2 to L03/L04; Bonus 3 to L05/L06; Bonus 4 Tasks 1–2 to L07 and Tasks 3–4 to L08. Existing local solution notes remain the keys. |
 | Exercise slide decks | 7 PDFs | `Übung 02` → k-NN/Blatt 1; `Übung 03` → vectorization/linear regression; `Übung 04` → regression/nonlinear/regularization; `Übung 06` → logistic/GD/Blatt 3; `Übung 07` → perceptron + prior-sheet review. `TÜbung 04` and `Übung 05` are byte-identical logistic-regression geometry decks, not two missing topics. |
@@ -37,7 +38,7 @@ that “not selected” is never confused with “not reviewed.”
 
 | Family | Count | Disposition |
 |---|---:|---|
-| Current lecture decks | 15 PDFs | Every L01–L15 lecture now has an individual unit. L06–L10 were split into five executable maps; L11–L15 were added as separate maps. |
+| Current lecture decks | 15 PDFs | Every L01–L15 lecture has an individual knowledge map and a lecture-specific material menu. L06–L10 are independent lectures, not one aggregate. |
 | Current exercise/sheet PDFs | 11 PDFs | All were opened and topic-classified. Sheet/deck numbering was not trusted. Exact routing is listed below. |
 | Prior-year course PDFs | 19 PDFs | Twelve topic decks plus UE1–UE7. Used only on verified topic matches; 2025 numbering is never treated as the 2026 sequence. |
 | Local solved external exams | 5 PDFs | FAU WS14/15 is the first full German exam. HS Harz, Köln, Leuphana, and Regensburg form the secondary gap-targeted bank. |
@@ -86,24 +87,27 @@ that “not selected” is never confused with “not reviewed.”
 | scikit-learn evaluation docs | Authoritative micro/macro/weighted metric definitions for SaD L11 and AML L08. |
 | PyTorch official tutorials | L09 autograd and L10 CNN implementation connection; not a replacement for hand derivations. |
 | MML companion | Ch 5/7 mathematical safety net; deliberately not used as a k-NN/logistic first source. |
-| StatQuest, 3Blue1Brown, jbstatistics, Kurzes Tutorium, Brandon Foltz, Daniel Jung, numiqo | Exact topic clips are retained in L06–L10/L14/L15 and AML L08–L09 maps or in the preserved L06–L10 synthesis note. They are gap-targeted refreshers, never linear playlists. |
+| StatQuest, 3Blue1Brown, jbstatistics, Kurzes Tutorium, Brandon Foltz, Daniel Jung, numiqo | Exact topic clips are exposed as lecture-specific material options for L06–L10/L14/L15 and AML L08–L09. The preserved L06–L10 synthesis note is a legacy reference only. They are gap-targeted refreshers, never linear playlists. |
 
 ## Routing reconciliation found by the standardized preflight
 
-The first run of the new no-write source-routing gate found material that was
-already selected in unit stages but absent from the corresponding module route.
+The first run of the source-routing gate found material that had appeared in
+older study stages but was absent from the corresponding module route.
 No canonical file had to be rolled back. The plan packages and canonical source
 maps now explicitly include these joins:
 
-- SaD: 3Blue1Brown Linear Algebra for L01/L03; early-lecture routes for
-  StatQuest, jbstatistics, Kurzes Tutorium, Kelleher, ISLP, and CS229; the
-  L06–L10 synthesis route for MIT 18.05; and explicit prior-year routes for
-  L11/L12/L14 where non-match/reference dispositions use the 2025 archive.
+- SaD: 3Blue1Brown Linear Algebra for L03; early-lecture routes for StatQuest,
+  jbstatistics, Kurzes Tutorium, Kelleher, ISLP, and CS229; per-lecture MIT
+  18.05 routes for L04–L10; and explicit prior-year routes only where the 2025
+  archive is a verified topic match. Non-matches remain visible in this audit
+  instead of becoming misleading material choices.
 - AML: ISLP for L06, CS229 notes for L02/L04, and 3Blue1Brown Linear Algebra for
-  L03/L06/L07.
+  L03/L06/L07. The later semantic redesign expanded every AML route into a
+  lecture-specific option with angle, format, coverage, depth, and scope.
 
-This distinction matters: a source can be globally registered and even appear
-in a stage while still being missing from the module-to-unit routing layer.
+This distinction matters: a source can be globally registered while still
+being missing from the module-to-unit routing layer that powers the material
+choice UI.
 
 ## Completeness invariants applied
 
@@ -115,3 +119,6 @@ in a stage while still being missing from the module-to-unit routing layer.
 4. Duplicate files count once conceptually but remain recorded.
 5. Missing current evidence is labeled; it is never silently backfilled from an
    older semester and called current.
+6. Every selectable option states format, lecture-specific angle, covered
+   knowledge nodes, depth, scope, and a usable locator. The menu is complete;
+   its order is not a study prescription.

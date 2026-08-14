@@ -48,6 +48,7 @@ from learning_os.commands.capture import (  # noqa: E402
 from learning_os.commands.garden import (  # noqa: E402
     cmd_garden_seed_create,
 )
+from learning_os.commands.job import cmd_job_dashboard  # noqa: E402
 from learning_os.commands.detour import (  # noqa: E402
     cmd_detour_create, cmd_detour_resolve,
 )
@@ -81,7 +82,7 @@ from learning_os.commands.support import (  # noqa: E402
     WriteRefused, _add_expected_revision_argument,
 )
 from learning_os.commands.unit import (  # noqa: E402
-    cmd_unit_list, cmd_unit_map_import, cmd_unit_note,
+    cmd_unit_list, cmd_unit_map_import, cmd_unit_note, cmd_unit_source_selection,
 )
 
 
@@ -128,6 +129,17 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("program-list", help="list programs and boundary areas")
     p.set_defaults(func=cmd_program_list)
+
+    p = sub.add_parser(
+        "job-dashboard",
+        help="read the bounded quarantined Job dashboard after an explicit access gesture",
+    )
+    p.add_argument(
+        "--confirm-job-access",
+        action="store_true",
+        help="confirm this invocation is an explicit Job session",
+    )
+    p.set_defaults(func=cmd_job_dashboard)
 
     p = sub.add_parser("module-list", help="list modules with optional program/status filters")
     p.add_argument("--program-id", default=None)
@@ -292,6 +304,19 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_unit_note)
+
+    p = sub.add_parser(
+        "unit-source-selection",
+        help="select or remove one material option from a unit's complete menu",
+    )
+    p.add_argument("unit_id")
+    p.add_argument("source_id")
+    p.add_argument("locator")
+    p.add_argument("action", choices=("select", "remove"))
+    p.add_argument("--purpose", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_unit_source_selection)
 
     p = sub.add_parser("stage-note", help="save or append a unit-stage working note")
     p.add_argument("unit_id")

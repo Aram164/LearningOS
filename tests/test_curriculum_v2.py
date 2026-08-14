@@ -126,6 +126,135 @@ def _set_workspace_status(root: Path, status: str, workspace: str = "workspace-d
                        "\n---\n\n" + body.lstrip(), encoding="utf-8")
 
 
+def _add_material_overview(root: Path, *, covers=None, builds_on=None) -> None:
+    """Give the synthetic lecture one v5 knowledge map and rich source route."""
+    unit_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["knowledge_map"] = {
+        "summary": "Expected value connects outcome values to their probabilities.",
+        "nodes": [
+            {
+                "id": "knowledge-demo-outcomes",
+                "title": "Outcome values",
+                "summary": "A random variable assigns a number to each outcome.",
+            },
+            {
+                "id": "knowledge-demo-expectation",
+                "title": "Probability-weighted average",
+                "summary": "Expectation weights every value by its probability.",
+                "builds_on": builds_on or ["knowledge-demo-outcomes"],
+            },
+        ],
+    }
+    write_yaml(unit_path, unit)
+
+    source_map_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"] = [{
+        "unit_id": "unit-demo-l01",
+        "title": "Demo book — expected-value derivation",
+        "format": "book",
+        "angle": "Derives the weighted sum and works a discrete example.",
+        "covers": covers or ["knowledge-demo-outcomes", "knowledge-demo-expectation"],
+        "depth": "derivation",
+        "scope": "current",
+        "locator": "lecture-01.pdf",
+    }]
+    write_yaml(source_map_path, source_map)
+
+    registry_path = root / "sources/sources.yaml"
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    registry["sources"][0]["material"] = "material://source-demo-book/book.pdf"
+    write_yaml(registry_path, registry)
+
+
+def test_rich_material_route_projects_semantics_and_resolved_local_file(mini_repo):
+    from learning_os.genout import build_manifest
+
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    local = mini_repo.parent / "materials/source-demo-book/lecture-01.pdf"
+    local.parent.mkdir(parents=True, exist_ok=True)
+    local.write_text("synthetic lecture", encoding="utf-8")
+
+    repo = load_repo(mini_repo)
+    assert [issue for issue in validate(repo) if issue.severity == "E"] == []
+    manifest = build_manifest(repo, "2026-08-12T12:00:00+00:00")
+    projected_map = next(row for row in manifest["module_source_maps"]
+                         if row["module_id"] == "module-demo")
+    route = projected_map["sources"][0]["unit_routes"][0]
+    assert route["angle"] == "Derives the weighted sum and works a discrete example."
+    assert route["covers"] == ["knowledge-demo-outcomes", "knowledge-demo-expectation"]
+    assert route["material_uri"] == "material://source-demo-book/lecture-01.pdf"
+    assert route["material_path"] == "materials/source-demo-book/lecture-01.pdf"
+    assert route["material_exists"] is True
+    projected_unit = next(row for row in manifest["units"] if row["id"] == "unit-demo-l01")
+    assert projected_unit["knowledge_map"]["nodes"][1]["builds_on"] == ["knowledge-demo-outcomes"]
+
+
+def test_material_route_cannot_claim_an_unknown_knowledge_node(mini_repo):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo, covers=["knowledge-demo-missing"])
+    errors = [issue for issue in validate(load_repo(mini_repo)) if issue.severity == "E"]
+    assert any(issue.code == "REF-KNOWLEDGE" for issue in errors)
+
+
+def test_knowledge_map_dependency_must_resolve_inside_its_lecture(mini_repo):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo, builds_on=["knowledge-demo-missing"])
+    errors = [issue for issue in validate(load_repo(mini_repo)) if issue.severity == "E"]
+    assert any(issue.code == "KNOWLEDGE-EDGE" for issue in errors)
+
+
+def test_learner_can_choose_and_remove_one_rich_material_option(mini_repo):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["source_selections"] = []
+    write_yaml(unit_path, unit)
+
+    chosen = run_los(
+        mini_repo,
+        "unit-source-selection",
+        "unit-demo-l01",
+        "source-demo-book",
+        "lecture-01.pdf",
+        "select",
+        "--purpose",
+        "Use the worked derivation.",
+    )
+    assert chosen.returncode == 0, chosen.stderr
+    selection = load_repo(mini_repo).units["unit-demo-l01"].data["source_selections"]
+    assert selection == [{
+        "source_id": "source-demo-book",
+        "locator": "lecture-01.pdf",
+        "purpose": "Use the worked derivation.",
+    }]
+
+    removed = run_los(
+        mini_repo,
+        "unit-source-selection",
+        "unit-demo-l01",
+        "source-demo-book",
+        "lecture-01.pdf",
+        "remove",
+    )
+    assert removed.returncode == 0, removed.stderr
+    assert load_repo(mini_repo).units["unit-demo-l01"].data["source_selections"] == []
+
+    invented = run_los(
+        mini_repo,
+        "unit-source-selection",
+        "unit-demo-l01",
+        "source-demo-book",
+        "not-on-the-menu.pdf",
+        "select",
+    )
+    assert invented.returncode == 2
+    assert "must match one rich material route" in invented.stderr
+
+
 def _lifecycle_errors(root: Path) -> set[str]:
     return {issue.code for issue in validate(load_repo(root))
             if issue.severity == "E" and issue.code.startswith("LIFECYCLE-")}
@@ -181,7 +310,7 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     repo = load_repo(mini_repo)
     assert not [issue for issue in validate(repo) if issue.severity == "E"]
     manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
-    assert manifest["_generated"]["contract_version"] == 4
+    assert manifest["_generated"]["contract_version"] == 5
     assert manifest["programs"][0]["id"] == "program-bachelors"
     assert manifest["modules"][0]["id"] == "module-demo"
     assert manifest["units"][0]["source_selections"][0]["locator"] == "§1 Erwartungswert"
@@ -1197,6 +1326,66 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
 
 
 # RESOURCE IDENTITY (ADR-009)
+
+
+def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root):
+    """SaD follows the same choose-a-source semantics as AML, lecture by lecture."""
+    repo = load_repo(repo_root)
+    module_dir = (
+        repo_root
+        / "curriculum/modules/module-hu-m2-statistik-analysis"
+    )
+    module = yaml.safe_load((module_dir / "module.yaml").read_text(encoding="utf-8"))
+    lecture_ids = [f"unit-m2-sad-l{i:02d}" for i in range(1, 16)]
+    unit_ids = [*lecture_ids, "unit-m2-sad-clustering"]
+
+    assert all(uid in module["unit_order"] for uid in unit_ids)
+    assert "unit-m2-sad-l06-l10" not in module["unit_order"]
+
+    node_ids_by_unit = {}
+    for uid in unit_ids:
+        unit = repo.units[uid].data
+        knowledge_map = unit.get("knowledge_map")
+        assert knowledge_map and knowledge_map["nodes"], f"{uid} has no knowledge map"
+        assert "current_study_map" not in unit
+        assert not (module_dir / f"units/{uid}/study-map.yaml").exists()
+        node_ids_by_unit[uid] = {node["id"] for node in knowledge_map["nodes"]}
+
+    source_map = yaml.safe_load(
+        (module_dir / "source-map.yaml").read_text(encoding="utf-8")
+    )
+    routes_by_unit = {uid: [] for uid in unit_ids}
+    required = {"unit_id", "title", "format", "angle", "covers", "depth", "scope", "locator"}
+    for source in source_map["sources"]:
+        for route in source.get("unit_routes", []):
+            assert not (
+                isinstance(route, str) and route.startswith("unit-m2-sad-")
+            ), f"SaD route on {source['source_id']} is still an unannotated id"
+            if not isinstance(route, dict) or route.get("unit_id") not in routes_by_unit:
+                continue
+            assert required <= route.keys()
+            assert route["covers"]
+            assert set(route["covers"]) <= node_ids_by_unit[route["unit_id"]]
+            routes_by_unit[route["unit_id"]].append((source["source_id"], route))
+
+    assert all(routes_by_unit.values()), "every SaD lecture/topic needs material choices"
+    assert all(
+        any(route["scope"] == "current" for _, route in routes)
+        for routes in routes_by_unit.values()
+    ), "every SaD lecture/topic needs a current course-scope option"
+    formats = {
+        route["format"]
+        for routes in routes_by_unit.values()
+        for _, route in routes
+    }
+    assert {"course-material", "exercise", "book", "video"} <= formats
+
+    obsolete = [
+        "work/active/workspace-m2-exam-prep/inputs/SaD_L01_Mini_Plan.md",
+        "work/active/workspace-m2-exam-prep/outputs/SaD-L06-L15-module-plan.yaml",
+        "work/active/workspace-m2-exam-prep/paths/path-sad-l04-probability-bayes.yaml",
+    ]
+    assert not [path for path in obsolete if (repo_root / path).exists()]
 
 
 def test_amls_bundle_resources_carry_stable_ids(repo_root):

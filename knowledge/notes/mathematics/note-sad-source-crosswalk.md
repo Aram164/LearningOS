@@ -52,19 +52,18 @@ chapters only.
 
 ## Division of labor
 
-This crosswalk *selects sources*; the detailed study guides stay authoritative
-where they exist:
+This crosswalk documents source relationships; the canonical per-lecture
+knowledge maps and material menus decide what is selectable:
 
-- **SaD 06–10** → the probability/inference deep plan (legacy:
-  `Plans/Math/sad/SaD/notes/SaD_06-10_Probability-Inference_DeepPlan.md` — Stage 2);
+- **SaD 06–10** → individual L06–L10 knowledge maps; the former
+  probability/inference deep plan is retained only as a legacy synthesis;
 - **SaD 03** → `note-regression-sad-aml-islp-bridge` (Tiers 0–5 are the canonical
   treatment; already maps Fahrmeir Ch 3, ISLP Ch 3, AML L03/L04);
 - **SaD 13/15** → the AML-side selector rows (L02 / L08–L09) — point there instead
   of duplicating;
-- **Block N** (Chat1) remains the exam-prep program: the testing tier feeds
-  clusters N1–N5; per-lecture units are the study scripts where they exist
-  (`note-sad-l02-descriptive-basics` + `note-sad-l02-exercise-bank` for L02; the
-  L01/L03/L04/L05 units are still legacy files — Stage 2).
+- **Block N** (Chat1) remains historical exam-prep context. Current lecture
+  units are knowledge maps, while the references and exercise banks are
+  selectable materials rather than study scripts.
 
 ## Reading ladder per stats topic
 

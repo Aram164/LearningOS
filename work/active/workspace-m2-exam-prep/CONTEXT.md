@@ -93,7 +93,6 @@ unit_ids:
 - unit-m2-sad-l14
 - unit-m2-sad-l15
 - unit-m2-sad-clustering
-- unit-m2-sad-l06-l10
 - unit-m2-analysis-exam-prep
 ---
 
@@ -110,7 +109,7 @@ with Analysis proof blocks, do not run two parallel tracks.
 
 ## Current Scope
 
-Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD N1/N2 work. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after the AML 2. Termin switch to AN.X and combined M2 mocks for the M2 sitting. (All three dates live in the owning module records — `module-hu-amls`, `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never restated here.)
+Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD lane. SaD is no longer a fixed N1/N2 sequence: open the relevant lecture knowledge map, compare all available materials by format and angle, and choose the source that fits the current gap. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after the AML 2. Termin switch to AN.X and combined M2 mocks for the M2 sitting. (All three dates live in the owning module records — `module-hu-amls`, `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never restated here.)
 
 ## Open Questions
 
@@ -123,25 +122,25 @@ Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current S
 
 ## Next Action
 
-> **Two different pointers — do not conflate them.** The global resume pointer
-> (`curriculum/resume.yaml`) reports the *last stage left open*:
-> `unit-m2-sad-l04 / stage-event-spaces`. It is convenience state, not a
-> recommendation (ARCHITECTURE §22). The planned next block below is the
-> *decision* about what to do next. Both are correct; they answer different
-> questions. An interface must label them separately — "Resume where you left
-> off" vs "Planned next" — never both as "Continue".
-
 **Planned next block:** start stage-m2-analysis-calibrate (60 min) — read the
 script's course contract, take one cold WV sample, and create the five-class
 error ledger. Then begin AN.0 with unser skript Chapters 1–2.
 
-**Open thread to resume when convenient:** `unit-m2-sad-l04 /
-stage-event-spaces` is still `active` and unfinished; close it out during the
-steady SaD lane rather than leaving it dangling behind the Analysis start.
+**SaD choice when returning to statistics:** L04 remains the open lecture, but
+it has no forced current stage. Use its probability/Bayes knowledge graph to
+identify the gap, then choose any current, book, video, website, or practice
+option from the material menu. A source selection does not become a hidden
+global sequence.
 
 ## Durable Notes
 
 Analysis now has an executable script-led study map. unser skript.pdf is the scope and notation authority; current HU exercises come before external banks; intuition sources are capped detours; proofs are selective understanding repairs because the script says they need not be memorized.
+
+SaD has one knowledge map per current lecture (L01–L15) plus the explicitly
+labeled clustering topic. Each source route states its format, lecture-specific
+angle, exact concept coverage, depth, scope, and locator. The former Mini Plans
+and L06–L10 aggregate are retired; durable references and exercise banks remain
+available as materials rather than mandatory steps.
 
 ## Deferred
 

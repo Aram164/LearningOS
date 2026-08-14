@@ -29,13 +29,30 @@ source_map:
       why: "Current taught material is the scope authority."
       priority: 0
       unit_routes:
-        - unit-example-l01
+        - unit_id: unit-example-l01
+          title: Current L01 lecture deck
+          format: course-material
+          angle: "Defines the taught scope and presents the lecturer's notation and examples."
+          covers:
+            - knowledge-example-l01-formulation
+            - knowledge-example-l01-core-result
+          depth: course-aligned
+          scope: current
+          locator: lecture-slides/01-example.pdf
     - source_id: source-example-book
       role: spine
       why: "Selected explanation after the current course pass."
       priority: 1
       unit_routes:
-        - unit-example-l01
+        - unit_id: unit-example-l01
+          title: Example book — independent derivation
+          format: book
+          angle: "Re-derives the core result from first principles and supplies one worked example."
+          covers:
+            - knowledge-example-l01-core-result
+          depth: derivation
+          scope: complementary
+          locator: "Chapter 1: exact sections"
 
 units:
   - unit:
@@ -46,68 +63,31 @@ units:
       title: Example Lecture 01
       order: 1
       scope: "Current L01 material: exact concepts actually taught."
-      status: ready
+      status: not-started
+      knowledge_map:
+        summary: "The lecture moves from the learning problem to its core result and application."
+        nodes:
+          - id: knowledge-example-l01-formulation
+            title: Problem formulation
+            summary: "State the inputs, target, assumptions, and objective."
+          - id: knowledge-example-l01-core-result
+            title: Core result
+            summary: "Derive and interpret the lecture's central result."
+            builds_on:
+              - knowledge-example-l01-formulation
       scope_sources:
         - source_id: source-example-course
           authority: slides
           locator: lecture-slides/01-example.pdf
-      source_selections:
-        - source_id: source-example-book
-          locator: "Chapter 1: exact sections"
-          purpose: Derivation and independent explanation
-          stage_ids:
-            - stage-example-l01-derive
-      current_study_map: study-map-example-l01
+      # The complete menu lives in source_map.unit_routes. Keep this empty until
+      # the learner actually chooses material; never preselect every available source.
+      source_selections: []
       artifacts: {}
       workspace_ids:
         - workspace-example
-    study_map:
-      id: study-map-example-l01
-      type: study-map
-      unit_id: unit-example-l01
-      status: ready
-      current_stage: stage-example-l01-scope
-      source_plan:
-        path: work/active/workspace-example/outputs/example-module-plan.yaml
-        provenance: operator
-      detours: []
-      shelving:
-        state: none
-      stages:
-        - id: stage-example-l01-scope
-          title: Confirm the taught scope
-          status: pending
-          objective: Open the current material and reproduce its concept boundary.
-          done_when:
-            - Explain every in-scope concept and record explicit exclusions.
-          estimate_minutes: 60
-          exam_critical: true
-          scope_triage: required-now
-          resources:
-            - kind: read
-              label: Current L01 deck
-              source_id: source-example-course
-              locator: lecture-slides/01-example.pdf
-          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-scope/notes.md
-          attachments: []
-          source_feedback: []
-        - id: stage-example-l01-derive
-          title: Build the derivation
-          status: pending
-          objective: Derive the lecture's core result with the selected spine.
-          done_when:
-            - Reproduce the derivation without the source.
-          estimate_minutes: 90
-          exam_critical: true
-          scope_triage: required-now
-          resources:
-            - kind: read
-              label: Exact book section
-              source_id: source-example-book
-              locator: "Chapter 1: exact sections"
-          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-derive/notes.md
-          attachments: []
-          source_feedback: []
+    # study_map is optional. Add it only after the learner chooses material and
+    # explicitly wants an ordered, progress-tracked path. Its resources must be
+    # a subset of those choices; it never replaces the complete material menu.
 
 workspace_updates:
   - id: workspace-example
@@ -119,4 +99,4 @@ workspace_updates:
       - unit-example-l01
     sections:
       Current Scope: "One individual current unit per ordinary lecture."
-      Next Action: "Start stage-example-l01-scope after the import gates pass."
+      Next Action: "Open unit-example-l01, compare material angles, and choose what to study."

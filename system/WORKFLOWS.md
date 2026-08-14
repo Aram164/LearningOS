@@ -408,8 +408,10 @@ no-write preflight, snapshot guard, and acceptance gates are mandatory.
    existing note", not new study steps).
 3. **Coverage and granularity pass.** Complete the item-by-item local/web audit,
    reconcile current and prior-year materials by contents, and give every
-   ordinary lecture its own unit/map. Record duplicate, deferred, off-scope,
-   and unresolved items rather than omitting them.
+   ordinary lecture its own unit and knowledge map. Connect every reviewed
+   source through rich lecture routes carrying format, angle, coverage, depth,
+   scope, and exact locator. Record duplicate, deferred, off-scope, and
+   unresolved items rather than omitting them.
 4. **Package and preflight.** Build from
    `system/templates/module-plan-import.template.yaml`; run
    `module-plan-import ... --check`; fix the package until the shadow validation
@@ -419,18 +421,21 @@ no-write preflight, snapshot guard, and acceptance gates are mandatory.
    - the lecture reference → `role: reference`;
    - drills → `role: exercise-bank`;
    - a self-test → `role: mock-exam` (difficulty ≥ the real exam).
-6. **One current study script:** import or create `study-map.yaml` beside the
-   unit. Preserve provenance to the original Mini Plan. Git preserves prior
-   versions; never create several competing current scripts.
-7. **Work stage by stage.** Exact actions and locators, done-when criteria,
+6. **Choose before sequencing.** Browse the complete material menu by format
+   and explanatory angle. Record only the learner's actual choices in
+   `source_selections`; source-map priority is not a mandatory order.
+7. **Optional personal path.** Create `study-map.yaml` only when ordered
+   progress tracking is useful. It may use only chosen material, must preserve
+   its provenance, and never replaces or truncates the complete menu.
+8. **Work stage by stage when a path exists.** Exact actions and locators, done-when criteria,
    exact resources, feedback and optional detours stay with the stage. Existing
    stage working notes and attachments remain compatibility inputs. The app's
    primary note action appends one learner-authored session section to the
    unit's `notes.md` after the relevant stages; the note is never required to
    complete a stage. Handwritten originals remain faithful until shelving.
-8. **Shelve by review.** Optional stages may remain; apply only selected
+9. **Shelve by review.** Optional stages may remain; apply only selected
    durable changes and preserve stage provenance.
-9. **Validate, regenerate, test, and diff-review** against the coverage audit.
+10. **Validate, regenerate, test, and diff-review** against the coverage audit.
 
 ## 24. Turn the semester
 

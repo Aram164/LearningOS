@@ -1,7 +1,7 @@
 ---
 id: note-sad-probability-inference-deep-plan
 type: note
-title: "SaD 6–10 — The Probability & Inference Core (Deep Study Plan)"
+title: "SaD 6–10 — Probability & Inference Synthesis (Legacy Reference)"
 created: "2026-07-11"
 role: reference
 state: evolving
@@ -14,7 +14,12 @@ contexts: [workspace-m2-exam-prep]
 > **Migration note (2026-07-17, Stage 2):** body preserved verbatim from
 > `Plans/Math/sad/SaD/notes/SaD_06-10_Probability-Inference_DeepPlan.md` (legacy tree).
 
-# SaD 6–10 — The Probability & Inference Core (Deep Study Plan)
+> **Current status (2026-08-12):** retained as a durable synthesis and historical
+> study suggestion. It is not an operational plan. The canonical L06–L10 units
+> each have their own knowledge map and complete material menu; the learner may
+> choose any listed source rather than follow the sequence below.
+
+# SaD 6–10 — Probability & Inference Synthesis (Legacy Reference)
 
 *The biggest, most exam-heavy block of SaD, done once and done properly.*
 *Created KW 23 (Jun 2026) | Companion to `Regression_SaD-AML-ISLP_Bridge` and `AML_L02_Ultimate_Reference`*

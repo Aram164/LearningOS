@@ -56,8 +56,12 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
             sid = entry.get("source_id")
             if sid:
                 source_to_modules.setdefault(sid, []).append(mid)
-            for uid in entry.get("unit_routes", []) or []:
-                source_to_units.setdefault(sid, []).append(uid)
+            for route in entry.get("unit_routes", []) or []:
+                uid = route if isinstance(route, str) else (
+                    route.get("unit_id") if isinstance(route, dict) else None
+                )
+                if uid:
+                    source_to_units.setdefault(sid, []).append(uid)
     for study_map in study_maps_v2:
         module_id = study_map.get("module_id")
         for stage in study_map.get("stages", []) or []:

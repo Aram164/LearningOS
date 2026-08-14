@@ -16,8 +16,8 @@ from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _p
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
 # announces about the gateway itself. This is a third, independent version:
 #   operator/gateway contract  here                              v2
-#   canonical record format    system/contracts/data-contract.yaml       v4
-#   published manifest shape   system/contracts/manifest-contract.yaml   v3
+#   canonical record format    system/contracts/data-contract.yaml       v5
+#   published manifest shape   system/contracts/manifest-contract.yaml   v5
 # Three contracts sharing the name "contract_version" is how the manifest came
 # to be published as v2 after its shape had already changed (2026-08-08).
 CONTRACT_VERSION = 2
@@ -119,7 +119,9 @@ def _capabilities(root: Path) -> dict:
             "artifact_revision_conflicts_fail_closed": True,
             "shelving_requires_explicit_approval": True,
             "job_quarantine": True,
-            "interfaces_read_projection_only": True,
+            "ordinary_interfaces_read_projection_only": True,
+            "job_dashboard_requires_explicit_access": True,
+            "job_dashboard_is_ephemeral": True,
             "module_plan_preflight_required": True,
             "ai_actions_are_provider_independent": True,
             "ai_actions_never_read_job": True,

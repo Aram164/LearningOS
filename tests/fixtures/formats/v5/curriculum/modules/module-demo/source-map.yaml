@@ -1,0 +1,18 @@
+type: module-source-map
+module_id: module-demo
+sources:
+- source_id: source-demo-book
+  role: spine
+  why: Scoped demo reading.
+  priority: 0
+  unit_routes:
+  - unit_id: unit-demo-l01
+    title: Demo book — expected-value derivation
+    format: book
+    angle: Derives the probability-weighted sum and works one discrete example.
+    covers:
+    - knowledge-demo-random-variable
+    - knowledge-demo-expectation
+    depth: derivation
+    scope: current
+    locator: §1 Erwartungswert

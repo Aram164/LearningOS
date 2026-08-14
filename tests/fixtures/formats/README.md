@@ -52,6 +52,16 @@ contradictory pair is the point — under v1/v2 both judgments collapsed onto
 close. The id-less resources and the source-level entry keep proving the old
 shape still loads.
 
+`v4` (adopted 2026-08-08) is `v3` plus the optional source `topics` facet over
+the closed vocabulary in `sources/topics.yaml`. The field remains optional so
+older source records continue to load unchanged.
+
+`v5` (adopted 2026-08-12) is `v4` plus an optional unit `knowledge_map` and a
+rich module source route. Its demo lecture declares two linked knowledge nodes,
+and its book route states format, lecture-specific angle, covered nodes, depth,
+scope, and exact locator. The v1–v4 string routes remain frozen and valid,
+proving the redesign is additive rather than a forced migration.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

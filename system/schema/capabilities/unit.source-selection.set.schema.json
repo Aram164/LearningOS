@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/unit.source-selection.set.schema.json",
+  "title": "payload for capability unit.source-selection.set",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "action",
+    "locator",
+    "source_id",
+    "unit_id"
+  ],
+  "properties": {
+    "action": {
+      "type": "string"
+    },
+    "locator": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": "string"
+    },
+    "unit_id": {
+      "type": "string"
+    }
+  }
+}

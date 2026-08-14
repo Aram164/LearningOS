@@ -75,6 +75,105 @@ def cmd_unit_map_import(args) -> int:
     return 0
 
 
+def cmd_unit_source_selection(args) -> int:
+    """Persist one learner choice without changing the complete material menu."""
+    root = _root(args)
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo = load_repo(root)
+        unit = repo.units.get(args.unit_id)
+        if unit is None:
+            print(f"los: unit not found: {args.unit_id}", file=sys.stderr)
+            return 2
+        if args.source_id not in repo.sources:
+            print(f"los: source not found: {args.source_id}", file=sys.stderr)
+            return 2
+
+        source_map = repo.module_source_maps.get(unit.module_id, {})
+        matching_route = None
+        for source in source_map.get("sources", []) or []:
+            if not isinstance(source, dict) or source.get("source_id") != args.source_id:
+                continue
+            for route in source.get("unit_routes", []) or []:
+                if (
+                    isinstance(route, dict)
+                    and route.get("unit_id") == args.unit_id
+                    and route.get("locator") == args.locator
+                ):
+                    matching_route = route
+                    break
+            if matching_route is not None:
+                break
+        if matching_route is None:
+            print(
+                "los: selection must match one rich material route on this unit "
+                f"({args.source_id} · {args.locator})",
+                file=sys.stderr,
+            )
+            return 2
+
+        unit_data = copy.deepcopy(unit.data)
+        selections = list(unit_data.get("source_selections", []) or [])
+        index = next((
+            i for i, row in enumerate(selections)
+            if isinstance(row, dict)
+            and row.get("source_id") == args.source_id
+            and row.get("locator") == args.locator
+        ), None)
+
+        if args.action == "select":
+            purpose = str(args.purpose or matching_route.get("angle") or "Chosen learning material").strip()
+            if not purpose:
+                print("los: a selected material needs a purpose", file=sys.stderr)
+                return 2
+            replacement = {
+                "source_id": args.source_id,
+                "locator": args.locator,
+                "purpose": purpose,
+            }
+            if index is None:
+                selections.append(replacement)
+            else:
+                if selections[index].get("stage_ids"):
+                    replacement["stage_ids"] = list(selections[index]["stage_ids"])
+                selections[index] = replacement
+            selected = True
+        else:
+            if index is not None and selections[index].get("stage_ids"):
+                print(
+                    "los: this choice is used by the current study path; remove it "
+                    "from those stages before removing the choice",
+                    file=sys.stderr,
+                )
+                return 2
+            if index is not None:
+                selections.pop(index)
+            selected = False
+
+        unit_data["source_selections"] = selections
+        code, errors, _confirmation = _write_transaction(
+            root,
+            {unit.path: _dump_yaml(unit_data)},
+            capability="unit.source-selection.set",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.unit_id],
+        )
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+
+    print(json.dumps({
+        "ok": True,
+        "unit_id": args.unit_id,
+        "source_id": args.source_id,
+        "locator": args.locator,
+        "selected": selected,
+    }, ensure_ascii=False))
+    return 0
+
+
 def _unit_note_marker(metadata: dict) -> str:
     return "<!-- learningos:unit-note " + json.dumps(
         metadata, ensure_ascii=False, sort_keys=True, separators=(",", ":")

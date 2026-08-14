@@ -7,7 +7,35 @@ order: 1
 scope: Current 2026 L01 deck; ML definitions and course orientation, historical milestones as a concept
   map, datasets/features/labels, learning tasks, train/test reasoning, MNIST/Iris examples, and the linear-algebra/tooling
   prerequisite shelf.
-status: ready
+status: not-started
+knowledge_map:
+  summary: The lecture moves from the historical motivation for machine learning to the vocabulary needed
+    to formulate a learning problem, then identifies the mathematical and tooling prerequisites used later.
+  nodes:
+  - id: knowledge-aml-l01-history
+    title: Historical concept map
+    summary: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks that explain
+      why later model families exist rather than as a chronology to memorize.
+  - id: knowledge-aml-l01-formulation
+    title: Learning-problem formulation
+    summary: Examples, features, labels, hypotheses, learning algorithms, losses, and the distinction
+      between classification, regression, supervised, and unsupervised learning.
+  - id: knowledge-aml-l01-data
+    title: Data representation
+    summary: Datasets as matrices and vectors, illustrated through MNIST, Iris, and embeddings.
+    builds_on:
+    - knowledge-aml-l01-formulation
+  - id: knowledge-aml-l01-generalization
+    title: Generalization and evaluation
+    summary: Why training performance is not evidence of future performance and why train/test separation
+      belongs in the problem definition.
+    builds_on:
+    - knowledge-aml-l01-formulation
+    - knowledge-aml-l01-data
+  - id: knowledge-aml-l01-prerequisites
+    title: Mathematical and tooling prerequisites
+    summary: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and notebooks as the
+      working language assumed by later lectures.
 scope_sources:
 - source_id: source-aml-ss26-lectures
   authority: slides
@@ -15,22 +43,9 @@ scope_sources:
 - source_id: source-aml-ss26-lectures
   authority: reference
   locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
-source_selections:
-- source_id: source-islp
-  locator: Ch 2 selections
-  purpose: Learning task, generalization, data-split framing
-- source_id: source-mit-6036
-  locator: Introduction, representations, generalization
-  purpose: Structured independent introduction
-- source_id: source-domingos-useful-things
-  locator: Complete essay
-  purpose: Optional conceptual framing
-- source_id: source-sad-ss26-lectures
-  locator: SaD L11
-  purpose: Cross-module workflow/metrics bridge
+source_selections: []
 artifacts: {}
 workspace_ids:
 - workspace-aml-exam-prep
 related_module_ids:
 - module-hu-m2-statistik-analysis
-current_study_map: study-map-aml-l01

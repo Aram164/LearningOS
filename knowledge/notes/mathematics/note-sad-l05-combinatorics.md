@@ -208,7 +208,7 @@ Very handy for **algorithm-complexity analysis** over combinatorial quantities (
 
 ### 11.3 What's next (beyond this batch)
 
-- **L06 (Random Variables):** RVs, E[X], Var, Chebyshev, LLN — the probability half proper. Its deep guide already exists: **`SaD/notes/SaD_06-10_Probability-Inference_DeepPlan.md`** (Sessions 1–5 cover L06–L10). Per the module plan, **L06–L10 use that deep plan as their unit layer** rather than separate per-lecture units.
+- **L06 (Random Variables):** RVs, E[X], Var, Chebyshev, LLN — the probability half proper. L06 now has its own knowledge map and source menu. The former L06–L10 deep guide remains a legacy synthesis, not the unit layer.
 
 ---
 

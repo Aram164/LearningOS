@@ -13,8 +13,7 @@ contexts: [workspace-aml-exam-prep]
 ---
 
 > **Migration note (2026-07-17, Stage-1 pilot):** body preserved verbatim from
-> `Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Ultimate_Reference.md` (legacy tree). Companions in v3: `note-aml-l07-exercise-bank`, `note-aml-l07-mock-exam`. The step hook (F.K2) and the Mini Plan are operational and live in
-> `work/active/workspace-aml-exam-prep/`.
+> `Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_L07_Ultimate_Reference.md` (legacy tree). Companions in v3: `note-aml-l07-exercise-bank`, `note-aml-l07-mock-exam`. The former step hook (F.K2) and Mini Plan have been superseded by the L07 knowledge map and material menu.
 
 # AML Lecture 07 — Ultimate Reference: Linear Classifiers, Perceptron, Kernel Trick, Multi-Class
 

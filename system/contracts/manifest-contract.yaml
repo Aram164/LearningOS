@@ -2,8 +2,8 @@
 #
 # This is a different contract from system/contracts/data-contract.yaml:
 #
-#     canonical record format        data-contract.yaml       (currently v4)
-#     manifest/interface projection  this file                (currently v3)
+#     canonical record format        data-contract.yaml       (currently v5)
+#     manifest/interface projection  this file                (currently v5)
 #
 # Canonical records are what Core stores. The manifest is what Core *publishes*
 # to consumers (the Obsidian UI, los.py --json, any future interface). The two
@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 4
+contract_version: 5
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -116,3 +116,10 @@ history:
   note: publish concrete review_items and make Garden projection Core-owned independently
     of optional AI state
   mirrored_in_ui: contracts/manifest-v4.lock.json
+- version: 5
+  adopted: '2026-08-12'
+  note: projected units may publish a knowledge_map and projected module source
+    routes may publish lecture-specific material metadata plus resolved source and
+    local material paths. This additive nested-shape change powers the material-choice
+    UI and deliberately bumps the exact consumer contract.
+  mirrored_in_ui: contracts/manifest-v5.lock.json

@@ -66,8 +66,10 @@ PROGRAMS = [
         "id": "program-job-boundary", "type": "program", "title": "Job",
         "kind": "boundary", "status": "boundary-only", "default": False,
         "semester_bound": False,
-        "description": "Hard confidentiality boundary. Job content never enters LearningOS.",
-        "boundary_action": "Request explicit Job access",
+        "description": ("Hard confidentiality boundary. Job content stays outside the normal manifest, "
+                        "search, academic recommendations, and AI context; the deliberate Job view may "
+                        "load its bounded read-only dashboard on demand."),
+        "boundary_action": "Open confidential Job workspace",
         "semesters": [],
     },
 ]
@@ -401,9 +403,9 @@ def source_maps(source_ids: set[str]) -> dict[str, list[dict]]:
         ("module-hu-aml", "source-islp"): ["unit-aml-l02", "unit-aml-l03", "unit-aml-l04"],
         ("module-hu-aml", "source-cs229-notes"): ["unit-aml-l03", "unit-aml-l05"],
         ("module-hu-m2-statistik-analysis", "source-sad-ss26-lectures"):
-            [*[f"unit-m2-sad-l0{i}" for i in range(1, 6)], "unit-m2-sad-l06-l10"],
+            [*[f"unit-m2-sad-l{i:02d}" for i in range(1, 16)], "unit-m2-sad-clustering"],
         ("module-hu-m2-statistik-analysis", "source-sad-uebungen"):
-            [f"unit-m2-sad-l0{i}" for i in range(1, 6)],
+            [*[f"unit-m2-sad-l{i:02d}" for i in range(1, 16)], "unit-m2-sad-clustering"],
         ("module-hu-m2-statistik-analysis", "source-islp"): ["unit-m2-sad-l03"],
     }
     for mid, entries in maps.items():
@@ -500,6 +502,27 @@ def run(root: Path, apply: bool) -> Migration:
         modules[mid] = module
 
     for mid, uid, component, order, title, plan, scope_source, wid in MINI_PLANS:
+        # Once a unit exists in the partitioned curriculum it is the canonical
+        # record. A compatibility-migration rerun must preserve later semantic
+        # redesigns (including an intentionally absent study map) and must not
+        # require the one-time source plan to remain in an active workspace.
+        existing_unit = before.units.get(uid)
+        if existing_unit is not None:
+            existing_maps = [
+                sm for sm in before.study_maps.values()
+                if sm.unit_id == uid
+            ]
+            existing_map = copy.deepcopy(existing_maps[0].data) if len(existing_maps) == 1 else None
+            units_by_module.setdefault(mid, []).append(
+                (copy.deepcopy(existing_unit.data), existing_map)
+            )
+            if mid != "module-hu-aml":
+                migration.mappings.append({
+                    "old": plan,
+                    "new": f"curriculum/modules/{mid}/units/{uid}/unit.yaml",
+                    "kind": "replaced-by-knowledge-map",
+                })
+            continue
         if uid == "unit-m2-sad-l04":
             study_map = convert_l04(root, mid, uid)
         else:
@@ -520,18 +543,6 @@ def run(root: Path, apply: bool) -> Migration:
                                    "new": f"curriculum/modules/{mid}/units/{uid}/study-map.yaml",
                                    "kind": "retained-source-plan"})
 
-    deep_map = note_backed_map("module-hu-m2-statistik-analysis", "unit-m2-sad-l06-l10",
-                               "SaD L06–L10 probability and inference deep plan",
-                               "note-sad-probability-inference-deep-plan")
-    deep_unit = make_unit(
-        "module-hu-m2-statistik-analysis", "unit-m2-sad-l06-l10", "lecture-cluster",
-        "SaD L06–L10 — Probability & inference core", 6,
-        "Intentionally clustered probability and inference sequence; do not split without scope evidence.",
-        "ready", ["workspace-m2-exam-prep"],
-        {"ultimate_reference": "note-sad-probability-inference-deep-plan"},
-        component_id="component-m2-sad", study_map=deep_map,
-        scope_source="source-sad-ss26-lectures")
-    units_by_module.setdefault("module-hu-m2-statistik-analysis", []).append(deep_unit)
     units_by_module["module-hu-m2-statistik-analysis"].append(make_unit(
         "module-hu-m2-statistik-analysis", "unit-m2-analysis-exam-prep", "exam-block",
         "Analysis — exam preparation block", 100,
@@ -720,11 +731,6 @@ def run(root: Path, apply: bool) -> Migration:
                         migration.write(stage["working_note"], "")
                 migration.write(f"{base}/study-map.yaml", dump_yaml(clean_map))
 
-    migration.write("curriculum/resume.yaml", dump_yaml({
-        "type": "resume-pointer", "module_id": "module-hu-m2-statistik-analysis",
-        "unit_id": "unit-m2-sad-l04", "study_map_id": "study-map-m2-sad-l04-probability-bayes",
-        "stage_id": "stage-event-spaces", "updated": TODAY,
-    }))
     migration.write("curriculum/quarantine/index.yaml", dump_yaml({
         "type": "quarantine-index", "id": "quarantine-masters-planning",
         "workspace_ids": ["workspace-degree-planning"],
@@ -776,7 +782,7 @@ def run(root: Path, apply: bool) -> Migration:
 
     mappings = {
         "migration": "curriculum-v2", "date": TODAY,
-        "notes": "Original Mini Plans remain in place; quarantined material is moved intact.",
+        "notes": "Former fixed source plans are superseded by lecture knowledge maps; quarantined material is moved intact.",
         "mappings": migration.mappings,
     }
     migration.write("migration/curriculum-v2/old-to-new.yaml", dump_yaml(mappings))

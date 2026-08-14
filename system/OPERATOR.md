@@ -14,10 +14,10 @@ python tools/los.py bootstrap
 ```
 
 The stable read contract is the single atomic `generated/manifest.json`,
-`contract_version: 3` — declared in `system/contracts/manifest-contract.yaml`
+`contract_version: 5` — declared in `system/contracts/manifest-contract.yaml`
 and enforced by the producer on every build, so the version announced and the
 shape published cannot disagree. (This is not the canonical record format,
-which is `data-contract.yaml` v4; the two version different things and move
+which is `data-contract.yaml` v5; the two version different things and move
 independently.) It contains programs, semesters, partitioned modules,
 components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
@@ -31,10 +31,12 @@ application state by parsing canonical Markdown or YAML. Use `list-*`,
 program / area
 └── module
     ├── optional stable components
-    ├── module source map
+    ├── module source map (complete lecture-material options)
     └── units
+        ├── lecture knowledge map
+        ├── learner source selections
         ├── durable artifact references
-        └── one current study map
+        └── optional current study map
             └── ordered stages
 ```
 
@@ -48,13 +50,17 @@ Skills and projects use modules and units without false academic metadata.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
 3. `Job/` is outside LearningOS. Never read, scan, index, cite, or route it
-   without an explicit Job task; it never appears in the manifest.
+   without an explicit Job task; it never appears in the manifest. The sole UI
+   exception is the ephemeral `job-dashboard` query: deliberately opening Job
+   confirms one read-only session against the bounded `Job/dashboard.yaml`
+   catalogue. It cannot feed search, AI context, recommendations, or writes.
 4. Master's Planning is Git-tracked under `curriculum/quarantine/`, excluded
    from normal loading and search, and represented only by a boundary record.
 5. Academic administrative facts live only in the owning partitioned
    `curriculum/modules/<module-id>/module.yaml`; coordination decisions live
    only in `work/COORDINATION.md`.
-6. Units own study maps and stage work. Workspaces coordinate efforts through
+6. Units may own a personal study map and stage work after source choice.
+   Knowledge maps and complete material menus do not require one. Workspaces coordinate efforts through
    explicit `program_ids`, `module_ids`, and `unit_ids`; they do not own the
    curriculum hierarchy.
 7. Durable notes remain globally canonical under `knowledge/`; units reference
@@ -77,22 +83,30 @@ Skills and projects use modules and units without false academic metadata.
 
 ## Unit workflow
 
-Choose a module and unit. The unit has at most one current study map. Work in
-ordered stages while preserving independent state for every other unit.
+Choose a module and unit. First inspect its knowledge map and complete material
+menu, grouped by format and annotated with angle, depth, scope, and coverage.
+Record actual choices in `source_selections`. If ordered tracking would help,
+the unit may then have at most one current study map using only those choices.
+Work in its stages while preserving independent state for every other unit.
 
 ```bash
+python tools/los.py unit-source-selection UNIT_ID SOURCE_ID LOCATOR select --purpose "Why this angle fits"
 python tools/los.py unit-note UNIT_ID --text "..." --stage-id STAGE_ID --expected-snapshot SNAPSHOT
 python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot SNAPSHOT
 python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
 python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
 ```
 
+`unit-source-selection` accepts only a rich material route already exposed on
+that unit. It changes the learner's choice list, not the source map or the
+complete menu. Removing a choice already wired into a study path is refused.
+
 `unit-note` appends one session-level section after the learner finishes the
 relevant stages. `stage-note` remains a compatibility command for existing
 stage-owned scratch files.
 
-When confirmed lecture scope requires a module-wide batch (new units, current
-study maps, source routing, and workspace joins), follow
+When confirmed lecture scope requires a module-wide batch (new units, knowledge
+maps, complete rich source routing, optional study maps, and workspace joins), follow
 [`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md). Complete its material-coverage
 audit, build from the canonical template, and require the no-write gate
 `.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml

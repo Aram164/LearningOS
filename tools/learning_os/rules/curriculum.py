@@ -118,6 +118,20 @@ class ChecksCurriculum:
             if not current and owned:
                 self.err("UNIT-MAP-UNDECLARED",
                          f"unit '{uid}' has a study-map.yaml but does not declare it", where)
+            knowledge_nodes = [
+                node for node in ((unit.data.get("knowledge_map") or {}).get("nodes", []) or [])
+                if isinstance(node, dict)
+            ]
+            knowledge_ids = [node.get("id") for node in knowledge_nodes]
+            if len(knowledge_ids) != len(set(knowledge_ids)):
+                self.err("KNOWLEDGE-NODE-DUP",
+                         f"unit '{uid}' knowledge-map node ids must be unique", where)
+            known = set(knowledge_ids)
+            for node in knowledge_nodes:
+                for dependency in node.get("builds_on", []) or []:
+                    if dependency not in known:
+                        self.err("KNOWLEDGE-EDGE",
+                                 f"unit '{uid}' knowledge node '{node.get('id')}' builds on unknown node '{dependency}'", where)
 
     def check_lifecycle_coherence(self):
         """A unit cannot be ready while every workspace that would do it is blocked.

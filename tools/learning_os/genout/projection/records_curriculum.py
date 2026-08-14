@@ -8,6 +8,7 @@ from typing import Callable
 
 from ...loader import Repo
 from ..common import _first_para, _git_last_commit
+from ..materials import _project_material_resource
 from .grouping import ordered_thematic_group_ids
 from .lifecycle import module_lifecycle
 from .stages import project_stages
@@ -133,9 +134,26 @@ def project_module_source_maps(repo: Repo, revision: Revision) -> list[dict]:
     for mid in sorted(repo.module_source_maps):
         source_map = repo.module_source_maps[mid]
         source_map_id = f"source-map-{mid.removeprefix('module-')}"
+        projected_sources = []
+        for entry in source_map.get("sources", []) or []:
+            if not isinstance(entry, dict):
+                projected_sources.append(entry)
+                continue
+            projected_entry = dict(entry)
+            projected_entry["unit_routes"] = [
+                _project_material_resource(
+                    repo,
+                    {**route, "source_id": entry.get("source_id")},
+                )
+                if isinstance(route, dict)
+                else route
+                for route in entry.get("unit_routes", []) or []
+            ]
+            projected_sources.append(projected_entry)
         records.append({
             "id": source_map_id,
-            **dict(source_map),
+            **{k: v for k, v in source_map.items() if k != "sources"},
+            "sources": projected_sources,
             "revision": revision(source_map_id, source_map),
             "path": str(repo.module_source_map_origins[mid].relative_to(repo.root)),
         })

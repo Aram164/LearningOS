@@ -326,7 +326,7 @@ Leser's own research thread, shown to prove the course's methods are used in rea
 ### 11.3 What's next
 
 - **L02 (Basic Concepts):** population vs sample, x̄, s², quantiles, boxplots — the formal descriptive layer. (Next unit to build.)
-- **L04 (Probability):** the rigorous home of §5/§8; do the Bayes intuition materials in the Mini Plan first.
+- **L04 (Probability):** the rigorous home of §5/§8; use the L04 knowledge map to choose the Bayes intuition or derivation material that fits the gap.
 
 ---
 

@@ -389,6 +389,18 @@ The important question is:
 
 The system should personalize this over time based on my feedback.
 
+A lecture should therefore expose two things before it proposes a plan:
+
+- a compact knowledge map of the ideas taught and how they build on each other;
+- a complete material menu grouped by format, where every item says which part
+  of the lecture it covers and from what explanatory angle.
+
+Availability, selection, and sequence are different facts. A book can be
+available without being selected; a selected video need not come before a
+selected exercise. The system must not turn source priority or an old plan into
+one mandatory learning sequence. I choose the materials. An ordered study path
+is optional, personal, and created only when it reduces cognitive load.
+
 ---
 
 ## 10. Timeless design principles

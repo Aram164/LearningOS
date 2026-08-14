@@ -1,19 +1,57 @@
 id: unit-m2-sad-l04
 type: unit
 module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 04 — Probability & Naïve Bayes
 order: 4
-scope: The lecture as taught; the preserved Mini Plan is the single study script.
+scope: Current 2026 L04 deck; cognitive framing effects, random experiments and event spaces,
+  Kolmogorov probability axioms, unions/intersections/complements, conditional probability, total probability,
+  Bayes' law, independence, and a categorical Naive Bayes classifier.
 status: active
+knowledge_map:
+  summary: The lecture formalizes uncertain events and then turns Bayes' law into a classifier, exposing both
+    the strength and the assumptions of probability-based learning.
+  nodes:
+  - id: knowledge-sad-l04-framing
+    title: Human probability judgments and framing
+    summary: Equivalent outcomes can trigger different decisions when expressed as gains or losses, motivating
+      a formal calculus instead of unaided intuition.
+  - id: knowledge-sad-l04-events
+    title: Random experiments, outcomes, and event spaces
+    summary: A sample space contains possible outcomes; events are subsets, and set operations encode the
+      logical structure of compound probability questions.
+  - id: knowledge-sad-l04-axioms
+    title: Probability axioms and derived rules
+    summary: Non-negativity, normalization, and additivity generate complement, union, inclusion-exclusion,
+      monotonicity, and bounds.
+    builds_on: [knowledge-sad-l04-events]
+  - id: knowledge-sad-l04-conditional
+    title: Conditional probability and total probability
+    summary: Conditioning restricts the reference population; partitions decompose an event into mutually
+      exclusive cases whose weighted probabilities sum to the whole.
+    builds_on: [knowledge-sad-l04-axioms]
+  - id: knowledge-sad-l04-bayes
+    title: Bayes' law and posterior reasoning
+    summary: Bayes reverses a conditional using likelihoods and prior/base rates, explaining medical-test and
+      classification paradoxes that raw accuracy obscures.
+    builds_on: [knowledge-sad-l04-conditional]
+  - id: knowledge-sad-l04-independence
+    title: Independence and conditional independence
+    summary: Independent events factorize jointly; conditional independence is a different claim that can hold
+      or fail after a third variable is known.
+    builds_on: [knowledge-sad-l04-conditional]
+  - id: knowledge-sad-l04-naive-bayes
+    title: Categorical Naive Bayes classifier
+    summary: Class priors and per-feature likelihoods produce a posterior score under a conditional-independence
+      assumption; missing combinations and zero counts preview the smoothing problem in L14.
+    builds_on: [knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
+  locator: lecture-slides/04_probability.pdf (59 pages)
 source_selections: []
 artifacts:
   ultimate_reference: note-sad-l04-probability-bayes
   exercise_bank: note-sad-l04-exercise-bank
-workspace_ids:
-- workspace-m2-exam-prep
-component_id: component-m2-sad
-current_study_map: study-map-m2-sad-l04-probability-bayes
+workspace_ids: [workspace-m2-exam-prep]

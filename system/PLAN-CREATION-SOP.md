@@ -1,9 +1,9 @@
-# Standard plan-creation procedure
+# Standard lecture-material mapping and optional study-path procedure
 
-This procedure is mandatory for every new or revised module plan. It turns a
-material review into one reviewable `module-plan-import` package without
-silently losing sources, inventing scope, or discovering structural mistakes
-only after canonical files have been touched.
+This procedure is mandatory for every new or revised module learning surface.
+It turns a material review into one reviewable `module-plan-import` package
+without silently losing sources, inventing scope, forcing one study order, or
+discovering structural mistakes only after canonical files have been touched.
 
 Use the project environment. If `.venv/bin/python` does not exist, run
 `make setup` once. Do not assume a global `los` executable exists.
@@ -19,12 +19,18 @@ A plan is complete only when all of the following are true:
    duplicate, superseded, off-scope, or unresolved;
 3. current taught material is the scope authority; filenames, numbering, books,
    search snippets, and prior-year material are never treated as scope evidence;
-4. each normal lecture has its own unit and study map; a cluster is used only
-   when the authoritative material actually defines one, while synthesis/review
-   units are auxiliary and never replace lecture units;
-5. the package passes the no-write preflight;
-6. the snapshot-guarded import succeeds once; and
-7. validation, generation, focused tests, and the final diff are clean.
+4. each normal lecture has its own unit with a knowledge map of what the lecture
+   covers; a cluster is used only when the authoritative material actually
+   defines one, while synthesis/review units are auxiliary and never replace
+   lecture units;
+5. every usable material appears as a lecture-specific option with title,
+   format, explanation angle, covered knowledge nodes, depth, scope status, and
+   exact locator; the overview is complete even when nothing is selected;
+6. `source_selections` records actual learner choices, and a `study-map.yaml` is
+   optional—created only when the learner wants an ordered progress path;
+7. the package passes the no-write preflight;
+8. the snapshot-guarded import succeeds once; and
+9. validation, generation, focused tests, and the final diff are clean.
 
 ## Gate 0 — establish the contract and repository state
 
@@ -36,10 +42,12 @@ Run:
 git status --short
 ```
 
-Preserve unrelated changes. Read the current module, source map, units, study
-maps, workspace, the relevant JSON Schemas, and any earlier plan package before
-drafting. Copy `snapshot.snapshot_id` from `bootstrap`; the actual import
-requires it. A preflight may run without it, but an import may not.
+Preserve unrelated changes. Read the current module, source map, units, optional
+study maps, workspace, the relevant JSON Schemas, and any earlier plan package
+before drafting. Older plans are evidence about possible coverage, never the
+semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
+`bootstrap`; the actual import requires it. A preflight may run without it, but
+an import may not.
 
 ## Gate 1 — build the material inventory before writing stages
 
@@ -99,13 +107,23 @@ Create one lecture unit per ordinary lecture. Split combined plans such as
 remain only as an auxiliary review unit with explicit parent/child or purpose
 context.
 
-For every unit, finish a coverage row before drafting stages:
+For every unit, finish its semantic map before considering stages:
 
-- authoritative scope material;
-- selected first exposure, spine, derivation, implementation, and practice;
-- reference-only/deferred items with reasons;
-- exact stage destination for each selected locator; and
+- authoritative scope material and the exact concepts actually taught;
+- stable knowledge nodes with short explanations and explicit `builds_on`
+  edges where the dependency is meaningful;
+- every first exposure, intuition, derivation, implementation, practice,
+  reference, and advanced-depth option available for those nodes;
+- one lecture-specific angle statement explaining what each option contributes,
+  rather than a generic description of the source as a whole;
+- format grouping (`course-material`, `exercise`, `book`, `video`, `website`,
+  `course`, `documentation`, `code`, or `paper`);
+- current/prerequisite/complementary/optional/prior-year/out-of-scope status,
+  with no older source presented as current; and
 - a stated exercise/practice gap when no matching asset exists.
+
+Do not choose a winner merely to make a plan look complete. The permanent
+output is a navigable knowledge-to-material graph. The learner chooses from it.
 
 ## Gate 3 — build the package from the canonical template
 
@@ -124,17 +142,36 @@ Use only schema enums. Module source-map roles are:
 `implementation`, `practice`, `exam-preparation`, `optional-depth`,
 `reference`, and `candidate`.
 
+Each rich `unit_routes` entry is one source-to-lecture edge and must contain:
+
+- `unit_id`, a human-readable option `title`, and `format`;
+- `angle`, written for this lecture rather than copied from global source
+  metadata;
+- `covers`, containing only knowledge-node IDs declared by that unit;
+- `depth`: `orientation`, `intuition`, `course-aligned`, `derivation`,
+  `implementation`, `practice`, or `advanced-reference`;
+- `scope`: `current`, `prerequisite`, `complementary`, `optional`, `prior-year`,
+  or `out-of-scope`; and
+- the most exact safe `locator`, `url`, or `vault_path` available.
+
+Legacy string routes remain readable for backward compatibility, but a newly
+mapped lecture must use rich routes so the interface can explain the choice.
+
 Additional package invariants:
 
 - `module_patch.unit_order` lists every final owned unit exactly once, including
   pre-existing units not changed by this package;
-- every unit/map/stage ID is unique and module-scoped;
-- `current_stage` resolves, and every working note stays below its owning unit;
+- every unit, knowledge-node, and optional map/stage ID is unique and
+  module-scoped;
+- every material `covers` reference resolves inside its target unit;
+- when a study map is supplied, `current_stage` resolves and every working note
+  stays below its owning unit;
 - every source used by a unit scope, selection, stage resource, feedback entry,
   or workspace update exists in the module source map;
 - every source used by a unit explicitly routes to that unit in
   `unit_routes`;
-- source selections that name `stage_ids` resolve to stages in the same map;
+- source selections are empty until the learner has chosen; if a selection
+  names `stage_ids`, those IDs resolve to stages in the same optional map;
 - the workspace's `sources` and `unit_ids` contain the final intended joins;
 - older-only material is labelled as prior-year/reference/candidate and never
   described as current; and
@@ -193,9 +230,11 @@ a migration must preserve evolved units and source maps instead of recreating
 an older snapshot.
 
 Review the final diff against the coverage audit, not only against the package:
-every selected material must land in the intended unit/stage, every non-selected
-material must retain its disposition, lecture units must not have collapsed
-back into a cluster, and unrelated dirty-tree changes must remain untouched.
+every reviewed material must land in the intended unit menu with the correct
+angle and disposition, chosen material must remain distinguishable from merely
+available material, optional study maps must use only chosen resources, lecture
+units must not have collapsed back into a cluster, and unrelated dirty-tree
+changes must remain untouched.
 
 ## Why these gates exist
 
@@ -205,9 +244,10 @@ back into a cluster, and unrelated dirty-tree changes must remain untouched.
 | Trusting filenames or old lecture numbers | Materials must be opened; current/prior reconciliation is explicit. |
 | Inventing source roles or malformed YAML scalars | Canonical template, schema enums, and shadow validation. |
 | A source appeared in a stage/workspace but not its source map | Package routing preflight checks both presence and `unit_routes`. |
+| A long source list gave no reason to choose one item | Every rich route carries a lecture-specific angle, depth, scope, and knowledge coverage. |
+| A generated plan silently became the only way to view a lecture | Knowledge maps and complete material menus are permanent; study maps are optional personal projections. |
 | YAML anchors changed serialized canonical files | Template forbids anchors and the gateway emits alias-free YAML. |
 | Discovering schema errors only after canonical writes | `--check` validates a shadow repository and writes zero files. |
 | Applying against stale state | The real import requires `--expected-snapshot`. |
 | A compatibility migration recreated old units after planning | Post-import migration dry-run must be idempotent. |
-| A combined lecture range hid missing individual plans | One ordinary lecture equals one unit/map; synthesis is auxiliary. |
-
+| A combined lecture range hid missing individual coverage | One ordinary lecture equals one unit knowledge/material map; synthesis is auxiliary. |
