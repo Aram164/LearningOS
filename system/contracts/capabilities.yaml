@@ -15,6 +15,33 @@ queries:
     handler: inspect
     result: record
 commands:
+  job.session.log:
+    handler: job_session_log
+    cli_command: job-session-log
+    writes:
+    - Job/workspace-job-deem/scratch/**
+    invariants:
+    - explicit access confirmation is required
+    - the transaction is rooted at Job/ and cannot reach the canon
+    - never offered to AI actions
+  job.note.stamp:
+    handler: job_note_stamp
+    cli_command: job-note-stamp
+    writes:
+    - Job/notes/**
+    invariants:
+    - explicit access confirmation is required
+    - only the living-note header is rewritten, never the body
+    - never offered to AI actions
+  job.track.progress:
+    handler: job_track_progress
+    cli_command: job-track-progress
+    writes:
+    - Job/operations/progress.yaml
+    invariants:
+    - explicit access confirmation is required
+    - progress is machine-owned; the authored dashboard is never rewritten
+    - never offered to AI actions
   capture.create:
     handler: capture
     cli_command: capture
@@ -202,7 +229,7 @@ internal_commands:
     - restores migration backup atomically
 forbidden:
 - direct interface filesystem writes
-- writes under Job/
+- writes under Job/ outside the job.* capabilities (ADR-010)
 - partial application of a validated transaction
 - deletion of transaction receipts
 - repository.read-job

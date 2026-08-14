@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/job.session.log.schema.json",
+  "title": "payload for capability job.session.log",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "confirm_job_access": {
+      "type": "boolean"
+    },
+    "minutes": {
+      "type": "integer"
+    },
+    "session": {
+      "type": "integer"
+    },
+    "text": {
+      "type": "string"
+    },
+    "track": {
+      "type": "string"
+    }
+  }
+}

@@ -49,6 +49,11 @@ from learning_os.commands.garden import (  # noqa: E402
     cmd_garden_seed_create,
 )
 from learning_os.commands.job import cmd_job_dashboard  # noqa: E402
+from learning_os.commands.job_write import (  # noqa: E402
+    cmd_job_note_stamp,
+    cmd_job_session_log,
+    cmd_job_track_progress,
+)
 from learning_os.commands.detour import (  # noqa: E402
     cmd_detour_create, cmd_detour_resolve,
 )
@@ -140,6 +145,44 @@ def build_parser() -> argparse.ArgumentParser:
         help="confirm this invocation is an explicit Job session",
     )
     p.set_defaults(func=cmd_job_dashboard)
+
+    # Bounded Job writes (ADR-010). Each is an explicit gesture; the transaction
+    # is rooted at Job/, so containment is the engine's guard, not a new check.
+    p = sub.add_parser(
+        "job-session-log",
+        help="append one session entry to the Job workspace scratch log",
+    )
+    p.add_argument("--confirm-job-access", action="store_true",
+                   help="confirm this invocation is an explicit Job session")
+    p.add_argument("--text", default=None,
+                   help="entry text; omit to read from stdin")
+    p.add_argument("--track", default=None, help="learning track this session served")
+    p.add_argument("--session", type=int, default=None, help="track session number")
+    p.add_argument("--minutes", type=int, default=None, help="time spent")
+    p.set_defaults(func=cmd_job_session_log)
+
+    p = sub.add_parser(
+        "job-note-stamp",
+        help="re-stamp a living Job note's verified_against commit",
+    )
+    p.add_argument("--confirm-job-access", action="store_true",
+                   help="confirm this invocation is an explicit Job session")
+    p.add_argument("--note", required=True, help="note id, e.g. note-stratum-op-joinop")
+    p.add_argument("--commit", required=True, help="commit the note was verified against")
+    p.add_argument("--date", default=None, help="verification date (default: today)")
+    p.add_argument("--status", default="current",
+                   help="current | drifting | stale (default: current)")
+    p.set_defaults(func=cmd_job_note_stamp)
+
+    p = sub.add_parser(
+        "job-track-progress",
+        help="record one completed Job learning-track session",
+    )
+    p.add_argument("--confirm-job-access", action="store_true",
+                   help="confirm this invocation is an explicit Job session")
+    p.add_argument("--track", required=True, help="track id, e.g. job-track-polars")
+    p.add_argument("--session", type=int, required=True, help="session number completed")
+    p.set_defaults(func=cmd_job_track_progress)
 
     p = sub.add_parser("module-list", help="list modules with optional program/status filters")
     p.add_argument("--program-id", default=None)

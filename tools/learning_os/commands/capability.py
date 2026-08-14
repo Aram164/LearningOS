@@ -35,6 +35,13 @@ def _capability_handlers() -> dict[str, str]:
         "path.attachment.add": "path_attach",
         "project.create": "project_create",
         "project.update": "project_update",
+        # Bounded Job writes (ADR-010). Public so the Job view can reach them
+        # through the same envelope as every other write; each still refuses
+        # without `confirm_job_access` in its payload, and none is ever placed
+        # in an AI action's allowed-capabilities list.
+        "job.session.log": "job_session_log",
+        "job.note.stamp": "job_note_stamp",
+        "job.track.progress": "job_track_progress",
     }
 
 

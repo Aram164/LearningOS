@@ -156,6 +156,45 @@ def _git_changed(repo: Path, revision: str, component: str) -> bool | None:
     return None
 
 
+#: Stratum's own pipeline, capture → run. `notes/README.md` already groups the
+#: components this way; deriving the layer here means the interface can render a
+#: map instead of a flat list without owning a second copy of the grouping rule.
+LAYERS = (
+    ("capture", "Capture / frontend", "building the DAG from user code"),
+    ("logical", "Logical IR", "the operator tree"),
+    ("rewrites", "Rewrites", "logical and cost-based optimization"),
+    ("physical", "Physical", "lowering to executable ops"),
+    ("runtime", "Runtime", "execution"),
+    ("cross-cutting", "Cross-cutting", ""),
+)
+
+#: Each entry matches the package form (`optimizer/ir/…`) and the single-module
+#: form (`optimizer/ir.py`) — a layer can be either, and reading only the first
+#: would silently file the module under the broader `optimizer/` bucket below.
+_LAYER_RULES = (
+    ("logical", ("optimizer/ir/", "optimizer/ir.")),
+    ("physical", ("optimizer/physical/", "optimizer/physical.")),
+    ("rewrites", ("optimizer/",)),
+    ("runtime", ("runtime/", "_rust")),
+    ("capture", ("_api.py", "patching/")),
+)
+
+
+def _layer_for(component: str, kind: str) -> str:
+    """Place one note on the pipeline. Upstream skrub notes describe capture."""
+    if kind == "skrub":
+        return "capture"
+    value = component.strip().replace("\\", "/")
+    if not value:
+        return ""
+    # `optimizer/ir/` and `optimizer/physical/` are tested before the bare
+    # `optimizer/` prefix, so the specific layers win over the rewrites bucket.
+    for layer, prefixes in _LAYER_RULES:
+        if any(prefix in value for prefix in prefixes):
+            return layer
+    return "cross-cutting"
+
+
 def _note_record(path: Path, job_root: Path) -> dict | None:
     if path.name in {"README.md", "_TEMPLATE.md"}:
         return None
@@ -193,6 +232,7 @@ def _note_record(path: Path, job_root: Path) -> dict | None:
         "summary": _note_summary(body),
         "path": relative,
         "component": component,
+        "layer": _layer_for(component, kind),
         "verified_against": verified,
         "declared_status": declared,
         "freshness": freshness,
@@ -218,7 +258,18 @@ def _notes(config: dict, job_root: Path) -> dict:
         for label in ("current", "drifting", "stale")
     }
     health["unverified"] = len(stratum) - sum(health.values())
-    return {"skrub": skrub, "stratum": stratum, "health": health}
+    # The layer roster is published whole, empty layers included: a layer with no
+    # notes is the finding, and a view that omitted it would hide exactly that.
+    layers = [
+        {
+            "id": layer_id,
+            "title": title,
+            "summary": summary,
+            "note_ids": [record["id"] for record in records if record["layer"] == layer_id],
+        }
+        for layer_id, title, summary in LAYERS
+    ]
+    return {"skrub": skrub, "stratum": stratum, "health": health, "layers": layers}
 
 
 def _field(block: str, label: str) -> str:
@@ -230,7 +281,21 @@ def _field(block: str, label: str) -> str:
     return _plain(match.group(1)) if match else ""
 
 
-def _track(entry: dict, job_root: Path) -> dict:
+def _progress(job_root: Path) -> dict:
+    """Machine-owned track progress, merged at read time.
+
+    It lives in ``operations/progress.yaml`` rather than in the authored
+    ``dashboard.yaml`` so a write never re-serialises a hand-written file
+    (ADR-010). The dashboard therefore stays config; this stays state.
+    """
+    path = job_root / "operations" / "progress.yaml"
+    if not path.is_file():
+        return {}
+    tracks = _read_yaml(path).get("tracks")
+    return tracks if isinstance(tracks, dict) else {}
+
+
+def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
     path = _safe_job_path(job_root, entry.get("path"))
     try:
         text = path.read_text(encoding="utf-8")
@@ -249,14 +314,24 @@ def _track(entry: dict, job_root: Path) -> dict:
             "practice": _field(block, "Rebuild/stretch"),
         })
     outcome = _first_paragraph(_section(text, 'Definition of "there"'))
+    track_id = str(entry.get("id") or path.stem)
+    recorded = (progress or {}).get(track_id) or {}
+    completed = [
+        number for number in (recorded.get("completed_sessions") or [])
+        if isinstance(number, int)
+    ]
+    for session in sessions:
+        session["done"] = session["number"] in completed
     return {
-        "id": str(entry.get("id") or path.stem),
+        "id": track_id,
         "title": str(entry.get("title") or path.stem),
         "status": str(entry.get("status") or "ready"),
         "cadence": str(entry.get("cadence") or ""),
         "horizon": str(entry.get("horizon") or "now"),
         "outcome": outcome,
         "sessions": sessions,
+        "completed_sessions": sorted(completed),
+        "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
     }
 
@@ -326,8 +401,10 @@ def cmd_job_dashboard(args) -> int:
         workspace_config = config.get("workspace") or {}
         workspace_path = _safe_job_path(job_root, workspace_config.get("path"))
         note_config = config.get("notes") or {}
+        progress = _progress(job_root)
         tracks = [
-            _track(entry, job_root) for entry in (config.get("learning_tracks") or [])
+            _track(entry, job_root, progress)
+            for entry in (config.get("learning_tracks") or [])
             if isinstance(entry, dict)
         ]
         papers = [
