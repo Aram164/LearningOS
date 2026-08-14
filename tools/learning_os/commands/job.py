@@ -8,6 +8,7 @@ this module.  It is reached only through ``los job-dashboard
 from __future__ import annotations
 
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -137,6 +138,15 @@ def _note_summary(body: str) -> str:
 
 
 def _git_changed(repo: Path, revision: str, component: str) -> bool | None:
+    """Has *component* moved since *revision*? Asked without touching the repo.
+
+    The Stratum checkout is strictly read-only (Aram's standing rule): nothing
+    may change there in any shape or form. A plain ``git diff`` still refreshes
+    ``.git/index`` as a stat cache, which is a write to a repository we have no
+    permission to write to. ``GIT_OPTIONAL_LOCKS=0`` tells git to skip every
+    lock and index refresh it would otherwise take for a read command, so drift
+    detection observes the checkout without leaving a trace in it.
+    """
     if not revision or not component:
         return None
     try:
@@ -146,6 +156,7 @@ def _git_changed(repo: Path, revision: str, component: str) -> bool | None:
             capture_output=True,
             timeout=10,
             check=False,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
     except (OSError, subprocess.TimeoutExpired):
         return None
