@@ -5,10 +5,53 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 15 — Neural Networks
 order: 15
-scope: Current 2026 L15 deck; single neurons and the MLR equivalence, one-hot/softmax outputs, XOR/nonlinearity,
-  MLP forward passes and parameter counts, gradient/backprop overview, training practices, universal approximation,
-  and CNN/RNN/Transformer outlook.
-status: ready
+scope: Current 2026 L15 deck; artificial neurons and the multivariate-linear-regression equivalence,
+  activation functions and XOR, one-hot/softmax outputs, multilayer forward passes and parameter counts,
+  loss gradients and backpropagation, training practices, universal approximation, and CNN/RNN/Transformer outlook.
+status: not-started
+knowledge_map:
+  summary: The lecture builds neural networks from the familiar linear model by adding nonlinear activations
+    and layers, then explains how gradients allocate credit through the resulting computation graph.
+  nodes:
+  - id: knowledge-sad-l15-neuron
+    title: Artificial neurons and linear-model equivalence
+    summary: A neuron computes an affine weighted sum followed by an activation; with the identity activation,
+      a one-layer network is multivariate linear regression.
+  - id: knowledge-sad-l15-activation
+    title: Nonlinearity, activation functions, and XOR
+    summary: Stacking purely linear layers remains linear; nonlinear activations such as sigmoid, tanh, and ReLU
+      let multilayer networks represent boundaries like XOR.
+    builds_on: [knowledge-sad-l15-neuron]
+  - id: knowledge-sad-l15-output
+    title: One-hot targets, output layers, and softmax
+    summary: Regression and classification require different output parameterizations; softmax converts class
+      scores into a normalized categorical distribution.
+    builds_on: [knowledge-sad-l15-neuron]
+  - id: knowledge-sad-l15-forward
+    title: Multilayer forward passes, shapes, and parameter counts
+    summary: Matrix multiplication, biases, activations, and layer dimensions define the forward graph; parameter
+      counting follows directly from adjacent widths and bias vectors.
+    builds_on: [knowledge-sad-l15-activation, knowledge-sad-l15-output]
+  - id: knowledge-sad-l15-backprop
+    title: Loss gradients and backpropagation
+    summary: The chain rule propagates output error backward through each operation, producing parameter gradients
+      reused by gradient-based optimizers.
+    builds_on: [knowledge-sad-l15-forward]
+  - id: knowledge-sad-l15-training
+    title: Training, generalization, and practical choices
+    summary: Initialization, batches, learning rate, stopping, data volume, regularization, and validation interact;
+      lower training loss alone is not evidence of a better model.
+    builds_on: [knowledge-sad-l15-backprop]
+  - id: knowledge-sad-l15-universality
+    title: Expressiveness and universal approximation
+    summary: Sufficiently wide nonlinear networks can approximate broad function classes, but the theorem does
+      not guarantee efficient learning, good generalization, or a practical architecture.
+    builds_on: [knowledge-sad-l15-activation, knowledge-sad-l15-training]
+  - id: knowledge-sad-l15-outlook
+    title: CNN, RNN, and Transformer outlook
+    summary: Convolutions encode locality and sharing, recurrent networks encode sequence state, and attention-based
+      Transformers model interactions; these are orientation topics beyond the core MLP calculations.
+    builds_on: [knowledge-sad-l15-forward]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -16,28 +59,7 @@ scope_sources:
 - source_id: source-sad-2025-recordings
   authority: reference
   locator: 14_neural_nets_part1.pdf + 15_neural_nets_part2.pdf
-source_selections:
-- source_id: source-kelleher-fmlpda
-  locator: Ch 7
-  purpose: Primary course-aligned neural-network text
-- source_id: source-islp
-  locator: §10.1–10.2
-  purpose: Gentle MLP/forward-pass reading
-- source_id: source-murphy-pml1
-  locator: §13.2–13.3
-  purpose: Optional network/backprop depth
-- source_id: source-cs229-notes
-  locator: §7
-  purpose: Compact neural-network derivation
-- source_id: source-aml-ss26-lectures
-  locator: AML VL08–VL09
-  purpose: Cross-module deepening after SaD L15
-- source_id: source-cs4780-homeworks
-  locator: 2018 HW9
-  purpose: Local solution-backed NN practice
+source_selections: []
 artifacts: {}
-workspace_ids:
-- workspace-m2-exam-prep
-related_module_ids:
-- module-hu-aml
-current_study_map: study-map-m2-sad-l15
+workspace_ids: [workspace-m2-exam-prep]
+related_module_ids: [module-hu-aml]

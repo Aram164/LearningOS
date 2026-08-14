@@ -1,21 +1,57 @@
 ---
 name: semester-kickoff
-description: Bootstrap a new semester's planning system from Aram's proven architecture — brain files, domain-based plan folders, step-ID prefixes, and wiring into the degree-level knowledge system (Masters-Planning). Use at the start of a semester or when asked to "set up the new semester".
+description: Turn the semester — walk every module of the closing term into close-or-carry, harvest the Garden, prune operational residue, and start the new term's modules and workspaces. Use at a term boundary, or when asked to "set up the new semester", "close the semester", or "turn the semester".
 ---
 
-# Semester Kickoff (~1 h)
+# Semester Kickoff — Turn the Semester (Learning OS v3)
 
-Spec: `Masters-Planning/templates/SEMESTER-KICKOFF-Template.md`. Ask Aram first: module list (verified in Moses/AGNES — never from old notes), exam forms/dates if known, workload constraints.
+Implements `system/WORKFLOWS.md` §24. §24 is pure orchestration: every step is an
+existing atomic workflow, and this skill's job is to run the boundary without
+skipping a fork, not to invent a procedure. Read §24 first — the five steps live
+there and are deliberately not restated here.
 
-## Steps
+In v3 a semester is **not** a folder to scaffold. There are no brain files, plan
+trees, step-ID prefixes or per-semester tool copies to create: modules,
+units and workspaces already carry that structure, and the term boundary only
+settles state and opens what comes next.
 
-1. **Skeleton:** semester folder with `HANDOFF.md` (no live state!), `<SEM>-STATUS.md` (dashboard, §0.5 Open Loops, dependency map, progress tracker, priority rules, neglect tracker, load planner, key dates), `SESSION-LOG.md` (separate from day 1), `CHAT-DIVISION.md`, `LEARNING-RESOURCES.md`, `Plans/<domain>/<module>/` + `Plans/WIRING.md` + `Plans/README.md`, `tools/` (copy `check_system.py`).
-2. **Step-ID prefixes** per module (unique in semester); module IDs `<MODULE>-<Sem>` globally.
-3. **Wire backwards (the degree step):** for each module, read its incoming edges in `Masters-Planning/DEGREE-WIRING.md` §2; open the module plan with the prerequisite Module Cards + CONCEPT-INDEX rows ("known content — revise, don't re-learn"); add "revise via" pointers to Mini Plans for indexed concepts.
-4. **Register** the semester in `Masters-Planning/MASTERS-ARCHITECTURE.md` §8.
-5. **Rituals active from day 1:** session-log append; Open Loops checked every session; tier flow (material→tier 1, planning→tier 2, studying→tier-3 units via `lecture-unit-builder`); exam dates screenshot-verified with Rücktritt deadlines in Key Dates.
-6. **Validate:** `python3 Masters-Planning/tools/check_system.py`.
+## The forks that must not be skipped
 
-## Guardrails
+**Every module of the closing term takes exactly one branch.** Truly done →
+close it (§19). Something outlives it — a second attempt not yet sat, thesis
+groundwork, an unfinished thread → carry it (§20). No module quietly stays
+"active" into the new term because nobody asked.
 
-Never invent module data (Ground-Truth rule). Never copy live state into HANDOFF (it drifts). Keep the old semester system frozen — link to it, don't edit it.
+**Closing has an order that matters.** Durable knowledge lands under
+`knowledge/` *before* any workspace is archived (§19 step 2) — an archived
+workspace is frozen, so promotion afterwards is too late and the knowledge is
+stranded. `standing: true` efforts (degree planning, job) are exempt and never
+close on a boundary.
+
+**Harvest the Garden** (CLAUDE.md §14) — the `promotion-ritual` skill. Promote
+the ripe, prune the dead, name what is left to gestate.
+
+**Prune operational residue.** `COORDINATION.md` must mention no closed module
+(§19 step 4); collections drop entries that served only the closed term (§6b);
+the inbox ends empty (§21).
+
+**Plan forward through §18, in its order.** Module record and registration
+first, then promote *only* adopted sources into the module source map — never
+the whole prospective sea — then one workspace per distinct effort (not one per
+module), then dependencies in `COORDINATION.md`. Never open a workspace before
+its module record exists; never mint a second record for a module already
+present. A merely prospective Master's choice stays quarantined.
+
+**Close with one reviewed commit** (§22 / `los session-end`) — the semester
+turns once, reviewably, not across a scatter of half-commits.
+
+## Hard constraints
+
+Module facts are asked, never inferred: registration windows, exam dates, forms
+and grades are recorded exactly as Aram or an official document states them
+(§10), and they live only in the owning partitioned academic `module.yaml` —
+never in prose, never in `COORDINATION.md`, never in a note. Verify the new
+term's module list against the official system rather than last term's notes.
+
+Rebuild and validate at the end of each fork, and finish at 0 errors, 0
+warnings.

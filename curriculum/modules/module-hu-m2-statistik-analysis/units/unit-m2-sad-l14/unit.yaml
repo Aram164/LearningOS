@@ -5,30 +5,52 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 14 — Probability-Based Learning
 order: 14
-scope: Current 2026 L14 deck; Naive Bayes recap, Laplace smoothing, discretized/continuous features, Gaussian
-  and Multinomial NB in log space, Bayesian networks, conditional independence, and Markov blankets.
-status: ready
+scope: Current 2026 L14 deck; Naive Bayes recap, zero-frequency failure and Laplace smoothing, numerical
+  attributes and discretization, Gaussian and Multinomial Naive Bayes in log space, Bayesian networks,
+  conditional independence, factorization, and Markov blankets.
+status: not-started
+knowledge_map:
+  summary: The lecture extends the elementary categorical Naive Bayes model to sparse, numeric, and count data,
+    then relaxes its global independence assumption with explicit probabilistic graphs.
+  nodes:
+  - id: knowledge-sad-l14-nb-recap
+    title: Naive Bayes decision rule
+    summary: Class priors multiply with feature likelihoods under conditional independence, and the largest
+      posterior score determines the class without needing the shared evidence denominator.
+  - id: knowledge-sad-l14-smoothing
+    title: Zero counts and Laplace smoothing
+    summary: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts prevent collapse
+      while preserving normalized conditional distributions.
+    builds_on: [knowledge-sad-l14-nb-recap]
+  - id: knowledge-sad-l14-numeric
+    title: Numerical attributes and discretization
+    summary: Numeric features can be binned into categorical events or modeled with a class-conditional density;
+      binning changes information and probability estimates.
+    builds_on: [knowledge-sad-l14-nb-recap]
+  - id: knowledge-sad-l14-gaussian
+    title: Gaussian Naive Bayes
+    summary: Each class-feature pair is modeled by a Normal density with estimated mean and variance, producing
+      continuous likelihoods under the same conditional-independence factorization.
+    builds_on: [knowledge-sad-l14-numeric]
+  - id: knowledge-sad-l14-multinomial
+    title: Multinomial Naive Bayes and log space
+    summary: Count features such as words use multinomial event probabilities; log probabilities turn products
+      into sums and prevent numerical underflow.
+    builds_on: [knowledge-sad-l14-smoothing]
+  - id: knowledge-sad-l14-bayes-net
+    title: Bayesian networks and factorization
+    summary: A directed acyclic graph encodes local conditional dependencies, factorizing a joint distribution
+      without assuming that all features are independent given the class.
+    builds_on: [knowledge-sad-l14-nb-recap]
+  - id: knowledge-sad-l14-markov
+    title: Conditional independence and Markov blankets
+    summary: Graph structure determines which variables become independent when others are observed; a node's
+      Markov blanket contains the local information needed for its conditional distribution.
+    builds_on: [knowledge-sad-l14-bayes-net]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
   locator: lecture-slides/14_probability_based.pdf (29 pages)
-source_selections:
-- source_id: source-kelleher-fmlpda
-  locator: Ch 6
-  purpose: Primary probability-based learner text
-- source_id: source-cs229-notes
-  locator: §4.2 selections
-  purpose: Naive Bayes derivation
-- source_id: source-islp
-  locator: §4.4.4 and lab selections
-  purpose: Gaussian NB and application
-- source_id: source-murphy-pml1
-  locator: §9.3–9.4
-  purpose: Optional Gaussian/Multinomial NB depth
-- source_id: source-csc411-notes
-  locator: Naive Bayes selections
-  purpose: Independent compact notes
+source_selections: []
 artifacts: {}
-workspace_ids:
-- workspace-m2-exam-prep
-current_study_map: study-map-m2-sad-l14
+workspace_ids: [workspace-m2-exam-prep]

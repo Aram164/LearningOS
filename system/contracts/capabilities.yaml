@@ -1,6 +1,13 @@
 contract_version: 1
 cli_protocol: 3
 queries:
+  job.dashboard:
+    handler: job_dashboard
+    result: job-dashboard-v1
+    invariants:
+    - explicit access confirmation is required
+    - read-only and in-memory only
+    - absent from manifest, search, AI, and generated views
   project.list:
     handler: project_list
     result: project-list
@@ -66,6 +73,15 @@ commands:
     invariants:
     - session-level append
     - failed save preserves caller draft
+  unit.source-selection.set:
+    handler: unit_source_selection
+    cli_command: unit-source-selection
+    writes:
+    - curriculum/modules/**/units/**/unit.yaml
+    invariants:
+    - selection must match a rich route on the same unit
+    - complete material menu is unchanged
+    - a selection used by a study path cannot be removed implicitly
   stage.note.write:
     handler: stage_note
     cli_command: stage-note

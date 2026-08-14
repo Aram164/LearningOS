@@ -55,16 +55,18 @@ grades; skill, project and foundation modules omit academic-only fields. Facts,
 not knowledge; modules never contain durable synthesis.
 
 **Curriculum operations** (`curriculum/`): programs/areas, modules, optional
-components, units, module source maps, one current study map per unit, stage
-working notes and attachments, and one resume pointer. This is operationally
-canonical and Git-tracked. Durable knowledge remains under `knowledge/`.
+components, units with lecture knowledge maps, module source maps with complete
+material options, optional current study maps and stage work, and one resume
+pointer. This is operationally canonical and Git-tracked. Durable knowledge
+remains under `knowledge/`.
 
 ### 2.3 Operationally canonical
 
 - `work/COORDINATION.md` — cross-workspace coordination facts (§10);
 - **active workspaces** — one coherent learning effort each (§9).
-- **module-owned units and study maps** — the actual study hierarchy; workspaces
-  reference them explicitly and may coordinate several of them.
+- **module-owned units and optional study maps** — the study hierarchy;
+  knowledge/material maps remain usable without an ordered script, and
+  workspaces reference units explicitly and may coordinate several of them.
 
 Operationally canonical means: authoritative while active, but not part of the permanent knowledge model.
 
@@ -214,7 +216,7 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Module record | `curriculum/modules/<module-id>/module.yaml` | one partition per module |
 | Module source map | `curriculum/modules/<module-id>/source-map.yaml` | fixed inside module |
 | Unit | `curriculum/modules/<module-id>/units/<unit-id>/unit.yaml` | one owning module |
-| Current study map | beside its unit as `study-map.yaml` | at most one current map per unit |
+| Optional current study map | beside its unit as `study-map.yaml` | at most one current map per unit; absent until an ordered path is wanted |
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
 | Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
@@ -495,14 +497,18 @@ combined M2 module therefore owns one examination while SaD and Analysis units
 route to separate component IDs.
 
 A unit is a `lecture`, `topic`, `lecture-cluster`, `milestone`, `exam-block`, or
-`bridge`. It owns scope, ordering, state, source selections, the current-map
-reference, and stable IDs of durable artifacts. The state vocabulary is
+`bridge`. It owns scope, ordering, state, its lecture knowledge map, actual
+learner source selections, an optional current-map reference, and stable IDs of
+durable artifacts. The state vocabulary is
 `needs-map`, `not-started`, `ready`, `active`, `paused`, `ready-to-shelve`, and
 `complete`. A clustered unit is valid; the model must not invent individual
 lectures when the preserved plan intentionally spans several.
 
-A unit has at most one current study map. Git preserves its prior forms rather
-than a pile of competing active scripts. The map owns ordered stages, its
+A unit does not require a study map. Its knowledge map and complete material
+menu remain useful before any study order is chosen. When the learner wants an
+ordered, progress-tracked path, the unit may have at most one current study
+map. Git preserves prior forms rather than a pile of competing active scripts.
+The optional map owns ordered stages, its
 current stage, source-plan provenance, explicit prerequisite detours with a
 return stage, and shelving proposal state. A stage owns its objective, state,
 done-when evidence, exact source actions/locators, scope triage, working note,
@@ -514,9 +520,19 @@ Source relationships have four distinct owners:
 1. the global source record owns identity, location, authorship and contextual
    pedagogical evaluations;
 2. the module source map owns why/when a source is used in that module, its
-   role, priority and unit routes;
-3. the unit owns exact selected sections against lecture scope;
-4. the stage owns the small watch/read/practise/reference action and locator.
+   role and priority; each rich unit route owns one lecture-specific material
+   option—format, angle, covered knowledge nodes, depth, scope status, and exact
+   locator;
+3. the unit owns the learner's actual selections against the complete menu;
+4. an optional stage owns the small watch/read/practise/reference action and
+   locator for an ordered personal path.
+
+The lecture knowledge map is not a timetable. Its stable nodes describe the
+ideas taught and its `builds_on` edges expose prerequisite structure. Rich
+source routes connect materials to those nodes. Interfaces group these options
+by format and show their different angles; they do not infer one preferred
+sequence from source priority. A study map is a personal operational projection
+over chosen options, never the authority for which materials exist.
 
 **Resource-level scope triage (data contract v2, 2026-08-08).** A stage resource
 may carry its own optional `scope_triage`, drawn from the same four-value
@@ -578,8 +594,9 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 19. The repository defines what the system is; operator-specific behavior lives only in the operator contract (`CLAUDE.md` for Claude).
 20. Every unit belongs to exactly one module; an optional component belongs to
     that same module.
-21. A unit has at most one current study map, and every map's current stage is
-    one of its own ordered stages.
+21. A unit's knowledge map and complete material menu do not require a study
+    map. If a unit has a current study map, it has at most one, and that map's
+    current stage is one of its own ordered stages.
 22. The resume pointer is optional convenience state and never filters the
     curriculum. It reports the last stage left open — *where you stopped* — and
     is never, on its own, an answer to *what to do next*. An interface that
@@ -589,16 +606,18 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 22a. `unit_order` is an ordering, not a claim that every entry is the same kind
     of thing. Each unit carries `kind` (`lecture`, `topic`, `lecture-cluster`,
     `milestone`, `exam-block`, `bridge`), the manifest projects it, and
-    interfaces must render it: a `lecture-cluster` such as
-    `unit-m2-sad-l06-l10` is a cross-lecture synthesis over units that are
-    themselves the authoritative plans, and listing it flat between L15 and the
-    Analysis block presents a summary as a sixteenth lecture. Non-`lecture`
-    kinds are shown as what they are or grouped apart — never silently dropped,
-    because a unit that no surface lists is a unit that does not exist.
+    interfaces must render it. Non-`lecture` kinds are shown as what they are or
+    grouped apart — never silently presented as another lecture and never
+    silently dropped, because a unit that no surface lists is a unit that does
+    not exist.
 23. Workspace-to-module/unit joins are explicit in v2; interfaces never infer
     them from names or prose.
 24. Master's quarantined content and Job content never enter the normal
-    manifest; only declared boundary records may appear.
+    manifest; only declared boundary records may appear. Job additionally has
+    one explicit, ephemeral read model: opening the Job destination invokes the
+    bounded `job-dashboard-v1` query. Its in-memory response belongs only to
+    that view and is excluded from global search, recommendations, AI actions,
+    generated artifacts, and normal resource opening.
 25. Interface writes use action-specific, snapshot-checked gateway commands;
     no interface writes canonical files directly.
 26. A learning-session commit stages only its action ledger. Unrelated files,
@@ -641,6 +660,6 @@ Projects live under `projects/registry/` and are independent from curriculum
 modules. A project may have no fixed structure, a linear structure, parallel
 workstreams, or nested steps. Project relationships are explicit records under
 `projects/relations/`; aliases preserve old deep links during compatibility
-gates. The current manifest-v2 projection exposes Projects additively. The
-manifest-v3 contract bump remains deferred until the required canonical
-families are ready together.
+gates. The current manifest-v5 projection exposes Projects together with
+Core-owned Review and Garden state. Projection changes remain producer-owned
+and must be mirrored in the UI contract lock in the same release.

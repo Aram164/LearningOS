@@ -5,30 +5,52 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 12 — Tree-Based Learning & Ensembles
 order: 12
-scope: Current 2026 L12 deck; classification/regression trees, entropy/information gain/ID3, variance
-  reduction, stopping/pruning, bagging, random forests, boosting, stacking, and ensemble tradeoffs.
-status: ready
+scope: Current 2026 L12 deck; decision-tree representation and preference bias, classification and regression
+  trees, entropy and information gain, ID3 induction, variance reduction, overfitting, stopping and pruning,
+  bagging, random forests, boosting, stacking, and ensemble tradeoffs.
+status: not-started
+knowledge_map:
+  summary: The lecture constructs interpretable partition models from information criteria and then reduces
+    their instability by combining many trees in deliberately different ways.
+  nodes:
+  - id: knowledge-sad-l12-tree-model
+    title: Decision trees, rules, and preference bias
+    summary: Internal nodes test features, branches partition the instance space, and leaves predict; simpler
+      rules encode a generalization preference rather than merely memorizing IDs.
+  - id: knowledge-sad-l12-entropy-id3
+    title: Entropy, information gain, and ID3
+    summary: Entropy measures class impurity, information gain measures the reduction after a split, and ID3
+      greedily chooses the feature that produces the largest gain.
+    builds_on: [knowledge-sad-l12-tree-model]
+  - id: knowledge-sad-l12-regression
+    title: Regression trees and variance reduction
+    summary: Numeric targets replace class impurity with within-node squared-error or variance reduction while
+      retaining the same recursive partition structure.
+    builds_on: [knowledge-sad-l12-tree-model]
+  - id: knowledge-sad-l12-pruning
+    title: Tree growth, stopping, and pruning
+    summary: Depth, minimum samples, purity thresholds, and post-pruning control complexity; an unpruned tree
+      can fit noise and generalize poorly.
+    builds_on: [knowledge-sad-l12-entropy-id3]
+  - id: knowledge-sad-l12-bagging-forest
+    title: Bagging and random forests
+    summary: Bootstrap aggregation averages unstable learners, while random forests add feature subsampling to
+      decorrelate trees and reduce ensemble variance.
+    builds_on: [knowledge-sad-l12-pruning]
+  - id: knowledge-sad-l12-boosting
+    title: Boosting
+    summary: Sequential weak learners focus on residuals or misclassified examples, trading a coordinated bias
+      reduction against sensitivity to noise and tuning.
+    builds_on: [knowledge-sad-l12-tree-model]
+  - id: knowledge-sad-l12-stacking
+    title: Stacking and ensemble tradeoffs
+    summary: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction, diversity,
+      interpretability, compute, and calibration decide whether an ensemble is worthwhile.
+    builds_on: [knowledge-sad-l12-bagging-forest, knowledge-sad-l12-boosting]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
   locator: lecture-slides/12_tree_based.pdf (36 pages)
-source_selections:
-- source_id: source-kelleher-fmlpda
-  locator: Ch 4
-  purpose: Primary course-aligned tree family
-- source_id: source-islp
-  locator: §8.1–8.2
-  purpose: Trees, bagging, random forests, boosting
-- source_id: source-kroese-dsml
-  locator: Ch 8 selections
-  purpose: Independent tree/ensemble reference
-- source_id: source-cs4780-homeworks
-  locator: 2018 HW8 tree/AdaBoost tasks
-  purpose: Local solution-backed practice
-- source_id: source-mit-6034-quizzes
-  locator: ID3/tree construction problems
-  purpose: Solved tracing practice
+source_selections: []
 artifacts: {}
-workspace_ids:
-- workspace-m2-exam-prep
-current_study_map: study-map-m2-sad-l12
+workspace_ids: [workspace-m2-exam-prep]

@@ -1,23 +1,56 @@
 ---
 name: promotion-ritual
-description: Run the end-of-semester promotion ritual for Aram's degree knowledge system — freeze the semester's operational layer and promote its knowledge layer into Masters-Planning (module cards, concept index, degree wiring). Use when asked to "close the semester", "run the promotion ritual", or after final exams.
+description: Harvest the Garden — walk every idea in knowledge/garden/, promote the ripe ones into canonical notes, prune the dead, and let the rest gestate. Use when asked to "harvest the Garden", "run the promotion ritual", promote a specific garden note, or as step 2 of turning the semester.
 ---
 
-# End-of-Semester Promotion Ritual (~2–3 h)
+# Promotion Ritual — Harvest the Garden (Learning OS v3)
 
-Spec: `Masters-Planning/MASTERS-ARCHITECTURE.md` §6. Requires the semester folder connected. Work module by module; confirm exam results with Aram before filling grades.
+Implements the **Harvest the Garden** routine in `system/CLAUDE.md` §14, with
+`system/WORKFLOWS.md` §3 (create or evolve a note), §4–§6a (register concepts,
+relations, sources) and §15 (deprecate or supersede) as the atomic steps. Read
+§14 before running it; the six-step routine lives there and is not restated
+here.
 
-## Steps
+Promotion is deliberately **not** a `los` command — `tools/los.py` excludes it
+by design as operator judgment. That judgment is this skill's whole content.
 
-1. **Freeze the operational layer.** Final SEMESTER-STATUS update ("semester closed", date); append closing SESSION-LOG entry; move superseded plans to `archive/` (never delete; no redirect stubs).
-2. **Fill Module Cards** (`Masters-Planning/module-cards/<MODULE-ID>.md`, template in `templates/`): scope actually covered incl. deviations, artifact paths + completeness flags, exam artifacts, grade, fed-by/feeds wires, 3-line retrospective. Flip frontmatter `status: stub → live`.
-3. **CONCEPT-INDEX:** walk every tier-3 unit folder; one row per worked concept not yet indexed; upgrade depth flags (⚪→🟡→🟢). Index points INTO units — never copy content.
-4. **DEGREE-WIRING:** add module→module edges the semester revealed; extend the incoming-edges table for next semester's modules.
-5. **Promote resources:** new entries in the semester's LEARNING-RESOURCES → matching `MASTERS-*-RESOURCES.md` axis file.
-6. **Frontmatter:** every new unit anchor + reference doc carries the §3.1 schema (anchor-file rule: one block per unit).
-7. **Validate:** `python3 Masters-Planning/tools/check_system.py` green + (if installed) `lychee --offline .`.
-8. **Register:** update `MASTERS-ARCHITECTURE.md` §8 semester registry; log the ritual in MASTERS-STATUS §5.
+## The call to make, per garden note
 
-## Guardrails
+The Garden (`knowledge/garden/`) is a nursery, not an attic. Every file gets one
+of three honest verdicts:
 
-Never invent grades, dates, or scope — ask. Semester content files are read-only during this ritual except the freeze edits in step 1.
+- **Promote** — the idea has a coherent independent purpose. Prefer evolving an
+  existing note where it already has a home (§8); create a new canonical note
+  only when it stands on its own.
+- **Keep gestating** — real, not ready. It stays, and it stays *named* in the
+  harvest summary so it does not quietly rot.
+- **Prune** — it was never canonical, so deletion needs no heavyweight approval,
+  but always name which notes you are removing before removing them.
+
+`generated/nebula.md` (rebuilt by `make views`) is the only lens on the Garden:
+garden notes grouped by tag, annotated with harvest pressure — uncommitted and
+oldest-touched first. Read it first; it is a disposable view, so never edit it.
+
+## Hard constraints
+
+**Promotion is a visible-review change** (CLAUDE.md §4): it assigns a role and
+creates a canonical note. Propose full frontmatter (id, title, role, concepts,
+sources, state) and the target `knowledge/notes/<domain>/` path, then get
+approval per note or per batch before moving anything.
+
+**The wording is Aram's.** Preserve it verbatim (§3, §6) — promotion adds
+frontmatter and a home, never a rewrite, a polish, or a tidier conclusion.
+
+**Register only what is genuinely new** (§4 concepts with German aliases, §5
+relations, §6a sources). Wire on use; never bulk-backfill.
+
+**Finish the loop.** `python tools/validate.py` to 0 errors, 0 warnings, then
+`python tools/generate.py`. A promoted note now participates in the canon and
+its garden file is gone from the working tree — its history stays in Git.
+
+## Quality bar
+
+Never promote to look productive: a thin note admitted to the canon costs more
+than an idea left to mature. Never declare mastery — a promoted note carries
+evidence trails or their documented absence. The tiebreaker is unchanged:
+reduce organizational burden rather than create it.

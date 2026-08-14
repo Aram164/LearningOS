@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 4
-schema_fingerprint: sha256:3909440ce8469f1a812306a770473177ed795c236e1a2df6b57cffa6cff13eeb
+contract_version: 5
+schema_fingerprint: sha256:44202d168a3b23a79f1c7b96209baf4822531f2ec24d5877097ea4ff20fd1fae
 record_schemas: 21
 history:
 - version: 1
@@ -50,3 +50,11 @@ history:
     means not yet classified, and population is on-use rather than a bulk backfill.
   migration: null
   fixture: tests/fixtures/formats/v4/
+- version: 5
+  adopted: '2026-08-12'
+  note: units gained an optional knowledge_map of stable concept nodes, and module
+    source routes may now carry lecture-specific material metadata (format, angle,
+    covered nodes, depth, scope, and locator). Both changes are additive and legacy
+    string routes remain valid, so no migration is required.
+  migration: null
+  fixture: tests/fixtures/formats/v5/

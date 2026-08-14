@@ -160,12 +160,18 @@ is the whole learning interface.
   workspace joins, progress, reverse indexes, boundaries, and resume snapshot.
 - [ ] Bachelor's is active/default; every current Bachelor module is visible.
   Skills and Thesis/Projects use universal modules without invented academic
-  fields. Master's and Job expose boundary records only.
+  fields. Master's and Job expose boundary records only in the normal
+  manifest. The explicit Job destination may load `job-dashboard-v1` into that
+  read-only view only; it never enters search, AI context, or generated views.
 - [ ] M2 owns stable SaD and Analysis components, one combined exam/grade, and
-  separately selectable unit state. SaD L04 resumes at `stage-event-spaces`;
-  selecting L02 does not alter it.
-- [ ] AML L02–L07 and SaD L01–L05 preserved Mini Plans are current unit study
-  maps. SaD L06–L10 remains an intentional lecture cluster.
+  separately selectable unit state. Every SaD lecture can be opened directly;
+  selecting a material in one lecture does not create or alter a hidden stage
+  sequence in another.
+- [ ] AML L01–L11 expose individual knowledge maps and complete rich material
+  menus; the obsolete L02–L07 Mini Plans are not current study maps. SaD L01–L15
+  and the clustering topic follow the same material-choice model: knowledge
+  maps plus complete rich menus, with no fixed current study maps and no
+  L06–L10 aggregate.
 - [ ] Python topic units and thesis milestone units exist without false
   completion. Analysis and the second thesis unit honestly show `needs-map`.
 - [ ] One source can join two modules without duplicate identity. ISLP unit

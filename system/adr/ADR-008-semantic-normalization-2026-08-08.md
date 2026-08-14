@@ -83,6 +83,10 @@ Six changes. Nothing was deleted; educational content was preserved verbatim.
    `thematic-group-ml-systems`; the platform-regulation seminar moved off
    `thematic-group-algorithms`.
 
+   **Superseded 2026-08-12:** the SaD semantic redesign retired that compatibility
+   aggregate in favor of independent L06–L10 knowledge maps and complete
+   material-choice menus. This paragraph remains the historical decision record.
+
 ## Consequences
 
 - `make check`: 0 errors. Suite: 228 passed, 1 skipped. Contract v2 matches 21

@@ -13,7 +13,7 @@ contexts: [workspace-m2-exam-prep]
 ---
 
 > **Migration note (2026-07-17, Stage-1 pilot):** body preserved verbatim from
-> `Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Ultimate_Reference.md` (legacy tree). Companion: `note-sad-l02-exercise-bank`; the Mini Plan is operational and lives in `work/active/workspace-m2-exam-prep/`.
+> `Plans/Math/sad/SaD/notes/lect02 basics/SaD_L02_Ultimate_Reference.md` (legacy tree). Companion: `note-sad-l02-exercise-bank`. The former Mini Plan has been superseded by the L02 knowledge map and material menu.
 
 # SaD Lecture 02 — Ultimate Reference: Basic Concepts (Populations, Scales, Location & Dispersion)
 

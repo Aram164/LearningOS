@@ -213,6 +213,16 @@ plans.
 - Job knowledge deliberately does not appear in the registries or generated
   views while quarantined. If job-relevant durable knowledge should enter the
   canon, Aram says so explicitly.
+- **First-party Job view exception (Aram-approved, 2026-08-12):** deliberately
+  opening the Job destination is an explicit Job access gesture. The UI may
+  call `los job-dashboard --confirm-job-access`, which reads only
+  `Job/dashboard.yaml` and its allowlisted note, workspace, plan, and paper
+  paths. The response is read-only, ephemeral, and held in that view only. It
+  is never written to `generated/manifest.json`, indexed by global search,
+  included in recommendations or AI context, or made available to ordinary
+  file-opening paths. Closing/restarting the app ends the grant. This exception
+  does not authorize agents or other workflows to scan Job without the normal
+  explicit conversational command.
 - The boundary workflow — reference, capture, and promotion across
   Job↔LearningOS — is formalized in `Job/WORKFLOW.md` (adopted 2026-08-03,
   ADR-003); it operates within this quarantine, never against it.

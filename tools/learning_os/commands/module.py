@@ -89,6 +89,14 @@ def _unit_source_refs(unit_data: dict, map_data: dict | None) -> set[str]:
     return refs
 
 
+def _route_unit_id(route) -> str | None:
+    if isinstance(route, str):
+        return route
+    if isinstance(route, dict) and isinstance(route.get("unit_id"), str):
+        return route["unit_id"]
+    return None
+
+
 def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[str]:
     """Catch source omissions that ordinary referential validation cannot see."""
     source_map = package.get("source_map")
@@ -99,7 +107,11 @@ def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[s
     for entry in source_entries or []:
         if not isinstance(entry, dict) or not isinstance(entry.get("source_id"), str):
             continue
-        routes.setdefault(entry["source_id"], set()).update(entry.get("unit_routes", []) or [])
+        routed_units = {
+            uid for route in (entry.get("unit_routes", []) or [])
+            if (uid := _route_unit_id(route))
+        }
+        routes.setdefault(entry["source_id"], set()).update(routed_units)
 
     units: dict[str, tuple[dict, dict | None]] = {}
     for uid, unit in repo.units.items():

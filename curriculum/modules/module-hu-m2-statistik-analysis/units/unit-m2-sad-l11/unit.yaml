@@ -5,28 +5,53 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 11 — Data Science & Machine Learning Workflow
 order: 11
-scope: Current 2026 L11 deck; DS/ML framing, data and feature pipelines, supervised/unsupervised tasks,
-  splits/CV/bootstrap, losses and inductive bias, evaluation metrics, over/underfitting, bias–variance,
-  and compute considerations.
-status: ready
+scope: Current 2026 L11 deck; data-science framing and pipelines, structured/unstructured data,
+  supervised and unsupervised learning, classification and regression, feature construction, train/validation/test
+  splits, cross-validation and bootstrap, losses and inductive bias, evaluation metrics, overfitting,
+  bias-variance tradeoffs, and data/compute considerations.
+status: not-started
+knowledge_map:
+  summary: The lecture situates models inside an end-to-end data-science process and defines the evaluation
+    discipline needed to distinguish a useful system from a model that merely fits available data.
+  nodes:
+  - id: knowledge-sad-l11-pipeline
+    title: The data-science pipeline
+    summary: Data acquisition, cleaning, integration, exploration, feature construction, modeling, validation,
+      communication, and action are coupled steps; modeling is only one part of the work.
+  - id: knowledge-sad-l11-tasks
+    title: Supervised and unsupervised tasks
+    summary: Classification predicts categories, regression predicts quantities, and unsupervised methods seek
+      structure without labels; the learning setup must match the target and available supervision.
+    builds_on: [knowledge-sad-l11-pipeline]
+  - id: knowledge-sad-l11-representation
+    title: Data types, features, and representation
+    summary: Structured, text, image, graph, and temporal data require different preprocessing and representations;
+      domain knowledge determines which transformations preserve useful information.
+    builds_on: [knowledge-sad-l11-pipeline]
+  - id: knowledge-sad-l11-resampling
+    title: Train, validation, test, cross-validation, and bootstrap
+    summary: Separate data roles prevent evaluation leakage; repeated splits, cross-validation, and bootstrap
+      estimate different aspects of out-of-sample uncertainty.
+    builds_on: [knowledge-sad-l11-tasks]
+  - id: knowledge-sad-l11-objectives
+    title: Loss functions, hypotheses, and inductive bias
+    summary: A learner searches a hypothesis space using an objective; architecture, regularization, features,
+      and optimization encode assumptions about which solutions should generalize.
+    builds_on: [knowledge-sad-l11-tasks]
+  - id: knowledge-sad-l11-evaluation
+    title: Evaluation metrics and class imbalance
+    summary: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses answer
+      different questions; metric choice follows costs, prevalence, and deployment context.
+    builds_on: [knowledge-sad-l11-resampling]
+  - id: knowledge-sad-l11-generalization
+    title: Underfitting, overfitting, and bias-variance
+    summary: Model complexity trades approximation bias against sensitivity to samples; data volume, regularization,
+      validation, and compute shape the attainable generalization performance.
+    builds_on: [knowledge-sad-l11-objectives, knowledge-sad-l11-evaluation]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
   locator: lecture-slides/11_datascience_intro.pdf (49 pages)
-source_selections:
-- source_id: source-islp
-  locator: Ch 2
-  purpose: Statistical learning workflow and evaluation
-- source_id: source-kelleher-fmlpda
-  locator: Introductory/workflow sections
-  purpose: Course-named ML text
-- source_id: source-kroese-dsml
-  locator: §7.2 and workflow selections
-  purpose: Evaluation/data-science reference
-- source_id: source-domingos-useful-things
-  locator: Complete essay
-  purpose: Optional overfitting/inductive-bias framing
+source_selections: []
 artifacts: {}
-workspace_ids:
-- workspace-m2-exam-prep
-current_study_map: study-map-m2-sad-l11
+workspace_ids: [workspace-m2-exam-prep]

@@ -4,11 +4,53 @@ module_id: module-hu-aml
 kind: lecture
 title: AML Lecture 02 — k-Nearest Neighbors
 order: 2
-scope: The lecture as taught; the preserved Mini Plan is the single study script.
-status: ready
+scope: Current 2026 L02 deck; nearest-neighbour classification, k-NN voting, lazy learning and computational
+  cost, distance functions, feature scaling, the curse of dimensionality, bias/variance, generalization,
+  cross-validation, and evaluation connections.
+status: not-started
+knowledge_map:
+  summary: 'The lecture uses k-NN to connect similarity-based prediction with the central model-selection
+    problem: distance and k define inductive bias, while validation estimates which choice generalizes.'
+  nodes:
+  - id: knowledge-aml-l02-representation
+    title: Embeddings and neighbourhoods
+    summary: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature space.
+  - id: knowledge-aml-l02-algorithm
+    title: 1-NN and k-NN prediction
+    summary: Lazy training, nearest-neighbour search, majority voting for classification, averaging for
+      regression, computational cost, and memory cost.
+    builds_on:
+    - knowledge-aml-l02-representation
+  - id: knowledge-aml-l02-distance
+    title: Distance functions and scaling
+    summary: Lp distances, metric properties, feature scales, irrelevant features, and how the geometry
+      determines which examples count as neighbours.
+    builds_on:
+    - knowledge-aml-l02-representation
+  - id: knowledge-aml-l02-dimensionality
+    title: Curse of dimensionality
+    summary: Why distances become less informative and data requirements grow rapidly in high-dimensional spaces.
+    builds_on:
+    - knowledge-aml-l02-distance
+  - id: knowledge-aml-l02-bias-variance
+    title: Bias, variance, and generalization
+    summary: Small k as flexible/high-variance behaviour, large k as smoother/high-bias behaviour, and
+      the difference between training and test error.
+    builds_on:
+    - knowledge-aml-l02-algorithm
+  - id: knowledge-aml-l02-validation
+    title: Cross-validation and choosing k
+    summary: Validation folds, hyperparameter selection, leakage avoidance, and reliable comparison of
+      distance/scaling/k choices.
+    builds_on:
+    - knowledge-aml-l02-bias-variance
 scope_sources:
 - source_id: source-aml-ss26-lectures
   authority: slides
+  locator: lecture-slides/VL 02-nearest-neighbor.pdf (78 pages)
+- source_id: source-aml-ss26-lectures
+  authority: reference
+  locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
 source_selections: []
 artifacts:
   ultimate_reference: note-aml-l02-knn-bias-variance
@@ -16,4 +58,3 @@ artifacts:
   mock_exam: note-aml-l02-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
-current_study_map: study-map-aml-l02

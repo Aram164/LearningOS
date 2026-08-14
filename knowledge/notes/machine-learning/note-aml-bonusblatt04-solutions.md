@@ -12,8 +12,7 @@ contexts: [workspace-aml-exam-prep]
 ---
 
 > **Migration note (2026-07-17, Stage-1 pilot):** body preserved verbatim from
-> `Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_BonusSheet04_Solution.md` (legacy tree). Companions in v3: `note-aml-l07-exercise-bank` (bank cites these Aufgaben). The step hook (F.K2) and the Mini Plan are operational and live in
-> `work/active/workspace-aml-exam-prep/`.
+> `Plans/ML/foundations/AML/my notes/lect07 linear classifiers/AML_BonusSheet04_Solution.md` (legacy tree). Companions in v3: `note-aml-l07-exercise-bank` (bank cites these Aufgaben). The former step hook (F.K2) and Mini Plan have been superseded by the L07 knowledge map and material menu.
 
 # Bonusblatt 4 — Worked Solutions (Perceptron, Separability, Single-Layer NN, MLP)
 

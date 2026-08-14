@@ -155,11 +155,31 @@ class ChecksReferences:
                 sid = entry.get("source_id") if isinstance(entry, dict) else None
                 if sid and sid not in r.sources:
                     self.err("REF-SOURCE", f"module source map references unknown source '{sid}'", where)
-                for uid in entry.get("unit_routes", []) or []:
+                for route in entry.get("unit_routes", []) or []:
+                    uid = route if isinstance(route, str) else (
+                        route.get("unit_id") if isinstance(route, dict) else None
+                    )
+                    if not uid:
+                        continue
                     if uid not in r.units:
                         self.err("REF-UNIT", f"module source map routes to unknown unit '{uid}'", where)
                     elif r.units[uid].module_id != mid:
                         self.err("SOURCE-MAP-ROUTE", f"module source map routes to foreign unit '{uid}'", where)
+                    elif isinstance(route, dict):
+                        node_ids = {
+                            node.get("id")
+                            for node in (
+                                (r.units[uid].data.get("knowledge_map") or {}).get("nodes", [])
+                            )
+                            if isinstance(node, dict) and node.get("id")
+                        }
+                        for knowledge_id in route.get("covers", []) or []:
+                            if knowledge_id not in node_ids:
+                                self.err(
+                                    "REF-KNOWLEDGE",
+                                    f"source '{sid}' route to '{uid}' covers unknown knowledge node '{knowledge_id}'",
+                                    where,
+                                )
         for smid, study_map in r.study_maps.items():
             where = self._rel(study_map.path)
             data = study_map.data

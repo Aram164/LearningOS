@@ -5,6 +5,9 @@ kind: boundary
 status: boundary-only
 default: false
 semester_bound: false
-description: Hard confidentiality boundary. Job content never enters LearningOS.
-boundary_action: Request explicit Job access
+description: >-
+  Hard confidentiality boundary. Job content stays outside the normal manifest,
+  search, academic recommendations, and AI context; the deliberate Job view may
+  load its bounded read-only dashboard on demand.
+boundary_action: Open confidential Job workspace
 semesters: []

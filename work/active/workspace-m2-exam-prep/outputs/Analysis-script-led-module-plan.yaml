@@ -27,7 +27,6 @@ module_patch:
   - unit-m2-sad-l14
   - unit-m2-sad-l15
   - unit-m2-sad-clustering
-  - unit-m2-sad-l06-l10
   - unit-m2-analysis-exam-prep
 source_patches: []
 source_map:
@@ -55,7 +54,6 @@ source_map:
     - unit-m2-sad-l14
     - unit-m2-sad-l15
     - unit-m2-sad-clustering
-    - unit-m2-sad-l06-l10
   - source_id: source-sad-uebungen
     role: practice
     why: Current Blatt/UE decks are the closest available guide to expected computations and German wording.
@@ -127,7 +125,6 @@ source_map:
     - unit-m2-sad-l08
     - unit-m2-sad-l09
     - unit-m2-sad-l10
-    - unit-m2-sad-l06-l10
   - source_id: source-fahrmeir-arbeitsbuch
     role: practice
     why: German worked exercises for the corresponding Fahrmeir chapters, especially estimation and testing.
@@ -154,7 +151,6 @@ source_map:
     - unit-m2-sad-l06
     - unit-m2-sad-l07
     - unit-m2-sad-l08
-    - unit-m2-sad-l06-l10
   - source_id: source-pitman-probability
     role: optional-depth
     why: Intermediate alternative when Blitzstein is too terse or deep; use only for L04–L08.
@@ -244,7 +240,6 @@ source_map:
     - unit-m2-sad-l08
     - unit-m2-sad-l09
     - unit-m2-sad-l10
-    - unit-m2-sad-l06-l10
   - source_id: source-stat110
     role: optional-depth
     why: Cherry-pick Units 3–6 for RVs, expectation, distributions, Normal, and CLT; never run as a second
@@ -1209,7 +1204,6 @@ workspace_updates:
   - unit-m2-sad-l14
   - unit-m2-sad-l15
   - unit-m2-sad-clustering
-  - unit-m2-sad-l06-l10
   - unit-m2-analysis-exam-prep
   sections:
     Current Scope: 'Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD

@@ -4,30 +4,54 @@ module_id: module-hu-aml
 kind: lecture
 title: AML Lecture 11 — Recurrent Neural Networks (prior-year reference; 2026 scope unconfirmed)
 order: 11
-scope: Conditional plan based only on the local older 85-page RNN deck; RNN forward passes and architectures,
+scope: Conditional overview based only on the local older 85-page RNN deck; RNN forward passes and architectures,
   BPTT, vanishing gradients, GRU, LSTM, and deep RNNs. No current 2026 L11 deck is locally posted, so
   this unit is not promoted to current exam scope until verified.
-status: ready
+status: not-started
+knowledge_map:
+  summary: This is a prior-year reference map, not confirmed 2026 scope. It explains sequence modelling,
+    shared recurrent state, training through time, gradient instability, and gated memory architectures.
+  nodes:
+  - id: knowledge-aml-l11-sequences
+    title: Sequence modelling
+    summary: Variable-length inputs/outputs, language and tagging examples, temporal order, and task architectures.
+  - id: knowledge-aml-l11-recurrence
+    title: Recurrent state and forward pass
+    summary: Hidden-state updates, parameter sharing through time, outputs, shapes, and unfolded computation graphs.
+    builds_on:
+    - knowledge-aml-l11-sequences
+  - id: knowledge-aml-l11-architectures
+    title: Sequence architectures
+    summary: One-to-many, many-to-one, many-to-many, bidirectional, and deep recurrent arrangements.
+    builds_on:
+    - knowledge-aml-l11-recurrence
+  - id: knowledge-aml-l11-bptt
+    title: Backpropagation through time
+    summary: Unrolling, temporal dependency paths, shared-parameter gradient accumulation, and training cost.
+    builds_on:
+    - knowledge-aml-l11-recurrence
+  - id: knowledge-aml-l11-gradient-health
+    title: Vanishing gradients through time
+    summary: Repeated recurrent Jacobians, long-range dependencies, decay/explosion, and connection to L09.
+    builds_on:
+    - knowledge-aml-l11-bptt
+  - id: knowledge-aml-l11-gru
+    title: Gated recurrent units
+    summary: Reset/update gates, candidate state, controlled memory, and the role of interpolation.
+    builds_on:
+    - knowledge-aml-l11-gradient-health
+  - id: knowledge-aml-l11-lstm
+    title: LSTM memory cells
+    summary: Cell state plus input/forget/output gates and why additive memory paths support longer dependencies.
+    builds_on:
+    - knowledge-aml-l11-gradient-health
 scope_sources:
 - source_id: source-aml-ss26-lectures
   authority: reference
   locator: older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf (85 pages; prior year only)
-source_selections:
-- source_id: source-islp
-  locator: §10.5
-  purpose: Preliminary RNN reading pending current-deck verification
-- source_id: source-murphy-pml1
-  locator: §15.2
-  purpose: RNN/BPTT/GRU/LSTM derivation depth
-- source_id: source-eecs498
-  locator: Recurrent Networks lecture
-  purpose: Optional matched video
-- source_id: source-rohrer-e2eml
-  locator: Ch 24 / RNN explanation
-  purpose: Optional visual first pass
+source_selections: []
 artifacts:
   other:
   - note-aml-sad-master-wiring
 workspace_ids:
 - workspace-aml-exam-prep
-current_study_map: study-map-aml-l11

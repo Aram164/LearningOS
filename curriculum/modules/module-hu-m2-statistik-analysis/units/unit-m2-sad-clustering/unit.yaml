@@ -5,11 +5,38 @@ component_id: component-m2-sad
 kind: topic
 title: SaD Auxiliary Topic — Clustering & k-Means (UE7-defined scope)
 order: 16
-scope: 'Current 2026 UE7 slides 32–75 define the missing clustering topic: clustering as exploratory unsupervised
-  learning, hierarchical/partitioning/density families, k-means assignment/update iterations, convergence,
-  initialization, outliers, and local optima. The 2025 L12 clustering deck is the same-topic reference;
-  no separate 2026 clustering lecture deck exists.'
-status: ready
+scope: Current 2026 UE7 slides 32–75; exploratory unsupervised learning, hierarchical/partitioning/density
+  families, k-means objective and assignment/update iterations, convergence, initialization, outliers, and
+  local optima. No separate current clustering lecture exists; the 2025 L12 deck is same-topic depth only.
+status: not-started
+knowledge_map:
+  summary: This exercise-defined topic complements L11 by showing how unlabeled observations can be organized,
+    while keeping algorithm assumptions and the absence of one “true” clustering visible.
+  nodes:
+  - id: knowledge-sad-clustering-unsupervised
+    title: Exploratory unsupervised learning
+    summary: Clustering seeks useful groups without labels; the result depends on representation, similarity,
+      objective, and chosen algorithm rather than revealing a unique ground truth automatically.
+  - id: knowledge-sad-clustering-families
+    title: Hierarchical, partitioning, and density families
+    summary: The main families express different assumptions about cluster nesting, number, compactness, shape,
+      density, noise, and outliers.
+    builds_on: [knowledge-sad-clustering-unsupervised]
+  - id: knowledge-sad-clustering-kmeans
+    title: k-means objective and iterations
+    summary: Alternating nearest-centroid assignment and centroid recomputation decreases within-cluster squared
+      distance until assignments stabilize.
+    builds_on: [knowledge-sad-clustering-unsupervised]
+  - id: knowledge-sad-clustering-initialization
+    title: Initialization, convergence, and local optima
+    summary: k, starting centroids, scale, and outliers can change the result; convergence guarantees a stable
+      local solution, not the global optimum or the right number of clusters.
+    builds_on: [knowledge-sad-clustering-kmeans]
+  - id: knowledge-sad-clustering-evaluation
+    title: Comparing clustering results
+    summary: Within-cluster compactness, separation, stability, and domain usefulness offer partial validation,
+      but every criterion imports assumptions and can favor different partitions.
+    builds_on: [knowledge-sad-clustering-families, knowledge-sad-clustering-initialization]
 scope_sources:
 - source_id: source-sad-uebungen
   authority: brief
@@ -19,15 +46,7 @@ scope_sources:
   locator: 12_clustering.pdf
 - source_id: source-sad-ss26-lectures
   authority: reference
-  locator: 11_datascience_intro.pdf supervised/unsupervised framing
-source_selections:
-- source_id: source-islp
-  locator: §12.2
-  purpose: Optional clustering algorithms and validation depth
-- source_id: source-kroese-dsml
-  locator: Clustering selections
-  purpose: Independent data-science reference
+  locator: lecture-slides/11_datascience_intro.pdf supervised/unsupervised framing
+source_selections: []
 artifacts: {}
-workspace_ids:
-- workspace-m2-exam-prep
-current_study_map: study-map-m2-sad-clustering
+workspace_ids: [workspace-m2-exam-prep]

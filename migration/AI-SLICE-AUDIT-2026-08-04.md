@@ -194,6 +194,20 @@ Line lengths were left alone: the repository has no linter config and its own mo
 
 **Not deleted, flagged instead.** The untracked `system/skills/` holds three pre-v3 skill files (`lecture-unit-builder`, `promotion-ritual`, `semester-kickoff`). All three reference the retired `Masters-Planning/` tree — `check_system.py`, `CONCEPT-INDEX.md`, `DEGREE-WIRING.md` — which v3 replaced and which the installed v3 `lecture-unit-builder` skill explicitly calls retired. `lecture-unit-builder` is a superseded duplicate of a skill you already have installed; the other two have no v3 successor anywhere. They are untracked, so deleting them is unrecoverable, and §5 of the operating contract puts deletion of authored material behind explicit approval. They need either a v3 rewrite or a deliberate goodbye.
 
+> **Resolved 2026-08-14 — v3 rewrite, not goodbye.** All three were rewritten
+> against current v3 procedure and no longer name `Masters-Planning/`,
+> `check_system.py`, `CONCEPT-INDEX.md` or `DEGREE-WIRING.md`:
+> `lecture-unit-builder` → WORKFLOWS §23 (knowledge map + complete material
+> menu + choose-before-sequencing; the study map is optional);
+> `promotion-ritual` → CLAUDE.md §14 Harvest the Garden, the promotion judgment
+> `los.py` deliberately excludes; `semester-kickoff` → WORKFLOWS §24 Turn the
+> semester (§19 close / §20 carry / §18 start), replacing the retired
+> folder-scaffolding notion of a semester. Each file now delegates procedure to
+> the workflow it implements and states only its own gates and quality bar —
+> restated procedure is what went stale the first time. Two names are now
+> imprecise for what they do (`promotion-ritual` = Garden harvest,
+> `semester-kickoff` = the whole term boundary); renaming was left to Aram.
+
 The three empty `Untitled*.canvas` files (each literally `{}`) and four stray `__pycache__` directories were removed.
 
 ---

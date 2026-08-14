@@ -6,30 +6,50 @@ kind: lecture
 title: SaD Lecture 07 — Discrete Distributions
 order: 7
 scope: Current 2026 L07 deck; Bernoulli, Binomial, Hypergeometric, Geometric, and Poisson distributions,
-  their assumptions, PMFs, expectation, and variance.
-status: ready
+  their experiment assumptions, PMFs, expectation and variance, and relationships or approximations between
+  the models.
+status: not-started
+knowledge_map:
+  summary: >-
+    The lecture replaces formula matching with experiment matching: each named distribution is the
+    probability model of a particular data-generating story.
+  nodes:
+  - id: knowledge-sad-l07-model-selection
+    title: Distribution choice from assumptions
+    summary: Number of trials, independence, replacement, changing versus fixed success probability, stopping
+      rule, and count interval determine which discrete model is valid.
+  - id: knowledge-sad-l07-bernoulli-binomial
+    title: Bernoulli trials and the Binomial distribution
+    summary: A Bernoulli variable records one success/failure, while Binomial(n,p) counts successes in n
+      independent trials with constant p; combinatorics explains its PMF.
+    builds_on: [knowledge-sad-l07-model-selection]
+  - id: knowledge-sad-l07-hypergeometric
+    title: Hypergeometric sampling without replacement
+    summary: Drawing from a finite population without replacement makes trials dependent and adds the finite
+      population correction absent from the Binomial model.
+    builds_on: [knowledge-sad-l07-model-selection]
+  - id: knowledge-sad-l07-geometric
+    title: Geometric waiting times
+    summary: The Geometric model counts trials until the first success, introducing a stopping-time story and
+      the memoryless property rather than a fixed number of trials.
+    builds_on: [knowledge-sad-l07-bernoulli-binomial]
+  - id: knowledge-sad-l07-poisson
+    title: Poisson event counts
+    summary: Poisson(lambda) models independent events occurring at a stable rate in an interval, with equal
+      expectation and variance.
+    builds_on: [knowledge-sad-l07-model-selection]
+  - id: knowledge-sad-l07-relationships
+    title: Limits, approximations, and moment signatures
+    summary: Rare-event Binomials approach Poisson; distribution moments provide fast checks, but approximation
+      conditions must be stated rather than assumed.
+    builds_on: [knowledge-sad-l07-bernoulli-binomial, knowledge-sad-l07-poisson]
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
-  locator: lecture-slides/07_discrete_distributions.pdf
+  locator: lecture-slides/07_discrete_distributions.pdf (33 pages)
 - source_id: source-sad-2025-recordings
   authority: reference
   locator: 07_discrete_distributions.pptx (1).pdf
-source_selections:
-- source_id: source-fahrmeir-statistik
-  locator: Ch 5
-  purpose: Course-notation distribution definitions
-- source_id: source-blitzstein-hwang
-  locator: Ch 3–4
-  purpose: Distribution-generating stories
-- source_id: source-stat110
-  locator: Units 3–4
-  purpose: Optional Binomial/Hypergeometric/Poisson depth
-- source_id: source-mit-1805
-  locator: Discrete-distribution problems
-  purpose: Solved practice
-artifacts:
-  ultimate_reference: note-sad-probability-inference-deep-plan
-workspace_ids:
-- workspace-m2-exam-prep
-current_study_map: study-map-m2-sad-l07
+source_selections: []
+artifacts: {}
+workspace_ids: [workspace-m2-exam-prep]

@@ -31,7 +31,7 @@ CAPABILITY_RE = re.compile(
     r"(?:\s+stage=(?P<stage>stage-[a-z0-9-]+))?\]"
 )
 WRITE_CAPABILITIES = {
-    "unit-map-import", "stage-note", "stage-progress", "stage-attach",
+    "unit-map-import", "unit-source-selection", "stage-note", "stage-progress", "stage-attach",
     "source-feedback", "detour-create", "detour-resolve",
     "shelving-prepare", "shelving-apply",
 }

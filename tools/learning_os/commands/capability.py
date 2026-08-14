@@ -21,6 +21,7 @@ def _capability_handlers() -> dict[str, str]:
         "note.evidence.add": "note_evidence",
         "unit.map.import": "unit_map_import",
         "unit.note.append": "unit_note",
+        "unit.source-selection.set": "unit_source_selection",
         "stage.note.write": "stage_note",
         "stage.progress.update": "stage_progress",
         "stage.attachment.add": "stage_attach",
