@@ -6,7 +6,7 @@ title: AMLS Lecture 07 — LLM Training and Inference
 order: 7
 scope: Transformer systems, scaling laws and distributed training; SFT/RLHF/DPO/LoRA; KV-cache management,
   vLLM, FlashAttention and compound systems.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

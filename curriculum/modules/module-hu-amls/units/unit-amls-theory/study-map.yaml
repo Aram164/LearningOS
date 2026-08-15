@@ -1,7 +1,7 @@
 id: study-map-amls-exam-synthesis
 type: study-map
 unit_id: unit-amls-theory
-status: ready
+status: paused
 current_stage: stage-amls-mock-blueprint
 source_plan:
   path: work/active/workspace-amls-exam-prep/CONTEXT.md

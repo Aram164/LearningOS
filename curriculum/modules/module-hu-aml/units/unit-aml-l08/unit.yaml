@@ -49,6 +49,9 @@ scope_sources:
   locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
 source_selections: []
 artifacts:
+  ultimate_reference: note-aml-l08-feedforward-networks
+  exercise_bank: note-aml-l08-exercise-bank
+  mock_exam: note-aml-l08-mock-exam
   other:
   - note-aml-sad-master-wiring
   - note-aml-bonusblatt04-solutions

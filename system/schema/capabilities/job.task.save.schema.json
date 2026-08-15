@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/job.task.save.schema.json",
+  "title": "payload for capability job.task.save",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task"
+  ],
+  "properties": {
+    "confirm_job_access": {
+      "type": "boolean"
+    },
+    "task": {
+      "type": "object"
+    }
+  }
+}

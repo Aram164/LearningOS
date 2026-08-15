@@ -10,47 +10,64 @@ sources:
     title: Current L01 introduction deck
     format: course-material
     angle: Uses one study-duration dataset to show why mean, median, mode, robustness, distributions,
-      samples, classification metrics, and base rates answer different questions. This is the 2026 scope authority.
-    covers: [knowledge-sad-l01-data-questions, knowledge-sad-l01-location,
-      knowledge-sad-l01-distributions, knowledge-sad-l01-sampling-context,
-      knowledge-sad-l01-classification, knowledge-sad-l01-base-rates,
-      knowledge-sad-l01-course-map]
+      samples, classification metrics, and base rates answer different questions. This is the 2026 scope
+      authority.
+    covers:
+    - knowledge-sad-l01-data-questions
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-distributions
+    - knowledge-sad-l01-sampling-context
+    - knowledge-sad-l01-classification
+    - knowledge-sad-l01-base-rates
+    - knowledge-sad-l01-course-map
     depth: course-aligned
     scope: current
     locator: lecture-slides/01_introduction.pdf (42 pages)
   - unit_id: unit-m2-sad-l02
     title: Current L02 basic-concepts deck
     format: course-material
-    angle: Defines the exact course vocabulary and calculation conventions for populations, samples,
-      scales, frequencies, location, dispersion, Simpson's paradox, and sampling bias.
-    covers: [knowledge-sad-l02-vocabulary, knowledge-sad-l02-scales,
-      knowledge-sad-l02-frequencies, knowledge-sad-l02-location,
-      knowledge-sad-l02-dispersion, knowledge-sad-l02-simpson,
-      knowledge-sad-l02-sampling]
+    angle: Defines the exact course vocabulary and calculation conventions for populations, samples, scales,
+      frequencies, location, dispersion, Simpson's paradox, and sampling bias.
+    covers:
+    - knowledge-sad-l02-vocabulary
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
+    - knowledge-sad-l02-simpson
+    - knowledge-sad-l02-sampling
     depth: course-aligned
     scope: current
     locator: lecture-slides/02_basics.pdf (39 pages)
   - unit_id: unit-m2-sad-l03
     title: Current L03 correlation and regression deck
     format: course-material
-    angle: The course's own path from scatterplots and Pearson correlation through least squares,
-      multivariate regression, the normal equation, and gradient descent.
-    covers: [knowledge-sad-l03-paired-data, knowledge-sad-l03-covariance,
-      knowledge-sad-l03-interpretation, knowledge-sad-l03-simple-regression,
-      knowledge-sad-l03-multivariate, knowledge-sad-l03-gradient-descent,
-      knowledge-sad-l03-scaling-weights]
+    angle: The course's own path from scatterplots and Pearson correlation through least squares, multivariate
+      regression, the normal equation, and gradient descent.
+    covers:
+    - knowledge-sad-l03-paired-data
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-gradient-descent
+    - knowledge-sad-l03-scaling-weights
     depth: course-aligned
     scope: current
     locator: lecture-slides/03_correlation_regression.pdf (48 pages)
   - unit_id: unit-m2-sad-l04
     title: Current L04 probability and Naive Bayes deck
     format: course-material
-    angle: Starts from human framing errors, formalizes event probability, conditioning, Bayes and
-      independence, and ends with the categorical spam-classifier construction. It controls exam notation.
-    covers: [knowledge-sad-l04-framing, knowledge-sad-l04-events,
-      knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence,
-      knowledge-sad-l04-naive-bayes]
+    angle: Starts from human framing errors, formalizes event probability, conditioning, Bayes and independence,
+      and ends with the categorical spam-classifier construction. It controls exam notation.
+    covers:
+    - knowledge-sad-l04-framing
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
+    - knowledge-sad-l04-naive-bayes
     depth: course-aligned
     scope: current
     locator: lecture-slides/04_probability.pdf (59 pages)
@@ -59,33 +76,45 @@ sources:
     format: course-material
     angle: Organizes the six classical counting cases by order, replacement, and selection size, then
       connects them to finite probability and hypergeometric sampling.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-permutations,
-      knowledge-sad-l05-variations, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-repetition, knowledge-sad-l05-counting-probability,
-      knowledge-sad-l05-identities]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-repetition
+    - knowledge-sad-l05-counting-probability
+    - knowledge-sad-l05-identities
     depth: course-aligned
     scope: current
     locator: lecture-slides/05_combinatorics.pdf (34 pages)
   - unit_id: unit-m2-sad-l06
     title: Current L06 random-variables deck
     format: course-material
-    angle: The scope authority for random-variable language, PMF/PDF/CDF, moments, covariance,
-      sample-mean variance, Chebyshev, and the law of large numbers.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-distribution-functions,
-      knowledge-sad-l06-transformations, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance, knowledge-sad-l06-sample-mean,
-      knowledge-sad-l06-concentration]
+    angle: The scope authority for random-variable language, PMF/PDF/CDF, moments, covariance, sample-mean
+      variance, Chebyshev, and the law of large numbers.
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
+    - knowledge-sad-l06-concentration
     depth: course-aligned
     scope: current
     locator: lecture-slides/06_random_variables.pdf (60 pages)
   - unit_id: unit-m2-sad-l07
     title: Current L07 discrete-distributions deck
     format: course-material
-    angle: Defines the distribution-identification conditions and formulas for Bernoulli/Binomial,
-      Hypergeometric, Geometric, and Poisson models, including their moments and relationships.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson, knowledge-sad-l07-relationships]
+    angle: Defines the distribution-identification conditions and formulas for Bernoulli/Binomial, Hypergeometric,
+      Geometric, and Poisson models, including their moments and relationships.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
+    - knowledge-sad-l07-relationships
     depth: course-aligned
     scope: current
     locator: lecture-slides/07_discrete_distributions.pdf (33 pages)
@@ -94,95 +123,128 @@ sources:
     format: course-material
     angle: The exact 2026 treatment of Normal calculations, LLN-versus-CLT, approximation, likelihood,
       and the Gaussian-error derivation that turns maximum likelihood into squared-error minimization.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-transform-sum, knowledge-sad-l08-clt,
-      knowledge-sad-l08-approximation, knowledge-sad-l08-likelihood,
-      knowledge-sad-l08-mle]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: course-aligned
     scope: current
     locator: lecture-slides/08_normal_distribution.pdf (38 pages)
   - unit_id: unit-m2-sad-l09
     title: Current L09 estimation deck
     format: course-material
-    angle: The exam-notation authority for estimator properties, standard errors, z/t confidence
-      intervals, bootstrap reasoning, and the distinction between statistical uncertainty and biased data.
-    covers: [knowledge-sad-l09-estimator, knowledge-sad-l09-properties,
-      knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval, knowledge-sad-l09-bootstrap,
-      knowledge-sad-l09-data-bias]
+    angle: The exam-notation authority for estimator properties, standard errors, z/t confidence intervals,
+      bootstrap reasoning, and the distinction between statistical uncertainty and biased data.
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
+    - knowledge-sad-l09-bootstrap
+    - knowledge-sad-l09-data-bias
     depth: course-aligned
     scope: current
     locator: lecture-slides/09_estimating.pdf (45 pages)
   - unit_id: unit-m2-sad-l10
     title: Current L10 hypothesis-testing deck
     format: course-material
-    angle: The complete course logic from null models and p-values through errors/power, z/t and
-      categorical tests, nonparametric alternatives, confidence-interval duality, and multiple testing.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power, knowledge-sad-l10-z-t,
-      knowledge-sad-l10-ci-duality, knowledge-sad-l10-chi-square,
-      knowledge-sad-l10-nonparametric, knowledge-sad-l10-multiple]
+    angle: The complete course logic from null models and p-values through errors/power, z/t and categorical
+      tests, nonparametric alternatives, confidence-interval duality, and multiple testing.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-ci-duality
+    - knowledge-sad-l10-chi-square
+    - knowledge-sad-l10-nonparametric
+    - knowledge-sad-l10-multiple
     depth: course-aligned
     scope: current
     locator: lecture-slides/10_testing.pdf (65 pages)
   - unit_id: unit-m2-sad-l11
     title: Current L11 data-science introduction deck
     format: course-material
-    angle: Places learning algorithms inside a data pipeline and defines the task, resampling,
-      objective, evaluation, generalization, and compute concepts used by L12-L15.
-    covers: [knowledge-sad-l11-pipeline, knowledge-sad-l11-tasks,
-      knowledge-sad-l11-representation, knowledge-sad-l11-resampling,
-      knowledge-sad-l11-objectives, knowledge-sad-l11-evaluation,
-      knowledge-sad-l11-generalization]
+    angle: Places learning algorithms inside a data pipeline and defines the task, resampling, objective,
+      evaluation, generalization, and compute concepts used by L12-L15.
+    covers:
+    - knowledge-sad-l11-pipeline
+    - knowledge-sad-l11-tasks
+    - knowledge-sad-l11-representation
+    - knowledge-sad-l11-resampling
+    - knowledge-sad-l11-objectives
+    - knowledge-sad-l11-evaluation
+    - knowledge-sad-l11-generalization
     depth: course-aligned
     scope: current
     locator: lecture-slides/11_datascience_intro.pdf (49 pages)
   - unit_id: unit-m2-sad-l12
     title: Current L12 tree-based learning deck
     format: course-material
-    angle: >-
-      The only current tree scope: preference bias, entropy/information gain/ID3, regression
-      splitting, pruning, and the bagging/random-forest/boosting/stacking ensemble family.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-entropy-id3,
-      knowledge-sad-l12-regression, knowledge-sad-l12-pruning,
-      knowledge-sad-l12-bagging-forest, knowledge-sad-l12-boosting,
-      knowledge-sad-l12-stacking]
+    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
+      pruning, and the bagging/random-forest/boosting/stacking ensemble family.'
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-regression
+    - knowledge-sad-l12-pruning
+    - knowledge-sad-l12-bagging-forest
+    - knowledge-sad-l12-boosting
+    - knowledge-sad-l12-stacking
     depth: course-aligned
     scope: current
     locator: lecture-slides/12_tree_based.pdf (36 pages)
   - unit_id: unit-m2-sad-l13
     title: Current L13 similarity-based learning deck
     format: course-material
-    angle: The scope authority for k-NN prediction, metric choice and normalization, and Leser's
-      systems-oriented exact/approximate similarity-indexing section.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-metrics, knowledge-sad-l13-minkowski,
-      knowledge-sad-l13-special-measures, knowledge-sad-l13-exact-indexing,
-      knowledge-sad-l13-lsh]
+    angle: The scope authority for k-NN prediction, metric choice and normalization, and Leser's systems-oriented
+      exact/approximate similarity-indexing section.
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-metrics
+    - knowledge-sad-l13-minkowski
+    - knowledge-sad-l13-special-measures
+    - knowledge-sad-l13-exact-indexing
+    - knowledge-sad-l13-lsh
     depth: course-aligned
     scope: current
     locator: lecture-slides/13_similarity_based.pdf (32 pages)
   - unit_id: unit-m2-sad-l14
     title: Current L14 probability-based learning deck
     format: course-material
-    angle: Extends L04's categorical classifier through smoothing, numerical and count likelihoods,
-      stable log computation, and Bayesian-network dependence structure.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-smoothing,
-      knowledge-sad-l14-numeric, knowledge-sad-l14-gaussian,
-      knowledge-sad-l14-multinomial, knowledge-sad-l14-bayes-net,
-      knowledge-sad-l14-markov]
+    angle: Extends L04's categorical classifier through smoothing, numerical and count likelihoods, stable
+      log computation, and Bayesian-network dependence structure.
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-smoothing
+    - knowledge-sad-l14-numeric
+    - knowledge-sad-l14-gaussian
+    - knowledge-sad-l14-multinomial
+    - knowledge-sad-l14-bayes-net
+    - knowledge-sad-l14-markov
     depth: course-aligned
     scope: current
     locator: lecture-slides/14_probability_based.pdf (29 pages)
   - unit_id: unit-m2-sad-l15
     title: Current L15 neural-networks deck
     format: course-material
-    angle: Builds the SaD neural-network model from MLR equivalence through activations, softmax,
-      MLP shapes/parameter counts, backpropagation, training, universality, and an architecture outlook.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-output, knowledge-sad-l15-forward,
-      knowledge-sad-l15-backprop, knowledge-sad-l15-training,
-      knowledge-sad-l15-universality, knowledge-sad-l15-outlook]
+    angle: Builds the SaD neural-network model from MLR equivalence through activations, softmax, MLP
+      shapes/parameter counts, backpropagation, training, universality, and an architecture outlook.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-output
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
+    - knowledge-sad-l15-universality
+    - knowledge-sad-l15-outlook
     depth: course-aligned
     scope: current
     locator: lecture-slides/15_neural_networks.pdf (38 pages)
@@ -191,7 +253,8 @@ sources:
     format: course-material
     angle: Supplies the current lecture definition of unsupervised learning that UE7's clustering topic
       instantiates; it is a framing bridge, not a missing clustering lecture.
-    covers: [knowledge-sad-clustering-unsupervised]
+    covers:
+    - knowledge-sad-clustering-unsupervised
     depth: course-aligned
     scope: complementary
     locator: lecture-slides/11_datascience_intro.pdf supervised/unsupervised section
@@ -203,10 +266,12 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: Blatt 1 and UE2 — data and feature foundations
     format: exercise
-    angle: Course-native questions on features, observations, descriptive summaries, and the first
-      interpretation decisions; use the walkthrough language as the exam vocabulary layer.
-    covers: [knowledge-sad-l01-data-questions, knowledge-sad-l01-location,
-      knowledge-sad-l01-sampling-context]
+    angle: Course-native questions on features, observations, descriptive summaries, and the first interpretation
+      decisions; use the walkthrough language as the exam vocabulary layer.
+    covers:
+    - knowledge-sad-l01-data-questions
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-sampling-context
     depth: practice
     scope: current
     locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf introductory section
@@ -215,19 +280,25 @@ sources:
     format: exercise
     angle: Computes and interprets scale types, frequencies, location and dispersion from course data,
       making the L02 definitions operational.
-    covers: [knowledge-sad-l02-scales, knowledge-sad-l02-frequencies,
-      knowledge-sad-l02-location, knowledge-sad-l02-dispersion,
-      knowledge-sad-l02-sampling]
+    covers:
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
+    - knowledge-sad-l02-sampling
     depth: practice
     scope: current
     locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf
   - unit_id: unit-m2-sad-l03
     title: UE2 and Blatt 2 — correlation and regression practice
     format: exercise
-    angle: The current worked route for paired features, covariance/correlation, linear regression,
-      coefficient interpretation, and the bridge from descriptive calculations to fitted models.
-    covers: [knowledge-sad-l03-paired-data, knowledge-sad-l03-covariance,
-      knowledge-sad-l03-simple-regression, knowledge-sad-l03-scaling-weights]
+    angle: The current worked route for paired features, covariance/correlation, linear regression, coefficient
+      interpretation, and the bridge from descriptive calculations to fitted models.
+    covers:
+    - knowledge-sad-l03-paired-data
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-scaling-weights
     depth: practice
     scope: current
     locator: exercise-slides/UE2.pdf correlation/regression section; exercise-slides/blatt-02.pdf
@@ -236,9 +307,12 @@ sources:
     format: exercise
     angle: Course-native event, conditional-probability, Bayes, and classifier calculations; it tests
       whether the reference population and conditioning direction are explicit.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-axioms,
-      knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-naive-bayes]
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-naive-bayes
     depth: practice
     scope: current
     locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section
@@ -247,9 +321,12 @@ sources:
     format: exercise
     angle: Counting problems whose main difficulty is selecting the correct order/replacement case before
       evaluating a formula, plus finite-probability applications.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-permutations,
-      knowledge-sad-l05-variations, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: current
     locator: exercise-slides/blatt-02.pdf counting tasks; exercise-slides/UE3.pdf matching walkthrough
@@ -258,9 +335,12 @@ sources:
     format: exercise
     angle: Probability tables, CDFs, transformations, expectation, variance, and Chebyshev calculations
       in the course's own notation.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance,
-      knowledge-sad-l06-concentration]
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-concentration
     depth: practice
     scope: current
     locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
@@ -269,20 +349,26 @@ sources:
     format: exercise
     angle: Converts word problems into Binomial, Hypergeometric, Geometric, or Poisson assumptions before
       computing probabilities and moments.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: current
     locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
   - unit_id: unit-m2-sad-l08
     title: Blatt 4 and UE5 — Normal and CLT calculations
     format: exercise
-    angle: z-standardization, Normal probabilities, sampling means, approximation, and the MLE bridge in
-      the exact current exercise sequence.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt, knowledge-sad-l08-approximation,
-      knowledge-sad-l08-mle]
+    angle: z-standardization, Normal probabilities, sampling means, approximation, and the MLE bridge
+      in the exact current exercise sequence.
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
+    - knowledge-sad-l08-mle
     depth: practice
     scope: current
     locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
@@ -291,8 +377,11 @@ sources:
     format: exercise
     angle: Computes estimator properties, standard errors, and confidence intervals, with the tutorial
       walkthrough exposing the required interpretation language.
-    covers: [knowledge-sad-l09-properties, knowledge-sad-l09-standard-error,
-      knowledge-sad-l09-z-interval, knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: practice
     scope: current
     locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
@@ -301,28 +390,33 @@ sources:
     format: exercise
     angle: Full current test setups plus the Blatt-5 permutation-test solution; useful for checking tails,
       p-value interpretation, decision wording, and nonparametric logic.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power, knowledge-sad-l10-z-t,
-      knowledge-sad-l10-nonparametric]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-nonparametric
     depth: practice
     scope: current
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1;
-      exercise-slides/UE7.pdf slides 12–16
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16
   - unit_id: unit-m2-sad-l11
     title: Blatt 5 and UE7 — multiclass metrics
     format: exercise
     angle: Builds multiclass confusion data and computes/compares metric averaging, grounding L11's abstract
       evaluation choices in a course-owned worked example.
-    covers: [knowledge-sad-l11-evaluation]
+    covers:
+    - knowledge-sad-l11-evaluation
     depth: practice
     scope: current
     locator: exercise-slides/blatt-05.pdf Aufgabe 3; exercise-slides/UE7.pdf slides 22–30
   - unit_id: unit-m2-sad-l13
     title: UE7 clustering distances — similarity bridge only
     format: exercise
-    angle: The distance and assignment calculations transfer to similarity reasoning, but this is not a
-      current k-NN exercise sheet and must not be presented as one.
-    covers: [knowledge-sad-l13-minkowski]
+    angle: The distance and assignment calculations transfer to similarity reasoning, but this is not
+      a current k-NN exercise sheet and must not be presented as one.
+    covers:
+    - knowledge-sad-l13-minkowski
     depth: practice
     scope: complementary
     locator: exercise-slides/UE7.pdf slides 32–75
@@ -331,18 +425,21 @@ sources:
     format: exercise
     angle: Course-native Naive Bayes classification and probability calculations, connecting the L04 base
       model to L14's smoothing and numeric-feature extensions.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-smoothing,
-      knowledge-sad-l14-numeric]
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-smoothing
+    - knowledge-sad-l14-numeric
     depth: practice
     scope: current
     locator: exercise-slides/UE6.pdf probability-based learning section
   - unit_id: unit-m2-sad-l15
     title: Blatt 5 and UE7 — neural-network forward task
     format: exercise
-    angle: >-
-      The confirmed current NN exercise: trace a forward pass, softmax/loss, and multiclass output; no
-      separate standalone L15 sheet exists.
-    covers: [knowledge-sad-l15-output, knowledge-sad-l15-forward]
+    angle: 'The confirmed current NN exercise: trace a forward pass, softmax/loss, and multiclass output;
+      no separate standalone L15 sheet exists.'
+    covers:
+    - knowledge-sad-l15-output
+    - knowledge-sad-l15-forward
     depth: practice
     scope: current
     locator: exercise-slides/blatt-05.pdf Aufgabe 2; exercise-slides/UE7.pdf slides 17–21
@@ -351,9 +448,12 @@ sources:
     format: exercise
     angle: The current authority for this auxiliary topic, including method families, a full assignment/
       centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    covers: [knowledge-sad-clustering-unsupervised, knowledge-sad-clustering-families,
-      knowledge-sad-clustering-kmeans, knowledge-sad-clustering-initialization,
-      knowledge-sad-clustering-evaluation]
+    covers:
+    - knowledge-sad-clustering-unsupervised
+    - knowledge-sad-clustering-families
+    - knowledge-sad-clustering-kmeans
+    - knowledge-sad-clustering-initialization
+    - knowledge-sad-clustering-evaluation
     depth: course-aligned
     scope: current
     locator: exercise-slides/UE7.pdf slides 32–87
@@ -368,9 +468,12 @@ sources:
     format: course-material
     angle: A prior-year same-course second explanation of event probability, conditioning, Bayes, and
       independence. Use it only after the current L04 deck when one derivation needs another telling.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-axioms,
-      knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: prior-year
     locator: 04_probability_with_notes (1).pdf
@@ -379,7 +482,8 @@ sources:
     format: course-material
     angle: Prior-year probability examples that reuse finite counting; it supports the probability connection
       but does not replace the current dedicated L05 combinatorics deck.
-    covers: [knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: prior-year
     locator: 04_probability_with_notes (1).pdf counting/probability selections
@@ -388,8 +492,11 @@ sources:
     format: course-material
     angle: Splits random-variable definitions and expectation/moment calculations across two older decks,
       providing more same-course examples than the combined current treatment.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-distribution-functions,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: advanced-reference
     scope: prior-year
     locator: 05_random_variables.pdf; 06_expected_values.pptx-1.pdf
@@ -398,8 +505,11 @@ sources:
     format: course-material
     angle: Same-topic prior-year examples for selecting and calculating the named discrete distributions;
       current L07 wording and scope remain authoritative.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-poisson
     depth: advanced-reference
     scope: prior-year
     locator: 07_discrete_distributions.pptx (1).pdf
@@ -408,8 +518,10 @@ sources:
     format: course-material
     angle: Same-course visual and numerical second pass for Normal standardization and CLT; it does not
       override the current deck's likelihood/MLE scope.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-clt]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
     depth: advanced-reference
     scope: prior-year
     locator: 08_normal_distribution_no_notes.pdf
@@ -418,54 +530,68 @@ sources:
     format: course-material
     angle: A prior-year same-topic explanation of estimator properties and confidence intervals with additional
       course examples.
-    covers: [knowledge-sad-l09-estimator, knowledge-sad-l09-properties,
-      knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: advanced-reference
     scope: prior-year
     locator: 09_point_interval_estimation (1).pdf
   - unit_id: unit-m2-sad-l10
     title: 2025 statistical-significance deck
     format: course-material
-    angle: Same-course alternate explanation of test logic, p-values, and statistical significance; use after
-      the current deck for a blocked interpretation, not as a separate syllabus.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power]
+    angle: Same-course alternate explanation of test logic, p-values, and statistical significance; use
+      after the current deck for a blocked interpretation, not as a separate syllabus.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
     depth: advanced-reference
     scope: prior-year
     locator: 10_statistical_significance.pdf
   - unit_id: unit-m2-sad-l13
     title: 2025 instance- and similarity-based pair
     format: course-material
-    angle: >-
-      The verified older match for current L13: one full instance-based deck plus a later similarity-depth
-      deck. Numbering differs, so content—not lecture number—controls the route.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-metrics, knowledge-sad-l13-minkowski,
-      knowledge-sad-l13-special-measures, knowledge-sad-l13-exact-indexing]
+    angle: 'The verified older match for current L13: one full instance-based deck plus a later similarity-depth
+      deck. Numbering differs, so content—not lecture number—controls the route.'
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-metrics
+    - knowledge-sad-l13-minkowski
+    - knowledge-sad-l13-special-measures
+    - knowledge-sad-l13-exact-indexing
     depth: advanced-reference
     scope: prior-year
     locator: 11_instance-based.pdf; 13_similarity_based_part3.pdf
   - unit_id: unit-m2-sad-l15
     title: 2025 neural-networks Part 1 and Part 2
     format: course-material
-    angle: >-
-      The strongest local same-course NN depth: the two-deck sequence expands the current lecture's
-      forward, training, gradient, and backpropagation overview.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-output, knowledge-sad-l15-forward,
-      knowledge-sad-l15-backprop, knowledge-sad-l15-training]
+    angle: 'The strongest local same-course NN depth: the two-deck sequence expands the current lecture''s
+      forward, training, gradient, and backpropagation overview.'
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-output
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: advanced-reference
     scope: prior-year
     locator: 14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf
   - unit_id: unit-m2-sad-clustering
     title: 2025 L12 clustering deck
     format: course-material
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
-      current L12 trees despite sharing the number 12.
-    covers: [knowledge-sad-clustering-unsupervised, knowledge-sad-clustering-families,
-      knowledge-sad-clustering-kmeans, knowledge-sad-clustering-initialization,
-      knowledge-sad-clustering-evaluation]
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
+      for current L12 trees despite sharing the number 12.
+    covers:
+    - knowledge-sad-clustering-unsupervised
+    - knowledge-sad-clustering-families
+    - knowledge-sad-clustering-kmeans
+    - knowledge-sad-clustering-initialization
+    - knowledge-sad-clustering-evaluation
     depth: advanced-reference
     scope: prior-year
     locator: 12_clustering.pdf
@@ -483,41 +609,52 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: Fahrmeir Chapter 2 — descriptive-statistics reference
     format: book
-    angle: German notation-matched depth for location, empirical distributions, robustness, and the
-      sample/population distinction introduced informally by L01.
-    covers: [knowledge-sad-l01-location, knowledge-sad-l01-distributions,
-      knowledge-sad-l01-sampling-context]
+    angle: German notation-matched depth for location, empirical distributions, robustness, and the sample/population
+      distinction introduced informally by L01.
+    covers:
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-distributions
+    - knowledge-sad-l01-sampling-context
     depth: derivation
     scope: complementary
     locator: Chapter 2 selections
   - unit_id: unit-m2-sad-l02
     title: Fahrmeir Chapter 2 — univariate descriptive statistics
     format: book
-    angle: The closest book match to the course's German terms and formulas for scales, frequencies,
-      quantiles, boxplots, location, and dispersion.
-    covers: [knowledge-sad-l02-scales, knowledge-sad-l02-frequencies,
-      knowledge-sad-l02-location, knowledge-sad-l02-dispersion]
+    angle: The closest book match to the course's German terms and formulas for scales, frequencies, quantiles,
+      boxplots, location, and dispersion.
+    covers:
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
     depth: derivation
     scope: complementary
     locator: Chapter 2
   - unit_id: unit-m2-sad-l03
     title: Fahrmeir Chapter 3 — multivariate description and regression
     format: book
-    angle: German statistics treatment of covariance, correlation, scatterplots, and regression for
-      matching lecture notation and interpretation.
-    covers: [knowledge-sad-l03-paired-data, knowledge-sad-l03-covariance,
-      knowledge-sad-l03-interpretation, knowledge-sad-l03-simple-regression]
+    angle: German statistics treatment of covariance, correlation, scatterplots, and regression for matching
+      lecture notation and interpretation.
+    covers:
+    - knowledge-sad-l03-paired-data
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
+    - knowledge-sad-l03-simple-regression
     depth: derivation
     scope: complementary
     locator: Chapter 3
   - unit_id: unit-m2-sad-l04
     title: Fahrmeir Chapter 4 — probability foundations
     format: book
-    angle: Course-compatible German derivations for event algebra, conditional probability, total
-      probability, Bayes, and independence.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-axioms,
-      knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-independence]
+    angle: Course-compatible German derivations for event algebra, conditional probability, total probability,
+      Bayes, and independence.
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: derivation
     scope: complementary
     locator: Chapter 4 probability sections
@@ -526,41 +663,52 @@ sources:
     format: book
     angle: Places counting formulas inside probability models, useful when a formula is known but the
       event/sample-space construction is unclear.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: derivation
     scope: complementary
     locator: Chapter 4 combinatorics sections
   - unit_id: unit-m2-sad-l06
     title: Fahrmeir Chapters 5–7 — random variables and moments
     format: book
-    angle: The German rigor home for discrete/continuous RVs, distribution functions, expectation,
-      variance, covariance, Chebyshev, and large-sample behavior.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-distribution-functions,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance,
-      knowledge-sad-l06-concentration]
+    angle: The German rigor home for discrete/continuous RVs, distribution functions, expectation, variance,
+      covariance, Chebyshev, and large-sample behavior.
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-concentration
     depth: derivation
     scope: complementary
     locator: Chapters 5–7 selected sections
   - unit_id: unit-m2-sad-l07
     title: Fahrmeir Chapter 5 — discrete distributions
     format: book
-    angle: Formula- and notation-aligned definitions of the named distributions, with expectation,
-      variance, and model assumptions in the same German statistical layer as the exam.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    angle: Formula- and notation-aligned definitions of the named distributions, with expectation, variance,
+      and model assumptions in the same German statistical layer as the exam.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: derivation
     scope: complementary
     locator: Chapter 5
   - unit_id: unit-m2-sad-l08
     title: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     format: book
-    angle: Formal Normal calculations, transformations, LLN, and CLT in the notation layer closest to the
-      lecture; use the deck for the MLE-to-MSE derivation.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-transform-sum, knowledge-sad-l08-clt,
-      knowledge-sad-l08-approximation]
+    angle: Formal Normal calculations, transformations, LLN, and CLT in the notation layer closest to
+      the lecture; use the deck for the MLE-to-MSE derivation.
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: derivation
     scope: complementary
     locator: Chapters 6–7
@@ -569,9 +717,12 @@ sources:
     format: book
     angle: The German estimation spine for estimator quality, sampling distributions, standard errors,
       and confidence intervals.
-    covers: [knowledge-sad-l09-estimator, knowledge-sad-l09-properties,
-      knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: derivation
     scope: complementary
     locator: Chapter 9
@@ -580,9 +731,13 @@ sources:
     format: book
     angle: The German logic/formula reference for classical tests, errors, p-values, categorical tests,
       nonparametric alternatives, and test selection.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power, knowledge-sad-l10-z-t,
-      knowledge-sad-l10-chi-square, knowledge-sad-l10-nonparametric]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
+    - knowledge-sad-l10-nonparametric
     depth: derivation
     scope: complementary
     locator: Chapters 10–11
@@ -596,26 +751,32 @@ sources:
     format: exercise
     angle: German worked problems for location and empirical distributions after the lecture examples;
       this is repetition, not a second conceptual source.
-    covers: [knowledge-sad-l01-location, knowledge-sad-l01-distributions]
+    covers:
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-distributions
     depth: practice
     scope: complementary
     locator: Chapter 2 introductory selections
   - unit_id: unit-m2-sad-l02
     title: Arbeitsbuch Chapter 2 — descriptive-statistics drills
     format: exercise
-    angle: Chapter-matched German calculations for frequencies, quantiles, boxplots, location, and
-      dispersion with worked solutions.
-    covers: [knowledge-sad-l02-frequencies, knowledge-sad-l02-location,
-      knowledge-sad-l02-dispersion]
+    angle: Chapter-matched German calculations for frequencies, quantiles, boxplots, location, and dispersion
+      with worked solutions.
+    covers:
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
     depth: practice
     scope: complementary
     locator: Chapter 2
   - unit_id: unit-m2-sad-l03
     title: Arbeitsbuch Chapter 3 — correlation and regression drills
     format: exercise
-    angle: Worked German problems for covariance/Pearson correlation and simple regression once the
-      current UE material is exhausted.
-    covers: [knowledge-sad-l03-covariance, knowledge-sad-l03-simple-regression]
+    angle: Worked German problems for covariance/Pearson correlation and simple regression once the current
+      UE material is exhausted.
+    covers:
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-simple-regression
     depth: practice
     scope: complementary
     locator: Chapter 3
@@ -624,18 +785,23 @@ sources:
     format: exercise
     angle: German worked event-algebra, conditioning, Bayes, and independence calculations for repeated
       formula-selection practice.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Chapter 4 probability selections
   - unit_id: unit-m2-sad-l05
     title: Arbeitsbuch Chapter 4 — combinatorics applications
     format: exercise
-    angle: Solved finite-counting and probability problems that force the order/replacement decision
-      before computation.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    angle: Solved finite-counting and probability problems that force the order/replacement decision before
+      computation.
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Chapter 4 counting selections
@@ -644,8 +810,11 @@ sources:
     format: exercise
     angle: Solved German calculations for PMF/CDF, expectation, variance, covariance, and bounds after
       the current UE4 tasks.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance, knowledge-sad-l06-concentration]
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-concentration
     depth: practice
     scope: complementary
     locator: Chapters 5–7 selections
@@ -653,8 +822,11 @@ sources:
     title: Arbeitsbuch Chapter 5 — distribution drills
     format: exercise
     angle: Repeated German word-problem practice for distinguishing and calculating the discrete models.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
     locator: Chapter 5 selections
@@ -663,8 +835,10 @@ sources:
     format: exercise
     angle: Worked standardization, Normal probability, approximation, and sampling-mean problems in the
       German exam notation layer.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-clt,
-      knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
     locator: Chapters 6–7 selections
@@ -673,19 +847,25 @@ sources:
     format: exercise
     angle: Solved German confidence-interval and estimator-quality problems, especially useful for checking
       standard-error and t-versus-z decisions.
-    covers: [knowledge-sad-l09-properties, knowledge-sad-l09-standard-error,
-      knowledge-sad-l09-z-interval, knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: practice
     scope: complementary
     locator: Chapter 9
   - unit_id: unit-m2-sad-l10
     title: Arbeitsbuch Chapters 10–11 — testing drills
     format: exercise
-    angle: Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t, knowledge-sad-l10-chi-square,
-      knowledge-sad-l10-nonparametric]
+    angle: Fully worked German tests for building the complete H0/statistic/reference-distribution/ rejection/p-value
+      argument without skipping interpretation.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
+    - knowledge-sad-l10-nonparametric
     depth: practice
     scope: complementary
     locator: Chapters 10–11
@@ -700,8 +880,10 @@ sources:
     format: book
     angle: Story-first probability reasoning that explains why conditioning changes the reference space,
       how Bayes reverses information, and where independence intuition fails.
-    covers: [knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: intuition
     scope: complementary
     locator: Chapter 2, especially §§2.1–2.3 and §2.8
@@ -710,19 +892,26 @@ sources:
     format: book
     angle: Builds permutation/combination formulas from sampling stories and emphasizes choosing a counting
       strategy over memorizing an isolated formula.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-permutations,
-      knowledge-sad-l05-variations, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-repetition, knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-repetition
+    - knowledge-sad-l05-counting-probability
     depth: intuition
     scope: complementary
     locator: Chapter 1
   - unit_id: unit-m2-sad-l06
     title: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     format: book
-    angle: The strongest story/proof explanation of random variables, expectation, indicator methods, and
-      transformations; Ch 10 is used only for matching moment depth.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    angle: The strongest story/proof explanation of random variables, expectation, indicator methods,
+      and transformations; Ch 10 is used only for matching moment depth.
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: intuition
     scope: complementary
     locator: Chapters 3–4; selected Chapter 10 sections
@@ -731,9 +920,12 @@ sources:
     format: book
     angle: Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson families through the experiments
       that create them, making assumption recognition the main skill.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: intuition
     scope: complementary
     locator: Chapters 3–4 selections
@@ -742,8 +934,10 @@ sources:
     format: book
     angle: A probability-first route through continuous distributions, Normal structure, transforms, and
       the CLT when the deck's concise treatment needs a derivational second voice.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
     depth: intuition
     scope: complementary
     locator: Chapter 5; selected Chapter 10 sections
@@ -757,8 +951,11 @@ sources:
     format: book
     angle: An intermediate, theorem-aware alternative for event algebra, conditioning, Bayes, and independence
       when Blitzstein is too story-driven or too compressed.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
     locator: Probability axioms, conditioning, and Bayes selections
@@ -767,7 +964,9 @@ sources:
     format: book
     angle: Intermediate probability text treatment of counting and finite sample spaces; useful as a formal
       check, not as the first combinatorics teacher.
-    covers: [knowledge-sad-l05-combinations, knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
     locator: Counting and equally likely outcomes selections
@@ -776,8 +975,11 @@ sources:
     format: book
     angle: Middle-rung exposition between the course/Fahrmeir layer and Ross, covering distribution functions,
       expectation, variance, and transformations.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: advanced-reference
     scope: complementary
     locator: Random variables, expectation, and variance chapters
@@ -785,8 +987,11 @@ sources:
     title: Pitman Chapters 2–3 — discrete distributions
     format: book
     angle: Intermediate derivations and examples for the standard discrete families after the course deck.
-    covers: [knowledge-sad-l07-bernoulli-binomial, knowledge-sad-l07-hypergeometric,
-      knowledge-sad-l07-geometric, knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: advanced-reference
     scope: complementary
     locator: Chapters 2–3 selections
@@ -795,8 +1000,10 @@ sources:
     format: book
     angle: Formal intermediate backup for Normal calculations and the CLT without taking on Ross's full
       proof-heavy depth.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-clt]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
     depth: advanced-reference
     scope: complementary
     locator: Normal distribution and limit-theorem selections
@@ -808,9 +1015,11 @@ sources:
   - unit_id: unit-m2-sad-l04
     title: Tijms — simulation-first probability intuition
     format: book
-    angle: Uses repeated experiments and numerical examples to make conditioning, Bayes, and long-run frequency
-      tangible before returning to the course formulas.
-    covers: [knowledge-sad-l04-conditional, knowledge-sad-l04-bayes]
+    angle: Uses repeated experiments and numerical examples to make conditioning, Bayes, and long-run
+      frequency tangible before returning to the course formulas.
+    covers:
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
     depth: advanced-reference
     scope: complementary
     locator: Conditional probability and Bayes selections
@@ -819,17 +1028,22 @@ sources:
     format: book
     angle: Concrete sampling and chance examples show how combinatorial counts become event probabilities;
       useful when abstract cases do not yet feel motivated.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
     locator: Finite probability and counting selections
   - unit_id: unit-m2-sad-l06
     title: Tijms — random variables by experiment and simulation
     format: book
-    angle: A computationally intuitive route to distributions, expectation, variance, and stabilization that
-      complements Fahrmeir's notation-first treatment.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance, knowledge-sad-l06-concentration]
+    angle: A computationally intuitive route to distributions, expectation, variance, and stabilization
+      that complements Fahrmeir's notation-first treatment.
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-concentration
     depth: advanced-reference
     scope: complementary
     locator: Random variables, expectation, and variance selections
@@ -838,9 +1052,12 @@ sources:
     format: book
     angle: Application- and simulation-heavy examples for recognizing Binomial, Hypergeometric, Geometric,
       and Poisson assumptions.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: advanced-reference
     scope: complementary
     locator: Discrete-distribution selections
@@ -849,7 +1066,9 @@ sources:
     format: book
     angle: The strongest simulation-first alternative for seeing sample averages stabilize and become
       approximately Normal before formal standardization and inference.
-    covers: [knowledge-sad-l08-clt, knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: advanced-reference
     scope: complementary
     locator: Law of large numbers and central limit theorem selections
@@ -861,20 +1080,26 @@ sources:
   - unit_id: unit-m2-sad-l04
     title: Ross — formal probability foundations
     format: book
-    angle: Proof-heavier treatment of event probability, conditioning, Bayes, and independence for later depth;
-      it is deliberately not the first pass for this exam.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    angle: Proof-heavier treatment of event probability, conditioning, Bayes, and independence for later
+      depth; it is deliberately not the first pass for this exam.
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
     locator: Probability axioms and conditioning chapters
   - unit_id: unit-m2-sad-l05
     title: Ross — combinatorial analysis
     format: book
-    angle: Formal counting principles and probability applications with greater problem depth than the course;
-      use after the six-case grid is already stable.
-    covers: [knowledge-sad-l05-permutations, knowledge-sad-l05-variations,
-      knowledge-sad-l05-combinations, knowledge-sad-l05-counting-probability]
+    angle: Formal counting principles and probability applications with greater problem depth than the
+      course; use after the six-case grid is already stable.
+    covers:
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
     locator: Combinatorial analysis chapter
@@ -883,8 +1108,11 @@ sources:
     format: book
     angle: Formal discrete/continuous variable, distribution-function, expectation, variance, and joint-variable
       depth beyond the course requirements.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-distribution-functions,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: advanced-reference
     scope: complementary
     locator: Random variables and expectation chapters
@@ -893,19 +1121,24 @@ sources:
     format: book
     angle: Derivations, relationships, and a larger problem bank for the standard discrete families after
       exam scope is secure.
-    covers: [knowledge-sad-l07-bernoulli-binomial, knowledge-sad-l07-hypergeometric,
-      knowledge-sad-l07-geometric, knowledge-sad-l07-poisson,
-      knowledge-sad-l07-relationships]
+    covers:
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
+    - knowledge-sad-l07-relationships
     depth: advanced-reference
     scope: complementary
     locator: Discrete random-variable chapters
   - unit_id: unit-m2-sad-l08
     title: Ross — Normal distribution and limit theorems
     format: book
-    angle: Proof-oriented Normal and CLT treatment for later theoretical depth, not the fastest route to
-      course calculations or likelihood.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt]
+    angle: Proof-oriented Normal and CLT treatment for later theoretical depth, not the fastest route
+      to course calculations or likelihood.
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
     depth: advanced-reference
     scope: complementary
     locator: Continuous distributions and limit-theorem chapters
@@ -919,8 +1152,11 @@ sources:
     format: exercise
     angle: High-volume worked calculations for event algebra, conditional probability, Bayes, and independence
       after the underlying meaning is understood.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Probability and conditional-probability problem sets
@@ -928,40 +1164,52 @@ sources:
     title: Schaum — combinatorics drills
     format: exercise
     angle: Terse theory plus many solved counting problems for making the order/replacement decision automatic.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-permutations,
-      knowledge-sad-l05-variations, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Combinatorics problem sets
   - unit_id: unit-m2-sad-l06
     title: Schaum — random-variable and moment drills
     format: exercise
-    angle: Worked PMF/PDF/CDF, expectation, variance, transformation, and covariance calculations for extra
-      repetition rather than first learning.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    angle: Worked PMF/PDF/CDF, expectation, variance, transformation, and covariance calculations for
+      extra repetition rather than first learning.
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
     locator: Random-variable and expectation problem sets
   - unit_id: unit-m2-sad-l07
     title: Schaum — discrete-distribution drills
     format: exercise
-    angle: Large worked bank for distribution selection and formula fluency when course and Fahrmeir tasks are
-      exhausted.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    angle: Large worked bank for distribution selection and formula fluency when course and Fahrmeir tasks
+      are exhausted.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
     locator: Discrete-distribution problem sets
   - unit_id: unit-m2-sad-l08
     title: Schaum — Normal and CLT drills
     format: exercise
-    angle: Worked standardization, Normal probability, transform, and CLT approximation exercises after the
-      conceptual source is chosen.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt, knowledge-sad-l08-approximation]
+    angle: Worked standardization, Normal probability, transform, and CLT approximation exercises after
+      the conceptual source is chosen.
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
     locator: Normal-distribution and limit-theorem problem sets
@@ -982,8 +1230,11 @@ sources:
     format: book
     angle: Gentle English first exposure to data questions, samples, distributions, center, and variability
       before the German course notation layer.
-    covers: [knowledge-sad-l01-data-questions, knowledge-sad-l01-location,
-      knowledge-sad-l01-distributions, knowledge-sad-l01-sampling-context]
+    covers:
+    - knowledge-sad-l01-data-questions
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-distributions
+    - knowledge-sad-l01-sampling-context
     depth: orientation
     scope: complementary
     locator: Chapters 1–2 selections
@@ -992,9 +1243,13 @@ sources:
     format: book
     angle: Accessible explanations and data examples for variables, sampling, distributions, center, spread,
       outliers, and misleading aggregation.
-    covers: [knowledge-sad-l02-vocabulary, knowledge-sad-l02-scales,
-      knowledge-sad-l02-frequencies, knowledge-sad-l02-location,
-      knowledge-sad-l02-dispersion, knowledge-sad-l02-sampling]
+    covers:
+    - knowledge-sad-l02-vocabulary
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
+    - knowledge-sad-l02-sampling
     depth: orientation
     scope: complementary
     locator: §§1.2–1.3 and §2.1 selections
@@ -1003,18 +1258,24 @@ sources:
     format: book
     angle: Gentle data-analysis treatment of scatterplots, correlation, residuals, least squares, interpretation,
       and regression limitations.
-    covers: [knowledge-sad-l03-paired-data, knowledge-sad-l03-covariance,
-      knowledge-sad-l03-interpretation, knowledge-sad-l03-simple-regression]
+    covers:
+    - knowledge-sad-l03-paired-data
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
+    - knowledge-sad-l03-simple-regression
     depth: orientation
     scope: complementary
     locator: Correlation and linear-regression chapter selections
   - unit_id: unit-m2-sad-l04
     title: OpenIntro — probability foundations
     format: book
-    angle: Accessible event, conditional-probability, independence, and Bayes examples before returning to the
-      lecture's formal notation and Naive Bayes model.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    angle: Accessible event, conditional-probability, independence, and Bayes examples before returning
+      to the lecture's formal notation and Naive Bayes model.
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: orientation
     scope: complementary
     locator: Probability chapter selections
@@ -1023,7 +1284,8 @@ sources:
     format: book
     angle: Limited gentle support for combinatorial probability; use L05 or Blitzstein for the full six-case
       combinatorics taxonomy.
-    covers: [knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-counting-probability
     depth: orientation
     scope: complementary
     locator: Counting-based probability examples
@@ -1032,38 +1294,48 @@ sources:
     format: book
     angle: Gentle transition from probability to random variables, expectation, variability, and sampling
       distributions without the full formal depth of Fahrmeir.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance, knowledge-sad-l06-sample-mean]
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
     depth: orientation
     scope: complementary
     locator: Chapter 4 selections
   - unit_id: unit-m2-sad-l07
     title: OpenIntro Chapter 4 — common distributions
     format: book
-    angle: Application-first Binomial and related distribution examples, useful as a gentle first pass but not
-      complete coverage of every named L07 model.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-poisson]
+    angle: Application-first Binomial and related distribution examples, useful as a gentle first pass
+      but not complete coverage of every named L07 model.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-poisson
     depth: orientation
     scope: complementary
     locator: Chapter 4 distribution selections
   - unit_id: unit-m2-sad-l08
     title: OpenIntro Chapter 4 — Normal and sampling distributions
     format: book
-    angle: Gentle Normal, standardization, and sampling-distribution explanation before the course's CLT and
-      likelihood derivations.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-clt, knowledge-sad-l08-approximation]
+    angle: Gentle Normal, standardization, and sampling-distribution explanation before the course's CLT
+      and likelihood derivations.
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: orientation
     scope: complementary
     locator: Chapter 4
   - unit_id: unit-m2-sad-l09
     title: OpenIntro Chapter 5 — confidence intervals
     format: book
-    angle: The most accessible first pass for standard errors, repeated-sampling interval meaning, and z/t-style
-      interval construction.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    angle: The most accessible first pass for standard errors, repeated-sampling interval meaning, and
+      z/t-style interval construction.
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: orientation
     scope: complementary
     locator: Chapter 5 confidence-interval sections
@@ -1072,8 +1344,11 @@ sources:
     format: book
     angle: Gentle test selection and interpretation for means, proportions, categorical counts, and numerical
       comparisons, with assumptions visible alongside calculations.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t, knowledge-sad-l10-chi-square]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
     depth: orientation
     scope: complementary
     locator: Chapters 5–7 selected tests
@@ -1085,20 +1360,25 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: Dekking — descriptive review and answer-backed exercises
     format: exercise
-    angle: Broad review source with short answers for sample summaries and distribution interpretation after the
-      course-owned exercises.
-    covers: [knowledge-sad-l01-location, knowledge-sad-l01-distributions,
-      knowledge-sad-l01-sampling-context]
+    angle: Broad review source with short answers for sample summaries and distribution interpretation
+      after the course-owned exercises.
+    covers:
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-distributions
+    - knowledge-sad-l01-sampling-context
     depth: practice
     scope: complementary
     locator: Descriptive-statistics selections
   - unit_id: unit-m2-sad-l02
     title: Dekking — descriptive-statistics exercise bank
     format: exercise
-    angle: Additional answer-backed practice for frequencies, center, spread, and sampling when the current UE
-      and Fahrmeir workbook are exhausted.
-    covers: [knowledge-sad-l02-frequencies, knowledge-sad-l02-location,
-      knowledge-sad-l02-dispersion, knowledge-sad-l02-sampling]
+    angle: Additional answer-backed practice for frequencies, center, spread, and sampling when the current
+      UE and Fahrmeir workbook are exhausted.
+    covers:
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
+    - knowledge-sad-l02-sampling
     depth: practice
     scope: complementary
     locator: Descriptive-statistics exercise selections
@@ -1106,18 +1386,23 @@ sources:
     title: Dekking — correlation and regression exercises
     format: exercise
     angle: Answer-backed practice for covariance, Pearson correlation, simple regression, and interpretation.
-    covers: [knowledge-sad-l03-covariance, knowledge-sad-l03-interpretation,
-      knowledge-sad-l03-simple-regression]
+    covers:
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
+    - knowledge-sad-l03-simple-regression
     depth: practice
     scope: complementary
     locator: Correlation and regression selections
   - unit_id: unit-m2-sad-l04
     title: Dekking — probability exercise bank
     format: exercise
-    angle: Broad answer-backed event, conditional-probability, Bayes, and independence problems after the
-      course calculations.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    angle: Broad answer-backed event, conditional-probability, Bayes, and independence problems after
+      the course calculations.
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Probability selections
@@ -1125,26 +1410,36 @@ sources:
     title: Dekking — counting and finite-probability exercises
     format: exercise
     angle: Additional answer-backed problems for combinatorial classification and probability by counting.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Counting selections
   - unit_id: unit-m2-sad-l06
     title: Dekking — random-variable exercises
     format: exercise
-    angle: Answer-backed PMF/CDF, expectation, variance, and transformation calculations for independent practice.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    angle: Answer-backed PMF/CDF, expectation, variance, and transformation calculations for independent
+      practice.
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
     locator: Random-variable and expectation selections
   - unit_id: unit-m2-sad-l07
     title: Dekking — discrete-distribution exercises
     format: exercise
-    angle: Distribution-identification and probability calculations with short answers across the L07 model family.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-poisson]
+    angle: Distribution-identification and probability calculations with short answers across the L07
+      model family.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
     locator: Discrete-distribution selections
@@ -1152,27 +1447,37 @@ sources:
     title: Dekking — Normal and CLT exercises
     format: exercise
     angle: Answer-backed standardization, Normal probability, transform, and limit-theorem practice.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt, knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
     locator: Normal and CLT selections
   - unit_id: unit-m2-sad-l09
     title: Dekking — estimation exercises
     format: exercise
-    angle: Additional answer-backed estimator, standard-error, and confidence-interval work outside the German
-      course wording layer.
-    covers: [knowledge-sad-l09-properties, knowledge-sad-l09-standard-error,
-      knowledge-sad-l09-z-interval, knowledge-sad-l09-t-interval]
+    angle: Additional answer-backed estimator, standard-error, and confidence-interval work outside the
+      German course wording layer.
+    covers:
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: practice
     scope: complementary
     locator: Estimation selections
   - unit_id: unit-m2-sad-l10
     title: Dekking — hypothesis-testing exercises
     format: exercise
-    angle: Broad answer-backed testing problems for independent repetition after the course and German exam banks.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t, knowledge-sad-l10-chi-square]
+    angle: Broad answer-backed testing problems for independent repetition after the course and German
+      exam banks.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
     depth: practice
     scope: complementary
     locator: Hypothesis-testing selections
@@ -1186,8 +1491,11 @@ sources:
     format: course
     angle: Official university notes plus solution-backed exercises for events, conditioning, Bayes, and
       independence; use selected topics, not the whole course.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Probability and conditional-probability notes/problem sets
@@ -1196,27 +1504,37 @@ sources:
     format: course
     angle: Selected problem sets that connect combinatorial counts to probability; strongest as independent
       solution-backed practice rather than a replacement theory source.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Counting and finite-probability notes/problem sets
   - unit_id: unit-m2-sad-l06
     title: MIT 18.05 — random variables, expectation, and variance
     format: course
-    angle: Official notes and solved problems for PMF/PDF/CDF, functions of variables, expectation, and variance.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    angle: Official notes and solved problems for PMF/PDF/CDF, functions of variables, expectation, and
+      variance.
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
     locator: Random-variable, expectation, and variance units
   - unit_id: unit-m2-sad-l07
     title: MIT 18.05 — discrete-distribution problems
     format: course
-    angle: Solution-backed model-selection and calculation tasks for the standard discrete distribution family.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    angle: Solution-backed model-selection and calculation tasks for the standard discrete distribution
+      family.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
     locator: Discrete-distribution notes and problem sets
@@ -1225,8 +1543,11 @@ sources:
     format: course
     angle: Official explanations plus solved exam problems for Normal standardization, sampling distributions,
       and CLT approximation.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-clt, knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
     locator: Normal/CLT notes, problem sets, and solved exam questions
@@ -1235,8 +1556,11 @@ sources:
     format: course
     angle: Solution-backed estimation problems and exams with an independent English explanation of standard
       errors and interval coverage.
-    covers: [knowledge-sad-l09-estimator, knowledge-sad-l09-standard-error,
-      knowledge-sad-l09-z-interval, knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: practice
     scope: complementary
     locator: Estimation and confidence-interval notes/exams
@@ -1245,9 +1569,12 @@ sources:
     format: course
     angle: Official test-logic notes plus solved exam questions for p-values, errors, mean tests, categorical
       tests, and interpretation.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power, knowledge-sad-l10-z-t,
-      knowledge-sad-l10-chi-square]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
     depth: practice
     scope: complementary
     locator: Hypothesis-testing notes, problem sets, and solved exams
@@ -1260,10 +1587,12 @@ sources:
   - unit_id: unit-m2-sad-l04
     title: Harvard Stat 110 — conditioning and Bayes lectures
     format: course
-    angle: Rigorous classroom explanations and strategic-practice problems for conditional probability and
-      Bayes; use selected lectures only after the course scope is clear.
-    covers: [knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-independence]
+    angle: Rigorous classroom explanations and strategic-practice problems for conditional probability
+      and Bayes; use selected lectures only after the course scope is clear.
+    covers:
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
     locator: Conditional probability and Bayes lectures/notes
@@ -1272,8 +1601,10 @@ sources:
     format: course
     angle: Lecture-level counting strategy and probability applications; richer than the SaD exam requires,
       but valuable when formula selection remains brittle.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
     locator: Counting and story-proof lectures/problem sets
@@ -1282,29 +1613,37 @@ sources:
     format: course
     angle: Full lecture treatment of random variables, expectation, indicators, and variance for derivational
       depth beyond L06.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-transformations,
-      knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-transformations
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: advanced-reference
     scope: complementary
     locator: Units 3–4
   - unit_id: unit-m2-sad-l07
     title: Harvard Stat 110 Units 3–4 — discrete distributions
     format: course
-    angle: Distribution-generating stories, relationships, and strategic practice for Binomial,
-      Hypergeometric, Geometric, and Poisson models.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    angle: Distribution-generating stories, relationships, and strategic practice for Binomial, Hypergeometric,
+      Geometric, and Poisson models.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: advanced-reference
     scope: complementary
     locator: Units 3–4 plus distribution handout
   - unit_id: unit-m2-sad-l08
     title: Harvard Stat 110 Units 5–6 — Normal and CLT
     format: course
-    angle: Rigorous video/notes route for continuous variables, Normal structure, and the CLT; do not run the
-      entire course as a parallel syllabus.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-transform-sum,
-      knowledge-sad-l08-clt]
+    angle: Rigorous video/notes route for continuous variables, Normal structure, and the CLT; do not
+      run the entire course as a parallel syllabus.
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-transform-sum
+    - knowledge-sad-l08-clt
     depth: advanced-reference
     scope: complementary
     locator: Units 5–6
@@ -1316,9 +1655,11 @@ sources:
   - unit_id: unit-m2-sad-l08
     title: MIT 18.650 Lectures 4–5 — maximum likelihood
     format: course
-    angle: Rigorous likelihood and MLE derivations when the course's Normal-errors-to-MSE argument needs a
-      more formal statistical treatment.
-    covers: [knowledge-sad-l08-likelihood, knowledge-sad-l08-mle]
+    angle: Rigorous likelihood and MLE derivations when the course's Normal-errors-to-MSE argument needs
+      a more formal statistical treatment.
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: advanced-reference
     scope: complementary
     locator: Lectures 4–5
@@ -1327,8 +1668,10 @@ sources:
     format: course
     angle: Formal estimator, Fisher-information, and MLE context beyond the SaD interval-calculation scope;
       use for a diagnosed theory gap only.
-    covers: [knowledge-sad-l09-estimator, knowledge-sad-l09-properties,
-      knowledge-sad-l09-standard-error]
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
     depth: advanced-reference
     scope: complementary
     locator: Lectures 3–5
@@ -1337,8 +1680,11 @@ sources:
     format: course
     angle: Rigorous testing, asymptotic, and goodness-of-fit depth after the course logic is secure; broader
       than the M2 exam.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-errors-power,
-      knowledge-sad-l10-z-t, knowledge-sad-l10-chi-square]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
     depth: advanced-reference
     scope: complementary
     locator: Lectures 7–12
@@ -1347,7 +1693,8 @@ sources:
     format: course
     angle: Optional Bayesian inference context. It is not a Bayesian-network tutorial and does not replace
       L14's graph/factorization material.
-    covers: [knowledge-sad-l14-nb-recap]
+    covers:
+    - knowledge-sad-l14-nb-recap
     depth: advanced-reference
     scope: complementary
     locator: Lectures 17–18
@@ -1359,27 +1706,33 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: FAU solved exam — contingency-table and Bayes transfer
     format: exercise
-    angle: A German timed transfer item using four-field tables and posterior reasoning; it tests whether the
-      L01 metric/base-rate ideas survive outside the lecture examples.
-    covers: [knowledge-sad-l01-classification, knowledge-sad-l01-base-rates]
+    angle: A German timed transfer item using four-field tables and posterior reasoning; it tests whether
+      the L01 metric/base-rate ideas survive outside the lecture examples.
+    covers:
+    - knowledge-sad-l01-classification
+    - knowledge-sad-l01-base-rates
     depth: practice
     scope: complementary
     locator: 4-Feldertafel/Bayes item with solution
   - unit_id: unit-m2-sad-l02
     title: FAU solved exam — descriptive-statistics block
     format: exercise
-    angle: German exam-format median, quartile, range, skewness, and descriptive interpretation with a complete
-      solution for self-grading.
-    covers: [knowledge-sad-l02-location, knowledge-sad-l02-dispersion]
+    angle: German exam-format median, quartile, range, skewness, and descriptive interpretation with a
+      complete solution for self-grading.
+    covers:
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
     depth: practice
     scope: complementary
     locator: Descriptive-statistics questions and solutions
   - unit_id: unit-m2-sad-l03
     title: FAU solved exam — correlation item
     format: exercise
-    angle: Transfer practice for computing and interpreting correlation under time pressure, including the
-      difference between an observed association and a statistical conclusion.
-    covers: [knowledge-sad-l03-covariance, knowledge-sad-l03-interpretation]
+    angle: Transfer practice for computing and interpreting correlation under time pressure, including
+      the difference between an observed association and a statistical conclusion.
+    covers:
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
     depth: practice
     scope: complementary
     locator: Correlation question and solution
@@ -1388,17 +1741,21 @@ sources:
     format: exercise
     angle: The best local German full-exam match for translating a contingency table into conditional
       probabilities, checking independence, and applying Bayes.
-    covers: [knowledge-sad-l04-conditional, knowledge-sad-l04-bayes,
-      knowledge-sad-l04-independence]
+    covers:
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Independence/4-Feldertafel/Bayes questions and solutions
   - unit_id: unit-m2-sad-l05
     title: FAU solved exam — finite counting inside probability
     format: exercise
-    angle: Timed counting/probability transfer where the event model must be chosen before a Binomial or finite
-      count can be evaluated.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-counting-probability]
+    angle: Timed counting/probability transfer where the event model must be chosen before a Binomial
+      or finite count can be evaluated.
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Counting and Binomial-related questions
@@ -1407,7 +1764,9 @@ sources:
     format: exercise
     angle: A complete German exam application of the Binomial model with solution-backed parameter and
       probability calculations.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
     depth: practice
     scope: complementary
     locator: Binomial question and solution
@@ -1416,7 +1775,9 @@ sources:
     format: exercise
     angle: Timed interval construction and interpretation for a proportion, useful for checking standard-error,
       quantile, and coverage language.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval]
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
     depth: practice
     scope: complementary
     locator: Proportion confidence-interval question and solution
@@ -1425,8 +1786,11 @@ sources:
     format: exercise
     angle: German full-test setups and solutions spanning t tests, p-value interpretation, and correlation
       significance; the closest local exam-format test practice.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-errors-power, knowledge-sad-l10-z-t]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
     depth: practice
     scope: complementary
     locator: t-test, p-value, and correlation-test questions with solutions
@@ -1438,10 +1802,12 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: External German solved exams — introduction transfer
     format: exercise
-    angle: Gap-targeted contingency-table, descriptive, and interpretation items from HS Harz, Köln,
-      Leuphana, and Regensburg after the FAU match is exhausted.
-    covers: [knowledge-sad-l01-location, knowledge-sad-l01-classification,
-      knowledge-sad-l01-base-rates]
+    angle: Gap-targeted contingency-table, descriptive, and interpretation items from HS Harz, Köln, Leuphana,
+      and Regensburg after the FAU match is exhausted.
+    covers:
+    - knowledge-sad-l01-location
+    - knowledge-sad-l01-classification
+    - knowledge-sad-l01-base-rates
     depth: practice
     scope: complementary
     locator: Local solved bank; choose only matching descriptive/contingency questions
@@ -1450,9 +1816,12 @@ sources:
     format: exercise
     angle: Additional German exam questions for scale, frequency, location, dispersion, and sample interpretation;
       select by diagnosed gap rather than completing every paper.
-    covers: [knowledge-sad-l02-scales, knowledge-sad-l02-frequencies,
-      knowledge-sad-l02-location, knowledge-sad-l02-dispersion,
-      knowledge-sad-l02-sampling]
+    covers:
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
+    - knowledge-sad-l02-sampling
     depth: practice
     scope: complementary
     locator: Local solved bank; descriptive-statistics questions
@@ -1460,48 +1829,60 @@ sources:
     title: External German solved exams — correlation/regression block
     format: exercise
     angle: Gap-targeted German transfer questions for correlation and regression computation/interpretation.
-    covers: [knowledge-sad-l03-covariance, knowledge-sad-l03-interpretation,
-      knowledge-sad-l03-simple-regression]
+    covers:
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
+    - knowledge-sad-l03-simple-regression
     depth: practice
     scope: complementary
     locator: Local solved bank; correlation and regression questions
   - unit_id: unit-m2-sad-l04
     title: External German solved exams — probability and Bayes block
     format: exercise
-    angle: Additional event, conditioning, independence, and Bayes problems with solutions once course and
-      FAU material no longer expose mistakes.
-    covers: [knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
-      knowledge-sad-l04-bayes, knowledge-sad-l04-independence]
+    angle: Additional event, conditioning, independence, and Bayes problems with solutions once course
+      and FAU material no longer expose mistakes.
+    covers:
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
     locator: Local solved bank; probability/Bayes questions
   - unit_id: unit-m2-sad-l05
     title: External German solved exams — counting block
     format: exercise
-    angle: Gap-targeted combinatorics and finite-probability items for testing formula selection under German
-      exam wording.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-combinations,
-      knowledge-sad-l05-counting-probability]
+    angle: Gap-targeted combinatorics and finite-probability items for testing formula selection under
+      German exam wording.
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
     locator: Local solved bank; combinatorics questions
   - unit_id: unit-m2-sad-l06
     title: External German solved exams — random-variable block
     format: exercise
-    angle: Selected probability-table, expectation, and variance problems; use only questions that match the
-      L06 object definitions and notation.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance]
+    angle: Selected probability-table, expectation, and variance problems; use only questions that match
+      the L06 object definitions and notation.
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
     locator: Local solved bank; random-variable and moment questions
   - unit_id: unit-m2-sad-l07
     title: External German solved exams — distributions block
     format: exercise
-    angle: Additional German word problems for identifying and calculating Binomial, Hypergeometric, and Poisson
-      models.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-poisson]
+    angle: Additional German word problems for identifying and calculating Binomial, Hypergeometric, and
+      Poisson models.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
     locator: Local solved bank; discrete-distribution questions
@@ -1509,28 +1890,36 @@ sources:
     title: External German solved exams — Normal/CLT block
     format: exercise
     angle: Gap-targeted Normal probability, standardization, and approximation questions with German solutions.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-clt,
-      knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
     locator: Local solved bank; Normal and CLT questions
   - unit_id: unit-m2-sad-l09
     title: External German solved exams — estimation block
     format: exercise
-    angle: Additional confidence-interval and estimator questions for independent timed practice after FAU and
-      the course sheets.
-    covers: [knowledge-sad-l09-properties, knowledge-sad-l09-standard-error,
-      knowledge-sad-l09-z-interval, knowledge-sad-l09-t-interval]
+    angle: Additional confidence-interval and estimator questions for independent timed practice after
+      FAU and the course sheets.
+    covers:
+    - knowledge-sad-l09-properties
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: practice
     scope: complementary
     locator: Local solved bank; estimation questions
   - unit_id: unit-m2-sad-l10
     title: External German solved exams — testing block
     format: exercise
-    angle: Gap-targeted complete test setups, p-values, mean/categorical tests, and interpretation in German
-      exam format.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t, knowledge-sad-l10-chi-square]
+    angle: Gap-targeted complete test setups, p-values, mean/categorical tests, and interpretation in
+      German exam format.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
+    - knowledge-sad-l10-chi-square
     depth: practice
     scope: complementary
     locator: Local solved bank; hypothesis-testing questions
@@ -1545,17 +1934,20 @@ sources:
     format: video
     angle: Short visual decoding of TP/FP/FN/TN and the corresponding metrics; ideal when names are being
       confused, but the course examples still determine terminology and scope.
-    covers: [knowledge-sad-l01-classification]
+    covers:
+    - knowledge-sad-l01-classification
     depth: orientation
     scope: complementary
     locator: The Confusion Matrix; Sensitivity and Specificity
   - unit_id: unit-m2-sad-l03
     title: StatQuest — Pearson correlation, least squares, and gradient descent
     format: video
-    angle: Three surgical animations for association, fitted-line loss, and iterative optimization; use the
-      specific clip matching the blocked node rather than watching a playlist.
-    covers: [knowledge-sad-l03-covariance, knowledge-sad-l03-simple-regression,
-      knowledge-sad-l03-gradient-descent]
+    angle: Three surgical animations for association, fitted-line loss, and iterative optimization; use
+      the specific clip matching the blocked node rather than watching a playlist.
+    covers:
+    - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-gradient-descent
     depth: orientation
     scope: complementary
     locator: Pearson's Correlation; Linear Regression/Least Squares; Gradient Descent Step-by-Step
@@ -1564,7 +1956,8 @@ sources:
     format: video
     angle: Visual explanation of how class priors and conditionally independent feature likelihoods combine;
       use after Bayes law itself is understood.
-    covers: [knowledge-sad-l04-naive-bayes]
+    covers:
+    - knowledge-sad-l04-naive-bayes
     depth: orientation
     scope: complementary
     locator: Naive Bayes, Clearly Explained
@@ -1573,7 +1966,8 @@ sources:
     format: video
     angle: A short forward link showing how without-replacement combination counts become a discrete distribution
       in L07.
-    covers: [knowledge-sad-l05-counting-probability]
+    covers:
+    - knowledge-sad-l05-counting-probability
     depth: orientation
     scope: complementary
     locator: Hypergeometric Distribution
@@ -1582,17 +1976,21 @@ sources:
     format: video
     angle: Compact intuition for discrete/continuous expected value and the role of a probability distribution;
       best used for one diagnosed conceptual gap.
-    covers: [knowledge-sad-l06-distribution-functions, knowledge-sad-l06-expectation]
+    covers:
+    - knowledge-sad-l06-distribution-functions
+    - knowledge-sad-l06-expectation
     depth: orientation
     scope: complementary
-    locator: Expected Values, Main Ideas; Expected Values for Continuous Variables;
-      Main Ideas behind Probability Distributions
+    locator: Expected Values, Main Ideas; Expected Values for Continuous Variables; Main Ideas behind
+      Probability Distributions
   - unit_id: unit-m2-sad-l07
     title: StatQuest — Binomial distribution and sampling
     format: video
-    angle: Fast visual refresh of Binomial counts and drawing from a distribution; not a complete substitute for
-      the Hypergeometric/Geometric/Poisson scope.
-    covers: [knowledge-sad-l07-bernoulli-binomial, knowledge-sad-l07-model-selection]
+    angle: Fast visual refresh of Binomial counts and drawing from a distribution; not a complete substitute
+      for the Hypergeometric/Geometric/Poisson scope.
+    covers:
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-model-selection
     depth: orientation
     scope: complementary
     locator: Binomial Distribution in 30 Seconds; Sampling from a Distribution
@@ -1601,19 +1999,22 @@ sources:
     format: video
     angle: Separates probability from likelihood and visualizes the CLT/MLE ideas before the current deck's
       Gaussian-error algebra.
-    covers: [knowledge-sad-l08-clt, knowledge-sad-l08-likelihood,
-      knowledge-sad-l08-mle]
+    covers:
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: orientation
     scope: complementary
     locator: Central Limit Theorem; Probability is not Likelihood; Maximum Likelihood
   - unit_id: unit-m2-sad-l09
     title: StatQuest — standard error, confidence intervals, and bootstrap
     format: video
-    angle: >-
-      Short visual clarification of three often-conflated objects: raw spread, estimator uncertainty, and
-      resampling-based interval construction.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-bootstrap]
+    angle: 'Short visual clarification of three often-conflated objects: raw spread, estimator uncertainty,
+      and resampling-based interval construction.'
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-bootstrap
     depth: orientation
     scope: complementary
     locator: Standard Error; Confidence Intervals; Bootstrapping to Calculate p-values
@@ -1622,27 +2023,32 @@ sources:
     format: video
     angle: A targeted interpretation set for null hypotheses, calculated p-values, and one- versus two-tailed
       evidence; use the deck for the complete test taxonomy.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue]
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
     depth: orientation
     scope: complementary
-    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values;
-      One- or Two-Tailed p-values
+    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values; One- or Two-Tailed p-values
   - unit_id: unit-m2-sad-l12
     title: StatQuest — decision trees and random forests
     format: video
-    angle: Visual first exposure to recursive splits and variance reduction by ensembles; the current deck and
-      Kelleher retain entropy/ID3 and full ensemble scope.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-pruning,
-      knowledge-sad-l12-bagging-forest]
+    angle: Visual first exposure to recursive splits and variance reduction by ensembles; the current
+      deck and Kelleher retain entropy/ID3 and full ensemble scope.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-pruning
+    - knowledge-sad-l12-bagging-forest
     depth: orientation
     scope: complementary
     locator: Decision Trees, Clearly Explained; Random Forests, Clearly Explained
   - unit_id: unit-m2-sad-l14
     title: StatQuest — Naive Bayes and Gaussian Naive Bayes
     format: video
-    angle: Visual refresh of the base classifier and the Normal-density extension; Logistic Regression is only a
-      discriminative contrast, not part of the L14 model family.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-gaussian]
+    angle: Visual refresh of the base classifier and the Normal-density extension; Logistic Regression
+      is only a discriminative contrast, not part of the L14 model family.
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-gaussian
     depth: orientation
     scope: complementary
     locator: Naive Bayes; Gaussian Naive Bayes; Logistic Regression as contrast only
@@ -1651,8 +2057,10 @@ sources:
     format: video
     angle: Surgical intuition for neuron computation, gradient descent, and backpropagation when the algebraic
       graph is hard to visualize.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-forward,
-      knowledge-sad-l15-backprop]
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
     depth: orientation
     scope: complementary
     locator: Neural Networks Part 1; Backpropagation Main Ideas; Stochastic Gradient Descent
@@ -1664,20 +2072,26 @@ sources:
   - unit_id: unit-m2-sad-l02
     title: jbstatistics — data types, histograms, center, and spread
     format: video
-    angle: Calm calculation-exact explanations for scale types, frequency displays, mean/median/mode, variance,
-      standard deviation, and boxplots.
-    covers: [knowledge-sad-l02-scales, knowledge-sad-l02-frequencies,
-      knowledge-sad-l02-location, knowledge-sad-l02-dispersion]
+    angle: Calm calculation-exact explanations for scale types, frequency displays, mean/median/mode,
+      variance, standard deviation, and boxplots.
+    covers:
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
     depth: orientation
     scope: complementary
     locator: Types of Data; Frequency Distributions/Histograms; Mean/Median/Mode; Variance/SD
   - unit_id: unit-m2-sad-l05
     title: jbstatistics — permutations and combinations
     format: video
-    angle: Slow worked distinction between permutations, variations, and combinations, including the role of
-      order and replacement.
-    covers: [knowledge-sad-l05-decision-grid, knowledge-sad-l05-permutations,
-      knowledge-sad-l05-variations, knowledge-sad-l05-combinations]
+    angle: Slow worked distinction between permutations, variations, and combinations, including the role
+      of order and replacement.
+    covers:
+    - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
     depth: orientation
     scope: complementary
     locator: Permutations and Combinations series
@@ -1686,18 +2100,23 @@ sources:
     format: video
     angle: Calculation-first walkthroughs for discrete probability tables and moments when a short StatQuest
       intuition clip is too fast.
-    covers: [knowledge-sad-l06-expectation, knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: orientation
     scope: complementary
     locator: Expected value and variance videos
   - unit_id: unit-m2-sad-l07
     title: jbstatistics — discrete distributions
     format: video
-    angle: Calm, calculation-exact Binomial, Hypergeometric, Geometric, and Poisson walkthroughs close to the
-      style of SaD exam tasks.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-geometric,
-      knowledge-sad-l07-poisson]
+    angle: Calm, calculation-exact Binomial, Hypergeometric, Geometric, and Poisson walkthroughs close
+      to the style of SaD exam tasks.
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
+    - knowledge-sad-l07-poisson
     depth: orientation
     scope: complementary
     locator: Discrete-distribution video series
@@ -1705,27 +2124,34 @@ sources:
     title: jbstatistics — Normal, z-scores, and CLT
     format: video
     angle: Step-by-step numerical support for standardization, Normal-table work, and CLT calculations.
-    covers: [knowledge-sad-l08-standardization, knowledge-sad-l08-clt,
-      knowledge-sad-l08-approximation]
+    covers:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: orientation
     scope: complementary
     locator: Normal distribution, z-score, and CLT videos
   - unit_id: unit-m2-sad-l09
     title: jbstatistics — t distribution and confidence intervals
     format: video
-    angle: Slower interval arithmetic and interpretation, especially useful for the t-versus-z choice and
-      degrees-of-freedom step.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    angle: Slower interval arithmetic and interpretation, especially useful for the t-versus-z choice
+      and degrees-of-freedom step.
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: orientation
     scope: complementary
     locator: Confidence intervals and t-distribution series
   - unit_id: unit-m2-sad-l10
     title: jbstatistics — hypothesis-testing calculations
     format: video
-    angle: Calculation-exact test-statistic, rejection-region, and p-value walkthroughs for mean/proportion tests.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t]
+    angle: Calculation-exact test-statistic, rejection-region, and p-value walkthroughs for mean/proportion
+      tests.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
     depth: orientation
     scope: complementary
     locator: Hypothesis-testing video series
@@ -1737,9 +2163,10 @@ sources:
   - unit_id: unit-m2-sad-l01
     title: Kurzes Tutorium Statistik — Lagemaße und Streuung
     format: video
-    angle: German everyday-language introduction to mean, median, mode, and spread, useful for matching the
-      lecture's vocabulary before deeper probability or metric discussions.
-    covers: [knowledge-sad-l01-location]
+    angle: German everyday-language introduction to mean, median, mode, and spread, useful for matching
+      the lecture's vocabulary before deeper probability or metric discussions.
+    covers:
+    - knowledge-sad-l01-location
     depth: orientation
     scope: complementary
     locator: Lagemaße; Streuungsmaße
@@ -1748,8 +2175,11 @@ sources:
     format: video
     angle: German vocabulary repair for population/sample, feature types, measurement scales, and descriptive
       summaries.
-    covers: [knowledge-sad-l02-vocabulary, knowledge-sad-l02-scales,
-      knowledge-sad-l02-location, knowledge-sad-l02-dispersion]
+    covers:
+    - knowledge-sad-l02-vocabulary
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-location
+    - knowledge-sad-l02-dispersion
     depth: orientation
     scope: complementary
     locator: Statistische Grundbegriffe; Skalenniveaus; Lagemaße/Streuungsmaße
@@ -1758,8 +2188,11 @@ sources:
     format: video
     angle: German first exposure to sample spaces, events, elementary probability, conditioning, and Bayes
       before the formal course derivation.
-    covers: [knowledge-sad-l04-events, knowledge-sad-l04-axioms,
-      knowledge-sad-l04-conditional, knowledge-sad-l04-bayes]
+    covers:
+    - knowledge-sad-l04-events
+    - knowledge-sad-l04-axioms
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
     depth: orientation
     scope: complementary
     locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes
@@ -1767,8 +2200,10 @@ sources:
     title: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     format: video
     angle: German terminology-first refresh for random variables, expectation, and variance.
-    covers: [knowledge-sad-l06-random-variable, knowledge-sad-l06-expectation,
-      knowledge-sad-l06-variance-covariance]
+    covers:
+    - knowledge-sad-l06-random-variable
+    - knowledge-sad-l06-expectation
+    - knowledge-sad-l06-variance-covariance
     depth: orientation
     scope: complementary
     locator: Zufallsvariablen; Erwartungswert; Varianz
@@ -1777,8 +2212,11 @@ sources:
     format: video
     angle: German vocabulary and formula walkthroughs for the standard discrete models, supporting exam-language
       recognition.
-    covers: [knowledge-sad-l07-model-selection, knowledge-sad-l07-bernoulli-binomial,
-      knowledge-sad-l07-hypergeometric, knowledge-sad-l07-poisson]
+    covers:
+    - knowledge-sad-l07-model-selection
+    - knowledge-sad-l07-bernoulli-binomial
+    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-poisson
     depth: orientation
     scope: complementary
     locator: Binomial-, Hypergeometrische-, and Poisson-Verteilung videos
@@ -1786,28 +2224,34 @@ sources:
     title: Kurzes Tutorium Statistik — Normalverteilung and ZGS
     format: video
     angle: German compact review of Normal standardization and central-limit language before exam calculations.
-    covers: [knowledge-sad-l08-normal, knowledge-sad-l08-standardization,
-      knowledge-sad-l08-clt]
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
     depth: orientation
     scope: complementary
     locator: Normalverteilung; Zentraler Grenzwertsatz
   - unit_id: unit-m2-sad-l09
     title: Kurzes Tutorium Statistik — Konfidenzintervalle
     format: video
-    angle: German compact interval construction and interpretation, useful for aligning the English sources with
-      Klausur wording.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    angle: German compact interval construction and interpretation, useful for aligning the English sources
+      with Klausur wording.
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: orientation
     scope: complementary
     locator: Konfidenzintervall videos
   - unit_id: unit-m2-sad-l10
     title: Kurzes Tutorium Statistik — Hypothesentests
     format: video
-    angle: German compact H0/H1, test-statistic, p-value, and decision-language review; use exact clips for a
-      vocabulary gap rather than following the entire channel.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t]
+    angle: German compact H0/H1, test-statistic, p-value, and decision-language review; use exact clips
+      for a vocabulary gap rather than following the entire channel.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
     depth: orientation
     scope: complementary
     locator: Hypothesentest and p-Wert videos
@@ -1820,9 +2264,10 @@ sources:
   - unit_id: unit-m2-sad-l07
     title: Brandon Foltz — Poisson distribution walkthrough
     format: video
-    angle: Slow, every-step explanation of the Poisson model and calculations when the shorter channels move
-      too quickly.
-    covers: [knowledge-sad-l07-poisson]
+    angle: Slow, every-step explanation of the Poisson model and calculations when the shorter channels
+      move too quickly.
+    covers:
+    - knowledge-sad-l07-poisson
     depth: orientation
     scope: complementary
     locator: Introduction to the Poisson Distribution
@@ -1830,18 +2275,22 @@ sources:
     title: Brandon Foltz — confidence-interval walkthroughs
     format: video
     angle: Long-form, calm arithmetic and interpretation for z/t confidence intervals.
-    covers: [knowledge-sad-l09-standard-error, knowledge-sad-l09-z-interval,
-      knowledge-sad-l09-t-interval]
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-z-interval
+    - knowledge-sad-l09-t-interval
     depth: orientation
     scope: complementary
     locator: Confidence interval videos
   - unit_id: unit-m2-sad-l10
     title: Brandon Foltz — hypothesis-testing walkthroughs
     format: video
-    angle: Slow complete test setups for learners who need every assumption, statistic, critical value, and
-      conclusion written explicitly.
-    covers: [knowledge-sad-l10-test-model, knowledge-sad-l10-tails-pvalue,
-      knowledge-sad-l10-z-t]
+    angle: Slow complete test setups for learners who need every assumption, statistic, critical value,
+      and conclusion written explicitly.
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-z-t
     depth: orientation
     scope: complementary
     locator: Hypothesis-testing videos
@@ -1856,40 +2305,51 @@ sources:
     format: book
     angle: The course-named ML text's rent example visualizes loss surfaces, learning rates, and iterative
       fitting; it complements rather than replaces the lecture's regression derivation.
-    covers: [knowledge-sad-l03-gradient-descent, knowledge-sad-l03-scaling-weights]
+    covers:
+    - knowledge-sad-l03-gradient-descent
+    - knowledge-sad-l03-scaling-weights
     depth: intuition
     scope: complementary
     locator: Chapter 7 error-based learning selections
   - unit_id: unit-m2-sad-l11
     title: Kelleher — predictive-analytics workflow framing
     format: book
-    angle: Course-named introductory text for how data, features, models, evaluation, and deployment fit together
-      across the four learning families used in L12–L15.
-    covers: [knowledge-sad-l11-pipeline, knowledge-sad-l11-tasks,
-      knowledge-sad-l11-representation, knowledge-sad-l11-objectives,
-      knowledge-sad-l11-evaluation]
+    angle: Course-named introductory text for how data, features, models, evaluation, and deployment fit
+      together across the four learning families used in L12–L15.
+    covers:
+    - knowledge-sad-l11-pipeline
+    - knowledge-sad-l11-tasks
+    - knowledge-sad-l11-representation
+    - knowledge-sad-l11-objectives
+    - knowledge-sad-l11-evaluation
     depth: orientation
     scope: complementary
     locator: Introductory and workflow chapters
   - unit_id: unit-m2-sad-l12
     title: Kelleher Chapter 4 — information-based learning
     format: book
-    angle: Primary course-aligned tree source with worked toy datasets, entropy/information gain, ID3, pruning,
-      and ensemble context in an exam-friendly style.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-entropy-id3,
-      knowledge-sad-l12-pruning, knowledge-sad-l12-bagging-forest,
-      knowledge-sad-l12-boosting]
+    angle: Primary course-aligned tree source with worked toy datasets, entropy/information gain, ID3,
+      pruning, and ensemble context in an exam-friendly style.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-pruning
+    - knowledge-sad-l12-bagging-forest
+    - knowledge-sad-l12-boosting
     depth: course-aligned
     scope: complementary
     locator: Chapter 4, especially §4.2.3
   - unit_id: unit-m2-sad-l13
     title: Kelleher Chapter 5 — similarity-based learning
     format: book
-    angle: Primary course-aligned k-NN text with worked neighbor, aggregation, and distance examples; its focus is
-      predictive behavior rather than Leser's full indexing section.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-metrics, knowledge-sad-l13-minkowski,
-      knowledge-sad-l13-special-measures]
+    angle: Primary course-aligned k-NN text with worked neighbor, aggregation, and distance examples;
+      its focus is predictive behavior rather than Leser's full indexing section.
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-metrics
+    - knowledge-sad-l13-minkowski
+    - knowledge-sad-l13-special-measures
     depth: course-aligned
     scope: complementary
     locator: Chapter 5, especially §5.2.2
@@ -1898,19 +2358,25 @@ sources:
     format: book
     angle: Primary course-aligned Naive Bayes source with worked categorical and continuous-feature examples,
       supporting smoothing and Gaussian likelihoods.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-smoothing,
-      knowledge-sad-l14-numeric, knowledge-sad-l14-gaussian]
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-smoothing
+    - knowledge-sad-l14-numeric
+    - knowledge-sad-l14-gaussian
     depth: course-aligned
     scope: complementary
     locator: Chapter 6, especially §6.4.2
   - unit_id: unit-m2-sad-l15
     title: Kelleher Chapter 7 — error-based learning and neural networks
     format: book
-    angle: Primary course-aligned route from error surfaces and gradient updates to network learning, with
-      worked examples closer to SaD's level than advanced deep-learning texts.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-forward, knowledge-sad-l15-backprop,
-      knowledge-sad-l15-training]
+    angle: Primary course-aligned route from error surfaces and gradient updates to network learning,
+      with worked examples closer to SaD's level than advanced deep-learning texts.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: course-aligned
     scope: complementary
     locator: Chapter 7
@@ -1923,10 +2389,12 @@ sources:
   - unit_id: unit-m2-sad-l03
     title: ISLP Chapter 3 — statistical regression bridge
     format: book
-    angle: Adds fit assessment, inference, qualitative predictors, and a broader statistical-learning view to the
-      course's correlation/least-squares core; selected sections only.
-    covers: [knowledge-sad-l03-simple-regression, knowledge-sad-l03-multivariate,
-      knowledge-sad-l03-scaling-weights]
+    angle: Adds fit assessment, inference, qualitative predictors, and a broader statistical-learning
+      view to the course's correlation/least-squares core; selected sections only.
+    covers:
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-scaling-weights
     depth: derivation
     scope: complementary
     locator: Chapter 3 via Regression Bridge §§2, 4, and 7
@@ -1935,49 +2403,63 @@ sources:
     format: book
     angle: Gentle theory of prediction versus inference, supervised/unsupervised tasks, train/test behavior,
       flexibility, bias-variance, and resampling.
-    covers: [knowledge-sad-l11-tasks, knowledge-sad-l11-resampling,
-      knowledge-sad-l11-objectives, knowledge-sad-l11-generalization]
+    covers:
+    - knowledge-sad-l11-tasks
+    - knowledge-sad-l11-resampling
+    - knowledge-sad-l11-objectives
+    - knowledge-sad-l11-generalization
     depth: derivation
     scope: complementary
     locator: Chapter 2
   - unit_id: unit-m2-sad-l12
     title: ISLP §§8.1–8.2 — trees and ensembles
     format: book
-    angle: Statistical-learning treatment of classification/regression trees, cost-complexity pruning, bagging,
-      random forests, and boosting with code/application context.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-regression,
-      knowledge-sad-l12-pruning, knowledge-sad-l12-bagging-forest,
-      knowledge-sad-l12-boosting]
+    angle: Statistical-learning treatment of classification/regression trees, cost-complexity pruning,
+      bagging, random forests, and boosting with code/application context.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-regression
+    - knowledge-sad-l12-pruning
+    - knowledge-sad-l12-bagging-forest
+    - knowledge-sad-l12-boosting
     depth: derivation
     scope: complementary
     locator: §§8.1–8.2
   - unit_id: unit-m2-sad-l14
     title: ISLP §4.4.4 and lab — Naive Bayes in application
     format: book
-    angle: Compact Gaussian Naive Bayes definition plus Python lab context; useful for application, not for the
-      Bayesian-network section.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-gaussian]
+    angle: Compact Gaussian Naive Bayes definition plus Python lab context; useful for application, not
+      for the Bayesian-network section.
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-gaussian
     depth: derivation
     scope: complementary
     locator: §4.4.4 and relevant lab
   - unit_id: unit-m2-sad-l15
     title: ISLP §§10.1–10.2 — gentle neural-network introduction
     format: book
-    angle: Readable MLP and forward-pass explanation with statistical-learning context; lighter than Murphy and
-      closer to the lecture's first-pass level.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-output, knowledge-sad-l15-forward,
-      knowledge-sad-l15-training]
+    angle: Readable MLP and forward-pass explanation with statistical-learning context; lighter than Murphy
+      and closer to the lecture's first-pass level.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-output
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-training
     depth: derivation
     scope: complementary
     locator: §§10.1–10.2
   - unit_id: unit-m2-sad-clustering
     title: ISLP §12.2 — clustering algorithms and validation
     format: book
-    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after the UE7
-      scope; it broadens rather than defines the exam topic.
-    covers: [knowledge-sad-clustering-families, knowledge-sad-clustering-kmeans,
-      knowledge-sad-clustering-initialization, knowledge-sad-clustering-evaluation]
+    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after
+      the UE7 scope; it broadens rather than defines the exam topic.
+    covers:
+    - knowledge-sad-clustering-families
+    - knowledge-sad-clustering-kmeans
+    - knowledge-sad-clustering-initialization
+    - knowledge-sad-clustering-evaluation
     depth: advanced-reference
     scope: complementary
     locator: §12.2
@@ -1989,40 +2471,50 @@ sources:
   - unit_id: unit-m2-sad-l11
     title: Kroese — data-science workflow and evaluation
     format: book
-    angle: Independent, broader reference for pipelines, model evaluation, and data-science practice; §7.2 is
-      the compact metric layer.
-    covers: [knowledge-sad-l11-pipeline, knowledge-sad-l11-resampling,
-      knowledge-sad-l11-evaluation, knowledge-sad-l11-generalization]
+    angle: Independent, broader reference for pipelines, model evaluation, and data-science practice;
+      §7.2 is the compact metric layer.
+    covers:
+    - knowledge-sad-l11-pipeline
+    - knowledge-sad-l11-resampling
+    - knowledge-sad-l11-evaluation
+    - knowledge-sad-l11-generalization
     depth: derivation
     scope: complementary
     locator: Workflow selections and §7.2
   - unit_id: unit-m2-sad-l12
     title: Kroese Chapter 8 — tree methods
     format: book
-    angle: Independent mathematical/computational reference for trees and ensembles after Kelleher or ISLP;
-      use when one method needs a third formulation.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-regression,
-      knowledge-sad-l12-bagging-forest, knowledge-sad-l12-boosting]
+    angle: Independent mathematical/computational reference for trees and ensembles after Kelleher or
+      ISLP; use when one method needs a third formulation.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-regression
+    - knowledge-sad-l12-bagging-forest
+    - knowledge-sad-l12-boosting
     depth: derivation
     scope: complementary
     locator: Chapter 8 selections
   - unit_id: unit-m2-sad-l14
     title: Kroese — probability-based classifier selections
     format: book
-    angle: Broader DS/ML reference for probabilistic classification and density modeling; the lecture remains the
-      authority for Laplace and Bayesian-network details.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-numeric,
-      knowledge-sad-l14-gaussian]
+    angle: Broader DS/ML reference for probabilistic classification and density modeling; the lecture
+      remains the authority for Laplace and Bayesian-network details.
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-numeric
+    - knowledge-sad-l14-gaussian
     depth: derivation
     scope: complementary
     locator: Probabilistic classification selections
   - unit_id: unit-m2-sad-l15
     title: Kroese — neural-network reference
     format: book
-    angle: Broader mathematical and implementation context for MLPs and training when the course/Kelleher level
-      is secure.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-backprop,
-      knowledge-sad-l15-training]
+    angle: Broader mathematical and implementation context for MLPs and training when the course/Kelleher
+      level is secure.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: derivation
     scope: complementary
     locator: Neural-network selections
@@ -2031,8 +2523,10 @@ sources:
     format: book
     angle: Independent data-science treatment of clustering families, objectives, and practical evaluation;
       optional after the UE7 trace.
-    covers: [knowledge-sad-clustering-families, knowledge-sad-clustering-kmeans,
-      knowledge-sad-clustering-evaluation]
+    covers:
+    - knowledge-sad-clustering-families
+    - knowledge-sad-clustering-kmeans
+    - knowledge-sad-clustering-evaluation
     depth: advanced-reference
     scope: complementary
     locator: Clustering selections
@@ -2045,9 +2539,10 @@ sources:
   - unit_id: unit-m2-sad-l04
     title: CS229 §4.2 — Naive Bayes event models
     format: course-material
-    angle: More formal Naive Bayes derivation and event-model view after the course's categorical spam example;
-      smoothing and multinomial depth mainly belong to L14.
-    covers: [knowledge-sad-l04-naive-bayes]
+    angle: More formal Naive Bayes derivation and event-model view after the course's categorical spam
+      example; smoothing and multinomial depth mainly belong to L14.
+    covers:
+    - knowledge-sad-l04-naive-bayes
     depth: advanced-reference
     scope: complementary
     locator: §4.2 selections
@@ -2056,26 +2551,32 @@ sources:
     format: course-material
     angle: Compact advanced mathematical depth for tree and boosting ideas; not needed for the first course-
       aligned pass or hand ID3 trace.
-    covers: [knowledge-sad-l12-entropy-id3, knowledge-sad-l12-boosting]
+    covers:
+    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-boosting
     depth: advanced-reference
     scope: complementary
     locator: Decision-tree and boosting selections
   - unit_id: unit-m2-sad-l14
     title: CS229 §4.2 — Naive Bayes derivation
     format: course-material
-    angle: Formal categorical/multinomial event-model treatment and log-likelihood perspective beyond Kelleher;
-      no Bayesian-network coverage.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-smoothing,
-      knowledge-sad-l14-multinomial]
+    angle: Formal categorical/multinomial event-model treatment and log-likelihood perspective beyond
+      Kelleher; no Bayesian-network coverage.
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-smoothing
+    - knowledge-sad-l14-multinomial
     depth: advanced-reference
     scope: complementary
     locator: §4.2 selections
   - unit_id: unit-m2-sad-l15
     title: CS229 §7 — compact neural-network derivation
     format: course-material
-    angle: Dense mathematical derivation of forward propagation and backpropagation for readers who want a
-      compact formula reference after the SaD explanation.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-backprop]
+    angle: Dense mathematical derivation of forward propagation and backpropagation for readers who want
+      a compact formula reference after the SaD explanation.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
     depth: advanced-reference
     scope: complementary
     locator: §7
@@ -2087,10 +2588,12 @@ sources:
   - unit_id: unit-m2-sad-l12
     title: Stanford CS229 — tree/ensemble lecture selections
     format: course
-    angle: Full university-lecture depth on selected tree or ensemble topics; use only the matching lecture after
-      SaD scope, never the entire course.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-bagging-forest,
-      knowledge-sad-l12-boosting]
+    angle: Full university-lecture depth on selected tree or ensemble topics; use only the matching lecture
+      after SaD scope, never the entire course.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-bagging-forest
+    - knowledge-sad-l12-boosting
     depth: advanced-reference
     scope: complementary
     locator: Topic-matched tree/ensemble lecture
@@ -2099,17 +2602,21 @@ sources:
     format: course
     angle: Advanced lecture treatment of Naive Bayes/event models for derivational depth beyond the current
       course examples.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-multinomial]
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-multinomial
     depth: advanced-reference
     scope: complementary
     locator: Topic-matched generative learning/Naive Bayes lecture
   - unit_id: unit-m2-sad-l15
     title: Stanford CS229 — neural-network lecture
     format: course
-    angle: Full lecture-level forward/backprop derivation and optimization context; optional after the compact
-      SaD/Kelleher route.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-backprop,
-      knowledge-sad-l15-training]
+    angle: Full lecture-level forward/backprop derivation and optimization context; optional after the
+      compact SaD/Kelleher route.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: advanced-reference
     scope: complementary
     locator: Topic-matched neural-network lecture
@@ -2123,17 +2630,21 @@ sources:
     format: book
     angle: Probabilistic-modeling derivations and implementation detail beyond the course/Kelleher layer;
       use for a specific Gaussian or Multinomial gap.
-    covers: [knowledge-sad-l14-gaussian, knowledge-sad-l14-multinomial]
+    covers:
+    - knowledge-sad-l14-gaussian
+    - knowledge-sad-l14-multinomial
     depth: advanced-reference
     scope: complementary
     locator: §§9.3–9.4
   - unit_id: unit-m2-sad-l15
     title: Murphy §§13.2–13.3 — neural-network depth
     format: book
-    angle: Advanced probabilistic ML treatment of network parameterization and learning; derivational depth,
-      not an exam-first source.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-backprop,
-      knowledge-sad-l15-training]
+    angle: Advanced probabilistic ML treatment of network parameterization and learning; derivational
+      depth, not an exam-first source.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: advanced-reference
     scope: complementary
     locator: §§13.2–13.3
@@ -2147,16 +2658,21 @@ sources:
     format: course-material
     angle: Independent concise classifier treatment when Kelleher and CS229 wording do not resolve a derivation
       gap.
-    covers: [knowledge-sad-l14-nb-recap, knowledge-sad-l14-gaussian,
-      knowledge-sad-l14-multinomial]
+    covers:
+    - knowledge-sad-l14-nb-recap
+    - knowledge-sad-l14-gaussian
+    - knowledge-sad-l14-multinomial
     depth: advanced-reference
     scope: complementary
     locator: Naive Bayes selections
   - unit_id: unit-m2-sad-l15
     title: CSC411 notes — compact neural-network reference
     format: course-material
-    angle: Dense independent treatment of network forward computation and gradient learning for formula checking.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-backprop]
+    angle: Dense independent treatment of network forward computation and gradient learning for formula
+      checking.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
     depth: advanced-reference
     scope: complementary
     locator: Neural-network selections
@@ -2168,10 +2684,12 @@ sources:
   - unit_id: unit-m2-sad-l13
     title: AML L02 — k-NN deepening
     format: course-material
-    angle: Current AML expansion of representation, neighbor search, Lp distance, scaling, irrelevant features,
-      cross-validation, and bias-variance. Use only after the SaD L13 scope pass.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-minkowski]
+    angle: Current AML expansion of representation, neighbor search, Lp distance, scaling, irrelevant
+      features, cross-validation, and bias-variance. Use only after the SaD L13 scope pass.
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-minkowski
     depth: advanced-reference
     scope: optional
     locator: lecture-slides/VL 02-nearest-neighbor.pdf
@@ -2180,13 +2698,15 @@ sources:
     format: course-material
     angle: Current AML deepening of activations, output heads, forward shapes, computation graphs, full
       backpropagation, regularization, gradient health, and autograd after SaD's overview.
-    covers: [knowledge-sad-l15-activation, knowledge-sad-l15-output,
-      knowledge-sad-l15-forward, knowledge-sad-l15-backprop,
-      knowledge-sad-l15-training]
+    covers:
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-output
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
+    - knowledge-sad-l15-training
     depth: advanced-reference
     scope: optional
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf;
-      lecture-slides/VL 09-neural-networks.pdf
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
 - source_id: source-cs4780-homeworks
   role: practice
   why: Local solution-backed tree and neural-network problems; restrict each homework to the lecture topic.
@@ -2195,10 +2715,12 @@ sources:
   - unit_id: unit-m2-sad-l12
     title: Cornell CS4780 HW8 — trees and AdaBoost
     format: exercise
-    angle: Local solution-backed tree construction and boosting problems; select only the relevant tasks from
-      the course-year variants.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-entropy-id3,
-      knowledge-sad-l12-boosting]
+    angle: Local solution-backed tree construction and boosting problems; select only the relevant tasks
+      from the course-year variants.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-boosting
     depth: practice
     scope: complementary
     locator: 2018Fall/HW8; 2018Spring/HW8
@@ -2207,18 +2729,22 @@ sources:
     format: exercise
     angle: Local solution-backed neighbor, distance, and decision-boundary practice across three course-year
       variants; broader than the missing current SaD k-NN sheet.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-minkowski]
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-minkowski
     depth: practice
     scope: complementary
     locator: 2017Spring/hw1; 2018Fall/HW1; 2018Spring/HW1
   - unit_id: unit-m2-sad-l15
     title: Cornell CS4780 HW9 — neural networks and ReLU
     format: exercise
-    angle: Local solution-backed forward, activation, gradient, and network-reasoning problems after the current
-      Blatt 5 task.
-    covers: [knowledge-sad-l15-activation, knowledge-sad-l15-forward,
-      knowledge-sad-l15-backprop]
+    angle: Local solution-backed forward, activation, gradient, and network-reasoning problems after the
+      current Blatt 5 task.
+    covers:
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
     depth: practice
     scope: complementary
     locator: 2018Fall/HW9; 2018Spring/HW9
@@ -2232,7 +2758,9 @@ sources:
     format: exercise
     angle: Solution-backed hand construction and information-gain questions close to SaD's algorithm-tracing
       demands.
-    covers: [knowledge-sad-l12-entropy-id3, knowledge-sad-l12-tree-model]
+    covers:
+    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-tree-model
     depth: practice
     scope: complementary
     locator: Tree/ID3 quiz selections
@@ -2240,18 +2768,22 @@ sources:
     title: MIT 6.034 quizzes — nearest-neighbor tracing
     format: exercise
     angle: Solution-backed small-data neighbor and distance questions for manual prediction practice.
-    covers: [knowledge-sad-l13-neighbors, knowledge-sad-l13-aggregation,
-      knowledge-sad-l13-minkowski]
+    covers:
+    - knowledge-sad-l13-neighbors
+    - knowledge-sad-l13-aggregation
+    - knowledge-sad-l13-minkowski
     depth: practice
     scope: complementary
     locator: Nearest-neighbor quiz selections
   - unit_id: unit-m2-sad-l15
     title: MIT 6.034 quizzes — neural-network tracing
     format: exercise
-    angle: Solution-backed forward/activation/weight reasoning on compact networks, useful for parameter and
-      computation checks.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-forward]
+    angle: Solution-backed forward/activation/weight reasoning on compact networks, useful for parameter
+      and computation checks.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-forward
     depth: practice
     scope: complementary
     locator: Neural-network quiz selections
@@ -2263,10 +2795,13 @@ sources:
   - unit_id: unit-m2-sad-l15
     title: 3Blue1Brown — Neural Networks playlist
     format: video
-    angle: The strongest visual intuition for layers, gradient descent, and backpropagation. Episodes 1–2 support
-      forward structure; 3–4 support gradients and credit assignment.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-activation,
-      knowledge-sad-l15-forward, knowledge-sad-l15-backprop]
+    angle: The strongest visual intuition for layers, gradient descent, and backpropagation. Episodes
+      1–2 support forward structure; 3–4 support gradients and credit assignment.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-activation
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-backprop
     depth: orientation
     scope: complementary
     locator: Episodes 1–4
@@ -2279,9 +2814,11 @@ sources:
   - unit_id: unit-m2-sad-l03
     title: 3Blue1Brown — vectors, dot products, and matrix transformations
     format: video
-    angle: Targeted visual prerequisite repair for the multivariate design-matrix and normal-equation geometry;
-      use only the blocked concept, not the full playlist by default.
-    covers: [knowledge-sad-l03-multivariate, knowledge-sad-l03-gradient-descent]
+    angle: Targeted visual prerequisite repair for the multivariate design-matrix and normal-equation
+      geometry; use only the blocked concept, not the full playlist by default.
+    covers:
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-gradient-descent
     depth: orientation
     scope: complementary
     locator: Essence of Linear Algebra — vectors, dot products, and matrix multiplication episodes
@@ -2293,10 +2830,12 @@ sources:
   - unit_id: unit-m2-sad-l15
     title: UMich EECS 498 — fully connected and architecture depth
     format: course
-    angle: Deferred deep-learning lectures for implementation and CNN context after SaD and AML scope; much
-      deeper than the exam's MLP calculations.
-    covers: [knowledge-sad-l15-forward, knowledge-sad-l15-training,
-      knowledge-sad-l15-outlook]
+    angle: Deferred deep-learning lectures for implementation and CNN context after SaD and AML scope;
+      much deeper than the exam's MLP calculations.
+    covers:
+    - knowledge-sad-l15-forward
+    - knowledge-sad-l15-training
+    - knowledge-sad-l15-outlook
     depth: advanced-reference
     scope: optional
     locator: Selected fully connected and convolutional-network lectures
@@ -2308,18 +2847,22 @@ sources:
   - unit_id: unit-m2-sad-l12
     title: Brandon Rohrer — friendly decision-tree explanation
     format: website
-    angle: Visual, plain-language intuition for recursive splitting and tree behavior when the entropy formulas
-      are computable but the model picture is missing.
-    covers: [knowledge-sad-l12-tree-model, knowledge-sad-l12-pruning]
+    angle: Visual, plain-language intuition for recursive splitting and tree behavior when the entropy
+      formulas are computable but the model picture is missing.
+    covers:
+    - knowledge-sad-l12-tree-model
+    - knowledge-sad-l12-pruning
     depth: orientation
     scope: complementary
     locator: Decision-tree article/video selections
   - unit_id: unit-m2-sad-l15
     title: Brandon Rohrer — friendly neural-network explanation
     format: website
-    angle: Plain-language visual network intuition for a diagnosed gap; use the course/Kelleher sources for
-      calculations and backprop detail.
-    covers: [knowledge-sad-l15-neuron, knowledge-sad-l15-forward]
+    angle: Plain-language visual network intuition for a diagnosed gap; use the course/Kelleher sources
+      for calculations and backprop detail.
+    covers:
+    - knowledge-sad-l15-neuron
+    - knowledge-sad-l15-forward
     depth: orientation
     scope: complementary
     locator: Neural-network article/video selections
@@ -2331,10 +2874,12 @@ sources:
   - unit_id: unit-m2-sad-l11
     title: Domingos — A Few Useful Things to Know About Machine Learning
     format: paper
-    angle: One concise conceptual essay on generalization, representation, overfitting, data, and inductive bias;
-      perspective rather than formulas or exam practice.
-    covers: [knowledge-sad-l11-representation, knowledge-sad-l11-objectives,
-      knowledge-sad-l11-generalization]
+    angle: One concise conceptual essay on generalization, representation, overfitting, data, and inductive
+      bias; perspective rather than formulas or exam practice.
+    covers:
+    - knowledge-sad-l11-representation
+    - knowledge-sad-l11-objectives
+    - knowledge-sad-l11-generalization
     depth: intuition
     scope: complementary
     locator: Complete article
@@ -2344,142 +2889,428 @@ sources:
     labels, theorem statements, examples, and the closest current HU exercise sets.'
   priority: 0
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: unser skript.pdf — the scope authority
+    format: course-material
+    angle: Hella Rabus's own script (Stand 04.02.2025) and the only thing that defines what is examinable.
+      Its course contract (pp. iv-vii) states proofs need not be memorized — which is why definitions,
+      theorem conditions/results and application drive every other choice on this menu. Wiederholung required;
+      Ausflug is exam-light context; Exkurs and Chapter 8 are outside exam scope.
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-exp-log-uniform
+    - knowledge-an-differentiation
+    - knowledge-an-taylor
+    - knowledge-an-integration
+    - knowledge-an-proof-presentation
+    depth: course-aligned
+    scope: current
+    locator: unser skript.pdf Chapters 1-7 (contents pp. ii-iii, contract pp. iv-vii)
+  - unit_id: unit-m2-analysis-exam-prep
+    title: HU exercise series 05-09 + WV
+    format: exercise
+    angle: The only tasks calibrated to this script and this examiner, in HU notation. These come BEFORE
+      any external bank — external sheets are other examiners asking differently.
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    - knowledge-an-exam-transfer
+    depth: course-aligned
+    scope: current
+    locator: ana_inf_serie05-09.pdf, ana_inf_serieWV.pdf
 - source_id: source-professor-leonard
   role: first-exposure
   why: Optional 20-minute intuition unlock before the script for a genuinely new topic; never substitutes
     for the HU definitions or notation.
   priority: 1
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Professor Leonard — Calculus 1/2
+    format: video
+    angle: Slow blackboard teaching that does the computation in full where the script compresses to a
+      result. The angle is pace. Only after a cold diagnostic shows a block, capped at 20 min per gap
+      — a detour, not a parallel course.
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    depth: intuition
+    scope: complementary
+    locator: Topic-matched; max 20 min per gap
 - source_id: source-3b1b-essence-of-calculus
   role: intuition
   why: Short visual previews for limits, derivatives, Taylor, and integration when the cold diagnostic
     exposes a missing mental picture.
   priority: 2
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: 3Blue1Brown — Essence of Calculus
+    format: video
+    angle: Geometric intuition, not technique. Shows why the limit and the Taylor approximation are the
+      shapes they are — useless for producing an epsilon-N argument. Watch, then return to the script.
+    covers:
+    - knowledge-an-limits-continuity
+    - knowledge-an-taylor
+    depth: intuition
+    scope: complementary
+    locator: Limits/continuity and Taylor episodes only
 - source_id: source-fritzsche-trainingsbuch
   role: practice
   why: Gentle German worked companion after current HU tasks; Chapters 1-4 match the script sequence and
     explain solutions without becoming a second syllabus.
   priority: 3
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Fritzsche — Trainingsbuch zur Analysis
+    format: exercise
+    angle: German drill with the solution reasoning written out, not just answers. Use after an HU task
+      you got wrong, when you need to see a correct write-up in the script’s vocabulary.
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-exp-log-uniform
+    - knowledge-an-differentiation
+    depth: practice
+    scope: complementary
+    locator: Kapitel 1-4, topic-matched only
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
   why: Topic-specific solved drills fill the local exercise gap, especially for differentiation, Taylor,
     and integration where current HU sheets are absent.
   priority: 4
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: External Analysis drill sheets
+    format: exercise
+    angle: Volume with solutions attached. For when one technique needs ten more repetitions rather than
+      a new explanation. Always after the HU series.
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-differentiation
+    - knowledge-an-taylor
+    - knowledge-an-integration
+    depth: practice
+    scope: complementary
+    locator: Exact file/task locators as diagnosed
 - source_id: source-analysis-klausuren-extern
   role: exam-preparation
   why: German and MIT exam papers are used only after scope-matching to unser skript; they provide transfer
     and timing, not syllabus authority.
   priority: 5
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: External Klausuren (Marburg, Regensburg, Ulm, Leipzig)
+    format: exam
+    angle: Two uses, and mixing them wastes the material. Marburg/Regensburg come WITH solutions — for
+      diagnosed gaps. Ulm/Leipzig stay unsolved — reserved for fresh timed sittings, where seeing the
+      answer first destroys the test.
+    covers:
+    - knowledge-an-exam-transfer
+    depth: practice
+    scope: complementary
+    locator: Marburg/Regensburg solved; Ulm/Leipzig reserved unsolved
 - source_id: source-strang-calculus
   role: intuition
   why: Local gentle calculus chapters support Taylor and Riemann-integral intuition when video is unnecessary.
   priority: 6
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Strang — Calculus
+    format: book
+    angle: 'Applied-first: integration and Taylor introduced through what they compute rather than how
+      they are constructed. Complements 3B1B — Strang gives worked mechanics where 3B1B gives the picture.'
+    covers:
+    - knowledge-an-taylor
+    - knowledge-an-integration
+    depth: intuition
+    scope: complementary
+    locator: Chapters 5, 7, 10 selections
 - source_id: source-mit-18100a
   role: optional-depth
   why: Mapped rigorous lectures repair one blocked theorem or pointwise/uniform-convergence distinction;
     the script explicitly prevents a proof-heavy second course.
   priority: 10
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: MIT 18.100A — Real Analysis
+    format: course
+    angle: Full rigour, deliberately more than this exam needs. For repair when a definition genuinely
+      does not make sense. Two windows only (L7-L9 sequences, L23-L24) — never a linear second course.
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-exp-log-uniform
+    depth: derivation
+    scope: optional
+    locator: Lectures 7-9 and 23-24 only
 - source_id: source-analysis-grundlagen-handouts
   role: reference
   why: Sets, relations, and proof notes are prerequisite repair only because Chapters 1-2 remain the course
     authority.
   priority: 11
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Mengen und Abbildungen / Relationen handouts
+    format: documentation
+    angle: Prerequisite repair only. The script assumes set and mapping language without building it;
+      these supply exactly that. Open the one missing subsection — never read through.
+    covers:
+    - knowledge-an-foundations
+    depth: orientation
+    scope: complementary
+    locator: Mengen-und-Abbildungen.pdf, Relationen.pdf — targeted subsection only
 - source_id: source-forster-wessoly
   role: reference
   why: Terse solved German problems are a reserve bank after the current HU sets and Fritzsche, not a
     parallel plan.
   priority: 12
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Forster/Wessoly — Übungsbuch zur Analysis 1
+    format: exercise
+    angle: 'The German solved-exercise standard: terse but complete solutions, and per its source record
+      "the exam points live here". First stop for solved drill in Klausur vocabulary.'
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    depth: practice
+    scope: complementary
+    locator: Topic-matched sections
 - source_id: source-deitmar-uebungsbuch
   role: reference
   why: Fresh solved exercises are reserved for exhausted topics; not selected for the first pass.
   priority: 13
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Deitmar — Übungsbuch zur Analysis
+    format: exercise
+    angle: 'The SECOND solved-problem bank — reach for it only once Forster and Fritzsche are exhausted
+      and you need FRESH problems. Standard Analysis-1 order: Kap 1-2 → AN.0, Kap 3.1 → convergence, Kap
+      3.2 → series. Verify later chapters on first use.'
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    depth: practice
+    scope: complementary
+    locator: 257 pp; Kap 1-2, 3.1, 3.2 mapped
 - source_id: source-ableitinger-musterloesungen
   role: reference
   why: Used only to repair proof presentation after an error; the script says proof memorization is not
     required.
   priority: 14
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Ableitinger — Musterlösungen
+    format: solutions
+    angle: Model solutions as WRITING samples, not answers — what a marker expects a correct proof to
+      look like on paper. One example matched to a diagnosed presentation error.
+    covers:
+    - knowledge-an-proof-presentation
+    - knowledge-an-exam-transfer
+    depth: practice
+    scope: complementary
+    locator: One example matching the diagnosed error
 - source_id: source-abbott-understanding-analysis
   role: optional-depth
   why: Readable English rigor for one stubborn concept; never read linearly during exam preparation.
   priority: 15
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Abbott — Understanding Analysis
+    format: book
+    angle: 'The most readable English rigour text; motivates WHY each definition takes the form it does.
+      Chapter map from its record: Ch2 → sequences/series, Ch4 → continuity, Ch5 → differentiation, Ch6
+      → uniform convergence, Ch7 → integral. Rule from the record: pick ONE book per stuck proof.'
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-exp-log-uniform
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    depth: derivation
+    scope: complementary
+    locator: Ch 2, 4, 5, 6, 7 as mapped
 - source_id: source-grieser-analysis1
   role: reference
   why: German second voice for a blocked concept when matching Klausur vocabulary matters.
   priority: 16
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Grieser — Analysis I
+    format: book
+    angle: '"The German Abbott" (353 pp): heavy motivation, exercises with Hinweise and Lösungen. The
+      German second voice in Klausur vocabulary when a script proof needs one — the same role as Abbott
+      but without the language switch.'
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-differentiation
+    depth: derivation
+    scope: complementary
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
 - source_id: source-lebl-basic-analysis
   role: reference
   why: Volume I is an alternate rigorous reference; Volume II is beyond the one-variable exam scope.
   priority: 17
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Lebl — Basic Analysis I + II
+    format: book
+    angle: The free English text-twin of the script — closest structural match on this menu. Ch0-1 → AN.0,
+      Ch2 → sequences (§2.5-2.6 series), Ch3 → continuity, Ch4 → differentiation (§4.3 Taylor), Ch5 →
+      integral, §6.1-6.2 → uniform convergence.
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    - knowledge-an-exp-log-uniform
+    - knowledge-an-differentiation
+    - knowledge-an-taylor
+    - knowledge-an-integration
+    depth: derivation
+    scope: complementary
+    locator: Ch 0-6 as mapped
 - source_id: source-labs-schreyer-mathe-informatiker
   role: reference
   why: Broad mathematics-for-computer-science backup; use only for a named prerequisite gap.
   priority: 18
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Mathematik für Informatiker (Teil 1-3)
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-foundations
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-mfnf-analysis1
   role: reference
   why: Accessible German explanation fallback for a specific gap, not an exam authority.
   priority: 19
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Mathe für Nicht-Freaks — Analysis 1
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-foundations
+    - knowledge-an-sequences
+    - knowledge-an-series
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-ohlbach-eisinger-beweise
   role: reference
   why: General proof-pattern reference only; use after a diagnosed proof-structure problem.
   priority: 20
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Design Patterns für mathematische Beweise
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-proof-presentation
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-velleman-how-to-prove-it
   role: reference
   why: General proof textbook is deferred unless basic proof syntax blocks script applications.
   priority: 21
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: How To Prove It — A Structured Approach
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-proof-presentation
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-ross-elementary-analysis
   role: reference
   why: Proof-oriented alternate text, shelved during the exam-first pass.
   priority: 22
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: Ross — Elementary Analysis
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-sequences
+    - knowledge-an-series
+    - knowledge-an-limits-continuity
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-thomas-calculus
   role: reference
   why: Large computational calculus reference; local targeted drills only if selected banks are exhausted.
   priority: 23
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: 'Thomas'' Calculus: Early Transcendentals'
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-stewart-calculus
   role: reference
   why: Large computational calculus alternative, redundant for the first pass.
   priority: 24
   unit_routes:
-  - unit-m2-analysis-exam-prep
+  - unit_id: unit-m2-analysis-exam-prep
+    title: 'Stewart — Calculus: Early Transcendentals (8th ed.)'
+    format: book
+    angle: 'NO CONTEXTUAL EVALUATION REGISTERED. Routed to this unit but never assessed, so no angle can
+      be stated honestly — the operator will not invent a pedagogical judgment (CLAUDE.md §4). Visibility
+      debt: repay on use (WORKFLOWS §6a) by adding a minimal evaluation stub the first time this is actually
+      opened.'
+    covers:
+    - knowledge-an-differentiation
+    - knowledge-an-integration
+    depth: unassessed
+    scope: unevaluated
+    locator: Not yet located; establish on first use
 - source_id: source-rudin-principles
   role: reference
   why: Too proof-dense for this exam plan and explicitly not selected; retained for future depth.

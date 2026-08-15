@@ -1,9 +1,9 @@
 ---
 id: workspace-amls-exam-prep
 type: workspace
-title: AMLS written exam prep — S.X track (last August sitting)
+title: AMLS written exam prep — S.X track (shelved; resuming next year)
 created: '2026-07-17'
-status: active
+status: blocked
 standing: false
 concepts:
 - concept-ml-systems
@@ -53,6 +53,31 @@ unit_ids:
 ---
 
 # AMLS exam prep — S.X
+
+> **Status 2026-08-14 — SHELVED for this course run (Aram).** AMLS will not be
+> written in SoSe 2026; Aram is taking it **next year**. The course-run slot-3
+> sitting is not being sat. Workspace `blocked` by decision, not by
+> dependency; the 14 units and their study maps moved to `paused` in the same
+> pass so no layer can claim this work is ready while another says it is shelved
+> (the lifecycle invariant added 2026-08-08).
+>
+> **Everything below this banner is preserved intact as the reinstatement plan,
+> not live work** — the 13-lecture spine, the 42 stages (~66 h), the 60 curated
+> must-reads and the 283 lecture-grouped bibliography entries. Nothing was
+> deleted and nothing was consumed: all 42 stages were still `pending` when the
+> track was shelved, so the plan is reinstated exactly as written.
+>
+> **Unlike Algo 2, this is not a same-cycle reinstatement.** Slot 3 was the last
+> course-run sitting, so resuming means the next course run. Two things stay open
+> until Aram states them: the administrative shape of not sitting (the `attempts`
+> record in `curriculum/modules/module-hu-amls/module.yaml` still reads
+> `termin: 3 · result: registered`, deliberately untouched rather than guessed),
+> and whether the lost Bachelor-UEWP LP need covering from elsewhere. See
+> `system/adr/semantic-state-report-2026-08-14.md` §Part 5.
+>
+> The recovered paper inventory keeps its value independent of the exam: it is a
+> curated map of the ML-systems literature, and `thematic-group-ml-systems` is
+> also the thesis's primary group.
 
 ## Objective
 
@@ -114,15 +139,30 @@ grouping remains useful context, but it is not the current study script.
 
 ## Open Questions
 
+*(Dormant while shelved — both only matter on reinstatement.)*
+
 - Lecture 12's deck is present, but its title page says "Last update: Jul
   09, 2025". Treat this as a source-stamp anomaly until the chair/course
   page confirms whether the SS26 upload intentionally reused the deck.
-- Course-run exam registration formality for the chosen sitting: verify
-  the TU/MOSES or chair-side action recorded in the owning module.
+  Re-check against the next course run's upload rather than resolving it now.
+- Course-run exam registration formality: **void for this run** — nothing is
+  being registered. On reinstatement this returns as a required action, not a
+  question: Nebenhörerschaft at the TU Studierendensekretariat plus exam
+  registration via TU MOSES/MTS, confirmed with the AMLS chair, then recognised
+  back at HU.
 
 ## Next Action
 
-Start `unit-amls-l03`, stage `stage-amls-l03-scope`: watch the SS26
+**None — shelved for this course run (Aram, 2026-08-14).** No study, no
+registration, no admin while this workspace is `blocked`.
+
+*To reinstate next year:* set this workspace, all 14 `unit-amls-*` units and
+their 14 study maps back to `active`/`ready` **together**, re-verify the SS26
+material against whatever the new course run posts (decks, the paper reading
+list and especially the Lecture 12 stamp anomaly in Open Questions), then resume
+at the preserved first step:
+
+> Start `unit-amls-l03`, stage `stage-amls-l03-scope`: watch the SS26
 recording and build the page-located outline for **03 Compilation – Size
 Inference and Rewrites** (43 pages). Then enter the integration stage and read
 the one `required-now` paper — **SystemML: Declarative Machine Learning on

@@ -8,6 +8,7 @@ this module.  It is reached only through ``los job-dashboard
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import re
 import subprocess
@@ -15,17 +16,51 @@ from pathlib import Path
 
 import yaml
 
+from ..transactions import artifact_revision
 from .support import _fresh_manifest, _root
 
 
-CONTRACT = "job-dashboard-v1"
+CONTRACT = "job-dashboard-v2"
 ALLOWED_TOP_LEVELS = {
-    "notes", "workspace-job-deem", "papers", "legacy-plans",
+    "notes", "workspace-job-deem", "papers", "legacy-plans", "plans",
 }
+
+# Only domain state belongs in the optimistic-concurrency snapshot. Transaction
+# ledgers and receipts are deliberately absent: bookkeeping must not make an
+# otherwise unchanged dashboard stale immediately after a successful write.
+_FINGERPRINTED = (
+    "dashboard.yaml",
+    "notes",
+    "workspace-job-deem",
+    "plans",
+    "operations/progress.yaml",
+    "operations/tasks.yaml",
+)
 
 
 class JobDashboardError(ValueError):
     """The bounded Job catalogue cannot be read safely."""
+
+
+def job_fingerprint(job_root: Path) -> str:
+    """Digest the authored and machine-owned Job domain state."""
+    digest = hashlib.sha256()
+    for relative in _FINGERPRINTED:
+        base = job_root / relative
+        if not base.exists():
+            continue
+        files = [base] if base.is_file() else sorted(
+            path for path in base.rglob("*") if path.is_file()
+        )
+        for path in files:
+            rel = path.relative_to(job_root)
+            if any(part.startswith(".") for part in rel.parts):
+                continue
+            digest.update(rel.as_posix().encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
+    return digest.hexdigest()
 
 
 def _job_root(repository_root: Path) -> Path:
@@ -219,7 +254,12 @@ def _note_record(path: Path, job_root: Path) -> dict | None:
     if not note_id or not title:
         return None
     relative = path.relative_to(job_root).as_posix()
-    kind = "stratum" if relative.startswith("notes/stratum/") else "skrub"
+    if relative.startswith("notes/stratum/"):
+        kind = "stratum"
+    elif relative.startswith("notes/skrub/") or path.name.startswith("note-skrub"):
+        kind = "skrub"
+    else:
+        kind = "learning"
     verified = str(meta.get("verified_against") or "").strip()
     revision = verified.split()[0] if verified else ""
     component = str(meta.get("component") or "").strip()
@@ -231,6 +271,11 @@ def _note_record(path: Path, job_root: Path) -> dict | None:
         freshness = "drifting"
     elif changed is False:
         freshness = "current"
+    elif kind == "stratum" and component:
+        # A missing/invalid revision or an unreadable checkout is not evidence
+        # that a code note is current. Report the uncertainty instead of
+        # falling back to a hand-written `current` label.
+        freshness = "unverified"
     else:
         freshness = declared
     concepts = [str(item) for item in (meta.get("concepts") or []) if str(item).strip()]
@@ -241,12 +286,14 @@ def _note_record(path: Path, job_root: Path) -> dict | None:
         "kind": kind,
         "family": family,
         "summary": _note_summary(body),
+        "body": body.strip(),
         "path": relative,
         "component": component,
         "layer": _layer_for(component, kind),
         "verified_against": verified,
         "declared_status": declared,
         "freshness": freshness,
+        "revision": artifact_revision(job_root, f"job-note:{note_id}"),
     }
 
 
@@ -264,6 +311,7 @@ def _notes(config: dict, job_root: Path) -> dict:
                if (record := _note_record(path, job_root)) is not None]
     skrub = [record for record in records if record["kind"] == "skrub"]
     stratum = [record for record in records if record["kind"] == "stratum"]
+    learning = [record for record in records if record["kind"] == "learning"]
     health = {
         label: sum(1 for record in stratum if record["freshness"] == label)
         for label in ("current", "drifting", "stale")
@@ -280,7 +328,13 @@ def _notes(config: dict, job_root: Path) -> dict:
         }
         for layer_id, title, summary in LAYERS
     ]
-    return {"skrub": skrub, "stratum": stratum, "health": health, "layers": layers}
+    return {
+        "learning": learning,
+        "skrub": skrub,
+        "stratum": stratum,
+        "health": health,
+        "layers": layers,
+    }
 
 
 def _field(block: str, label: str) -> str:
@@ -344,7 +398,121 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
         "completed_sessions": sorted(completed),
         "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
+        "source_kind": "legacy-markdown",
+        "revision": artifact_revision(job_root, f"job-plan:{track_id}"),
     }
+
+
+def _structured_track(path: Path, job_root: Path, progress: dict) -> dict:
+    data = _read_yaml(path)
+    if data.get("type") != "job-learning-plan" or data.get("schema_version") != 1:
+        raise JobDashboardError(f"unsupported learning plan contract in {path.name}")
+    track_id = str(data.get("id") or path.stem).strip()
+    title = str(data.get("title") or "").strip()
+    if not track_id or not title:
+        raise JobDashboardError(f"learning plan {path.name} needs id and title")
+    sessions = []
+    seen: set[int] = set()
+    for row in data.get("sessions") or []:
+        if not isinstance(row, dict):
+            continue
+        number = row.get("number")
+        session_title = str(row.get("title") or "").strip()
+        if not isinstance(number, int) or number < 1 or number in seen or not session_title:
+            raise JobDashboardError(
+                f"learning plan {track_id} has an invalid or duplicate session"
+            )
+        seen.add(number)
+        sessions.append({
+            "number": number,
+            "title": session_title,
+            "concept": str(row.get("concept") or "").strip(),
+            "source": str(row.get("source") or "").strip(),
+            "anchor": str(row.get("anchor") or "").strip(),
+            "practice": str(row.get("practice") or "").strip(),
+        })
+    sessions.sort(key=lambda row: row["number"])
+    recorded = progress.get(track_id) or {}
+    completed = sorted(
+        number for number in (recorded.get("completed_sessions") or [])
+        if isinstance(number, int) and number in seen
+    )
+    for session in sessions:
+        session["done"] = session["number"] in completed
+    return {
+        "id": track_id,
+        "title": title,
+        "status": str(data.get("status") or "ready"),
+        "cadence": str(data.get("cadence") or ""),
+        "horizon": str(data.get("horizon") or "now"),
+        "outcome": str(data.get("outcome") or "").strip(),
+        "sessions": sessions,
+        "completed_sessions": completed,
+        "last_session_at": str(recorded.get("last_session_at") or ""),
+        "path": path.relative_to(job_root).as_posix(),
+        "source_kind": "structured",
+        "revision": artifact_revision(job_root, f"job-plan:{track_id}"),
+    }
+
+
+def _learning_tracks(config: dict, job_root: Path, progress: dict) -> list[dict]:
+    """Merge legacy declared plans with structured, editable Job plans.
+
+    A structured plan with the same id deliberately shadows its legacy
+    Markdown predecessor. This adds an editable path without re-serialising or
+    deleting the learner's original document.
+    """
+    tracks = {
+        track["id"]: track
+        for entry in (config.get("learning_tracks") or [])
+        if isinstance(entry, dict)
+        for track in [_track(entry, job_root, progress)]
+    }
+    plans_root = job_root / "plans"
+    if plans_root.is_dir():
+        for path in sorted(plans_root.glob("*.yaml")):
+            track = _structured_track(path, job_root, progress)
+            tracks[track["id"]] = track
+    return sorted(
+        tracks.values(),
+        key=lambda row: ({"now": 0, "next": 1, "later": 2}.get(row["horizon"], 3), row["title"]),
+    )
+
+
+def _tasks(job_root: Path) -> list[dict]:
+    path = job_root / "operations" / "tasks.yaml"
+    if not path.is_file():
+        return []
+    data = _read_yaml(path)
+    if data.get("type") != "job-task-list" or data.get("schema_version") != 1:
+        raise JobDashboardError("unsupported Job task-list contract")
+    output = []
+    for row in data.get("tasks") or []:
+        if not isinstance(row, dict):
+            continue
+        task_id = str(row.get("id") or "").strip()
+        title = str(row.get("title") or "").strip()
+        if not task_id or not title:
+            continue
+        output.append({
+            "id": task_id,
+            "title": title,
+            "details": str(row.get("details") or "").strip(),
+            "horizon": str(row.get("horizon") or "now"),
+            "status": str(row.get("status") or "open"),
+            "track_id": str(row.get("track_id") or "").strip(),
+            "created_at": str(row.get("created_at") or ""),
+            "updated_at": str(row.get("updated_at") or ""),
+            "revision": artifact_revision(job_root, f"job-task:{task_id}"),
+        })
+    return sorted(
+        output,
+        key=lambda row: (
+            row["status"] == "done",
+            {"now": 0, "next": 1, "later": 2}.get(row["horizon"], 3),
+            row["title"],
+        ),
+    )
 
 
 def _paper(entry: dict, job_root: Path) -> dict:
@@ -413,16 +581,13 @@ def cmd_job_dashboard(args) -> int:
         workspace_path = _safe_job_path(job_root, workspace_config.get("path"))
         note_config = config.get("notes") or {}
         progress = _progress(job_root)
-        tracks = [
-            _track(entry, job_root, progress)
-            for entry in (config.get("learning_tracks") or [])
-            if isinstance(entry, dict)
-        ]
+        tracks = _learning_tracks(config, job_root, progress)
         papers = [
             _paper(entry, job_root) for entry in (config.get("papers") or [])
             if isinstance(entry, dict)
         ]
         notes = _notes(note_config, job_root)
+        tasks = _tasks(job_root)
         shelf = _shelf(config.get("canonical_shelf") or [], repository_root)
         dashboard = {
             "id": str(config.get("id") or "job-dashboard"),
@@ -431,13 +596,18 @@ def cmd_job_dashboard(args) -> int:
             "workspace": _workspace(workspace_path, job_root),
             "notes": notes,
             "learning_tracks": tracks,
+            "tasks": tasks,
             "papers": papers,
             "canonical_shelf": shelf,
             "counts": {
-                "notes": len(notes["skrub"]) + len(notes["stratum"]),
+                "notes": len(notes["learning"]) + len(notes["skrub"]) + len(notes["stratum"]),
+                "learning_notes": len(notes["learning"]),
                 "skrub_notes": len(notes["skrub"]),
                 "system_notes": len(notes["stratum"]),
+                "learning_tracks": len(tracks),
                 "learning_sessions": sum(len(track["sessions"]) for track in tracks),
+                "open_tasks": sum(task["status"] != "done" for task in tasks),
+                "completed_tasks": sum(task["status"] == "done" for task in tasks),
                 "papers": len(papers),
                 "canonical_sources": len(shelf),
             },
@@ -455,6 +625,9 @@ def cmd_job_dashboard(args) -> int:
             "excluded_from_manifest": True,
             "excluded_from_search": True,
             "excluded_from_ai": True,
+            "writes_through_gateway": True,
+            "allowed_roots": sorted(ALLOWED_TOP_LEVELS),
+            "snapshot_id": f"sha256:{job_fingerprint(job_root)}",
         },
         "dashboard": dashboard,
     }, indent=2, sort_keys=True, ensure_ascii=False))

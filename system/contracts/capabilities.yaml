@@ -3,11 +3,12 @@ cli_protocol: 3
 queries:
   job.dashboard:
     handler: job_dashboard
-    result: job-dashboard-v1
+    result: job-dashboard-v2
     invariants:
     - explicit access confirmation is required
     - read-only and in-memory only
     - absent from manifest, search, AI, and generated views
+    - publishes a Job-specific optimistic-concurrency snapshot
   project.list:
     handler: project_list
     result: project-list
@@ -32,6 +33,33 @@ commands:
     invariants:
     - explicit access confirmation is required
     - only the living-note header is rewritten, never the body
+    - never offered to AI actions
+  job.note.save:
+    handler: job_note_save
+    cli_command: job-note-save
+    writes:
+    - Job/notes/**
+    invariants:
+    - explicit access confirmation and learner approval are required
+    - stable note ids and existing frontmatter are preserved on revision
+    - never offered to AI actions
+  job.plan.save:
+    handler: job_plan_save
+    cli_command: job-plan-save
+    writes:
+    - Job/plans/**
+    invariants:
+    - explicit access confirmation and learner approval are required
+    - structured plans shadow but never rewrite legacy Markdown plans
+    - never offered to AI actions
+  job.task.save:
+    handler: job_task_save
+    cli_command: job-task-save
+    writes:
+    - Job/operations/tasks.yaml
+    invariants:
+    - explicit access confirmation is required
+    - tasks remain quarantined from the canonical work graph
     - never offered to AI actions
   job.track.progress:
     handler: job_track_progress

@@ -6,7 +6,7 @@ title: AMLS Lecture 11 — Model Selection and Management
 order: 9
 scope: Grid/random/Bayesian search, acquisition functions and NAS/AutoML; model management, lineage and
   reuse.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

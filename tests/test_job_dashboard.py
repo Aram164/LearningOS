@@ -24,6 +24,19 @@ def run_los(root: Path, *args: str):
     )
 
 
+def run_capability(root: Path, name: str, envelope: dict):
+    return subprocess.run(
+        [
+            sys.executable, str(LOS), "--root", str(root),
+            "capability", name, "--payload-file", "-",
+        ],
+        input=json.dumps(envelope),
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+
+
 def write_job(mini_repo: Path, *, workspace_path: str = "workspace-job-deem/CONTEXT.md") -> Path:
     job = mini_repo.parent.parent / "Job"
     (job / "notes" / "stratum").mkdir(parents=True)
@@ -91,6 +104,12 @@ def write_job(mini_repo: Path, *, workspace_path: str = "workspace-job-deem/CONT
         - **Stratum anchor:** compare both backends.
         - **Rebuild/stretch:** implement one expression.
 
+        ### Session 2 — Lazy optimization
+        - **Concept:** lazy plans.
+        - **Source:** Lazy API.
+        - **Stratum anchor:** compare explain output.
+        - **Rebuild/stretch:** annotate one plan.
+
         ## Definition of "there"
         Implement a backend from scratch.
         """), encoding="utf-8")
@@ -135,21 +154,34 @@ def test_job_dashboard_is_bounded_and_not_projected(mini_repo):
     proc = run_los(mini_repo, "job-dashboard", "--confirm-job-access")
     assert proc.returncode == 0, proc.stderr
     payload = json.loads(proc.stdout)
-    assert payload["contract"] == "job-dashboard-v1"
-    assert payload["access"] == {
+    assert payload["contract"] == "job-dashboard-v2"
+    access = payload["access"]
+    assert {key: access[key] for key in (
+        "scope", "read_only", "ephemeral", "excluded_from_manifest",
+        "excluded_from_search", "excluded_from_ai", "writes_through_gateway",
+    )} == {
         "scope": "job-dashboard",
         "read_only": True,
         "ephemeral": True,
         "excluded_from_manifest": True,
         "excluded_from_search": True,
         "excluded_from_ai": True,
+        "writes_through_gateway": True,
+    }
+    assert access["snapshot_id"].startswith("sha256:")
+    assert set(access["allowed_roots"]) == {
+        "legacy-plans", "notes", "papers", "plans", "workspace-job-deem",
     }
     dashboard = payload["dashboard"]
     assert dashboard["counts"] == {
         "notes": 2,
+        "learning_notes": 0,
         "skrub_notes": 1,
         "system_notes": 1,
-        "learning_sessions": 1,
+        "learning_tracks": 1,
+        "learning_sessions": 2,
+        "open_tasks": 0,
+        "completed_tasks": 0,
         "papers": 1,
         "canonical_sources": 1,
     }
@@ -320,6 +352,133 @@ def test_job_track_progress_is_machine_owned_and_leaves_the_dashboard_alone(mini
     progress = yaml.safe_load((job / "operations" / "progress.yaml").read_text("utf-8"))
     assert progress["tracks"]["polars"]["completed_sessions"] == [1, 2]
     assert (job / "dashboard.yaml").read_bytes() == authored
+
+    reopened = run_los(mini_repo, "job-track-progress", "--confirm-job-access",
+                       "--track", "polars", "--session", "2", "--state", "open")
+    assert reopened.returncode == 0, reopened.stderr
+    progress = yaml.safe_load((job / "operations" / "progress.yaml").read_text("utf-8"))
+    assert progress["tracks"]["polars"]["completed_sessions"] == [1]
+
+
+def test_job_track_progress_rejects_a_nonexistent_session(mini_repo):
+    write_job(mini_repo)
+    proc = run_los(mini_repo, "job-track-progress", "--confirm-job-access",
+                   "--track", "polars", "--session", "99")
+    assert proc.returncode == 2
+    assert "has no session 99" in proc.stderr
+
+
+def test_job_note_save_creates_and_updates_a_learning_note(mini_repo):
+    job = write_job(mini_repo)
+    created = run_los(
+        mini_repo, "job-note-save", "--confirm-job-access", "--approve",
+        "--note", "Join order", "--title", "Join order", "--body", "First model.",
+    )
+    assert created.returncode == 0, created.stderr
+    payload = json.loads(created.stdout)
+    assert payload["note"] == "job-note-join-order"
+    note = job / payload["path"]
+    assert note.is_file()
+    assert "First model." in note.read_text("utf-8")
+
+    updated = run_los(
+        mini_repo, "job-note-save", "--confirm-job-access", "--approve",
+        "--note", "job-note-join-order", "--title", "Join ordering",
+        "--body", "Revised model.",
+    )
+    assert updated.returncode == 0, updated.stderr
+    text = note.read_text("utf-8")
+    assert "title: Join ordering" in text
+    assert "Revised model." in text and "First model." not in text
+
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)["dashboard"]
+    assert dashboard["notes"]["learning"][0]["id"] == "job-note-join-order"
+
+
+def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
+    job = write_job(mini_repo)
+    legacy = job / "workspace-job-deem" / "inputs" / "Polars-Learning-Plan.md"
+    authored = legacy.read_bytes()
+    plan = {
+        "id": "polars",
+        "title": "Polars production path",
+        "horizon": "next",
+        "cadence": "Two sessions per month",
+        "outcome": "Explain and implement a lazy optimizer.",
+        "sessions": [{"number": 1, "title": "Logical plans", "concept": "IR"}],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert legacy.read_bytes() == authored
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)["dashboard"]
+    assert len(dashboard["learning_tracks"]) == 1
+    assert dashboard["learning_tracks"][0]["source_kind"] == "structured"
+    assert dashboard["learning_tracks"][0]["title"] == "Polars production path"
+
+
+def test_job_task_save_creates_and_updates_the_quarantined_list(mini_repo):
+    write_job(mini_repo)
+    task = {
+        "title": "Trace the join planner",
+        "details": "Write down one surprise.",
+        "horizon": "now",
+        "status": "open",
+        "track_id": "polars",
+    }
+    created = run_los(
+        mini_repo, "job-task-save", "--confirm-job-access", "--task", json.dumps(task),
+    )
+    assert created.returncode == 0, created.stderr
+    task_id = json.loads(created.stdout)["task"]
+    task.update({"id": task_id, "status": "done"})
+    updated = run_los(
+        mini_repo, "job-task-save", "--confirm-job-access", "--task", json.dumps(task),
+    )
+    assert updated.returncode == 0, updated.stderr
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)["dashboard"]
+    assert dashboard["tasks"][0]["id"] == task_id
+    assert dashboard["tasks"][0]["status"] == "done"
+    assert dashboard["counts"]["completed_tasks"] == 1
+
+
+def test_job_capability_refuses_a_stale_snapshot_and_returns_its_receipt(mini_repo):
+    write_job(mini_repo)
+    payload = {
+        "task": {"title": "Trace planner", "horizon": "now", "status": "open"},
+        "confirm_job_access": True,
+    }
+    stale = run_capability(mini_repo, "job.task.save", {
+        "request_id": "req-job-task-stale",
+        "capability": "job.task.save",
+        "expected_snapshot": "sha256:stale",
+        "payload": payload,
+    })
+    assert stale.returncode == 3
+    assert "changed since this view loaded" in json.loads(stale.stdout)["error"]
+
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)
+    saved = run_capability(mini_repo, "job.task.save", {
+        "request_id": "req-job-task-current",
+        "capability": "job.task.save",
+        "expected_snapshot": dashboard["access"]["snapshot_id"],
+        "payload": payload,
+    })
+    assert saved.returncode == 0, saved.stderr
+    response = json.loads(saved.stdout)
+    assert response["ok"] is True
+    assert response["receipt_path"].startswith("operations/transactions/transaction-")
+    assert response["result"]["receipt_path"] == response["receipt_path"]
 
 
 def test_the_stratum_checkout_is_never_writable(mini_repo):

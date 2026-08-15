@@ -34,7 +34,8 @@
                     "unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
                     "title": { "type": "string", "minLength": 1 },
                     "format": {
-                      "enum": ["course-material", "exercise", "book", "video", "website", "course", "documentation", "code", "paper"]
+                      "description": "What kind of artifact this is, which governs how it is used. 'exam' (past papers) and 'solutions' (worked model answers) are deliberately separate from 'exercise': a past paper is spent once under timed conditions, and model solutions are read as writing samples rather than solved.",
+                      "enum": ["course-material", "exercise", "exam", "solutions", "book", "video", "website", "course", "documentation", "code", "paper"]
                     },
                     "angle": { "type": "string", "minLength": 1 },
                     "covers": {
@@ -44,10 +45,12 @@
                       "uniqueItems": true
                     },
                     "depth": {
-                      "enum": ["orientation", "intuition", "course-aligned", "derivation", "implementation", "practice", "advanced-reference"]
+                      "description": "How deep this route goes. 'unassessed' means no contextual evaluation has been written yet, so the depth is genuinely unknown — it is not a judgment of shallowness and must never be inferred by an operator (CLAUDE.md §4).",
+                      "enum": ["orientation", "intuition", "course-aligned", "derivation", "implementation", "practice", "advanced-reference", "unassessed"]
                     },
                     "scope": {
-                      "enum": ["current", "prerequisite", "complementary", "optional", "prior-year", "out-of-scope"]
+                      "description": "How this route relates to current exam scope. 'unevaluated' is distinct from 'optional': optional means assessed and judged skippable, unevaluated means the source is routed here but nobody has ever assessed it — visibility debt, made visible so it can be chosen or dismissed deliberately, and repaid on use rather than in bulk (WORKFLOWS §6a).",
+                      "enum": ["current", "prerequisite", "complementary", "optional", "prior-year", "out-of-scope", "unevaluated"]
                     },
                     "locator": { "type": "string", "minLength": 1 },
                     "url": { "type": "string", "format": "uri" },

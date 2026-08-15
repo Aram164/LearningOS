@@ -6,7 +6,7 @@ title: AMLS Lecture 12 — Model Debugging, Fairness, and Explainability
 order: 10
 scope: Validation and confusion matrices; occlusion/saliency and SliceLine; LIME/SHAP; bias sources, fairness
   metrics/constraints and regulation.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

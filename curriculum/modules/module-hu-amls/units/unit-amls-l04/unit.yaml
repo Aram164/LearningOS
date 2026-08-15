@@ -6,7 +6,7 @@ title: AMLS Lecture 04 — Compilation – Adaptation, Fusion, and JIT
 order: 2
 scope: Runtime adaptation and dynamic recompilation; operator fusion/code generation; memoized plan search;
   XLA, MLIR and vectorized execution.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

@@ -82,52 +82,104 @@ sources that fit the current gap, and only then create a personal study path.
 
 ## Current Scope
 
-> **Phase A posture (COORDINATION.md, Aram 2026-07-25): synergy lane, not
-> parked.** AMLS is the primary track until its sitting, but AMLS
-> content is understood on top of AML foundations, so the AML concepts AMLS
-> rests on are studied *together with AMLS now* — the shared hours serve both
-> exams. What is deferred is AML **exam-specific** prep, not AML learning.
-> (Until 2026-08-08 this section still read "parked until after the AMLS
-> sitting", the pre-07-25 rule that COORDINATION.md explicitly superseded.)
+> **Phase A posture (COORDINATION.md, Aram 2026-08-14): AML is the primary
+> track.** AMLS is shelved to next year, so the synergy lane that governed this
+> workspace is void — AML foundations were being pulled in *because* AMLS needed
+> them, and there is no AMLS track to pull from. **Nothing about AML is deferred
+> behind another exam any more.** AML is simply the nearest sitting.
+> (Change history: this section read "parked until after the AMLS sitting" until
+> 2026-08-08, then "synergy lane" until 2026-08-14.)
 
-*Required now* — the AML foundations AMLS builds on, pulled in on demand from
-the AMLS track rather than run as a separate lecture sequence. Concretely:
-computation graphs → backprop (unit-aml-l09) behind AMLS L03/L04 rewriting and
-fusion; the forward pass and activation material (unit-aml-l08) behind AMLS
-hardware and distributed-execution decks. Study these from the AML units when
-AMLS reaches them — do not schedule them as their own block yet.
+*Required now — admin.* Register the 2. Termin via AGNES inside the 2.-PZ
+Anmeldung window (dates: `curriculum/modules/module-hu-aml/module.yaml` →
+`registration_windows`). Non-negotiable and the only hard dated gate before the
+exam; missing it forfeits the sitting. Not a reminder to set — an action to do
+when the window opens.
 
-*Helpful now* — passive cross-wires during M2: SaD L11 supplies workflow
-and metrics; SaD L15 is the deliberate warm-up for AML L08–L09.
+*Required now — study.* AML exam-specific preparation, which starts immediately:
 
-*Defer* — AML **exam-specific** preparation until after the AMLS sitting: the
-L07 material choice and practice session, the closed-book mock, and the
-systematic L05→L11 review. The complete per-lecture material menus are ready;
-this does not move their calendar priority.
+1. **L07** — make the material choice and run the practice session, then
+   self-test with `note-aml-l07-mock-exam` (75 min, closed book).
+2. **L08–L10 — the real build.** These were the gap: L02–L07 had reference notes,
+   exercise banks and mock exams; L08–L10 had none of the three. Complete
+   material menus and knowledge maps exist for all of L01–L11, so this is
+   building artifacts from a ready inventory, not scoping from scratch.
+   **Order is L08 → L09 → L10**, because L08 is the forward pass and L09's
+   backprop presupposes it — the deck itself defers backprop from L08 p53 to
+   L09. (An earlier draft of this file said "L09 then L08" on AMLS-synergy
+   grounds; that reason died with the AMLS shelving.)
+   **All three are built as of 2026-08-15** — nine notes, each page-anchored to
+   its current 2026 deck, each carrying `authorship: external` because the schema
+   has no "operator-drafted" value (see Open Questions). **They are operator-built
+   and not yet worked by Aram**; each becomes `mixed` when he adds his own
+   reasoning, and none of them is evidence until he does.
+   - **L08** (81pp) — `note-aml-l08-feedforward-networks`,
+     `-exercise-bank`, `-mock-exam`. Scope finding: the deck **stops at the
+     forward pass** (backprop deferred on p53), and the **metrics block is ~a
+     quarter of the deck**.
+   - **L09** (74pp) — `note-aml-l09-backpropagation`, `-exercise-bank`,
+     `-mock-exam`. Reuses L08's running example plus a loss node. **No batch
+     normalization.** Three in-deck quiz slides (p12, p48, p53).
+   - **L10** (70pp) — `note-aml-l10-cnn`, `-exercise-bank`, `-mock-exam`. **Five
+     in-deck quiz slides** (p16, p34, p36, p51, p57) — the highest density in the
+     course, drilled first in the bank.
+   - **L11 — not buildable and deliberately not built.** No current 2026 deck
+     exists; only the prior-year RNN slides. Building artifacts would violate the
+     slide-scope rule.
+3. **The systematic L05→L11 review** and a closed-book mock against the real
+   format, once L08–L10 have artifacts to review.
+
+*Helpful now* — passive cross-wires from the parallel M2 track: SaD L11 supplies
+workflow and metrics; SaD L15 is the deliberate warm-up for AML L08–L09. These
+are genuinely bidirectional now that both tracks run at once.
 
 *Reference only* — AML L11 is a conditional prior-year RNN overview. The local
 2026 archive currently stops at L10, so L11 must not become exam scope
-until a current deck or syllabus confirmation appears.
+until a current deck or syllabus confirmation appears. It is excluded from the
+L08–L11 build above until that confirmation exists.
 
 ## Open Questions
 
-- 2.-PZ Anmeldung for the 2. Termin — set the reminder. (Window dates:
-  `curriculum/modules/module-hu-aml/module.yaml` → `registration_windows`.)
-- Fine-grained sequencing: AMLS sits in the last August slot (confirmed
-  2026-07-17), so serious AML hours start right after it — how do they interleave
-  with M2 prep through September?
+- *(Resolved 2026-08-14 — the Anmeldung is no longer a question. It moved to
+  Current Scope as a required action.)*
+- Day-to-day interleaving with the parallel M2 track: the two sittings are nine
+  days apart, so M2 cannot wait for AML to be written. What split holds through
+  September — alternating days, or AML-heavy weeks with M2 anchor sessions?
+  Open because it is a working-rhythm decision, not a planning gap.
+- *(Resolved 2026-08-15 — all three lectures got the full set.)*
+- **Schema gap: `authorship` has no "operator-drafted" value.** The enum is
+  `user | mixed | external`; the nine new L08–L10 notes are recorded as
+  `external` (their substance is the lecturer's deck) with a build-note banner
+  carrying the nuance. Under the current philosophy — operator builds the menu
+  and the artifacts, Aram selects and works them — operator-drafted notes are
+  routine, so the enum probably wants a fourth value. **Schema changes need
+  Aram's explicit approval (CLAUDE.md §5); proposed, not done.**
+- The prior-year L08/L09/L10 decks have not been diffed against the 2026 ones.
+  ~20 minutes each if you want certainty that no topic moved in or out.
 
 ## Next Action
 
-**Now (synergy):** when the AMLS track reaches computation graphs and rewriting
-(AMLS L03/L04), study `unit-aml-l09` alongside it rather than skimming the AMLS
-deck alone — that is the single highest-shared-value AML block in Phase A.
+**Open `unit-aml-l07`:** choose one explanation source and one practice source
+for each uncovered knowledge node, then self-test with `note-aml-l07-mock-exam`
+(75 min, closed book). This was the deferred-until-after-AMLS action; it is now
+simply the next action.
 
-**After the AMLS sitting, exam-specific prep begins:** open `unit-aml-l07`,
-choose one explanation and one practice source for each uncovered knowledge
-node, self-test with `note-aml-l07-mock-exam` (75 min, closed book), then use
-the same choose-before-planning workflow for L08–L10. (The sitting date lives
-in `curriculum/modules/module-hu-amls/module.yaml` — never restated here.)
+**Then work L08 → L09 → L10, in that order.** All nine artifacts now exist, so
+the loop per lecture is: read the reference against the deck → work the exercise
+bank → sit the mock closed-book (75 min) → **let the misses choose your sources**
+from that lecture's routed menu (L08: 22 routes, L09: 24, L10: 19). That is the
+selection step this workspace exists for; the artifacts are the diagnostic that
+makes the choice informed rather than arbitrary.
+
+Order matters: L09's backprop presupposes L08's forward pass, and L10's
+degradation problem presupposes L09's vanishing gradients.
+
+**One verification worth doing** (L09 exercise bank C6): run the deck's own
+PyTorch snippet and check `.grad` against the hand-computed gradients. It
+confirms both the arithmetic and the autograd understanding in one step.
+
+**Admin, when the window opens:** register the 2. Termin via AGNES (see Current
+Scope). Dates live in `curriculum/modules/module-hu-aml/module.yaml`.
 
 ## Durable Notes
 
@@ -142,9 +194,10 @@ remain optional and are created only after sources are chosen.
 
 ## Deferred
 
-- The systematic L08–L10 sweep remains after L07 and the AMLS sitting; the
-  material inventory and semantic mapping are complete now. This does not block pulling
-  L08/L09 material in early as AMLS synergy (see Current Scope).
+- *(Retired 2026-08-14)* "The systematic L08–L10 sweep remains after L07 and the
+  AMLS sitting." Void — there is no AMLS sitting to wait for, and L08–L10 are now
+  required-now work (see Current Scope). The material inventory and semantic
+  mapping being complete is what makes that feasible.
 - L11 RNN execution is deferred until 2026 scope is confirmed.
 - Sutton & Barto remains visible but off-scope for posted AML L01–L10;
   Zacharski is an optional L02 alternative, not a neural-network source.

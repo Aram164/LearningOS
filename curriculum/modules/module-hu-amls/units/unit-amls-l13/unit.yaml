@@ -6,7 +6,7 @@ title: AMLS Lecture 13 — Model Deployment and Serving
 order: 11
 scope: Model exchange and serving patterns; batching/caching/quantization/distillation/cascades; monitoring,
   concept drift, retraining and machine unlearning.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

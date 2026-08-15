@@ -49,6 +49,9 @@ scope_sources:
   authority: reference
   locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
 source_selections: []
-artifacts: {}
+artifacts:
+  ultimate_reference: note-aml-l10-cnn
+  exercise_bank: note-aml-l10-exercise-bank
+  mock_exam: note-aml-l10-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep

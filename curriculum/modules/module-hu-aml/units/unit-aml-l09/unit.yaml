@@ -55,6 +55,9 @@ scope_sources:
   locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
 source_selections: []
 artifacts:
+  ultimate_reference: note-aml-l09-backpropagation
+  exercise_bank: note-aml-l09-exercise-bank
+  mock_exam: note-aml-l09-mock-exam
   other:
   - note-aml-sad-master-wiring
 workspace_ids:

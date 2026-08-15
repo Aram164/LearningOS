@@ -189,6 +189,49 @@
         }
       }
     },
+    "drop": {
+      "description": "Why and when the module left the active cycle, for modules whose status is 'dropped' or 'paused'. Exists so a drop is a first-class fact rather than prose buried in examination.notes: 'attempt_made: false' is the load-bearing distinction, because an empty attempts array cannot by itself say whether nothing was ever registered or the record is merely incomplete. Purely descriptive — it never overrides status, and the exam facts stay in examination.",
+      "type": "object",
+      "required": [
+        "date",
+        "attempt_made"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "When the drop was decided."
+        },
+        "attempt_made": {
+          "type": "boolean",
+          "description": "Whether any sitting was actually attempted. false means no registration was ever completed and no attempt exists to record."
+        },
+        "semester": {
+          "type": "string",
+          "description": "The cycle dropped from, when the intent is to retake in a later one."
+        },
+        "stated_by": {
+          "type": "string",
+          "description": "Who stated the fact. Operators never infer a drop."
+        },
+        "reversible": {
+          "type": "boolean",
+          "description": "Whether the module can be resumed in the same cycle. false where the last sitting of the run has passed."
+        },
+        "intent": {
+          "enum": [
+            "retake-later",
+            "abandoned",
+            "undecided"
+          ],
+          "description": "What is meant to happen next. Governs whether the preparation plan is preserved as a reinstatement plan or archived."
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
     "attempts": {
       "type": "array",
       "items": {

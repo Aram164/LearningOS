@@ -6,7 +6,7 @@ title: AMLS Lecture 08 — Hardware Accelerators
 order: 4
 scope: GPU architecture, Tensor Cores, memory and interconnects, Amdahl's law; FPGA/ASIC/TPU trade-offs
   and accelerator code generation.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides
