@@ -2,7 +2,7 @@ id: module-hu-amls
 institution: TU Berlin
 title: Architecture of ML Systems (AMLS)
 semester: sose-2026
-status: enrolled
+status: dropped
 examination:
   type: klausur
   sittings:
@@ -25,13 +25,27 @@ examination:
     — Nebenhörerschaft at the TU Studierendensekretariat (nebenhoerer@studsek.tu-berlin.de) + exam registration
     via TU MOSES/MTS, to confirm with the AMLS chair — then recognised back at HU. No dated Anmeldung
     window exists to record. NOTE: taken as Bachelor-UEWP — LP-gesperrt im Master (Doppelanrechnungsverbot);
-    knowledge fully reusable (module card, Masters-Planning).'
-attempts:
-- termin: 3
-  date: '2026-08-27'
-  result: registered
-  notes: 'Sitting chosen 2026-07-17 (Aram): the LAST course-run slot. Course-run registration formality
-    to complete closer to the date if required.'
+    knowledge fully reusable (module card, Masters-Planning). The three sittings above are
+    retained as the historical course-run schedule; the module was dropped from this run
+    without any of them being sat (see the `drop` record).'
+attempts: []
+drop:
+  date: '2026-08-15'
+  attempt_made: false
+  semester: sose-2026
+  stated_by: Aram
+  reversible: false
+  intent: retake-later
+  notes: 'Aram, 2026-08-15: "AMLS can be dropped, there was no attempt." No sitting was taken
+    and no exam registration was ever completed — the course-run formality (TU Nebenhörerschaft
+    + MOSES/MTS) recorded in examination.notes was never carried out. The earlier attempts entry
+    (termin 3, 2026-08-27, result: registered) was REMOVED as factually wrong rather than amended
+    to `withdrawn`: the slot was a chosen intent, never a registration, so there was nothing to
+    withdraw from. reversible: false because slot 3 was the LAST sitting of this course run —
+    resuming means the next run, not a later Termin. The preparation plan is preserved intact in
+    work/active/workspace-amls-exam-prep (blocked) with its 14 units and 14 study maps paused;
+    nothing was deleted. Open: whether the lost Bachelor-UEWP LP need covering from elsewhere in
+    program-bachelors.'
 type: module
 kind: academic
 area_id: program-bachelors

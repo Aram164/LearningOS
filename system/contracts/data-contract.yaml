@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 5
-schema_fingerprint: sha256:44202d168a3b23a79f1c7b96209baf4822531f2ec24d5877097ea4ff20fd1fae
+contract_version: 6
+schema_fingerprint: sha256:cb16542e01defcc19e882af65adbd04e3b07abb1734ea610dfdbf48889813389
 record_schemas: 21
 history:
 - version: 1
@@ -58,3 +58,20 @@ history:
     string routes remain valid, so no migration is required.
   migration: null
   fixture: tests/fixtures/formats/v5/
+- version: 6
+  adopted: '2026-08-15'
+  note: 'Three additive schema extensions, all backward-compatible (no migration):
+    (1) note.authorship gains ''operator-drafted'' — a note built by the operator
+    from a scope source and not yet reasoned through by the learner, distinct from
+    ''external'' (another author''s text) and never evidence of understanding; (2)
+    module gains an optional structured ''drop'' record (date, attempt_made, semester,
+    stated_by, reversible, intent, notes) so a drop is a first-class fact rather than
+    prose in examination.notes — attempt_made is load-bearing, since an empty attempts
+    array cannot itself say whether nothing was registered or the record is incomplete;
+    (3) module-source-map unit_routes gain format ''exam''/''solutions'' (used differently
+    from ''exercise''), depth ''unassessed'' and scope ''unevaluated'' — a source
+    routed to a unit but never evaluated, so visibility debt is visible per-route
+    instead of being flattened into ''optional''. Absent values mean exactly what
+    they meant at v5.'
+  migration: null
+  fixture: tests/fixtures/formats/v6/

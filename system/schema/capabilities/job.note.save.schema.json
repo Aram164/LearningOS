@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/job.note.save.schema.json",
+  "title": "payload for capability job.note.save",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "body",
+    "note",
+    "title"
+  ],
+  "properties": {
+    "approve": {
+      "type": "boolean"
+    },
+    "body": {
+      "type": "string"
+    },
+    "confirm_job_access": {
+      "type": "boolean"
+    },
+    "folder": {
+      "type": "string"
+    },
+    "note": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    }
+  }
+}

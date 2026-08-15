@@ -6,7 +6,7 @@ title: AMLS module mock and integration pass
 order: 14
 scope: One module-level 90-minute written mock over the official seven exam areas, followed by evidence-based
   remediation across the 13 lecture units.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

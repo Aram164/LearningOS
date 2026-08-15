@@ -40,7 +40,10 @@ def _capability_handlers() -> dict[str, str]:
         # without `confirm_job_access` in its payload, and none is ever placed
         # in an AI action's allowed-capabilities list.
         "job.session.log": "job_session_log",
+        "job.note.save": "job_note_save",
         "job.note.stamp": "job_note_stamp",
+        "job.plan.save": "job_plan_save",
+        "job.task.save": "job_task_save",
         "job.track.progress": "job_track_progress",
     }
 

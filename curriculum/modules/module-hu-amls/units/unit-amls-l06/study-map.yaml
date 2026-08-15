@@ -1,7 +1,7 @@
 id: study-map-amls-l06
 type: study-map
 unit_id: unit-amls-l06
-status: ready
+status: paused
 current_stage: stage-amls-l06-scope
 source_plan:
   path: work/active/workspace-amls-exam-prep/CONTEXT.md

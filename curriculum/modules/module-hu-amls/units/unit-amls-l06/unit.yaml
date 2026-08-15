@@ -6,7 +6,7 @@ title: AMLS Lecture 06 — Parameter Servers
 order: 6
 scope: Data/model-parallel parameter-server architecture; BSP, ASP and SSP; optimizer/batch communication;
   distributed RL and federated learning.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

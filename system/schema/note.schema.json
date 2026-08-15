@@ -17,7 +17,10 @@
       "default": "synthesis"
     },
     "state": { "enum": ["rough", "evolving", "mature", "deprecated"] },
-    "authorship": { "enum": ["user", "mixed", "external"] },
+    "authorship": {
+      "description": "Who wrote the note body. 'user' is Aram's own synthesis. 'mixed' is his reasoning plus imported material. 'external' is another author's text carried in. 'operator-drafted' is built by the operator from a scope source and NOT yet reasoned through by Aram — a study input, never evidence of understanding; it becomes 'mixed' when he works it and adds his own reasoning.",
+      "enum": ["user", "mixed", "external", "operator-drafted"]
+    },
     "transcription": { "enum": ["none", "manual", "ai-assisted"] },
     "semantic_review": { "enum": ["unreviewed", "user-reviewed"] },
     "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },

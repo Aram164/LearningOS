@@ -6,7 +6,7 @@ title: AMLS Lecture 10 — Data Acquisition and Preparation
 order: 8
 scope: Data acquisition, cleaning and validation; transformation, recoding, one-hot encoding, binning
   and text encodings; reproducible preparation pipelines.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

@@ -6,7 +6,7 @@ title: AMLS Lecture 09 — Data Access Methods
 order: 5
 scope: Caching/buffer management, partitioning and indexing; lossless compression; mixed precision, min-max
   quantization and numerical stability.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

@@ -50,8 +50,11 @@ from learning_os.commands.garden import (  # noqa: E402
 )
 from learning_os.commands.job import cmd_job_dashboard  # noqa: E402
 from learning_os.commands.job_write import (  # noqa: E402
+    cmd_job_note_save,
     cmd_job_note_stamp,
+    cmd_job_plan_save,
     cmd_job_session_log,
+    cmd_job_task_save,
     cmd_job_track_progress,
 )
 from learning_os.commands.detour import (  # noqa: E402
@@ -175,6 +178,35 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_job_note_stamp)
 
     p = sub.add_parser(
+        "job-note-save",
+        help="create or explicitly revise one learner-authored Job note",
+    )
+    p.add_argument("--confirm-job-access", action="store_true")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--note", required=True, help="stable note id")
+    p.add_argument("--title", required=True)
+    p.add_argument("--body", required=True)
+    p.add_argument("--folder", default="learning")
+    p.set_defaults(func=cmd_job_note_save)
+
+    p = sub.add_parser(
+        "job-plan-save",
+        help="create or update one structured Job learning plan",
+    )
+    p.add_argument("--confirm-job-access", action="store_true")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--plan", type=json_object, required=True)
+    p.set_defaults(func=cmd_job_plan_save)
+
+    p = sub.add_parser(
+        "job-task-save",
+        help="create or update one Job task",
+    )
+    p.add_argument("--confirm-job-access", action="store_true")
+    p.add_argument("--task", type=json_object, required=True)
+    p.set_defaults(func=cmd_job_task_save)
+
+    p = sub.add_parser(
         "job-track-progress",
         help="record one completed Job learning-track session",
     )
@@ -182,6 +214,7 @@ def build_parser() -> argparse.ArgumentParser:
                    help="confirm this invocation is an explicit Job session")
     p.add_argument("--track", required=True, help="track id, e.g. job-track-polars")
     p.add_argument("--session", type=int, required=True, help="session number completed")
+    p.add_argument("--state", default="done", help="done | open (default: done)")
     p.set_defaults(func=cmd_job_track_progress)
 
     p = sub.add_parser("module-list", help="list modules with optional program/status filters")

@@ -6,7 +6,7 @@ title: AMLS Lecture 03 — Compilation – Size Inference and Rewrites
 order: 1
 scope: Compilation pipeline; size, sparsity and cost inference; CSE and algebraic rewrites; matrix-chain
   optimization and deferred standardization.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

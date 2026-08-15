@@ -16,6 +16,9 @@
     "session": {
       "type": "integer"
     },
+    "state": {
+      "type": "string"
+    },
     "track": {
       "type": "string"
     }

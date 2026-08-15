@@ -6,7 +6,7 @@ title: AMLS Lecture 05 — Data- and Task-Parallel Execution
 order: 3
 scope: Batch execution and Flynn taxonomy; MapReduce/Spark; distributed matrix operators and shuffle choices;
   parfor scheduling and hybrid parallelism.
-status: ready
+status: paused
 scope_sources:
 - source_id: source-amls-ss26-lectures
   authority: slides

@@ -109,22 +109,78 @@ with Analysis proof blocks, do not run two parallel tracks.
 
 ## Current Scope
 
-Required now: run stage-m2-analysis-calibrate, then AN.0 alongside the current SaD lane. SaD is no longer a fixed N1/N2 sequence: open the relevant lecture knowledge map, compare all available materials by format and angle, and choose the source that fits the current gap. During Phase A keep M2 steady; after the AMLS sitting advance AN.A-G while SaD progresses; after the AML 2. Termin switch to AN.X and combined M2 mocks for the M2 sitting. (All three dates live in the owning module records — `module-hu-amls`, `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never restated here.)
+> **Posture change (COORDINATION.md, Aram 2026-08-14): M2 runs substantially in
+> parallel from now, not as a post-AML sprint.** AMLS is shelved, so the old
+> "steady during Phase A, ramp after the AMLS sitting" sequencing has no pivot.
+> The binding constraint is that the AML and M2 sittings are **nine days apart** —
+> M2 must already be substantially prepared when AML is written. Treating M2 as
+> the final stretch would compress it into exactly the cram that "study super
+> well for Math-2" was meant to prevent.
+
+*Required now — admin.* Register the combined M2 Klausur via AGNES inside the
+2.-PZ Anmeldung window (dates: `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`
+→ `registration_windows`). Non-negotiable and the only hard dated gate before
+the exam. An action to do when the window opens, not a reminder to set.
+
+*Required now — study.* Run `stage-m2-analysis-calibrate`, then AN.0, alongside
+the current SaD lane. **Neither half is a fixed sequence any more (2026-08-15).**
+Both SaD and Analysis now work the same way: open the unit's knowledge map,
+compare the available materials by format and **angle**, and choose the source
+that fits the current gap. The merged-prep rule stands — interleave SaD stats
+clusters with Analysis proof blocks; do not run two parallel tracks *inside* M2.
+
+> **Analysis overhaul, 2026-08-15.** `unit-m2-analysis-exam-prep` was the last
+> prescriptive stage-script in a live track. It now carries a **10-node knowledge
+> map** (AN.0 foundations → sequences → series → limits/continuity →
+> exp-log/uniform → differentiation → Taylor → integration, plus
+> proof-presentation as a cross-cutting skill and exam-transfer as the
+> convergence point), and its sources moved from stage-keyed `source_selections`
+> into **23 knowledge-node-keyed routes with an explicit `angle` each**.
+> `source_selections` is now empty by design — it is *your* selection space, not
+> the operator's prescription.
+>
+> **What that surfaced:** 22 sources were routed to the Analysis unit, but only
+> 10 carried any description. The other 12 were bare unit-id strings — invisible
+> to any selection decision. Five of those had rich evaluations sitting unused in
+> their source records (Forster/Wessoly, Deitmar, Abbott, Grieser, Lebl); their
+> angles are now drawn from those records. **Seven have no registered evaluation
+> at all** and are listed with `scope: optional` and an angle that says so
+> plainly, rather than a judgment invented by the operator (CLAUDE.md §4). They
+> are visibility debt — repay on use, never in bulk (WORKFLOWS §6a).
+>
+> The 11-stage study map is **kept and still valid** as an optional ordered path
+> (WORKFLOWS §7); it no longer claims to be the only route through the material.
+
+Phasing while AML leads: advance AN.A–G and keep SaD progressing throughout
+rather than holding them; after the AML 2. Termin, switch to AN.X and the
+combined M2 mocks for the final nine days. (Both dates live in the owning module
+records — `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never
+restated here.)
 
 ## Open Questions
 
-- 2.-PZ Anmeldung: calendar reminder set? (Window dates:
-  `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml` →
-  `registration_windows`.)
-- Where do the Analysis blocks slot around the AMLS sitting (last slot,
-  confirmed) and the AML 2. Termin — sequencing decision pending (legacy Open
-  Loop #2). With AMLS in late August, the M2 deep-prep window is September.
+- *(Resolved 2026-08-14 — the Anmeldung is no longer a question. It moved to
+  Current Scope as a required action.)*
+- *(Resolved 2026-08-14 — legacy Open Loop #2.)* The Analysis blocks no longer
+  slot "around the AMLS sitting"; that sitting is shelved. September is now a
+  shared AML/M2 window rather than an M2 deep-prep window, which is why M2 runs
+  substantially in parallel instead of waiting.
+- Day-to-day split with the parallel AML track through September — alternating
+  days, or AML-heavy weeks with M2 anchor sessions? A working-rhythm decision,
+  tracked identically in `workspace-aml-exam-prep`; decide once, for both.
 
 ## Next Action
 
 **Planned next block:** start stage-m2-analysis-calibrate (60 min) — read the
 script's course contract, take one cold WV sample, and create the five-class
 error ledger. Then begin AN.0 with unser skript Chapters 1–2.
+
+This is the first stage of the Analysis map and it is still `pending`; the map's
+11 stages carry ~47.5 h. With AML leading on intensity, M2's job through
+September is to get genuinely through AN.0→AN.G rather than to hold position.
+
+**Admin, when the window opens:** register the combined M2 Klausur via AGNES
+(see Current Scope). Dates live in the owning module record.
 
 **SaD choice when returning to statistics:** L04 remains the open lecture, but
 it has no forced current stage. Use its probability/Bayes knowledge graph to
