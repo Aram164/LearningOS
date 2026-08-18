@@ -5,10 +5,61 @@ from pathlib import Path
 import pytest
 import yaml
 
+import ast
+
+import learning_os.fingerprint as fingerprint_module
+from learning_os.genout import source_fingerprint
+from learning_os.loader import load_repo
 from learning_os.transactions import (
     TransactionConflict, TransactionFailure, TransactionService,
     artifact_revision, canonical_fingerprint,
 )
+
+TOOLS = Path(__file__).resolve().parent.parent / "tools"
+
+
+# --------------------------------------------------------------------------
+# One fingerprint, one root list.
+#
+# Two implementations existed until 2026-08-18: `transactions.canonical_
+# fingerprint` produced the value a receipt records as snapshot_before/after,
+# and `genout.source_fingerprint` produced the value the projection publishes
+# as `_generated.snapshot_id` — the token the UI hands back to guard its next
+# write. Same roots, same algorithm, nothing holding them together. Add a
+# canonical root to one and forget the other and the receipt starts describing
+# a different state than the one the write was checked against, silently.
+#
+# Value equality on a fixture is too weak to guard this on its own: a root the
+# fixture happens not to contain could diverge without moving either digest.
+# So the structure is asserted too.
+# --------------------------------------------------------------------------
+
+def test_the_receipt_and_the_projection_share_one_digest_function():
+    assert canonical_fingerprint is fingerprint_module.canonical_fingerprint
+
+
+def test_only_one_module_declares_the_canonical_root_list():
+    """No second copy of the root list may appear anywhere under tools/."""
+    roots = set(fingerprint_module.CANONICAL_ROOTS)
+    declaring: list[str] = []
+    for path in sorted(TOOLS.rglob("*.py")):
+        for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+            if not isinstance(node, (ast.Tuple, ast.List, ast.Set)):
+                continue
+            try:
+                literal = set(ast.literal_eval(node))
+            except (ValueError, TypeError, SyntaxError):
+                continue
+            if roots <= literal:
+                declaring.append(path.relative_to(TOOLS).as_posix())
+                break
+    assert declaring == ["learning_os/fingerprint.py"], (
+        f"the canonical root list is declared in more than one place: {declaring}"
+    )
+
+
+def test_the_receipt_and_the_projection_agree_on_a_real_repository(mini_repo: Path):
+    assert source_fingerprint(load_repo(mini_repo)) == canonical_fingerprint(mini_repo)
 
 
 def test_failed_transaction_restores_canonical_state(tmp_path: Path):

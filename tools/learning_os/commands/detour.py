@@ -51,7 +51,7 @@ def cmd_detour_create(args) -> int:
             for issue in errors[:12]:
                 print(issue, file=sys.stderr)
             return code
-    print(json.dumps({"ok": True, "detour": detour}, ensure_ascii=False))
+    print(json.dumps({"ok": True, "detour": detour, **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -92,5 +92,6 @@ def cmd_detour_resolve(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "detour_id": args.detour_id,
-                      "return_to_stage": target_stage["id"]}, ensure_ascii=False))
+                      "return_to_stage": target_stage["id"],
+                      **confirmation}, ensure_ascii=False))
     return 0

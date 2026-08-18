@@ -49,7 +49,8 @@ def cmd_stage_note(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "stage_id": args.stage_id, "working_note": stage["working_note"]},
+                      "stage_id": args.stage_id, "working_note": stage["working_note"],
+                      **confirmation},
                      ensure_ascii=False))
     return 0
 
@@ -115,7 +116,8 @@ def cmd_stage_progress(args) -> int:
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id, "stage_id": args.stage_id,
                       "status": action, "map_status": data["status"],
-                      "current_stage": data["current_stage"]}, ensure_ascii=False))
+                      "current_stage": data["current_stage"],
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -155,5 +157,6 @@ def cmd_stage_attach(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "stage_id": args.stage_id, "attachment": rel}, ensure_ascii=False))
+                      "stage_id": args.stage_id, "attachment": rel,
+                      **confirmation}, ensure_ascii=False))
     return 0

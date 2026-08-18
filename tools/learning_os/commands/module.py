@@ -362,6 +362,7 @@ def cmd_module_plan_import(args) -> int:
                     print(issue, file=sys.stderr)
                 return code
             result = {"ok": True, "mode": "apply", "module_id": args.module_id,
-                      "units_written": sorted(seen_units), "files_written": len(writes)}
+                      "units_written": sorted(seen_units), "files_written": len(writes),
+                      **confirmation}
     print(json.dumps(result, ensure_ascii=False))
     return 0
