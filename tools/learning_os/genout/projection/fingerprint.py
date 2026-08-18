@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
-import hashlib
-
+from ...fingerprint import canonical_fingerprint
 from ...loader import Repo
-
-_FINGERPRINT_ROOTS = (
-    "knowledge", "sources", "records", "work", "curriculum", "projects",
-    "system/schema", "system/contracts",
-)
 
 
 def source_fingerprint(repo: Repo) -> str:
     """Content identity of every authored input used by the projection.
+
+    The digest itself lives in ``learning_os.fingerprint`` and is the same one
+    a transaction receipt records, so the token the UI guards a write with and
+    the token the receipt reports cannot drift apart. What this wrapper adds is
+    memoisation.
 
     Memoised on the ``Repo``. A ``Repo`` is the result of one ``load_repo``
     walk and is never mutated afterwards, so every caller holding the same
@@ -25,21 +24,7 @@ def source_fingerprint(repo: Repo) -> str:
     cached = getattr(repo, "_source_fingerprint_cache", None)
     if cached is not None:
         return cached
-    digest = hashlib.sha256()
-    for rel_root in _FINGERPRINT_ROOTS:
-        base = repo.root / rel_root
-        if not base.exists():
-            continue
-        files = [base] if base.is_file() else sorted(p for p in base.rglob("*") if p.is_file())
-        for path in files:
-            rel = path.relative_to(repo.root).as_posix()
-            if any(part.startswith(".") for part in path.relative_to(repo.root).parts):
-                continue
-            digest.update(rel.encode("utf-8"))
-            digest.update(b"\0")
-            digest.update(path.read_bytes())
-            digest.update(b"\0")
-    result = digest.hexdigest()
+    result = canonical_fingerprint(repo.root)
     try:
         repo._source_fingerprint_cache = result
     except (AttributeError, TypeError):

@@ -26,6 +26,22 @@ from typing import Callable, Iterable, Mapping, Sequence
 
 import yaml
 
+# One digest, one root list, shared with the projection (see fingerprint.py).
+# Re-exported here because the receipt fields and every existing caller name it
+# through this module.
+from .fingerprint import canonical_fingerprint
+
+__all__ = [
+    "TransactionConflict",
+    "TransactionFailure",
+    "TransactionResult",
+    "TransactionService",
+    "artifact_revision",
+    "canonical_fingerprint",
+    "load_revisions",
+    "parse_expected_revisions",
+]
+
 
 class TransactionConflict(Exception):
     """One or more expected artifact revisions are stale."""
@@ -50,39 +66,6 @@ class TransactionResult:
     revisions: dict[str, int]
     snapshot_before: str
     snapshot_after: str
-
-
-_CANONICAL_ROOTS = (
-    "knowledge",
-    "sources",
-    "records",
-    "work",
-    "curriculum",
-    "projects",
-    "system/schema",
-    "system/contracts",
-)
-
-
-def canonical_fingerprint(root: Path) -> str:
-    """Return a stable digest of authored canonical inputs, excluding ledgers."""
-    digest = hashlib.sha256()
-    for rel_root in _CANONICAL_ROOTS:
-        base = root / rel_root
-        if not base.exists():
-            continue
-        files = [base] if base.is_file() else sorted(
-            path for path in base.rglob("*") if path.is_file()
-        )
-        for path in files:
-            rel = path.relative_to(root)
-            if any(part.startswith(".") for part in rel.parts):
-                continue
-            digest.update(rel.as_posix().encode("utf-8"))
-            digest.update(b"\0")
-            digest.update(path.read_bytes())
-            digest.update(b"\0")
-    return digest.hexdigest()
 
 
 def parse_expected_revisions(values: Sequence[str] | None) -> dict[str, int]:

@@ -60,7 +60,8 @@ def cmd_shelving_prepare(args) -> int:
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
                       "proposal_path": shelving["proposal_path"],
-                      "state": shelving["state"]}, ensure_ascii=False))
+                      "state": shelving["state"],
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -119,7 +120,8 @@ def cmd_shelving_apply(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "applied": sorted(selected)}, ensure_ascii=False))
+                      "applied": sorted(selected),
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 

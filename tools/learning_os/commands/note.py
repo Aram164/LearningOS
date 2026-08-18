@@ -56,7 +56,8 @@ def cmd_note_revise(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "note_id": args.note_id,
-                      "path": note.path.relative_to(root).as_posix()}, ensure_ascii=False))
+                      "path": note.path.relative_to(root).as_posix(),
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -119,6 +120,7 @@ def cmd_note_evidence(args) -> int:
                       "path": note.path.relative_to(root).as_posix(),
                       "evidence": entry,
                       "evidence_count": len(meta["evidence"]),
-                      "scheme": args.ref.split("://", 1)[0]},
+                      "scheme": args.ref.split("://", 1)[0],
+                      **confirmation},
                      ensure_ascii=False))
     return 0

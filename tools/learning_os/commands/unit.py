@@ -71,7 +71,8 @@ def cmd_unit_map_import(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "study_map_id": data.get("id")}, ensure_ascii=False))
+                      "study_map_id": data.get("id"),
+                      **confirmation}, ensure_ascii=False))
     return 0
 
 
@@ -152,7 +153,7 @@ def cmd_unit_source_selection(args) -> int:
             selected = False
 
         unit_data["source_selections"] = selections
-        code, errors, _confirmation = _write_transaction(
+        code, errors, confirmation = _write_transaction(
             root,
             {unit.path: _dump_yaml(unit_data)},
             capability="unit.source-selection.set",
@@ -170,6 +171,7 @@ def cmd_unit_source_selection(args) -> int:
         "source_id": args.source_id,
         "locator": args.locator,
         "selected": selected,
+        **confirmation,
     }, ensure_ascii=False))
     return 0
 
@@ -288,5 +290,6 @@ def cmd_unit_note(args) -> int:
         "ok": True, "unit_id": args.unit_id, "working_note": rel,
         "recorded_at": recorded_at, "stage_ids": stage_ids,
         "attachments": attachments,
+        **confirmation,
     }, ensure_ascii=False))
     return 0

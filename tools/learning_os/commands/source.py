@@ -60,5 +60,6 @@ def cmd_source_feedback(args) -> int:
                 print(issue, file=sys.stderr)
             return code
     print(json.dumps({"ok": True, "unit_id": args.unit_id,
-                      "stage_id": args.stage_id, "feedback": entry}, ensure_ascii=False))
+                      "stage_id": args.stage_id, "feedback": entry,
+                      **confirmation}, ensure_ascii=False))
     return 0
