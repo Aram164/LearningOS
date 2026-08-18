@@ -360,24 +360,126 @@ def _progress(job_root: Path) -> dict:
     return tracks if isinstance(tracks, dict) else {}
 
 
+def _legacy_stage(number: int, title: str, concept: str, source: str,
+                  anchor: str, practice: str) -> dict:
+    """Project retired prose sessions into the common stage read model."""
+    return {
+        "id": f"stage-legacy-{number}",
+        "number": number,
+        "title": title,
+        "status": "pending",
+        "objective": concept or f"Build working fluency in {title}.",
+        "done_when": [practice] if practice else [],
+        "estimate_minutes": None,
+        "exam_critical": False,
+        "concepts": [],
+        "scope_triage": "required-now",
+        "resources": ([{
+            "id": None,
+            "kind": "read",
+            "label": "Legacy learning material",
+            "source_id": None,
+            "locator": source,
+            "url": None,
+            "vault_path": None,
+            "scope_triage": "required-now",
+        }] if source else []),
+        "attachments": [],
+        "source_feedback": [],
+        "job_context": {
+            "mental_models": ([{"label": "Mental model", "text": concept}] if concept else []),
+            "read_only_anchor": anchor,
+        },
+    }
+
+
+def _structured_resource(value: object, stage_id: str) -> dict:
+    if not isinstance(value, dict):
+        raise JobDashboardError(f"learning plan stage {stage_id} has an invalid resource")
+    kind = str(value.get("kind") or "").strip()
+    label = str(value.get("label") or "").strip()
+    if kind not in {"watch", "read", "practise", "reference"} or not label:
+        raise JobDashboardError(f"learning plan stage {stage_id} has an invalid resource")
+    return {
+        "id": str(value.get("id") or "").strip() or None,
+        "kind": kind,
+        "label": label,
+        "source_id": str(value.get("source_id") or "").strip() or None,
+        "locator": str(value.get("locator") or "").strip() or None,
+        "url": str(value.get("url") or "").strip() or None,
+        "vault_path": str(value.get("vault_path") or "").strip() or None,
+        "scope_triage": str(value.get("scope_triage") or "").strip() or None,
+    }
+
+
+def _structured_stage(value: object) -> dict:
+    if not isinstance(value, dict):
+        raise JobDashboardError("learning plan has an invalid stage")
+    stage_id = str(value.get("id") or "").strip()
+    number = value.get("number")
+    title = str(value.get("title") or "").strip()
+    objective = str(value.get("objective") or "").strip()
+    done_when = [
+        str(item).strip() for item in (value.get("done_when") or [])
+        if str(item).strip()
+    ]
+    if (not stage_id.startswith("stage-") or not isinstance(number, int)
+            or number < 1 or not title or not objective or not done_when):
+        raise JobDashboardError("learning plan has an invalid stage contract")
+    context = value.get("job_context") or {}
+    if not isinstance(context, dict):
+        raise JobDashboardError(f"learning plan stage {stage_id} has invalid job_context")
+    models = []
+    for model in context.get("mental_models") or []:
+        if not isinstance(model, dict):
+            continue
+        label = str(model.get("label") or "").strip()
+        text = str(model.get("text") or "").strip()
+        if label and text:
+            models.append({"label": label, "text": text})
+    estimate = value.get("estimate_minutes")
+    return {
+        "id": stage_id,
+        "number": number,
+        "title": title,
+        "status": str(value.get("status") or "pending"),
+        "objective": objective,
+        "done_when": done_when,
+        "estimate_minutes": estimate if isinstance(estimate, int) and estimate > 0 else None,
+        "exam_critical": value.get("exam_critical") is True,
+        "concepts": [str(item) for item in (value.get("concepts") or []) if str(item)],
+        "scope_triage": str(value.get("scope_triage") or "required-now"),
+        "resources": [
+            _structured_resource(resource, stage_id)
+            for resource in (value.get("resources") or [])
+        ],
+        "attachments": list(value.get("attachments") or []),
+        "source_feedback": list(value.get("source_feedback") or []),
+        "job_context": {
+            "mental_models": models,
+            "read_only_anchor": str(context.get("read_only_anchor") or "").strip(),
+        },
+    }
+
+
 def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
     path = _safe_job_path(job_root, entry.get("path"))
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
         raise JobDashboardError(f"cannot read learning track {path.name}: {exc}") from exc
-    sessions: list[dict] = []
+    stages: list[dict] = []
     matches = list(re.finditer(r"^###\s+Session\s+(\d+)\s+[—-]\s+(.+?)\s*$", text, flags=re.MULTILINE))
     for index, match in enumerate(matches):
         block = text[match.end():matches[index + 1].start() if index + 1 < len(matches) else len(text)]
-        sessions.append({
-            "number": int(match.group(1)),
-            "title": _plain(match.group(2)),
-            "concept": _field(block, "Concept"),
-            "source": _field(block, "Source"),
-            "anchor": _field(block, "Stratum anchor"),
-            "practice": _field(block, "Rebuild/stretch"),
-        })
+        stages.append(_legacy_stage(
+            int(match.group(1)),
+            _plain(match.group(2)),
+            _field(block, "Concept"),
+            _field(block, "Source"),
+            _field(block, "Stratum anchor"),
+            _field(block, "Rebuild/stretch"),
+        ))
     outcome = _first_paragraph(_section(text, 'Definition of "there"'))
     track_id = str(entry.get("id") or path.stem)
     recorded = (progress or {}).get(track_id) or {}
@@ -385,8 +487,8 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
         number for number in (recorded.get("completed_sessions") or [])
         if isinstance(number, int)
     ]
-    for session in sessions:
-        session["done"] = session["number"] in completed
+    for stage in stages:
+        stage["done"] = stage["number"] in completed
     return {
         "id": track_id,
         "title": str(entry.get("title") or path.stem),
@@ -394,7 +496,7 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
         "cadence": str(entry.get("cadence") or ""),
         "horizon": str(entry.get("horizon") or "now"),
         "outcome": outcome,
-        "sessions": sessions,
+        "stages": stages,
         "completed_sessions": sorted(completed),
         "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
@@ -405,40 +507,45 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
 
 def _structured_track(path: Path, job_root: Path, progress: dict) -> dict:
     data = _read_yaml(path)
-    if data.get("type") != "job-learning-plan" or data.get("schema_version") != 1:
+    version = data.get("schema_version")
+    if data.get("type") != "job-learning-plan" or version not in {1, 2}:
         raise JobDashboardError(f"unsupported learning plan contract in {path.name}")
     track_id = str(data.get("id") or path.stem).strip()
     title = str(data.get("title") or "").strip()
     if not track_id or not title:
         raise JobDashboardError(f"learning plan {path.name} needs id and title")
-    sessions = []
+    stages = []
     seen: set[int] = set()
-    for row in data.get("sessions") or []:
-        if not isinstance(row, dict):
+    rows = data.get("stages") if version == 2 else data.get("sessions")
+    for row in rows or []:
+        if version == 2:
+            stage = _structured_stage(row)
+        elif isinstance(row, dict):
+            stage = _legacy_stage(
+                row.get("number"),
+                str(row.get("title") or "").strip(),
+                str(row.get("concept") or "").strip(),
+                str(row.get("source") or "").strip(),
+                str(row.get("anchor") or "").strip(),
+                str(row.get("practice") or "").strip(),
+            )
+        else:
             continue
-        number = row.get("number")
-        session_title = str(row.get("title") or "").strip()
-        if not isinstance(number, int) or number < 1 or number in seen or not session_title:
+        number = stage["number"]
+        if not isinstance(number, int) or number < 1 or number in seen or not stage["title"]:
             raise JobDashboardError(
-                f"learning plan {track_id} has an invalid or duplicate session"
+                f"learning plan {track_id} has an invalid or duplicate stage"
             )
         seen.add(number)
-        sessions.append({
-            "number": number,
-            "title": session_title,
-            "concept": str(row.get("concept") or "").strip(),
-            "source": str(row.get("source") or "").strip(),
-            "anchor": str(row.get("anchor") or "").strip(),
-            "practice": str(row.get("practice") or "").strip(),
-        })
-    sessions.sort(key=lambda row: row["number"])
+        stages.append(stage)
+    stages.sort(key=lambda row: row["number"])
     recorded = progress.get(track_id) or {}
     completed = sorted(
         number for number in (recorded.get("completed_sessions") or [])
         if isinstance(number, int) and number in seen
     )
-    for session in sessions:
-        session["done"] = session["number"] in completed
+    for stage in stages:
+        stage["done"] = stage["number"] in completed
     return {
         "id": track_id,
         "title": title,
@@ -446,7 +553,7 @@ def _structured_track(path: Path, job_root: Path, progress: dict) -> dict:
         "cadence": str(data.get("cadence") or ""),
         "horizon": str(data.get("horizon") or "now"),
         "outcome": str(data.get("outcome") or "").strip(),
-        "sessions": sessions,
+        "stages": stages,
         "completed_sessions": completed,
         "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
@@ -605,7 +712,7 @@ def cmd_job_dashboard(args) -> int:
                 "skrub_notes": len(notes["skrub"]),
                 "system_notes": len(notes["stratum"]),
                 "learning_tracks": len(tracks),
-                "learning_sessions": sum(len(track["sessions"]) for track in tracks),
+                "learning_stages": sum(len(track["stages"]) for track in tracks),
                 "open_tasks": sum(task["status"] != "done" for task in tasks),
                 "completed_tasks": sum(task["status"] == "done" for task in tasks),
                 "papers": len(papers),

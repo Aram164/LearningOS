@@ -1,0 +1,1276 @@
+module_id: module-hu-algo2
+plan_contract:
+  version: 1
+  coverage_audit: work/active/workspace-algo2-exam-prep/outputs/algo2-resource-coverage-audit-2026-08-16.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+module_patch:
+  unit_order:
+  - unit-algo2-exam-prep
+source_patches: []
+source_map:
+  type: module-source-map
+  module_id: module-hu-algo2
+  sources:
+  - source_id: source-algo2-hu-materials
+    role: course-material
+    why: The twelve current HU decks define scope; the bundled assigned papers, stable-matching sheet,
+      and authored viva drills stay beside them.
+    priority: 0
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: HU AlgoDat II — complete local course bundle
+      format: course-material
+      angle: Primary authority for terminology, theorem statements, and what the oral can ask. Topic stages
+        open the exact deck; this route opens the complete bundle.
+      covers:
+      - knowledge-algo2-phase0
+      - knowledge-algo2-fast-multiplication
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-b-trees
+      - knowledge-algo2-fibonacci-heaps
+      - knowledge-algo2-splay-trees
+      - knowledge-algo2-cuckoo-hashing
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-stable-matching
+      - knowledge-algo2-computational-geometry
+      - knowledge-algo2-fft
+      - knowledge-algo2-oral-delivery
+      depth: course-aligned
+      scope: current
+      locator: Twelve decks, assigned papers, one exercise sheet, and viva drills
+      vault_path: material://source-algo2-hu-materials
+  - source_id: source-dms-grundwerkzeuge
+    role: spine
+    why: Course-assigned German text for Karatsuba and hashing.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: DMS — Chapters 1 and 4
+      format: book
+      angle: Matches the course's German vocabulary and gives the assigned derivation for Karatsuba plus
+        the hashing foundation.
+      covers:
+      - knowledge-algo2-fast-multiplication
+      - knowledge-algo2-cuckoo-hashing
+      depth: derivation
+      scope: current
+      locator: Kapitel 1 and 4
+      vault_path: material://source-dms-grundwerkzeuge/dms.pdf
+  - source_id: source-clrs
+    role: spine
+    why: Course-assigned reference for amortization, B-trees, Fibonacci heaps, paths, flow, and geometry.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: CLRS — mapped Algo 2 chapters
+      format: book
+      angle: The precise proof-and-algorithm reference behind six HU topics; read only the chapter named
+        by the current stage.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-b-trees
+      - knowledge-algo2-fibonacci-heaps
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-computational-geometry
+      depth: derivation
+      scope: current
+      locator: Ch. 17–19, 24–26, and 33 as stage-mapped
+      vault_path: material://source-clrs/clrs-de.pdf
+  - source_id: source-ottmann-widmayer
+    role: spine
+    why: Course-assigned German text for splay trees, bipartite matching, and FFT.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Ottmann/Widmayer — mapped sections
+      format: book
+      angle: Provides the assigned second account in German; use §5.4 for splay, §9.8 for matching, and
+        §1.2 for FFT.
+      covers:
+      - knowledge-algo2-splay-trees
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-fft
+      depth: derivation
+      scope: current
+      locator: §1.2, §3.3, §5.4, §9.8
+      vault_path: material://source-ottmann-widmayer/ow.pdf
+  - source_id: source-kleinberg-tardos
+    role: spine
+    why: Course-assigned source for Gale–Shapley and its optimality results.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Kleinberg/Tardos — Stable Matching
+      format: book
+      angle: A compact proof-oriented telling of Gale–Shapley, stability, and proposer optimality.
+      covers:
+      - knowledge-algo2-stable-matching
+      depth: derivation
+      scope: current
+      locator: Section 1.1
+      vault_path: material://source-kleinberg-tardos/Kleinberg-Tardos_Algorithm-Design.pdf
+  - source_id: source-pagh-cuckoo-hashing
+    role: spine
+    why: The course-assigned short primary paper for cuckoo hashing.
+    priority: 1
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Pagh — Cuckoo Hashing for Undergraduates
+      format: paper
+      angle: Separates worst-case lookup, expected insertion, and amortized expected dynamic guarantees
+        in the source the course assigns.
+      covers:
+      - knowledge-algo2-cuckoo-hashing
+      depth: derivation
+      scope: current
+      locator: Complete paper
+      vault_path: material://source-algo2-hu-materials/Pagh06_CuckooHashingForUndergraduates.pdf
+  - source_id: source-mit-6006
+    role: intuition
+    why: One exact Karatsuba lecture for the first recurrence before returning to the assigned German
+      text.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: MIT 6.006 — Karatsuba multiplication
+      format: video
+      angle: A worked audiovisual derivation of the three-product identity and recurrence.
+      covers:
+      - knowledge-algo2-fast-multiplication
+      depth: intuition
+      scope: complementary
+      locator: Fall 2011 Karatsuba lecture
+      url: https://www.youtube.com/watch?v=eCaXlAaN2uE
+  - source_id: source-mit-6046j
+    role: derivation
+    why: Exact lectures supply a second proof-level telling for six difficult topics; it is not a second
+      linear course.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: MIT 6.046J — selected Algo 2 lectures
+      format: course
+      angle: Use only L2 convex hull, L3 FFT, L5 amortization, L11 APSP, L13 flow, or L14 matching when
+        that stage is active.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-computational-geometry
+      - knowledge-algo2-fft
+      depth: derivation
+      scope: complementary
+      locator: Lectures 2, 3, 5, 11, 13, and 14
+      url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/video_galleries/lecture-videos/
+  - source_id: source-open-data-structures
+    role: first-exposure
+    why: A concrete open textbook chapter for the B-tree cost model and operations.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Open Data Structures — B-Trees
+      format: book
+      angle: Makes the external-memory model and split/merge mechanics concrete before the CLRS proof
+        details.
+      covers:
+      - knowledge-algo2-b-trees
+      depth: intuition
+      scope: complementary
+      locator: Chapter 14.2
+      url: https://opendatastructures.org/ods-cpp/14_2_B_Trees.html
+  - source_id: source-tuwien-ad2-fibonacci
+    role: first-exposure
+    why: A German worked second explanation for Fibonacci-heap operations.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: TU Wien AD2 — Fibonacci-Heaps
+      format: documentation
+      angle: Worked figures connect the potential argument to actual consolidate, cut, and cascading-cut
+        operations.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-fibonacci-heaps
+      depth: course-aligned
+      scope: complementary
+      locator: Fibonacci-Heaps chapter
+      url: https://www.ac.tuwien.ac.at/files/teaching/ss12/AD2/kapitel_fibonacci.pdf
+  - source_id: source-cmu-15451-splay-notes
+    role: derivation
+    why: A cleaner access-lemma derivation from Sleator's course.
+    priority: 3
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: CMU 15-451 — Splay Trees
+      format: documentation
+      angle: A proof-focused route through rank potential and the access lemma when the assigned text
+        is too compressed.
+      covers:
+      - knowledge-algo2-splay-trees
+      depth: derivation
+      scope: complementary
+      locator: Lecture 8 notes
+      url: https://www.cs.cmu.edu/~15451-f23/lectures/lecture08-splay-trees.pdf
+  - source_id: source-sleator-tarjan-splay
+    role: optional-depth
+    why: The original paper is preserved for proof depth, not assigned on the first pass.
+    priority: 12
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Sleator–Tarjan — Self-Adjusting Binary Search Trees
+      format: paper
+      angle: The original access-lemma source; open only after the HU and CMU explanations if a proof
+        detail remains unresolved.
+      covers:
+      - knowledge-algo2-splay-trees
+      depth: advanced-reference
+      scope: optional
+      locator: Complete 1985 paper
+      vault_path: material://source-algo2-hu-materials/SleatorT1985_SelfAdjustingBinarySearchTrees.pdf
+  - source_id: source-frankfurt-algo2-course
+    role: practice
+    why: German short videos, sheets, and exam archive fill the local exercise gap without redefining
+      HU scope.
+    priority: 4
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Goethe Frankfurt ALGO2 — mapped German practice
+      format: course
+      angle: Use the amortization/splay and network-flow sheets plus short videos for German transfer
+        vocabulary; keep the exam archive for later oral explanation drills.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-splay-trees
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-oral-delivery
+      depth: practice
+      scope: complementary
+      locator: Amortization/Splay, Netzwerkfluss I–II, and exam archive
+      url: https://tcs.uni-frankfurt.de/algo2/
+  - source_id: source-visualgo
+    role: intuition
+    why: Interactive traces expose state changes in graph and geometry algorithms before the proof-level
+      pass.
+    priority: 4
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: VisuAlgo — Algo 2 visual traces
+      format: website
+      angle: Run one small SSSP, max-flow, matching, or convex-hull instance and narrate each state change;
+        then return to the HU proof.
+      covers:
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-computational-geometry
+      depth: intuition
+      scope: complementary
+      locator: SSSP, max flow, matching, convex hull
+      url: https://visualgo.net/en
+  - source_id: source-wayne-kt-slides
+    role: intuition
+    why: The official Kleinberg–Tardos deck is the most compact visual stable-matching review.
+    priority: 4
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Princeton — Stable Matching
+      format: documentation
+      angle: Visual proposal rounds and concise invariant slides reinforce the assigned book's proof.
+      covers:
+      - knowledge-algo2-stable-matching
+      depth: course-aligned
+      scope: complementary
+      locator: Chapter 1 slide deck
+      url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/01StableMatching.pdf
+  - source_id: source-reducible-fft
+    role: intuition
+    why: A single strong visual preview of point-value representation and divide-and-conquer FFT.
+    priority: 4
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Reducible — The Fast Fourier Transform
+      format: video
+      angle: Builds the picture for roots-of-unity evaluation before the HU deck and Ottmann/Widmayer
+        derivation.
+      covers:
+      - knowledge-algo2-fft
+      depth: intuition
+      scope: complementary
+      locator: Complete video
+      url: https://www.youtube.com/watch?v=h7apO7q16V0
+  - source_id: source-algo2-frankfurt-klausuren
+    role: exam-preparation
+    why: Solved written exams become explain-aloud scripts after the twelve topic drills.
+    priority: 5
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Frankfurt ALGO2 solved exams 2021–2024
+      format: solutions
+      angle: Choose one unseen problem, explain the solution aloud, then compare against the model answer;
+        do not treat this other university's written format as HU calibration.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-b-trees
+      - knowledge-algo2-fibonacci-heaps
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-oral-delivery
+      depth: practice
+      scope: complementary
+      locator: Eight local solved exams; start with 2024-03-26
+      vault_path: material://source-algo2-frankfurt-klausuren/ALGO2-2024-03-26-solutions.pdf
+  - source_id: source-jeff-erickson-algorithms
+    role: optional-depth
+    why: Free proof-oriented book chapters are a reserve second telling for graph topics.
+    priority: 20
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: Jeff Erickson — Algorithms
+      format: book
+      angle: Open one mapped chapter only when the assigned source leaves a proof gap; never read it as
+        a parallel course.
+      covers:
+      - knowledge-algo2-amortized-analysis
+      - knowledge-algo2-splay-trees
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-fft
+      depth: derivation
+      scope: optional
+      locator: Ch. 8–11 plus mapped extended notes
+      url: https://jeffe.cs.illinois.edu/teaching/algorithms/
+  - source_id: source-fiset-graph-theory
+    role: optional-depth
+    why: Visual graph explanations are a fallback for a diagnosed intuition gap.
+    priority: 21
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: William Fiset — Graph Theory playlist
+      format: video
+      angle: Select only Bellman–Ford, Ford–Fulkerson, or bipartite matching; the full playlist is out
+        of scope.
+      covers:
+      - knowledge-algo2-shortest-paths
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      depth: intuition
+      scope: optional
+      locator: Mapped videos only
+      url: https://www.youtube.com/playlist?list=PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P
+  - source_id: source-kit-algorithmen2
+    role: optional-depth
+    why: A German full-course fallback whose vocabulary aligns with DMS, but only topic extracts are useful
+      now.
+    priority: 22
+    unit_routes:
+    - unit_id: unit-algo2-exam-prep
+      title: KIT Algorithmen 2 — selected recordings
+      format: course
+      angle: Use one topic-matched German recording for flow, matching, or geometry only after a diagnosed
+        gap; never restart Algo 2 linearly.
+      covers:
+      - knowledge-algo2-maximum-flow
+      - knowledge-algo2-bipartite-matching
+      - knowledge-algo2-computational-geometry
+      depth: course-aligned
+      scope: optional
+      locator: Flow, matching, or geometry recording only
+      url: https://www.youtube.com/playlist?list=PLfk0Dfh13pBNyD4E0lUbTe3o4nvRwexRv
+units:
+- unit:
+    id: unit-algo2-exam-prep
+    type: unit
+    module_id: module-hu-algo2
+    kind: exam-block
+    title: Algo 2 oral exam preparation — twelve-topic spine + Phase 0 prerequisites
+    order: 1
+    scope: 'Algorithmen und Datenstrukturen II (Kratsch, HU Berlin, SoSe 2026), examined as a 30-minute
+      oral by Zoom. Scope is the twelve current-run lecture decks (608 slides, 2026-03-30 to 2026-06-30),
+      verified 2026-08-16 against the official lecture schedule: every scheduled topic has its deck and
+      every deck''s page count reconciles with the schedule''s slide ranges. Each deck names its own Literatur
+      on slide 2 and every named book is held locally, so external reading is prescribed rather than chosen.
+      Two known gaps, both recorded as absent rather than reconstructed - the Organisation deck (1st lecture,
+      8 April) is NOT held, and there are NO HU Übungsblätter for any topic except stable matching. Übungen
+      are ungraded (module record), but this leaves the oral with no examiner-calibrated practice, which
+      is why the per-topic viva drills carry the diagnostic load.'
+    status: paused
+    knowledge_map:
+      summary: Twelve topics in one methodological arc. The course opens and closes on the same question
+        - how fast can we multiply - reaching O(n^log2(3)) via Karatsuba in lecture 1 and O(n log n) via
+        the FFT in lecture 12. Between them sit two families. The data-structure family is gated by amortized
+        analysis, which is itself a topic and which Fibonacci heaps and splay trees both presuppose; B-trees
+        and cuckoo hashing stand apart, one optimizing disk accesses and the other giving the course's
+        only worst-case constant lookup. The graph family runs shortest paths, then maximum flow, which
+        bipartite matching reduces to; stable matching is a different problem despite the adjacency, and
+        computational geometry is self-contained apart from its determinant primitive. Three distinct
+        kinds of guarantee appear and are routinely confused - deterministic worst case, amortized over
+        a sequence, and expected over random hash functions - and cuckoo hashing's dynamic variant needs
+        two of the three words at once. Phase 0 nodes are prerequisites the decks assume and never re-teach.
+      nodes:
+      - id: knowledge-algo2-phase0
+        title: Phase 0 - assumed prerequisites
+        summary: Asymptotics and elementary operations, recurrences and the master theorem, ADT Dictionary
+          and BSTs, ADT Priority Queue and heaps, hashing with chaining plus expected-value probability,
+          graphs and Dijkstra, complex roots of unity, determinants and orientation, and proof presentation
+          out loud. Every item is named by a deck's own Erinnerung or Wiederholung slide, not inferred.
+          Run as diagnostics first - most should pass and be skipped.
+      - id: knowledge-algo2-fast-multiplication
+        title: T01 - Schnellere Multiplikation
+        summary: Number representation and addition cost, the school method and its tight 3n^2 bound,
+          the recursive split, Karatsuba's three-multiplication identity, both recurrences, and the master
+          theorem giving O(n^log2(3)). The decisive point is 3 versus 4 as the branching factor. Toom-k
+          as Ausblick.
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-amortized-analysis
+        title: T02 - Amortisierte Analyse
+        summary: Aggregate analysis, the accounting method and the potential method, each carried through
+          the same two examples - the multipop stack and the k-bit binary counter. The potential theorem
+          and the distinction between its sufficient conditions and the actual requirement. Deterministic,
+          not average-case. Load-bearing for two later topics.
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-b-trees
+        title: T03 - B-Bäume
+        summary: Motivated entirely by secondary-storage access costs. Minimal degree t, the height bound
+          log_t((n+1)/2), search by disk accesses, splitting with the median moving up, single-pass insertion
+          that splits on the way down, growth at the root, and the deletion cases under the at-least-t-keys
+          invariant. B+ and B*.
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-fibonacci-heaps
+        title: T04 - Fibonacci-Heaps
+        summary: Lazy structure of unordered min-heap-ordered trees with a root list and marking. Potential
+          t(H) + 2m(H); insert, min, union and decreasekey amortized O(1), extractmin and delete O(log
+          n), worst case O(n). Consolidation by degree, cut and cascading cut, and the degree bound via
+          size(x) >= F_{k+2} >= phi^k.
+        builds_on:
+        - knowledge-algo2-amortized-analysis
+      - id: knowledge-algo2-splay-trees
+        title: T05 - Splay-Bäume
+        summary: Self-adjusting BSTs with no balance information. The splay operation with zig, zig-zig
+          and zig-zag, where rotating the grandparent first is what distinguishes it from move-to-root.
+          Rank potential, the 3(r(t) - r(p)) + 1 lemma, and O(log n) amortized. Dynamic optimality remains
+          open.
+        builds_on:
+        - knowledge-algo2-amortized-analysis
+      - id: knowledge-algo2-cuckoo-hashing
+        title: T06 - Cuckoo Hashing
+        summary: Two hash functions and two permitted positions, giving search and delete in worst-case
+          O(1) - the course's only such guarantee. Insert by eviction, analysed through the cuckoo graph
+          and a path lemma; rehashing costs O(n) but occurs with probability O(1/r). The dynamic variant
+          is amortized expected O(1).
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-shortest-paths
+        title: T07 - Kürzeste Wege
+        summary: What breaks with negative weights. Relaxation and optimal substructure, Bellman-Ford
+          in Theta(nm) with n-1 passes plus negative-cycle detection by telescoping, and Johnson's all-pairs
+          method via per-vertex reweighting that leaves cycle lengths unchanged. Dijkstra and BFS are
+          assumed from AlgoDat I.
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-maximum-flow
+        title: T08 - Maximaler Fluss
+        summary: Flow networks, why naive greedy fails, and the residual network whose backward edges
+          restore the ability to undo. Ford-Fulkerson at O(F*m), which is not polynomial; Edmonds-Karp
+          at O(|V|*|A|^2) by always taking a shortest residual path. Cuts, the three equivalences, max-flow
+          min-cut and how to extract the cut. Variant reductions and Menger.
+        builds_on:
+        - knowledge-algo2-shortest-paths
+      - id: knowledge-algo2-bipartite-matching
+        title: T09 - Bipartites Matching
+        summary: Maximal versus maximum, alternating and augmenting paths, and Berge's theorem with its
+          vertex-disjoint count. Hopcroft-Karp works in phases over maximal SAP-packings; O(sqrt(n)) phases
+          at O(m) each gives O(m*sqrt(n)). Also solvable by reduction to maximum flow. General graphs
+          need blossoms.
+        builds_on:
+        - knowledge-algo2-maximum-flow
+      - id: knowledge-algo2-stable-matching
+        title: T10 - Stable Matching
+        summary: A different problem from T09 - always perfect, optimizing stability against preferences
+          rather than cardinality. Instability requires a mutual incentive to deviate. Gale-Shapley terminates
+          in at most n^2 iterations and is always stable; every execution yields the same matching, optimal
+          for every proposer and pessimal for every receiver.
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-computational-geometry
+        title: T11 - Algorithmische Geometrie
+        summary: Orientation by the sign of a determinant, chosen to avoid division and trigonometry,
+          and segment intersection from it. The sweep-line method, where only newly adjacent pairs need
+          testing. Convex hull with the Omega(n log n) bound by reduction from sorting, Jarvis at O(n*h)
+          and Graham at O(n log n). Closest pair, where pre-sorting once turns O(n log^2 n) into O(n log
+          n).
+        builds_on:
+        - knowledge-algo2-phase0
+      - id: knowledge-algo2-fft
+        title: T12 - Schnelle Fourier-Transformation
+        summary: Polynomial representations and their differing operation costs, the recursive split p(x)
+          = g(x^2) + x*u(x^2), and why complex roots of unity are needed for the halving to repeat. The
+          FFT in O(n log n), the inverse via the Vandermonde matrix and the summation lemma, and fast
+          multiplication of polynomials and integers - closing the question lecture 1 opened.
+        builds_on:
+        - knowledge-algo2-fast-multiplication
+      - id: knowledge-algo2-oral-delivery
+        title: Oral delivery and exam transfer
+        summary: Converting knowledge into a 30-minute viva - five-minute summaries per topic, follow-up
+          question trees, board work narrated while drawing, and the cross-topic threads an examiner samples.
+          The one genuinely different skill, and the one with no written substitute.
+        builds_on:
+        - knowledge-algo2-fft
+        - knowledge-algo2-bipartite-matching
+        - knowledge-algo2-stable-matching
+        - knowledge-algo2-computational-geometry
+        - knowledge-algo2-b-trees
+        - knowledge-algo2-fibonacci-heaps
+        - knowledge-algo2-splay-trees
+        - knowledge-algo2-cuckoo-hashing
+    scope_sources:
+    - source_id: source-algo2-hu-materials
+      authority: slides
+      locator: ad2_*.pdf, twelve current-run decks (608 sl.), 2026-03-30 to 2026-06-30. Each deck's slide
+        2 carries its Themen des Abschnitts and its Literatur/Leseaufgabe.
+    - source_id: source-clrs
+      authority: reference
+      locator: Kap. 17.1-17.4 (amortized), 18 (B-trees), 19 (Fibonacci), 24-25 (shortest paths), 26.1-26.2
+        (flow), 33 (geometry)
+    - source_id: source-dms-grundwerkzeuge
+      authority: reference
+      locator: Kap. 1 (fast multiplication, read fully), Kap. 4 (hashing)
+    - source_id: source-ottmann-widmayer
+      authority: reference
+      locator: Abschnitt 1.2 (FFT), 3.3 (self-adjusting lists, Leseaufgabe), 5.4 (splay), 9.8 (matching)
+    - source_id: source-kleinberg-tardos
+      authority: reference
+      locator: Abschnitt 1.1 (stable matching)
+    - source_id: source-algo2-frankfurt-klausuren
+      authority: reference
+      locator: Eight solved ALGO2 exams 2021-2024; written format from another university - use as explain-aloud
+        drill only
+    source_selections: []
+    current_study_map: study-map-algo2-exam-prep
+    artifacts:
+      ultimate_reference: note-algo2-phase0-prerequisites
+      other:
+      - note-algo2-fast-multiplication
+      - note-algo2-fast-multiplication-exercise-bank
+      - note-algo2-fast-multiplication-viva-drill
+      - note-algo2-amortized-analysis
+      - note-algo2-amortized-analysis-exercise-bank
+      - note-algo2-amortized-analysis-viva-drill
+      - note-algo2-b-trees
+      - note-algo2-b-trees-exercise-bank
+      - note-algo2-b-trees-viva-drill
+      - note-algo2-fibonacci-heaps
+      - note-algo2-fibonacci-heaps-exercise-bank
+      - note-algo2-fibonacci-heaps-viva-drill
+      - note-algo2-splay-trees
+      - note-algo2-splay-trees-exercise-bank
+      - note-algo2-splay-trees-viva-drill
+      - note-algo2-cuckoo-hashing
+      - note-algo2-cuckoo-hashing-exercise-bank
+      - note-algo2-cuckoo-hashing-viva-drill
+      - note-algo2-shortest-paths
+      - note-algo2-shortest-paths-exercise-bank
+      - note-algo2-shortest-paths-viva-drill
+      - note-algo2-maximum-flow
+      - note-algo2-maximum-flow-exercise-bank
+      - note-algo2-maximum-flow-viva-drill
+      - note-algo2-bipartite-matching
+      - note-algo2-bipartite-matching-exercise-bank
+      - note-algo2-bipartite-matching-viva-drill
+      - note-algo2-stable-matching
+      - note-algo2-stable-matching-exercise-bank
+      - note-algo2-stable-matching-viva-drill
+      - note-algo2-computational-geometry
+      - note-algo2-computational-geometry-exercise-bank
+      - note-algo2-computational-geometry-viva-drill
+      - note-algo2-fft
+      - note-algo2-fft-exercise-bank
+      - note-algo2-fft-viva-drill
+    workspace_ids:
+    - workspace-algo2-exam-prep
+  study_map:
+    id: study-map-algo2-exam-prep
+    type: study-map
+    unit_id: unit-algo2-exam-prep
+    status: paused
+    current_stage: stage-algo2-phase0
+    source_plan:
+      path: work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md
+      provenance: migrated-mini-plan
+    detours: []
+    shelving:
+      state: none
+    stages:
+    - id: stage-algo2-phase0
+      title: Phase 0 - run the prerequisite diagnostics
+      status: pending
+      objective: Run the nine Phase 0 diagnostics cold and repair only what fails. This is triage, not
+        a course - most items should pass and be skipped. The 120 minutes below covers the diagnostics
+        only; repair costs 2-8 hours depending on results, and that spread is itself the decision input.
+      done_when:
+      - All nine diagnostics attempted cold and the outcome recorded per phase.
+      - Every failed phase repaired within its stated budget and re-checked cold in a later session.
+      - The five-class error ledger created (definition, theorem-condition, method-choice, algebra, time).
+      - The actual Phase 0 cost recorded, since it changes what reinstating the module costs.
+      estimate_minutes: 120
+      exam_critical: true
+      concepts:
+      - concept-asymptotic-analysis
+      - concept-recurrences-master-theorem
+      - concept-adt-dictionary
+      - concept-binary-search-trees
+      - concept-adt-priority-queue
+      - concept-hashing-chaining
+      - concept-graph-basics
+      - concept-complex-roots-of-unity
+      - concept-determinant-orientation
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: Phase 0 diagnostics and repair routes
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-phase0-prerequisites
+        vault_path: knowledge/notes/algorithms/note-algo2-phase0-prerequisites.md
+        scope_triage: required-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-phase0/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t01-fast-multiplication
+      title: T01 - Schnellere Multiplikation
+      status: pending
+      objective: Karatsuba, both recurrences, and the master theorem application.
+      done_when:
+      - Karatsuba's identity written from memory with the correct multiplication count.
+      - Both recurrences stated and solved; the 3-versus-4 point stated in one sentence.
+      - Viva drill section A delivered aloud within five minutes.
+      estimate_minutes: 120
+      exam_critical: true
+      concepts:
+      - concept-fast-multiplication
+      - concept-recurrences-master-theorem
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — fast multiplication
+        source_id: source-algo2-hu-materials
+        locator: ad2_fastmultiplication.pdf (31 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_fastmultiplication.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — DMS Chapter 1
+        source_id: source-dms-grundwerkzeuge
+        locator: Kapitel 1
+        vault_path: material://source-dms-grundwerkzeuge/dms.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.006 — Karatsuba multiplication
+        source_id: source-mit-6006
+        locator: Fall 2011, Lecture 10 segment
+        url: https://www.youtube.com/watch?v=eCaXlAaN2uE
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t01-fast-multiplication/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t02-amortized-analysis
+      title: T02 - Amortisierte Analyse
+      status: pending
+      objective: All three methods across both running examples. This gates T04 and T05 - do not start
+        either until the six-cell transfer drill is complete.
+      done_when:
+      - All six cells of the method-transfer drill delivered aloud in under 90 seconds each.
+      - The potential theorem stated with its conditions, and the sufficient-versus-necessary distinction
+        explained.
+      - Dynamic arrays worked (CLRS 17.4, the set Leseaufgabe).
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-amortized-analysis
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — amortized analysis
+        source_id: source-algo2-hu-materials
+        locator: ad2_amortizedanalysis.pdf (40 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_amortizedanalysis.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS 17.1–17.4
+        source_id: source-clrs
+        locator: Kapitel 17.1–17.4, including 17.4
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.046J — amortized analysis
+        source_id: source-mit-6046j
+        locator: Lecture 5
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-5-amortization-amortized-analysis/
+        scope_triage: helpful-now
+      - kind: practise
+        label: Frankfurt ALGO2 — German amortization/splay practice
+        source_id: source-frankfurt-algo2-course
+        locator: Amortisierte Analyse + Splay-Bäume
+        url: https://tcs.uni-frankfurt.de/algo2/
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t02-amortized-analysis/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t03-b-trees
+      title: T03 - B-Bäume
+      status: pending
+      objective: The disk-access cost model, the height bound, one-pass insertion, and the deletion cases.
+      done_when:
+      - The height theorem stated and proved, with a worked disk-access count for realistic t and n.
+      - A t=2 tree built by insertion and reduced by deletion, naming the case each time.
+      - Viva drill delivered, leading with the cost model rather than the definition.
+      estimate_minutes: 180
+      exam_critical: true
+      concepts:
+      - concept-b-trees
+      - concept-adt-dictionary
+      - concept-binary-search-trees
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — B-trees
+        source_id: source-algo2-hu-materials
+        locator: ad2_btrees.pdf (44 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_btrees.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS Chapter 18
+        source_id: source-clrs
+        locator: Kapitel 18
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Open Data Structures — B-trees
+        source_id: source-open-data-structures
+        locator: 'Chapter 14.2: B-Trees'
+        url: https://opendatastructures.org/ods-cpp/14_2_B_Trees.html
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t03-b-trees/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t04-fibonacci-heaps
+      title: T04 - Fibonacci-Heaps
+      status: pending
+      objective: Structure, marking, the potential t + 2m, all six operations, and the degree bound.
+      done_when:
+      - The bound table reproduced including the worst-case row.
+      - The decreasekey cancellation derived, and the role of the factor 2 explained.
+      - The chain from grad[y_i] >= i-2 to D(n) = O(log n) delivered aloud.
+      estimate_minutes: 240
+      exam_critical: true
+      concepts:
+      - concept-fibonacci-heaps
+      - concept-adt-priority-queue
+      - concept-amortized-analysis
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — Fibonacci heaps
+        source_id: source-algo2-hu-materials
+        locator: ad2_fibonacciheap.pdf (57 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_fibonacciheap.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS Chapter 19
+        source_id: source-clrs
+        locator: Kapitel 19
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: read
+        label: TU Wien AD2 — German worked Fibonacci-heap chapter
+        source_id: source-tuwien-ad2-fibonacci
+        locator: Fibonacci-Heaps und amortisierte Analyse
+        url: https://www.ac.tuwien.ac.at/files/teaching/ss12/AD2/kapitel_fibonacci.pdf
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t04-fibonacci-heaps/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t05-splay-trees
+      title: T05 - Splay-Bäume
+      status: pending
+      objective: The splay operation and the rank-potential analysis - the hardest proof in the course.
+      done_when:
+      - zig-zig drawn correctly under questioning, grandparent first.
+      - The 3(r(t) - r(p)) + 1 lemma stated, and the auxiliary log lemma proved.
+      - Why only the zig-zig case is tight, and what that says about the constant 3.
+      estimate_minutes: 240
+      exam_critical: true
+      concepts:
+      - concept-splay-trees
+      - concept-binary-search-trees
+      - concept-amortized-analysis
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — splay trees
+        source_id: source-algo2-hu-materials
+        locator: ad2_splaytrees.pdf (52 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_splaytrees.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — Ottmann/Widmayer §5.4 and §3.3
+        source_id: source-ottmann-widmayer
+        locator: Abschnitt 5.4; Leseaufgabe Abschnitt 3.3
+        vault_path: material://source-ottmann-widmayer/ow.pdf
+        scope_triage: required-now
+      - kind: read
+        label: CMU 15-451 — splay-tree access lemma notes
+        source_id: source-cmu-15451-splay-notes
+        locator: Lecture 8
+        url: https://www.cs.cmu.edu/~15451-f23/lectures/lecture08-splay-trees.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Sleator–Tarjan original paper
+        source_id: source-sleator-tarjan-splay
+        locator: Self-Adjusting Binary Search Trees (1985)
+        vault_path: material://source-algo2-hu-materials/SleatorT1985_SelfAdjustingBinarySearchTrees.pdf
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t05-splay-trees/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t06-cuckoo-hashing
+      title: T06 - Cuckoo Hashing
+      status: pending
+      objective: Two positions, worst-case constant lookup, and the probabilistic analysis. The precision
+        topic - three kinds of guarantee appear here.
+      done_when:
+      - Search stated as worst case, insert as expected, dynamic as amortized expected - unprompted.
+      - The rehashing objection answered with the O(1/r) times O(n) argument.
+      - The difference from T02's amortized bounds stated in one sentence.
+      estimate_minutes: 180
+      exam_critical: true
+      concepts:
+      - concept-cuckoo-hashing
+      - concept-hashing-chaining
+      - concept-expected-value
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — cuckoo hashing
+        source_id: source-algo2-hu-materials
+        locator: ad2_hashing.pdf (39 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_hashing.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — DMS Chapter 4
+        source_id: source-dms-grundwerkzeuge
+        locator: Kapitel 4
+        vault_path: material://source-dms-grundwerkzeuge/dms.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned paper — Cuckoo Hashing for Undergraduates
+        source_id: source-pagh-cuckoo-hashing
+        locator: Pagh (2006), read independently
+        vault_path: material://source-algo2-hu-materials/Pagh06_CuckooHashingForUndergraduates.pdf
+        scope_triage: required-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t06-cuckoo-hashing/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t07-shortest-paths
+      title: T07 - Kürzeste Wege
+      status: pending
+      objective: Bellman-Ford with correctness and negative-cycle detection, and Johnson's reweighting.
+      done_when:
+      - A counterexample ready showing Dijkstra failing on a negative edge.
+      - The telescoping detection proof delivered.
+      - Why a global constant shift does not work, contrasted with per-vertex reweighting.
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-shortest-paths
+      - concept-graph-basics
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — shortest paths
+        source_id: source-algo2-hu-materials
+        locator: ad2_shortestpaths.pdf (54 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_shortestpaths.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS Chapters 24–25
+        source_id: source-clrs
+        locator: Kapitel 24 und 25
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.046J — all-pairs shortest paths and Johnson
+        source_id: source-mit-6046j
+        locator: Lecture 11
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-11-dynamic-programming-all-pairs-shortest-paths/
+        scope_triage: helpful-now
+      - kind: practise
+        label: VisuAlgo — shortest-path traces
+        source_id: source-visualgo
+        locator: SSSP visualizer
+        url: https://visualgo.net/en/sssp
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t07-shortest-paths/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t08-maximum-flow
+      title: T08 - Maximaler Fluss
+      status: pending
+      objective: The residual network, Ford-Fulkerson and Edmonds-Karp, and max-flow min-cut with its
+        proof. Four lecture sessions - the largest topic.
+      done_when:
+      - An instance drawn where naive greedy sticks, and the backward edge that fixes it.
+      - The three equivalences stated and (2) implies (3) proved with the reachable-set construction.
+      - Why O(F*m) is not polynomial, stated crisply.
+      estimate_minutes: 270
+      exam_critical: true
+      concepts:
+      - concept-max-flow
+      - concept-graph-basics
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — maximum flow
+        source_id: source-algo2-hu-materials
+        locator: ad2_maximumflow.pdf (67 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_maximumflow.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS 26.1–26.2
+        source_id: source-clrs
+        locator: Abschnitte 26.1 und 26.2
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.046J — max-flow/min-cut
+        source_id: source-mit-6046j
+        locator: Lecture 13
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-13-incremental-improvement-max-flow-min-cut/
+        scope_triage: helpful-now
+      - kind: practise
+        label: Frankfurt ALGO2 — German network-flow videos and sheets
+        source_id: source-frankfurt-algo2-course
+        locator: Netzwerkfluss I–II
+        url: https://tcs.uni-frankfurt.de/algo2/
+        scope_triage: helpful-now
+      - kind: practise
+        label: VisuAlgo — residual-network and max-flow traces
+        source_id: source-visualgo
+        locator: Max-flow visualizer
+        url: https://visualgo.net/en/maxflow
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t08-maximum-flow/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t09-bipartite-matching
+      title: T09 - Bipartites Matching
+      status: pending
+      objective: Berge's theorem and Hopcroft-Karp, including the flow reduction the deck sets as its
+        Übung.
+      done_when:
+      - Berge proved via the degree-at-most-two component argument.
+      - The O(sqrt(n)) phase bound derived, and distinguished from the O(m*sqrt(n)) runtime.
+      - The flow network for bipartite matching built and justified.
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-bipartite-matching
+      - concept-max-flow
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — bipartite matching
+        source_id: source-algo2-hu-materials
+        locator: ad2_bipartitematching.pdf (58 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_bipartitematching.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — Ottmann/Widmayer §9.8
+        source_id: source-ottmann-widmayer
+        locator: Abschnitt 9.8
+        vault_path: material://source-ottmann-widmayer/ow.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.046J — matching
+        source_id: source-mit-6046j
+        locator: Lecture 14
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-14-incremental-improvement-matching/
+        scope_triage: helpful-now
+      - kind: practise
+        label: VisuAlgo — matching and augmenting paths
+        source_id: source-visualgo
+        locator: Matching visualizer
+        url: https://visualgo.net/en/matching
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t09-bipartite-matching/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t10-stable-matching
+      title: T10 - Stable Matching
+      status: pending
+      objective: Gale-Shapley and its three results, plus the optimality/pessimality pair. The only topic
+        with a local exercise sheet - use it first.
+      done_when:
+      - Instability defined precisely as a mutual incentive, not individual unhappiness.
+      - The stability proof delivered aloud.
+      - The local exercise sheet worked through.
+      estimate_minutes: 150
+      exam_critical: true
+      concepts:
+      - concept-stable-matching
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — stable matching
+        source_id: source-algo2-hu-materials
+        locator: ad2_stablematching.pdf (42 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_stablematching.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: HU stable-matching exercise sheet
+        source_id: source-algo2-hu-materials
+        locator: stable matching aufgaben.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — Kleinberg/Tardos §1.1
+        source_id: source-kleinberg-tardos
+        locator: Abschnitt 1.1
+        vault_path: material://source-kleinberg-tardos/Kleinberg-Tardos_Algorithm-Design.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Princeton — stable-matching slides
+        source_id: source-wayne-kt-slides
+        locator: Chapter 1 slide deck
+        url: https://www.cs.princeton.edu/~wayne/kleinberg-tardos/pdf/01StableMatching.pdf
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t10-stable-matching/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t11-computational-geometry
+      title: T11 - Algorithmische Geometrie
+      status: pending
+      objective: Orientation tests, sweep line, convex hull, closest pair. The most drawing-dependent
+        topic.
+      done_when:
+      - The determinant test and its sign convention automatic.
+      - Graham's stack run on paper showing at least one pop, narrated while drawing.
+      - The pre-sorting improvement for closest pair stated unprompted.
+      estimate_minutes: 210
+      exam_critical: true
+      concepts:
+      - concept-computational-geometry
+      - concept-determinant-orientation
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — computational geometry
+        source_id: source-algo2-hu-materials
+        locator: ad2_computationalgeometry.pdf (57 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_computationalgeometry.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — CLRS Chapter 33
+        source_id: source-clrs
+        locator: Kapitel 33
+        vault_path: material://source-clrs/clrs-de.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: MIT 6.046J — divide-and-conquer convex hull
+        source_id: source-mit-6046j
+        locator: Lecture 2
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-2-divide-conquer-convex-hull-median-finding/
+        scope_triage: helpful-now
+      - kind: practise
+        label: VisuAlgo — convex-hull traces
+        source_id: source-visualgo
+        locator: Convex-hull visualizer
+        url: https://visualgo.net/en/convexhull
+        scope_triage: helpful-now
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t11-computational-geometry/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-t12-fft
+      title: T12 - Schnelle Fourier-Transformation
+      status: pending
+      objective: Representations, roots of unity, the FFT and its inverse, and fast multiplication - closing
+        the question T01 opened. Confirm the open scope question first.
+      done_when:
+      - The summation lemma proved, and its role in inverting the Vandermonde matrix explained.
+      - The FFT recurrence contrasted with Karatsuba's, in one sentence.
+      - The open scope question resolved - how far the 8 July session actually got.
+      estimate_minutes: 240
+      exam_critical: true
+      concepts:
+      - concept-fft
+      - concept-complex-roots-of-unity
+      - concept-fast-multiplication
+      scope_triage: required-now
+      resources:
+      - kind: read
+        label: HU deck — FFT (confirm delivered scope first)
+        source_id: source-algo2-hu-materials
+        locator: ad2_fastfouriertransform.pdf (67 slides)
+        vault_path: material://source-algo2-hu-materials/ad2_fastfouriertransform.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Assigned book — Ottmann/Widmayer §1.2
+        source_id: source-ottmann-widmayer
+        locator: Abschnitt 1.2
+        vault_path: material://source-ottmann-widmayer/ow.pdf
+        scope_triage: required-now
+      - kind: watch
+        label: Reducible — FFT intuition
+        source_id: source-reducible-fft
+        locator: The Fast Fourier Transform
+        url: https://www.youtube.com/watch?v=h7apO7q16V0
+        scope_triage: helpful-now
+      - kind: watch
+        label: MIT 6.046J — FFT derivation
+        source_id: source-mit-6046j
+        locator: Lecture 3
+        url: https://ocw.mit.edu/courses/6-046j-design-and-analysis-of-algorithms-spring-2015/resources/lecture-3-divide-conquer-fft/
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-t12-fft/notes.md
+      attachments: []
+      source_feedback: []
+    - id: stage-algo2-oral-delivery
+      title: Oral delivery - the skill with no written substitute
+      status: pending
+      objective: Convert twelve topics into a 30-minute Zoom viva. Timed five-minute summaries, follow-up
+        trees answered aloud, board work narrated while drawing, and the cross-topic threads. Cannot be
+        done by reading.
+      done_when:
+      - Every topic's five-minute summary delivered cold, timed, without notes.
+      - Every topic's two-minute version delivered verbatim.
+      - At least one full mock viva run with another person, unscripted.
+      - The closing course-summary answer (the T01/T12 bookend) delivered.
+      estimate_minutes: 300
+      exam_critical: true
+      concepts:
+      - concept-proof-technique
+      scope_triage: required-now
+      resources:
+      - kind: practise
+        label: T01 viva drill — Schnellere Multiplikation
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-fast-multiplication-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-fast-multiplication-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T02 viva drill — Amortisierte Analyse
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-amortized-analysis-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-amortized-analysis-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T03 viva drill — B-Bäume
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-b-trees-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-b-trees-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T04 viva drill — Fibonacci-Heaps
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-fibonacci-heaps-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-fibonacci-heaps-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T05 viva drill — Splay-Bäume
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-splay-trees-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-splay-trees-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T06 viva drill — Cuckoo Hashing
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-cuckoo-hashing-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-cuckoo-hashing-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T07 viva drill — Kürzeste Wege
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-shortest-paths-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-shortest-paths-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T08 viva drill — Maximaler Fluss
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-maximum-flow-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-maximum-flow-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T09 viva drill — Bipartites Matching
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-bipartite-matching-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-bipartite-matching-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T10 viva drill — Stable Matching
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-stable-matching-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-stable-matching-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T11 viva drill — Algorithmische Geometrie
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-computational-geometry-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-computational-geometry-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: T12 viva drill — FFT
+        source_id: source-algo2-hu-materials
+        locator: note-algo2-fft-viva-drill
+        vault_path: knowledge/notes/algorithms/note-algo2-fft-viva-drill.md
+        scope_triage: required-now
+      - kind: practise
+        label: Frankfurt 2024 solved exam — explain every solution aloud
+        source_id: source-algo2-frankfurt-klausuren
+        locator: ALGO2 2024-03-26 solutions
+        vault_path: material://source-algo2-frankfurt-klausuren/ALGO2-2024-03-26-solutions.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Frankfurt solved-exam archive
+        source_id: source-frankfurt-algo2-course
+        locator: Exam archive, 2021–2024
+        url: https://files.tcs.uni-frankfurt.de/algo2/exams/
+        scope_triage: reference-only
+      working_note: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/stages/stage-algo2-oral-delivery/notes.md
+      attachments: []
+      source_feedback: []
+workspace_updates:
+- id: workspace-algo2-exam-prep
+  sources:
+  - source-algo2-hu-materials
+  - source-dms-grundwerkzeuge
+  - source-clrs
+  - source-ottmann-widmayer
+  - source-kleinberg-tardos
+  - source-pagh-cuckoo-hashing
+  - source-mit-6006
+  - source-mit-6046j
+  - source-open-data-structures
+  - source-tuwien-ad2-fibonacci
+  - source-cmu-15451-splay-notes
+  - source-sleator-tarjan-splay
+  - source-frankfurt-algo2-course
+  - source-visualgo
+  - source-wayne-kt-slides
+  - source-reducible-fft
+  - source-algo2-frankfurt-klausuren
+  - source-jeff-erickson-algorithms
+  - source-fiset-graph-theory
+  - source-kit-algorithmen2
+  unit_ids:
+  - unit-algo2-exam-prep

@@ -179,13 +179,16 @@ def test_job_dashboard_is_bounded_and_not_projected(mini_repo):
         "skrub_notes": 1,
         "system_notes": 1,
         "learning_tracks": 1,
-        "learning_sessions": 2,
+        "learning_stages": 2,
         "open_tasks": 0,
         "completed_tasks": 0,
         "papers": 1,
         "canonical_sources": 1,
     }
-    assert dashboard["learning_tracks"][0]["sessions"][0]["title"] == "Expressions"
+    first_stage = dashboard["learning_tracks"][0]["stages"][0]
+    assert first_stage["title"] == "Expressions"
+    assert first_stage["objective"] == "expression contexts."
+    assert first_stage["resources"][0]["kind"] == "read"
     assert dashboard["canonical_shelf"][0]["title"] == "Demo Book"
     assert all(not item["path"].startswith("/") for item in (
         dashboard["notes"]["skrub"]
@@ -405,9 +408,36 @@ def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
         "id": "polars",
         "title": "Polars production path",
         "horizon": "next",
-        "cadence": "Two sessions per month",
+        "cadence": "Two stages per month",
         "outcome": "Explain and implement a lazy optimizer.",
-        "sessions": [{"number": 1, "title": "Logical plans", "concept": "IR"}],
+        "stages": [{
+            "id": "stage-polars-logical-plans",
+            "number": 1,
+            "title": "Logical plans",
+            "status": "pending",
+            "objective": "Explain a logical plan and implement one transformation.",
+            "done_when": ["A tested transformation preserves the declared schema."],
+            "estimate_minutes": 90,
+            "exam_critical": False,
+            "concepts": ["concept-python"],
+            "scope_triage": "required-now",
+            "resources": [{
+                "kind": "read",
+                "label": "Polars lazy API",
+                "url": "https://docs.pola.rs/user-guide/lazy/",
+                "scope_triage": "required-now",
+            }, {
+                "kind": "practise",
+                "label": "Implement and test one optimizer rewrite",
+                "scope_triage": "required-now",
+            }],
+            "attachments": [],
+            "source_feedback": [],
+            "job_context": {
+                "mental_models": [{"label": "Core model", "text": "IR before execution."}],
+                "read_only_anchor": "Inspect Stratum's logical plan only; do not edit it.",
+            },
+        }],
     }
     proc = run_los(
         mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
@@ -421,6 +451,35 @@ def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
     assert len(dashboard["learning_tracks"]) == 1
     assert dashboard["learning_tracks"][0]["source_kind"] == "structured"
     assert dashboard["learning_tracks"][0]["title"] == "Polars production path"
+    stage = dashboard["learning_tracks"][0]["stages"][0]
+    assert stage["objective"].startswith("Explain a logical plan")
+    assert stage["resources"][0]["url"] == "https://docs.pola.rs/user-guide/lazy/"
+    assert stage["job_context"]["mental_models"][0]["label"] == "Core model"
+    stored = yaml.safe_load((job / "plans" / "polars.yaml").read_text("utf-8"))
+    assert stored["schema_version"] == 2
+    assert "stages" in stored and "sessions" not in stored
+
+
+def test_job_plan_save_rejects_an_unstructured_stage(mini_repo):
+    write_job(mini_repo)
+    plan = {
+        "id": "polars",
+        "title": "Broken plan",
+        "stages": [{
+            "id": "stage-polars-broken",
+            "number": 1,
+            "title": "Broken",
+            "objective": "This is not enough.",
+            "done_when": [],
+            "resources": [{"kind": "browse", "label": "Anything"}],
+        }],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode == 2
+    assert "done_when" in proc.stderr
 
 
 def test_job_task_save_creates_and_updates_the_quarantined_list(mini_repo):

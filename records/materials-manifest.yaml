@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-08-07'
+captured: '2026-08-15'
 totals:
-  files: 1117
-  bytes: 2022646753
+  files: 1121
+  bytes: 2057292585
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker.
     Rechenverfahren der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -356,9 +356,6 @@ files:
   machine-learning/classical/aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf:
     size: 835635
     sha256: 9c82e9cd2eaf1e4b2c5efa3c183a30f5d3802dde8827fbb14d15a9c59d50ffd8
-  machine-learning/classical/aml-ss26-lectures/exercise-slides/TÜbung 04.pdf:
-    size: 4327499
-    sha256: 36cd9e144cea566667e648c51b1b9d43e18a2140aa961093daee1637ef36c91f
   machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 02 .pdf:
     size: 2390301
     sha256: 043299501b41cee4eb13a7758279d3b9a360b8d9dd06eea87b31cff45df5a2a9
@@ -377,6 +374,18 @@ files:
   machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 07.pdf:
     size: 6142349
     sha256: e4d8836a29b8a6adf03af144a2f79b27729e6bc6e96e8e1e3801efef39bdbfaa
+  machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 08.pdf:
+    size: 3159053
+    sha256: 05648ad239e449c52af6bae66b16cd25ba1beef9e348f7c95785b94cf32ec27b
+  machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 09.pdf:
+    size: 8705421
+    sha256: 34c116443c1003a88aed254e9601ce45b02830e06135b949242ba15892bba29a
+  machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 10.pdf:
+    size: 8369503
+    sha256: 42e9029a5ed7907e6bd9522f124a7ccae646bf2fad46317583bc1f4822dfb4be
+  machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 11.pdf:
+    size: 9552987
+    sha256: 26f18ff133f4f4b52ccc6e28f13bb822c401da55e481da46156bb7f62023ca6d
   machine-learning/classical/aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf:
     size: 4439321
     sha256: ae5b9a5bafe8ad54e7d9b4a56ee18889ee452db9a20476303155f17189a5a0f1
@@ -407,6 +416,9 @@ files:
   machine-learning/classical/aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf:
     size: 6442578
     sha256: a083c737e55b1827dd91f8eee82d1c80dfcb85f953a99ae467da1018fe236f37
+  machine-learning/classical/aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf:
+    size: 9186367
+    sha256: 1eb5d3dacd8eb3e2832a1ed5b2b90397f0031256062c367f37449d8b8934e7af
   machine-learning/classical/aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf:
     size: 4635519
     sha256: 867771baf6436c69bd504e52683ba59bc5d783ba4e7f82634868cb76192ab516

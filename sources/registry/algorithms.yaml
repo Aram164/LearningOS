@@ -193,6 +193,19 @@ sources:
         audience: [German readers]
         strengths: ["§5.4 Splay-Bäume (with the Sleator/Tarjan paper as depth), §9.8 bipartites Matching — the course's sources for the starred topics"]
 
+  - id: source-open-data-structures
+    thematic_group_ids: [thematic-group-algorithms]
+    title: Open Data Structures — free textbook
+    type: book
+    authors: [Pat Morin]
+    url: https://opendatastructures.org/
+    evaluations:
+      - concepts: [concept-b-trees]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths:
+          - "The B-tree chapter makes the external-memory model and split/merge mechanics unusually concrete; use it as a visual second explanation after the HU deck, not as a second syllabus"
+
   - id: source-pagh-cuckoo-hashing
     thematic_group_ids: [thematic-group-algorithms]
     title: Cuckoo Hashing for Undergraduates
@@ -237,6 +250,20 @@ sources:
         strengths:
           - "German chapter with worked Fib-heap operation examples — second telling of AL.B→AL.D with figures to hand-run against"
 
+  - id: source-visualgo
+    thematic_group_ids: [thematic-group-algorithms]
+    title: VisuAlgo — algorithm and data-structure visualizations
+    type: website
+    organization: National University of Singapore
+    url: https://visualgo.net/en
+    evaluations:
+      - concepts: [concept-shortest-paths, concept-max-flow, concept-bipartite-matching,
+                   concept-computational-geometry]
+        roles: [intuition, exercise]
+        level: introductory
+        strengths:
+          - "Interactive traces for SSSP, max flow, matching, and convex hull expose state changes that are hard to see in static slides; use only for the named stage and then return to proof-level material"
+
   - id: source-wayne-kt-slides
     thematic_group_ids: [thematic-group-algorithms]
     title: Kevin Wayne (Princeton) — Kleinberg-Tardos slide decks
@@ -250,9 +277,36 @@ sources:
           - "Polished official KT decks — stable matching (Gale-Shapley) for the AL.I3 gap (HU Kap. 10 not posted at the time), network-flow decks for AL.H"
   - id: source-algo2-hu-materials
     thematic_group_ids: [thematic-group-algorithms]
-    title: "AlgoDat II — lecture notes (splay trees, B-trees, amortized analysis) and the flow/shortest-path papers"
-    type: other
+    title: "AlgoDat II — Algorithmen und Datenstrukturen II, complete lecture slides (Kratsch, HU Berlin, SoSe 2026) + the assigned primary papers"
+    type: lecture
+    authors: [Stefan Kratsch]
+    organization: HU Berlin
+    year: 2026
     material: material://source-algo2-hu-materials
+    evaluations:
+      - roles: [first-learning, reference]
+        strengths:
+          - "**The complete current course run — twelve topic decks, 608 slides**, dated 2026-03-30 to 2026-06-30, verified against the official lecture schedule (2026-08-16). Every scheduled topic has its deck and every deck's page count reconciles with the schedule's slide ranges — no truncated or prior-year versions"
+          - "**Each deck names its own Literatur and Leseaufgabe on slide 2.** The course is unusually explicit about which book section it follows, and every named book is held locally — so external reading is prescribed, not guessed"
+          - "Each deck opens with a 'Themen des Abschnitts' agenda that is a usable scope fence, and several open with an explicit Erinnerung/Wiederholung slide naming the AlgoDat I prerequisite"
+        weaknesses:
+          - "**The Organisation deck (1st lecture, 8 April) is NOT held.** It is the only scheduled item with no file — likely carries exam-format and organizational detail that exists nowhere else in the local archive"
+          - "**No HU Übungsblätter are held at all.** `practice-extern/` is empty and only `stable matching aufgaben.pdf` covers exercises, for one topic of twelve. Übungen are ungraded (module record), but this leaves the oral with no examiner-calibrated practice material — the Frankfurt Klausuren are another university and a written format"
+          - "The FFT deck's final scheduled session (8 July, `[15-end]`) spans 53 slides against 6–21 for every other session — either an unusually long closing lecture or material never delivered. Confirm before treating all 67 pages as scope"
+        useful_sections:
+          - "ad2_fastmultiplication.pdf (31 sl.)": "Zahlendarstellung, Schulmethode, rekursive Variante, Karatsuba, Erinnerung Mastertheorem. Literatur: DMS Kap. 1 (read fully)"
+          - "ad2_btrees.pdf (44 sl.)": "ADT Dictionary/BST recall, primär- vs sekundärer Speicher, B-tree definition and operations, B⁺/B*. Literatur: CLRS Kap. 18 (4. Aufl. D.); Bayer & McCreight 1970"
+          - "ad2_amortizedanalysis.pdf (40 sl.)": "**The method every later analysis uses.** Aggregate, accounting and potential methods. Literatur: CLRS Kap. 17.1–17.3; Leseaufgabe 17.4 dynamische Tabellen"
+          - "ad2_fibonacciheap.pdf (57 sl.)": "ADT Priority Queue recall (sl. 6 bound table), structure, operations, potential-method analysis, max-degree bound. Literatur: CLRS Kap. 19"
+          - "ad2_splaytrees.pdf (52 sl.)": "Self-adjusting lists and trees, the splay operation, amortized analysis. Literatur: Ottmann/Widmayer 5.4 (6. Aufl. D.); Leseaufgabe O/W 3.3; Sleator & Tarjan 1985, first six pages"
+          - "ad2_hashing.pdf (39 sl.)": "Cuckoo hashing: core idea, insert/rehash analysis, dynamic variant. Literatur: DMS Kap. 4 + Pagh 2006 'Cuckoo Hashing for Undergraduates' (both held)"
+          - "ad2_shortestpaths.pdf (54 sl.)": "Relaxation and bounds, negative cycles, Bellman-Ford, Johnson. Literatur: CLRS Kap. 24–25. Note: 'Alles Weitere wurde bereits in AlgoDat 1 behandelt' — Dijkstra is assumed"
+          - "ad2_maximumflow.pdf (67 sl.)": "Flow networks, greedy, Ford-Fulkerson, Edmonds-Karp, **max-flow min-cut**. Literatur: CLRS 26.1–26.2, with notation and ordering deliberately differing from the book"
+          - "ad2_bipartitematching.pdf (58 sl.)": "Augmenting paths, Hopcroft-Karp, matching via max flow, outlook to general graphs. Literatur: Ottmann/Widmayer 9.8; Vazirani 2020 MV paper"
+          - "ad2_stablematching.pdf (42 sl.)": "Gale-Shapley and its analysis. Literatur: Kleinberg & Tardos 1.1. **A separate topic from bipartite matching**, despite adjacency"
+          - "ad2_computationalgeometry.pdf (57 sl.)": "Orientation via determinants (division- and trig-free), sweep line, convex hull, closest pair. Literatur: CLRS Kap. 33"
+          - "ad2_fastfouriertransform.pdf (67 sl.)": "Polynomials and representations, Stützstellen, FFT and inverse FFT, fast polynomial/integer multiplication, alternatives to complex roots of unity. Literatur: Ottmann/Widmayer 1.2"
+          - "Assigned primary papers (all held)": "Bayer & McCreight 1970 (B-trees) · Sleator & Tarjan 1985 (splay) · Pagh 2006 (cuckoo) · Thorup 1999 (SSSP) · Chen et al. 2022 (almost-linear max flow) · Vazirani 2020 (MV matching)"
   - id: source-theoinfo-hu-archive
     thematic_group_ids: [thematic-group-algorithms]
     title: "Theoretische Informatik — HU course archive (scripts, Kellerautomaten/Automaten exercises, Probeklausuren with solutions)"

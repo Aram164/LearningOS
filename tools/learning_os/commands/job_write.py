@@ -381,6 +381,166 @@ def cmd_job_note_save(args) -> int:
 
 
 # -------------------------------------------------------------- plan saving
+_STAGE_STATUSES = {"pending", "active", "paused", "complete", "skipped"}
+_SCOPE_TRIAGE = {"required-now", "helpful-now", "deferred", "reference-only"}
+_RESOURCE_KINDS = {"watch", "read", "practise", "reference"}
+_CONCEPT_PATTERN = re.compile(r"^concept-[a-z0-9]+(?:-[a-z0-9]+)*$")
+_RESOURCE_PATTERN = re.compile(r"^resource-[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def _nonempty_strings(value: object, field: str, *, required: bool = False) -> list[str]:
+    if value is None and not required:
+        return []
+    if not isinstance(value, list):
+        raise JobDashboardError(f"{field} must be a list")
+    result = [str(item).strip() for item in value]
+    if any(not item for item in result):
+        raise JobDashboardError(f"{field} cannot contain empty values")
+    if required and not result:
+        raise JobDashboardError(f"{field} needs at least one item")
+    return result
+
+
+def _plan_resource(value: object, stage_id: str) -> dict:
+    if not isinstance(value, dict):
+        raise JobDashboardError(f"every resource on {stage_id} must be an object")
+    kind = str(value.get("kind") or "").strip()
+    label = str(value.get("label") or "").strip()
+    if kind not in _RESOURCE_KINDS or not label:
+        raise JobDashboardError(
+            f"resources on {stage_id} need a kind ({', '.join(sorted(_RESOURCE_KINDS))}) "
+            "and a label"
+        )
+    result = {"kind": kind, "label": label}
+    resource_id = str(value.get("id") or "").strip()
+    if resource_id:
+        if not _RESOURCE_PATTERN.fullmatch(resource_id):
+            raise JobDashboardError(f"invalid resource id '{resource_id}' on {stage_id}")
+        result["id"] = resource_id
+    source_id = str(value.get("source_id") or "").strip()
+    if source_id:
+        if not source_id.startswith("source-") or not _ID_PATTERN.fullmatch(source_id):
+            raise JobDashboardError(f"invalid source id '{source_id}' on {stage_id}")
+        result["source_id"] = source_id
+    for field in ("locator", "url", "vault_path"):
+        text = str(value.get(field) or "").strip()
+        if text:
+            result[field] = text
+    scope = str(value.get("scope_triage") or "").strip()
+    if scope:
+        if scope not in _SCOPE_TRIAGE:
+            raise JobDashboardError(f"invalid resource scope '{scope}' on {stage_id}")
+        result["scope_triage"] = scope
+    return result
+
+
+def _job_context(value: object, stage_id: str) -> dict:
+    if value is None:
+        return {"mental_models": [], "read_only_anchor": ""}
+    if not isinstance(value, dict):
+        raise JobDashboardError(f"job_context on {stage_id} must be an object")
+    models = []
+    for raw in value.get("mental_models") or []:
+        if not isinstance(raw, dict):
+            raise JobDashboardError(f"mental models on {stage_id} must be objects")
+        label = str(raw.get("label") or "").strip()
+        text = str(raw.get("text") or "").strip()
+        if not label or not text:
+            raise JobDashboardError(f"mental models on {stage_id} need label and text")
+        models.append({"label": label, "text": text})
+    return {
+        "mental_models": models,
+        "read_only_anchor": str(value.get("read_only_anchor") or "").strip(),
+    }
+
+
+def _legacy_plan_stage(raw: dict, plan_id: str, index: int) -> dict:
+    """Accept the retired flat editor payload but persist only the v2 shape."""
+    number = raw.get("number", index)
+    title = str(raw.get("title") or "").strip()
+    concept = str(raw.get("concept") or "").strip()
+    source = str(raw.get("source") or "").strip()
+    practice = str(raw.get("practice") or "").strip()
+    return {
+        "id": f"stage-{plan_id.removeprefix('job-track-')}-{number}",
+        "number": number,
+        "title": title,
+        "status": "pending",
+        "objective": concept or f"Build working fluency in {title}.",
+        "done_when": [practice or f"Explain and apply {title} without notes."],
+        "estimate_minutes": 90,
+        "exam_critical": False,
+        "concepts": [],
+        "scope_triage": "required-now",
+        "resources": ([{
+            "kind": "read",
+            "label": "Legacy learning material",
+            "locator": source,
+            "scope_triage": "required-now",
+        }] if source else []),
+        "attachments": [],
+        "source_feedback": [],
+        "job_context": {
+            "mental_models": ([{"label": "Mental model", "text": concept}] if concept else []),
+            "read_only_anchor": str(raw.get("anchor") or "").strip(),
+        },
+    }
+
+
+def _plan_stage(value: object, plan_id: str, index: int, seen: set[int]) -> dict:
+    if not isinstance(value, dict):
+        raise JobDashboardError("every plan stage must be an object")
+    number = value.get("number", index)
+    title = str(value.get("title") or "").strip()
+    if not isinstance(number, int) or number < 1 or number in seen or not title:
+        raise JobDashboardError("plan stages need unique positive numbers and titles")
+    seen.add(number)
+    stage_id = str(value.get("id") or "").strip()
+    if not stage_id:
+        stage_id = _slug_id(f"stage-{plan_id}-{number}-{title}", "stage")
+    if not stage_id.startswith("stage-") or not _ID_PATTERN.fullmatch(stage_id):
+        raise JobDashboardError(f"invalid stage id '{stage_id}'")
+    status = str(value.get("status") or "pending").strip()
+    if status not in _STAGE_STATUSES:
+        raise JobDashboardError(f"invalid stage status '{status}' on {stage_id}")
+    objective = str(value.get("objective") or "").strip()
+    if not objective:
+        raise JobDashboardError(f"{stage_id} needs an objective")
+    done_when = _nonempty_strings(value.get("done_when"), f"done_when on {stage_id}", required=True)
+    estimate = value.get("estimate_minutes")
+    if estimate is not None and (not isinstance(estimate, int) or estimate < 1):
+        raise JobDashboardError(f"estimate_minutes on {stage_id} must be a positive integer")
+    concepts = _nonempty_strings(value.get("concepts"), f"concepts on {stage_id}")
+    if any(not _CONCEPT_PATTERN.fullmatch(item) for item in concepts) or len(set(concepts)) != len(concepts):
+        raise JobDashboardError(f"concepts on {stage_id} must be unique concept ids")
+    scope = str(value.get("scope_triage") or "required-now").strip()
+    if scope not in _SCOPE_TRIAGE:
+        raise JobDashboardError(f"invalid stage scope '{scope}' on {stage_id}")
+    resources = [
+        _plan_resource(resource, stage_id) for resource in (value.get("resources") or [])
+    ]
+    result = {
+        "id": stage_id,
+        "number": number,
+        "title": title,
+        "status": status,
+        "objective": objective,
+        "done_when": done_when,
+    }
+    if estimate is not None:
+        result["estimate_minutes"] = estimate
+    result.update({
+        "exam_critical": value.get("exam_critical") is True,
+        "concepts": concepts,
+        "scope_triage": scope,
+        "resources": resources,
+        "attachments": list(value.get("attachments") or []),
+        "source_feedback": list(value.get("source_feedback") or []),
+        "job_context": _job_context(value.get("job_context"), stage_id),
+    })
+    return result
+
+
 def _plan_record(value: object) -> dict:
     if not isinstance(value, dict):
         raise JobDashboardError("plan must be an object")
@@ -391,36 +551,31 @@ def _plan_record(value: object) -> dict:
     horizon = str(value.get("horizon") or "now")
     if horizon not in {"now", "next", "later"}:
         raise JobDashboardError("plan horizon must be now, next or later")
-    sessions = []
+    raw_stages = value.get("stages")
+    if raw_stages is None and value.get("sessions") is not None:
+        raw_stages = [
+            _legacy_plan_stage(raw, plan_id, index)
+            for index, raw in enumerate(value.get("sessions") or [], start=1)
+            if isinstance(raw, dict)
+        ]
+    if not isinstance(raw_stages, list):
+        raise JobDashboardError("plan stages must be a list")
+    stages = []
     seen: set[int] = set()
-    for index, raw in enumerate(value.get("sessions") or [], start=1):
-        if not isinstance(raw, dict):
-            raise JobDashboardError("every plan session must be an object")
-        number = raw.get("number", index)
-        session_title = str(raw.get("title") or "").strip()
-        if not isinstance(number, int) or number < 1 or number in seen or not session_title:
-            raise JobDashboardError("plan sessions need unique positive numbers and titles")
-        seen.add(number)
-        sessions.append({
-            "number": number,
-            "title": session_title,
-            "concept": str(raw.get("concept") or "").strip(),
-            "source": str(raw.get("source") or "").strip(),
-            "anchor": str(raw.get("anchor") or "").strip(),
-            "practice": str(raw.get("practice") or "").strip(),
-        })
-    if not sessions:
-        raise JobDashboardError("a learning plan needs at least one session")
+    for index, raw in enumerate(raw_stages, start=1):
+        stages.append(_plan_stage(raw, plan_id, index, seen))
+    if not stages:
+        raise JobDashboardError("a learning plan needs at least one stage")
     return {
         "type": "job-learning-plan",
-        "schema_version": 1,
+        "schema_version": 2,
         "id": plan_id,
         "title": title,
         "status": str(value.get("status") or "ready"),
         "horizon": horizon,
         "cadence": str(value.get("cadence") or "").strip(),
         "outcome": str(value.get("outcome") or "").strip(),
-        "sessions": sorted(sessions, key=lambda row: row["number"]),
+        "stages": sorted(stages, key=lambda row: row["number"]),
     }
 
 
@@ -553,7 +708,7 @@ def cmd_job_track_progress(args) -> int:
                 raise JobDashboardError(
                     f"unknown learning track '{args.track}' (declared: {listing})"
                 )
-            session_numbers = {session["number"] for session in track["sessions"]}
+            session_numbers = {stage["number"] for stage in track["stages"]}
             if args.session not in session_numbers:
                 raise JobDashboardError(
                     f"track '{args.track}' has no session {args.session}"

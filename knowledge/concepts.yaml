@@ -271,6 +271,35 @@ concepts:
   - id: concept-recurrent-networks
     label: Recurrent neural networks
     aliases: [RNN, LSTM, GRU, BPTT, sequence models]
+  - id: concept-tokenization
+    label: Tokenization
+    aliases: [Tokenisierung, token, Token, subword, Subwort, vocabulary, Vokabular, BPE]
+    description: Splitting text into vocabulary units; subwords avoid the type-explosion of word-level vocabularies.
+  - id: concept-embedding
+    label: Embedding
+    aliases: [Einbettung, embedding matrix, Embedding-Matrix, one-hot encoding, One-Hot-Kodierung, static embedding, vector representation, Vektorrepräsentation]
+  - id: concept-contextual-embedding
+    label: Contextual embedding
+    aliases: [kontextuelle Einbettung, kontextabhängige Einbettung, contextualized representation]
+    description: Token representation that depends on surrounding tokens, as opposed to a fixed static embedding.
+  - id: concept-attention
+    label: Attention
+    aliases: [Attention, Aufmerksamkeit, self-attention, Selbstaufmerksamkeit, scaled dot-product attention, multi-head attention, Multi-Head-Attention, attention head, query key value, QKV]
+  - id: concept-positional-encoding
+    label: Positional encoding
+    aliases: [Positionskodierung, positional embedding, Positionseinbettung]
+  - id: concept-layer-normalization
+    label: Layer normalization
+    aliases: [LayerNorm, Layer-Normalisierung, Schichtnormalisierung]
+  - id: concept-residual-connection
+    label: Residual connection
+    aliases: [Residualverbindung, skip connection, Skip-Verbindung, shortcut connection]
+  - id: concept-transformer
+    label: Transformer
+    aliases: [Transformer-Architektur, transformer block, Transformer-Block, context window, Kontextfenster]
+  - id: concept-language-modelling
+    label: Language modelling
+    aliases: [Sprachmodell, language model, LM, next-token prediction, Next-Token-Vorhersage, LLM, large language model, großes Sprachmodell, language modelling head]
 
   # ------------------------------------------------------------ algorithms
   - id: concept-fast-multiplication
@@ -307,12 +336,56 @@ concepts:
     domain_hints: [algorithms]
   - id: concept-bipartite-matching
     label: Bipartite matching
-    aliases: [bipartites Matching, stable matching, Heiratsproblem]
+    aliases: [bipartites Matching, augmenting path, augmentierender Pfad, Hopcroft-Karp]
+    description: Matchings in bipartite graphs via augmenting paths. Distinct from stable matching — Algo 2 devotes a separate lecture to each.
+    domain_hints: [algorithms]
+  - id: concept-stable-matching
+    label: Stable matching
+    aliases: [stabiles Matching, Gale-Shapley, Heiratsproblem, stable marriage, deferred acceptance]
     domain_hints: [algorithms]
   - id: concept-computational-geometry
     label: Computational geometry
-    aliases: [algorithmische Geometrie, convex hull, sweep line]
+    aliases: [algorithmische Geometrie, convex hull, konvexe Hülle, sweep line, Sweep-Line, closest pair, dichtestes Punktepaar, Graham scan]
     domain_hints: [algorithms]
+
+  # ---------------------------------- Algo 2 prerequisites (Phase 0, from the
+  # decks' own Erinnerung/Wiederholung slides — see unit-algo2-exam-prep)
+  - id: concept-asymptotic-analysis
+    label: Asymptotic analysis
+    aliases: [O-Notation, Landau notation, big-O, Laufzeitanalyse, asymptotische Analyse, Elementaroperationen]
+    domain_hints: [algorithms]
+  - id: concept-recurrences-master-theorem
+    label: Recurrences and the master theorem
+    aliases: [Mastertheorem, master theorem, Rekursionsgleichung, recurrence relation, divide and conquer, Teile und Herrsche]
+    domain_hints: [algorithms]
+  - id: concept-adt-dictionary
+    label: ADT Dictionary
+    aliases: [Wörterbuch, associative array, assoziatives Array, Symboltabelle, search-insert-delete]
+    domain_hints: [algorithms]
+  - id: concept-binary-search-trees
+    label: Binary search trees
+    aliases: [binäre Suchbäume, BST, Suchbaumeigenschaft, balancierte Suchbäume, AVL, rotation, Rotation]
+    domain_hints: [algorithms]
+  - id: concept-adt-priority-queue
+    label: ADT Priority Queue
+    aliases: [Prioritätswarteschlange, binary heap, Binärheap, binomial heap, Binomial-Heap, decrease-key, extract-min]
+    domain_hints: [algorithms]
+  - id: concept-hashing-chaining
+    label: Hashing with chaining
+    aliases: [Hashing mit Verkettung, hash table, Hashtabelle, Hashfunktion, universal hashing, universelles Hashing, Kollision]
+    domain_hints: [algorithms]
+  - id: concept-graph-basics
+    label: Graph representations and traversal
+    aliases: [Graphen, Adjazenzliste, adjacency list, BFS, DFS, Breitensuche, Tiefensuche, gerichteter Graph, Kreis, cycle]
+    domain_hints: [algorithms]
+  - id: concept-complex-roots-of-unity
+    label: Complex numbers and roots of unity
+    aliases: [komplexe Zahlen, Einheitswurzeln, roots of unity, Polynome, polynomials, Stützstellen, interpolation]
+    domain_hints: [algorithms, mathematics]
+  - id: concept-determinant-orientation
+    label: Determinants and orientation tests
+    aliases: [Determinante, cross product, Kreuzprodukt, orientation test, Orientierungstest, counterclockwise, Vorzeichen]
+    domain_hints: [algorithms, mathematics]
   - id: concept-fft
     label: Fast Fourier transform
     aliases: [FFT, schnelle Fourier-Transformation, polynomial multiplication]

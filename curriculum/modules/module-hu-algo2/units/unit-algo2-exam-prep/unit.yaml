@@ -2,18 +2,217 @@ id: unit-algo2-exam-prep
 type: unit
 module_id: module-hu-algo2
 kind: exam-block
-title: Algo 2 oral exam preparation
+title: Algo 2 oral exam preparation — twelve-topic spine + Phase 0 prerequisites
 order: 1
-scope: Existing Algo 2 plan, retained as the unit's source plan.
-# Operationally paused since 2026-08-08, not dropped: the module stays
-# administratively `enrolled` (no formal Abmeldung) while the autumn-cycle drop
-# decision holds. Was `ready` until the engineering audit found this unit, its
-# study map and its workspace disagreeing — do nothing / ready / ready /
-# required-now, all at once.
+scope: 'Algorithmen und Datenstrukturen II (Kratsch, HU Berlin, SoSe 2026), examined as a 30-minute oral
+  by Zoom. Scope is the twelve current-run lecture decks (608 slides, 2026-03-30 to 2026-06-30), verified
+  2026-08-16 against the official lecture schedule: every scheduled topic has its deck and every deck''s
+  page count reconciles with the schedule''s slide ranges. Each deck names its own Literatur on slide
+  2 and every named book is held locally, so external reading is prescribed rather than chosen. Two known
+  gaps, both recorded as absent rather than reconstructed - the Organisation deck (1st lecture, 8 April)
+  is NOT held, and there are NO HU Übungsblätter for any topic except stable matching. Übungen are ungraded
+  (module record), but this leaves the oral with no examiner-calibrated practice, which is why the per-topic
+  viva drills carry the diagnostic load.'
+# Status stays `paused`, deliberately. This unit, its study map and its workspace
+# were found disagreeing in the 2026-08-08 engineering audit and were moved to
+# paused/blocked together; a validator invariant now enforces that they move
+# together. The 2026-08-16 build produced a complete REINSTATEMENT PACKAGE - it
+# does not reactivate the module. Reinstating means setting this unit, the study
+# map and workspace-algo2-exam-prep back to active TOGETHER, and registering in
+# the 2.-PZ Anmeldung window (closes 2026-09-10; dates in module.yaml).
 status: paused
-scope_sources: []
+knowledge_map:
+  summary: Twelve topics in one methodological arc. The course opens and closes on the same question -
+    how fast can we multiply - reaching O(n^log2(3)) via Karatsuba in lecture 1 and O(n log n) via the
+    FFT in lecture 12. Between them sit two families. The data-structure family is gated by amortized
+    analysis, which is itself a topic and which Fibonacci heaps and splay trees both presuppose; B-trees
+    and cuckoo hashing stand apart, one optimizing disk accesses and the other giving the course's only
+    worst-case constant lookup. The graph family runs shortest paths, then maximum flow, which bipartite
+    matching reduces to; stable matching is a different problem despite the adjacency, and computational
+    geometry is self-contained apart from its determinant primitive. Three distinct kinds of guarantee
+    appear and are routinely confused - deterministic worst case, amortized over a sequence, and expected
+    over random hash functions - and cuckoo hashing's dynamic variant needs two of the three words at
+    once. Phase 0 nodes are prerequisites the decks assume and never re-teach.
+  nodes:
+  - id: knowledge-algo2-phase0
+    title: Phase 0 - assumed prerequisites
+    summary: Asymptotics and elementary operations, recurrences and the master theorem, ADT Dictionary
+      and BSTs, ADT Priority Queue and heaps, hashing with chaining plus expected-value probability, graphs
+      and Dijkstra, complex roots of unity, determinants and orientation, and proof presentation out loud.
+      Every item is named by a deck's own Erinnerung or Wiederholung slide, not inferred. Run as diagnostics
+      first - most should pass and be skipped.
+  - id: knowledge-algo2-fast-multiplication
+    title: T01 - Schnellere Multiplikation
+    summary: Number representation and addition cost, the school method and its tight 3n^2 bound, the
+      recursive split, Karatsuba's three-multiplication identity, both recurrences, and the master theorem
+      giving O(n^log2(3)). The decisive point is 3 versus 4 as the branching factor. Toom-k as Ausblick.
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-amortized-analysis
+    title: T02 - Amortisierte Analyse
+    summary: Aggregate analysis, the accounting method and the potential method, each carried through
+      the same two examples - the multipop stack and the k-bit binary counter. The potential theorem and
+      the distinction between its sufficient conditions and the actual requirement. Deterministic, not
+      average-case. Load-bearing for two later topics.
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-b-trees
+    title: T03 - B-Bäume
+    summary: Motivated entirely by secondary-storage access costs. Minimal degree t, the height bound
+      log_t((n+1)/2), search by disk accesses, splitting with the median moving up, single-pass insertion
+      that splits on the way down, growth at the root, and the deletion cases under the at-least-t-keys
+      invariant. B+ and B*.
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-fibonacci-heaps
+    title: T04 - Fibonacci-Heaps
+    summary: Lazy structure of unordered min-heap-ordered trees with a root list and marking. Potential
+      t(H) + 2m(H); insert, min, union and decreasekey amortized O(1), extractmin and delete O(log n),
+      worst case O(n). Consolidation by degree, cut and cascading cut, and the degree bound via size(x)
+      >= F_{k+2} >= phi^k.
+    builds_on:
+    - knowledge-algo2-amortized-analysis
+  - id: knowledge-algo2-splay-trees
+    title: T05 - Splay-Bäume
+    summary: Self-adjusting BSTs with no balance information. The splay operation with zig, zig-zig and
+      zig-zag, where rotating the grandparent first is what distinguishes it from move-to-root. Rank potential,
+      the 3(r(t) - r(p)) + 1 lemma, and O(log n) amortized. Dynamic optimality remains open.
+    builds_on:
+    - knowledge-algo2-amortized-analysis
+  - id: knowledge-algo2-cuckoo-hashing
+    title: T06 - Cuckoo Hashing
+    summary: Two hash functions and two permitted positions, giving search and delete in worst-case O(1)
+      - the course's only such guarantee. Insert by eviction, analysed through the cuckoo graph and a
+      path lemma; rehashing costs O(n) but occurs with probability O(1/r). The dynamic variant is amortized
+      expected O(1).
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-shortest-paths
+    title: T07 - Kürzeste Wege
+    summary: What breaks with negative weights. Relaxation and optimal substructure, Bellman-Ford in Theta(nm)
+      with n-1 passes plus negative-cycle detection by telescoping, and Johnson's all-pairs method via
+      per-vertex reweighting that leaves cycle lengths unchanged. Dijkstra and BFS are assumed from AlgoDat
+      I.
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-maximum-flow
+    title: T08 - Maximaler Fluss
+    summary: Flow networks, why naive greedy fails, and the residual network whose backward edges restore
+      the ability to undo. Ford-Fulkerson at O(F*m), which is not polynomial; Edmonds-Karp at O(|V|*|A|^2)
+      by always taking a shortest residual path. Cuts, the three equivalences, max-flow min-cut and how
+      to extract the cut. Variant reductions and Menger.
+    builds_on:
+    - knowledge-algo2-shortest-paths
+  - id: knowledge-algo2-bipartite-matching
+    title: T09 - Bipartites Matching
+    summary: Maximal versus maximum, alternating and augmenting paths, and Berge's theorem with its vertex-disjoint
+      count. Hopcroft-Karp works in phases over maximal SAP-packings; O(sqrt(n)) phases at O(m) each gives
+      O(m*sqrt(n)). Also solvable by reduction to maximum flow. General graphs need blossoms.
+    builds_on:
+    - knowledge-algo2-maximum-flow
+  - id: knowledge-algo2-stable-matching
+    title: T10 - Stable Matching
+    summary: A different problem from T09 - always perfect, optimizing stability against preferences rather
+      than cardinality. Instability requires a mutual incentive to deviate. Gale-Shapley terminates in
+      at most n^2 iterations and is always stable; every execution yields the same matching, optimal for
+      every proposer and pessimal for every receiver.
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-computational-geometry
+    title: T11 - Algorithmische Geometrie
+    summary: Orientation by the sign of a determinant, chosen to avoid division and trigonometry, and
+      segment intersection from it. The sweep-line method, where only newly adjacent pairs need testing.
+      Convex hull with the Omega(n log n) bound by reduction from sorting, Jarvis at O(n*h) and Graham
+      at O(n log n). Closest pair, where pre-sorting once turns O(n log^2 n) into O(n log n).
+    builds_on:
+    - knowledge-algo2-phase0
+  - id: knowledge-algo2-fft
+    title: T12 - Schnelle Fourier-Transformation
+    summary: Polynomial representations and their differing operation costs, the recursive split p(x)
+      = g(x^2) + x*u(x^2), and why complex roots of unity are needed for the halving to repeat. The FFT
+      in O(n log n), the inverse via the Vandermonde matrix and the summation lemma, and fast multiplication
+      of polynomials and integers - closing the question lecture 1 opened.
+    builds_on:
+    - knowledge-algo2-fast-multiplication
+  - id: knowledge-algo2-oral-delivery
+    title: Oral delivery and exam transfer
+    summary: Converting knowledge into a 30-minute viva - five-minute summaries per topic, follow-up question
+      trees, board work narrated while drawing, and the cross-topic threads an examiner samples. The one
+      genuinely different skill, and the one with no written substitute.
+    builds_on:
+    - knowledge-algo2-fft
+    - knowledge-algo2-bipartite-matching
+    - knowledge-algo2-stable-matching
+    - knowledge-algo2-computational-geometry
+    - knowledge-algo2-b-trees
+    - knowledge-algo2-fibonacci-heaps
+    - knowledge-algo2-splay-trees
+    - knowledge-algo2-cuckoo-hashing
+scope_sources:
+- source_id: source-algo2-hu-materials
+  authority: slides
+  locator: ad2_*.pdf, twelve current-run decks (608 sl.), 2026-03-30 to 2026-06-30. Each deck's slide
+    2 carries its Themen des Abschnitts and its Literatur/Leseaufgabe.
+- source_id: source-clrs
+  authority: reference
+  locator: Kap. 17.1-17.4 (amortized), 18 (B-trees), 19 (Fibonacci), 24-25 (shortest paths), 26.1-26.2
+    (flow), 33 (geometry)
+- source_id: source-dms-grundwerkzeuge
+  authority: reference
+  locator: Kap. 1 (fast multiplication, read fully), Kap. 4 (hashing)
+- source_id: source-ottmann-widmayer
+  authority: reference
+  locator: Abschnitt 1.2 (FFT), 3.3 (self-adjusting lists, Leseaufgabe), 5.4 (splay), 9.8 (matching)
+- source_id: source-kleinberg-tardos
+  authority: reference
+  locator: Abschnitt 1.1 (stable matching)
+- source_id: source-algo2-frankfurt-klausuren
+  authority: reference
+  locator: Eight solved ALGO2 exams 2021-2024; written format from another university - use as explain-aloud
+    drill only
+# Empty by design (WORKFLOWS §6): this records Aram's actual choices, and he has
+# made none yet. The routes to choose FROM live in the module source-map and in
+# each topic's exercise bank.
 source_selections: []
-artifacts: {}
+current_study_map: study-map-algo2-exam-prep
+artifacts:
+  ultimate_reference: note-algo2-phase0-prerequisites
+  other:
+  - note-algo2-fast-multiplication
+  - note-algo2-fast-multiplication-exercise-bank
+  - note-algo2-fast-multiplication-viva-drill
+  - note-algo2-amortized-analysis
+  - note-algo2-amortized-analysis-exercise-bank
+  - note-algo2-amortized-analysis-viva-drill
+  - note-algo2-b-trees
+  - note-algo2-b-trees-exercise-bank
+  - note-algo2-b-trees-viva-drill
+  - note-algo2-fibonacci-heaps
+  - note-algo2-fibonacci-heaps-exercise-bank
+  - note-algo2-fibonacci-heaps-viva-drill
+  - note-algo2-splay-trees
+  - note-algo2-splay-trees-exercise-bank
+  - note-algo2-splay-trees-viva-drill
+  - note-algo2-cuckoo-hashing
+  - note-algo2-cuckoo-hashing-exercise-bank
+  - note-algo2-cuckoo-hashing-viva-drill
+  - note-algo2-shortest-paths
+  - note-algo2-shortest-paths-exercise-bank
+  - note-algo2-shortest-paths-viva-drill
+  - note-algo2-maximum-flow
+  - note-algo2-maximum-flow-exercise-bank
+  - note-algo2-maximum-flow-viva-drill
+  - note-algo2-bipartite-matching
+  - note-algo2-bipartite-matching-exercise-bank
+  - note-algo2-bipartite-matching-viva-drill
+  - note-algo2-stable-matching
+  - note-algo2-stable-matching-exercise-bank
+  - note-algo2-stable-matching-viva-drill
+  - note-algo2-computational-geometry
+  - note-algo2-computational-geometry-exercise-bank
+  - note-algo2-computational-geometry-viva-drill
+  - note-algo2-fft
+  - note-algo2-fft-exercise-bank
+  - note-algo2-fft-viva-drill
 workspace_ids:
 - workspace-algo2-exam-prep
-current_study_map: study-map-algo2-exam-prep
