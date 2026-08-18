@@ -109,6 +109,35 @@ sources:
           - "No batch normalization — out of scope for this course's exam (slide-verified)"
         useful_sections:
           - "L09 — Backprop, computation graphs, regularization, double descent": "vanishing/exploding gradients (λ⁷ argument, sl. 71–74)"
+      - concepts: [concept-convolutional-networks, concept-residual-connection]
+        roles: [first-learning]
+        strengths:
+          - "Unusually quiz-dense — five in-deck quiz slides (p16, p34, p36, p51, p57); a strong signal about exam content"
+          - "Arc: convolutions → one conv layer → CNNs → famous architectures, closing on residual connections (which L11 then reuses inside the transformer block)"
+        useful_sections:
+          - "L10 — Convolutions, conv layers, CNN architectures, residual connections (70 sl.)": "current 2026 deck `VL 10-cnn.pdf`"
+      - concepts: [concept-transformer, concept-attention, concept-contextual-embedding,
+                   concept-embedding, concept-tokenization, concept-positional-encoding,
+                   concept-layer-normalization, concept-language-modelling]
+        roles: [first-learning, derivation]
+        strengths:
+          - "Builds attention twice: a deliberately simplified version first (score = xᵀx, α = softmax, a_t = Σ α_tj x_j, worked one-hot example 'The quick brown' → 0.21/0.21/0.58, sl. 27–34), THEN the real QKV head (sl. 40–44, same example → 0.10/0.19/0.71). The two-pass construction is the pedagogical spine of the deck"
+          - "Transformer block given as explicit equations (sl. 52–55): MHA + FFN(x)=W₂ReLU(W₁x+b₁)+b₂ + residual + LayerNorm applied twice; FFN weights shared across all positions"
+          - "Closes the loop to L05: the LM training objective is cross-entropy over the vocabulary (sl. 64) — the same loss derived from MLE in L05"
+        weaknesses:
+          - "Contains NO RNN/LSTM content — it replaced the prior-year RNN lecture. `older-lecture-slides/11-rnn_*.pdf` is superseded and must not be used for 2026 scope (slide-verified 2026-08-15)"
+          - "No Übung covers it. The tutorial series ends at Übung 11 (CNNs, 2026-07-14) and the deck is dated 2026-07-17 — L11 is the only lecture in the course with zero tutorial drill coverage"
+          - "Sl. 73–81 ('Parallelizing') are labelled BONUS in the agenda, yet contain the canonical matrix form A = softmax(mask(QKᵀ/√d_k))V and causal masking — scope status ambiguous, treat as learn-anyway"
+        useful_sections:
+          - "L11 — Tokens, contextual embeddings, attention, transformer blocks, language modelling (81 sl.)": "current 2026 deck `VL 11-transformers.pdf`; confirmed exam scope by the Themen list in `exercise-slides/Übung 10.pdf` sl. 3, item 11"
+      - concepts: [concept-perceptron, concept-neural-network, concept-backpropagation,
+                   concept-convolutional-networks]
+        roles: [practice]
+        strengths:
+          - "Übung 08–11 (2026-06-23 → 07-14) are the Besprechung sessions for the graded Übungsblätter and Bonusblätter — worked solutions in the lecturer's own notation, the closest available proxy for exam marking"
+          - "Übung 10 sl. 2–3 carries the official exam admin + the Themen list (11 items) — the only authoritative scope statement in the whole course"
+        useful_sections:
+          - "Übung 10 sl. 2–3 — Klausur-Hinweise + Themen": "format facts: 120 min, one double-sided handwritten A4 sheet, calculator, ruler, photo ID + CampusCard"
 
   - id: source-asimov-nn-zoo
     thematic_group_ids: [thematic-group-machine-learning]
@@ -657,6 +686,23 @@ sources:
           - "Community-solved conceptual + applied exercises for every ISLP chapter in the plan — turns each ISLP reading into checked practice"
         weaknesses:
           - "Quality varies — cross-check derivations against the book"
+
+  - id: source-jurafsky-slp3
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Jurafsky & Martin — Speech and Language Processing (3rd ed. draft)
+    type: book
+    authors: [Daniel Jurafsky, James H. Martin]
+    url: https://web.stanford.edu/~jurafsky/slp3/
+    year: 2026
+    evaluations:
+      - concepts: [concept-transformer, concept-attention, concept-contextual-embedding,
+                   concept-tokenization, concept-language-modelling]
+        roles: [first-learning, derivation, reference]
+        strengths:
+          - "**The deck's own named further reading** (AML L11 sl. 72 → Chapter 8: Transformers). L11 follows its notation and worked examples closely, and sl. 14's types/instances corpus table is lifted from it — so it is the one external source guaranteed to agree with the lecture"
+        useful_sections:
+          - "Ch. 8 — Transformers": "the chapter L11 is built from; fills in every derivation the 81 slides state without proving"
+          - "Ch. 3 — N-gram language models": "the probabilistic framing behind L11 sl. 4–9 (p(x₁…xₙ), next-token prediction)"
 
   - id: source-karpathy-micrograd
     thematic_group_ids: [thematic-group-machine-learning]

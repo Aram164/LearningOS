@@ -175,6 +175,20 @@ restated here.)
 script's course contract, take one cold WV sample, and create the five-class
 error ledger. Then begin AN.0 with unser skript Chapters 1–2.
 
+> 🆕 **Per-node plans written 2026-08-15 → [`inputs/AN_Node_Plans_INDEX.md`](inputs/AN_Node_Plans_INDEX.md).**
+> One plan per knowledge-map node (ten), each stating which of the 23 routed
+> sources to use **at which angle**, what artifact to produce, and how to
+> self-test. Start with `AN_00_proof_presentation.md` — it is the calibrate stage
+> and it sets the proof depth for the other 46 hours. These are **operational and
+> expire with this workspace**; `source_selections` stays empty until you have
+> actually used a source and it worked.
+>
+> **The number the plans surface:** AN.0–AN.X total **2,760 exam-critical
+> minutes = 46 hours**, none of it started. AN.X alone is 540 min and needs
+> contiguous sessions. Against a nine-day Phase C, AN.0–AN.G (≈37 h) has to be
+> substantially done **before** the AML sitting, or AN.X — the only block that
+> rehearses the combined SaD+Analysis format — is what gets sacrificed.
+
 This is the first stage of the Analysis map and it is still `pending`; the map's
 11 stages carry ~47.5 h. With AML leading on intensity, M2's job through
 September is to get genuinely through AN.0→AN.G rather than to hold position.

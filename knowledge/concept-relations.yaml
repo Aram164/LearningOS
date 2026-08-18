@@ -261,6 +261,163 @@ relations:
     to: concept-neural-network
     source: note-aml-book-crosswalk
 
+  # ---- transformers (AML L11, added 2026-08-15 with the current 2026 deck)
+  - from: concept-embedding
+    type: requires
+    to: concept-tokenization
+    context: "the embedding matrix E ∈ ℝ^{|V|×d} is indexed by the vocabulary tokenization produces (L11 sl. 36)"
+    source: note-aml-l11-transformers
+  - from: concept-contextual-embedding
+    type: builds-on
+    to: concept-embedding
+    context: "static embeddings map a token to one fixed vector regardless of context; contextual ones do not (L11 sl. 21–22)"
+    source: note-aml-l11-transformers
+  - from: concept-attention
+    type: derives
+    to: concept-contextual-embedding
+    context: "attention IS the mechanism producing contextual representations: a_t = Σ_{j≤t} α_tj v_j (L11 sl. 24, 44)"
+    source: note-aml-l11-transformers
+  - from: concept-attention
+    type: requires
+    to: concept-softmax
+    context: "attention weights are softmax-normalized similarity scores; the same softmax as L08's output layer (L11 sl. 30)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: builds-on
+    to: concept-attention
+    context: "a transformer block is multi-head self-attention + FFN + residual + LayerNorm (L11 sl. 52)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: requires
+    to: concept-layer-normalization
+    context: "LayerNorm is applied twice per block (L11 sl. 54–55)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: requires
+    to: concept-residual-connection
+    context: "residual connections preserve the token stream across blocks (L11 sl. 52, 55)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: requires
+    to: concept-positional-encoding
+    context: "attention is permutation-invariant, so position must be added: x_t = x_t + p_t (L11 sl. 48)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: requires
+    to: concept-neural-network
+    context: "the per-block feedforward layer is the L08 two-layer MLP, weights shared across positions (L11 sl. 53)"
+    source: note-aml-l11-transformers
+  - from: concept-transformer
+    type: contrasts-with
+    to: concept-recurrent-networks
+    context: "both model sequences; the 2026 deck replaced the prior-year RNN lecture — transformers parallelize over the sequence, RNNs cannot (L11 sl. 74)"
+    source: note-aml-l11-transformers
+  - from: concept-language-modelling
+    type: applies-in
+    to: concept-transformer
+    context: "next-token prediction is the training objective the architecture is fitted to (L11 sl. 60)"
+    source: note-aml-l11-transformers
+  - from: concept-language-modelling
+    type: requires
+    to: concept-cross-entropy
+    context: "the LM training loss is cross-entropy over the vocabulary — the same loss derived in L05 (L11 sl. 64)"
+    source: note-aml-l11-transformers
+  - from: concept-residual-connection
+    type: applies-in
+    to: concept-convolutional-networks
+    context: "L10 closes on residual connections (ResNet) before L11 reuses them in the transformer block"
+    source: note-aml-l11-transformers
+
+  # ---- Algo 2 (SoSe 2026, Kratsch): prerequisites → topics.
+  # Every edge below is taken from a deck's own "Themen des Abschnitts" or
+  # Erinnerung/Wiederholung slide, not inferred. Added 2026-08-16.
+
+  # Phase 0 → topics
+  - from: concept-fast-multiplication
+    type: requires
+    to: concept-recurrences-master-theorem
+    context: "the deck's own agenda ends 'Erinnerung: Mastertheorem' — Karatsuba's bound is a recurrence solve (sl. 2)"
+    source: note-algo2-fast-multiplication
+  - from: concept-b-trees
+    type: requires
+    to: concept-adt-dictionary
+    context: "'Erinnerung an ADT Dictionary und binäre Suchbäume' opens the deck (sl. 2)"
+    source: note-algo2-b-trees
+  - from: concept-b-trees
+    type: requires
+    to: concept-binary-search-trees
+    source: note-algo2-b-trees
+  - from: concept-splay-trees
+    type: requires
+    to: concept-binary-search-trees
+    context: "splay trees are BSTs without balance values; rotations are assumed known (sl. 2, 11)"
+    source: note-algo2-splay-trees
+  - from: concept-fibonacci-heaps
+    type: requires
+    to: concept-adt-priority-queue
+    context: "'Erinnerung an ADT Priority Queue und Umsetzung mittels Heap'; sl. 6 compares binary/binomial/Fibonacci bounds (sl. 2, 6)"
+    source: note-algo2-fibonacci-heaps
+  - from: concept-cuckoo-hashing
+    type: requires
+    to: concept-hashing-chaining
+    context: "'Wiederholung: Hashing with Chaining' — sl. 10 says 'Sicher bekannt aus AlgoDat I'"
+    source: note-algo2-cuckoo-hashing
+  - from: concept-cuckoo-hashing
+    type: requires
+    to: concept-expected-value
+    context: "randomization yields only expected runtimes; the whole analysis is probabilistic (sl. 7)"
+    source: note-algo2-cuckoo-hashing
+  - from: concept-shortest-paths
+    type: requires
+    to: concept-graph-basics
+    context: "'(Erinnerung) Graphen und kürzeste Wege'; sl. 7 flags cycles as the single repeated definition (sl. 2, 7)"
+    source: note-algo2-shortest-paths
+  - from: concept-max-flow
+    type: requires
+    to: concept-graph-basics
+    source: note-algo2-maximum-flow
+  - from: concept-fft
+    type: requires
+    to: concept-complex-roots-of-unity
+    context: "polynomials, Stützstellen and complex roots of unity are the deck's opening machinery (sl. 2–7)"
+    source: note-algo2-fft
+  - from: concept-computational-geometry
+    type: requires
+    to: concept-determinant-orientation
+    context: "orientation via det[x₁ x₂; y₁ y₂] = x₁y₂ − x₂y₁, chosen to avoid division and trigonometry (sl. 7, 9)"
+    source: note-algo2-computational-geometry
+  - from: concept-amortized-analysis
+    type: requires
+    to: concept-asymptotic-analysis
+    source: note-algo2-amortized-analysis
+
+  # internal dependencies — the reason amortized analysis is taught second
+  - from: concept-fibonacci-heaps
+    type: requires
+    to: concept-amortized-analysis
+    context: "the deck's agenda item is 'Amortisierte Analyse von Fibonacci-Heaps mit Potentialmethode' — the potential method must already be owned (sl. 2)"
+    source: note-algo2-fibonacci-heaps
+  - from: concept-splay-trees
+    type: requires
+    to: concept-amortized-analysis
+    context: "splay trees' O(log n) is amortized, not worst-case; the analysis is the lecture's fourth agenda item (sl. 2)"
+    source: note-algo2-splay-trees
+  - from: concept-bipartite-matching
+    type: builds-on
+    to: concept-max-flow
+    context: "the deck's own Übung: find bipartite matchings via maximum flow (sl. 2)"
+    source: note-algo2-bipartite-matching
+  - from: concept-fft
+    type: applies-in
+    to: concept-fast-multiplication
+    context: "the FFT deck closes on fast multiplication of polynomials AND integers — it returns to lecture 1's problem with a better bound (sl. 2)"
+    source: note-algo2-fft
+  - from: concept-stable-matching
+    type: contrasts-with
+    to: concept-bipartite-matching
+    context: "different problems taught back to back: Gale-Shapley optimizes preference stability, Hopcroft-Karp maximizes cardinality"
+    source: note-algo2-stable-matching
+
   # ---- analysis pipeline (Stage 2, from the AN crosswalk block order)
   - from: concept-sequences-convergence
     type: requires

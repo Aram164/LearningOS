@@ -22,9 +22,14 @@ contexts: [workspace-aml-exam-prep]
 *Built from `VL 10-cnn.pdf`, 70 pages. Prior-year variant:
 `older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf`.*
 
-> ⚠️ **Scope note (slide-verified).** L10 is the **last lecture with a current
-> 2026 deck.** The lecture's arc: convolutions → one layer → CNNs → famous
-> architectures. It closes on residual connections.
+> ⚠️ **Scope note (slide-verified).** The lecture's arc: convolutions → one layer
+> → CNNs → famous architectures. It closes on residual connections — which L11
+> then reuses inside the transformer block.
+>
+> *Correction 2026-08-15:* this note previously said L10 was "the last lecture
+> with a current 2026 deck." That was true when written and is now false — the
+> L11 Transformers deck (`VL 11-transformers.pdf`, 81 sl.) arrived the same day
+> and is confirmed exam scope. See `note-aml-l11-transformers`.
 >
 > **This deck is unusually quiz-dense — five in-deck quiz slides** (p16, p34, p36,
 > p51, p57). That is a strong signal about exam content; all five are drilled in
