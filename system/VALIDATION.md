@@ -76,7 +76,7 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **E** Shelving apply accepts explicit existing proposal IDs and approved
   destinations only. General AI has no write capability.
 - **E** Session closure stages only its temporary action ledger and always
-  excludes `Untitled.canvas`, `Untitled 1.canvas`, and `Untitled 2.canvas`.
+  excludes every `.canvas` file, regardless of the default name Obsidian assigns.
 
 ## Operating contract
 

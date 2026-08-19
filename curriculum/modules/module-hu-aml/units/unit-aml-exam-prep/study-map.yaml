@@ -1,0 +1,353 @@
+id: study-map-aml-exam-prep
+type: study-map
+unit_id: unit-aml-exam-prep
+status: active
+current_stage: stage-aml-calibration
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-exam-execution-plan-2026-08-19.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-calibration
+  title: AML.0 — cold L01–L11 calibration (19–22 August)
+  status: active
+  objective: Before further reading, run a 120-minute closed-book diagnostic across all eleven announced
+    topics and turn the result into an error ledger that decides full-pass, repair-only or cold-skip treatment
+    for every later cluster.
+  done_when:
+  - Recall the L01 problem-formulation vocabulary for ten minutes, then attempt at least one representative
+    unseen item from every L02–L11 mock without opening an answer key.
+  - Classify every miss as definition, model-or-method choice, derivation, arithmetic-or-shape, interpretation,
+    or time.
+  - Mark L02–L04, L05–L07 and each of L08–L11 full-pass, repair-only or cold-skip from recorded evidence;
+    a clean gate permits a recorded skip but is not called mastery.
+  - Record the baseline score and the slowest three question types, then choose the first repair cluster.
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-gradient-descent
+  - concept-perceptron
+  - concept-neural-network
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Übung 10 slides 2–3 — exam rules and L01–L11 Themen list
+    source_id: source-aml-ss26-lectures
+    locator: exercise-slides/Übung 10.pdf, slides 2–3
+    scope_triage: required-now
+  - kind: practise
+    label: Representative items from the ten per-lecture mocks
+    locator: note-aml-l02-mock-exam through note-aml-l11-mock-exam; use unopened questions only
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-calibration/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-foundations-repair
+  title: AML.1 — L02–L04 foundations repair (23–29 August)
+  status: pending
+  objective: Repair only the diagnosed k-NN, regression, vectorization, basis-expansion and regularization
+    gaps; skip clean topics with the calibration evidence attached.
+  done_when:
+  - For every failed L02–L04 node, reproduce the relevant deck calculation or derivation and complete
+    the matching exercise-bank items without notes.
+  - Sit the 75-minute lecture mock for each cluster marked full-pass; use a shortened cold retest for
+    repair-only clusters and record any justified skip.
+  - Explain the model, objective, fitted parameters, validation choice and main failure mode for k-NN,
+    linear regression, polynomial regression, Ridge and Lasso.
+  - Move recurring formulas or decision rules—not whole explanations—to the A4-sheet ledger.
+  estimate_minutes: 360
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02–L04 decks
+    source_id: source-aml-ss26-lectures
+    locator: VL 02-nearest-neighbor.pdf; VL 03-linear-regression.pdf; VL 04-non-linear-regression.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: L02 artifact set
+    locator: note-aml-l02-knn-bias-variance; note-aml-l02-exercise-bank; note-aml-l02-mock-exam
+    scope_triage: required-now
+  - kind: practise
+    label: L03–L04 artifact sets
+    locator: note-aml-l03-linear-regression / exercise-bank / mock-exam; note-aml-l04-nonlinear-regression
+      / exercise-bank / mock-exam
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-foundations-repair/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-linear-optimization-repair
+  title: AML.2 — L05–L07 classification and optimization (30 August–5 September)
+  status: pending
+  objective: Make the logistic-loss derivation, optimizer mechanics, perceptron updates and kernel calculations
+    executable on paper before entering the neural-network arc.
+  done_when:
+  - Derive binary cross-entropy from Bernoulli likelihood and write the vectorized logistic gradient from
+    memory.
+  - Trace batch, stochastic or mini-batch updates and explain learning-rate, scaling, convexity, Adam
+    and Newton tradeoffs at the lecture's depth.
+  - Run primal and dual perceptron updates, compute a Gram/kernel value and explain XOR, RBF bandwidth
+    and one-vs-rest without importing SVM concepts.
+  - Complete the evidence-routed banks and mocks for L05–L07, then update the error ledger and A4-sheet
+    ledger.
+  estimate_minutes: 420
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-cross-entropy
+  - concept-gradient-descent
+  - concept-perceptron
+  - concept-kernel-trick
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L05–L07 decks and Übung 08
+    source_id: source-aml-ss26-lectures
+    locator: VL 05-logistic-regression.pdf through VL 07-linear-classifiers.pdf; exercise-slides/Übung
+      08.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: L05–L07 reference, bank and mock sets
+    locator: note-aml-l05-*; note-aml-l06-*; note-aml-l07-* (references, exercise banks and mock exams
+      only)
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-linear-optimization-repair/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-neural-transformer-loop
+  title: AML.3 — L08→L09→L10→L11 full loop (6–13 September)
+  status: pending
+  objective: 'Work the unverified late-course arc in strict dependency order: forward pass, backpropagation,
+    CNNs, then Transformers. The operator-drafted notes become evidence only through learner calculations
+    and closed-book mocks.'
+  done_when:
+  - 'L08: compute a complete forward pass with shapes and parameter counts, choose correct output heads,
+    and calculate binary and multiclass metrics.'
+  - 'L09: backpropagate through the shared example, explain regularization and gradient pathologies, and
+    verify one hand gradient against the deck''s PyTorch/autograd example.'
+  - 'L10: compute convolution outputs, padding/stride/channel shapes and parameter counts, then distinguish
+    the course-level contribution of LeNet, AlexNet, GoogLeNet and ResNet.'
+  - 'L11: compute simplified and Q/K/V attention, trace the Transformer block, connect language-model
+    cross-entropy to L05, and treat slides 73–81 as learn-anyway safety material.'
+  - For each lecture, work the exercise bank and sit the 75-minute mock closed-book; use the unit material
+    menu only for misses and record any source choice before use.
+  estimate_minutes: 900
+  exam_critical: true
+  concepts:
+  - concept-neural-network
+  - concept-softmax
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-residual-connection
+  - concept-attention
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L08–L11 decks and Übung 09–11
+    source_id: source-aml-ss26-lectures
+    locator: VL 08-feedforward-neural-network.pdf through VL 11-transformers.pdf; Übung 09–11.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: L08–L11 reference, bank and mock sets
+    locator: note-aml-l08-* through note-aml-l11-* (references, exercise banks and mock exams only)
+    scope_triage: required-now
+  - kind: reference
+    label: Jurafsky Chapter 8 only if the L11 diagnostic remains red
+    source_id: source-jurafsky-slp3
+    locator: Chapter 8 — Transformers
+    url: https://web.stanford.edu/~jurafsky/slp3/
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-neural-transformer-loop/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-integration-sheet
+  title: AML.4 — full-course integration and A4 sheet v1 (14–16 September)
+  status: pending
+  objective: Compress L01–L11 into a retrieval map and a usable handwritten sheet, emphasizing decisions
+    and recurring errors rather than transcribing the references.
+  done_when:
+  - Produce one page linking model → hypothesis → loss → optimizer/solution → validation → characteristic
+    failure for every L02–L11 model family.
+  - 'Complete two cross-lecture chains from memory: likelihood→cross-entropy→gradient descent→backpropagation
+    and perceptron/XOR→MLP→CNN→Transformer.'
+  - Write A4 sheet version 1 by hand on both sides using only formulas, shape rules, decision checks and
+    errors that were actually needed.
+  - Run a 45-minute mixed retrieval test and revise only items that were missing or too slow.
+  estimate_minutes: 240
+  exam_critical: true
+  concepts:
+  - concept-cross-entropy
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: AML × SaD master wiring and AML book crosswalk
+    locator: note-aml-sad-master-wiring; note-aml-book-crosswalk
+    scope_triage: helpful-now
+  - kind: reference
+    label: Current course decks for exact notation checks only
+    source_id: source-aml-ss26-lectures
+    locator: VL 01–11, exact slide only after a failed retrieval
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-integration-sheet/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-mock-one
+  title: AML.5 — mixed mock 1 (17 September)
+  status: pending
+  objective: 'Sit the first full-course paper under confirmed first-sitting conditions: 120 minutes, closed
+    book except the handwritten A4 sheet, with all eleven topics eligible.'
+  done_when:
+  - Assemble the paper only from still-unseen per-lecture mock questions and current exercise tasks, with
+    representation across L01–L11 and both calculation and explanation items.
+  - Work for 120 minutes unless a current second-sitting notice has confirmed a different duration; do
+    not extend the clock while solving.
+  - Self-grade after the sitting, record raw points by lecture and error class, and identify the three
+    highest-yield repairs.
+  - Photograph or attach the answer script and A4 sheet before changing either.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Unseen mixed items from L02–L11 mocks and current exercises
+    locator: per-lecture mocks plus Übung/Bonusblatt tasks not used in calibration; keep answer keys closed
+    scope_triage: required-now
+  - kind: reference
+    label: Confirmed first-sitting rules
+    source_id: source-aml-ss26-lectures
+    locator: exercise-slides/Übung 10.pdf slide 2
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-mock-one-repair
+  title: AML.6 — mock 1 repair (18–21 September)
+  status: pending
+  objective: Repair only errors that cost points or time in mock 1, then retest them cold; no new broad
+    reading is allowed.
+  done_when:
+  - For each lost point, write the smallest corrective rule and link it to one exact lecture node.
+  - Rework every missed calculation from a blank page and complete one fresh isomorphic item.
+  - Retest the three highest-yield repairs at least one day later without notes.
+  - Produce A4 sheet version 2 from repeated errors only and record any topic still below the chosen safety
+    margin.
+  estimate_minutes: 240
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-attention
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Mock 1 answer script, score breakdown and error ledger
+    vault_path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one-repair/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-mock-two
+  title: AML.7 — mixed mock 2 (22–23 September)
+  status: pending
+  objective: Run a second independent full-course paper to test whether mock-1 repairs transfer under
+    time pressure and whether the A4 sheet is actually usable.
+  done_when:
+  - Use a fresh mix of unseen questions across L01–L11 and the same 120-minute baseline unless the second-sitting
+    duration has been officially clarified.
+  - Finish with at least ten minutes reserved for shape/sign/unit checks and unanswered-item triage.
+  - Score by lecture and error class, compare directly with mock 1, and require that no red topic is hidden
+    by a strong aggregate score.
+  - Freeze A4 sheet version 3 except for corrections discovered during grading.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-kernel-trick
+  - concept-neural-network
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Second unseen mixed paper
+    locator: unused per-lecture mock and course-exercise items; no question repeated from mock 1
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-final-repair
+  title: AML.8 — final repair and dress rehearsal (24–27 September)
+  status: pending
+  objective: Close only the residual red topics, rehearse the opening and time-allocation strategy, and
+    stop expanding the source set.
+  done_when:
+  - Every remaining red topic has one cold successful retest or is explicitly accepted as residual risk.
+  - Run a 60-minute dress rehearsal covering the first-page scan, point triage, one derivation, one numerical
+    trace, one shape problem and final checking.
+  - Finalize the handwritten A4 sheet and verify it can be navigated within seconds under pressure.
+  - Confirm exam route, room, ID, CampusCard, calculator, pens and optional ruler; verify whether a second-sitting
+    notice changed the duration or allowed materials.
+  estimate_minutes: 240
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Both mock score breakdowns and the final error ledger
+    locator: stage-aml-mock-one and stage-aml-mock-two working notes
+    scope_triage: required-now
+  - kind: read
+    label: Current exam logistics notice if published
+    source_id: source-aml-ss26-lectures
+    locator: Übung 10 slide 2 baseline plus any later current second-sitting notice
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-final-repair/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-taper
+  title: AML.9 — taper (28–29 September)
+  status: pending
+  objective: Protect recall and sleep in the final forty-eight hours; use only the A4 sheet, error ledger
+    and short retrieval, with no new sources or full mock.
+  done_when:
+  - Complete one 30-minute formula/shape/decision retrieval pass and stop when the planned time ends.
+  - Read only the final error ledger and A4 sheet; do not reopen full references or add optional topics.
+  - Pack the required documents and materials and confirm the 09:00 start and ESZ 110 from the owning
+    module record.
+  - Set the next morning's departure and sleep plan.
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-transformer
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Final A4 sheet and error ledger
+    locator: stage-aml-final-repair outputs
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-taper/notes.md
+  attachments: []
+  source_feedback: []

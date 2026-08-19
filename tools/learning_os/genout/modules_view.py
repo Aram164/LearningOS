@@ -6,7 +6,7 @@ import datetime as _dt
 from ..loader import Repo
 from .common import _md_header
 
-def _exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:
+def exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:
     """(date, module_id, module, attempt) for attempts with result=registered."""
     spine = []
     for mid in sorted(repo.modules):
@@ -96,7 +96,7 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
 
     # A registered attempt remains visible even if its module has not yet been
     # backfilled with an available-sitting record.
-    for date, mid, module, attempt in _exam_spine(repo):
+    for date, mid, module, attempt in exam_spine(repo):
         key = (mid, int(attempt.get("termin", 1)), date)
         if key in represented_attempts:
             continue
@@ -127,7 +127,7 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
 
 def _exam_spine_lines(repo: Repo) -> list[str]:
     lines = []
-    spine = _exam_spine(repo)
+    spine = exam_spine(repo)
     if spine:
         lines.append("| Date | Module | Termin | Notes |")
         lines.append("|---|---|---|---|")

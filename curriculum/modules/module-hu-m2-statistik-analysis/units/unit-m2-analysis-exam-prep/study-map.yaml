@@ -4,7 +4,7 @@ unit_id: unit-m2-analysis-exam-prep
 status: ready
 current_stage: stage-m2-analysis-calibrate
 source_plan:
-  path: work/active/workspace-m2-exam-prep/outputs/Analysis-script-led-module-plan.yaml
+  path: work/active/workspace-m2-exam-prep/outputs/M2-two-lane-learning-plan.yaml
   provenance: operator
 detours: []
 shelving:
@@ -13,10 +13,10 @@ stages:
 - id: stage-m2-analysis-calibrate
   title: Calibrate the script-led method and exam boundary
   status: pending
-  objective: 'Use the agreed loop for every block: 10-minute cold diagnostic; at most 20 minutes of intuition
-    support only if blocked; active pass through unser skript; solve the current HU tasks before external
-    drills; repair only proofs that explain a failed application; finish with a closed-book retrieval
-    test.'
+  objective: 'Keep Analysis independent from Statistics. Calibrate the script-led loop: 10-minute cold
+    diagnostic; at most 20 minutes of intuition support only if blocked; active pass through unser skript;
+    current HU tasks before external drills; proof repair only when it explains a failed application;
+    closed-book retrieval to finish.'
   done_when:
   - 'Explain from memory how Wiederholung, Ausflug, and Exkurs change study priority: Wiederholung is
     required, Ausflug is exam-light application context, and Exkurs is not exam-relevant.'
@@ -35,14 +35,17 @@ stages:
     label: Course contract, notation, and chapter map
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. iv-x and contents pp. ii-iii (PDF pp. 2-10)'
+    scope_triage: required-now
   - kind: read
     label: Tutor proof-list disclaimer and repair candidates
     source_id: source-analysis-skript
     locator: 'kleine_beweise.pdf: both pages'
+    scope_triage: required-now
   - kind: practise
     label: Cold exam-style sample before studying
     source_id: source-analysis-skript
     locator: 'ana_inf_serieWV.pdf: choose one subproblem from WV1.1-WV1.4'
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md
   attachments: []
   source_feedback: []
@@ -72,18 +75,22 @@ stages:
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. 1-40 (PDF pp. 11-50); Exkurs none; §2.4 Ausflug at overview
       depth'
+    scope_triage: required-now
   - kind: practise
     label: Current HU sup/inf application
     source_id: source-analysis-skript
     locator: 'ana_inf_serie05.pdf: Aufgabe 5.4'
+    scope_triage: required-now
   - kind: reference
     label: Prerequisite repair only when notation or relations block the script
     source_id: source-analysis-grundlagen-handouts
     locator: 'Mengen-und-Abbildungen.pdf and Relationen.pdf: exact missing subsection only'
+    scope_triage: helpful-now
   - kind: practise
     label: Gentle solved companion after the HU task
     source_id: source-fritzsche-trainingsbuch
     locator: 'Kapitel 1 - Sprache der Analysis: matching problems only'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-an0/notes.md
   attachments: []
   source_feedback: []
@@ -113,22 +120,32 @@ stages:
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. 41-79 (PDF pp. 51-89); §3.2 and §3.4 Exkurse reference-only;
       §3.3 and §3.8 Ausflüge at application depth'
+    scope_triage: required-now
   - kind: practise
     label: Current HU sequence and recursion tasks
     source_id: source-analysis-skript
     locator: ana_inf_serie05.pdf Aufgaben 5.1-5.3; ana_inf_serie06.pdf all; ana_inf_serie07.pdf all
+    scope_triage: required-now
   - kind: practise
     label: Solved gap drills after the HU series
     source_id: source-analysis-drill-blaetter-extern
     locator: Grenzwerte-von-Folgen.pdf; Loesungen4.pdf; auf-2-2_Folgen_Loesungen.pdf
+    scope_triage: helpful-now
   - kind: watch
     label: Optional intuition unlock - sequences only, maximum 20 minutes before returning to the script
     source_id: source-professor-leonard
     locator: 'Calculus 2: Introduction to Sequences selection'
+    scope_triage: helpful-now
   - kind: reference
     label: Optional rigorous second voice for one blocked theorem
     source_id: source-mit-18100a
     locator: Lectures 7-9 only
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly — fresh German reserve drill
+    source_id: source-forster-wessoly
+    locator: Folgen and convergence sections; topic-matched problems only
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ana/notes.md
   attachments: []
   source_feedback: []
@@ -155,18 +172,27 @@ stages:
     label: Main source - Chapter 4
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. 80-97 (PDF pp. 90-107); §4.5 Exkurs excluded'
+    scope_triage: required-now
   - kind: practise
     label: Current HU series tasks
     source_id: source-analysis-skript
     locator: Pd3szO-ana_inf_serie08.pdf Aufgaben 8.1-8.3; ana_inf_serieWV.pdf WV1.3
+    scope_triage: required-now
   - kind: practise
     label: External solved drill after the HU tasks
     source_id: source-analysis-drill-blaetter-extern
     locator: KIT_Blatt-Reihen.pdf; Tutorium-Musterloesung-Reihen.pdf; auf-2-3_Reihen_Loesungen.pdf
+    scope_triage: helpful-now
   - kind: watch
     label: Optional intuition unlock - introduction and geometric series only
     source_id: source-professor-leonard
     locator: 'Calculus 2: Introduction to Series and Geometric Series selections'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly — fresh German reserve drill
+    source_id: source-forster-wessoly
+    locator: Reihen and convergence-test sections; topic-matched problems only
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anb/notes.md
   attachments: []
   source_feedback: []
@@ -193,19 +219,23 @@ stages:
     label: Optional visual preview only when the cold diagnostic fails
     source_id: source-3b1b-essence-of-calculus
     locator: Limits/continuity selections; maximum 20 minutes
+    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 5 through §5.5
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. 98-121 (PDF pp. 108-131)'
+    scope_triage: required-now
   - kind: practise
     label: Current HU limits and continuity tasks
     source_id: source-analysis-skript
     locator: Pd3szO-ana_inf_serie08.pdf Aufgabe 8.4; ana_inf_serie09.pdf all; ana_inf_serieWV.pdf WV1.2
       and WV1.4
+    scope_triage: required-now
   - kind: practise
     label: Direct continuity drills after the HU tasks
     source_id: source-analysis-drill-blaetter-extern
     locator: 'u10_Loesung.pdf: G31-G33, H37-H40'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anc/notes.md
   attachments: []
   source_feedback: []
@@ -232,14 +262,17 @@ stages:
     label: Main source - §§5.6-5.7
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: printed pp. 122-129 (PDF pp. 132-139); §5.8 Exkurs excluded'
+    scope_triage: required-now
   - kind: practise
     label: Explained companion exercises
     source_id: source-fritzsche-trainingsbuch
     locator: 'Kapitel 4: gleichmäßige Konvergenz selection only'
+    scope_triage: helpful-now
   - kind: reference
     label: Optional rigorous repair for the pointwise/uniform distinction
     source_id: source-mit-18100a
     locator: Lectures 23-24 only
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-and/notes.md
   attachments: []
   source_feedback: []
@@ -265,19 +298,28 @@ stages:
     label: Optional intuition unlock for derivative or MVT only
     source_id: source-professor-leonard
     locator: 'Calculus 1: definition of derivative and Mean Value Theorem selections'
+    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 6 core before Taylor
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §§6.1, 6.3-6.5, and 6.7; printed pp. 137-167 (PDF pp. 147-177); §§6.2
       and 6.6 excluded'
+    scope_triage: required-now
   - kind: practise
     label: Targeted solved calculations after the script examples
     source_id: source-analysis-drill-blaetter-extern
     locator: 'IngMath2_Aufgaben.pdf: Ch. 13 and §§14.1-14.2; AS-Ana1.pdf: matching differentiation tasks'
+    scope_triage: helpful-now
   - kind: practise
     label: Gentle German companion when the external collection is too terse
     source_id: source-fritzsche-trainingsbuch
     locator: 'Kapitel 3: Differenzierbarkeit and Mittelwertsatz selections'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly — fresh German reserve drill
+    source_id: source-forster-wessoly
+    locator: Differentiability, mean-value theorem, and l'Hospital sections
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ane/notes.md
   attachments: []
   source_feedback: []
@@ -303,18 +345,22 @@ stages:
     label: Optional visual preview for Taylor approximation
     source_id: source-3b1b-essence-of-calculus
     locator: Taylor-series selection; maximum 20 minutes
+    scope_triage: helpful-now
   - kind: read
     label: Main source - Taylor and interpolation boundary
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §6.8 and §6.10, printed pp. 168-190 (PDF pp. 178-200); §6.9 Exkurs excluded'
+    scope_triage: required-now
   - kind: practise
     label: Solved Taylor and curve-analysis tasks
     source_id: source-analysis-drill-blaetter-extern
     locator: 'IngMath2_Aufgaben.pdf: §14.3 and selected §14.4 tasks'
+    scope_triage: helpful-now
   - kind: reference
     label: Gentle alternative explanation
     source_id: source-strang-calculus
     locator: 'Chapter 10: Taylor/infinite-series selection only'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anf/notes.md
   attachments: []
   source_feedback: []
@@ -340,36 +386,47 @@ stages:
     label: Optional intuition unlock for the fundamental theorem
     source_id: source-professor-leonard
     locator: 'Calculus 2: Fundamental Theorem of Calculus selection'
+    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 7 core
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §§7.1-7.3, printed pp. 191-214 (PDF pp. 201-224); §7.4 Exkurs excluded'
+    scope_triage: required-now
   - kind: practise
     label: Solved Riemann/integration/improper-integral tasks
     source_id: source-analysis-drill-blaetter-extern
     locator: 'IngMath2_Aufgaben.pdf: Ch. 16-18 selections; Aufgabensammlung-M1_Loesung.pdf: Aufgabe 13'
+    scope_triage: helpful-now
   - kind: reference
     label: Gentle Riemann-sum and technique companion
     source_id: source-strang-calculus
     locator: Chapters 5 and 7 only
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly — fresh German reserve drill
+    source_id: source-forster-wessoly
+    locator: Riemann integration, FTC, substitution, parts, and improper-integral sections
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ang/notes.md
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-anx
-  title: AN.X - retrieval, mixed practice, and combined-M2 mocks
+  title: AN.X — Analysis retrieval and timed half-mocks
   status: pending
-  objective: Convert the completed blocks into exam performance using the script's definitions/results,
-    current HU exam-style tasks, gap-targeted external questions, and combined SaD-Analysis timing.
+  objective: Convert the completed Analysis blocks into independent subject performance using definitions/results
+    from the script, HU-style tasks, gap-targeted external questions, and two timed Analysis half-mocks.
+    Combined switching and the full three-hour simulation belong only to the joint unit.
   done_when:
-  - Produce a closed-book theorem ledger containing each exam-relevant definition/result, its assumptions,
+  - Produce a closed-book theorem ledger containing each exam-relevant definition/result, all assumptions,
     its trigger, and one application; do not copy full proofs.
-  - Complete ana_inf_serieWV.pdf under its stated 30-45-minute-per-problem conditions and correct it from
+  - Complete ana_inf_serieWV.pdf under its stated 30-45-minute-per-problem conditions and correct it against
     the script.
-  - Use kleine_beweise only on error-ledger proof/logic gaps and retain its explicit no-exam-prediction
-    disclaimer.
-  - Complete one Analysis-only 90-minute mixed mock and one full 3-hour combined M2 mock with the SaD
-    half; grade both and re-drill every red error.
-  - In the final 72 hours, pass two short retrieval rounds and stop adding new sources or non-exam Exkurse.
+  - Use kleine_beweise only on proof or logic gaps already present in the error ledger, preserving its
+    no-exam-prediction disclaimer.
+  - Complete and grade one 90-minute Analysis-only mixed mock, repair every red error, then complete a
+    fresh second 90-minute Analysis-only mock at least one day later.
+  - Enter the joint unit only when every Analysis block has a passed cold gate or an explicit remaining
+    repair item; do not add new sources in the final 72 hours.
   estimate_minutes: 540
   exam_critical: true
   concepts:
@@ -388,23 +445,28 @@ stages:
     label: Closest current HU exam-style set
     source_id: source-analysis-skript
     locator: 'ana_inf_serieWV.pdf: WV1.1-WV1.4 under 30-45 minute limits'
+    scope_triage: required-now
   - kind: read
     label: Selective logic repair, not memorization
     source_id: source-analysis-skript
     locator: 'kleine_beweise.pdf: only the theorem behind an error-ledger item'
+    scope_triage: required-now
   - kind: practise
     label: German solved gap checks
     source_id: source-analysis-klausuren-extern
     locator: 'Marburg and Regensburg: topic-matched tasks only; compare notation and scope back to unser
       skript'
+    scope_triage: helpful-now
   - kind: practise
     label: Fresh timed external paper for transfer
     source_id: source-analysis-klausuren-extern
     locator: 'Ulm or Leipzig: one timed selection; exclude topics absent from unser skript'
+    scope_triage: helpful-now
   - kind: reference
     label: Proof-writing repair only after a diagnosed presentation error
     source_id: source-ableitinger-musterloesungen
     locator: Analysis examples only; one matching Musterlösung
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
   attachments: []
   source_feedback: []
@@ -427,6 +489,7 @@ stages:
     label: Deferred computer-science connections
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: Chapter 8, printed pp. 226-248 (PDF pp. 236-258), plus other Exkurs sections'
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-exkurse/notes.md
   attachments: []
   source_feedback: []

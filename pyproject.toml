@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "learningos-core"
+version = "3.2.0"
+description = "Plain-file Learning OS core, contracts, validator, and gateway"
+requires-python = ">=3.12"
+dependencies = [
+  "PyYAML",
+  "jsonschema>=4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+los = "los:main"
+
+[tool.setuptools]
+package-dir = {"" = "tools"}
+py-modules = ["los"]
+
+[tool.setuptools.packages.find]
+where = ["tools"]
+include = ["learning_os*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["tools"]
+testpaths = ["tests"]

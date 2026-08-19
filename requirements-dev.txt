@@ -1,5 +1,6 @@
 # Development dependencies for the Learning OS tooling (validator, generator,
-# tests). Installed into a project-local .venv by `make setup` — see README.
+# tests). Kept as a compatibility input for simple dependency-only installs;
+# `make setup` installs the package and `dev` extra from pyproject.toml.
 # Pinned loosely; jsonschema must be >= 4 for the Draft 2020-12 validator.
 pyyaml
 jsonschema>=4

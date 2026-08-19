@@ -1,0 +1,633 @@
+id: study-map-m2-sad-exam-prep
+type: study-map
+unit_id: unit-m2-sad-exam-prep
+status: ready
+current_stage: stage-m2-sad-calibrate
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/M2-two-lane-learning-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-sad-calibrate
+  title: SaD.0 — cold diagnostic and scope calibration
+  status: pending
+  objective: Treat Statistics & Data Analysis as its own module. Attempt one representative task from
+    each of the five clusters before studying; record evidence, and skip explanatory material for any
+    cluster whose cold gate is already clean.
+  done_when:
+  - 'Attempt without notes: one descriptive/scale item, one Bayes/counting item, one distribution/inference
+    item, one model-tracing item, and one interpretation item.'
+  - 'Create the five-class SaD error ledger: definition, model-or-method choice, calculation, interpretation,
+    and time.'
+  - Mark every later SaD stage full-pass, repair-only, or cold-skip from recorded evidence; absence of
+    errors is evidence for skipping material, not a claim of mastery.
+  - Confirm that no Analysis task is placed in this map and that combined rehearsal starts only in the
+    joint unit.
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current SaD lecture-scope checklist
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf through 15_neural_networks.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Representative current exercise diagnostic
+    source_id: source-sad-uebungen
+    locator: 'Blatt1, blatt-02, Übung-3, Blatt4/UE5, Blatt5/UE7: one representative item per cluster'
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s01-descriptive
+  title: SaD.1 — descriptive statistics, data quality, and base rates (L01–L02)
+  status: pending
+  objective: Use the current L01-L02 decks as authority, then repair only the cold failures in scales,
+    summaries, sampling, confusion matrices, and base-rate reasoning.
+  done_when:
+  - Classify at least eight features by scale and state which ordering, distance, averaging, or ratio
+    operations are legal.
+  - Compute and interpret mean, median, quantiles, IQR, variance, standard deviation, and a boxplot; explain
+    one outlier and one n-versus-n-1 choice.
+  - Work one Simpson's-paradox or sampling-bias case and state why aggregation or selection changes the
+    claim.
+  - Build a confusion matrix from counts and compute accuracy, precision, recall/sensitivity, and specificity;
+    explain why accuracy can fail under imbalance.
+  - Solve one medical-test/base-rate problem by a frequency table and by Bayes, obtaining the same posterior.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01-L02 decks
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf and 02_basics.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current descriptive practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf and UE2.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Existing L01-L02 references and exercise banks
+    vault_path: knowledge/notes/mathematics/
+    scope_triage: helpful-now
+  - kind: read
+    label: Fahrmeir descriptive-statistics layer
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2, only the sections matching recorded errors
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s01-descriptive/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s02-regression
+  title: SaD.2 — correlation, regression, and optimization (L03)
+  status: pending
+  objective: 'Close the L03 chain independently: paired data to covariance/Pearson, least squares, multivariate
+    form, the normal equation, gradient descent, and interpretation.'
+  done_when:
+  - Calculate covariance, Pearson r, and a simple least-squares line from a small dataset and interpret
+    sign, strength, units, and outliers.
+  - State at least three reasons why correlation need not be causation.
+  - Set up the design matrix and normal equation with correct shapes and state the rank/invertibility
+    caveat.
+  - Perform one gradient-descent update by hand and explain the effects of learning rate and feature scaling.
+  - Pass a 30-minute mixed L03 gate without using the Regression Bridge until correction.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation/regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L03 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf correlation/regression section and blatt-02.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: SaD × AML × ISLP regression bridge
+    vault_path: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md
+    scope_triage: helpful-now
+  - kind: read
+    label: Fahrmeir correlation/regression layer
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 3, error-matched sections
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s02-regression/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s03-probability-counting
+  title: SaD.3 — probability, Bayes, independence, and counting (L04–L05)
+  status: pending
+  objective: 'Make method recognition automatic: event algebra and axioms, conditional probability/Bayes,
+    independence versus conditional independence, Naive Bayes, and the order/repetition counting grid.'
+  done_when:
+  - Solve one inclusion-exclusion and one complement-counting problem and state the probability axioms
+    used.
+  - Complete a 4-Feldertafel/Bayes problem and an independence check without formula hunting.
+  - Classify at least ten counting scenarios by order, repetition, and all-n versus choose-k before calculating.
+  - Compute one permutation, variation, combination, stars-and-bars, and hypergeometric application.
+  - Run a small Naive Bayes classification by hand, expose the zero-frequency failure, and show how smoothing
+    changes it.
+  estimate_minutes: 240
+  exam_critical: true
+  concepts:
+  - concept-probability
+  - concept-combinatorics
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04-L05 decks
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf and 05_combinatorics.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current probability and counting practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf and UE3.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Blitzstein conditioning and strategic counting
+    source_id: source-blitzstein-hwang
+    locator: Chapters 1-2, only after a failed intuition gate
+    scope_triage: helpful-now
+  - kind: reference
+    label: Existing L04-L05 references and exercise banks
+    vault_path: knowledge/notes/mathematics/
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s03-probability-counting/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s04-random-variables
+  title: SaD.4 — random variables, expectation, variance, and CDFs (L06)
+  status: pending
+  objective: Begin the probability-to-inference chain with PMF/PDF/CDF, expectation, variance, transformation
+    rules, independence, Chebyshev, and the sample mean as a random variable.
+  done_when:
+  - Move correctly between PMF/PDF and CDF and explain why a continuous point has probability zero.
+  - From a probability table compute E[X], E[X²], Var(X), and standard deviation without notes.
+  - Apply expectation/variance rules to aX+b and to an independent sum.
+  - Compute E[X-bar] and Var(X-bar) and explain why the latter shrinks with n.
+  - Apply Chebyshev to one tail bound and state what makes it distribution-free.
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L06 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf and UE4.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir random-variable layer
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5-7 selections
+    scope_triage: required-now
+  - kind: reference
+    label: Legacy L06-L10 synthesis and cold checks
+    vault_path: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s04-random-variables/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s05-discrete-distributions
+  title: SaD.5 — discrete distributions and model choice (L07)
+  status: pending
+  objective: Turn Binomial, Hypergeometric, and Poisson into a model-selection decision rather than a
+    formula list.
+  done_when:
+  - Build from memory a table with assumptions, PMF, expectation, variance, and recognition trigger for
+    Binomial, Hypergeometric, and Poisson.
+  - Choose the correct distribution for at least six word problems before calculating.
+  - Compute exact and tail probabilities for all three named distributions.
+  - Explain the finite-population correction and the Binomial-to-Poisson limiting regime.
+  - Pass the legacy three-scenario cold gate without mixing with/without replacement.
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  - concept-combinatorics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L07 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf and UE4.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir named discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5
+    scope_triage: required-now
+  - kind: practise
+    label: Fahrmeir Arbeitsbuch distribution drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 5 selections
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s05-discrete-distributions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s06-normal-clt-likelihood
+  title: SaD.6 — Normal distribution, CLT, approximations, and likelihood (L08)
+  status: pending
+  objective: Connect standardization and Normal calculations to the CLT, sampling distributions, approximations,
+    and the probability-versus-likelihood distinction.
+  done_when:
+  - Standardize and calculate two one- or two-sided Normal probabilities using symmetry and quantiles.
+  - State the LLN and CLT in the course's scope and distinguish what each guarantees.
+  - Use a Normal approximation with continuity correction and check whether the approximation conditions
+    are plausible.
+  - Explain probability versus likelihood and write the Gaussian likelihood-to-squared-error chain in
+    five steps.
+  - Pass a 30-minute gate mixing z-scores, CLT, approximation, and likelihood interpretation.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-normal-distribution
+  - concept-central-limit-theorem
+  - concept-maximum-likelihood
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L08 Normal/CLT/likelihood deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/08_normal_distribution.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L08 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf and UE5.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Normal and limit-theorem layer
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 6-7
+    scope_triage: required-now
+  - kind: read
+    label: One CLT or MLE visual repair
+    source_id: source-statquest
+    locator: Central Limit Theorem; Probability is not Likelihood; Maximum Likelihood — choose only the
+      failed concept
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s06-normal-clt-likelihood/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s07-estimation
+  title: SaD.7 — estimators, uncertainty, and confidence intervals (L09)
+  status: pending
+  objective: Treat an estimator as a random variable, compare quality criteria, and construct and interpret
+    intervals with the correct z/t assumptions.
+  done_when:
+  - Define bias, consistency, MSE, and efficiency and evaluate at least two simple estimators.
+  - Derive or explain the standard error of the sample mean from Var(X-bar).
+  - Construct one z interval and one t interval, stating every assumption and interpreting confidence
+    correctly.
+  - Predict how width changes with n, variability, and confidence before calculating.
+  - Explain why a large biased sample can be worse than a smaller representative one.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-statistical-estimation
+  - concept-normal-distribution
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L09 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf and UE5.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9
+    scope_triage: required-now
+  - kind: practise
+    label: Fahrmeir Arbeitsbuch estimation drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 9
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s07-estimation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s08-testing
+  title: SaD.8 — hypothesis tests, p-values, errors, and power (L10)
+  status: pending
+  objective: Run the entire test workflow with correct assumptions and language, including z/t/chi-square
+    and permutation logic, error types, power, multiple testing, and CI-test duality.
+  done_when:
+  - Translate a claim into one- or two-sided H0/H1 and choose z, t, chi-square, or permutation reasoning
+    with justification.
+  - 'Complete one z or t test end-to-end: statistic, reference distribution, rejection rule or p-value,
+    decision, and contextual conclusion.'
+  - Interpret a p-value without treating it as P(H0 true) and distinguish Type I, Type II, alpha, beta,
+    and power.
+  - Run one 2x2 chi-square calculation and explain expected counts and independence.
+  - Demonstrate CI-test duality on one two-sided mean example and explain the multiple-testing trap.
+  estimate_minutes: 210
+  exam_critical: true
+  concepts:
+  - concept-hypothesis-testing
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L10 practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf, blatt-05.pdf Aufgabe 1, and UE7.pdf slides 12-16
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10-11
+    scope_triage: required-now
+  - kind: practise
+    label: FAU solved testing transfer
+    source_id: source-fau-klausur-ws1415
+    locator: t-test, p-value, correlation-test, and contingency-table items
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s08-testing/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s09-workflow-evaluation
+  title: SaD.9 — data-science workflow, leakage, and evaluation (L11)
+  status: pending
+  objective: Make the workflow and evaluation vocabulary operational without importing AML's larger syllabus.
+  done_when:
+  - Draw the train/validation/test workflow and identify two leakage routes.
+  - Choose micro, macro, or weighted aggregation for three multiclass scenarios and justify the choice.
+  - Diagnose imbalance, overfitting, and distribution shift from a short case.
+  - Explain why lower training error is not sufficient evidence of better generalization.
+  - Pass one current multiclass-metrics task without consulting an AML note.
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science workflow deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L11 evaluation practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-05.pdf Aufgabe 3 and UE7.pdf slides 22-30
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s09-workflow-evaluation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s10-trees-ensembles
+  title: SaD.10 — decision trees and ensembles (L12)
+  status: pending
+  objective: Learn the current L12 tree scope and deliberately fill its missing current exercise sheet
+    with solution-backed tracing tasks.
+  done_when:
+  - Compute entropy/information gain for one classification split and variance reduction for one regression
+    split.
+  - Trace an ID3-style induction step and state the stopping condition.
+  - Explain overfitting, pre/post-pruning, and the bias-variance effect of tree depth.
+  - Compare bagging, random forests, boosting, and stacking by base learners, dependence, and aggregation.
+  - Complete one solution-backed tree task and one ensemble comparison cold.
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-decision-trees
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree/ensemble deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially section 4.2.3
+    scope_triage: required-now
+  - kind: practise
+    label: Cornell solution-backed trees and AdaBoost
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW8 or 2018Spring/HW8; choose one
+    scope_triage: required-now
+  - kind: practise
+    label: MIT ID3/tree tracing reserve
+    source_id: source-mit-6034-quizzes
+    locator: Tree/ID3 quiz selections
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s10-trees-ensembles/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s11-similarity-clustering
+  title: SaD.11 — similarity, k-NN, search, and clustering (L13 + UE7)
+  status: pending
+  objective: Keep the current L13 k-NN/similarity lecture and the exercise-defined clustering topic together
+    for review while preserving their distinct authoritative scopes.
+  done_when:
+  - Run k-NN classification and regression with unweighted and distance-weighted aggregation and handle
+    one tie or imbalance case.
+  - Check metric axioms and compare Euclidean, Manhattan, cosine, Jaccard, and Mahalanobis by their invariances
+    and assumptions.
+  - Explain why scaling and high dimension change neighborhoods and exact-index effectiveness.
+  - Trace k-means assignment/update iterations to convergence and explain initialization, outliers, and
+    local optima.
+  - Complete one solution-backed k-NN task and one complete UE7 clustering trace.
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-k-nearest-neighbors
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current UE7 clustering/similarity bridge
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 32-87
+    scope_triage: required-now
+  - kind: reference
+    label: Existing instance-based reference
+    vault_path: knowledge/notes/mathematics/note-sad-l11-instance-based.md
+    scope_triage: helpful-now
+  - kind: practise
+    label: Cornell solution-backed k-NN task
+    source_id: source-cs4780-homeworks
+    locator: 2017Spring/hw1 or 2018Fall/HW1; choose one
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s11-similarity-clustering/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s12-probabilistic-learning
+  title: SaD.12 — Naive Bayes extensions and Bayesian networks (L14)
+  status: pending
+  objective: Extend the L04 classifier to numeric and count data, stable log-space computation, and explicit
+    dependency graphs.
+  done_when:
+  - Calculate a smoothed categorical Naive Bayes posterior score and explain why the shared denominator
+    can be omitted for argmax.
+  - Compare discretization, Gaussian Naive Bayes, and Multinomial Naive Bayes for three feature types.
+  - Convert a likelihood product to log space and explain the numerical reason.
+  - Factorize a small Bayesian network from its DAG and identify one conditional-independence claim.
+  - Identify a node's Markov blanket and explain what information it makes locally sufficient.
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-naive-bayes
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L14 probability-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/14_probability_based.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L14 probability-based practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf probability-based learning section
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher probability-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 6, especially section 6.4.2
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s12-probabilistic-learning/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s13-neural-networks
+  title: SaD.13 — neural networks, backpropagation, and training (L15)
+  status: pending
+  objective: 'Stay at SaD scope: forward shapes and parameters, the need for nonlinearity, chain-rule
+    credit assignment, and training/generalization choices.'
+  done_when:
+  - Compute a multilayer forward pass with correct matrix/vector shapes and parameter count.
+  - Explain why stacked linear layers remain linear and how an activation resolves XOR-type limits.
+  - Match regression, binary classification, and multiclass classification to output/loss choices at course
+    depth.
+  - Trace one small backpropagation derivative by the chain rule.
+  - Explain learning rate, batches, initialization, stopping, regularization, and validation without claiming
+    that lower training loss means better generalization.
+  estimate_minutes: 150
+  exam_critical: true
+  concepts:
+  - concept-neural-network
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L15 neural-networks deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/15_neural_networks.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Current L15 forward task
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-05.pdf Aufgabe 2 and UE7.pdf slides 17-21
+    scope_triage: required-now
+  - kind: practise
+    label: One solution-backed neural-network trace
+    source_id: source-mit-6034-quizzes
+    locator: Neural-network quiz selection
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher error-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 7, only the L15-aligned sections
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s13-neural-networks/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-sad-s14-exam-transfer
+  title: SaD.X — Statistics-only retrieval and timed half-mocks
+  status: pending
+  objective: Convert the completed Statistics lane into independent exam performance before entering the
+    shared combined-exam unit.
+  done_when:
+  - 'Produce from memory a compact Statistics ledger: decision grids, formulas with assumptions, interpretation
+    traps, and one worked trigger per cluster.'
+  - Complete one 90-minute Statistics-only mixed mock assembled from unused German solved/unsolved tasks;
+    grade it and classify every error.
+  - Repair every red error and re-test it cold in a different representation at least one day later.
+  - Complete a second fresh 90-minute Statistics-only mock with no repeated questions and meet the predeclared
+    score and time thresholds.
+  - Enter the joint unit only when every cluster has either a passed cold gate or an explicit remaining
+    repair item.
+  estimate_minutes: 360
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-probability
+  - concept-statistical-estimation
+  - concept-hypothesis-testing
+  - concept-decision-trees
+  - concept-naive-bayes
+  - concept-neural-network
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: FAU solved German Statistics exam
+    source_id: source-fau-klausur-ws1415
+    locator: Spend once as a timed mixed source; do not read the solution first
+    scope_triage: required-now
+  - kind: practise
+    label: Fresh external German Statistics tasks
+    source_id: source-sad-klausuren-extern
+    locator: Choose topic-matched questions not used during stages
+    scope_triage: required-now
+  - kind: practise
+    label: MIT 18.05 solved-exam reserve
+    source_id: source-mit-1805
+    locator: Use only to replace a missing fresh probability/inference task
+    scope_triage: helpful-now
+  - kind: read
+    label: Current SaD decks for correction authority
+    source_id: source-sad-ss26-lectures
+    locator: Correct definitions and scope against the exact matching 2026 deck
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md
+  attachments: []
+  source_feedback: []

@@ -258,6 +258,38 @@ sources:
     depth: course-aligned
     scope: complementary
     locator: lecture-slides/11_datascience_intro.pdf supervised/unsupervised section
+  - unit_id: unit-m2-sad-exam-prep
+    title: Current SaD L01-L15 scope spine
+    format: course-material
+    angle: Provides the exact 2026 definitions, notation, examples, and topic boundaries for every Statistics
+      review stage.
+    covers:
+    - knowledge-sad-exam-calibration
+    - knowledge-sad-exam-descriptive
+    - knowledge-sad-exam-regression
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-workflow
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-similarity
+    - knowledge-sad-exam-probabilistic-ml
+    - knowledge-sad-exam-neural
+    - knowledge-sad-exam-transfer
+    depth: course-aligned
+    scope: current
+    locator: lecture-slides/01_introduction.pdf through 15_neural_networks.pdf
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: SaD current-scope correction index
+    format: course-material
+    angle: Corrects the Statistics half after a combined mock; it does not define the Analysis half or
+      official combined weighting.
+    covers:
+    - knowledge-m2-joint-blueprint
+    - knowledge-m2-joint-simulation
+    depth: course-aligned
+    scope: current
+    locator: L01-L15 deck contents and exact matching deck for each error
 - source_id: source-sad-uebungen
   role: practice
   why: Current Blatt/UE decks are the closest available guide to expected computations and German wording.
@@ -457,6 +489,36 @@ sources:
     depth: course-aligned
     scope: current
     locator: exercise-slides/UE7.pdf slides 32–87
+  - unit_id: unit-m2-sad-exam-prep
+    title: Current SaD exercises and clustering authority
+    format: exercise
+    angle: Supplies the closest course-aligned computations and interpretations; UE7 is the authority
+      for the auxiliary clustering topic.
+    covers:
+    - knowledge-sad-exam-calibration
+    - knowledge-sad-exam-descriptive
+    - knowledge-sad-exam-regression
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-workflow
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-similarity
+    - knowledge-sad-exam-probabilistic-ml
+    - knowledge-sad-exam-neural
+    - knowledge-sad-exam-transfer
+    depth: practice
+    scope: current
+    locator: Blatt1 through Blatt5 and UE2 through UE7, topic matched
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: SaD near-transfer repair pool
+    format: exercise
+    angle: Provides one course-aligned repair task after a Statistics error in a combined mock.
+    covers:
+    - knowledge-m2-joint-simulation
+    depth: practice
+    scope: current
+    locator: Exact matching Blatt/UE task for the diagnosed error
 - source_id: source-sad-2025-recordings
   role: reference
   why: Same-course older decks and UE1–UE7 are used only where topic alignment was verified; numbering
@@ -741,6 +803,20 @@ sources:
     depth: derivation
     scope: complementary
     locator: Chapters 10–11
+  - unit_id: unit-m2-sad-exam-prep
+    title: Fahrmeir — German Statistics derivation spine
+    format: book
+    angle: Explains descriptive statistics, probability, distributions, estimation, and testing in exam-compatible
+      German notation after the current-deck pass.
+    covers:
+    - knowledge-sad-exam-descriptive
+    - knowledge-sad-exam-regression
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    depth: derivation
+    scope: complementary
+    locator: Chapters 2-7 and 9-11, topic matched
 - source_id: source-fahrmeir-arbeitsbuch
   role: practice
   why: German worked exercises for the corresponding Fahrmeir chapters, especially estimation and testing.
@@ -869,6 +945,17 @@ sources:
     depth: practice
     scope: complementary
     locator: Chapters 10–11
+  - unit_id: unit-m2-sad-exam-prep
+    title: Fahrmeir Arbeitsbuch — solution-backed repair
+    format: exercise
+    angle: Adds German worked problems for distributions, estimation, and testing only after current exercises
+      expose a gap.
+    covers:
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    depth: practice
+    scope: complementary
+    locator: Matching Chapters 5, 9, and 10-11
 - source_id: source-blitzstein-hwang
   role: derivation
   why: Story-proof explanations for random variables, expectation, distributions, Normal/CLT, and conditional
@@ -941,6 +1028,16 @@ sources:
     depth: intuition
     scope: complementary
     locator: Chapter 5; selected Chapter 10 sections
+  - unit_id: unit-m2-sad-exam-prep
+    title: Blitzstein — conditioning and strategic counting
+    format: book
+    angle: Supplies story-based intuition for Bayes and the order/repetition counting decisions without
+      becoming a second probability course.
+    covers:
+    - knowledge-sad-exam-probability
+    depth: intuition
+    scope: complementary
+    locator: Chapters 1-2 only after a failed cold gate
 - source_id: source-pitman-probability
   role: optional-depth
   why: Intermediate alternative when Blitzstein is too terse or deep; use only for L04–L08.
@@ -1578,6 +1675,19 @@ sources:
     depth: practice
     scope: complementary
     locator: Hypothesis-testing notes, problem sets, and solved exams
+  - unit_id: unit-m2-sad-exam-prep
+    title: MIT 18.05 solved-exam reserve
+    format: exam
+    angle: Replaces a missing fresh probability/inference item only; German course sources retain wording
+      authority.
+    covers:
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-transfer
+    depth: practice
+    scope: optional
+    locator: Unused solved probability/inference exam question
 - source_id: source-stat110
   role: optional-depth
   why: Cherry-pick Units 3–6 for RVs, expectation, distributions, Normal, and CLT; never run as a second
@@ -1794,6 +1904,28 @@ sources:
     depth: practice
     scope: complementary
     locator: t-test, p-value, and correlation-test questions with solutions
+  - unit_id: unit-m2-sad-exam-prep
+    title: FAU solved German Statistics transfer
+    format: exam
+    angle: Provides a coherent German solved paper for Statistics-only timing and inference-language correction.
+    covers:
+    - knowledge-sad-exam-descriptive
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-transfer
+    depth: practice
+    scope: complementary
+    locator: Spend once under Statistics-only timed conditions before reading solutions
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: FAU questions for the second Statistics half
+    format: exam
+    angle: Supplies unused, solution-backed Statistics questions for a fresh combined simulation; it is
+      not represented as an official M2 paper.
+    covers:
+    - knowledge-m2-joint-simulation
+    depth: practice
+    scope: complementary
+    locator: Unused questions not spent in SaD.X
 - source_id: source-sad-klausuren-extern
   role: exam-preparation
   why: Local HS Harz, Köln, Leuphana, and Regensburg solved exams for gap-targeted drilling.
@@ -1923,6 +2055,30 @@ sources:
     depth: practice
     scope: complementary
     locator: Local solved bank; hypothesis-testing questions
+  - unit_id: unit-m2-sad-exam-prep
+    title: External German Statistics exam bank
+    format: exam
+    angle: Provides fresh topic-matched transfer after the course exercises and a second Statistics-only
+      half-mock.
+    covers:
+    - knowledge-sad-exam-descriptive
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-random-variables
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-transfer
+    depth: practice
+    scope: complementary
+    locator: HS Harz, Köln, Leuphana, and Regensburg; choose only current-scope tasks
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: Fresh Statistics half for combined mock 1
+    format: exam
+    angle: Assembles an unused Statistics half with traceable solutions; no claim is made that its weighting
+      matches the official combined paper.
+    covers:
+    - knowledge-m2-joint-simulation
+    depth: practice
+    scope: complementary
+    locator: Unused current-scope questions with solutions
 - source_id: source-statquest
   role: intuition
   why: Exact short refreshers for distributions, CLT, MLE, intervals, tests, trees, Naive Bayes, and neural
@@ -2064,6 +2220,16 @@ sources:
     depth: orientation
     scope: complementary
     locator: Neural Networks Part 1; Backpropagation Main Ideas; Stochastic Gradient Descent
+  - unit_id: unit-m2-sad-exam-prep
+    title: StatQuest — one short L08 intuition repair
+    format: video
+    angle: Clarifies CLT, probability versus likelihood, or MLE only when the current deck diagnostic
+      shows that exact gap.
+    covers:
+    - knowledge-sad-exam-random-variables
+    depth: intuition
+    scope: complementary
+    locator: Central Limit Theorem; Probability is not Likelihood; Maximum Likelihood
 - source_id: source-jbstatistics
   role: intuition
   why: Short calculation-exact probability and inference refreshers.
@@ -2380,6 +2546,21 @@ sources:
     depth: course-aligned
     scope: complementary
     locator: Chapter 7
+  - unit_id: unit-m2-sad-exam-prep
+    title: Kelleher — SaD machine-learning companion
+    format: book
+    angle: Provides course-named explanations for workflow, trees, similarity, probabilistic learning,
+      and neural networks at the SaD level.
+    covers:
+    - knowledge-sad-exam-regression
+    - knowledge-sad-exam-workflow
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-similarity
+    - knowledge-sad-exam-probabilistic-ml
+    - knowledge-sad-exam-neural
+    depth: course-aligned
+    scope: complementary
+    locator: Workflow selections and Chapters 4-7, topic matched
 - source_id: source-islp
   role: reference
   why: Ch 2 for workflow/evaluation, Ch 8 for trees/ensembles, Ch 4 for Naive Bayes, Ch 10 for neural
@@ -2748,6 +2929,16 @@ sources:
     depth: practice
     scope: complementary
     locator: 2018Fall/HW9; 2018Spring/HW9
+  - unit_id: unit-m2-sad-exam-prep
+    title: Cornell solution-backed tree and k-NN tasks
+    format: exercise
+    angle: Fills the two explicit current practice gaps with one scoped, solution-backed task per method.
+    covers:
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-similarity
+    depth: practice
+    scope: complementary
+    locator: HW8 tree/AdaBoost and HW1 k-NN selections
 - source_id: source-mit-6034-quizzes
   role: practice
   why: Solution-backed ID3, nearest-neighbor, and neural-network tracing problems.
@@ -2787,6 +2978,17 @@ sources:
     depth: practice
     scope: complementary
     locator: Neural-network quiz selections
+  - unit_id: unit-m2-sad-exam-prep
+    title: MIT trace problems for trees and neural networks
+    format: exercise
+    angle: Provides compact solution-backed tracing after the current deck when no matching SaD sheet
+      exists.
+    covers:
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-neural
+    depth: practice
+    scope: complementary
+    locator: Tree/ID3 and neural-network quiz selections
 - source_id: source-3b1b-neural-networks
   role: intuition
   why: Visual forward-pass, gradient, and backpropagation intuition for L15.
@@ -2924,6 +3126,17 @@ sources:
     depth: course-aligned
     scope: current
     locator: ana_inf_serie05-09.pdf, ana_inf_serieWV.pdf
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: Analysis scope and correction authority
+    format: course-material
+    angle: Provides the Analysis coverage boundary, notation, theorem conditions, and exact correction
+      source after a combined mock.
+    covers:
+    - knowledge-m2-joint-blueprint
+    - knowledge-m2-joint-simulation
+    depth: course-aligned
+    scope: current
+    locator: unser skript.pdf Chapters 1-7, course contract, and matching HU exercise
 - source_id: source-professor-leonard
   role: first-exposure
   why: Optional 20-minute intuition unlock before the script for a genuinely new topic; never substitutes
@@ -3017,6 +3230,16 @@ sources:
     depth: practice
     scope: complementary
     locator: Marburg/Regensburg solved; Ulm/Leipzig reserved unsolved
+  - unit_id: unit-m2-combined-exam-rehearsal
+    title: Fresh Analysis halves for combined simulation
+    format: exam
+    angle: Provides two disjoint, scope-matched Analysis selections with solutions where available; neither
+      is called an official M2 paper.
+    covers:
+    - knowledge-m2-joint-simulation
+    depth: practice
+    scope: complementary
+    locator: Two unused selections from Marburg/Regensburg/Ulm/Leipzig, matched back to unser skript
 - source_id: source-strang-calculus
   role: intuition
   why: Local gentle calculus chapters support Taylor and Riemann-integral intuition when video is unnecessary.

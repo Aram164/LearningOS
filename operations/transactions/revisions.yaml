@@ -3,8 +3,15 @@ type: artifact-revision-ledger
 revisions:
   capture:work/inbox/20260807-053214-stage-3-smoke.md: 1
   module-hu-algo2: 1
+  module-hu-aml: 2
+  module-hu-m2-statistik-analysis: 3
   module-project-bachelor-thesis: 1
   program-thesis-projects: 1
   project-bachelor-thesis: 1
   unit-algo2-exam-prep: 1
+  unit-aml-exam-prep: 2
+  unit-aml-l11: 2
+  unit-m2-analysis-exam-prep: 3
+  unit-m2-combined-exam-rehearsal: 3
+  unit-m2-sad-exam-prep: 3
   workspace-thesis-mle-medical: 1

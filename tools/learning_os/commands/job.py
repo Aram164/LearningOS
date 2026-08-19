@@ -16,6 +16,7 @@ from pathlib import Path
 
 import yaml
 
+from ..contracts import ContractValidationError, validate_contract
 from ..transactions import artifact_revision
 from .support import _fresh_manifest, _root
 
@@ -126,39 +127,32 @@ def _first_paragraph(value: str) -> str:
     return _plain(re.split(r"\n\s*\n", value.strip(), maxsplit=1)[0] if value else "")
 
 
-def _workspace(path: Path, job_root: Path) -> dict:
-    text = path.read_text(encoding="utf-8")
-    meta, body = _frontmatter(text)
-    current_raw = _section(body, "Current Scope")
-    scope: list[dict] = []
-    labels = "Required now|Helpful now|Defer|Reference only"
-    for match in re.finditer(
-        rf"\*({labels})\*\s*[—-]\s*(.*?)(?=\n\s*\n\*?(?:{labels})\*?\s*[—-]|\Z)",
-        current_raw,
-        flags=re.DOTALL,
-    ):
-        scope.append({
-            "label": match.group(1).lower().replace(" ", "-"),
-            "text": _plain(match.group(2)),
-        })
-    open_raw = _section(body, "Open Questions")
-    open_questions = [
-        _plain(match.group(1)) for match in re.finditer(
-            r"^-\s+(.*?)(?=^-\s+|\Z)",
-            open_raw,
-            flags=re.MULTILINE | re.DOTALL,
+def _workspace(config: dict, path: Path, job_root: Path) -> dict:
+    """Project the record-shaped workspace block from ``dashboard.yaml``.
+
+    The dashboard used to rename Markdown headings into API fields with regular
+    expressions.  That made prose structure an undeclared wire contract.  Job's
+    bounded catalogue now carries the small read record explicitly; ``path`` is
+    retained only as the user-openable source document.
+    """
+    fields = (
+        "id", "title", "status", "standing", "objective", "current_scope",
+        "next_action", "open_questions",
+    )
+    missing = [field for field in fields if field not in config]
+    if missing:
+        raise JobDashboardError(
+            "workspace catalogue record is missing: " + ", ".join(missing)
         )
-        if _plain(match.group(1))
-    ]
     return {
-        "id": str(meta.get("id") or "workspace-job-deem"),
-        "title": str(meta.get("title") or "BIFOLD/DEEM job — Stratum"),
-        "status": str(meta.get("status") or "active"),
-        "standing": bool(meta.get("standing", True)),
-        "objective": _first_paragraph(_section(body, "Objective")),
-        "current_scope": scope,
-        "next_action": _first_paragraph(_section(body, "Next Action")),
-        "open_questions": open_questions,
+        "id": config["id"],
+        "title": config["title"],
+        "status": config["status"],
+        "standing": config["standing"],
+        "objective": config["objective"],
+        "current_scope": config["current_scope"],
+        "next_action": config["next_action"],
+        "open_questions": config["open_questions"],
         "path": path.relative_to(job_root).as_posix(),
     }
 
@@ -505,11 +499,26 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
     }
 
 
-def _structured_track(path: Path, job_root: Path, progress: dict) -> dict:
+def _structured_track(
+    path: Path,
+    job_root: Path,
+    progress: dict,
+    repository_root: Path,
+) -> dict:
     data = _read_yaml(path)
     version = data.get("schema_version")
     if data.get("type") != "job-learning-plan" or version not in {1, 2}:
         raise JobDashboardError(f"unsupported learning plan contract in {path.name}")
+    if version == 2:
+        try:
+            validate_contract(
+                repository_root,
+                "job-plan.schema.json",
+                data,
+                label=f"job-plan-v2 ({path.name})",
+            )
+        except ContractValidationError as exc:
+            raise JobDashboardError(str(exc)) from exc
     track_id = str(data.get("id") or path.stem).strip()
     title = str(data.get("title") or "").strip()
     if not track_id or not title:
@@ -562,7 +571,12 @@ def _structured_track(path: Path, job_root: Path, progress: dict) -> dict:
     }
 
 
-def _learning_tracks(config: dict, job_root: Path, progress: dict) -> list[dict]:
+def _learning_tracks(
+    config: dict,
+    job_root: Path,
+    progress: dict,
+    repository_root: Path,
+) -> list[dict]:
     """Merge legacy declared plans with structured, editable Job plans.
 
     A structured plan with the same id deliberately shadows its legacy
@@ -578,7 +592,7 @@ def _learning_tracks(config: dict, job_root: Path, progress: dict) -> list[dict]
     plans_root = job_root / "plans"
     if plans_root.is_dir():
         for path in sorted(plans_root.glob("*.yaml")):
-            track = _structured_track(path, job_root, progress)
+            track = _structured_track(path, job_root, progress, repository_root)
             tracks[track["id"]] = track
     return sorted(
         tracks.values(),
@@ -685,10 +699,14 @@ def cmd_job_dashboard(args) -> int:
         if config.get("type") != "job-dashboard" or config.get("schema_version") != 1:
             raise JobDashboardError("unsupported Job dashboard contract")
         workspace_config = config.get("workspace") or {}
+        if not isinstance(workspace_config, dict):
+            raise JobDashboardError("Job dashboard workspace must be an object")
         workspace_path = _safe_job_path(job_root, workspace_config.get("path"))
         note_config = config.get("notes") or {}
+        if not isinstance(note_config, dict):
+            raise JobDashboardError("Job dashboard notes must be an object")
         progress = _progress(job_root)
-        tracks = _learning_tracks(config, job_root, progress)
+        tracks = _learning_tracks(config, job_root, progress, repository_root)
         papers = [
             _paper(entry, job_root) for entry in (config.get("papers") or [])
             if isinstance(entry, dict)
@@ -700,7 +718,7 @@ def cmd_job_dashboard(args) -> int:
             "id": str(config.get("id") or "job-dashboard"),
             "title": str(config.get("title") or "Job"),
             "subtitle": str(config.get("subtitle") or "Confidential workspace"),
-            "workspace": _workspace(workspace_path, job_root),
+            "workspace": _workspace(workspace_config, workspace_path, job_root),
             "notes": notes,
             "learning_tracks": tracks,
             "tasks": tasks,
@@ -722,7 +740,7 @@ def cmd_job_dashboard(args) -> int:
     except (JobDashboardError, OSError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
         return 2
-    print(json.dumps({
+    response = {
         "ok": True,
         "contract": CONTRACT,
         "access": {
@@ -737,5 +755,16 @@ def cmd_job_dashboard(args) -> int:
             "snapshot_id": f"sha256:{job_fingerprint(job_root)}",
         },
         "dashboard": dashboard,
-    }, indent=2, sort_keys=True, ensure_ascii=False))
+    }
+    try:
+        validate_contract(
+            repository_root,
+            "job-dashboard.schema.json",
+            response,
+            label=CONTRACT,
+        )
+    except ContractValidationError as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False))
+        return 2
+    print(json.dumps(response, indent=2, sort_keys=True, ensure_ascii=False))
     return 0

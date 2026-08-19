@@ -15,9 +15,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 6
-schema_fingerprint: sha256:cb16542e01defcc19e882af65adbd04e3b07abb1734ea610dfdbf48889813389
-record_schemas: 21
+contract_version: 7
+schema_fingerprint: sha256:1fe3f50785ef58f8323341cca9d88e60a70674d03ca04e3b464d735454796474
+record_schemas: 23
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -75,3 +75,8 @@ history:
     they meant at v5.'
   migration: null
   fixture: tests/fixtures/formats/v6/
+- version: 7
+  adopted: '2026-08-19'
+  note: Add producer-owned Job dashboard and structured Job plan schemas
+  migration: null
+  fixture: tests/fixtures/formats/v7/

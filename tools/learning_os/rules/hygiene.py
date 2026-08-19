@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..fingerprint import source_fingerprint
 from ..githistory import last_commit_timestamp
 
 from pathlib import Path
@@ -49,7 +50,6 @@ class ChecksHygiene:
                       "but the human-fallback path depends on them)")
             return
         try:
-            from ..genout import source_fingerprint
             data = json.loads(manifest.read_text(encoding="utf-8"))
             projected = (data.get("_generated") or {}).get("source_fingerprint")
             current = source_fingerprint(self.repo)

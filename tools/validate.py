@@ -16,8 +16,6 @@ import datetime as _dt
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import render_report, validate  # noqa: E402
 

@@ -220,7 +220,7 @@ in a different shape, carrying a third copy of `examination.notes`. Interfaces
 read `academic_deadlines`, which additionally covers available sittings that
 have no attempt yet and grouped registration windows.
 
-`_exam_spine()` survives as the internal helper behind the "Exam spine" table in
+`exam_spine()` survives as the helper behind the "Exam spine" table in
 `coordination-view.md` / `reading-room.md` and behind `los.py status --json`.
 The CLI status payload keeps its `exam_spine` field: it is a separate surface
 with its own consumers and its own test (`tests/test_cli.py`), and it answers a

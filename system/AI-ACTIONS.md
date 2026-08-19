@@ -44,7 +44,8 @@ response is copied into `operations/ai-actions/incoming/` first and only
 published to `deliveries/` once it validates against the contract lock, target
 checksum, provider identity, explicit approval and capability allowlist — a
 rejected bundle never occupies a canonical-looking path. Successful application
-is atomic and creates a receipt under `operations/ai-actions/receipts/` before
+is atomic and creates the standard transaction receipt under
+`operations/transactions/` before
 the manifest projection is refreshed.
 
 ## Contracts
@@ -65,8 +66,8 @@ request arrives from Obsidian or from the CLI.
 Staleness is scoped to the target. A delivery is rejected when the Garden seed
 or an original attachment changed after preparation; unrelated edits elsewhere
 in the repository do not invalidate prepared work. The repository fingerprint is
-still recorded in the request and in the receipt's `pre_snapshot` /
-`post_snapshot` as provenance.
+still recorded in the request and in the receipt's `snapshot_before` /
+`snapshot_after` as provenance.
 
 Re-shelving a seed that already has an AI transcription requires the delivery to
 name what it replaces:
@@ -79,7 +80,7 @@ operations:
     supersedes: transcription-garden-note-example-attention-as-soft-knn
 ```
 
-The receipt then records the replaced id under `superseded_ids`.
+The receipt then records the replaced id under `metadata.superseded_ids`.
 
 Before any canonical write the gateway runs a post-action scope check: every
 destination must fall inside the `writes:` prefixes its capability declares in

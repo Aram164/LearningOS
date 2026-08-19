@@ -120,7 +120,20 @@ def write_job(mini_repo: Path, *, workspace_path: str = "workspace-job-deem/CONT
         "id": "job-dashboard",
         "title": "Job",
         "subtitle": "Bounded",
-        "workspace": {"path": workspace_path},
+        "workspace": {
+            "path": workspace_path,
+            "id": "workspace-job-deem",
+            "title": "Job workspace",
+            "status": "active",
+            "standing": True,
+            "objective": "Build the system.",
+            "current_scope": [
+                {"label": "required-now", "text": "Current ticket."},
+                {"label": "helpful-now", "text": "Read one chapter."},
+            ],
+            "open_questions": ["What should be promoted later?"],
+            "next_action": "Read the system map.",
+        },
         "notes": {"roots": ["notes"]},
         "learning_tracks": [{
             "id": "polars",
@@ -147,6 +160,20 @@ def test_job_dashboard_requires_explicit_confirmation(mini_repo):
     proc = run_los(mini_repo, "job-dashboard")
     assert proc.returncode == 2
     assert "explicit" in json.loads(proc.stdout)["error"]
+
+
+def test_job_dashboard_fails_closed_when_its_producer_contract_drifts(mini_repo):
+    job = write_job(mini_repo)
+    path = job / "dashboard.yaml"
+    dashboard = yaml.safe_load(path.read_text(encoding="utf-8"))
+    dashboard["workspace"]["current_scope"][0]["label"] = "urgent-but-undeclared"
+    path.write_text(yaml.safe_dump(dashboard, sort_keys=False), encoding="utf-8")
+
+    proc = run_los(mini_repo, "job-dashboard", "--confirm-job-access")
+    assert proc.returncode == 2
+    error = json.loads(proc.stdout)["error"]
+    assert "job-dashboard-v2 contract violation" in error
+    assert "urgent-but-undeclared" in error
 
 
 def test_job_dashboard_is_bounded_and_not_projected(mini_repo):
@@ -224,7 +251,6 @@ def test_notes_are_placed_on_the_stratum_pipeline(mini_repo):
 
 def test_layer_derivation_prefers_the_specific_prefix(mini_repo):
     """`optimizer/ir/` and `optimizer/physical/` must beat the bare `optimizer/`."""
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
     from learning_os.commands.job import _layer_for
 
     cases = {
@@ -546,7 +572,6 @@ def test_the_stratum_checkout_is_never_writable(mini_repo):
     Pinned at the guard rather than trusted to the allowlist's silence, so a
     future edit that adds "stratum" to WRITABLE_ROOTS fails loudly here.
     """
-    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
     from learning_os.commands.job import JobDashboardError
     from learning_os.commands.job_write import (
         FORBIDDEN_ROOTS, WRITABLE_ROOTS, _writable_path,

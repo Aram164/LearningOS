@@ -2,7 +2,7 @@
 # `make` with no target prints this help.
 
 # System interpreter used only to *build* the venv; override if needed
-# (e.g. `make setup PYTHON=python3.12`).
+# (e.g. `make setup PYTHON=python3.14`).
 PYTHON ?= python3
 VENV   := .venv
 
@@ -64,7 +64,7 @@ all: check views materials test
 setup:
 	$(PYTHON) -m venv $(VENV)
 	$(VENV)/bin/python -m pip install --upgrade pip
-	$(VENV)/bin/python -m pip install -r requirements-dev.txt
+	$(VENV)/bin/python -m pip install -e ".[dev]"
 	cp tools/hooks/pre-commit tools/hooks/post-commit .git/hooks/
 	chmod +x .git/hooks/pre-commit .git/hooks/post-commit
 	@echo "setup complete: .venv created, deps installed, hooks active."

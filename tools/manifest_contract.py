@@ -37,8 +37,6 @@ import json
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 from learning_os.contracts.manifest_contract import (  # noqa: E402
     ManifestContractError, bump, check, shape_of,
 )

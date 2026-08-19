@@ -2,55 +2,86 @@ id: unit-aml-l11
 type: unit
 module_id: module-hu-aml
 kind: lecture
-title: AML Lecture 11 — Recurrent Neural Networks (prior-year reference; 2026 scope unconfirmed)
+title: AML Lecture 11 — Transformers
 order: 11
-scope: Conditional overview based only on the local older 85-page RNN deck; RNN forward passes and architectures,
-  BPTT, vanishing gradients, GRU, LSTM, and deep RNNs. No current 2026 L11 deck is locally posted, so
-  this unit is not promoted to current exam scope until verified.
+scope: Current 2026 L11 deck; words and tokens, static and contextual embeddings, language-modelling motivation,
+  simplified and Q/K/V multi-head attention, positional information, Transformer blocks with residual
+  connections and layer normalization, cross-entropy training, and the bonus parallelization/causal-masking
+  section. RNNs, GRUs and LSTMs are not in the 2026 lecture.
 status: not-started
 knowledge_map:
-  summary: This is a prior-year reference map, not confirmed 2026 scope. It explains sequence modelling,
-    shared recurrent state, training through time, gradient instability, and gated memory architectures.
+  summary: The lecture starts from next-token prediction, turns tokens into contextual representations
+    through attention, assembles the Transformer block, and returns to language-model training with the
+    same cross-entropy objective introduced in L05.
   nodes:
-  - id: knowledge-aml-l11-sequences
-    title: Sequence modelling
-    summary: Variable-length inputs/outputs, language and tagging examples, temporal order, and task architectures.
-  - id: knowledge-aml-l11-recurrence
-    title: Recurrent state and forward pass
-    summary: Hidden-state updates, parameter sharing through time, outputs, shapes, and unfolded computation graphs.
+  - id: knowledge-aml-l11-language-task
+    title: Language modelling as next-token prediction
+    summary: A sequence probability is factorized into conditional next-token probabilities; the model
+      predicts a distribution over the vocabulary at each position.
+  - id: knowledge-aml-l11-tokenization
+    title: Words, tokens, types, and instances
+    summary: Text is converted into token identities; vocabulary, token instances, sequence length and
+      subword choices determine the model's discrete input representation.
     builds_on:
-    - knowledge-aml-l11-sequences
-  - id: knowledge-aml-l11-architectures
-    title: Sequence architectures
-    summary: One-to-many, many-to-one, many-to-many, bidirectional, and deep recurrent arrangements.
+    - knowledge-aml-l11-language-task
+  - id: knowledge-aml-l11-embeddings
+    title: Static and contextual embeddings
+    summary: Embedding lookup maps token identities to vectors, while contextual embeddings let the same
+      token acquire a different representation from surrounding tokens.
     builds_on:
-    - knowledge-aml-l11-recurrence
-  - id: knowledge-aml-l11-bptt
-    title: Backpropagation through time
-    summary: Unrolling, temporal dependency paths, shared-parameter gradient accumulation, and training cost.
+    - knowledge-aml-l11-tokenization
+  - id: knowledge-aml-l11-attention
+    title: Simplified self-attention
+    summary: Dot-product similarities become softmax weights whose weighted sum mixes token representations;
+      the deck's first worked example deliberately omits learned Q/K/V projections.
     builds_on:
-    - knowledge-aml-l11-recurrence
-  - id: knowledge-aml-l11-gradient-health
-    title: Vanishing gradients through time
-    summary: Repeated recurrent Jacobians, long-range dependencies, decay/explosion, and connection to L09.
+    - knowledge-aml-l11-embeddings
+  - id: knowledge-aml-l11-qkv
+    title: Queries, keys, values, and multi-head attention
+    summary: Learned projections create queries, keys and values; scaled dot products produce attention
+      weights, and multiple heads learn different interaction patterns.
     builds_on:
-    - knowledge-aml-l11-bptt
-  - id: knowledge-aml-l11-gru
-    title: Gated recurrent units
-    summary: Reset/update gates, candidate state, controlled memory, and the role of interpolation.
+    - knowledge-aml-l11-attention
+  - id: knowledge-aml-l11-position
+    title: Positional information
+    summary: Because attention itself is permutation-insensitive, positional representations inject order
+      before tokens enter the block.
     builds_on:
-    - knowledge-aml-l11-gradient-health
-  - id: knowledge-aml-l11-lstm
-    title: LSTM memory cells
-    summary: Cell state plus input/forget/output gates and why additive memory paths support longer dependencies.
+    - knowledge-aml-l11-embeddings
+  - id: knowledge-aml-l11-block
+    title: Transformer block
+    summary: Multi-head attention and a position-wise feedforward network are wrapped with residual connections
+      and layer normalization; shapes and information flow connect back to L08-L10.
     builds_on:
-    - knowledge-aml-l11-gradient-health
+    - knowledge-aml-l11-qkv
+    - knowledge-aml-l11-position
+  - id: knowledge-aml-l11-training
+    title: Language-model outputs and cross-entropy training
+    summary: Block outputs become vocabulary logits and softmax probabilities, and cross-entropy trains
+      the model to predict the observed next token.
+    builds_on:
+    - knowledge-aml-l11-block
+    - knowledge-aml-l11-language-task
+  - id: knowledge-aml-l11-parallelization
+    title: 'Bonus: matrix attention and causal masking'
+    summary: The bonus section expresses attention as a matrix operation, scales by the key dimension
+      and masks future positions; it is retained as learn-anyway safety material while exam scope remains
+      ambiguous.
+    builds_on:
+    - knowledge-aml-l11-qkv
+    - knowledge-aml-l11-training
 scope_sources:
 - source_id: source-aml-ss26-lectures
-  authority: reference
-  locator: older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf (85 pages; prior year only)
+  authority: slides
+  locator: lecture-slides/VL 11-transformers.pdf (81 pages; 2026-07-17)
+- source_id: source-aml-ss26-lectures
+  authority: brief
+  locator: 'exercise-slides/Übung 10.pdf slide 3 — Themen list item 11: Transformers'
 source_selections: []
 artifacts:
+  ultimate_reference: note-aml-l11-transformers
+  exercise_bank: note-aml-l11-exercise-bank
+  mock_exam: note-aml-l11-mock-exam
   other:
   - note-aml-sad-master-wiring
 workspace_ids:

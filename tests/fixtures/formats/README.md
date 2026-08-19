@@ -62,6 +62,16 @@ and its book route states format, lecture-specific angle, covered nodes, depth,
 scope, and exact locator. The v1–v4 string routes remain frozen and valid,
 proving the redesign is additive rather than a forced migration.
 
+`v6` (adopted 2026-08-15) adds operator-drafted note authorship, a structured
+module drop record, and richer source-route formats/depth/scope. All three are
+optional additions; the fixture deliberately exercises them while older
+fixtures remain valid.
+
+`v7` (adopted 2026-08-19) adds producer-owned schemas for the quarantined Job
+dashboard and structured Job plans. Those records live outside the canonical
+data tree, so the frozen canonical fixture is byte-identical to `v6`; that is
+the compatibility claim being recorded, not a regenerated fixture.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

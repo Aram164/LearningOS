@@ -30,8 +30,6 @@ import argparse
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
 
 # Command registry: one module per domain, so a behaviour is found by name.

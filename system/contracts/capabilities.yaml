@@ -1,9 +1,12 @@
+contract: learningos-capabilities
+schema_version: 1
 contract_version: 1
 cli_protocol: 3
 queries:
   job.dashboard:
     handler: job_dashboard
     result: job-dashboard-v2
+    schema: system/schema/job-dashboard.schema.json
     invariants:
     - explicit access confirmation is required
     - read-only and in-memory only
@@ -263,8 +266,6 @@ forbidden:
 - repository.read-job
 - repository.write-arbitrary
 - artifact.delete
-schema_version: 1
-contract: learningos-capabilities
 domain_capabilities:
   garden.add-transcription:
     writes:
@@ -281,12 +282,3 @@ domain_capabilities:
   relationship.create:
     writes:
     - knowledge/relationships.yaml
-ai_action_interface:
-  queries:
-  - ai_action.list
-  - ai_action.status
-  commands:
-  - ai_action.prepare
-  - ai_action.import_delivery
-  - ai_action.validate_delivery
-  - ai_action.apply_delivery

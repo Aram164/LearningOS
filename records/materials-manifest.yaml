@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-08-15'
+captured: '2026-08-19'
 totals:
-  files: 1121
-  bytes: 2057292585
+  files: 1131
+  bytes: 2071501162
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker.
     Rechenverfahren der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -21,6 +21,36 @@ files:
   _unsorted/Diskrete Mathematik .pdf:
     size: 3233992
     sha256: 7f98db1b7892f2f101147797edb5f91fd77fc25f9107e530ddccbe42d8e96c63
+  _unsorted/Legacy-DBT-review/DBT-Skript.pdf:
+    size: 2149964
+    sha256: 89d8c016465672d73a6750ef96a620742bd4b1c31867376d9267eef094c1f9d4
+  _unsorted/Legacy-DBT-review/ÜB-Blätter/Blatt01.pdf:
+    size: 149063
+    sha256: 4faab56b9f82c53370cef1698dcbaa53a611c22d0bb68ed9860c28ecc4414250
+  _unsorted/Legacy-DBT-review/ÜB-Blätter/Blatt04.pdf:
+    size: 202562
+    sha256: 7f1df8ae76ea8dca107723b3e7b0fb5d13e5082e21694e8a8f277bc57b68b31f
+  _unsorted/Legacy-DBT-review/ÜB-Blätter/DBT-Blatt02.pdf:
+    size: 173695
+    sha256: d73e5dadaa0ea569b578c7ad5f7db98dbe493c1478f0836fb88a5eea5e9d7adf
+  _unsorted/Legacy-DBT-review/ÜB-Blätter/DBT-Blatt03.pdf:
+    size: 201943
+    sha256: fc64af984c2dc515439c32d64af440ed9bef11520718b7db85779f8fef9e6ad6
+  _unsorted/Legacy-DBT-review/database theory .pdf:
+    size: 5376223
+    sha256: 620b406fa62010d797139e0135478d242f19cc5499e60a1b0bfd0ca64ea62bab
+  _unsorted/Legacy-DBT-review/database theory wothwhile schweikardt articl.pdf:
+    size: 1162359
+    sha256: 48ec1120e9cdd63990dd19f4ec88b0ecb6e7fe791c3645cfa13fd34d08705920
+  _unsorted/Legacy-DBT-review/foundations of Databases.pdf:
+    size: 4346030
+    sha256: 0e5da36b51f58105b4cdc68842fea7d10e91d77547c0f8ce6b06b20c1f3a7796
+  _unsorted/Legacy-DBT-review/mockExam.pdf:
+    size: 108831
+    sha256: d5b8e5995ad2650109d6b0523d4076c587eabd04c4a14ba8d372ce1e6be26ea1
+  _unsorted/Legacy-SaD-review/SaD_L01-L05_Full_Units.pdf:
+    size: 337907
+    sha256: 99b05106b20ffee81e3138608625bf8d696e3acddf39a333dd96c6b5406f5432
   _unsorted/README.md:
     size: 2875
     sha256: 40a232f6d1f8437d4f234eb0d4f5b032d87ab8629e072e809c64db95d4f8a89b

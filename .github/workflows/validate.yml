@@ -15,12 +15,37 @@ on:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: repository
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out Core
+        uses: actions/checkout@v4
+        with:
+          path: repository
+
+      # The Job dashboard schema has a separately released consumer. Checking
+      # its mirror only in the UI repository recreates the failure topology the
+      # producer-owned manifest contract removed: Core can pass while shipping
+      # a shape the UI cannot decode. Keep the paired UI branch explicit until
+      # the contract work lands on both default branches, then drop `ref:`.
+      - name: Check out the Job dashboard consumer
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          ref: engineering-review-tier1
+          path: obsidian-ui
+
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - run: pip install -r requirements-dev.txt
+          python-version: "3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: pip install -e ".[dev]"
+      - name: producer-side Core/UI contract gate
+        working-directory: obsidian-ui
+        run: npm run contract:check
       - name: validate (schemas + VALIDATION.md rules)
         run: python tools/validate.py
       - name: URL-rot audit (weekly only)

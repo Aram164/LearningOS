@@ -81,13 +81,16 @@ Derived from canonical data; gitignored; may be deleted and rebuilt at any time:
 - manifest;
 - concept index;
 - source index (including crosswalk selector views);
+- library view and generated collection views;
 - domain atlas (the cross-domain map — ADR-005);
 - module views;
 - coordination view;
+- dependency report and concept map;
 - reading room (the human home page composing the other views — ADR-006);
 - concept canvas (JSON Canvas of the relation registry — ADR-006);
+- Nebula (the Garden lens — ADR-002);
 - backlinks;
-- validation reports.
+- health and validation reports.
 
 Generated artifacts must never become canonical inputs.
 
@@ -187,8 +190,16 @@ repository/
 │   ├── manifest.json
 │   ├── concept-index.md
 │   ├── source-index.md
+│   ├── library.md
+│   ├── collections/*.md
+│   ├── domain-atlas.md
+│   ├── reading-room.md
+│   ├── nebula.md
 │   ├── module-view.md
 │   ├── coordination-view.md
+│   ├── dependency-report.md
+│   ├── concept-map.md
+│   ├── concept-canvas.canvas
 │   ├── backlinks.json
 │   └── reports/
 │
@@ -615,7 +626,7 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
 24. Master's quarantined content and Job content never enter the normal
     manifest; only declared boundary records may appear. Job additionally has
     one explicit, ephemeral read model: opening the Job destination invokes the
-    bounded `job-dashboard-v1` query. Its in-memory response belongs only to
+    bounded `job-dashboard-v2` query. Its in-memory response belongs only to
     that view and is excluded from global search, recommendations, AI actions,
     generated artifacts, and normal resource opening.
 25. Interface writes use action-specific, snapshot-checked gateway commands;

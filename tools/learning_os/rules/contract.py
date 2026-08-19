@@ -19,18 +19,7 @@ See tools/schema_contract.py for the reasoning and the bump procedure.
 
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
-
-def _schema_contract():
-    """Import the contract helper from tools/ without a package dependency."""
-    tools = Path(__file__).resolve().parents[2]
-    if str(tools) not in sys.path:
-        sys.path.insert(0, str(tools))
-    import schema_contract  # noqa: PLC0415 — deliberately lazy
-
-    return schema_contract
+from ..contracts import data_contract
 
 
 class ChecksContract:
@@ -43,7 +32,6 @@ class ChecksContract:
         if not schema_dir.is_dir():
             return
 
-        module = _schema_contract()
         if not contract_path.exists():
             self.warn("SCHEMA-CONTRACT-MISSING",
                       "no system/contracts/data-contract.yaml — the record "
@@ -54,7 +42,7 @@ class ChecksContract:
                       "system/contracts/")
             return
 
-        ok, message = module.check(schema_dir, contract_path)
+        ok, message = data_contract.check(schema_dir, contract_path)
         if not ok:
             # One error, multi-line: the message names the exact next step.
             self.err("SCHEMA-CONTRACT-DRIFT", message.replace("\n", " "),

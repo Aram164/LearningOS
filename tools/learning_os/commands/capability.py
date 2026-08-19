@@ -11,42 +11,6 @@ from learning_os.contracts.capability_catalog import command_definitions
 from pathlib import Path
 from .support import WriteRefused, _read_structured_file, _root
 
-def _capability_handlers() -> dict[str, str]:
-    """Public command capability -> concrete gateway handler name."""
-    return {
-        "capture.create": "capture",
-        "garden.seed.create": "garden_seed_create",
-        "module.plan.import": "module_plan_import",
-        "note.revise": "note_revise",
-        "note.evidence.add": "note_evidence",
-        "unit.map.import": "unit_map_import",
-        "unit.note.append": "unit_note",
-        "unit.source-selection.set": "unit_source_selection",
-        "stage.note.write": "stage_note",
-        "stage.progress.update": "stage_progress",
-        "stage.attachment.add": "stage_attach",
-        "source.feedback.record": "source_feedback",
-        "detour.create": "detour_create",
-        "detour.resolve": "detour_resolve",
-        "review.prepare": "shelving_prepare",
-        "review.apply": "shelving_apply",
-        "path.note.write": "path_note",
-        "path.progress.update": "path_progress",
-        "path.attachment.add": "path_attach",
-        "project.create": "project_create",
-        "project.update": "project_update",
-        # Bounded Job writes (ADR-010). Public so the Job view can reach them
-        # through the same envelope as every other write; each still refuses
-        # without `confirm_job_access` in its payload, and none is ever placed
-        # in an AI action's allowed-capabilities list.
-        "job.session.log": "job_session_log",
-        "job.note.save": "job_note_save",
-        "job.note.stamp": "job_note_stamp",
-        "job.plan.save": "job_plan_save",
-        "job.task.save": "job_task_save",
-        "job.track.progress": "job_track_progress",
-    }
-
 
 def _payload_schema_path(root: Path, name: str) -> Path:
     return root / "system" / "schema" / "capabilities" / f"{name}.schema.json"
@@ -108,18 +72,33 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
     text, complaint = captured.getvalue().strip(), errors.getvalue().strip()
     if code:
         return code, {"error": complaint or text or f"{definition.name} failed"}
+    if not text:
+        raise WriteRefused(
+            f"{definition.name} reported success without a JSON result"
+        )
     try:
-        result = json.loads(text) if text else {}
-    except json.JSONDecodeError:
-        result = {"output": text}
+        result = json.loads(text)
+    except json.JSONDecodeError as exc:
+        raise WriteRefused(
+            f"{definition.name} reported success with non-JSON output"
+        ) from exc
     if not isinstance(result, dict):
-        result = {"output": result}
+        raise WriteRefused(
+            f"{definition.name} reported success with a non-object JSON result"
+        )
     return 0, result
 
 
-def _validate_capability_envelope(root: Path, envelope: dict) -> None:
+def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
     schema = json.loads((root / "system/schema/capability-envelope.schema.json").read_text(encoding="utf-8"))
-    errors = sorted(Draft202012Validator(schema).iter_errors(envelope), key=lambda error: list(error.path))
+    try:
+        directional_schema = schema["$defs"][kind]
+    except KeyError as exc:  # pragma: no cover - a repository contract defect
+        raise WriteRefused(f"capability envelope schema has no {kind} definition") from exc
+    errors = sorted(
+        Draft202012Validator(directional_schema).iter_errors(envelope),
+        key=lambda error: list(error.path),
+    )
     if errors:
         raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
 
@@ -127,11 +106,14 @@ def _validate_capability_envelope(root: Path, envelope: dict) -> None:
 def cmd_capability(args) -> int:
     root = _root(args)
     definitions = command_definitions(root)
-    if args.name not in definitions or args.name not in _capability_handlers():
+    # ``command_definitions`` already exposes only the public ``commands:``
+    # section.  It is the allowlist; keeping a second dictionary here made
+    # every new capability require two coordinated declarations.
+    if args.name not in definitions:
         print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
         return 2
     envelope = _read_structured_file(args.payload_file)
-    _validate_capability_envelope(root, envelope)
+    _validate_capability_envelope(root, envelope, kind="request")
     if envelope.get("capability") != args.name:
         print("los: envelope capability does not match requested capability", file=sys.stderr)
         return 2
@@ -161,6 +143,6 @@ def cmd_capability(args) -> int:
         "result": result if code == 0 else {},
         "error": None if code == 0 else result.get("error", "capability failed"),
     }
-    _validate_capability_envelope(root, response)
+    _validate_capability_envelope(root, response, kind="result")
     print(json.dumps(response, indent=2, ensure_ascii=False))
     return code

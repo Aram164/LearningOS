@@ -120,16 +120,17 @@ actions use the same gateway through `ai-action-list`, `ai-action-prepare`,
 The loader stays the single authority; the CLI only delegates.
 
 `make setup` creates a project-local virtual environment at `.venv/` (gitignored)
-from `requirements-dev.txt`, so the tooling never touches your system Python —
+and installs the package with its `dev` dependencies from `pyproject.toml`, so
+the tooling never touches your system Python —
 this sidesteps the PEP 668 / Homebrew "externally-managed-environment" error you
 hit on a clean macOS install. Every later `make` target and both Git hooks use
 `.venv/bin/python` automatically when it exists, and fall back to the system
 `python3` otherwise. Build with a specific interpreter via
-`make setup PYTHON=python3.12`.
+`make setup PYTHON=python3.14`.
 
 (Equivalent direct calls once the venv exists: `.venv/bin/python tools/validate.py`
 [`--online` adds the URL audit], `.venv/bin/python tools/generate.py`,
-`.venv/bin/python -m pytest`.) Requires Python 3.10+, `pyyaml`, `jsonschema>=4`,
+.venv/bin/python -m pytest`.) Requires Python 3.12+, `pyyaml`, `jsonschema>=4`,
 `pytest` — the tools fail fast with the exact fix if a dependency is missing or
 too old.
 

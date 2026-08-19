@@ -93,69 +93,24 @@ unit_ids:
 - unit-m2-sad-l14
 - unit-m2-sad-l15
 - unit-m2-sad-clustering
+- unit-m2-sad-exam-prep
 - unit-m2-analysis-exam-prep
+- unit-m2-combined-exam-rehearsal
 ---
 
 # M2 exam prep — SaD + Analysis
 
 ## Objective
 
-Pass module-hu-m2-statistik-analysis: ONE combined 3h Klausur covering both the
-SaD (statistics + ML half) and Analysis components, one shared grade. The sitting
-is deferred to the 2. Termin (deferral in COORDINATION; dates in
-`curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`) — the July time
-pressure is off, but the merged-prep rule stands: interleave SaD stats clusters
-with Analysis proof blocks, do not run two parallel tracks.
+Prepare Statistik und Datenanalyse and Analysis as two independent learning modules with separate scope, stages, progress, and subject-only mocks. The single combined three-hour sitting and shared grade are handled only by `unit-m2-combined-exam-rehearsal`; the administrative facts remain solely in the owning M2 module record.
 
 ## Current Scope
 
-> **Posture change (COORDINATION.md, Aram 2026-08-14): M2 runs substantially in
-> parallel from now, not as a post-AML sprint.** AMLS is shelved, so the old
-> "steady during Phase A, ramp after the AMLS sitting" sequencing has no pivot.
-> The binding constraint is that the AML and M2 sittings are **nine days apart** —
-> M2 must already be substantially prepared when AML is written. Treating M2 as
-> the final stretch would compress it into exactly the cram that "study super
-> well for Math-2" was meant to prevent.
+**Two independent subject lanes, one joint exam bridge (Aram, 2026-08-19).** Statistics and Analysis no longer form one merged study sequence. `unit-m2-sad-exam-prep` owns SaD.0→SaD.X; `unit-m2-analysis-exam-prep` owns calibrate→AN.X. Both may progress in parallel, but neither stage contains first-pass work from the other subject. Only after both subject-only transfer gates are met does `unit-m2-combined-exam-rehearsal` run the coverage blueprint, two full three-hour mocks, evidence-routed repair, and final taper.
 
-*Required now — admin.* Register the combined M2 Klausur via AGNES inside the
-2.-PZ Anmeldung window (dates: `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`
-→ `registration_windows`). Non-negotiable and the only hard dated gate before
-the exam. An action to do when the window opens, not a reminder to set.
+Every subject stage starts from a cold gate or uses the module-wide diagnostic. A clean gate permits a recorded skip; a failed gate chooses the smallest repair source. Current course material remains authority, exercises come before external banks, and optional books/videos are capped gap tools rather than second courses.
 
-*Required now — study.* Run `stage-m2-analysis-calibrate`, then AN.0, alongside
-the current SaD lane. **Neither half is a fixed sequence any more (2026-08-15).**
-Both SaD and Analysis now work the same way: open the unit's knowledge map,
-compare the available materials by format and **angle**, and choose the source
-that fits the current gap. The merged-prep rule stands — interleave SaD stats
-clusters with Analysis proof blocks; do not run two parallel tracks *inside* M2.
-
-> **Analysis overhaul, 2026-08-15.** `unit-m2-analysis-exam-prep` was the last
-> prescriptive stage-script in a live track. It now carries a **10-node knowledge
-> map** (AN.0 foundations → sequences → series → limits/continuity →
-> exp-log/uniform → differentiation → Taylor → integration, plus
-> proof-presentation as a cross-cutting skill and exam-transfer as the
-> convergence point), and its sources moved from stage-keyed `source_selections`
-> into **23 knowledge-node-keyed routes with an explicit `angle` each**.
-> `source_selections` is now empty by design — it is *your* selection space, not
-> the operator's prescription.
->
-> **What that surfaced:** 22 sources were routed to the Analysis unit, but only
-> 10 carried any description. The other 12 were bare unit-id strings — invisible
-> to any selection decision. Five of those had rich evaluations sitting unused in
-> their source records (Forster/Wessoly, Deitmar, Abbott, Grieser, Lebl); their
-> angles are now drawn from those records. **Seven have no registered evaluation
-> at all** and are listed with `scope: optional` and an angle that says so
-> plainly, rather than a judgment invented by the operator (CLAUDE.md §4). They
-> are visibility debt — repay on use, never in bulk (WORKFLOWS §6a).
->
-> The 11-stage study map is **kept and still valid** as an optional ordered path
-> (WORKFLOWS §7); it no longer claims to be the only route through the material.
-
-Phasing while AML leads: advance AN.A–G and keep SaD progressing throughout
-rather than holding them; after the AML 2. Termin, switch to AN.X and the
-combined M2 mocks for the final nine days. (Both dates live in the owning module
-records — `module-hu-aml`, `module-hu-m2-statistik-analysis` — and are never
-restated here.)
+**Administration remains shared:** registration, sitting, withdrawal, and grade facts are read only from `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`.
 
 ## Open Questions
 
@@ -171,52 +126,18 @@ restated here.)
 
 ## Next Action
 
-**Planned next block:** start stage-m2-analysis-calibrate (60 min) — read the
-script's course contract, take one cold WV sample, and create the five-class
-error ledger. Then begin AN.0 with unser skript Chapters 1–2.
-
-> 🆕 **Per-node plans written 2026-08-15 → [`inputs/AN_Node_Plans_INDEX.md`](inputs/AN_Node_Plans_INDEX.md).**
-> One plan per knowledge-map node (ten), each stating which of the 23 routed
-> sources to use **at which angle**, what artifact to produce, and how to
-> self-test. Start with `AN_00_proof_presentation.md` — it is the calibrate stage
-> and it sets the proof depth for the other 46 hours. These are **operational and
-> expire with this workspace**; `source_selections` stays empty until you have
-> actually used a source and it worked.
->
-> **The number the plans surface:** AN.0–AN.X total **2,760 exam-critical
-> minutes = 46 hours**, none of it started. AN.X alone is 540 min and needs
-> contiguous sessions. Against a nine-day Phase C, AN.0–AN.G (≈37 h) has to be
-> substantially done **before** the AML sitting, or AN.X — the only block that
-> rehearses the combined SaD+Analysis format — is what gets sacrificed.
-
-This is the first stage of the Analysis map and it is still `pending`; the map's
-11 stages carry ~47.5 h. With AML leading on intensity, M2's job through
-September is to get genuinely through AN.0→AN.G rather than to hold position.
-
-**Admin, when the window opens:** register the combined M2 Klausur via AGNES
-(see Current Scope). Dates live in the owning module record.
-
-**SaD choice when returning to statistics:** L04 remains the open lecture, but
-it has no forced current stage. Use its probability/Bayes knowledge graph to
-identify the gap, then choose any current, book, video, website, or practice
-option from the material menu. A source selection does not become a hidden
-global sequence.
+Run two separate calibration sessions: (1) `stage-m2-sad-calibrate` for 90 minutes across the five SaD clusters, producing the SaD error ledger and full-pass/repair-only/cold-skip decisions; (2) `stage-m2-analysis-calibrate` for 60 minutes using the script contract and one cold WV sample. Do not start the joint unit yet. After calibration, advance the weakest SaD cluster and AN.0 as independent sessions.
 
 ## Durable Notes
 
-Analysis now has an executable script-led study map. unser skript.pdf is the scope and notation authority; current HU exercises come before external banks; intuition sources are capped detours; proofs are selective understanding repairs because the script says they need not be memorized.
+The current SaD L01-L15 knowledge maps and material menus remain intact. The new SaD exam-prep map synthesizes them without replacing lecture units. Useful legacy material is preserved through existing canonical references and the new cold gates: L01-L05 method checks, the L06-L10 probability→inference chain, and Analysis block diagnostics. The blanket legacy rule to work every proof was not retained because the current script explicitly prioritizes definitions, theorem conditions/results, and application; proof work is error-ledger repair.
 
-SaD has one knowledge map per current lecture (L01–L15) plus the explicitly
-labeled clustering topic. Each source route states its format, lecture-specific
-angle, exact concept coverage, depth, scope, and locator. The former Mini Plans
-and L06–L10 aggregate are retired; durable references and exercise banks remain
-available as materials rather than mandatory steps.
+Analysis remains script-led and now ends with two Analysis-only half-mocks. Statistics ends with two Statistics-only half-mocks. Full mixed performance belongs only to the joint bridge.
 
 ## Deferred
 
-- Full transcription of handwritten Teil-01/02/03 scans — do per cluster
-  during prep so transcription doubles as review.
-- Teschl & Teschl remains officially named but unresolved: no reachable
-  local material or verified URL is currently registered.
-- Swanson's *Principles of Probability* is explicitly excluded as
-  off-syllabus formal-logic/measure-theory material.
+- Full transcription of handwritten Statistics scans — use only when a live stage makes a scan relevant, so transcription doubles as review.
+- Teschl & Teschl remains unresolved; no stage is allowed to block on it.
+- Analysis Chapter 8 and all script sections explicitly labeled Exkurs remain post-exam depth.
+- Optional full courses and proof-heavy books remain reference-only unless a recorded stage error selects one exact section.
+- No official current combined M2 past paper is registered. Joint mocks must remain source-traceable assemblies and must label their time/point split provisional.

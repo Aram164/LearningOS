@@ -8,6 +8,9 @@ generated/*
 /.trash/
 .DS_Store
 **/__pycache__/
+*.egg-info/
+build/
+dist/
 # Project-local virtual environment (created by `make setup`); never committed —
 # it is platform-specific and each contributor builds their own.
 .venv/
@@ -20,4 +23,3 @@ operations/ai-actions/deliveries/*
 # Quarantine for untrusted provider output awaiting validation; a leftover
 # directory here only ever means an import was interrupted.
 operations/ai-actions/incoming/
-

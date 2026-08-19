@@ -15,6 +15,8 @@ from pathlib import Path
 import pytest
 
 from learning_os.contracts.capability_catalog import command_definitions
+from learning_os.commands.capability import _dispatch, _validate_capability_envelope
+from learning_os.commands.support import WriteRefused
 
 SCHEMA_DIR = Path("system/schema/capabilities")
 
@@ -39,7 +41,6 @@ def test_every_command_capability_has_a_payload_schema(repo_root: Path):
 
 def test_payload_schemas_match_the_cli_parser(repo_root: Path):
     """Regenerating must be a no-op: the checked-in files are derived, not authored."""
-    sys.path.insert(0, str(repo_root / "tools"))
     import los
     from learning_os.contracts.payloads import all_payload_schemas
 
@@ -90,6 +91,40 @@ def test_an_undeclared_field_is_refused(repo_root: Path, tmp_path: Path):
     })
     assert result.returncode != 0
     assert "invalid payload" in json.loads(result.stdout)["error"]
+
+
+def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
+    with pytest.raises(WriteRefused, match="invalid capability envelope"):
+        _validate_capability_envelope(repo_root, {
+            "request_id": "req-result-as-request",
+            "capability": "capture.create",
+            "ok": True,
+            "transaction_id": None,
+            "receipt_path": None,
+            "result": {},
+            "error": None,
+        }, kind="request")
+
+
+@pytest.mark.parametrize("printed", ["plain success", "[]", ""])
+def test_non_object_handler_output_is_a_hard_gateway_failure(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch, printed: str):
+    import los
+
+    def malformed_success(_args):
+        if printed:
+            print(printed)
+        return 0
+
+    monkeypatch.setattr(los, "cmd_capture", malformed_success)
+    definition = command_definitions(mini_repo)["capture.create"]
+    with pytest.raises(WriteRefused, match="reported success"):
+        _dispatch(
+            mini_repo,
+            definition,
+            {"request_id": "req-malformed-success", "capability": definition.name},
+            {"text": "capture me"},
+        )
 
 
 @pytest.mark.parametrize("name", sorted(

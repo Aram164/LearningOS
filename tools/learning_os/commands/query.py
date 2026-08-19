@@ -7,7 +7,7 @@ import json
 import sys
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
-from learning_os.genout import _exam_spine, adoption_counts
+from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from pathlib import Path
@@ -38,7 +38,7 @@ def cmd_status(args) -> int:
     spine = [
         {"date": date, "module_id": mid,
          "title": module.get("title", mid), "termin": att.get("termin")}
-        for date, mid, module, att in _exam_spine(repo)
+        for date, mid, module, att in exam_spine(repo)
     ]
 
     payload = {

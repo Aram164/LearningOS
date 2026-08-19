@@ -13,7 +13,8 @@ import subprocess
 import sys
 import tempfile
 import yaml
-from learning_os.genout import source_fingerprint, build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
+from learning_os.fingerprint import source_fingerprint
+from learning_os.genout import build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService, parse_expected_revisions
@@ -82,6 +83,10 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
 
 def _publish(root: Path) -> None:
     repo = load_repo(root)
+    write_outputs(repo, generate_all(repo))
+
+
+def _publish_repo(repo) -> None:
     write_outputs(repo, generate_all(repo))
 
 
@@ -158,14 +163,16 @@ def _record_touched(root: Path, paths) -> None:
             rel = p.resolve().relative_to(root.resolve()).as_posix()
         except ValueError:
             continue
-        if rel not in {"Untitled.canvas", "Untitled 1.canvas", "Untitled 2.canvas"}:
+        # Canvas files are Obsidian UI state, not part of a learning-session
+        # action ledger. The protection is about the file type, not the first
+        # three default names Obsidian happened to generate.
+        if p.suffix.lower() != ".canvas":
             current.add(rel)
     _atomic_text(ledger, json.dumps(sorted(current), indent=2) + "\n")
 
 
 def _write_transaction(root: Path, writes: dict[Path, str | bytes],
-                       *, prevalidated: bool = False,
-                       capability: str = "legacy.write",
+                       *, capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
                        artifact_ids=()) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
@@ -181,18 +188,21 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     for path in writes:
         if path.exists() and not path.is_file():
             return 2, [f"cannot write {path}: target is not a regular file"], {}
-    baseline_errors = {
-        str(issue) for issue in validate(load_repo(root), online=False)
-        if issue.severity == "E"
-    } if not prevalidated else set()
+    validated_repo = None
 
     def validation_errors():
-        if prevalidated:
-            return []
+        nonlocal validated_repo
+        validated_repo = load_repo(root)
         return [
-            issue for issue in validate(load_repo(root), online=False)
-            if issue.severity == "E" and str(issue) not in baseline_errors
+            issue for issue in validate(validated_repo, online=False)
+            if issue.severity == "E"
         ]
+
+    def publish_validated_state():
+        nonlocal validated_repo
+        repo = validated_repo or load_repo(root)
+        validated_repo = None
+        _publish_repo(repo)
 
     try:
         result = service.commit(
@@ -201,7 +211,8 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             artifact_ids=artifact_ids,
             expected_revisions=expected_revisions or {},
             validate_state=validation_errors,
-            publish=lambda: _publish(root),
+            publish=publish_validated_state,
+            rollback_publish=lambda: _publish(root),
             touched=lambda paths: _record_touched(root, paths),
         )
     except TransactionConflict as exc:

@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import shutil
-import sys
 import textwrap
 from pathlib import Path
 
@@ -11,7 +10,6 @@ import pytest
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(REPO_ROOT / "tools"))
 
 
 @pytest.fixture(scope="session")

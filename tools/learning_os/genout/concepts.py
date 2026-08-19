@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import re
+from ..fingerprint import source_fingerprint
 from ..loader import Repo
 from .common import _json_header, _letter_toc, _md_header, mermaid_node_ids
-from .projection import source_fingerprint
 
 def build_backlinks(repo: Repo, generated_at: str) -> dict:
     concept_to_notes: dict[str, list] = {}

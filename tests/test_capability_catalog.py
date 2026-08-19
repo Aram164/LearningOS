@@ -1,32 +1,70 @@
 from __future__ import annotations
 
-import ast
 import json
 import subprocess
 import sys
 from pathlib import Path
 
-from learning_os.contracts.capability_catalog import command_definitions
+import pytest
+from learning_os.contracts.capability_catalog import (
+    CapabilityCatalogError,
+    command_definitions,
+    domain_capability_definitions,
+    query_definitions,
+)
 
 
-GATEWAY = "tools/learning_os/commands/capability.py"
+def test_every_public_command_is_bound_to_its_declared_cli_handler(repo_root: Path):
+    import los
+    from learning_os.contracts.payloads import subparsers
+
+    parsers = subparsers(los.build_parser())
+    definitions = command_definitions(repo_root)
+    assert definitions, "the producer catalogue must declare public commands"
+    assert len({definition.cli_command for definition in definitions.values()}) == len(definitions)
+    for definition in definitions.values():
+        parser = parsers.get(definition.cli_command or "")
+        assert parser is not None, f"{definition.name} has no executable CLI route"
+        handler = parser.get_default("func")
+        assert handler is not None
+        assert handler.__name__ == f"cmd_{definition.handler}"
 
 
-def _handler_mapping(repo_root: Path) -> dict[str, str]:
-    """Read the gateway's handler table without importing the CLI.
-
-    Parsed rather than imported so the assertion stays a statement about the
-    declared catalogue, not about whatever a live import happens to produce.
-    """
-    tree = ast.parse((repo_root / GATEWAY).read_text(encoding="utf-8"))
-    fn = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == "_capability_handlers")
-    returned = next(node.value for node in ast.walk(fn) if isinstance(node, ast.Return))
-    return ast.literal_eval(returned)
+def test_job_query_declares_its_producer_owned_schema(repo_root: Path):
+    definition = query_definitions(repo_root)["job.dashboard"]
+    assert definition.result == "job-dashboard-v2"
+    assert definition.schema == "system/schema/job-dashboard.schema.json"
+    assert (repo_root / definition.schema).is_file()
 
 
-def test_public_capability_catalog_matches_gateway_handlers(repo_root: Path):
-    declared = {name: row.handler for name, row in command_definitions(repo_root).items()}
-    assert declared == _handler_mapping(repo_root)
+def test_ai_action_domain_capabilities_are_loaded_by_the_validated_catalogue(repo_root: Path):
+    definitions = domain_capability_definitions(repo_root)
+    assert definitions["garden.add-transcription"].writes == (
+        "knowledge/garden/transcriptions/",
+    )
+    assert definitions["garden.update"].allowed_fields == ("title", "state")
+
+
+def test_a_versioned_query_cannot_skip_its_schema(mini_repo: Path):
+    import yaml
+
+    path = mini_repo / "system/contracts/capabilities.yaml"
+    catalogue = yaml.safe_load(path.read_text(encoding="utf-8"))
+    catalogue["queries"]["job.dashboard"].pop("schema")
+    path.write_text(yaml.safe_dump(catalogue, sort_keys=False), encoding="utf-8")
+    with pytest.raises(CapabilityCatalogError, match="no producer-owned schema"):
+        query_definitions(mini_repo)
+
+
+def test_a_domain_capability_cannot_skip_its_write_scope(mini_repo: Path):
+    import yaml
+
+    path = mini_repo / "system/contracts/capabilities.yaml"
+    catalogue = yaml.safe_load(path.read_text(encoding="utf-8"))
+    catalogue["domain_capabilities"]["garden.update"]["writes"] = []
+    path.write_text(yaml.safe_dump(catalogue, sort_keys=False), encoding="utf-8")
+    with pytest.raises(CapabilityCatalogError, match="writes must not be empty"):
+        domain_capability_definitions(mini_repo)
 
 
 def test_unknown_generic_capability_fails_before_payload_read(repo_root: Path):

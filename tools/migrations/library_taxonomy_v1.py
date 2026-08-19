@@ -273,7 +273,6 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
 
-    sys.path.insert(0, str(ROOT / "tools"))
     from learning_os.loader import load_repo
 
     repo = load_repo(ROOT)

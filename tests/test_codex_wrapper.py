@@ -72,6 +72,7 @@ def test_capability_scope_allows_only_unit_and_approved_shelving_destinations():
     assert wrapper.outside_scope({
         "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
         "knowledge/garden/idea.md",
+        "Untitled 37.canvas",
         "records/modules.yaml",
     }, prefixes) == {"records/modules.yaml"}
 
