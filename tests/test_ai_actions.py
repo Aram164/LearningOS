@@ -48,7 +48,7 @@ def ai_repo(mini_repo: Path) -> Path:
         "# Import registration\n\nThe decorator stores the function during import. #python #optimizer\n",
         encoding="utf-8",
     )
-    write_yaml(mini_repo / "knowledge/relationships.yaml", {
+    write_yaml(mini_repo / "operations/ai-actions/relationships.yaml", {
         "schema_version": 1,
         "relationships": [],
     })
@@ -208,7 +208,7 @@ def test_full_round_trip_preserves_original_and_commits_receipt(ai_repo: Path, t
     state = yaml.safe_load(app.repository.state_path(target_id(ai_repo)).read_text())
     assert state["title"] == "Import-Time Registration"
     assert state["state"] == "developing"
-    relations = yaml.safe_load((ai_repo / "knowledge/relationships.yaml").read_text())
+    relations = yaml.safe_load((ai_repo / "operations/ai-actions/relationships.yaml").read_text())
     assert relations["relationships"][0]["to"]["id"] == "module-demo"
     request_state = app.request_status(request["id"])
     assert request_state["status"] == "completed"
@@ -327,7 +327,7 @@ def test_rejected_delivery_never_lands_in_the_deliveries_directory(ai_repo: Path
 def test_a_delivery_without_relations_leaves_the_registry_byte_identical(
         ai_repo: Path, tmp_path: Path):
     """An untouched authored file must not be re-serialised by an unrelated apply."""
-    registry = ai_repo / "knowledge/relationships.yaml"
+    registry = ai_repo / "operations/ai-actions/relationships.yaml"
     registry.write_text(
         "schema_version: 1\n"
         "# hand-written comment that a YAML round-trip would destroy\n"

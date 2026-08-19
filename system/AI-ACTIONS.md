@@ -16,7 +16,7 @@ only:
   `knowledge/garden/transcriptions/`;
 - update the seed's separate operational state under
   `operations/ai-actions/garden-state/`;
-- add a typed relationship to `knowledge/relationships.yaml`.
+- add a typed relationship to `operations/ai-actions/relationships.yaml`.
 
 No action may read `Job/`, overwrite the original artifact, delete content, or
 write outside its capability allowlist. A job-derived export requires explicit
