@@ -171,7 +171,7 @@ class AIActionService:
             "destination_metadata": {
                 "durable_notes_root": "knowledge/notes/",
                 "garden_transcriptions_root": "knowledge/garden/transcriptions/",
-                "relationship_registry": "knowledge/relationships.yaml",
+                "relationship_registry": "operations/ai-actions/relationships.yaml",
             },
         }
         instructions = (
@@ -299,13 +299,13 @@ class AIActionService:
         state = _read_yaml(state_path, {})
         if not isinstance(state, dict):
             state = {}
-        relationship_path = self.root / "knowledge" / "relationships.yaml"
+        relationship_path = self.root / "operations" / "ai-actions" / "relationships.yaml"
         relationships = _read_yaml(relationship_path, {"schema_version": 1, "relationships": []})
         if not isinstance(relationships, dict):
             relationships = {"schema_version": 1, "relationships": []}
         rows = relationships.setdefault("relationships", [])
         if not isinstance(rows, list):
-            raise DeliveryValidationError("knowledge/relationships.yaml has an invalid relationships list")
+            raise DeliveryValidationError("operations/ai-actions/relationships.yaml has an invalid relationships list")
 
         # path -> (content, the capability that authorised writing it)
         staged: dict[Path, tuple[str, str]] = {}
@@ -389,7 +389,7 @@ class AIActionService:
             "last_ai_request_id": request["id"],
         })
         staged[state_path] = (_dump_yaml(state), "garden.update")
-        # Only rewrite the authored relationship registry when this delivery
+        # Only rewrite the AI-action relationship registry when this delivery
         # actually added a relation — re-serialising an untouched file would
         # reformat the user's own YAML for nothing.
         if relations_added:

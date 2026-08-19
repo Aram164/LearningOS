@@ -281,4 +281,4 @@ domain_capabilities:
     - state
   relationship.create:
     writes:
-    - knowledge/relationships.yaml
+    - operations/ai-actions/relationships.yaml
