@@ -4,10 +4,12 @@ from __future__ import annotations
 
 import textwrap
 
+import pytest
 import yaml
 
 from learning_os.loader import load_repo
 from learning_os.rules import validate
+from learning_os.rules.references import classify_markdown_link, parse_reference_uri
 
 
 def codes(issues, severity=None):
@@ -24,10 +26,44 @@ def test_mini_repo_is_clean(mini_repo):
     assert codes(issues, "E") == [], [str(i) for i in issues]
 
 
+@pytest.mark.full_repo
 def test_real_repository_has_no_errors(repo_root):
     issues = run(repo_root)
     errors = [str(i) for i in issues if i.severity == "E"]
     assert errors == [], errors
+
+
+@pytest.mark.parametrize(
+    ("value", "scheme", "target"),
+    [
+        ("note://note-demo", "note", "note-demo"),
+        ("material://source-demo-book/chapter.pdf", "material",
+         "source-demo-book/chapter.pdf"),
+        ("https://example.com/path", "https", "example.com/path"),
+    ],
+)
+def test_reference_uri_parsing_is_independent_of_repository_state(
+    value, scheme, target
+):
+    parsed = parse_reference_uri(value)
+    assert parsed is not None
+    assert (parsed.scheme, parsed.target) == (scheme, target)
+
+
+@pytest.mark.parametrize(
+    ("value", "kind", "resolved_target"),
+    [
+        ("#section", "skip", "#section"),
+        ("mailto:reader@example.com", "skip", "mailto:reader@example.com"),
+        ("note://note-demo", "uri", "note://note-demo"),
+        ("../notes/note-demo.md#proof", "relative", "../notes/note-demo.md"),
+    ],
+)
+def test_markdown_link_classification_has_a_pure_testable_seam(
+    value, kind, resolved_target
+):
+    classified = classify_markdown_link(value)
+    assert (classified.kind, classified.target) == (kind, resolved_target)
 
 
 # ------------------------------------------------------------------ identity

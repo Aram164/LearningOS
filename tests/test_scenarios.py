@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 
+import pytest
 import yaml
 
 from learning_os.genout import generate_all
@@ -37,6 +38,7 @@ def test_scenario_7_exam_attempt_lifecycle(mini_repo):
                 assert "2026-09-30" not in text, path
 
 
+@pytest.mark.full_repo
 def test_scenario_7_on_real_repo(repo_root):
     """The real modules.yaml exercises withdrawal + second sitting + Kombimodul."""
     repo = load_repo(repo_root)
@@ -90,6 +92,7 @@ def _owned_admin_dates(repo_root):
     return forms
 
 
+@pytest.mark.full_repo
 def test_admin_dates_are_not_restated_in_live_operational_prose(repo_root):
     """Hard rule #2 applies to prose that *directs current work*.
 
@@ -152,6 +155,7 @@ def test_scenario_4_file_move_keeps_id(mini_repo):
     assert "cross-domain/note-demo.md" in manifest_path
 
 
+@pytest.mark.full_repo
 def test_scenario_2_contextual_judgment_no_scalar_rating(repo_root):
     """Source evaluations are contextual; no universal scalar rating field exists."""
     repo = load_repo(repo_root)
@@ -161,6 +165,7 @@ def test_scenario_2_contextual_judgment_no_scalar_rating(repo_root):
             assert "rating" not in ev and "score" not in ev
 
 
+@pytest.mark.full_repo
 def test_crosswalk_judgments_not_only_in_notes(repo_root):
     """Scenario 8 spot-check: crosswalk notes exist AND source records carry
     evaluations — the judgments do not live only in the narrative note."""

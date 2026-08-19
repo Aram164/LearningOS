@@ -7,6 +7,8 @@ import re
 import shutil
 import subprocess
 
+import pytest
+
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
 
@@ -114,6 +116,7 @@ def test_generated_is_gitignored(repo_root):
     assert out.returncode == 0, "generated/* must be gitignored"
 
 
+@pytest.mark.full_repo
 def test_real_repo_generates_and_selector_views_present(repo_root):
     repo = load_repo(repo_root)
     outputs = generate_all(repo, generated_at="T1")
@@ -126,6 +129,7 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
     assert "## Neglect signals (Git)" in coord
 
 
+@pytest.mark.full_repo
 def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root):
     manifest = json.loads(generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"])
     deadlines = manifest["academic_deadlines"]

@@ -8,7 +8,6 @@ this module.  It is reached only through ``los job-dashboard
 from __future__ import annotations
 
 import json
-import hashlib
 import os
 import re
 import subprocess
@@ -18,69 +17,21 @@ import yaml
 
 from ..contracts import ContractValidationError, validate_contract
 from ..transactions import artifact_revision
+from .job_boundary import (
+    JobDashboardError,
+    READABLE_ROOTS,
+    job_fingerprint,
+    job_root,
+    safe_job_path,
+)
 from .support import _fresh_manifest, _root
 
 
 CONTRACT = "job-dashboard-v2"
-ALLOWED_TOP_LEVELS = {
-    "notes", "workspace-job-deem", "papers", "legacy-plans", "plans",
-}
-
-# Only domain state belongs in the optimistic-concurrency snapshot. Transaction
-# ledgers and receipts are deliberately absent: bookkeeping must not make an
-# otherwise unchanged dashboard stale immediately after a successful write.
-_FINGERPRINTED = (
-    "dashboard.yaml",
-    "notes",
-    "workspace-job-deem",
-    "plans",
-    "operations/progress.yaml",
-    "operations/tasks.yaml",
-)
-
-
-class JobDashboardError(ValueError):
-    """The bounded Job catalogue cannot be read safely."""
-
-
-def job_fingerprint(job_root: Path) -> str:
-    """Digest the authored and machine-owned Job domain state."""
-    digest = hashlib.sha256()
-    for relative in _FINGERPRINTED:
-        base = job_root / relative
-        if not base.exists():
-            continue
-        files = [base] if base.is_file() else sorted(
-            path for path in base.rglob("*") if path.is_file()
-        )
-        for path in files:
-            rel = path.relative_to(job_root)
-            if any(part.startswith(".") for part in rel.parts):
-                continue
-            digest.update(rel.as_posix().encode("utf-8"))
-            digest.update(b"\0")
-            digest.update(path.read_bytes())
-            digest.update(b"\0")
-    return digest.hexdigest()
-
-
-def _job_root(repository_root: Path) -> Path:
-    # <semestercontext>/LearningOS/repository -> <semestercontext>/Job
-    return repository_root.parent.parent / "Job"
-
-
-def _safe_job_path(job_root: Path, value: object) -> Path:
-    relative = str(value or "").strip().replace("\\", "/")
-    if not relative or relative.startswith("/"):
-        raise JobDashboardError("Job dashboard paths must be non-empty relative paths")
-    candidate = (job_root / relative).resolve()
-    try:
-        resolved_relative = candidate.relative_to(job_root.resolve())
-    except ValueError as exc:
-        raise JobDashboardError(f"Job dashboard path escapes the quarantine: {relative}") from exc
-    if not resolved_relative.parts or resolved_relative.parts[0] not in ALLOWED_TOP_LEVELS:
-        raise JobDashboardError(f"Job dashboard path is outside the read allowlist: {relative}")
-    return candidate
+# Backward-compatible internal names used by the command module and older tests.
+ALLOWED_TOP_LEVELS = READABLE_ROOTS
+_job_root = job_root
+_safe_job_path = safe_job_path
 
 
 def _read_yaml(path: Path) -> dict:

@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views materials inventory verify-materials contract test all setup garden status
+.PHONY: help check views materials inventory verify-materials contract test test-fast all setup garden status
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -27,7 +27,8 @@ help:
 	@echo "                (schema_contract.py) and the published manifest shape"
 	@echo "                (manifest_contract.py) - different contracts, different consumers"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
-	@echo "make test   - run the test suite"
+	@echo "make test-fast - run tests that do not load the checked-in repository state"
+	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make all    - check + views + materials + test"
 	@echo "make setup  - create .venv, install deps, install both Git hooks (run once per clone/move)"
 
@@ -58,6 +59,9 @@ garden: views
 
 test:
 	$(PY) -m pytest -q
+
+test-fast:
+	$(PY) -m pytest -q -m "not full_repo"
 
 all: check views materials test
 

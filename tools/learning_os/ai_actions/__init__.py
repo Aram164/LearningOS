@@ -23,6 +23,10 @@ from .registry import (
 from .service import AIActionService
 from .storage import FilesystemAIActionRepository
 from .support import parse_frontmatter_request_id
+from .types import (
+    AIActionRequest, ApplyDeliveryResult, DeliveryRecord,
+    DeliveryValidationResult, RequestStatus,
+)
 
 __all__ = [
     "AIActionError", "AIActionService", "ActionDefinition", "ActionNotFoundError",
@@ -30,4 +34,6 @@ __all__ = [
     "ConfidentialityError", "DeliveryValidationError", "FilesystemAIActionRepository",
     "MAX_DELIVERY_BYTES", "MAX_DELIVERY_ENTRIES", "StaleDeliveryError",
     "TargetNotFoundError", "manifest_ai_projection", "parse_frontmatter_request_id",
+    "AIActionRequest", "ApplyDeliveryResult", "DeliveryRecord",
+    "DeliveryValidationResult", "RequestStatus",
 ]

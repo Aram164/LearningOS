@@ -2,9 +2,42 @@
 
 from __future__ import annotations
 
-from ..loader import EVIDENCE_SCHEMES
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
+
+from ..loader import EVIDENCE_SCHEMES
 from .common import CANONICAL_TREES, MD_LINK_RE, WORKSPACE_TOKEN_RE, _in_garden, _in_quarantine
+
+
+@dataclass(frozen=True)
+class ParsedReference:
+    scheme: str
+    target: str
+
+
+@dataclass(frozen=True)
+class ClassifiedLink:
+    kind: Literal["skip", "uri", "relative"]
+    target: str
+
+
+def parse_reference_uri(value: str) -> ParsedReference | None:
+    """Split one declared reference URI without consulting repository state."""
+    for prefix in EVIDENCE_SCHEMES:
+        if value.startswith(prefix):
+            return ParsedReference(prefix.removesuffix("://"), value[len(prefix):])
+    return None
+
+
+def classify_markdown_link(target: str) -> ClassifiedLink:
+    """Classify a Markdown target before any filesystem or registry lookup."""
+    if target.startswith(("http://", "https://", "mailto:", "#")):
+        return ClassifiedLink("skip", target)
+    if parse_reference_uri(target) is not None:
+        return ClassifiedLink("uri", target)
+    relative = target.split("#", 1)[0]
+    return ClassifiedLink("relative" if relative else "skip", relative)
 
 
 class ChecksReferences:
@@ -300,32 +333,33 @@ class ChecksReferences:
 
     def _check_uri(self, ref: str, where: str):
         r = self.repo
-        if ref.startswith("note://"):
-            if ref[len("note://"):] not in r.notes:
+        parsed = parse_reference_uri(ref)
+        if parsed is None:
+            return
+        if parsed.scheme == "note":
+            if parsed.target not in r.notes:
                 self.err("URI-NOTE", f"'{ref}' does not resolve", where)
-        elif ref.startswith("concept://"):
-            if ref[len("concept://"):] not in r.concepts:
+        elif parsed.scheme == "concept":
+            if parsed.target not in r.concepts:
                 self.err("URI-CONCEPT", f"'{ref}' does not resolve", where)
-        elif ref.startswith("source://"):
-            if ref[len("source://"):] not in r.sources:
+        elif parsed.scheme == "source":
+            if parsed.target not in r.sources:
                 self.err("URI-SOURCE", f"'{ref}' does not resolve", where)
-        elif ref.startswith("workspace://"):
-            wid = ref[len("workspace://"):]
+        elif parsed.scheme == "workspace":
+            wid = parsed.target
             if wid not in r.workspaces and wid not in r.quarantined_workspace_ids:
                 self.err("URI-WORKSPACE", f"'{ref}' does not resolve", where)
-        elif ref.startswith("material://"):
+        elif parsed.scheme == "material":
             # When the whole tree is unmounted every reference "fails", which is
             # noise, not information — check_materials() reports that situation
             # once. Per-reference warnings are only meaningful against a tree
             # that is actually present.
             if (r.learningos_root / "materials").is_dir():
-                rest = ref[len("material://"):]
-                if not (r.materials_root / rest).exists():
+                if not (r.materials_root / parsed.target).exists():
                     self.warn("URI-MATERIAL",
                               f"'{ref}' does not resolve on disk", where)
-        elif ref.startswith("project://"):
-            rest = ref[len("project://"):]
-            if not (r.projects_root / rest).exists():
+        elif parsed.scheme == "project":
+            if not (r.projects_root / parsed.target).exists():
                 self.warn("URI-PROJECT", f"'{ref}' does not resolve on disk", where)
 
     def check_links(self):
@@ -343,18 +377,14 @@ class ChecksReferences:
 
     def _check_link(self, target: str, source_file: Path):
         where = self._rel(source_file)
-        if target.startswith(("http://", "https://", "mailto:")) or target.startswith("#"):
+        classified = classify_markdown_link(target)
+        if classified.kind == "skip":
             return
-        schemes = ("note://", "concept://", "source://", "workspace://",
-                   "material://", "project://", "github://")
-        if target.startswith(schemes):
+        if classified.kind == "uri":
             if target.startswith("github://"):
                 return
             self._check_uri(target, where)
             return
-        rel_path = target.split("#", 1)[0]
-        if not rel_path:
-            return
-        resolved = (source_file.parent / rel_path).resolve()
+        resolved = (source_file.parent / classified.target).resolve()
         if not resolved.exists():
             self.err("LINK-BROKEN", f"internal link does not resolve: '{target}'", where)

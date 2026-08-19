@@ -591,6 +591,36 @@ def test_the_stratum_checkout_is_never_writable(mini_repo):
         assert "read-only" in str(caught.value) or "escapes" in str(caught.value)
 
 
+def test_job_read_and_write_paths_share_one_boundary_policy(mini_repo):
+    from learning_os.commands.job import JobDashboardError, _safe_job_path
+    from learning_os.commands.job_write import _writable_path
+
+    job = write_job(mini_repo)
+    assert _safe_job_path(job, "papers/paper.pdf") == job / "papers/paper.pdf"
+    assert _writable_path(job, "notes/new.md") == job / "notes/new.md"
+
+    with pytest.raises(JobDashboardError, match="read allowlist"):
+        _safe_job_path(job, "operations/tasks.yaml")
+    with pytest.raises(JobDashboardError, match="write allowlist"):
+        _writable_path(job, "papers/paper.pdf")
+
+
+def test_job_fingerprint_excludes_transaction_receipts(mini_repo):
+    from learning_os.commands.job import job_fingerprint
+
+    job = write_job(mini_repo)
+    before = job_fingerprint(job)
+    receipt = job / "operations/transactions/transaction-test.yaml"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text("id: transaction-test\n", encoding="utf-8")
+    assert job_fingerprint(job) == before
+
+    (job / "operations/tasks.yaml").write_text(
+        "type: job-task-list\nschema_version: 1\ntasks: []\n", encoding="utf-8"
+    )
+    assert job_fingerprint(job) != before
+
+
 def test_drift_detection_leaves_no_trace_in_the_read_only_checkout(mini_repo):
     """Even the stat-cache refresh a plain `git diff` performs is a write."""
     source = (Path(__file__).resolve().parent.parent

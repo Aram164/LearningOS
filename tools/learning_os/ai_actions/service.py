@@ -5,11 +5,21 @@ from __future__ import annotations
 import json
 import shutil
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from uuid import uuid4
 from .errors import ActionPolicyError, ConfidentialityError, DeliveryValidationError, StaleDeliveryError, TargetNotFoundError
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
+from .types import (
+    AIActionRequest,
+    ApplyDeliveryResult,
+    DeliveryRecord,
+    DeliveryValidationResult,
+    GardenTarget,
+    OriginalArtifact,
+    RequestStatus,
+    ValidatedDelivery,
+)
 from learning_os.contracts.manifest_contract import declared_version
 from learning_os.contracts.capability_catalog import domain_capability_definitions
 from learning_os.garden import project_garden_entries
@@ -73,10 +83,11 @@ class AIActionService:
         """Use the same Garden projection every other Core consumer uses."""
         return project_garden_entries(load_repo(self.root))
 
-    def _target(self, target_id: str) -> tuple[dict[str, Any], Path]:
+    def _target(self, target_id: str) -> tuple[GardenTarget, Path]:
         for row in self.list_garden_targets():
             if row["id"] == target_id:
-                return row, self.root / row["path"]
+                target = cast(GardenTarget, row)
+                return target, self.root / target["path"]
         raise TargetNotFoundError(f"Garden target not found: {target_id}")
 
     def prepare(
@@ -89,7 +100,7 @@ class AIActionService:
         expected_snapshot: str | None = None,
         request_id: str | None = None,
         job_export_confirmed: bool = False,
-    ) -> dict[str, Any]:
+    ) -> AIActionRequest:
         action = self.registry.get(action_id)
         if target_kind not in action.target_kinds:
             raise ActionPolicyError(f"action {action_id} does not support target kind {target_kind}")
@@ -119,14 +130,14 @@ class AIActionService:
             )
         now = self.clock()
         request_id = request_id or f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
-        original = {
+        original: OriginalArtifact = {
             "id": f"original-{target_id}",
             "canonical_path": target["path"],
             "bundle_path": f"attachments/{source.name}",
             "checksum": _sha256_file(source),
             "media_type": "text/markdown",
         }
-        request = {
+        request: AIActionRequest = {
             "schema_version": 1,
             "id": request_id,
             "type": "ai-action-request",
@@ -190,7 +201,7 @@ class AIActionService:
         self.repository.save_request(request, bundle_files)
         return request
 
-    def import_delivery(self, source: Path) -> dict[str, Any]:
+    def import_delivery(self, source: Path) -> DeliveryRecord:
         delivery, staged = self.repository.stage_delivery_directory(source)
         delivery_id = str(delivery.get("id", ""))
         try:
@@ -205,13 +216,13 @@ class AIActionService:
         self.repository.update_request(request)
         return delivery
 
-    def validate_delivery(self, delivery_id: str) -> dict[str, Any]:
+    def validate_delivery(self, delivery_id: str) -> DeliveryValidationResult:
         delivery, directory = self.repository.get_delivery(delivery_id)
         outcome = self._validate(delivery, directory)
-        return {"ok": True, "delivery_id": outcome["delivery_id"],
-                "request_id": outcome["request_id"]}
+        return {"ok": True, "delivery_id": outcome.delivery_id,
+                "request_id": outcome.request_id}
 
-    def _validate(self, delivery: dict[str, Any], directory: Path) -> dict[str, Any]:
+    def _validate(self, delivery: DeliveryRecord, directory: Path) -> ValidatedDelivery:
         delivery_id = str(delivery.get("id", ""))
         request = self.repository.get_request(str(delivery.get("request_id", "")))
         if delivery.get("type") != "ai-action-delivery":
@@ -250,10 +261,14 @@ class AIActionService:
         # scopes staleness to *the target*) makes the workflow unusable in a
         # live repository and tempts users to re-prepare blindly.
         target = self._assert_target_unchanged(request)
-        return {"delivery_id": delivery_id, "request_id": request["id"],
-                "request": request, "target": target}
+        return ValidatedDelivery(
+            delivery_id=delivery_id,
+            request_id=request["id"],
+            request=request,
+            target=target,
+        )
 
-    def _assert_target_unchanged(self, request: dict[str, Any]) -> dict[str, Any]:
+    def _assert_target_unchanged(self, request: AIActionRequest) -> GardenTarget:
         """Re-read the target, refuse if it moved, and hand back the fresh row.
 
         Returning the row is what lets callers stop re-walking the Garden tree:
@@ -271,13 +286,13 @@ class AIActionService:
                 raise DeliveryValidationError("original artifact changed after request preparation")
         return target
 
-    def apply_delivery(self, delivery_id: str) -> dict[str, Any]:
+    def apply_delivery(self, delivery_id: str) -> ApplyDeliveryResult:
         delivery, directory = self.repository.get_delivery(delivery_id)
         # Validation already read the delivery, the request and the target; reuse
         # them rather than parsing the same three files a second time.
         outcome = self._validate(delivery, directory)
-        request = outcome["request"]
-        target = outcome["target"]
+        request = outcome.request
+        target = outcome.target
         capability_definitions = self.capability_definitions()
         target_id = str(request["target"]["id"])
         state_path = self.repository.state_path(target_id)
@@ -471,16 +486,16 @@ class AIActionService:
         receipt = _read_yaml(result.receipt_path)
         if not isinstance(receipt, dict):  # pragma: no cover - commit guarantees this
             raise DeliveryValidationError("transaction committed without a readable receipt")
-        return {
+        return cast(ApplyDeliveryResult, {
             **receipt,
             "receipt_path": result.receipt_path.relative_to(self.root).as_posix(),
             "touched_paths": [
                 path.relative_to(self.root).as_posix()
                 for path in [*staged, request_path, result.receipt_path]
             ],
-        }
+        })
 
-    def request_status(self, request_id: str) -> dict[str, Any]:
+    def request_status(self, request_id: str) -> RequestStatus:
         request = self.repository.get_request(request_id)
         return {
             "id": request["id"],

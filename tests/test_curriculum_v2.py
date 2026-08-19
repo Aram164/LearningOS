@@ -836,6 +836,7 @@ def test_unit_note_snapshot_guard_keeps_note_unchanged(mini_repo):
     assert refused.returncode == 3
     assert not (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/notes.md").exists()
 
+@pytest.mark.full_repo
 def test_live_migration_is_idempotent_in_dry_run(repo_root):
     proc = subprocess.run([sys.executable, str(MIGRATE), "--root", str(repo_root), "--report"],
                           capture_output=True, text=True, timeout=120)
@@ -867,6 +868,7 @@ def _amls_inventory() -> dict:
     return yaml.safe_load(AMLS_INVENTORY.read_text(encoding="utf-8"))
 
 
+@pytest.mark.full_repo
 def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
     inventory = _amls_inventory()
     assert inventory["totals"]["curated"] == 60
@@ -910,6 +912,7 @@ def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
             f"lecture {lecture}: the learner gate must still name the primary paper")
 
 
+@pytest.mark.full_repo
 def test_amls_reading_list_still_matches_checked_in_inventory():
     if not AMLS_READING_LIST.exists():
         pytest.skip(f"materials/ not checked out: {AMLS_READING_LIST}")
@@ -922,6 +925,7 @@ def test_amls_reading_list_still_matches_checked_in_inventory():
     )
 
 
+@pytest.mark.full_repo
 def test_live_migration_preserves_rollback_evidence(repo_root):
     original = repo_root / "records/modules.yaml"
     backup = repo_root / "migration/curriculum-v2/originals/records-modules.yaml"
@@ -1328,6 +1332,7 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
 # RESOURCE IDENTITY (ADR-009)
 
 
+@pytest.mark.full_repo
 def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root):
     """SaD follows the same choose-a-source semantics as AML, lecture by lecture."""
     repo = load_repo(repo_root)
@@ -1388,6 +1393,7 @@ def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root)
     assert not [path for path in obsolete if (repo_root / path).exists()]
 
 
+@pytest.mark.full_repo
 def test_amls_bundle_resources_carry_stable_ids(repo_root):
     """A bundled source must be addressable item by item, not just as a bundle.
 
@@ -1415,6 +1421,7 @@ def test_amls_bundle_resources_carry_stable_ids(repo_root):
             f"un-identified AMLS bundle resource that is not an activity: {label}")
 
 
+@pytest.mark.full_repo
 def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
     """Identity belongs to the paper, not to the citation.
 
@@ -1444,6 +1451,7 @@ def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
 # FACETED LIBRARY (ADR-009)
 
 
+@pytest.mark.full_repo
 def test_topics_are_a_closed_vocabulary(repo_root):
     """An unlisted topic must be an error, or the facet decays into tag soup.
 
@@ -1464,6 +1472,7 @@ def test_topics_are_a_closed_vocabulary(repo_root):
     assert not [i for i in _validate(repo) if i.severity == "E"]
 
 
+@pytest.mark.full_repo
 def test_topics_are_independent_of_thematic_groups(repo_root):
     """One identity, many classifications — the point of the facet.
 
@@ -1486,6 +1495,7 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
         "second name for thematic_group_ids")
 
 
+@pytest.mark.full_repo
 def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
     """Sparse is the honest state under on-use population, so it must be visible.
 

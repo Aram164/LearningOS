@@ -28,6 +28,11 @@ from ..transactions import (
     TransactionService,
     parse_expected_revisions,
 )
+from .job_boundary import (
+    FORBIDDEN_WRITE_ROOTS,
+    WRITABLE_ROOTS,
+    writable_job_path,
+)
 from .job import (
     JobDashboardError,
     _frontmatter,
@@ -40,20 +45,9 @@ from .support import _operator_lock, _root
 
 CONTRACT = "job-write-v1"
 
-#: Where a Job write may land. Deliberately narrower than the dashboard's read
-#: allowlist: reading a declared paper is fine, rewriting one is not.
-WRITABLE_ROOTS = (
-    "workspace-job-deem/scratch",
-    "notes",
-    "plans",
-    "operations",
-)
-
-#: Aram's standing rule: the Stratum checkout is strictly read-only — nothing
-#: changes there in any shape or form. It is absent from WRITABLE_ROOTS, so the
-#: allowlist already refuses it; this names the rule so that adding "stratum"
-#: later reads as the deliberate violation it would be, and pins it in a test.
-FORBIDDEN_ROOTS = ("stratum",)
+# Backward-compatible names keep the guard directly inspectable to callers.
+FORBIDDEN_ROOTS = FORBIDDEN_WRITE_ROOTS
+_writable_path = writable_job_path
 
 _PROGRESS_RELATIVE = "operations/progress.yaml"
 _TASKS_RELATIVE = "operations/tasks.yaml"
@@ -70,30 +64,6 @@ def _require_confirmation(args) -> None:
         raise JobDashboardError(
             "Job writes require --confirm-job-access (CLAUDE.md §13, ADR-010)"
         )
-
-
-def _writable_path(job_root: Path, relative: str) -> Path:
-    """Resolve *relative* inside the quarantine, or refuse it."""
-    value = str(relative or "").strip().replace("\\", "/")
-    if not value or value.startswith("/"):
-        raise JobDashboardError("Job write paths must be non-empty relative paths")
-    candidate = (job_root / value).resolve()
-    try:
-        resolved = candidate.relative_to(job_root.resolve())
-    except ValueError as exc:
-        raise JobDashboardError(
-            f"Job write path escapes the quarantine: {value}"
-        ) from exc
-    posix = resolved.as_posix()
-    if any(posix == root or posix.startswith(f"{root}/") for root in FORBIDDEN_ROOTS):
-        raise JobDashboardError(
-            f"the Stratum checkout is read-only — refusing to write {posix}"
-        )
-    if not any(posix == root or posix.startswith(f"{root}/") for root in WRITABLE_ROOTS):
-        raise JobDashboardError(
-            f"Job write path is outside the write allowlist: {posix}"
-        )
-    return candidate
 
 
 def _expected_revisions(args) -> dict[str, int]:
