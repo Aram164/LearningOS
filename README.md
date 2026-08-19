@@ -107,7 +107,8 @@ make check      # validate (schemas + VALIDATION.md rules)
 make views      # rebuild everything under the gitignored output tree
 make status     # one-screen repository state
 make inventory  # rebuild the materials manifest (see "Materials durability")
-make test       # test suite
+make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
+make test       # complete suite, including full-repository integration checks
 make            # list the one-word commands
 ```
 
@@ -130,7 +131,8 @@ hit on a clean macOS install. Every later `make` target and both Git hooks use
 
 (Equivalent direct calls once the venv exists: `.venv/bin/python tools/validate.py`
 [`--online` adds the URL audit], `.venv/bin/python tools/generate.py`,
-.venv/bin/python -m pytest`.) Requires Python 3.12+, `pyyaml`, `jsonschema>=4`,
+`.venv/bin/python -m pytest -m "not full_repo"`, `.venv/bin/python -m pytest`.)
+Requires Python 3.12+, `pyyaml`, `jsonschema>=4`,
 `pytest` — the tools fail fast with the exact fix if a dependency is missing or
 too old.
 

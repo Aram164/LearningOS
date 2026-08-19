@@ -7,9 +7,10 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import cast
 from .errors import DeliveryValidationError, MAX_DELIVERY_BYTES, MAX_DELIVERY_ENTRIES, TargetNotFoundError
 from .support import _atomic_text, _dump_yaml, _inside, _read_yaml
+from .types import AIActionRequest, DeliveryRecord, RequestStatus
 
 class FilesystemAIActionRepository:
     def __init__(self, root: Path):
@@ -38,7 +39,7 @@ class FilesystemAIActionRepository:
     def state_path(self, target_id: str) -> Path:
         return self.garden_state / f"{self._id(target_id)}.yaml"
 
-    def save_request(self, request: dict[str, Any], bundle_files: dict[str, bytes]) -> None:
+    def save_request(self, request: AIActionRequest, bundle_files: dict[str, bytes]) -> None:
         destination = self.request_dir(str(request["id"]))
         if destination.exists():
             raise DeliveryValidationError(f"request already exists: {request['id']}")
@@ -55,17 +56,17 @@ class FilesystemAIActionRepository:
             shutil.rmtree(temp, ignore_errors=True)
             raise
 
-    def get_request(self, request_id: str) -> dict[str, Any]:
+    def get_request(self, request_id: str) -> AIActionRequest:
         path = self.request_path(request_id)
         value = _read_yaml(path)
         if not isinstance(value, dict):
             raise TargetNotFoundError(f"AI action request not found: {request_id}")
-        return value
+        return cast(AIActionRequest, value)
 
-    def update_request(self, request: dict[str, Any]) -> None:
+    def update_request(self, request: AIActionRequest) -> None:
         _atomic_text(self.request_path(str(request["id"])), _dump_yaml(request))
 
-    def stage_delivery_directory(self, source: Path) -> tuple[dict[str, Any], Path]:
+    def stage_delivery_directory(self, source: Path) -> tuple[DeliveryRecord, Path]:
         """Copy untrusted provider output into a quarantine directory.
 
         Nothing lands at its published path until validation has passed, so a
@@ -102,7 +103,7 @@ class FilesystemAIActionRepository:
         except Exception:
             shutil.rmtree(temp, ignore_errors=True)
             raise
-        return delivery, staged
+        return cast(DeliveryRecord, delivery), staged
 
     def publish_delivery(self, staged: Path, delivery_id: str) -> Path:
         destination = self.delivery_dir(delivery_id)
@@ -118,15 +119,15 @@ class FilesystemAIActionRepository:
         shutil.rmtree(staged.parent, ignore_errors=True)
         return destination
 
-    def get_delivery(self, delivery_id: str) -> tuple[dict[str, Any], Path]:
+    def get_delivery(self, delivery_id: str) -> tuple[DeliveryRecord, Path]:
         directory = self.delivery_dir(delivery_id)
         delivery = _read_yaml(directory / "delivery.yaml")
         if not isinstance(delivery, dict):
             raise TargetNotFoundError(f"AI delivery not found: {delivery_id}")
-        return delivery, directory
+        return cast(DeliveryRecord, delivery), directory
 
-    def request_projections(self) -> list[dict[str, Any]]:
-        rows = []
+    def request_projections(self) -> list[RequestStatus]:
+        rows: list[RequestStatus] = []
         if not self.requests.is_dir():
             return rows
         for path in sorted(self.requests.glob("*/request.yaml")):

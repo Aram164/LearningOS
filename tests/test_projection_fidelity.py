@@ -16,9 +16,11 @@ import json
 from pathlib import Path
 
 import pytest
-
 from learning_os.genout import generate_all
 from learning_os.loader import load_repo
+
+
+pytestmark = pytest.mark.full_repo
 
 ROOT = Path(__file__).resolve().parent.parent
 

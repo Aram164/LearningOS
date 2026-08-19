@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 
+import pytest
 import yaml
 
 from learning_os.genout import generate_all
@@ -133,6 +134,7 @@ def test_validator_rejects_unknown_thematic_group_references(mini_repo):
     assert any(issue.code == "REF-THEMATIC-GROUP" for issue in issues)
 
 
+@pytest.mark.full_repo
 def test_real_repository_navigation_projection_is_complete(repo_root):
     manifest = json.loads(
         generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"]

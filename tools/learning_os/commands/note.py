@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import sys
-from learning_os.loader import EVIDENCE_SCHEMES, load_repo, parse_frontmatter
 from pathlib import Path
+
+from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
+
 from .support import (_expected_ok, _expected_revisions_from_args, _operator_lock,
                       _render_frontmatter, _root, _write_transaction)
 
@@ -35,7 +37,7 @@ def cmd_note_revise(args) -> int:
         content = source.read_text(encoding="utf-8")
         try:
             meta, _ = parse_frontmatter(content, source)
-        except Exception as exc:  # LoaderError is intentionally presented as usage failure.
+        except LoaderError as exc:
             print(f"los: invalid revised note: {exc}", file=sys.stderr)
             return 2
         if meta.get("id") != args.note_id or meta.get("type") != "note":
@@ -95,7 +97,7 @@ def cmd_note_evidence(args) -> int:
         content = note.path.read_text(encoding="utf-8")
         try:
             meta, body = parse_frontmatter(content, note.path)
-        except Exception as exc:  # LoaderError is intentionally a usage failure.
+        except LoaderError as exc:
             print(f"los: cannot read note frontmatter: {exc}", file=sys.stderr)
             return 2
         existing = list(meta.get("evidence") or [])

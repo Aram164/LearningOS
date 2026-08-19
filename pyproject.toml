@@ -29,3 +29,6 @@ include = ["learning_os*"]
 [tool.pytest.ini_options]
 pythonpath = ["tools"]
 testpaths = ["tests"]
+markers = [
+  "full_repo: exercises the checked-in repository state rather than a synthetic fixture",
+]

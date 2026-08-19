@@ -5,8 +5,13 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from learning_os.genout import build_backlinks, build_manifest, stable_generated_at
 from learning_os.loader import load_repo
+
+
+pytestmark = pytest.mark.full_repo
 
 
 def manifest(root: Path) -> dict:
