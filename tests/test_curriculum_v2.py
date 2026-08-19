@@ -10,7 +10,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.genout import source_fingerprint, generate_all, write_outputs
+from learning_os.fingerprint import source_fingerprint
+from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo, parse_frontmatter
 from learning_os.rules import validate
 
@@ -609,13 +610,13 @@ def test_session_end_reports_canvas_as_unrelated_and_never_session_owned(mini_re
     saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
                     "--replace", "--text", "Session-owned note.")
     assert saved.returncode == 0, saved.stderr
-    (mini_repo / "Untitled.canvas").write_text("{}", encoding="utf-8")
+    (mini_repo / "Untitled 37.canvas").write_text("{}", encoding="utf-8")
     ended = run_los(mini_repo, "session-end")
     assert ended.returncode == 0, ended.stderr
     payload = json.loads(ended.stdout)
     assert any("stage-demo/notes.md" in path for path in payload["touched"])
-    assert "Untitled.canvas" not in payload["touched"]
-    assert any("Untitled.canvas" in line for line in payload["unrelated_changes"])
+    assert "Untitled 37.canvas" not in payload["touched"]
+    assert any("Untitled 37.canvas" in line for line in payload["unrelated_changes"])
     # session-end gates on validation, and validate.py resolves its repository
     # from its own location unless given --root. Without that flag it validated
     # the repository the TOOLS live in, so an unrelated warning over there could
@@ -912,7 +913,6 @@ def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
 def test_amls_reading_list_still_matches_checked_in_inventory():
     if not AMLS_READING_LIST.exists():
         pytest.skip(f"materials/ not checked out: {AMLS_READING_LIST}")
-    sys.path.insert(0, str(ROOT / "tools"))
     from refresh_amls_fixture import parse_reading_list
 
     assert parse_reading_list(AMLS_READING_LIST) == _amls_inventory()["lectures"], (

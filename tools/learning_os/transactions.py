@@ -136,13 +136,27 @@ def _safe_relative(root: Path, path: Path) -> str:
 
 
 def _atomic_write_bytes(path: Path, content: bytes) -> None:
-    # Preserve the gateway's established atomic sibling name. Existing
-    # red-team checks deliberately block this path to verify rollback.
+    """Atomically replace *path* and make the replacement crash-durable.
+
+    ``os.replace`` alone guarantees visibility, not persistence. Flushing the
+    file before replacement and the directory after it closes the window where
+    a committed receipt can survive while the content it records does not.
+    """
+    # Preserve the gateway's established atomic sibling name. Existing red-team
+    # checks deliberately block this path to verify rollback.
     tmp = path.with_name(f".{path.name}.tmp")
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
-        tmp.write_bytes(content)
+        with tmp.open("wb") as handle:
+            handle.write(content)
+            handle.flush()
+            os.fsync(handle.fileno())
         os.replace(tmp, path)
+        directory_fd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
     except OSError as exc:
         with contextlib.suppress(OSError):
             tmp.unlink(missing_ok=True)
@@ -174,8 +188,14 @@ def _receipt_text(receipt: Mapping) -> str:
 class TransactionService:
     """Commit one validated set of authored writes and one append-only receipt."""
 
-    def __init__(self, root: Path):
+    def __init__(
+        self,
+        root: Path,
+        *,
+        clock: Callable[[], dt.datetime] | None = None,
+    ):
         self.root = root.resolve()
+        self.clock = clock or (lambda: dt.datetime.now().astimezone())
 
     def commit(
         self,
@@ -187,9 +207,11 @@ class TransactionService:
         expected_revisions: Mapping[str, int] | None = None,
         validate_state: Callable[[], Sequence] | None = None,
         publish: Callable[[], None] | None = None,
+        rollback_publish: Callable[[], None] | None = None,
         touched: Callable[[Iterable[Path]], None] | None = None,
         metadata: Mapping | None = None,
         fingerprint: Callable[[], str] | None = None,
+        transaction_writes: Callable[[str], Mapping[Path, str | bytes]] | None = None,
     ) -> TransactionResult:
         if not capability or not capability.strip():
             raise TransactionFailure("transaction capability must be named")
@@ -232,6 +254,30 @@ class TransactionService:
             revisions_after[artifact] = next_value
             changed_revisions[artifact] = next_value
 
+        # Allocate the one shared transaction identity before finalising writes.
+        # Some transactional bookkeeping (for example an AI request moving to
+        # ``completed``) must record that identity in the same atomic commit as
+        # the canonical change.  ``transaction_writes`` provides that without
+        # inventing a second receipt or updating state after the commit.
+        now = self.clock().astimezone().replace(microsecond=0)
+        transaction_id, receipt_path = _next_transaction_identity(self.root, now)
+        if transaction_writes is not None:
+            try:
+                owned_writes = transaction_writes(transaction_id)
+            except Exception as exc:
+                raise TransactionFailure(
+                    f"cannot prepare transaction-owned writes: {exc}"
+                ) from exc
+            for raw_path, value in owned_writes.items():
+                path = Path(raw_path).resolve()
+                _safe_relative(self.root, path)
+                if path in delete_paths:
+                    raise TransactionFailure(f"transaction both writes and deletes {path}")
+                content = value.encode("utf-8") if isinstance(value, str) else bytes(value)
+                if path in normalized_writes and normalized_writes[path] != content:
+                    raise TransactionFailure(f"transaction defines conflicting writes for {path}")
+                normalized_writes[path] = content
+
         ledger_path = _revision_ledger_path(self.root).resolve()
         normalized_writes[ledger_path] = _dump_revisions(revisions_after).encode("utf-8")
 
@@ -245,12 +291,13 @@ class TransactionService:
         # their own digest over the artifacts they actually touch.
         take_fingerprint = fingerprint or (lambda: canonical_fingerprint(self.root))
         snapshot_before = take_fingerprint()
-        receipt_path: Path | None = None
 
-        def rollback() -> None:
-            if receipt_path is not None:
-                with contextlib.suppress(OSError):
-                    receipt_path.unlink(missing_ok=True)
+        def rollback() -> list[str]:
+            failures: list[str] = []
+            try:
+                receipt_path.unlink(missing_ok=True)
+            except OSError:
+                failures.append(_safe_relative(self.root, receipt_path))
             for path, old in reversed(list(backups.items())):
                 try:
                     if old is None:
@@ -259,12 +306,14 @@ class TransactionService:
                     else:
                         _atomic_write_bytes(path, old)
                 except Exception:
-                    # Preserve the original failure; callers still receive a
-                    # TransactionFailure and can inspect the named path.
-                    pass
-            if publish is not None:
-                with contextlib.suppress(Exception):
-                    publish()
+                    failures.append(_safe_relative(self.root, path))
+            restore_projection = rollback_publish or publish
+            if restore_projection is not None:
+                try:
+                    restore_projection()
+                except Exception:
+                    failures.append("<projection publication>")
+            return sorted(set(failures))
 
         try:
             for path, content in normalized_writes.items():
@@ -284,8 +333,6 @@ class TransactionService:
                 publish()
 
             snapshot_after = take_fingerprint()
-            now = dt.datetime.now().astimezone().replace(microsecond=0)
-            transaction_id, receipt_path = _next_transaction_identity(self.root, now)
             rows = []
             for path, after in normalized_writes.items():
                 if path == ledger_path:
@@ -341,11 +388,12 @@ class TransactionService:
                 snapshot_before=f"sha256:{snapshot_before}",
                 snapshot_after=f"sha256:{snapshot_after}",
             )
-        except TransactionConflict:
-            rollback()
-            raise
         except Exception as exc:
-            rollback()
+            rollback_failures = rollback()
+            if rollback_failures:
+                raise TransactionFailure(
+                    f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
+                ) from exc
             if isinstance(exc, TransactionFailure):
                 raise
             raise TransactionFailure(str(exc)) from exc

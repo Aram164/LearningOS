@@ -144,7 +144,7 @@ class Coordination:
         return md_section(self.body, heading)
 
 
-@dataclass
+@dataclass(eq=False)
 class Repo:
     root: Path
     concepts: dict[str, dict] = field(default_factory=dict)

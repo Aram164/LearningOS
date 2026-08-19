@@ -13,7 +13,6 @@ import sys
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent
-sys.path.insert(0, str(TOOLS))
 
 from learning_os.contracts.capability_catalog import command_definitions  # noqa: E402
 from learning_os.contracts.payloads import all_payload_schemas  # noqa: E402

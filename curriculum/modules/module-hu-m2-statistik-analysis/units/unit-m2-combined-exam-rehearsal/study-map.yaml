@@ -1,0 +1,180 @@
+id: study-map-m2-combined-exam-rehearsal
+type: study-map
+unit_id: unit-m2-combined-exam-rehearsal
+status: ready
+current_stage: stage-m2-joint-blueprint
+source_plan:
+  path: work/active/workspace-m2-exam-prep/outputs/M2-two-lane-learning-plan.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-joint-blueprint
+  title: M2.J0 — build the combined blueprint and entry gate
+  status: pending
+  objective: Join the two independently completed subject lanes without merging their content plans. Build
+    a traceable coverage and timing blueprint; do not invent an official weighting because no genuine
+    current combined paper is registered.
+  done_when:
+  - Verify that SaD.X and AN.X each have a graded half-mock plus explicit remaining repair items.
+  - Build a two-column coverage matrix linking every joint mock question to one SaD or Analysis stage
+    and its correction authority.
+  - Choose a provisional question order and time budget from evidence; label any equal split as a fallback
+    assumption, not an official format fact.
+  - 'Define before the mock: stop-loss time per question, review buffer, scoring rubric, and what counts
+    as a red error.'
+  estimate_minutes: 90
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: SaD current-scope index
+    source_id: source-sad-ss26-lectures
+    locator: L01-L15 deck contents and the SaD.X error ledger
+    scope_triage: required-now
+  - kind: read
+    label: Analysis current-scope index
+    source_id: source-analysis-skript
+    locator: unser skript.pdf contents/course contract and the AN.X theorem ledger
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-blueprint/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-joint-mock-one
+  title: M2.J1 — full combined mock 1
+  status: pending
+  objective: Assemble fresh Statistics and Analysis halves from traceable sources and sit them as one
+    uninterrupted three-hour exam under the provisional strategy.
+  done_when:
+  - Use no question previously solved in SaD.X or AN.X and record the exact source and solution/rubric
+    for every question before starting.
+  - Complete one uninterrupted 180-minute paper with only exam-permitted aids, including the predeclared
+    review buffer.
+  - Grade both halves separately and the paper overall; record points lost by content, method choice,
+    interpretation/proof presentation, context switch, and time.
+  - Identify whether the provisional order/time strategy helped or hurt using timestamps rather than memory.
+  estimate_minutes: 270
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-probability
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Fresh Statistics half
+    source_id: source-sad-klausuren-extern
+    locator: Unused scope-matched German questions with solutions
+    scope_triage: required-now
+  - kind: practise
+    label: Fresh Analysis half
+    source_id: source-analysis-klausuren-extern
+    locator: Unused scope-matched German questions with solutions
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-one/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-joint-repair
+  title: M2.J2 — repair the first combined mock
+  status: pending
+  objective: Return every error to its owning subject map, repair the cause, and retest cold; only switching/time
+    errors remain joint.
+  done_when:
+  - Assign every content error to exactly one SaD or Analysis stage and record the smallest repair source.
+  - 'For each red error: explain the cause, solve one near transfer, wait at least one sleep cycle, then
+    solve a different cold transfer.'
+  - Repair context-switch/time errors with a revised order, stop-loss rule, or review buffer rather than
+    rereading content.
+  - Freeze the second-mock strategy before seeing its questions.
+  estimate_minutes: 180
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: SaD correction authorities
+    source_id: source-sad-ss26-lectures
+    locator: Exact current deck for each SaD error
+    scope_triage: required-now
+  - kind: practise
+    label: SaD current repair tasks
+    source_id: source-sad-uebungen
+    locator: One near transfer for each SaD error
+    scope_triage: required-now
+  - kind: read
+    label: Analysis correction authority
+    source_id: source-analysis-skript
+    locator: Exact definition/result/example for each Analysis error
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-repair/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-joint-mock-two
+  title: M2.J3 — full combined mock 2 and readiness decision
+  status: pending
+  objective: Run a second fresh three-hour simulation with the frozen strategy and make the final repair
+    list from evidence.
+  done_when:
+  - Use a completely fresh, source-traceable Statistics half and Analysis half.
+  - Complete the full paper uninterrupted in 180 minutes and preserve timestamps and scratch work.
+  - Grade each half separately and overall against the same predeclared rubric as mock 1.
+  - Demonstrate that no red error from mock 1 recurs; if one recurs, reopen only its owning subject stage.
+  - Produce the final maximum-five-item repair list; everything else is retrieval-only.
+  estimate_minutes: 300
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-probability
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - kind: practise
+    label: Second fresh Statistics half
+    source_id: source-fau-klausur-ws1415
+    locator: Unused FAU items or unused source-sad-klausuren-extern questions
+    scope_triage: required-now
+  - kind: practise
+    label: Second fresh Analysis half
+    source_id: source-analysis-klausuren-extern
+    locator: Fresh Ulm/Leipzig or other unused scope-matched selection
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-two/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-joint-final-retrieval
+  title: M2.J4 — final 72-hour alternating retrieval
+  status: pending
+  objective: Protect execution with short alternating retrieval, logistics, and recovery. Add no new source,
+    theorem, model, or optional depth.
+  done_when:
+  - 'Run two short alternating rounds: one SaD method-selection/calculation set and one Analysis definition/theorem-trigger
+    set.'
+  - Rehearse the frozen question order, stop-loss rule, and review buffer once without a full mock.
+  - Check permitted materials, route, room, identification, and timing from the owning administrative
+    record or official notice.
+  - Stop full-length work early enough to protect sleep; leave no unresolved item outside the maximum-five
+    repair list.
+  estimate_minutes: 120
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  - concept-proof-technique
+  scope_triage: required-now
+  resources:
+  - kind: reference
+    label: Frozen SaD ledger and error list
+    vault_path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md
+    scope_triage: required-now
+  - kind: reference
+    label: Frozen Analysis theorem ledger and error list
+    vault_path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-final-retrieval/notes.md
+  attachments: []
+  source_feedback: []

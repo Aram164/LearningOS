@@ -35,9 +35,6 @@ FLAT = MATERIALS / ".flat"
 CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum", "projects")
 TEXT_SUFFIXES = {".md", ".yaml", ".yml"}
 
-sys.path.insert(0, str(ROOT / "tools"))
-
-
 def source_prefixes() -> list[tuple[str, str]]:
     """[(physical prefix, source-id)] sorted longest-first for greedy matching."""
     pairs = []

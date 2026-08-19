@@ -129,8 +129,7 @@ def cmd_session_end(args) -> int:
     root = _root(args)
     ledger = _session_ledger(root)
     touched = json.loads(ledger.read_text(encoding="utf-8")) if ledger.is_file() else []
-    touched = [path for path in touched
-               if path not in {"Untitled.canvas", "Untitled 1.canvas", "Untitled 2.canvas"}]
+    touched = [path for path in touched if Path(path).suffix.lower() != ".canvas"]
     # `validate.py` resolves its repository from its own location unless told
     # otherwise, so a bare `cwd=root` would validate the repository the tools
     # live in — not the one this session touched. Pass the root explicitly.

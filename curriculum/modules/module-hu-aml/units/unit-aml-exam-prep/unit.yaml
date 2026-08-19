@@ -1,0 +1,92 @@
+id: unit-aml-exam-prep
+type: unit
+module_id: module-hu-aml
+kind: exam-block
+title: AML exam preparation — calibration, repair and mixed mocks
+order: 90
+scope: 'Auxiliary execution lane for the 2026 second sitting. It synthesizes but does not replace L01–L11:
+  cold calibration controls repair depth, late lectures are worked in dependency order, and readiness
+  evidence comes from closed-book calculations and two mixed 120-minute rehearsals until a current second-sitting
+  notice confirms a different duration.'
+status: active
+knowledge_map:
+  summary: The execution lane moves from scope calibration through evidence-routed classical and neural
+    repair, then into cross-lecture retrieval, timed transfer, error correction and final logistics.
+  nodes:
+  - id: knowledge-aml-exam-scope
+    title: Current L01–L11 scope and format
+    summary: The current decks and Übung 10 Themen list define eleven eligible topics; first-sitting rules
+      are the rehearsal baseline until a second-sitting notice supersedes them.
+  - id: knowledge-aml-exam-calibration
+    title: Cold diagnostic and error ledger
+    summary: Representative closed-book work classifies each topic as full-pass, repair-only or cold-skip
+      and records definition, method-choice, derivation, arithmetic/shape, interpretation and time errors.
+    builds_on:
+    - knowledge-aml-exam-scope
+  - id: knowledge-aml-exam-classical
+    title: 'Classical ML transfer: L02–L07'
+    summary: Similarity, regression, regularization, logistic likelihood, optimizers, perceptrons and
+      kernels are repaired through calculations, derivations and per-lecture mocks.
+    builds_on:
+    - knowledge-aml-exam-calibration
+  - id: knowledge-aml-exam-neural
+    title: 'Neural and Transformer transfer: L08–L11'
+    summary: Forward propagation precedes backpropagation, which precedes CNNs and Transformers; learner-worked
+      calculations convert operator-drafted artifacts into evidence.
+    builds_on:
+    - knowledge-aml-exam-classical
+  - id: knowledge-aml-exam-integration
+    title: Cross-lecture retrieval and mixed timing
+    summary: Models are compared by hypothesis, objective, optimizer, validation and failure mode, then
+      combined under the full paper's switching and time pressure.
+    builds_on:
+    - knowledge-aml-exam-classical
+    - knowledge-aml-exam-neural
+  - id: knowledge-aml-exam-error-control
+    title: Mock-driven repair and A4 compression
+    summary: Lost points choose the smallest repair, repeated errors choose A4-sheet content, and delayed
+      cold retests—not rereading—supply the evidence.
+    builds_on:
+    - knowledge-aml-exam-integration
+  - id: knowledge-aml-exam-logistics
+    title: Registration, permitted materials and exam-day execution
+    summary: Registration, current duration, room, identification, permitted aids, arrival and the final
+      taper are explicit gates rather than assumptions.
+    builds_on:
+    - knowledge-aml-exam-scope
+scope_sources:
+- source_id: source-aml-ss26-lectures
+  authority: slides
+  locator: lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf
+- source_id: source-aml-ss26-lectures
+  authority: brief
+  locator: exercise-slides/Übung 10.pdf slides 2–3 — first-sitting rules and L01–L11 Themen list
+source_selections:
+- source_id: source-aml-ss26-lectures
+  locator: current L01–L11 decks, Übung 02–11 and Bonusblatt 01–04
+  purpose: Scope, notation, course-native practice and exam-format baseline for every execution stage;
+    external sources remain selected only inside a lecture unit after a diagnosed miss.
+  stage_ids:
+  - stage-aml-calibration
+  - stage-aml-foundations-repair
+  - stage-aml-linear-optimization-repair
+  - stage-aml-neural-transformer-loop
+  - stage-aml-integration-sheet
+  - stage-aml-mock-one
+  - stage-aml-mock-one-repair
+  - stage-aml-mock-two
+  - stage-aml-final-repair
+  - stage-aml-taper
+- source_id: source-jurafsky-slp3
+  locator: Chapter 8 — Transformers
+  purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use
+    only if the current deck, bank and mock leave an attention/block gap.
+  stage_ids:
+  - stage-aml-neural-transformer-loop
+current_study_map: study-map-aml-exam-prep
+artifacts:
+  other:
+  - note-aml-sad-master-wiring
+  - note-aml-book-crosswalk
+workspace_ids:
+- workspace-aml-exam-prep

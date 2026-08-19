@@ -35,8 +35,8 @@ type: module
 kind: academic
 area_id: program-bachelors
 thematic_group_ids:
-  - thematic-group-machine-learning
-  - thematic-group-mathematics
+- thematic-group-machine-learning
+- thematic-group-mathematics
 source_map: source-map.yaml
 unit_order:
 - unit-aml-l01
@@ -50,3 +50,4 @@ unit_order:
 - unit-aml-l09
 - unit-aml-l10
 - unit-aml-l11
+- unit-aml-exam-prep

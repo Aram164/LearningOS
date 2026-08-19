@@ -475,6 +475,21 @@ The freshness guarantee of layer 3 is exactly the session-end ritual of
 layer 2. If a view looks stale, reload its manifest or press Rebuild; never
 edit a generated file.
 
+### Cross-layer contract change checklist
+
+When a Core result is consumed by the interface, change it as one release:
+
+1. declare the result and its producer-owned schema in
+   `system/contracts/capabilities.yaml`;
+2. validate the complete result before Core emits it;
+3. mirror the schema in the UI and make the contract check compare the mirror
+   with Core;
+4. update the UI's stable typed contract and boundary decoder;
+5. add producer refusal, decoder, and cross-repository drift tests.
+
+Contract versions are data. Keep stable source module names and discover the
+single versioned lock; do not put the current version in import paths.
+
 ## 26. Source routing and feedback
 
 Register one global source identity first. Add a module source-map entry only

@@ -69,7 +69,7 @@ def _inside(root: Path, rel: str) -> Path:
 
 def _snapshot(root: Path) -> str:
     # Local import avoids a cycle when genout projects AI-action state.
-    from learning_os.genout import source_fingerprint
+    from learning_os.fingerprint import source_fingerprint
     from learning_os.loader import load_repo
 
     return f"sha256:{source_fingerprint(load_repo(root))}"

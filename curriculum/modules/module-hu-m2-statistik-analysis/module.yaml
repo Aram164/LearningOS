@@ -45,7 +45,7 @@ type: module
 kind: academic
 area_id: program-bachelors
 thematic_group_ids:
-  - thematic-group-mathematics
+- thematic-group-mathematics
 source_map: source-map.yaml
 unit_order:
 - unit-m2-sad-l01
@@ -64,4 +64,6 @@ unit_order:
 - unit-m2-sad-l14
 - unit-m2-sad-l15
 - unit-m2-sad-clustering
+- unit-m2-sad-exam-prep
 - unit-m2-analysis-exam-prep
+- unit-m2-combined-exam-rehearsal

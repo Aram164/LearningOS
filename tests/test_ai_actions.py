@@ -18,6 +18,8 @@ from learning_os.ai_actions import (
     DeliveryValidationError,
     StaleDeliveryError,
 )
+from learning_os.contracts import validate_contract
+from learning_os.transactions import artifact_revision
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXED = datetime(2026, 8, 4, 1, 0, tzinfo=timezone.utc)
@@ -38,7 +40,6 @@ def ai_repo(mini_repo: Path) -> Path:
     for rel in (
         "operations/ai-actions/requests",
         "operations/ai-actions/deliveries",
-        "operations/ai-actions/receipts",
         "operations/ai-actions/garden-state",
         "knowledge/garden",
     ):
@@ -191,8 +192,18 @@ def test_full_round_trip_preserves_original_and_commits_receipt(ai_repo: Path, t
     receipt = app.apply_delivery(delivery["id"])
     assert hashlib.sha256(original.read_bytes()).hexdigest() == before
     assert receipt["status"] == "committed"
-    assert receipt["pre_snapshot"] != receipt["post_snapshot"]
-    assert receipt["deleted_ids"] == []
+    assert receipt["capability"] == "ai-action.garden.shelve"
+    assert receipt["snapshot_before"] != receipt["snapshot_after"]
+    assert receipt["metadata"]["deleted_ids"] == []
+    assert receipt["receipt_path"].startswith("operations/transactions/")
+    assert (ai_repo / receipt["receipt_path"]).is_file()
+    validate_contract(
+        ai_repo,
+        "transaction-receipt.schema.json",
+        yaml.safe_load((ai_repo / receipt["receipt_path"]).read_text(encoding="utf-8")),
+        label="AI transaction receipt",
+    )
+    assert artifact_revision(ai_repo, target_id(ai_repo)) == 1
     assert (ai_repo / f"knowledge/garden/transcriptions/{target_id(ai_repo)}.md").is_file()
     state = yaml.safe_load(app.repository.state_path(target_id(ai_repo)).read_text())
     assert state["title"] == "Import-Time Registration"
@@ -299,7 +310,7 @@ def test_reshelving_will_not_silently_replace_a_transcription(ai_repo: Path, tmp
     body["operations"][0]["supersedes"] = f"transcription-{tid}"
     write_yaml(third / "delivery.yaml", body)
     receipt = app.apply_delivery(app.import_delivery(third)["id"])
-    assert receipt["superseded_ids"] == [f"transcription-{tid}"]
+    assert receipt["metadata"]["superseded_ids"] == [f"transcription-{tid}"]
     assert "A revised reading." in transcription.read_text(encoding="utf-8")
 
 
@@ -362,6 +373,34 @@ def test_capability_write_scope_is_enforced_from_the_contract(ai_repo: Path, tmp
     with pytest.raises(DeliveryValidationError, match="may not write"):
         app.apply_delivery(delivery["id"])
     assert not (ai_repo / f"knowledge/garden/transcriptions/{target_id(ai_repo)}.md").exists()
+
+
+def test_garden_state_bookkeeping_is_not_exempt_from_its_declared_scope(
+        ai_repo: Path, tmp_path: Path):
+    """garden.update's only destination must be checked, not blanket-exempted."""
+    contract = ai_repo / "system/contracts/capabilities.yaml"
+    value = yaml.safe_load(contract.read_text(encoding="utf-8"))
+    value["domain_capabilities"]["garden.update"]["writes"] = [
+        "operations/ai-actions/somewhere-else/"
+    ]
+    write_yaml(contract, value)
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    with pytest.raises(DeliveryValidationError, match="garden.update may not write"):
+        app.apply_delivery(delivery["id"])
+    assert not any(app.repository.garden_state.glob("*.yaml"))
+
+
+def test_garden_update_fields_are_enforced_from_the_catalogue(
+        ai_repo: Path, tmp_path: Path):
+    contract = ai_repo / "system/contracts/capabilities.yaml"
+    value = yaml.safe_load(contract.read_text(encoding="utf-8"))
+    value["domain_capabilities"]["garden.update"]["allowed_fields"] = ["title"]
+    write_yaml(contract, value)
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    with pytest.raises(DeliveryValidationError, match="forbidden fields.*state"):
+        app.apply_delivery(delivery["id"])
 
 def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
     from learning_os.contracts.manifest_contract import declared_version

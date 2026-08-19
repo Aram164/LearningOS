@@ -115,3 +115,7 @@ LearningOS/projects/amls-project (code),DELETED 2026-07-17 per Aram (GitHub Abda
 "legacy/Plans/crosscutting/seminar + archive/workspaces/2026/workspace-seminar-iug + materials/_unsorted/Seminar-reference",DELETED 2026-07-17 per Aram (module record module-hu-seminar-iug kept — grade pending; md deliverables recoverable from legacy git history; pptx/pdf gone),purge,post-cutover
 "legacy/Plans/ML/mlprov + archive/workspaces/2026/workspace-mlprov",DELETED 2026-07-17 per Aram,purge,post-cutover
 "workspace-job-deem + knowledge/notes/data-systems/note-skrub-* + materials/_unsorted/Job-papers + projects/stratum + legacy/Plans/crosscutting/job",Job/ (QUARANTINED — CLAUDE.md §13: scan only on explicit command),job-quarantine,post-cutover
+Plans/ML/systems/AMLS-Source-Crosswalk.md,curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml,crosswalk-decomposition,legacy-exit-review
+Plans/Math/analysis/AN_Source-Crosswalk.md,curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml,crosswalk-decomposition,legacy-exit-review
+Plans/Math/sad/SaD_Book-Difficulty-Map_L01-L15.md,curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml,source-evaluations,legacy-exit-review
+Plans/Math/sad/SaD/notes/SaD_L01-L05_Full_Units.pdf,LearningOS/materials/_unsorted/Legacy-SaD-review/SaD_L01-L05_Full_Units.pdf,preserved-material-copy,legacy-exit-review

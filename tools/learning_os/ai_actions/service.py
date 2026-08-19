@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import contextlib
 import json
 import shutil
 from pathlib import Path
@@ -12,9 +11,11 @@ from .errors import ActionPolicyError, ConfidentialityError, DeliveryValidationE
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
 from learning_os.contracts.manifest_contract import declared_version
+from learning_os.contracts.capability_catalog import domain_capability_definitions
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
-from .support import Clock, _atomic_text, _dump_yaml, _inside, _iso, _now_utc, _projection, _read_yaml, _sha256_file, _snapshot, parse_frontmatter_request_id
+from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService
+from .support import Clock, _dump_yaml, _inside, _iso, _now_utc, _projection, _read_yaml, _sha256_file, _snapshot, parse_frontmatter_request_id
 
 class AIActionService:
     """Bounded gateway for AI-proposed canonical writes.
@@ -37,6 +38,10 @@ class AIActionService:
     def list_actions(self) -> list[dict[str, Any]]:
         return [action.project() for action in self.registry.list()]
 
+    def capability_definitions(self):
+        """Validated AI-domain declarations from the one capability catalogue."""
+        return domain_capability_definitions(self.root)
+
     def capability_writes(self) -> dict[str, tuple[str, ...]]:
         """Declared write scopes, keyed by capability.
 
@@ -45,22 +50,14 @@ class AIActionService:
         ``system/contracts/capabilities.yaml`` so the contract and the code
         cannot drift apart silently.
         """
-        value = _read_yaml(self.contracts / "capabilities.yaml", {})
-        declared = value.get("domain_capabilities") if isinstance(value, dict) else None
-        scopes: dict[str, tuple[str, ...]] = {}
-        if isinstance(declared, dict):
-            for capability, spec in declared.items():
-                writes = (spec or {}).get("writes", []) if isinstance(spec, dict) else []
-                scopes[str(capability)] = tuple(str(w) for w in writes)
-        return scopes
+        return {
+            name: definition.writes
+            for name, definition in self.capability_definitions().items()
+        }
 
     def _assert_in_scope(self, capability: str, path: Path,
                          scopes: dict[str, tuple[str, ...]] | None = None) -> None:
         rel = path.relative_to(self.root).as_posix()
-        # Gateway bookkeeping is exchange state, not canonical knowledge; it is
-        # always in scope and is kept separate from the canonical tree by design.
-        if rel.startswith("operations/ai-actions/"):
-            return
         allowed = (scopes if scopes is not None else self.capability_writes()).get(capability, ())
         if not allowed:
             raise DeliveryValidationError(
@@ -281,6 +278,7 @@ class AIActionService:
         outcome = self._validate(delivery, directory)
         request = outcome["request"]
         target = outcome["target"]
+        capability_definitions = self.capability_definitions()
         target_id = str(request["target"]["id"])
         state_path = self.repository.state_path(target_id)
         state = _read_yaml(state_path, {})
@@ -334,7 +332,8 @@ class AIActionService:
                 patch = operation.get("patch") or {}
                 if not isinstance(patch, dict):
                     raise DeliveryValidationError("garden.update patch must be a mapping")
-                illegal = set(patch) - {"title", "state"}
+                allowed_fields = set(capability_definitions[capability].allowed_fields)
+                illegal = set(patch) - allowed_fields
                 if illegal:
                     raise DeliveryValidationError(
                         f"garden.update contains forbidden fields: {sorted(illegal)}"
@@ -385,84 +384,101 @@ class AIActionService:
         # Post-action scope check (operating contract, hard rule 12): every
         # canonical destination must fall inside the write scope its capability
         # declares in system/contracts/capabilities.yaml.
-        scopes = self.capability_writes()
+        scopes = {
+            name: definition.writes
+            for name, definition in capability_definitions.items()
+        }
         for path, (_content, capability) in staged.items():
             self._assert_in_scope(capability, path, scopes)
 
-        transaction_id = f"transaction-{self.clock():%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
-        receipt_path = self.repository.receipt_path(transaction_id)
         request_path = self.repository.request_path(str(request["id"]))
-        all_destinations = [*staged, request_path, receipt_path]
-        backups: dict[Path, bytes | None] = {
-            path: path.read_bytes() if path.is_file() else None for path in all_destinations
-        }
-        pre_snapshot = _snapshot(self.root)
         # Re-check the *target*, not the whole repository, immediately before the
         # write window; unrelated concurrent edits are not this delivery's
         # business, a changed target is.
         self._assert_target_unchanged(request)
-        try:
-            for path, (content, _capability) in staged.items():
-                _atomic_text(path, content)
 
-            from learning_os.loader import load_repo
+        def request_write(transaction_id: str) -> dict[Path, str]:
+            completed = dict(request)
+            completed["status"] = "completed"
+            completed["receipt_id"] = transaction_id
+            return {request_path: _dump_yaml(completed)}
+
+        validated_repo = None
+
+        def validation_errors() -> list:
+            nonlocal validated_repo
             from learning_os.rules import validate
-            errors = [issue for issue in validate(load_repo(self.root), online=False)
-                      if issue.severity == "E"]
-            if errors:
-                detail = "; ".join(f"{issue.code}: {issue.message}" for issue in errors[:8])
-                raise DeliveryValidationError(f"delivery creates invalid repository state: {detail}")
 
-            post_snapshot = _snapshot(self.root)
-            receipt = {
-                "schema_version": 1,
-                "id": transaction_id,
-                "type": "transaction-receipt",
-                "request_id": request["id"],
-                "delivery_id": delivery_id,
-                "action_id": request["action_id"],
-                "status": "committed",
-                "pre_snapshot": pre_snapshot,
-                "post_snapshot": post_snapshot,
-                "created_ids": created_ids,
-                "updated_ids": updated_ids,
-                "deleted_ids": [],
-                "superseded_ids": superseded_ids,
-                "validation": {
-                    "schemas": "passed",
-                    "references": "passed",
-                    "boundaries": "passed",
-                    "projection": "passed",
-                },
-                "committed_at": _iso(self.clock()),
-            }
-            request["status"] = "completed"
-            request["receipt_id"] = transaction_id
-            _atomic_text(request_path, _dump_yaml(request))
-            _atomic_text(receipt_path, _dump_yaml(receipt))
+            validated_repo = load_repo(self.root)
+            return [
+                issue for issue in validate(validated_repo, online=False)
+                if issue.severity == "E"
+            ]
 
+        def publish() -> None:
+            nonlocal validated_repo
             from learning_os.genout import generate_all, write_outputs
+
+            repo = validated_repo or load_repo(self.root)
+            validated_repo = None
+            write_outputs(repo, generate_all(repo))
+
+        def rollback_publish() -> None:
+            from learning_os.genout import generate_all, write_outputs
+
             repo = load_repo(self.root)
             write_outputs(repo, generate_all(repo))
-            return {**receipt, "touched_paths": [
-                path.relative_to(self.root).as_posix() for path in all_destinations
-            ]}
-        except Exception:
-            for path, old in backups.items():
-                try:
-                    if old is None:
-                        path.unlink(missing_ok=True)
-                    else:
-                        path.parent.mkdir(parents=True, exist_ok=True)
-                        path.write_bytes(old)
-                except OSError:
-                    pass
-            with contextlib.suppress(Exception):
-                from learning_os.genout import generate_all, write_outputs
-                from learning_os.loader import load_repo
-                repo = load_repo(self.root)
-                write_outputs(repo, generate_all(repo))
-            raise
+
+        metadata = {
+            "request_id": request["id"],
+            "delivery_id": delivery_id,
+            "action_id": request["action_id"],
+            "created_ids": created_ids,
+            "updated_ids": updated_ids,
+            "deleted_ids": [],
+            "superseded_ids": superseded_ids,
+            "validation": {
+                "schemas": "passed",
+                "references": "passed",
+                "boundaries": "passed",
+                "projection": "passed",
+            },
+        }
+        expected = {
+            str(artifact): revision
+            for artifact, revision in (
+                (request.get("preconditions") or {}).get("artifact_revisions") or {}
+            ).items()
+            if isinstance(revision, int) and revision >= 0
+        }
+        try:
+            result = TransactionService(self.root, clock=self.clock).commit(
+                capability=f"ai-action.{request['action_id']}",
+                writes={path: content for path, (content, _capability) in staged.items()},
+                artifact_ids={target_id, *created_ids, *superseded_ids},
+                expected_revisions=expected,
+                validate_state=validation_errors,
+                publish=publish,
+                rollback_publish=rollback_publish,
+                metadata=metadata,
+                transaction_writes=request_write,
+            )
+        except TransactionConflict as exc:
+            raise StaleDeliveryError(str(exc)) from exc
+        except TransactionFailure as exc:
+            raise DeliveryValidationError(f"delivery transaction failed: {exc}") from exc
+
+        receipt = _read_yaml(result.receipt_path)
+        if not isinstance(receipt, dict):  # pragma: no cover - commit guarantees this
+            raise DeliveryValidationError("transaction committed without a readable receipt")
+        return {
+            **receipt,
+            "receipt_path": result.receipt_path.relative_to(self.root).as_posix(),
+            "touched_paths": [
+                path.relative_to(self.root).as_posix()
+                for path in [*staged, request_path, result.receipt_path]
+            ],
+        }
 
     def request_status(self, request_id: str) -> dict[str, Any]:
         request = self.repository.get_request(request_id)

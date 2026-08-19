@@ -10,15 +10,18 @@ and forgetting the other would leave the receipt describing a different state
 than the one the write was guarded against, silently, which is exactly the class
 of failure the receipt chain exists to prevent.
 
-The root list and the walk now live here once. ``transactions`` re-exports the
-path-taking form; ``genout.projection.fingerprint`` wraps it with the ``Repo``
-memoisation that publishing depends on.
+The root list, walk, and projection memoisation now live here once.
+``transactions`` re-exports the path-taking form; projection code calls the
+``Repo``-taking form without making validators depend on generation modules.
 """
 
 from __future__ import annotations
 
 import hashlib
+import weakref
 from pathlib import Path
+
+from .loader import Repo
 
 CANONICAL_ROOTS = (
     "knowledge",
@@ -30,6 +33,8 @@ CANONICAL_ROOTS = (
     "system/schema",
     "system/contracts",
 )
+
+_SOURCE_FINGERPRINTS: weakref.WeakKeyDictionary[Repo, str] = weakref.WeakKeyDictionary()
 
 
 def canonical_fingerprint(root: Path) -> str:
@@ -56,3 +61,18 @@ def canonical_fingerprint(root: Path) -> str:
             digest.update(path.read_bytes())
             digest.update(b"\0")
     return digest.hexdigest()
+
+
+def source_fingerprint(repo: Repo) -> str:
+    """Memoise the digest externally for one loaded repository snapshot.
+
+    A ``Repo`` is a read snapshot and must be reloaded after writes. Keeping the
+    cache in a weak identity map makes that lifecycle explicit without silently
+    adding mutable, undeclared state to the model object.
+    """
+    cached = _SOURCE_FINGERPRINTS.get(repo)
+    if cached is not None:
+        return cached
+    result = canonical_fingerprint(repo.root)
+    _SOURCE_FINGERPRINTS[repo] = result
+    return result

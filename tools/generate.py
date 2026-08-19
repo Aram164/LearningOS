@@ -17,8 +17,6 @@ import argparse
 import sys
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 

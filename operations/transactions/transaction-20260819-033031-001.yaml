@@ -1,0 +1,140 @@
+schema_version: 1
+id: transaction-20260819-033031-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-19T03:30:31+02:00'
+snapshot_before: sha256:6dae51af37c18f7d66a4bae7e721dd4df69774b9e3abc81322cf36e7cf7e5c2c
+snapshot_after: sha256:6efe0ac7bed077a98e18fed1f665997549a3ba1c9161f5ca8296173564f193af
+expected_revisions: {}
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 0
+    after: 1
+  unit-m2-analysis-exam-prep:
+    before: 0
+    after: 1
+  unit-m2-combined-exam-rehearsal:
+    before: 0
+    after: 1
+  unit-m2-sad-exam-prep:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: a0135d92b631590242549ae96265a8769a309ff63605d622be9332c848d9d7ae
+  sha256_after: af6cbc5ff7b10a4d9ed4766c9c414f0691fffd2e7775b7efbbfe2ff44b82c93f
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: c7e816ff4357f63386f3a70edf8532cb8338d4743fc03963a18ea96e0c26d0a2
+  sha256_after: 2b70c0a1cb466eee00020669e88829d20f90f243177beb7930e59370bbf6cf77
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/study-map.yaml
+  sha256_before: fa488342fe5199069caf3468c6268275c4a9fb265cebf7ee8bc95d6424770352
+  sha256_after: 349322038ab65b30d67a3f7ddf138bd345ee5f2c36f7c2aa6eacf73ce936a189
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml
+  sha256_before: b5ab3d403f15bcaaca957f3151d60b229ed0533c3d75033ec69d84f3311489b9
+  sha256_after: 7dd198588815e7eda20be6aa75681e95fcf4f7c2198e1640fcf8cd5b180c199b
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-blueprint/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-final-retrieval/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-one/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-mock-two/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/stages/stage-m2-joint-repair/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  sha256_before: null
+  sha256_after: 7cc528901d0da20662036c2303ee6b19c22992abd34f713368c22805ef5ae552
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml
+  sha256_before: null
+  sha256_after: 030efb7545402799a5149494edef1a3354679f9e28162ed850405339527f8d7e
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s01-descriptive/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s02-regression/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s03-probability-counting/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s04-random-variables/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s05-discrete-distributions/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s06-normal-clt-likelihood/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s07-estimation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s08-testing/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s09-workflow-evaluation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s10-trees-ensembles/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s11-similarity-clustering/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s12-probabilistic-learning/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s13-neural-networks/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  sha256_before: null
+  sha256_after: af7bb6669db15138ad089be48050291a21371f2291d4191411e4c9c1a6d7dd08
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml
+  sha256_before: null
+  sha256_after: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  created: true
+- path: work/active/workspace-m2-exam-prep/CONTEXT.md
+  sha256_before: fa510d032f139b95c9bea73110be019288bd73d0d028ea226261ad6699bdf65b
+  sha256_after: 5979b430f7ab567997f1f69a14513e1f9c45f663f3c6e086f41360aae9946d28
+  created: false
+metadata: {}

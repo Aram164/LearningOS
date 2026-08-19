@@ -17,7 +17,6 @@ class FilesystemAIActionRepository:
         self.base = root / "operations" / "ai-actions"
         self.requests = self.base / "requests"
         self.deliveries = self.base / "deliveries"
-        self.receipts = self.base / "receipts"
         self.garden_state = self.base / "garden-state"
         self.quarantine = self.base / "incoming"
 
@@ -125,9 +124,6 @@ class FilesystemAIActionRepository:
         if not isinstance(delivery, dict):
             raise TargetNotFoundError(f"AI delivery not found: {delivery_id}")
         return delivery, directory
-
-    def receipt_path(self, transaction_id: str) -> Path:
-        return self.receipts / f"{self._id(transaction_id)}.yaml"
 
     def request_projections(self) -> list[dict[str, Any]]:
         rows = []

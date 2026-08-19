@@ -1,0 +1,212 @@
+id: unit-m2-sad-exam-prep
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-sad
+kind: exam-block
+title: Statistik und Datenanalyse — independent exam preparation
+order: 90
+scope: Independent Statistics & Data Analysis lane synthesizing current SaD L01-L15 plus the exercise-defined
+  clustering topic. The current 2026 decks and exercises control scope; legacy plans supply diagnostics
+  and sequencing only. Analysis content is excluded from this map, and combined timing is owned by the
+  separate joint-rehearsal unit.
+status: ready
+knowledge_map:
+  summary: The Statistics lane moves from descriptive data and probability through random variables and
+    inference, then through the course's data-science and machine-learning methods. Each stage starts
+    with a cold gate so existing evidence can compress the path without silently declaring mastery.
+  nodes:
+  - id: knowledge-sad-exam-calibration
+    title: Scope calibration and error ledger
+    summary: A cold, representative diagnostic decides which lecture clusters need a full pass and which
+      can be compressed; errors are classified by definition, model choice, calculation, interpretation,
+      or time.
+  - id: knowledge-sad-exam-descriptive
+    title: Descriptive statistics and data quality
+    summary: 'L01-L02: populations and samples, scales, frequency displays, robust location and dispersion,
+      Simpson''s paradox, bias, confusion matrices, and base rates.'
+    builds_on:
+    - knowledge-sad-exam-calibration
+  - id: knowledge-sad-exam-regression
+    title: Correlation and regression
+    summary: 'L03: covariance, Pearson correlation, causation limits, least squares, the normal equation,
+      gradient descent, scaling, and weight interpretation.'
+    builds_on:
+    - knowledge-sad-exam-descriptive
+  - id: knowledge-sad-exam-probability
+    title: Probability, Bayes, and combinatorics
+    summary: 'L04-L05: events and axioms, conditional probability, Bayes, independence, Naive Bayes, and
+      the order/repetition counting decision grid.'
+    builds_on:
+    - knowledge-sad-exam-descriptive
+  - id: knowledge-sad-exam-random-variables
+    title: Random variables and distributions
+    summary: 'L06-L08: PMF/PDF/CDF, expectation and variance, named discrete models, Normal standardization,
+      LLN/CLT, approximations, and likelihood.'
+    builds_on:
+    - knowledge-sad-exam-probability
+  - id: knowledge-sad-exam-inference
+    title: Estimation and testing
+    summary: 'L09-L10: estimators and their quality, standard error, confidence intervals, z/t/chi-square
+      and permutation tests, errors, power, p-values, and CI-test duality.'
+    builds_on:
+    - knowledge-sad-exam-random-variables
+  - id: knowledge-sad-exam-workflow
+    title: Data-science workflow and evaluation
+    summary: 'L11: supervised versus unsupervised work, preprocessing and leakage, validation, multiclass
+      metrics, imbalance, and generalization.'
+    builds_on:
+    - knowledge-sad-exam-descriptive
+  - id: knowledge-sad-exam-trees
+    title: Trees and ensembles
+    summary: 'L12: entropy/information gain and variance reduction, induction, overfitting and pruning,
+      bagging, random forests, boosting, and stacking.'
+    builds_on:
+    - knowledge-sad-exam-workflow
+  - id: knowledge-sad-exam-similarity
+    title: Similarity and clustering
+    summary: 'L13 plus the UE7 auxiliary topic: k-NN classification/regression, metric choice and scaling,
+      search indexes, clustering families, and k-means traces.'
+    builds_on:
+    - knowledge-sad-exam-workflow
+  - id: knowledge-sad-exam-probabilistic-ml
+    title: Probability-based learning
+    summary: 'L14: categorical, Gaussian, and Multinomial Naive Bayes, smoothing and log space, Bayesian-network
+      factorization, and Markov blankets.'
+    builds_on:
+    - knowledge-sad-exam-probability
+    - knowledge-sad-exam-workflow
+  - id: knowledge-sad-exam-neural
+    title: Neural networks
+    summary: 'L15: neurons, nonlinear activations, outputs, forward shapes and parameter counts, loss
+      gradients, backpropagation, training, and the course-level architecture outlook.'
+    builds_on:
+    - knowledge-sad-exam-regression
+    - knowledge-sad-exam-workflow
+  - id: knowledge-sad-exam-transfer
+    title: Statistics-only retrieval and timed transfer
+    summary: Mixed calculation, method selection, interpretation, and time control across the entire SaD
+      scope before any combined-exam rehearsal.
+    builds_on:
+    - knowledge-sad-exam-inference
+    - knowledge-sad-exam-trees
+    - knowledge-sad-exam-similarity
+    - knowledge-sad-exam-probabilistic-ml
+    - knowledge-sad-exam-neural
+scope_sources:
+- source_id: source-sad-ss26-lectures
+  authority: slides
+  locator: lecture-slides/01_introduction.pdf through 15_neural_networks.pdf
+- source_id: source-sad-uebungen
+  authority: brief
+  locator: current Blatt/UE assets, including UE7 clustering
+source_selections:
+- source_id: source-sad-ss26-lectures
+  locator: current L01-L15 decks
+  purpose: Scope and notation authority for every Statistics stage.
+  stage_ids:
+  - stage-m2-sad-calibrate
+  - stage-m2-sad-s01-descriptive
+  - stage-m2-sad-s02-regression
+  - stage-m2-sad-s03-probability-counting
+  - stage-m2-sad-s04-random-variables
+  - stage-m2-sad-s05-discrete-distributions
+  - stage-m2-sad-s06-normal-clt-likelihood
+  - stage-m2-sad-s07-estimation
+  - stage-m2-sad-s08-testing
+  - stage-m2-sad-s09-workflow-evaluation
+  - stage-m2-sad-s10-trees-ensembles
+  - stage-m2-sad-s11-similarity-clustering
+  - stage-m2-sad-s12-probabilistic-learning
+  - stage-m2-sad-s13-neural-networks
+  - stage-m2-sad-s14-exam-transfer
+- source_id: source-sad-uebungen
+  locator: current Blatt/UE assets
+  purpose: Closest course-aligned practice and the authority for the auxiliary clustering topic.
+  stage_ids:
+  - stage-m2-sad-calibrate
+  - stage-m2-sad-s01-descriptive
+  - stage-m2-sad-s02-regression
+  - stage-m2-sad-s03-probability-counting
+  - stage-m2-sad-s04-random-variables
+  - stage-m2-sad-s05-discrete-distributions
+  - stage-m2-sad-s06-normal-clt-likelihood
+  - stage-m2-sad-s07-estimation
+  - stage-m2-sad-s08-testing
+  - stage-m2-sad-s09-workflow-evaluation
+  - stage-m2-sad-s11-similarity-clustering
+  - stage-m2-sad-s12-probabilistic-learning
+  - stage-m2-sad-s13-neural-networks
+- source_id: source-fahrmeir-statistik
+  locator: Chapters 2-7 and 9-11, topic matched
+  purpose: German notation-aligned derivation for descriptive statistics, probability, estimation, and
+    testing.
+  stage_ids:
+  - stage-m2-sad-s01-descriptive
+  - stage-m2-sad-s02-regression
+  - stage-m2-sad-s03-probability-counting
+  - stage-m2-sad-s04-random-variables
+  - stage-m2-sad-s05-discrete-distributions
+  - stage-m2-sad-s06-normal-clt-likelihood
+  - stage-m2-sad-s07-estimation
+  - stage-m2-sad-s08-testing
+- source_id: source-fahrmeir-arbeitsbuch
+  locator: matching Chapters 5, 9, and 10-11
+  purpose: Solution-backed repair after current exercises.
+  stage_ids:
+  - stage-m2-sad-s05-discrete-distributions
+  - stage-m2-sad-s07-estimation
+  - stage-m2-sad-s08-testing
+- source_id: source-blitzstein-hwang
+  locator: Chapters 1-2
+  purpose: Conditional-probability or strategic-counting intuition only after a failed gate.
+  stage_ids:
+  - stage-m2-sad-s03-probability-counting
+- source_id: source-kelleher-fmlpda
+  locator: workflow and Chapters 4, 6, 7
+  purpose: Course-aligned companion for the SaD machine-learning half.
+  stage_ids:
+  - stage-m2-sad-s09-workflow-evaluation
+  - stage-m2-sad-s10-trees-ensembles
+  - stage-m2-sad-s11-similarity-clustering
+  - stage-m2-sad-s12-probabilistic-learning
+  - stage-m2-sad-s13-neural-networks
+- source_id: source-cs4780-homeworks
+  locator: solution-backed HW1/HW8
+  purpose: Fill the explicit current k-NN and tree practice gaps.
+  stage_ids:
+  - stage-m2-sad-s10-trees-ensembles
+  - stage-m2-sad-s11-similarity-clustering
+- source_id: source-mit-6034-quizzes
+  locator: tree and neural-network selections
+  purpose: Fresh trace problems where the current course has no matching sheet.
+  stage_ids:
+  - stage-m2-sad-s10-trees-ensembles
+  - stage-m2-sad-s13-neural-networks
+- source_id: source-fau-klausur-ws1415
+  locator: solved German Statistics paper
+  purpose: First Statistics-only timed transfer source.
+  stage_ids:
+  - stage-m2-sad-s08-testing
+  - stage-m2-sad-s14-exam-transfer
+- source_id: source-sad-klausuren-extern
+  locator: topic-matched unused German tasks
+  purpose: Second Statistics-only timed transfer source and repair pool.
+  stage_ids:
+  - stage-m2-sad-s14-exam-transfer
+- source_id: source-mit-1805
+  locator: unused solved exam questions
+  purpose: Reserve only when the German banks lack a fresh probability/inference item.
+  stage_ids:
+  - stage-m2-sad-s14-exam-transfer
+- source_id: source-statquest
+  locator: CLT/MLE selections
+  purpose: One short visual repair for a failed L08 concept.
+  stage_ids:
+  - stage-m2-sad-s06-normal-clt-likelihood
+current_study_map: study-map-m2-sad-exam-prep
+artifacts:
+  other:
+  - note-sad-source-crosswalk
+  - note-sad-probability-inference-deep-plan
+workspace_ids:
+- workspace-m2-exam-prep

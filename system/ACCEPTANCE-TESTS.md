@@ -155,13 +155,13 @@ Cutover only when: all critical structural, ownership, reference, module, genera
 These checks supersede any earlier assumption that one workspace learning path
 is the whole learning interface.
 
-- [ ] Manifest contract v2 atomically exposes programs, semesters, modules,
+- [ ] Manifest contract v5 atomically exposes programs, semesters, modules,
   structured components, units, maps, stages/notes, source maps, artifacts,
   workspace joins, progress, reverse indexes, boundaries, and resume snapshot.
 - [ ] Bachelor's is active/default; every current Bachelor module is visible.
   Skills and Thesis/Projects use universal modules without invented academic
   fields. Master's and Job expose boundary records only in the normal
-  manifest. The explicit Job destination may load `job-dashboard-v1` into that
+  manifest. The explicit Job destination may load `job-dashboard-v2` into that
   read-only view only; it never enters search, AI context, or generated views.
 - [ ] M2 owns stable SaD and Analysis components, one combined exam/grade, and
   separately selectable unit state. Every SaD lecture can be opened directly;

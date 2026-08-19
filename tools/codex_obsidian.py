@@ -35,7 +35,6 @@ WRITE_CAPABILITIES = {
     "source-feedback", "detour-create", "detour-resolve",
     "shelving-prepare", "shelving-apply",
 }
-PROTECTED_UNTRACKED = {"Untitled.canvas", "Untitled 1.canvas", "Untitled 2.canvas"}
 
 
 def codex_binary() -> str | None:
@@ -90,7 +89,7 @@ def dirty_paths() -> set[str]:
 
 def outside_scope(paths: set[str], prefixes: tuple[str, ...]) -> set[str]:
     return {path for path in paths
-            if path not in PROTECTED_UNTRACKED
+            if Path(path).suffix.lower() != ".canvas"
             and not any(path.startswith(prefix) for prefix in prefixes)}
 
 

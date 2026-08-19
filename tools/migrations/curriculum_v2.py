@@ -20,10 +20,7 @@ from pathlib import Path
 
 import yaml
 
-# This lives one level below tools/, so put tools/ on the path before the
-# package import — the same shape tools/migrations/projects_v1.py uses.
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "tools"))
 
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 

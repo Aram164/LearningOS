@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/job-plan-v2",
+  "title": "LearningOS Job learning plan v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "schema_version", "id", "title", "status", "horizon", "cadence", "outcome", "stages"],
+  "properties": {
+    "type": {"const": "job-learning-plan"},
+    "schema_version": {"const": 2},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,79}$"},
+    "title": {"type": "string", "pattern": "\\S"},
+    "status": {"type": "string", "pattern": "\\S"},
+    "horizon": {"enum": ["now", "next", "later"]},
+    "cadence": {"type": "string"},
+    "outcome": {"type": "string"},
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/stage"}
+    }
+  },
+  "$defs": {
+    "nonEmptyText": {"type": "string", "pattern": "\\S"},
+    "mentalModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "text"],
+      "properties": {
+        "label": {"$ref": "#/$defs/nonEmptyText"},
+        "text": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    },
+    "jobContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mental_models", "read_only_anchor"],
+      "properties": {
+        "mental_models": {"type": "array", "items": {"$ref": "#/$defs/mentalModel"}},
+        "read_only_anchor": {"type": "string"}
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "kind": {"enum": ["watch", "read", "practise", "reference"]},
+        "label": {"$ref": "#/$defs/nonEmptyText"},
+        "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "locator": {"type": "string", "pattern": "\\S"},
+        "url": {"type": "string", "pattern": "\\S"},
+        "vault_path": {"type": "string", "pattern": "\\S"},
+        "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "number", "title", "status", "objective", "done_when",
+        "exam_critical", "concepts", "scope_triage", "resources",
+        "attachments", "source_feedback", "job_context"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "number": {"type": "integer", "minimum": 1},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "status": {"enum": ["pending", "active", "paused", "complete", "skipped"]},
+        "objective": {"$ref": "#/$defs/nonEmptyText"},
+        "done_when": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmptyText"}},
+        "estimate_minutes": {"type": "integer", "minimum": 1},
+        "exam_critical": {"type": "boolean"},
+        "concepts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
+        "resources": {"type": "array", "items": {"$ref": "#/$defs/resource"}},
+        "attachments": {"type": "array"},
+        "source_feedback": {"type": "array"},
+        "job_context": {"$ref": "#/$defs/jobContext"}
+      }
+    }
+  }
+}

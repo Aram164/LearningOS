@@ -352,7 +352,7 @@ def cmd_module_plan_import(args) -> int:
                       "canonical_files_written": 0}
         else:
             code, errors, confirmation = _write_transaction(
-                root, writes, prevalidated=True, capability="module.plan.import",
+                root, writes, capability="module.plan.import",
                 expected_revisions=_expected_revisions_from_args(args),
                 artifact_ids=[args.module_id, *sorted(seen_units)],
             )

@@ -1,0 +1,295 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/job-dashboard-v2",
+  "title": "LearningOS Job dashboard response v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ok", "contract", "access", "dashboard"],
+  "properties": {
+    "ok": {"const": true},
+    "contract": {"const": "job-dashboard-v2"},
+    "access": {"$ref": "#/$defs/access"},
+    "dashboard": {"$ref": "#/$defs/dashboard"}
+  },
+  "$defs": {
+    "text": {"type": "string"},
+    "nonEmptyText": {"type": "string", "pattern": "\\S"},
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
+    },
+    "horizon": {"enum": ["now", "next", "later"]},
+    "access": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope", "read_only", "ephemeral", "excluded_from_manifest",
+        "excluded_from_search", "excluded_from_ai", "writes_through_gateway",
+        "allowed_roots", "snapshot_id"
+      ],
+      "properties": {
+        "scope": {"const": "job-dashboard"},
+        "read_only": {"const": true},
+        "ephemeral": {"const": true},
+        "excluded_from_manifest": {"const": true},
+        "excluded_from_search": {"const": true},
+        "excluded_from_ai": {"const": true},
+        "writes_through_gateway": {"const": true},
+        "allowed_roots": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"enum": ["legacy-plans", "notes", "papers", "plans", "workspace-job-deem"]}
+        },
+        "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    },
+    "workspaceScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "text"],
+      "properties": {
+        "label": {"enum": ["required-now", "helpful-now", "defer", "deferred", "reference-only"]},
+        "text": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "status", "standing", "objective", "current_scope",
+        "next_action", "open_questions", "path"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "status": {"$ref": "#/$defs/nonEmptyText"},
+        "standing": {"type": "boolean"},
+        "objective": {"$ref": "#/$defs/text"},
+        "current_scope": {"type": "array", "items": {"$ref": "#/$defs/workspaceScope"}},
+        "next_action": {"$ref": "#/$defs/text"},
+        "open_questions": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyText"}},
+        "path": {"$ref": "#/$defs/relativePath"}
+      }
+    },
+    "note": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "kind", "family", "summary", "body", "path",
+        "component", "layer", "verified_against", "declared_status", "freshness", "revision"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "kind": {"enum": ["learning", "skrub", "stratum"]},
+        "family": {"$ref": "#/$defs/text"},
+        "summary": {"$ref": "#/$defs/text"},
+        "body": {"$ref": "#/$defs/text"},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "component": {"$ref": "#/$defs/text"},
+        "layer": {"$ref": "#/$defs/text"},
+        "verified_against": {"$ref": "#/$defs/text"},
+        "declared_status": {"$ref": "#/$defs/text"},
+        "freshness": {"$ref": "#/$defs/nonEmptyText"},
+        "revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "layer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary", "note_ids"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "summary": {"$ref": "#/$defs/text"},
+        "note_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/nonEmptyText"}}
+      }
+    },
+    "notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["learning", "skrub", "stratum", "health", "layers"],
+      "properties": {
+        "learning": {"type": "array", "items": {"$ref": "#/$defs/note"}},
+        "skrub": {"type": "array", "items": {"$ref": "#/$defs/note"}},
+        "stratum": {"type": "array", "items": {"$ref": "#/$defs/note"}},
+        "health": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["current", "drifting", "stale", "unverified"],
+          "properties": {
+            "current": {"type": "integer", "minimum": 0},
+            "drifting": {"type": "integer", "minimum": 0},
+            "stale": {"type": "integer", "minimum": 0},
+            "unverified": {"type": "integer", "minimum": 0}
+          }
+        },
+        "layers": {"type": "array", "items": {"$ref": "#/$defs/layer"}}
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "label", "source_id", "locator", "url", "vault_path", "scope_triage"],
+      "properties": {
+        "id": {"type": ["string", "null"]},
+        "kind": {"enum": ["watch", "read", "practise", "reference"]},
+        "label": {"$ref": "#/$defs/nonEmptyText"},
+        "source_id": {"type": ["string", "null"]},
+        "locator": {"type": ["string", "null"]},
+        "url": {"type": ["string", "null"]},
+        "vault_path": {"type": ["string", "null"]},
+        "scope_triage": {"type": ["string", "null"]}
+      }
+    },
+    "mentalModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "text"],
+      "properties": {
+        "label": {"$ref": "#/$defs/nonEmptyText"},
+        "text": {"$ref": "#/$defs/nonEmptyText"}
+      }
+    },
+    "jobContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mental_models", "read_only_anchor"],
+      "properties": {
+        "mental_models": {"type": "array", "items": {"$ref": "#/$defs/mentalModel"}},
+        "read_only_anchor": {"$ref": "#/$defs/text"}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "number", "title", "status", "objective", "done_when",
+        "estimate_minutes", "exam_critical", "concepts", "scope_triage",
+        "resources", "attachments", "source_feedback", "job_context", "done"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^stage-[a-z0-9][a-z0-9-]*$"},
+        "number": {"type": "integer", "minimum": 1},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "status": {"$ref": "#/$defs/nonEmptyText"},
+        "objective": {"$ref": "#/$defs/nonEmptyText"},
+        "done_when": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyText"}},
+        "estimate_minutes": {"type": ["integer", "null"], "minimum": 1},
+        "exam_critical": {"type": "boolean"},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
+        "resources": {"type": "array", "items": {"$ref": "#/$defs/resource"}},
+        "attachments": {"type": "array"},
+        "source_feedback": {"type": "array"},
+        "job_context": {"$ref": "#/$defs/jobContext"},
+        "done": {"type": "boolean"}
+      }
+    },
+    "track": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "status", "cadence", "horizon", "outcome", "stages",
+        "completed_sessions", "last_session_at", "path", "source_kind", "revision"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "status": {"$ref": "#/$defs/nonEmptyText"},
+        "cadence": {"$ref": "#/$defs/text"},
+        "horizon": {"$ref": "#/$defs/horizon"},
+        "outcome": {"$ref": "#/$defs/text"},
+        "stages": {"type": "array", "items": {"$ref": "#/$defs/stage"}},
+        "completed_sessions": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "last_session_at": {"$ref": "#/$defs/text"},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "source_kind": {"enum": ["structured", "legacy-markdown"]},
+        "revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "details", "horizon", "status", "track_id", "created_at", "updated_at", "revision"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "details": {"$ref": "#/$defs/text"},
+        "horizon": {"$ref": "#/$defs/horizon"},
+        "status": {"enum": ["open", "done"]},
+        "track_id": {"$ref": "#/$defs/text"},
+        "created_at": {"$ref": "#/$defs/text"},
+        "updated_at": {"$ref": "#/$defs/text"},
+        "revision": {"type": "integer", "minimum": 0}
+      }
+    },
+    "paper": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "authors", "year", "pages", "horizon", "angle", "path", "available"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "authors": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyText"}},
+        "year": {"type": ["integer", "string", "null"]},
+        "pages": {"type": ["integer", "null"], "minimum": 0},
+        "horizon": {"$ref": "#/$defs/horizon"},
+        "angle": {"$ref": "#/$defs/text"},
+        "path": {"$ref": "#/$defs/relativePath"},
+        "available": {"type": "boolean"}
+      }
+    },
+    "shelfSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "title", "type", "authors", "horizon", "why"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "type": {"$ref": "#/$defs/nonEmptyText"},
+        "authors": {"type": "array", "items": {"$ref": "#/$defs/nonEmptyText"}},
+        "horizon": {"$ref": "#/$defs/horizon"},
+        "why": {"$ref": "#/$defs/text"}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notes", "learning_notes", "skrub_notes", "system_notes", "learning_tracks",
+        "learning_stages", "open_tasks", "completed_tasks", "papers", "canonical_sources"
+      ],
+      "properties": {
+        "notes": {"type": "integer", "minimum": 0},
+        "learning_notes": {"type": "integer", "minimum": 0},
+        "skrub_notes": {"type": "integer", "minimum": 0},
+        "system_notes": {"type": "integer", "minimum": 0},
+        "learning_tracks": {"type": "integer", "minimum": 0},
+        "learning_stages": {"type": "integer", "minimum": 0},
+        "open_tasks": {"type": "integer", "minimum": 0},
+        "completed_tasks": {"type": "integer", "minimum": 0},
+        "papers": {"type": "integer", "minimum": 0},
+        "canonical_sources": {"type": "integer", "minimum": 0}
+      }
+    },
+    "dashboard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "subtitle", "workspace", "notes", "learning_tracks", "tasks", "papers", "canonical_shelf", "counts"],
+      "properties": {
+        "id": {"$ref": "#/$defs/nonEmptyText"},
+        "title": {"$ref": "#/$defs/nonEmptyText"},
+        "subtitle": {"$ref": "#/$defs/text"},
+        "workspace": {"$ref": "#/$defs/workspace"},
+        "notes": {"$ref": "#/$defs/notes"},
+        "learning_tracks": {"type": "array", "items": {"$ref": "#/$defs/track"}},
+        "tasks": {"type": "array", "items": {"$ref": "#/$defs/task"}},
+        "papers": {"type": "array", "items": {"$ref": "#/$defs/paper"}},
+        "canonical_shelf": {"type": "array", "items": {"$ref": "#/$defs/shelfSource"}},
+        "counts": {"$ref": "#/$defs/counts"}
+      }
+    }
+  }
+}

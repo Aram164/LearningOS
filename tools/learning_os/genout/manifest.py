@@ -9,6 +9,7 @@ worth being able to read it on one screen.
 from __future__ import annotations
 
 from ..contracts.manifest_contract import declared_version, enforce
+from ..fingerprint import source_fingerprint
 from ..garden import project_garden_entries
 from ..loader import Repo
 from ..transactions import load_revisions
@@ -22,7 +23,7 @@ from .projection import (
     project_programs, project_project_aliases, project_project_relationships,
     project_projects, project_sources, project_study_maps,
     project_thematic_groups, project_topics, project_units, project_workspaces,
-    source_fingerprint, unit_to_project_ids,
+    unit_to_project_ids,
 )
 from .review import build_review_items
 
@@ -157,7 +158,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         #
         # There is deliberately no separate `exam_spine` key: it was a strict
         # subset of this list (registered attempts only) and a second shape for
-        # the same facts. `_exam_spine` survives as the internal helper behind
+        # the same facts. `exam_spine` survives as the helper behind
         # the Markdown views and `los.py status --json` (ADR-006, 2026-08-03).
         "academic_deadlines": _academic_deadlines(repo),
         "thematic_groups": thematic_groups,

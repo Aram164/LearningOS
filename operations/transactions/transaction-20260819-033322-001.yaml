@@ -1,0 +1,60 @@
+schema_version: 1
+id: transaction-20260819-033322-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-08-19T03:33:22+02:00'
+snapshot_before: sha256:3f9ca8e5aa904a9c08cc7969911e09e41473e7e1393f118d5fa00dd17fdcadef
+snapshot_after: sha256:6308f761e04ddee9a70fef273cd822efe084048c4d80754eb64556482d02b46f
+expected_revisions: {}
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 2
+    after: 3
+  unit-m2-analysis-exam-prep:
+    before: 2
+    after: 3
+  unit-m2-combined-exam-rehearsal:
+    before: 2
+    after: 3
+  unit-m2-sad-exam-prep:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: af6cbc5ff7b10a4d9ed4766c9c414f0691fffd2e7775b7efbbfe2ff44b82c93f
+  sha256_after: af6cbc5ff7b10a4d9ed4766c9c414f0691fffd2e7775b7efbbfe2ff44b82c93f
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 2b70c0a1cb466eee00020669e88829d20f90f243177beb7930e59370bbf6cf77
+  sha256_after: 2b70c0a1cb466eee00020669e88829d20f90f243177beb7930e59370bbf6cf77
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/study-map.yaml
+  sha256_before: 349322038ab65b30d67a3f7ddf138bd345ee5f2c36f7c2aa6eacf73ce936a189
+  sha256_after: 349322038ab65b30d67a3f7ddf138bd345ee5f2c36f7c2aa6eacf73ce936a189
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml
+  sha256_before: c6e927abff70c18d684827b5874dad3cf6ef5b8efb39e750a48770d1fb96401c
+  sha256_after: 5d5b86ab3d33f4aa3dcba4e32dc1d386d7b67211e11ffaee4294c3eea989a086
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  sha256_before: 7cc528901d0da20662036c2303ee6b19c22992abd34f713368c22805ef5ae552
+  sha256_after: 7cc528901d0da20662036c2303ee6b19c22992abd34f713368c22805ef5ae552
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml
+  sha256_before: 030efb7545402799a5149494edef1a3354679f9e28162ed850405339527f8d7e
+  sha256_after: 030efb7545402799a5149494edef1a3354679f9e28162ed850405339527f8d7e
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  sha256_before: af7bb6669db15138ad089be48050291a21371f2291d4191411e4c9c1a6d7dd08
+  sha256_after: af7bb6669db15138ad089be48050291a21371f2291d4191411e4c9c1a6d7dd08
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml
+  sha256_before: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  sha256_after: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  created: false
+- path: work/active/workspace-m2-exam-prep/CONTEXT.md
+  sha256_before: 06839ce9e95e766d231f8a5fc2fad9e56508613814e56c97da7056c12cca9867
+  sha256_after: 06839ce9e95e766d231f8a5fc2fad9e56508613814e56c97da7056c12cca9867
+  created: false
+metadata: {}

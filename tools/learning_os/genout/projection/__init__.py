@@ -8,7 +8,6 @@ so a change to how a source is rendered never means reading the whole payload.
 
 from __future__ import annotations
 
-from .fingerprint import source_fingerprint
 from .grouping import (
     ordered_thematic_group_ids, project_thematic_groups, project_topics,
     source_thematic_groups,
@@ -39,6 +38,6 @@ __all__ = [
     "project_project_aliases", "project_project_relationships", "project_projects",
     "project_sources", "project_stages", "project_study_maps",
     "project_thematic_groups", "project_topics", "project_units",
-    "source_fingerprint", "source_thematic_groups", "unit_note_sections",
+    "source_thematic_groups", "unit_note_sections",
     "unit_to_project_ids",
 ]
