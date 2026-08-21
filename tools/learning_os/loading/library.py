@@ -19,7 +19,7 @@ def load_sources(repo: Repo, root: Path) -> None:
         root / "sources" / "sources.yaml", root / "sources" / "registry", "sources"
     )
     repo.parse_failures.extend(failures)
-    for rec, origin in zip(records, origins):
+    for rec, origin in zip(records, origins, strict=True):
         sid = _record_id(rec)
         if sid is None:
             repo.parse_failures.append(

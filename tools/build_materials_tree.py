@@ -29,8 +29,9 @@ The script is idempotent:
 Usage:  python3 tools/build_materials_tree.py   (from LearningOS/repository/)
 """
 import os
+import shutil
+import sys
 from pathlib import Path
-import shutil, sys
 
 REPO = Path(__file__).resolve().parents[1]
 MATERIALS = REPO.parent / "materials"

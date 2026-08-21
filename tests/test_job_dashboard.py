@@ -11,7 +11,6 @@ from pathlib import Path
 import pytest
 import yaml
 
-
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
 
@@ -573,9 +572,11 @@ def test_the_stratum_checkout_is_never_writable(mini_repo):
     future edit that adds "stratum" to WRITABLE_ROOTS fails loudly here.
     """
     from learning_os.commands.job import JobDashboardError
-    from learning_os.commands.job_write import (
-        FORBIDDEN_ROOTS, WRITABLE_ROOTS, _writable_path,
-    )
+
+    # WRITABLE_ROOTS comes from the module that defines it and enforces it;
+    # job_write only ever re-exported it for this import.
+    from learning_os.commands.job_boundary import WRITABLE_ROOTS
+    from learning_os.commands.job_write import FORBIDDEN_ROOTS, _writable_path
 
     assert "stratum" in FORBIDDEN_ROOTS
     assert not any(root.startswith("stratum") for root in WRITABLE_ROOTS)

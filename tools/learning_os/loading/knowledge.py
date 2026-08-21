@@ -20,7 +20,7 @@ def load_concepts(repo: Repo, root: Path) -> None:
         root / "knowledge" / "concepts.yaml", root / "knowledge" / "concepts", "concepts"
     )
     repo.parse_failures.extend(failures)
-    for rec, origin in zip(records, origins):
+    for rec, origin in zip(records, origins, strict=True):
         cid = _record_id(rec)
         if cid is None:
             repo.parse_failures.append(

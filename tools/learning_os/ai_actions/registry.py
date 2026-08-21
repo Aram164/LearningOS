@@ -5,8 +5,10 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
 from .errors import ActionNotFoundError, ActionPolicyError
 from .support import _read_yaml
+
 
 @dataclass(frozen=True)
 class ActionDefinition:

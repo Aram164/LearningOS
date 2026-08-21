@@ -38,7 +38,10 @@ import sys
 from pathlib import Path
 
 from learning_os.contracts.manifest_contract import (  # noqa: E402
-    ManifestContractError, bump, check, shape_of,
+    ManifestContractError,
+    bump,
+    check,
+    shape_of,
 )
 from learning_os.genout.manifest import build_manifest  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402

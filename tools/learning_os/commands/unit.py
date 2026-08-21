@@ -6,10 +6,25 @@ import copy
 import datetime as _dt
 import json
 import sys
-import yaml
-from learning_os.loader import load_repo
 from pathlib import Path
-from .support import WriteRefused, _dump_yaml, _expected_ok, _expected_revisions_from_args, _fresh_manifest, _operator_lock, _print_rows, _root, _unit_map_or_error, _write_transaction
+
+import yaml
+
+from learning_os.loader import load_repo
+
+from .support import (
+    WriteRefused,
+    _dump_yaml,
+    _expected_ok,
+    _expected_revisions_from_args,
+    _fresh_manifest,
+    _operator_lock,
+    _print_rows,
+    _root,
+    _unit_map_or_error,
+    _write_transaction,
+)
+
 
 def cmd_unit_list(args) -> int:
     manifest = _fresh_manifest(_root(args))

@@ -7,6 +7,7 @@ from .common import _first_para, _git_last_commit, _md_header
 from .materials import _materials_queue_rows
 from .modules_view import _exam_spine_lines
 
+
 def adoption_counts(repo: Repo) -> dict:
     """Adoption of the existing note review/evidence fields (no new schema —
     the fields have been in note.schema.json since v3; the gap is usage).

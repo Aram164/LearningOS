@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
@@ -22,7 +22,7 @@ from learning_os.contracts import validate_contract
 from learning_os.transactions import artifact_revision
 
 ROOT = Path(__file__).resolve().parent.parent
-FIXED = datetime(2026, 8, 4, 1, 0, tzinfo=timezone.utc)
+FIXED = datetime(2026, 8, 4, 1, 0, tzinfo=UTC)
 
 
 def write_yaml(path: Path, value) -> None:

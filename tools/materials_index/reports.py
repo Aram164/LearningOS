@@ -7,6 +7,7 @@ from .registry import human_size, type_label
 from .render import render_unregistered
 from .tree import collect_loose_files
 
+
 def build_files_listing(roots) -> str:
     """materials/FILES.txt (ADR-005): a names-only, grep-able listing of every
     UNREGISTERED file in the materials tree — the Foundations archive and any

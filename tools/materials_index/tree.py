@@ -2,8 +2,19 @@
 
 from __future__ import annotations
 
-from .config import ARCHIVE_RE, ASSET_DIRS, BOOKS_SUBFOLDER_DOMAIN, DOMAIN_ORDER, HARD_SUPPORT_EXT, MATERIALS, MODULE_DOMAINS, SKIP_DIRS, SKIP_FILES
+from .config import (
+    ARCHIVE_RE,
+    ASSET_DIRS,
+    BOOKS_SUBFOLDER_DOMAIN,
+    DOMAIN_ORDER,
+    HARD_SUPPORT_EXT,
+    MATERIALS,
+    MODULE_DOMAINS,
+    SKIP_DIRS,
+    SKIP_FILES,
+)
 from .render import href_for
+
 
 def build_tree(sources, flatmap):
     """Physical tree; registered-source context inherited into nested items.

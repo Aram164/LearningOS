@@ -7,7 +7,18 @@ import datetime as _dt
 import json
 import sys
 from pathlib import Path
-from .support import _dump_yaml, _expected_ok, _expected_revisions_from_args, _operator_lock, _root, _stage, _unit_map_or_error, _write_transaction
+
+from .support import (
+    _dump_yaml,
+    _expected_ok,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _root,
+    _stage,
+    _unit_map_or_error,
+    _write_transaction,
+)
+
 
 def cmd_stage_note(args) -> int:
     root = _root(args)

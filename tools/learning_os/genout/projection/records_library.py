@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Callable
+from collections.abc import Callable
 
 from ...loader import Repo
 from ..atlas import ATLAS_COLLECTION_DOMAIN

@@ -3,8 +3,18 @@
 from __future__ import annotations
 
 import os
+
 import yaml
-from .config import COLLECTION_DOMAIN, LOW_PRIORITY_COLLECTIONS, MATERIALS, ONLINE_DOMAIN_OVERRIDE, SOURCES, TYPE_LABEL
+
+from .config import (
+    COLLECTION_DOMAIN,
+    LOW_PRIORITY_COLLECTIONS,
+    MATERIALS,
+    ONLINE_DOMAIN_OVERRIDE,
+    SOURCES,
+    TYPE_LABEL,
+)
+
 
 def _authors_str(a) -> str:
     if isinstance(a, list):

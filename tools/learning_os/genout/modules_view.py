@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import datetime as _dt
+
 from ..loader import Repo
 from .common import _md_header
+
 
 def exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:
     """(date, module_id, module, attempt) for attempts with result=registered."""

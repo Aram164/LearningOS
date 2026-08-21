@@ -6,6 +6,7 @@ from ..loader import Repo
 from .common import LECTURE_KEY_RE, SELECTOR_ROLES, _letter_toc, _md_header
 from .concepts import _eval_line, _evals_for_concept
 
+
 def _lecture_entries(repo: Repo) -> list[tuple[str, str, str, dict]]:
     """(lecture_label, source_id, section_note, evaluation) for lecture-series sources.
 

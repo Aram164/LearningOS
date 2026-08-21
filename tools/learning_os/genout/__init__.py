@@ -12,21 +12,22 @@ from __future__ import annotations
 
 from .atlas import ATLAS_COLLECTION_DOMAIN, ATLAS_DOMAINS, build_domain_atlas
 from .canvas import build_concept_canvas
-from .common import (
-    LECTURE_KEY_RE, SELECTOR_ROLES, mermaid_node_ids, stable_generated_at,
-)
+from .common import LECTURE_KEY_RE, SELECTOR_ROLES, mermaid_node_ids, stable_generated_at
 from .concepts import (
-    PREREQ_TYPES, build_backlinks, build_concept_index, build_concept_map,
+    PREREQ_TYPES,
+    build_backlinks,
+    build_concept_index,
+    build_concept_map,
     build_dependency_report,
 )
 from .coordination import adoption_counts, build_coordination_view, build_health
 from .garden import build_nebula
-from .manifest import build_manifest
-from .modules_view import exam_spine, build_module_view
-from .reading_room import build_reading_room
 from .library import build_library
-from .sources import build_collection_view, build_source_index
+from .manifest import build_manifest
+from .modules_view import build_module_view, exam_spine
 from .outputs import generate_all, write_outputs
+from .reading_room import build_reading_room
+from .sources import build_collection_view, build_source_index
 
 __all__ = [
     "ATLAS_COLLECTION_DOMAIN", "ATLAS_DOMAINS", "LECTURE_KEY_RE", "PREREQ_TYPES",

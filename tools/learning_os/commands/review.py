@@ -7,7 +7,18 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from .support import _dump_yaml, _expected_ok, _expected_revisions_from_args, _operator_lock, _publish, _root, _session_ledger, _unit_map_or_error, _write_transaction
+
+from .support import (
+    _dump_yaml,
+    _expected_ok,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _publish,
+    _root,
+    _session_ledger,
+    _unit_map_or_error,
+    _write_transaction,
+)
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 

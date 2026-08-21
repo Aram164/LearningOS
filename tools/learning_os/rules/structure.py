@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
-from ..loader import (
-    ID_RE, PATH_ID_RE, PROGRAM_ID_RE, PROJECT_ID_RE, PROJECT_RELATION_ID_RE,
-    STUDY_MAP_ID_RE, UNIT_ID_RE
-)
 import time
+
+from ..loader import (
+    ID_RE,
+    PATH_ID_RE,
+    PROGRAM_ID_RE,
+    PROJECT_ID_RE,
+    PROJECT_RELATION_ID_RE,
+    STUDY_MAP_ID_RE,
+    UNIT_ID_RE,
+)
 from .common import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
 
 

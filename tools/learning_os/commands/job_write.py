@@ -28,11 +28,6 @@ from ..transactions import (
     TransactionService,
     parse_expected_revisions,
 )
-from .job_boundary import (
-    FORBIDDEN_WRITE_ROOTS,
-    WRITABLE_ROOTS,
-    writable_job_path,
-)
 from .job import (
     JobDashboardError,
     _frontmatter,
@@ -41,6 +36,7 @@ from .job import (
     _read_yaml,
     job_fingerprint,
 )
+from .job_boundary import FORBIDDEN_WRITE_ROOTS, writable_job_path
 from .support import _operator_lock, _root
 
 CONTRACT = "job-write-v1"

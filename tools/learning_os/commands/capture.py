@@ -7,7 +7,9 @@ import json
 import re
 import sys
 from pathlib import Path
+
 from .support import _expected_revisions_from_args, _operator_lock, _root, _write_transaction
+
 
 # ---------------------------------------------------------------- capture
 def cmd_capture(args) -> int:

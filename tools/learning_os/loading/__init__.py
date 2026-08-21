@@ -33,27 +33,46 @@ from __future__ import annotations
 from pathlib import Path
 
 from .curriculum import (
-    load_modules, load_programs, load_quarantine_boundary, load_resume_pointer,
+    load_modules,
+    load_programs,
+    load_quarantine_boundary,
+    load_resume_pointer,
     load_thematic_groups,
 )
 from .knowledge import load_concepts, load_garden, load_notes, load_relations
 from .library import load_collections, load_sources, load_topics
 from .model import (
-    Coordination, GardenNote, LearningPath, Note, Program, Project, Repo,
-    StudyMap, Unit, Workspace, _register,
+    Coordination,
+    GardenNote,
+    LearningPath,
+    Note,
+    Program,
+    Project,
+    Repo,
+    StudyMap,
+    Unit,
+    Workspace,
 )
 from .projects import load_project_aliases, load_project_relations, load_projects
 from .vocabulary import (
-    EVIDENCE_SCHEMES, FRONTMATTER_RE, GARDEN_TAG_RE, ID_RE, NOTE_ROLES,
-    PATH_ID_RE, PREREQUISITE_RELATIONS, PROGRAM_ID_RE, PROJECT_ID_RE,
-    PROJECT_RELATION_ID_RE, RELATION_SEMANTICS, RELATION_TYPES,
-    STUDY_MAP_ID_RE, SYMMETRIC_RELATIONS, UNIT_ID_RE, _strip_code,
+    EVIDENCE_SCHEMES,
+    FRONTMATTER_RE,
+    GARDEN_TAG_RE,
+    ID_RE,
+    NOTE_ROLES,
+    PATH_ID_RE,
+    PREREQUISITE_RELATIONS,
+    PROGRAM_ID_RE,
+    PROJECT_ID_RE,
+    PROJECT_RELATION_ID_RE,
+    RELATION_SEMANTICS,
+    RELATION_TYPES,
+    STUDY_MAP_ID_RE,
+    SYMMETRIC_RELATIONS,
+    UNIT_ID_RE,
 )
 from .work import load_coordination, load_workspaces
-from .yamlio import (
-    LoaderError, _load_registry, _load_yaml, _normalize, _record_id,
-    md_section, parse_frontmatter,
-)
+from .yamlio import LoaderError, md_section, parse_frontmatter
 
 __all__ = [
     # model

@@ -7,9 +7,34 @@ import shutil
 from pathlib import Path
 from typing import Any, cast
 from uuid import uuid4
-from .errors import ActionPolicyError, ConfidentialityError, DeliveryValidationError, StaleDeliveryError, TargetNotFoundError
+
+from learning_os.contracts.capability_catalog import domain_capability_definitions
+from learning_os.contracts.manifest_contract import declared_version
+from learning_os.garden import project_garden_entries
+from learning_os.loader import load_repo
+from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService
+
+from .errors import (
+    ActionPolicyError,
+    ConfidentialityError,
+    DeliveryValidationError,
+    StaleDeliveryError,
+    TargetNotFoundError,
+)
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
+from .support import (
+    Clock,
+    _dump_yaml,
+    _inside,
+    _iso,
+    _now_utc,
+    _projection,
+    _read_yaml,
+    _sha256_file,
+    _snapshot,
+    parse_frontmatter_request_id,
+)
 from .types import (
     AIActionRequest,
     ApplyDeliveryResult,
@@ -20,12 +45,7 @@ from .types import (
     RequestStatus,
     ValidatedDelivery,
 )
-from learning_os.contracts.manifest_contract import declared_version
-from learning_os.contracts.capability_catalog import domain_capability_definitions
-from learning_os.garden import project_garden_entries
-from learning_os.loader import load_repo
-from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService
-from .support import Clock, _dump_yaml, _inside, _iso, _now_utc, _projection, _read_yaml, _sha256_file, _snapshot, parse_frontmatter_request_id
+
 
 class AIActionService:
     """Bounded gateway for AI-proposed canonical writes.

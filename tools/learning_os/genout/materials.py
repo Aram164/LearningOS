@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-from ..loader import Repo
 from pathlib import PurePosixPath
+
+from ..loader import Repo
+
 
 # --------------------------------------------------------------------- build
 def _material_location(repo: Repo, ref) -> dict:

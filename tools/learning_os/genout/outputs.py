@@ -4,12 +4,18 @@ from __future__ import annotations
 
 import json
 import os
-from ..loader import Repo
 from pathlib import Path, PurePosixPath
+
+from ..loader import Repo
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at
-from .concepts import build_backlinks, build_concept_index, build_concept_map, build_dependency_report
+from .concepts import (
+    build_backlinks,
+    build_concept_index,
+    build_concept_map,
+    build_dependency_report,
+)
 from .coordination import build_coordination_view, build_health
 from .garden import build_nebula
 from .library import build_library
@@ -17,6 +23,7 @@ from .manifest import build_manifest
 from .modules_view import build_module_view
 from .reading_room import build_reading_room
 from .sources import build_collection_view, build_source_index
+
 
 def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     """Build all outputs; returns {relative path: content}.

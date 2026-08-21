@@ -9,7 +9,6 @@ test suite asserts the checked-in files match what this produces.
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 
 TOOLS = Path(__file__).resolve().parent

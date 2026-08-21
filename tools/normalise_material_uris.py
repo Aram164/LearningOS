@@ -66,8 +66,7 @@ def rewrite_payload(payload: str, prefixes: list[tuple[str, str]]) -> str | None
 
 def process_text(text: str, prefixes):
     """Return (new_text, [(old, new)], [unmapped])."""
-    from learning_os.rules.materials import (MATERIAL_URI_BARE,
-                                             MATERIAL_URI_DELIMITED)
+    from learning_os.rules.materials import MATERIAL_URI_BARE, MATERIAL_URI_DELIMITED
 
     changes: list[tuple[str, str]] = []
     unmapped: list[str] = []

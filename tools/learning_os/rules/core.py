@@ -6,10 +6,12 @@ inspect. `run` below is the whole order of validation, on one screen.
 
 from __future__ import annotations
 
-from ..loader import Repo
-from pathlib import Path
 import json
+from pathlib import Path
+
 import jsonschema
+
+from ..loader import Repo
 from .common import Issue
 from .contract import ChecksContract
 from .curriculum import ChecksCurriculum

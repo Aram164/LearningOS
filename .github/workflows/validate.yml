@@ -43,6 +43,11 @@ jobs:
         with:
           node-version: 22
       - run: pip install -e ".[dev]"
+      # Runs before the validator and the tests because it is the cheapest gate
+      # and it catches the class of finding that previously only careful reading
+      # found — dead imports, dead re-exports, bindings never read.
+      - name: lint (ruff)
+        run: ruff check tools tests
       - name: producer-side Core/UI contract gate
         working-directory: obsidian-ui
         run: npm run contract:check

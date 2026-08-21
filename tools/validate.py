@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
-import sys
 from pathlib import Path
 
 from learning_os.loader import load_repo  # noqa: E402

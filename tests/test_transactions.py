@@ -1,23 +1,25 @@
 from __future__ import annotations
 
-from pathlib import Path
+import ast
 import json
+from pathlib import Path
 
 import pytest
 import yaml
 
-import ast
-
+import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
 import learning_os.transactions as transaction_module
-import learning_os.commands.support as command_support
 from learning_os.fingerprint import source_fingerprint
 from learning_os.loader import load_repo
-from learning_os.transactions import (
-    TransactionConflict, TransactionFailure, TransactionService,
-    artifact_revision, canonical_fingerprint,
-)
 from learning_os.rules.common import Issue
+from learning_os.transactions import (
+    TransactionConflict,
+    TransactionFailure,
+    TransactionService,
+    artifact_revision,
+    canonical_fingerprint,
+)
 
 TOOLS = Path(__file__).resolve().parent.parent / "tools"
 

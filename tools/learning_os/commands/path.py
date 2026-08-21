@@ -5,9 +5,19 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import sys
-import yaml
 from pathlib import Path
-from .support import _expected_ok, _expected_revisions_from_args, _operator_lock, _path_or_error, _root, _write_transaction
+
+import yaml
+
+from .support import (
+    _expected_ok,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _path_or_error,
+    _root,
+    _write_transaction,
+)
+
 
 # ---------------------------------------------------------- learning paths
 def cmd_path_note(args) -> int:

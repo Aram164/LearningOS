@@ -19,7 +19,12 @@ import pytest
 import yaml
 
 from learning_os.contracts.manifest_contract import (
-    ManifestContractError, check, contract_path, declared_version, enforce, shape_of,
+    ManifestContractError,
+    check,
+    contract_path,
+    declared_version,
+    enforce,
+    shape_of,
 )
 from learning_os.genout import generate_all
 from learning_os.genout.manifest import build_manifest

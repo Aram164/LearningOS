@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff>=0.16"]
 
 [project.scripts]
 los = "los:main"
@@ -32,3 +32,36 @@ testpaths = ["tests"]
 markers = [
   "full_repo: exercises the checked-in repository state rather than a synthetic fixture",
 ]
+
+# Linting (engineering review 2026-08-18, item 12; added 2026-08-21).
+#
+# The review's argument for a linter was not style. Three of the five Tier-1
+# findings were things only reading finds — a dead module, a dead import, a
+# variable bound and never used — and the fix for that class is a tool that
+# reads every file every time rather than a person who read them once. The
+# first run found 332 of them, including six dead re-exports in the loader
+# facade that four modules were assumed to be consuming and none was.
+[tool.ruff]
+line-length = 100
+extend-exclude = [".venv", "generated", "legacy", "**/__pycache__"]
+
+[tool.ruff.lint]
+# E501 (line-too-long) is deliberately NOT selected. 212 existing lines exceed
+# 100 columns; re-wrapping working code by hand to satisfy a cosmetic rule is
+# the kind of churn that makes a linter something people turn off. `line-length`
+# above still governs `ruff format` if that is ever adopted, and the rules that
+# are selected are the ones that find defects rather than opinions.
+#
+# `I` (import sorting) is the exception to that framing, and it is worth knowing
+# what it cost: ruff's isort has no packed-wrap mode, so adopting it re-wrapped
+# every multi-line import block in the codebase from the hand-packed several-
+# names-per-line style to one name per line. Most of the adoption diff is that
+# reformat rather than the eighteen real findings underneath it. It could not be
+# split into its own commit because both changes land inside the same import
+# blocks — so read that diff with `git show -w --stat` first, and expect the
+# per-file detail to be mostly noise.
+select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+# `learning_os` and `los` live under tools/, so ruff cannot infer them.
+known-first-party = ["learning_os", "los"]

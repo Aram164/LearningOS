@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import re
 import subprocess
+from pathlib import Path
+
 from .. import __version__
 from ..githistory import last_commit_date
-from pathlib import Path
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 

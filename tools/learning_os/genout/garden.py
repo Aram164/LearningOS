@@ -5,6 +5,7 @@ from __future__ import annotations
 from ..loader import Repo
 from .common import _git_last_commit, _md_header
 
+
 def _garden_relpath(repo: Repo, note) -> str:
     """Markdown link from generated/nebula.md to a garden note (both local)."""
     return "../" + note.path.relative_to(repo.root).as_posix()
