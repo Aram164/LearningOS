@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import json
 import sys
+from pathlib import Path
+
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.rules import validate
-from pathlib import Path
+
 from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`

@@ -8,8 +8,15 @@ from pathlib import Path
 
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 
-from .support import (_expected_ok, _expected_revisions_from_args, _operator_lock,
-                      _render_frontmatter, _root, _write_transaction)
+from .support import (
+    _expected_ok,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _render_frontmatter,
+    _root,
+    _write_transaction,
+)
+
 
 def cmd_note_revise(args) -> int:
     """Replace one existing note after explicit, reviewable approval.

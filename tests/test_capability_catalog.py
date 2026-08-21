@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 
 import pytest
+
 from learning_os.contracts.capability_catalog import (
     CapabilityCatalogError,
     command_definitions,

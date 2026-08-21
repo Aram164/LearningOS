@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
-from learning_os.ai_actions import AIActionService
 from pathlib import Path
+
+from learning_os.ai_actions import AIActionService
+
 from .support import _operator_lock, _publish, _record_touched, _root
+
 
 # ------------------------------------------------------------- AI actions
 def cmd_ai_action_list(args) -> int:

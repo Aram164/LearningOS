@@ -17,12 +17,26 @@ from .common import _git_state, _json_header
 from .coordination import adoption_counts
 from .modules_view import _academic_deadlines
 from .projection import (
-    build_counts, build_indexes, build_progress, project_collections,
-    project_concepts, project_coordination, project_learning_paths,
-    project_module_source_maps, project_modules, project_notes,
-    project_programs, project_project_aliases, project_project_relationships,
-    project_projects, project_sources, project_study_maps,
-    project_thematic_groups, project_topics, project_units, project_workspaces,
+    build_counts,
+    build_indexes,
+    build_progress,
+    project_collections,
+    project_concepts,
+    project_coordination,
+    project_learning_paths,
+    project_module_source_maps,
+    project_modules,
+    project_notes,
+    project_programs,
+    project_project_aliases,
+    project_project_relationships,
+    project_projects,
+    project_sources,
+    project_study_maps,
+    project_thematic_groups,
+    project_topics,
+    project_units,
+    project_workspaces,
     unit_to_project_ids,
 )
 from .review import build_review_items

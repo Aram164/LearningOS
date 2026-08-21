@@ -77,7 +77,7 @@ def project_record(root: Path, module_data: dict, workspace_body: str) -> dict:
     if len(section) == 2:
         first = section[1].split("## ", 1)[0].strip().split("\n\n", 1)[0]
         objective = " ".join(first.replace("**", "").split()) or objective
-    timestamp = dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat()
+    timestamp = dt.datetime.now(dt.UTC).replace(microsecond=0).isoformat()
     return {
         "schema_version": 1,
         "id": PROJECT_ID,

@@ -10,7 +10,6 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-
 READABLE_ROOTS = frozenset({
     "notes", "workspace-job-deem", "papers", "legacy-plans", "plans",
 })

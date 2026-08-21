@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import json
+
 from .common import (
-    CANONICAL_TREES, GENERATED_ALLOWED, GENERATED_REPORT_PREFIXES, MD_LINK_RE, _in_garden,
-    _in_quarantine
+    CANONICAL_TREES,
+    GENERATED_ALLOWED,
+    GENERATED_REPORT_PREFIXES,
+    MD_LINK_RE,
+    _in_garden,
+    _in_quarantine,
 )
 
 
@@ -31,7 +36,7 @@ class ChecksGenerated:
         for f in sorted(gen.rglob("*.md")):
             head = f.read_text(encoding="utf-8", errors="replace")[:400]
             if "GENERATED" not in head:
-                self.err("GEN-HEADER", f"generated file lacks a generated-file warning header",
+                self.err("GEN-HEADER", "generated file lacks a generated-file warning header",
                          self._rel(f))
         for f in sorted(gen.rglob("*.json")):
             try:

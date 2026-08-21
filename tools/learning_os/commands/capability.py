@@ -6,9 +6,12 @@ import contextlib
 import io
 import json
 import sys
-from jsonschema import Draft202012Validator
-from learning_os.contracts.capability_catalog import command_definitions
 from pathlib import Path
+
+from jsonschema import Draft202012Validator
+
+from learning_os.contracts.capability_catalog import command_definitions
+
 from .support import WriteRefused, _read_structured_file, _root
 
 
@@ -42,9 +45,8 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
     translated into the arguments the command already accepts, so the two
     interfaces cannot diverge in behaviour — only in how they are called.
     """
-    from learning_os.contracts.payloads import payload_to_namespace, subparsers
-
     import los  # local: los imports this module, so the cycle must stay lazy
+    from learning_os.contracts.payloads import payload_to_namespace, subparsers
 
     _validate_payload(root, definition.name, payload)
     commands = subparsers(los.build_parser())

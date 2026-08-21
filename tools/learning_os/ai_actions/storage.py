@@ -8,9 +8,16 @@ import shutil
 import tempfile
 from pathlib import Path
 from typing import cast
-from .errors import DeliveryValidationError, MAX_DELIVERY_BYTES, MAX_DELIVERY_ENTRIES, TargetNotFoundError
+
+from .errors import (
+    MAX_DELIVERY_BYTES,
+    MAX_DELIVERY_ENTRIES,
+    DeliveryValidationError,
+    TargetNotFoundError,
+)
 from .support import _atomic_text, _dump_yaml, _inside, _read_yaml
 from .types import AIActionRequest, DeliveryRecord, RequestStatus
+
 
 class FilesystemAIActionRepository:
     def __init__(self, root: Path):

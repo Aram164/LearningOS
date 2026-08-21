@@ -8,6 +8,7 @@ from .coordination import adoption_counts
 from .materials import _materials_queue_rows
 from .modules_view import _academic_deadlines
 
+
 def build_reading_room(repo: Repo, generated_at: str) -> str:
     """The human home page (ADR-006): one generated screen that composes the
     deeper views and links into them. Interface layers (Obsidian, GitHub

@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from ..fingerprint import source_fingerprint
-from ..githistory import last_commit_timestamp
-
-from pathlib import Path
 import json
 import subprocess
 import time
+from pathlib import Path
+
+from ..fingerprint import source_fingerprint
+from ..githistory import last_commit_timestamp
 from .common import SHADOW_MTIME_SLACK_S, SHADOW_ROOTS, STALE_LOCK_AGE_S
 
 

@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import html
 from urllib.parse import quote
+
 from .config import DOMAIN_LABELS, MODULE_LABEL, TYPE_GROUP, TYPE_GROUP_ORDER
 from .registry import _authors_str, human_size, type_label
+
 
 def esc(s: str) -> str:
     return html.escape(s or "", quote=True)

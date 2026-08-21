@@ -4,12 +4,27 @@ from __future__ import annotations
 
 import json
 from datetime import datetime
+
 from .config import DOMAIN_LABELS, HTML_ENABLED, MATERIALS, SOURCES_DOMAIN_ORDER
 from .page import PAGE
-from .registry import domain_for_online, human_size, load_collection_domains, load_flat_map, load_sources, type_label
+from .registry import (
+    domain_for_online,
+    human_size,
+    load_collection_domains,
+    load_flat_map,
+    load_sources,
+    type_label,
+)
 from .render import esc, render_domain_files, render_domain_sources
 from .reports import build_files_listing, build_readme
-from .tree import build_tree, classify_source_node, collect_leaves, collect_source_nodes, collect_types
+from .tree import (
+    build_tree,
+    classify_source_node,
+    collect_leaves,
+    collect_source_nodes,
+    collect_types,
+)
+
 
 def main():
     if not MATERIALS.is_dir():
@@ -122,6 +137,6 @@ def main():
                      n_missing, ncontent, nsupport, total), encoding="utf-8")
     files_txt = build_files_listing(roots)
     (MATERIALS / "FILES.txt").write_text(files_txt, encoding="utf-8")
-    print(f"  wrote materials/README.md")
+    print("  wrote materials/README.md")
     print(f"  wrote materials/FILES.txt  ({files_txt.count(chr(10)) - 7} unregistered files)")
     print(f"  {summary}")

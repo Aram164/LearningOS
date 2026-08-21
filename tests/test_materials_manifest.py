@@ -10,9 +10,9 @@ from __future__ import annotations
 
 import textwrap
 
+import materials_manifest as mm
 import yaml
 
-import materials_manifest as mm
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.rules.materials import _uris_in

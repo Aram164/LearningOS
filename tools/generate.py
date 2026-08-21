@@ -14,7 +14,6 @@ inputs. Delete generated/ at any time; this command rebuilds everything.
 from __future__ import annotations
 
 import argparse
-import sys
 from pathlib import Path
 
 from learning_os.genout import generate_all, write_outputs  # noqa: E402

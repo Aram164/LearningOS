@@ -28,7 +28,6 @@ from __future__ import annotations
 
 import argparse
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -204,7 +203,9 @@ def retag_registry(path: Path, assignment: dict[str, list[str]]) -> tuple[str, i
     while i < len(lines):
         match = ID_RE.match(lines[i])
         if not match:
-            out.append(lines[i]); i += 1; continue
+            out.append(lines[i])
+            i += 1
+            continue
 
         list_indent, sid = match.group(1), match.group(3)
         field_indent = list_indent + "  "
@@ -230,9 +231,11 @@ def retag_registry(path: Path, assignment: dict[str, list[str]]) -> tuple[str, i
                         break
                     stop += 1
                 if record[start:stop] != [new_line]:
-                    record[start:stop] = [new_line]; changed += 1
+                    record[start:stop] = [new_line]
+                    changed += 1
             else:
-                record.insert(1, new_line); changed += 1
+                record.insert(1, new_line)
+                changed += 1
         out.extend(record)
         i = end
     return "".join(out), changed
@@ -256,11 +259,12 @@ def render_groups_registry() -> str:
     for name, title, order, description in GROUPS:
         lines += [f"  - id: {G}{name}\n",
                   f"    title: {title}\n",
-                  f"    description: >-\n"]
+                  "    description: >-\n"]
         words, line = description.split(), "     "
         for word in words:
             if len(line) + len(word) + 1 > 76:
-                lines.append(line + "\n"); line = "     "
+                lines.append(line + "\n")
+                line = "     "
             line += " " + word
         lines.append(line + "\n")
         lines.append(f"    order: {order}\n")
@@ -287,7 +291,8 @@ def main() -> int:
     unassigned: list[str] = []
     for sid in repo.sources:
         if sid in OVERRIDES:
-            assignment[sid] = OVERRIDES[sid]; continue
+            assignment[sid] = OVERRIDES[sid]
+            continue
         groups: list[str] = []
         for shelf in shelf_of.get(sid, []):
             for name in SHELF_DEFAULTS.get(shelf, []):

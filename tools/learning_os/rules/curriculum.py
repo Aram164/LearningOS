@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 
-
-
 class ChecksCurriculum:
     """Mixed into Validator; see rules/core.py."""
     def check_modules(self):

@@ -2,13 +2,16 @@
 
 from __future__ import annotations
 
-import yaml
 from pathlib import Path
 from typing import Any
+
+import yaml
+
 from .errors import AIActionError
 from .registry import DEFAULT_ADAPTERS, AdapterDefinition
 from .service import AIActionService
 from .support import _projection
+
 
 def manifest_ai_projection(root: Path) -> dict[str, Any]:
     """Best-effort additive projection; a missing optional subsystem stays empty."""

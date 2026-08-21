@@ -26,7 +26,6 @@ from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent.parent
 LEARNING_OS_ROOT = ROOT.parent
 DEFAULT_LEGACY_ROOT = ROOT.parents[1] / "legacy"

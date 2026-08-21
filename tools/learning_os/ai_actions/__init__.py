@@ -12,20 +12,27 @@ Split from a single 988-line module dominated by one 505-line service class.
 from __future__ import annotations
 
 from .errors import (
-    ActionNotFoundError, ActionPolicyError, AIActionError, ConfidentialityError,
-    DeliveryValidationError, StaleDeliveryError, TargetNotFoundError,
-    MAX_DELIVERY_BYTES, MAX_DELIVERY_ENTRIES,
+    MAX_DELIVERY_BYTES,
+    MAX_DELIVERY_ENTRIES,
+    ActionNotFoundError,
+    ActionPolicyError,
+    AIActionError,
+    ConfidentialityError,
+    DeliveryValidationError,
+    StaleDeliveryError,
+    TargetNotFoundError,
 )
 from .projection import manifest_ai_projection
-from .registry import (
-    ActionDefinition, ActionRegistry, AdapterDefinition, AdapterRegistry,
-)
+from .registry import ActionDefinition, ActionRegistry, AdapterDefinition, AdapterRegistry
 from .service import AIActionService
 from .storage import FilesystemAIActionRepository
 from .support import parse_frontmatter_request_id
 from .types import (
-    AIActionRequest, ApplyDeliveryResult, DeliveryRecord,
-    DeliveryValidationResult, RequestStatus,
+    AIActionRequest,
+    ApplyDeliveryResult,
+    DeliveryRecord,
+    DeliveryValidationResult,
+    RequestStatus,
 )
 
 __all__ = [

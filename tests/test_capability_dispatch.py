@@ -14,9 +14,9 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.commands.capability import _dispatch, _validate_capability_envelope
 from learning_os.commands.support import WriteRefused
+from learning_os.contracts.capability_catalog import command_definitions
 
 SCHEMA_DIR = Path("system/schema/capabilities")
 

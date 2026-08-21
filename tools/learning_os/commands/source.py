@@ -6,7 +6,18 @@ import copy
 import datetime as _dt
 import json
 import sys
-from .support import _dump_yaml, _expected_ok, _expected_revisions_from_args, _operator_lock, _root, _stage, _unit_map_or_error, _write_transaction
+
+from .support import (
+    _dump_yaml,
+    _expected_ok,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _root,
+    _stage,
+    _unit_map_or_error,
+    _write_transaction,
+)
+
 
 def cmd_source_feedback(args) -> int:
     root = _root(args)

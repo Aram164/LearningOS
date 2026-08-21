@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import re
-from typing import Callable
+from collections.abc import Callable
 
 from ...loader import Repo
 from ..common import _first_para, _git_last_commit

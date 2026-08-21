@@ -16,7 +16,6 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-
 ISO_DATE_RE = re.compile(r"\b(\d{4}-\d{2}-\d{2})\b")
 MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 # Collision suffixes are short counters (-02, -03, …); longer trailing numbers

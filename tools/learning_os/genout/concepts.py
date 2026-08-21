@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import re
+
 from ..fingerprint import source_fingerprint
 from ..loader import Repo
 from .common import _json_header, _letter_toc, _md_header, mermaid_node_ids
+
 
 def build_backlinks(repo: Repo, generated_at: str) -> dict:
     concept_to_notes: dict[str, list] = {}
@@ -213,10 +215,10 @@ def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> s
             continue
         label = repo.concepts[cid].get("label", cid)
         lines.append(f"- **{label}** (`{cid}`)")
-        lines.append(f"  - direct: " + ", ".join(f"`{c}`" for c in direct))
+        lines.append("  - direct: " + ", ".join(f"`{c}`" for c in direct))
         trans = [c for c in closure(cid) if c not in direct]
         if trans:
-            lines.append(f"  - transitive: " + ", ".join(f"`{c}`" for c in trans))
+            lines.append("  - transitive: " + ", ".join(f"`{c}`" for c in trans))
     lines.append("")
 
     # Layered study order (Kahn levels over the prerequisite subgraph)
@@ -236,7 +238,7 @@ def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> s
     while remaining:
         ready = sorted(c for c, deps in remaining.items() if not deps)
         if not ready:  # cycle guard — report and stop
-            lines.append(f"- ⚠️ cycle detected among: "
+            lines.append("- ⚠️ cycle detected among: "
                          + ", ".join(f"`{c}`" for c in sorted(remaining)))
             break
         layer_no += 1

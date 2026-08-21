@@ -69,7 +69,7 @@ def _spread_names(function: ast.AST) -> set[str]:
     names: set[str] = set()
     for node in ast.walk(function):
         if isinstance(node, ast.Dict):
-            for key, value in zip(node.keys, node.values):
+            for key, value in zip(node.keys, node.values, strict=True):
                 if key is None and isinstance(value, ast.Name):
                     names.add(value.id)
         elif isinstance(node, ast.Call):

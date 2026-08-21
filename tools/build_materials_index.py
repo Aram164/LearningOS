@@ -47,9 +47,6 @@ keep working. No third-party deps beyond PyYAML (already a repo dependency).
 """
 from __future__ import annotations
 
-import sys
-from pathlib import Path
-
 from materials_index import main  # noqa: E402
 
 if __name__ == "__main__":

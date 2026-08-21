@@ -7,11 +7,14 @@ import contextlib
 import datetime as dt
 import hashlib
 import os
-import yaml
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from typing import Any
+
+import yaml
+
 from .errors import DeliveryValidationError
+
 
 def _read_yaml(path: Path, default: Any = None) -> Any:
     if not path.is_file():
@@ -44,7 +47,7 @@ def _sha256_file(path: Path) -> str:
 
 
 def _now_utc() -> dt.datetime:
-    return dt.datetime.now(dt.timezone.utc)
+    return dt.datetime.now(dt.UTC)
 
 
 def _iso(value: dt.datetime) -> str:

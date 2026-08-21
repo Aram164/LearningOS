@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from ..loader import Repo
 from pathlib import Path
+
+from ..loader import Repo
 from .common import _md_header
 
 ATLAS_DOMAINS = [

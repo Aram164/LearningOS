@@ -18,14 +18,13 @@ import yaml
 from ..contracts import ContractValidationError, validate_contract
 from ..transactions import artifact_revision
 from .job_boundary import (
-    JobDashboardError,
     READABLE_ROOTS,
+    JobDashboardError,
     job_fingerprint,
     job_root,
     safe_job_path,
 )
 from .support import _fresh_manifest, _root
-
 
 CONTRACT = "job-dashboard-v2"
 # Backward-compatible internal names used by the command module and older tests.

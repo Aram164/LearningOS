@@ -6,9 +6,22 @@ import copy
 import json
 import re
 import sys
-import yaml
 from pathlib import Path
-from .support import WriteRefused, _expected_ok, _expected_revisions_from_args, _fresh_manifest, _operator_lock, _print_rows, _read_structured_file, _root, _write_transaction
+
+import yaml
+
+from .support import (
+    WriteRefused,
+    _expected_ok,
+    _expected_revisions_from_args,
+    _fresh_manifest,
+    _operator_lock,
+    _print_rows,
+    _read_structured_file,
+    _root,
+    _write_transaction,
+)
+
 
 def _project_write(root: Path, data: dict, *, capability: str,
                    expected_revisions: dict[str, int]) -> tuple[int, dict]:

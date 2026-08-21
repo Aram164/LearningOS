@@ -12,13 +12,26 @@ import re
 import subprocess
 import sys
 import tempfile
+from pathlib import Path
+
 import yaml
+
 from learning_os.fingerprint import source_fingerprint
-from learning_os.genout import build_backlinks, build_manifest, generate_all, stable_generated_at, write_outputs
+from learning_os.genout import (
+    build_backlinks,
+    build_manifest,
+    generate_all,
+    stable_generated_at,
+    write_outputs,
+)
 from learning_os.loader import load_repo
 from learning_os.rules import validate
-from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService, parse_expected_revisions
-from pathlib import Path
+from learning_os.transactions import (
+    TransactionConflict,
+    TransactionFailure,
+    TransactionService,
+    parse_expected_revisions,
+)
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 

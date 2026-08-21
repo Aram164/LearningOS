@@ -28,24 +28,22 @@ from __future__ import annotations
 
 import argparse
 import sys
-from pathlib import Path
 
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
 
 # Command registry: one module per domain, so a behaviour is found by name.
 from learning_os.commands.ai import (  # noqa: E402
-    cmd_ai_action_apply_delivery, cmd_ai_action_import_delivery, cmd_ai_action_list,
-    cmd_ai_action_prepare, cmd_ai_action_status, cmd_ai_action_validate_delivery,
+    cmd_ai_action_apply_delivery,
+    cmd_ai_action_import_delivery,
+    cmd_ai_action_list,
+    cmd_ai_action_prepare,
+    cmd_ai_action_status,
+    cmd_ai_action_validate_delivery,
 )
-from learning_os.commands.capability import (  # noqa: E402
-    cmd_capability,
-)
-from learning_os.commands.capture import (  # noqa: E402
-    cmd_capture,
-)
-from learning_os.commands.garden import (  # noqa: E402
-    cmd_garden_seed_create,
-)
+from learning_os.commands.capability import cmd_capability  # noqa: E402
+from learning_os.commands.capture import cmd_capture  # noqa: E402
+from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
+from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
 from learning_os.commands.job import cmd_job_dashboard  # noqa: E402
 from learning_os.commands.job_write import (  # noqa: E402
     cmd_job_note_save,
@@ -55,41 +53,48 @@ from learning_os.commands.job_write import (  # noqa: E402
     cmd_job_task_save,
     cmd_job_track_progress,
 )
-from learning_os.commands.detour import (  # noqa: E402
-    cmd_detour_create, cmd_detour_resolve,
-)
-from learning_os.commands.module import (  # noqa: E402
-    cmd_module_list, cmd_module_plan_import,
-)
-from learning_os.commands.note import (  # noqa: E402
-    cmd_note_evidence, cmd_note_revise,
-)
+from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
+from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
-    cmd_path_attach, cmd_path_note, cmd_path_progress,
+    cmd_path_attach,
+    cmd_path_note,
+    cmd_path_progress,
 )
 from learning_os.commands.project import (  # noqa: E402
-    cmd_project_create, cmd_project_list, cmd_project_update,
+    cmd_project_create,
+    cmd_project_list,
+    cmd_project_update,
 )
-from learning_os.contracts.payloads import json_object  # noqa: E402
 from learning_os.commands.query import (  # noqa: E402
-    cmd_bootstrap, cmd_capabilities, cmd_generate, cmd_inspect, cmd_program_list,
-    cmd_related, cmd_search, cmd_status, cmd_validate,
+    cmd_bootstrap,
+    cmd_capabilities,
+    cmd_generate,
+    cmd_inspect,
+    cmd_program_list,
+    cmd_related,
+    cmd_search,
+    cmd_status,
+    cmd_validate,
 )
 from learning_os.commands.review import (  # noqa: E402
-    cmd_session_end, cmd_shelving_apply, cmd_shelving_prepare,
+    cmd_session_end,
+    cmd_shelving_apply,
+    cmd_shelving_prepare,
 )
-from learning_os.commands.source import (  # noqa: E402
-    cmd_source_feedback,
-)
+from learning_os.commands.source import cmd_source_feedback  # noqa: E402
 from learning_os.commands.stage import (  # noqa: E402
-    cmd_stage_attach, cmd_stage_note, cmd_stage_progress,
+    cmd_stage_attach,
+    cmd_stage_note,
+    cmd_stage_progress,
 )
-from learning_os.commands.support import (  # noqa: E402
-    WriteRefused, _add_expected_revision_argument,
-)
+from learning_os.commands.support import WriteRefused, _add_expected_revision_argument  # noqa: E402
 from learning_os.commands.unit import (  # noqa: E402
-    cmd_unit_list, cmd_unit_map_import, cmd_unit_note, cmd_unit_source_selection,
+    cmd_unit_list,
+    cmd_unit_map_import,
+    cmd_unit_note,
+    cmd_unit_source_selection,
 )
+from learning_os.contracts.payloads import json_object  # noqa: E402
 
 
 # --------------------------------------------------------- parser / main

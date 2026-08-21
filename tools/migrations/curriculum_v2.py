@@ -14,7 +14,6 @@ import argparse
 import copy
 import re
 import shutil
-import sys
 import unicodedata
 from pathlib import Path
 
@@ -530,7 +529,7 @@ def run(root: Path, apply: bool) -> Migration:
         artifacts = artifact_ids(before, prefix)
         unit, study_map = make_unit(
             mid, uid, "lecture", title, order,
-            f"The lecture as taught; the preserved Mini Plan is the single study script.",
+            "The lecture as taught; the preserved Mini Plan is the single study script.",
             "active" if uid == "unit-m2-sad-l04" else "ready", [wid], artifacts,
             component_id=component, study_map=study_map, scope_source=scope_source,
             source_selections=[row for row in UNIT_SOURCE_SELECTIONS.get(uid, [])
