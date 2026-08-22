@@ -461,6 +461,10 @@ def _track(entry: dict, job_root: Path, progress: dict | None = None) -> dict:
         "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
         "source_kind": "legacy-markdown",
+        # A Markdown track was never authored from the template, so the field
+        # is null rather than 0: "this record predates the standard", not
+        # "this record declares template version zero".
+        "plan_template_version": None,
         "revision": artifact_revision(job_root, f"job-plan:{track_id}"),
     }
 
@@ -515,6 +519,8 @@ def _structured_track(
         seen.add(number)
         stages.append(stage)
     stages.sort(key=lambda row: row["number"])
+    declared_template = data.get("plan_template_version")
+    template_version = declared_template if isinstance(declared_template, int) else None
     recorded = progress.get(track_id) or {}
     completed = sorted(
         number for number in (recorded.get("completed_sessions") or [])
@@ -534,6 +540,10 @@ def _structured_track(
         "last_session_at": str(recorded.get("last_session_at") or ""),
         "path": path.relative_to(job_root).as_posix(),
         "source_kind": "structured",
+        # Projected so the interface can tell a plan authored from the current
+        # creation template apart from one that predates it. Without this the
+        # standard is enforced on the way in and invisible on the way out.
+        "plan_template_version": template_version,
         "revision": artifact_revision(job_root, f"job-plan:{track_id}"),
     }
 

@@ -216,7 +216,8 @@
       "additionalProperties": false,
       "required": [
         "id", "title", "status", "cadence", "horizon", "outcome", "stages",
-        "completed_sessions", "last_session_at", "path", "source_kind", "revision"
+        "completed_sessions", "last_session_at", "path", "source_kind",
+        "plan_template_version", "revision"
       ],
       "properties": {
         "id": {"$ref": "#/$defs/nonEmptyText"},
@@ -230,6 +231,11 @@
         "last_session_at": {"$ref": "#/$defs/text"},
         "path": {"$ref": "#/$defs/relativePath"},
         "source_kind": {"enum": ["structured", "legacy-markdown"]},
+        "plan_template_version": {
+          "description": "The creation template this plan was authored from. `null` means the record predates plan-template v1 and is readable history, not a template — the interface says so rather than implying the plan is on the current standard.",
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
         "revision": {"type": "integer", "minimum": 0}
       }
     },

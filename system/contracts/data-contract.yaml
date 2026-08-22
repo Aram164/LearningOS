@@ -15,9 +15,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 10
-schema_fingerprint: sha256:8a87df03303ac60958595b979f1a974978679cb1987eb9f53be3786de49a2956
-record_schemas: 24
+contract_version: 11
+schema_fingerprint: sha256:1780ccd6dc3fbe57755e88cc91b6b0a35cf2287ae054ac5750229bea6fa1d242
+record_schemas: 25
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -101,4 +101,11 @@ history:
   note: Standardize curriculum and Job plan creation on shared plan-template v1, numbered
     stages, and one resource contract; legacy study maps remain readable.
   migration: tools/migrations/standardize_plan_template_v10.py
+  fixture: tests/fixtures/formats/v10/
+- version: 11
+  adopted: '2026-08-22'
+  note: 'Declare the plan-template query result and project plan_template_version
+    onto Job dashboard tracks. No stored-record shape changed: both schemas govern
+    query responses, so the v10 fixture remains the frozen on-disk shape.'
+  migration: null
   fixture: tests/fixtures/formats/v10/
