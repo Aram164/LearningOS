@@ -1,5 +1,6 @@
 id: study-map-amls-l05
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l05
 status: paused
 current_stage: stage-amls-l05-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l05-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Map each execution abstraction to its data movement, synchronization and fault-tolerance
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l05-integrate
+  number: 2
   title: Integrate distributed-training and lecturer perspectives
   status: pending
   objective: Relate the deck's batch execution to Vol 2, Ultra-Scale and DMMLS without replacing the taught
@@ -111,6 +114,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l05-evidence
+  number: 3
   title: Full evidence — reference, drills and lecture mock
   status: pending
   objective: Solve execution-plan and concurrency questions in written-exam form.

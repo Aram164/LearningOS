@@ -15,9 +15,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 9
-schema_fingerprint: sha256:7ddec830698f6d087d4755c68fec912f7acbbcd0904d9ef10f937cf255571492
-record_schemas: 23
+contract_version: 10
+schema_fingerprint: sha256:8a87df03303ac60958595b979f1a974978679cb1987eb9f53be3786de49a2956
+record_schemas: 24
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -96,3 +96,9 @@ history:
     is required.
   migration: null
   fixture: tests/fixtures/formats/v9/
+- version: 10
+  adopted: '2026-08-22'
+  note: Standardize curriculum and Job plan creation on shared plan-template v1, numbered
+    stages, and one resource contract; legacy study maps remain readable.
+  migration: tools/migrations/standardize_plan_template_v10.py
+  fixture: tests/fixtures/formats/v10/

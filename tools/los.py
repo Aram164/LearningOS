@@ -60,6 +60,7 @@ from learning_os.commands.path import (  # noqa: E402
     cmd_path_note,
     cmd_path_progress,
 )
+from learning_os.commands.plan import cmd_plan_template  # noqa: E402
 from learning_os.commands.project import (  # noqa: E402
     cmd_project_create,
     cmd_project_list,
@@ -140,6 +141,16 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("program-list", help="list programs and boundary areas")
     p.set_defaults(func=cmd_program_list)
+
+    p = sub.add_parser(
+        "plan-template",
+        help="print the one canonical authored-plan template for a domain profile",
+    )
+    p.add_argument("profile", choices=("curriculum", "job"))
+    p.add_argument("--title", required=True)
+    p.add_argument("--unit-id", default=None)
+    p.add_argument("--module-id", default=None)
+    p.set_defaults(func=cmd_plan_template)
 
     p = sub.add_parser(
         "job-dashboard",

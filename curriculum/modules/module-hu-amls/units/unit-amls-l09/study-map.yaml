@@ -1,5 +1,6 @@
 id: study-map-amls-l09
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l09
 status: paused
 current_stage: stage-amls-l09-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l09-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Connect data layout and movement to caching, compression and precision choices.
@@ -34,6 +36,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l09-integrate
+  number: 2
   title: Integrate data-management and storage perspectives
   status: pending
   objective: Use DMMLS and Vol 2 to deepen data-access reasoning while keeping the deck taxonomy. Read
@@ -105,6 +108,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l09-evidence
+  number: 3
   title: Full evidence — reference, drills and lecture mock
   status: pending
   objective: Solve locality, caching and quantization questions closed-book.

@@ -1,5 +1,6 @@
 id: study-map-amls-l06
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l06
 status: paused
 current_stage: stage-amls-l06-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l06-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Draw the parameter-server architecture and reason about synchronization and staleness.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l06-integrate
+  number: 2
   title: Integrate communication and modern scaling views
   status: pending
   objective: Reconcile parameter-server updates with collective communication and ZeRO. Read the lecture's
@@ -127,6 +130,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l06-evidence
+  number: 3
   title: Mid-tier evidence — reference and drills
   status: pending
   objective: Produce the architecture reference and answer synchronization questions closed-book.

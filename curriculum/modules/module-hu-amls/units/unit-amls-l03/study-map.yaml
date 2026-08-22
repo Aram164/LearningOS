@@ -1,5 +1,6 @@
 id: study-map-amls-l03
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l03
 status: paused
 current_stage: stage-amls-l03-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l03-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Build a page-located outline of the compilation chain, inference methods and rewrites actually
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l03-integrate
+  number: 2
   title: Integrate lecturer prose and an executable compiler view
   status: pending
   objective: Use DMMLS for exam-near language and MLC for one concrete rewrite without expanding beyond
@@ -106,6 +109,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l03-evidence
+  number: 3
   title: Full evidence — reference, drills and lecture mock
   status: pending
   objective: Produce a compact reference and solve CSE, matrix-chain and computation-graph questions closed-book.

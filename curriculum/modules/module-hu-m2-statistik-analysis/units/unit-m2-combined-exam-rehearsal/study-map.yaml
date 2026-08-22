@@ -1,5 +1,6 @@
 id: study-map-m2-combined-exam-rehearsal
 type: study-map
+plan_template_version: 1
 unit_id: unit-m2-combined-exam-rehearsal
 status: ready
 current_stage: stage-m2-joint-blueprint
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-m2-joint-blueprint
+  number: 1
   title: M2.J0 — build the combined blueprint and entry gate
   status: pending
   objective: Join the two independently completed subject lanes without merging their content plans. Build
@@ -45,6 +47,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-joint-mock-one
+  number: 2
   title: M2.J1 — full combined mock 1
   status: pending
   objective: Assemble fresh Statistics and Analysis halves from traceable sources and sit them as one
@@ -79,6 +82,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-joint-repair
+  number: 3
   title: M2.J2 — repair the first combined mock
   status: pending
   objective: Return every error to its owning subject map, repair the cause, and retest cold; only switching/time
@@ -116,6 +120,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-joint-mock-two
+  number: 4
   title: M2.J3 — full combined mock 2 and readiness decision
   status: pending
   objective: Run a second fresh three-hour simulation with the frozen strategy and make the final repair
@@ -148,6 +153,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-joint-final-retrieval
+  number: 5
   title: M2.J4 — final 72-hour alternating retrieval
   status: pending
   objective: Protect execution with short alternating retrieval, logistics, and recovery. Add no new source,

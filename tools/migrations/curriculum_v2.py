@@ -207,11 +207,13 @@ def parse_plan(root: Path, rel: str, unit_id: str, source_ids: set[str]) -> dict
                      f"{stage_id}/notes.md")
         stage = {
             "id": stage_id,
+            "number": index + 1,
+            "exam_critical": "exam-critical" in raw_heading.casefold(),
+            "concepts": [],
             "title": title,
             "status": "pending",
             "objective": objective,
             "done_when": [f"Explain and apply {title} without relying on the study map."],
-            "exam_critical": "exam-critical" in raw_heading.casefold(),
             "scope_triage": "required-now",
             "resources": resources,
             "working_note": note_path,
@@ -225,7 +227,8 @@ def parse_plan(root: Path, rel: str, unit_id: str, source_ids: set[str]) -> dict
     if not stages:
         stage_id = f"stage-01-{slug(unit_id.removeprefix('unit-'))}"
         stages = [{
-            "id": stage_id, "title": "Work through the existing plan", "status": "pending",
+            "id": stage_id, "number": 1, "exam_critical": False, "concepts": [],
+            "title": "Work through the existing plan", "status": "pending",
             "objective": "Use the preserved source plan as the unit's scoped study script.",
             "done_when": ["Record the resulting work and evidence in this stage."],
             "scope_triage": "required-now", "resources": [],
@@ -235,7 +238,7 @@ def parse_plan(root: Path, rel: str, unit_id: str, source_ids: set[str]) -> dict
         }]
     return {
         "id": f"study-map-{unit_id.removeprefix('unit-')}",
-        "type": "study-map", "unit_id": unit_id,
+        "type": "study-map", "plan_template_version": 1, "unit_id": unit_id,
         "status": "ready", "current_stage": stages[0]["id"],
         "source_plan": {"path": rel, "provenance": "migrated-mini-plan"},
         "detours": [], "shelving": {"state": "none"}, "stages": stages,
@@ -271,8 +274,11 @@ def convert_l04(root: Path, module_id: str, unit_id: str) -> dict:
     old_path = root / "work/active/workspace-m2-exam-prep/paths/path-sad-l04-probability-bayes.yaml"
     old = yaml.safe_load(old_path.read_text(encoding="utf-8"))
     stages = []
-    for old_stage in old["stages"]:
+    for number, old_stage in enumerate(old["stages"], start=1):
         stage = copy.deepcopy(old_stage)
+        stage["number"] = number
+        stage.setdefault("exam_critical", False)
+        stage.setdefault("concepts", [])
         stage["resources"] = [
             {**resource, "kind": "practise" if resource.get("kind") == "practice"
              else resource.get("kind")}
@@ -288,7 +294,7 @@ def convert_l04(root: Path, module_id: str, unit_id: str) -> dict:
         stages.append(stage)
     return {
         "id": "study-map-m2-sad-l04-probability-bayes", "type": "study-map",
-        "unit_id": unit_id, "status": old["status"],
+        "plan_template_version": 1, "unit_id": unit_id, "status": old["status"],
         "current_stage": old["current_stage"],
         "source_plan": {"path": old["source_plan"], "provenance": "migrated-mini-plan"},
         "detours": [], "shelving": copy.deepcopy(old.get("shelving") or {"state": "none"}),
@@ -301,12 +307,14 @@ def note_backed_map(module_id: str, unit_id: str, title: str, note_id: str,
     stage_id = f"stage-01-{slug(title)}"
     return {
         "id": f"study-map-{unit_id.removeprefix('unit-')}", "type": "study-map",
-        "unit_id": unit_id, "status": "active" if active else status,
+        "plan_template_version": 1, "unit_id": unit_id,
+        "status": "active" if active else status,
         "current_stage": stage_id,
         "source_plan": {"path": f"note://{note_id}", "provenance": "durable-note"},
         "detours": [], "shelving": {"state": "none"},
         "stages": [{
-            "id": stage_id, "title": title, "status": "active" if active else "pending",
+            "id": stage_id, "number": 1, "exam_critical": False, "concepts": [],
+            "title": title, "status": "active" if active else "pending",
             "objective": f"Use the preserved {title} artifact as the scope and work record.",
             "done_when": ["Record concrete work or evidence without inferring mastery from the artifact."],
             "scope_triage": "required-now",
@@ -629,6 +637,7 @@ def run(root: Path, apply: bool) -> Migration:
     thesis_stage = "stage-01-research-landscape-and-question-framing"
     thesis_map = {
         "id": "study-map-thesis-landscape", "type": "study-map",
+        "plan_template_version": 1,
         "unit_id": "unit-thesis-landscape", "status": "active",
         "current_stage": thesis_stage,
         "source_plan": {
@@ -637,7 +646,8 @@ def run(root: Path, apply: bool) -> Migration:
         },
         "detours": [], "shelving": {"state": "none"},
         "stages": [{
-            "id": thesis_stage, "title": "Research landscape and question framing",
+            "id": thesis_stage, "number": 1, "exam_critical": False, "concepts": [],
+            "title": "Research landscape and question framing",
             "status": "active",
             "objective": "Use the existing thesis landscape and brief to frame the next milestone.",
             "done_when": ["Record the concrete next research decision without inferring completion from the plan."],

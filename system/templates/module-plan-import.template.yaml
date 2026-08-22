@@ -3,7 +3,8 @@
 module_id: module-example
 
 plan_contract:
-  version: 1
+  version: 2
+  plan_template_version: 1
   coverage_audit: work/active/workspace-example/outputs/example-coverage-audit.md
   # Expansion preserves existing unit/stage order by default. Add a reasoned
   # declaration here only for a deliberate pedagogical reorder.
@@ -66,7 +67,7 @@ units:
       title: Example Lecture 01
       order: 1
       scope: "Current L01 material: exact concepts actually taught."
-      status: not-started
+      status: ready
       knowledge_map:
         summary: "The lecture moves from the learning problem to its core result and application."
         nodes:
@@ -85,12 +86,42 @@ units:
       # The complete menu lives in source_map.unit_routes. Keep this empty until
       # the learner actually chooses material; never preselect every available source.
       source_selections: []
+      current_study_map: study-map-example-l01
       artifacts: {}
       workspace_ids:
         - workspace-example
-    # study_map is optional. Add it only after the learner chooses material and
-    # explicitly wants an ordered, progress-tracked path. Its resources must be
-    # a subset of those choices; it never replaces the complete material menu.
+    # Remove both current_study_map above and this study_map when no ordered path
+    # has been chosen. Never invent a different stage shape: every active plan
+    # uses plan-template v1, with only the curriculum boundary fields added.
+    study_map:
+      id: study-map-example-l01
+      type: study-map
+      plan_template_version: 1
+      unit_id: unit-example-l01
+      status: ready
+      current_stage: stage-example-l01-orientation
+      source_plan:
+        path: work/active/workspace-example/outputs/example-module-plan.yaml
+        provenance: operator
+      detours: []
+      stages:
+        - id: stage-example-l01-orientation
+          number: 1
+          title: Orient to Example Lecture 01
+          status: pending
+          objective: State the problem, assumptions, and core result in the course's notation.
+          done_when:
+            - Reproduce the formulation and explain the result without notes.
+          estimate_minutes: 90
+          exam_critical: true
+          concepts: []
+          scope_triage: required-now
+          resources: []
+          working_note: curriculum/modules/module-example/units/unit-example-l01/stages/stage-example-l01-orientation/notes.md
+          attachments: []
+          source_feedback: []
+      shelving:
+        state: none
 
 workspace_updates:
   - id: workspace-example

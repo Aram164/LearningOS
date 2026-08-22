@@ -21,7 +21,12 @@ from pathlib import Path
 
 import yaml
 
-from ..contracts import ContractValidationError, validate_contract
+from ..contracts import (
+    ContractValidationError,
+    PLAN_TEMPLATE_VERSION,
+    normalise_job_stage,
+    validate_contract,
+)
 from ..transactions import (
     TransactionConflict,
     TransactionFailure,
@@ -366,55 +371,6 @@ def _trim(value: object) -> object:
     return value.strip() if isinstance(value, str) else value
 
 
-def _trimmed_list(value: object) -> object:
-    if not isinstance(value, list):
-        return value
-    return [_trim(item) for item in value]
-
-
-def _normalise_plan_resource(value: object) -> object:
-    """Canonicalise whitespace and omissions; JSON Schema owns validity."""
-    if not isinstance(value, dict):
-        return value
-    result: dict = {}
-    for field in ("kind", "label", "id", "source_id", "locator", "url", "vault_path", "scope_triage"):
-        if field not in value:
-            continue
-        normalised = _trim(value[field])
-        if normalised not in (None, ""):
-            result[field] = normalised
-    return result
-
-
-def _normalise_job_context(value: object) -> object:
-    if value is None:
-        return {"mental_models": [], "read_only_anchor": "", "component": [], "verified_against": ""}
-    if not isinstance(value, dict):
-        return value
-    raw_models = value.get("mental_models", [])
-    if isinstance(raw_models, list):
-        models = [
-            {
-                "label": _trim(raw.get("label")),
-                "text": _trim(raw.get("text")),
-            }
-            if isinstance(raw, dict) else raw
-            for raw in raw_models
-        ]
-    else:
-        models = raw_models
-    # `component` and `verified_against` are the same stamp the notes/stratum/
-    # frontmatter carries. They are preserved verbatim rather than defaulted
-    # away, so a save round-trip through the editor cannot silently drop the
-    # thing drift detection reads.
-    return {
-        "mental_models": models,
-        "read_only_anchor": _trim(value.get("read_only_anchor", "")),
-        "component": _trimmed_list(value.get("component", [])),
-        "verified_against": _trim(value.get("verified_against", "")),
-    }
-
-
 def _legacy_plan_stage(raw: dict, plan_id: str, index: int) -> dict:
     """Accept the retired flat editor payload but persist only the v2 shape."""
     number = raw.get("number", index)
@@ -452,42 +408,6 @@ def _legacy_plan_stage(raw: dict, plan_id: str, index: int) -> dict:
     }
 
 
-def _normalise_plan_stage(value: object, plan_id: str, index: int) -> object:
-    if not isinstance(value, dict):
-        return value
-    number = value.get("number", index)
-    title = _trim(value.get("title", ""))
-    stage_id = _trim(value.get("id", ""))
-    if not stage_id and isinstance(title, str) and title:
-        stage_id = _slug_id(f"stage-{plan_id}-{number}-{title}", "stage")
-    raw_resources = value.get("resources", [])
-    resources = (
-        [_normalise_plan_resource(resource) for resource in raw_resources]
-        if isinstance(raw_resources, list) else raw_resources
-    )
-    result = {
-        "id": stage_id,
-        "number": number,
-        "title": title,
-        "status": _trim(value.get("status") or "pending"),
-        "objective": _trim(value.get("objective", "")),
-        "done_when": _trimmed_list(value.get("done_when", [])),
-    }
-    estimate = value.get("estimate_minutes")
-    if estimate is not None:
-        result["estimate_minutes"] = estimate
-    result.update({
-        "exam_critical": value.get("exam_critical") is True,
-        "concepts": _trimmed_list(value.get("concepts", [])),
-        "scope_triage": _trim(value.get("scope_triage") or "required-now"),
-        "resources": resources,
-        "attachments": value.get("attachments", []),
-        "source_feedback": value.get("source_feedback", []),
-        "job_context": _normalise_job_context(value.get("job_context")),
-    })
-    return result
-
-
 def _plan_record(value: object, repository_root: Path) -> dict:
     if not isinstance(value, dict):
         raise JobDashboardError("plan must be an object")
@@ -502,13 +422,14 @@ def _plan_record(value: object, repository_root: Path) -> dict:
             if isinstance(raw, dict)
         ]
     stages = (
-        [_normalise_plan_stage(raw, plan_id, index)
+        [normalise_job_stage(raw, plan_id, index)
          for index, raw in enumerate(raw_stages, start=1)]
         if isinstance(raw_stages, list) else raw_stages
     )
     plan = {
         "type": "job-learning-plan",
         "schema_version": 2,
+        "plan_template_version": PLAN_TEMPLATE_VERSION,
         "id": plan_id,
         "title": title,
         "status": _trim(value.get("status") or "ready"),

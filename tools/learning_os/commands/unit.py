@@ -10,6 +10,12 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts import (
+    ContractValidationError,
+    PlanTemplateError,
+    require_current_template,
+    validate_contract,
+)
 from learning_os.loader import load_repo
 
 from .support import (
@@ -64,6 +70,17 @@ def cmd_unit_map_import(args) -> int:
             return 2
         if not isinstance(data, dict) or data.get("unit_id") != args.unit_id:
             print("los: imported map must be a mapping with the requested unit_id", file=sys.stderr)
+            return 2
+        try:
+            require_current_template(data, "curriculum")
+            validate_contract(
+                root,
+                "study-map.schema.json",
+                data,
+                label="curriculum plan template v1",
+            )
+        except (PlanTemplateError, ContractValidationError) as exc:
+            print(f"los: study map creation contract failed: {exc}", file=sys.stderr)
             return 2
         unit_data = dict(unit.data)
         unit_data["current_study_map"] = data.get("id")

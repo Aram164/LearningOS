@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learning-plan-v1",
+  "title": "LearningOS canonical plan template v1",
+  "description": "The shared authored-plan vocabulary. Curriculum and Job records extend the same numbered stage and resource contract at their domain boundary.",
+  "$defs": {
+    "nonEmptyText": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "kind": {
+          "enum": ["watch", "read", "practise", "reference"]
+        },
+        "label": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "vault_path": {
+          "type": "string"
+        },
+        "scope_triage": {
+          "enum": ["required-now", "helpful-now", "deferred", "reference-only"]
+        }
+      }
+    },
+    "stageCore": {
+      "type": "object",
+      "required": [
+        "id",
+        "number",
+        "title",
+        "status",
+        "objective",
+        "done_when",
+        "exam_critical",
+        "concepts",
+        "scope_triage",
+        "resources",
+        "attachments",
+        "source_feedback"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "status": {
+          "enum": ["pending", "active", "paused", "complete", "skipped"]
+        },
+        "objective": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "done_when": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyText"
+          }
+        },
+        "estimate_minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exam_critical": {
+          "type": "boolean"
+        },
+        "concepts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "scope_triage": {
+          "enum": ["required-now", "helpful-now", "deferred", "reference-only"]
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resource"
+          }
+        },
+        "attachments": {
+          "type": "array"
+        },
+        "source_feedback": {
+          "type": "array"
+        }
+      }
+    },
+    "curriculumStage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/stageCore"
+        },
+        {
+          "type": "object",
+          "required": ["working_note"],
+          "properties": {
+            "working_note": {
+              "type": "string",
+              "pattern": "^curriculum/modules/.+/stages/.+/notes\\.md$"
+            },
+            "attachments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["path", "label"],
+                "additionalProperties": false,
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "pattern": "^curriculum/modules/.+/stages/.+/attachments/.+"
+                  },
+                  "label": {
+                    "$ref": "#/$defs/nonEmptyText"
+                  }
+                }
+              }
+            },
+            "source_feedback": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["source_id", "feedback", "recorded"],
+                "additionalProperties": false,
+                "properties": {
+                  "source_id": {
+                    "type": "string",
+                    "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "resource_id": {
+                    "type": "string",
+                    "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "feedback": {
+                    "enum": ["helpful", "too-advanced", "wrong-perspective", "useful-for-derivation", "useful-for-review", "skipped"]
+                  },
+                  "note": {
+                    "type": "string"
+                  },
+                  "recorded": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            },
+            "detour_id": {
+              "type": "string",
+              "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "completed": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "mentalModel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["label", "text"],
+      "properties": {
+        "label": {
+          "$ref": "#/$defs/nonEmptyText"
+        },
+        "text": {
+          "$ref": "#/$defs/nonEmptyText"
+        }
+      }
+    },
+    "jobContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mental_models", "read_only_anchor"],
+      "properties": {
+        "mental_models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mentalModel"
+          }
+        },
+        "read_only_anchor": {
+          "type": "string"
+        },
+        "component": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(?![/:\\-])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*[\\\\*?\\[])[^\\s]+$"
+          },
+          "uniqueItems": true
+        },
+        "verified_against": {
+          "type": "string",
+          "pattern": "^$|^[0-9a-fA-F]{7,64}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$"
+        }
+      }
+    },
+    "jobStage": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/stageCore"
+        },
+        {
+          "type": "object",
+          "required": ["job_context"],
+          "properties": {
+            "job_context": {
+              "$ref": "#/$defs/jobContext"
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    }
+  }
+}

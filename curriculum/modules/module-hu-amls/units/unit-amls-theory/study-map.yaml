@@ -1,5 +1,6 @@
 id: study-map-amls-exam-synthesis
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-theory
 status: paused
 current_stage: stage-amls-mock-blueprint
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-mock-blueprint
+  number: 1
   title: Freeze the official exam blueprint
   status: pending
   objective: Extract the seven areas and point weights from the official sample without reading its displayed
@@ -34,6 +36,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-mock-sit
+  number: 2
   title: Sit and mark the 90-minute module mock
   status: pending
   objective: Complete all seven official tasks closed-book, then mark against the slide answers and log
@@ -58,6 +61,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-mock-remediate
+  number: 3
   title: Remediate only evidenced gaps
   status: pending
   objective: Reopen only the units and external question banks justified by the marked mock.

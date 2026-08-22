@@ -10,7 +10,9 @@ import json
 from pathlib import Path
 
 import jsonschema
+from referencing import Registry
 
+from ..contracts.json_schema import ContractValidationError, schema_registry
 from ..loader import Repo
 from .common import Issue
 from .contract import ChecksContract
@@ -31,6 +33,13 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.online = online
         self.issues: list[Issue] = []
         self.schemas = self._load_schemas()
+        try:
+            self.schema_registry = schema_registry(
+                self.repo.root / "system" / "schema"
+            )
+        except ContractValidationError as exc:
+            self.schema_registry = Registry()
+            self.err("SCHEMA-REGISTRY", str(exc), "system/schema")
 
     # ------------------------------------------------------------------ util
     def err(self, code: str, msg: str, path: str = ""):
@@ -55,7 +64,10 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         # `2026-13-45` validated clean on the most operationally critical field
         # in the repository — exam dates.
         validator = jsonschema.Draft202012Validator(
-            schema, format_checker=jsonschema.FormatChecker())
+            schema,
+            registry=self.schema_registry,
+            format_checker=jsonschema.FormatChecker(),
+        )
         for e in sorted(validator.iter_errors(instance), key=str):
             locator = "/".join(str(p) for p in e.absolute_path)
             self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)

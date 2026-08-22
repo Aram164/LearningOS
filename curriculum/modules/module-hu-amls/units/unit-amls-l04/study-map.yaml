@@ -1,5 +1,6 @@
 id: study-map-amls-l04
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l04
 status: paused
 current_stage: stage-amls-l04-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l04-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Trace why runtime adaptation is needed and how fusion/JIT changes the execution plan.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l04-integrate
+  number: 2
   title: Integrate fusion prose and implementation
   status: pending
   objective: Connect SystemDS fusion decisions to one MLC graph-optimization/fusion example. Read the
@@ -106,6 +109,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l04-evidence
+  number: 3
   title: Full evidence — reference, drills and lecture mock
   status: pending
   objective: Demonstrate adaptation/fusion trade-offs with diagrams, a micro-example and timed performance

@@ -1,5 +1,6 @@
 id: study-map-amls-l01
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l01
 status: paused
 current_stage: stage-amls-l01-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l01-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Establish the course's ML-system definitions, lifecycle and architecture vocabulary.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l01-integrate
+  number: 2
   title: Integrate one foundation chapter and course overview
   status: pending
   objective: Use Vol 1 and CMU only to stabilize the course vocabulary. Read the lecture's primary paper
@@ -90,6 +93,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l01-evidence
+  number: 3
   title: Light evidence — reference and recall
   status: pending
   objective: Produce one-page orientation and recall the stack without notes.

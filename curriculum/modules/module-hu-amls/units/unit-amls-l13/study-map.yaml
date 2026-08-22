@@ -1,5 +1,6 @@
 id: study-map-amls-l13
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l13
 status: paused
 current_stage: stage-amls-l13-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l13-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Trace a deployed model from exchange format through serving, monitoring and update.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l13-integrate
+  number: 2
   title: Integrate inference, serving and operations views
   status: pending
   objective: Use Vol 2, Vol 1 and Huyen to sharpen serving trade-offs without expanding the exam scope.
@@ -119,6 +122,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l13-evidence
+  number: 3
   title: Light evidence — reference and recall
   status: pending
   objective: Build the serving reference and answer the official deployment question.

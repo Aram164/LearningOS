@@ -1,5 +1,6 @@
 id: study-map-amls-l08
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l08
 status: paused
 current_stage: stage-amls-l08-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l08-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Trace performance from GPU execution/memory through Tensor Cores and specialized accelerators.
@@ -34,6 +36,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l08-integrate
+  number: 2
   title: Integrate acceleration, infrastructure and roofline reasoning
   status: pending
   objective: Use both MLSysBook volumes and HTSYM to quantify the deck's accelerator choices. Read the
@@ -110,6 +113,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l08-evidence
+  number: 3
   title: Full evidence — reference, drills and lecture mock
   status: pending
   objective: Demonstrate accelerator selection and performance calculations in written form.

@@ -1,5 +1,6 @@
 id: study-map-python-oop-scope
 type: study-map
+plan_template_version: 1
 unit_id: unit-python-oop-scope
 status: ready
 current_stage: stage-python-repair-session-1-names-values-scope-the-root-of-everything
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-python-repair-session-1-names-values-scope-the-root-of-everything
+  number: 1
   title: Session 1 — Names, values, scope (the root of everything)
   status: pending
   objective: Your C++ intuition (variables are boxes holding values) is the bug. In Python, variables
@@ -50,6 +52,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-repair-session-2-class-mechanics-self-instance-vs-class-attributes
+  number: 2
   title: 'Session 2 — Class mechanics: self, instance vs class attributes'
   status: pending
   objective: '`obj.method(x)` is just `Class.method(obj, x)`. `self` is not magic — it''s an ordinary
@@ -87,6 +90,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-repair-session-3-inheritance-plus-super-the-headache-session
+  number: 3
   title: Session 3 — Inheritance + super() (the headache session)
   status: pending
   objective: '`super()` does NOT mean "my parent." It means "the next class after me in this object''s
@@ -130,6 +134,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-repair-session-4-subclassing-real-libraries-mlprov-shaped
+  number: 4
   title: Session 4 — Subclassing real libraries (mlprov-shaped)
   status: pending
   objective: TU Python-for-ML Sheet 2 — the inheritance/NumPy exercises. Real exercises with code, already
@@ -170,6 +175,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-repair-session-5-the-interpreter-demystified
+  number: 5
   title: Session 5 — The interpreter, demystified
   status: pending
   objective: 'Allison Kaptur — A Python Interpreter Written in Python. Your C++ background is an asset

@@ -1,5 +1,6 @@
 id: study-map-python-intermediate-roadmap
 type: study-map
+plan_template_version: 1
 unit_id: unit-python-intermediate-roadmap
 status: ready
 current_stage: stage-python-step-01-baseline-syntax-and-core-mechanics
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-python-step-01-baseline-syntax-and-core-mechanics
+  number: 1
   title: 'Step 1 — Baseline: syntax & core mechanics'
   status: pending
   objective: You're past this. Listed for gap-fills only.
@@ -39,6 +41,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-02-names-objects-references-mutability
+  number: 2
   title: Step 2 — Names, objects, references, mutability
   status: pending
   objective: 'The single most important mental-model fix from C++. Everything else builds on it. Symptoms
@@ -88,6 +91,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-03-scope-namespaces-functions-as-objects
+  number: 3
   title: Step 3 — Scope, namespaces, functions as objects
   status: pending
   objective: 'Repair the symptoms this step names: `UnboundLocalError`, confusion about what a function
@@ -127,6 +131,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-04-the-data-model-and-dunder-methods
+  number: 4
   title: Step 4 — The data model & dunder methods
   status: pending
   objective: 'The "grand unified theory" of Python: `len()`, operators, `for` loops, `with` — all just
@@ -169,6 +174,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-05-built-in-containers-and-comprehensions
+  number: 5
   title: Step 5 — Built-in containers & comprehensions
   status: pending
   objective: 'Repair the symptoms this step names: misusing lists where sets/dicts fit, slice confusion,
@@ -208,6 +214,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-06-strings-bytes-and-formatting
+  number: 6
   title: Step 6 — Strings, bytes, and formatting
   status: pending
   objective: 'Repair the symptoms this step names: `UnicodeDecodeError`, `b''...''` confusion, ugly string
@@ -238,6 +245,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-07-classes-i-mechanics
+  number: 7
   title: 'Step 7 — Classes I: mechanics'
   status: pending
   objective: 'Repair the symptoms this step names: `self` feels magic, instance vs class attributes blur,
@@ -284,6 +292,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-08-classes-ii-inheritance-super-mro-mixins
+  number: 8
   title: 'Step 8 — Classes II: inheritance, super(), MRO, mixins'
   status: pending
   objective: 'Your named headache. The repair plan''s Sessions 3–4 are the drill version of this step.
@@ -333,6 +342,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-09-data-class-builders
+  number: 9
   title: Step 9 — Data class builders
   status: pending
   objective: 'Repair the symptoms this step names: writing boilerplate `__init__`/`__repr__`/`__eq__`
@@ -364,6 +374,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-10-duck-typing-abcs-protocols
+  number: 10
   title: Step 10 — Duck typing, ABCs, protocols
   status: pending
   objective: 'Repair the symptoms this step names: "what type does this function accept?", `isinstance`
@@ -402,6 +413,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-11-closures-and-decorators
+  number: 11
   title: Step 11 — Closures & decorators
   status: pending
   objective: 'Repair the symptoms this step names: `@something` syntax feels magic, can''t write a decorator
@@ -443,6 +455,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-12-iterators-generators-lazy-pipelines
+  number: 12
   title: Step 12 — Iterators, generators, lazy pipelines
   status: pending
   objective: 'Repair the symptoms this step names: `yield` confusion, iterator-exhausted-once surprises,
@@ -493,6 +506,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-13-context-managers-with-else-match
+  number: 13
   title: Step 13 — Context managers, with / else / match
   status: pending
   objective: 'Repair the symptoms this step names: `with` feels like ritual, can''t write your own, `try/else`
@@ -529,6 +543,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-14-exceptions-and-error-handling
+  number: 14
   title: Step 14 — Exceptions & error handling
   status: pending
   objective: 'Repair the symptoms this step names: bare `except:`, unsure what to catch, when to define
@@ -570,6 +585,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-15-type-hints
+  number: 15
   title: Step 15 — Type hints
   status: pending
   objective: 'Repair the symptoms this step names: reading hinted signatures in skrub/sklearn/Stratum,
@@ -606,6 +622,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-16-modules-imports-packages-environments
+  number: 16
   title: Step 16 — Modules, imports, packages, environments
   status: pending
   objective: 'Repair the symptoms this step names: `ModuleNotFoundError`, `__init__.py` mystery, circular
@@ -647,6 +664,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-17-standard-library-power-tools
+  number: 17
   title: Step 17 — Standard library power tools
   status: pending
   objective: 'Repair the symptoms this step names: writing 10 lines for what stdlib does in 1; manual
@@ -694,6 +712,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-18-pythonic-style-and-idioms
+  number: 18
   title: Step 18 — Pythonic style & idioms
   status: pending
   objective: 'Repair the symptoms this step names: code works but reads like translated C++.'
@@ -726,6 +745,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-19-concurrency-and-the-gil
+  number: 19
   title: Step 19 — Concurrency & the GIL
   status: pending
   objective: Relevant for AMLS parallelism + job perf work.
@@ -775,6 +795,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-20-interpreter-internals
+  number: 20
   title: Step 20 — Interpreter internals
   status: pending
   objective: The "how does it actually work" itch. Your C++ background is an asset here.
@@ -822,6 +843,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-21-attribute-magic-properties-descriptors-metaclasses-module-getattr
+  number: 21
   title: 'Step 21 — Attribute magic: properties, descriptors, metaclasses, module `__getattr__`'
   status: pending
   objective: Read to understand libraries; you will write `@property` often, descriptors occasionally,
@@ -870,6 +892,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-22-runtime-introspection-and-reflection
+  number: 22
   title: Step 22 — Runtime introspection & reflection
   status: pending
   objective: 'Used pervasively in Stratum: `isinstance`, `getattr`, `hasattr`, `type`, `vars`, `inspect`.
@@ -918,6 +941,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-23-import-machinery-and-monkey-patching
+  number: 23
   title: Step 23 — Import machinery & monkey-patching
   status: pending
   objective: 'Stratum''s `patching/_patching.py` is a full monkey-patching system. Understanding it requires
@@ -978,6 +1002,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-24-generator-coroutines-send-throw-stopiteration-value
+  number: 24
   title: 'Step 24 — Generator coroutines: `send()`, `throw()`, `StopIteration.value`'
   status: pending
   objective: 'Used in `ImplOp.process()` in Stratum to fuse a generator-based evaluation protocol with
@@ -1017,6 +1042,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-25-python-rust-c-ffi-pyo3-maturin-c-extensions
+  number: 25
   title: 'Step 25 — Python ↔ Rust/C FFI: PyO3, maturin, C extensions'
   status: pending
   objective: 'Stratum has a Rust backend (`_rust_backend_native`) compiled with PyO3/maturin. This is
@@ -1113,6 +1139,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-26-dag-ir-patterns-in-python
+  number: 26
   title: Step 26 — DAG / IR patterns in Python
   status: pending
   objective: 'Stratum''s entire optimizer is a DAG transformation pipeline in Python. These patterns come
@@ -1219,6 +1246,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-27-slots-weakref-memory-layout
+  number: 27
   title: Step 27 — `__slots__`, `weakref`, memory layout
   status: pending
   objective: 'For performance-sensitive code; relevant when Op DAGs get large. Symptoms it repairs: high
@@ -1259,6 +1287,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-python-step-28-cpu-and-timing-profiling-making-python-faster
+  number: 28
   title: Step 28 — CPU & timing profiling ("making Python faster")
   status: pending
   objective: 'Step 27 covers memory; this is its time counterpart. A cost-based optimizer only pays off

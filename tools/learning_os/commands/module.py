@@ -11,6 +11,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
 from learning_os.loader import load_repo
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.rules import validate
@@ -54,8 +55,12 @@ def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
     """Verify the human review evidence required before a plan is executable."""
     problems: list[str] = []
     contract = package.get("plan_contract")
-    if not isinstance(contract, dict) or contract.get("version") != 1:
-        return ["plan_contract.version must be 1 (see system/PLAN-CREATION-SOP.md)"]
+    if not isinstance(contract, dict) or contract.get("version") != 2:
+        return ["plan_contract.version must be 2 (see system/PLAN-CREATION-SOP.md)"]
+    if contract.get("plan_template_version") != PLAN_TEMPLATE_VERSION:
+        problems.append(
+            f"plan_contract.plan_template_version must be {PLAN_TEMPLATE_VERSION}"
+        )
     audit_ref = contract.get("coverage_audit")
     if not isinstance(audit_ref, str) or not audit_ref.strip():
         problems.append("plan_contract.coverage_audit must name the completed audit")
@@ -115,6 +120,11 @@ def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
                     f"plan_contract.intentional_reorders repeats {key[0]} for {key[1]}"
                 )
             seen.add(key)
+    for unit_index, entry in enumerate(package.get("units", []) or []):
+        if not isinstance(entry, dict) or entry.get("study_map") is None:
+            continue
+        for problem in current_template_problems(entry.get("study_map"), "curriculum"):
+            problems.append(f"units[{unit_index}].study_map: {problem}")
     return problems
 
 

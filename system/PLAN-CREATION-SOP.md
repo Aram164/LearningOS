@@ -1,9 +1,35 @@
-# Standard lecture-material mapping and optional study-path procedure
+# Standard plan creation and lecture-material mapping procedure
 
-This procedure is mandatory for every new or revised module learning surface.
+This procedure is mandatory for every new or revised plan in LearningOS or the
+bounded Job learning area, and for every module learning surface.
 It turns a material review into one reviewable `module-plan-import` package
 without silently losing sources, inventing scope, forcing one study order, or
 discovering structural mistakes only after canonical files have been touched.
+
+## One plan template, two bounded profiles
+
+All newly authored plans use `plan_template_version: 1`. There is one shared
+stage and resource contract in `system/schema/learning-plan.schema.json`:
+
+- every stage has `id`, sequential `number`, `title`, `status`, `objective`,
+  `done_when`, `exam_critical`, `concepts`, `scope_triage`, `resources`,
+  `attachments`, and `source_feedback`;
+- curriculum stages add `working_note` (plus curriculum-only detour/completion
+  state); and
+- Job stages add `job_context`. Its Stratum anchor is descriptive and strictly
+  read-only; no plan operation may write the Stratum worktree or `.git`.
+
+Generate a valid starting record instead of copying an old plan:
+
+```bash
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-example --unit-id unit-example-l01 --title "Lecture 01"
+.venv/bin/python tools/los.py plan-template job --title "Rust systems track"
+```
+
+The curriculum and Job schemas both reference that shared contract. The Core
+Job gateway expands editor drafts using it. Legacy records remain readable as
+history, but creation gateways reject them as templates.
 
 Use the project environment. If `.venv/bin/python` does not exist, run
 `make setup` once. Do not assume a global `los` executable exists.
@@ -132,10 +158,12 @@ anchors, aliases, or merge keys. Quote text containing colons or YAML-sensitive
 punctuation. The gateway also serializes without aliases so shared defaults
 cannot leak anchors into authored files.
 
-The package must contain `plan_contract.version: 1`, the repository-relative
-coverage-audit path, all six completeness checks set to `true`, and an
-`intentional_reorders` list (normally empty). These are truth claims: do not set
-one until its audit work is complete.
+The package must contain `plan_contract.version: 2`,
+`plan_contract.plan_template_version: 1`, the repository-relative coverage-audit
+path, all six completeness checks set to `true`, and an `intentional_reorders`
+list (normally empty). Every supplied `study_map` must also declare
+`plan_template_version: 1` and sequential stage numbers. These are truth claims:
+do not set one until its audit work is complete.
 
 Plan expansion must preserve the relative order of every existing module unit
 and study-map stage. The preflight enforces this mechanically: adding a new
