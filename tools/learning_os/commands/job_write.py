@@ -24,7 +24,9 @@ import yaml
 from ..contracts import (
     ContractValidationError,
     PLAN_TEMPLATE_VERSION,
+    PlanTemplateError,
     normalise_job_stage,
+    require_current_template,
     validate_contract,
 )
 from ..transactions import (
@@ -448,10 +450,20 @@ def _plan_record(value: object, repository_root: Path) -> dict:
     except ContractValidationError as exc:
         raise JobDashboardError(str(exc)) from exc
 
-    numbers = [stage["number"] for stage in plan["stages"]]
-    if len(numbers) != len(set(numbers)):
-        raise JobDashboardError("job-plan-v2 contract violation: stage numbers must be unique")
-    plan["stages"] = sorted(plan["stages"], key=lambda row: row["number"])
+    # The shared rule, applied to the Job profile as well as the curriculum
+    # one. Until this call the stamp above was minted unconditionally, so a
+    # Job plan could assert conformance to a template whose own numbering rule
+    # it broke — the field said "this went through the gateway" while reading
+    # as "this satisfies template v1".
+    #
+    # This subsumes the uniqueness check it replaces, and it deliberately
+    # replaces the sort too: a gap or a reordering is now refused rather than
+    # silently rewritten, because the authored order is the learner's and the
+    # curriculum side has never been allowed to rewrite it either.
+    try:
+        require_current_template(plan, "job")
+    except PlanTemplateError as exc:
+        raise JobDashboardError(f"job-plan-v2 contract violation: {exc}") from exc
     return plan
 
 

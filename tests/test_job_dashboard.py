@@ -520,6 +520,58 @@ def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
     assert dashboard["learning_tracks"][0]["plan_template_version"] == 1
 
 
+@pytest.mark.parametrize(
+    ("numbers", "reason"),
+    [
+        ([1, 5, 9], "a gap"),
+        ([2, 3, 4], "not starting at one"),
+        ([2, 1, 3], "authored out of order"),
+        ([1, 1, 2], "a duplicate"),
+    ],
+)
+def test_job_plan_save_refuses_stage_numbering_the_template_forbids(mini_repo, numbers, reason):
+    """The stamp must be a conformance claim, not a provenance one.
+
+    Before this gate the Job path checked uniqueness only, then sorted — so
+    every one of these was written to disk carrying `plan_template_version: 1`
+    while breaking the numbering rule that version declares. The curriculum
+    path has always refused them; both profiles read the same rule now.
+    """
+    write_job(mini_repo)
+    plan = {
+        "title": "Numbering track",
+        "stages": [
+            {"number": number, "title": f"Stage {index}"}
+            for index, number in enumerate(numbers, start=1)
+        ],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode != 0, f"{reason} was accepted: {proc.stdout}"
+    assert "sequential" in (proc.stdout + proc.stderr), reason
+    assert not (mini_repo.parent.parent / "Job" / "plans" / "job-plan-numbering-track.yaml").exists()
+
+
+def test_job_plan_save_accepts_the_numbering_the_template_generates(mini_repo):
+    job = write_job(mini_repo)
+    plan = {
+        "title": "Numbering track",
+        "stages": [{"title": "First"}, {"title": "Second"}, {"title": "Third"}],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode == 0, proc.stderr
+    stored = yaml.safe_load(
+        (job / "plans" / "job-plan-numbering-track.yaml").read_text(encoding="utf-8")
+    )
+    assert [stage["number"] for stage in stored["stages"]] == [1, 2, 3]
+    assert stored["plan_template_version"] == 1
+
+
 def test_a_legacy_markdown_track_reports_no_template_rather_than_a_wrong_one(mini_repo):
     write_job(mini_repo)
     dashboard = json.loads(run_los(
