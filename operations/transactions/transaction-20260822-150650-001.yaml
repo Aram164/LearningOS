@@ -1,0 +1,46 @@
+schema_version: 1
+id: transaction-20260822-150650-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:06:50+02:00'
+snapshot_before: sha256:e3b256592cc2b77211f8ed3e9a2100cd9e9243d9cdc2c822de0877891c5e1467
+snapshot_after: sha256:fb3b23acc557f5b1c420a53c97a881d649eaa88ffb60137dd0ba6e29032d0b9c
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-clustering:
+    before: 0
+    after: 1
+  unit-m2-sad-clustering:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/study-map.yaml
+  sha256_before: null
+  sha256_after: 1d5eab9185dabbdb71576088891bc1927a308c9817478eb9c31b7501cdfbae61
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/unit.yaml
+  sha256_before: 30b2b36cd6b5105a2fffdb7f792294e45ffe37d33490586f869c9b78e7abc5a7
+  sha256_after: 613bdce6baa56b2ae86ec720eea2f7f51904ad08dd3df9cf2a6bde7947b4132a
+  created: false
+metadata: {}

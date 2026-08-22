@@ -1,0 +1,586 @@
+id: study-map-m2-sad-l06
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l06
+status: not-started
+current_stage: stage-sad-l06-random-variable
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l06-random-variable
+  number: 1
+  title: Random variables and realizations
+  status: pending
+  objective: A random variable maps outcomes to numbers; the variable, a realized value, and the underlying
+    random experiment are distinct objects.
+  done_when:
+  - 'Reproduce without notes: A random variable maps outcomes to numbers; the variable, a realized value,
+    and the underlying random experiment are distinct objects.'
+  exam_critical: true
+  concepts:
+  - concept-random-variable
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 random-variables and expected-values pair
+    source_id: source-sad-2025-recordings
+    locator: 05_random_variables.pdf; 06_expected_values.pptx-1.pdf — Splits random-variable definitions
+      and expectation/moment calculations across two older decks, providing more same-course examples
+      than the combined current treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 5–7 — random variables and moments
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5–7 selected sections — The German rigor home for discrete/continuous RVs, distribution
+      functions, expectation, variance, covariance, Chebyshev, and large-sample behavior.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4; selected Chapter 10 sections — The strongest story/proof explanation of random
+      variables, expectation, indicator methods, and transformations; Ch 10 is used only for matching
+      moment depth.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Random variables and expectation chapters — Formal discrete/continuous variable, distribution-function,
+      expectation, variance, and joint-variable depth beyond the course requirements.
+    scope_triage: reference-only
+  - kind: read
+    label: OpenIntro Chapter 4 — distribution bridge
+    source_id: source-openintro-statistics
+    locator: Chapter 4 selections — Gentle transition from probability to random variables, expectation,
+      variability, and sampling distributions without the full formal depth of Fahrmeir.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — RVs and expectation
+    source_id: source-stat110
+    locator: Units 3–4 — Full lecture treatment of random variables, expectation, indicators, and variance
+      for derivational depth beyond L06.
+    scope_triage: reference-only
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsvariablen; Erwartungswert; Varianz — German terminology-first refresh for random variables,
+      expectation, and variance.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-distribution-functions
+  number: 2
+  title: PMF, density, and CDF
+  status: pending
+  objective: Discrete mass and continuous density assign probability differently, while the cumulative
+    distribution function uniformly represents P(X less than or equal to x).
+  done_when:
+  - 'Reproduce without notes: Discrete mass and continuous density assign probability differently, while
+    the cumulative distribution function uniformly represents P(X less than or equal to x).'
+  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — random variables and moments
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Probability tables, CDFs, transformations,
+      expectation, variance, and Chebyshev calculations in the course's own notation.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 random-variables and expected-values pair
+    source_id: source-sad-2025-recordings
+    locator: 05_random_variables.pdf; 06_expected_values.pptx-1.pdf — Splits random-variable definitions
+      and expectation/moment calculations across two older decks, providing more same-course examples
+      than the combined current treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 5–7 — random variables and moments
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5–7 selected sections — The German rigor home for discrete/continuous RVs, distribution
+      functions, expectation, variance, covariance, Chebyshev, and large-sample behavior.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 5–7 — RV and moment drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 5–7 selections — Solved German calculations for PMF/CDF, expectation, variance,
+      covariance, and bounds after the current UE4 tasks.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Random variables, expectation, and variance chapters — Middle-rung exposition between the
+      course/Fahrmeir layer and Ross, covering distribution functions, expectation, variance, and transformations.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Random variables, expectation, and variance selections — A computationally intuitive route
+      to distributions, expectation, variance, and stabilization that complements Fahrmeir's notation-first
+      treatment.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Random variables and expectation chapters — Formal discrete/continuous variable, distribution-function,
+      expectation, variance, and joint-variable depth beyond the course requirements.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Random-variable and expectation problem sets — Worked PMF/PDF/CDF, expectation, variance,
+      transformation, and covariance calculations for extra repetition rather than first learning.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Random-variable and expectation selections — Answer-backed PMF/CDF, expectation, variance,
+      and transformation calculations for independent practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: Random-variable, expectation, and variance units — Official notes and solved problems for
+      PMF/PDF/CDF, functions of variables, expectation, and variance.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — random-variable block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; random-variable and moment questions — Selected probability-table, expectation,
+      and variance problems; use only questions that match the L06 object definitions and notation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — expected values and probability distributions
+    source_id: source-statquest
+    locator: Expected Values, Main Ideas; Expected Values for Continuous Variables; Main Ideas behind
+      Probability Distributions — Compact intuition for discrete/continuous expected value and the role
+      of a probability distribution; best used for one diagnosed conceptual gap.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-transformations
+  number: 3
+  title: Functions and transformations of random variables
+  status: pending
+  objective: A transformation g(X) changes the possible values and distribution; probabilities and moments
+    must be recomputed from the mapping rather than by treating X as a fixed number.
+  done_when:
+  - 'Reproduce without notes: A transformation g(X) changes the possible values and distribution; probabilities
+    and moments must be recomputed from the mapping rather than by treating X as a fixed number.'
+  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — random variables and moments
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Probability tables, CDFs, transformations,
+      expectation, variance, and Chebyshev calculations in the course's own notation.
+    scope_triage: required-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4; selected Chapter 10 sections — The strongest story/proof explanation of random
+      variables, expectation, indicator methods, and transformations; Ch 10 is used only for matching
+      moment depth.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Random variables, expectation, and variance chapters — Middle-rung exposition between the
+      course/Fahrmeir layer and Ross, covering distribution functions, expectation, variance, and transformations.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Random-variable and expectation problem sets — Worked PMF/PDF/CDF, expectation, variance,
+      transformation, and covariance calculations for extra repetition rather than first learning.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Random-variable and expectation selections — Answer-backed PMF/CDF, expectation, variance,
+      and transformation calculations for independent practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: Random-variable, expectation, and variance units — Official notes and solved problems for
+      PMF/PDF/CDF, functions of variables, expectation, and variance.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — RVs and expectation
+    source_id: source-stat110
+    locator: Units 3–4 — Full lecture treatment of random variables, expectation, indicators, and variance
+      for derivational depth beyond L06.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-transformations/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-expectation
+  number: 4
+  title: Expected value and linearity
+  status: pending
+  objective: Expectation is a probability-weighted long-run average; linearity holds without independence
+    and extends from X to functions and sums of random variables.
+  done_when:
+  - 'Reproduce without notes: Expectation is a probability-weighted long-run average; linearity holds
+    without independence and extends from X to functions and sums of random variables.'
+  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-expected-value
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — random variables and moments
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Probability tables, CDFs, transformations,
+      expectation, variance, and Chebyshev calculations in the course's own notation.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 random-variables and expected-values pair
+    source_id: source-sad-2025-recordings
+    locator: 05_random_variables.pdf; 06_expected_values.pptx-1.pdf — Splits random-variable definitions
+      and expectation/moment calculations across two older decks, providing more same-course examples
+      than the combined current treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 5–7 — random variables and moments
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5–7 selected sections — The German rigor home for discrete/continuous RVs, distribution
+      functions, expectation, variance, covariance, Chebyshev, and large-sample behavior.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 5–7 — RV and moment drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 5–7 selections — Solved German calculations for PMF/CDF, expectation, variance,
+      covariance, and bounds after the current UE4 tasks.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4; selected Chapter 10 sections — The strongest story/proof explanation of random
+      variables, expectation, indicator methods, and transformations; Ch 10 is used only for matching
+      moment depth.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Random variables, expectation, and variance chapters — Middle-rung exposition between the
+      course/Fahrmeir layer and Ross, covering distribution functions, expectation, variance, and transformations.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Random variables, expectation, and variance selections — A computationally intuitive route
+      to distributions, expectation, variance, and stabilization that complements Fahrmeir's notation-first
+      treatment.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Random variables and expectation chapters — Formal discrete/continuous variable, distribution-function,
+      expectation, variance, and joint-variable depth beyond the course requirements.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Random-variable and expectation problem sets — Worked PMF/PDF/CDF, expectation, variance,
+      transformation, and covariance calculations for extra repetition rather than first learning.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 4 — distribution bridge
+    source_id: source-openintro-statistics
+    locator: Chapter 4 selections — Gentle transition from probability to random variables, expectation,
+      variability, and sampling distributions without the full formal depth of Fahrmeir.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Random-variable and expectation selections — Answer-backed PMF/CDF, expectation, variance,
+      and transformation calculations for independent practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: Random-variable, expectation, and variance units — Official notes and solved problems for
+      PMF/PDF/CDF, functions of variables, expectation, and variance.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — RVs and expectation
+    source_id: source-stat110
+    locator: Units 3–4 — Full lecture treatment of random variables, expectation, indicators, and variance
+      for derivational depth beyond L06.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — random-variable block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; random-variable and moment questions — Selected probability-table, expectation,
+      and variance problems; use only questions that match the L06 object definitions and notation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — expected values and probability distributions
+    source_id: source-statquest
+    locator: Expected Values, Main Ideas; Expected Values for Continuous Variables; Main Ideas behind
+      Probability Distributions — Compact intuition for discrete/continuous expected value and the role
+      of a probability distribution; best used for one diagnosed conceptual gap.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — expected value and variance calculations
+    source_id: source-jbstatistics
+    locator: Expected value and variance videos — Calculation-first walkthroughs for discrete probability
+      tables and moments when a short StatQuest intuition clip is too fast.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsvariablen; Erwartungswert; Varianz — German terminology-first refresh for random variables,
+      expectation, and variance.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-variance-covariance
+  number: 5
+  title: Variance, standard deviation, and covariance
+  status: pending
+  objective: Variance measures squared deviation from expectation, affine scaling squares the multiplier,
+    and covariance records joint variation needed for sums and sample means.
+  done_when:
+  - 'Reproduce without notes: Variance measures squared deviation from expectation, affine scaling squares
+    the multiplier, and covariance records joint variation needed for sums and sample means.'
+  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-correlation
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — random variables and moments
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Probability tables, CDFs, transformations,
+      expectation, variance, and Chebyshev calculations in the course's own notation.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 random-variables and expected-values pair
+    source_id: source-sad-2025-recordings
+    locator: 05_random_variables.pdf; 06_expected_values.pptx-1.pdf — Splits random-variable definitions
+      and expectation/moment calculations across two older decks, providing more same-course examples
+      than the combined current treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 5–7 — random variables and moments
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5–7 selected sections — The German rigor home for discrete/continuous RVs, distribution
+      functions, expectation, variance, covariance, Chebyshev, and large-sample behavior.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 5–7 — RV and moment drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 5–7 selections — Solved German calculations for PMF/CDF, expectation, variance,
+      covariance, and bounds after the current UE4 tasks.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4; selected Chapter 10 sections — The strongest story/proof explanation of random
+      variables, expectation, indicator methods, and transformations; Ch 10 is used only for matching
+      moment depth.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Random variables, expectation, and variance chapters — Middle-rung exposition between the
+      course/Fahrmeir layer and Ross, covering distribution functions, expectation, variance, and transformations.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Random variables, expectation, and variance selections — A computationally intuitive route
+      to distributions, expectation, variance, and stabilization that complements Fahrmeir's notation-first
+      treatment.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Random variables and expectation chapters — Formal discrete/continuous variable, distribution-function,
+      expectation, variance, and joint-variable depth beyond the course requirements.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Random-variable and expectation problem sets — Worked PMF/PDF/CDF, expectation, variance,
+      transformation, and covariance calculations for extra repetition rather than first learning.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 4 — distribution bridge
+    source_id: source-openintro-statistics
+    locator: Chapter 4 selections — Gentle transition from probability to random variables, expectation,
+      variability, and sampling distributions without the full formal depth of Fahrmeir.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Random-variable and expectation selections — Answer-backed PMF/CDF, expectation, variance,
+      and transformation calculations for independent practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: Random-variable, expectation, and variance units — Official notes and solved problems for
+      PMF/PDF/CDF, functions of variables, expectation, and variance.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — RVs and expectation
+    source_id: source-stat110
+    locator: Units 3–4 — Full lecture treatment of random variables, expectation, indicators, and variance
+      for derivational depth beyond L06.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — random-variable block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; random-variable and moment questions — Selected probability-table, expectation,
+      and variance problems; use only questions that match the L06 object definitions and notation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — expected value and variance calculations
+    source_id: source-jbstatistics
+    locator: Expected value and variance videos — Calculation-first walkthroughs for discrete probability
+      tables and moments when a short StatQuest intuition clip is too fast.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsvariablen; Erwartungswert; Varianz — German terminology-first refresh for random variables,
+      expectation, and variance.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-variance-covariance/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-sample-mean
+  number: 6
+  title: IID samples and the random sample mean
+  status: pending
+  objective: The sample mean is itself random; under IID sampling its expectation is the population mean
+    and its variance shrinks as sigma squared divided by n.
+  done_when:
+  - 'Reproduce without notes: The sample mean is itself random; under IID sampling its expectation is
+    the population mean and its variance shrinks as sigma squared divided by n.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: read
+    label: OpenIntro Chapter 4 — distribution bridge
+    source_id: source-openintro-statistics
+    locator: Chapter 4 selections — Gentle transition from probability to random variables, expectation,
+      variability, and sampling distributions without the full formal depth of Fahrmeir.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-sample-mean/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l06-concentration
+  number: 7
+  title: Chebyshev bounds and the law of large numbers
+  status: pending
+  objective: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why
+    sample averages stabilize as data accumulate.
+  done_when:
+  - 'Reproduce without notes: Chebyshev gives a distribution-free tail bound, and the law of large numbers
+    explains why sample averages stabilize as data accumulate.'
+  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L06 random-variables deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/06_random_variables.pdf (60 pages) — The scope authority for random-variable
+      language, PMF/PDF/CDF, moments, covariance, sample-mean variance, Chebyshev, and the law of large
+      numbers.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — random variables and moments
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Probability tables, CDFs, transformations,
+      expectation, variance, and Chebyshev calculations in the course's own notation.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapters 5–7 — random variables and moments
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 5–7 selected sections — The German rigor home for discrete/continuous RVs, distribution
+      functions, expectation, variance, covariance, Chebyshev, and large-sample behavior.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 5–7 — RV and moment drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 5–7 selections — Solved German calculations for PMF/CDF, expectation, variance,
+      covariance, and bounds after the current UE4 tasks.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Random variables, expectation, and variance selections — A computationally intuitive route
+      to distributions, expectation, variance, and stabilization that complements Fahrmeir's notation-first
+      treatment.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md
+  attachments: []
+  source_feedback: []

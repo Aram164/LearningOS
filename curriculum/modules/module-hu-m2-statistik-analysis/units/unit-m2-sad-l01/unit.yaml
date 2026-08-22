@@ -6,9 +6,9 @@ kind: lecture
 title: SaD Lecture 01 — Introduction
 order: 1
 scope: Current 2026 L01 deck; competing descriptions of the same data, mean/median/mode and robustness,
-  empirical distributions, sample dependence, classification tables and metrics, base-rate effects,
-  Bayes reasoning, and the course's descriptive-to-inferential-to-ML roadmap.
-status: not-started
+  empirical distributions, sample dependence, classification tables and metrics, base-rate effects, Bayes
+  reasoning, and the course's descriptive-to-inferential-to-ML roadmap.
+status: ready
 knowledge_map:
   summary: The lecture begins with one data question and shows why every numerical answer depends on the
     population, sample, representation, loss, and decision being asked for.
@@ -19,34 +19,41 @@ knowledge_map:
       decisions can require different summaries of the same observations.
   - id: knowledge-sad-l01-location
     title: Mean, median, mode, and robustness
-    summary: Central-tendency summaries answer different questions, while outliers move the mean much more
-      strongly than the median or mode.
-    builds_on: [knowledge-sad-l01-data-questions]
+    summary: Central-tendency summaries answer different questions, while outliers move the mean much
+      more strongly than the median or mode.
+    builds_on:
+    - knowledge-sad-l01-data-questions
   - id: knowledge-sad-l01-distributions
     title: Frequencies, histograms, and empirical distributions
     summary: Counts become relative frequencies and distributions, making samples of different sizes and
       ranges comparable without pretending that the sample is the population.
-    builds_on: [knowledge-sad-l01-location]
+    builds_on:
+    - knowledge-sad-l01-location
   - id: knowledge-sad-l01-sampling-context
     title: Samples, populations, and context
     summary: A result changes with the sampled group; the same-looking numbers can describe different
       populations, and comparison requires attention to selection and context.
-    builds_on: [knowledge-sad-l01-distributions]
+    builds_on:
+    - knowledge-sad-l01-distributions
   - id: knowledge-sad-l01-classification
     title: Confusion matrices and classification metrics
     summary: True/false positives and negatives support accuracy, precision, recall, sensitivity, and
       specificity; the useful metric depends on the error costs and class prevalence.
-    builds_on: [knowledge-sad-l01-data-questions]
+    builds_on:
+    - knowledge-sad-l01-data-questions
   - id: knowledge-sad-l01-base-rates
     title: Base rates and Bayes by counting
     summary: Medical-test and classification examples expose why a high sensitivity need not imply a high
       posterior probability when the positive class is rare.
-    builds_on: [knowledge-sad-l01-classification]
+    builds_on:
+    - knowledge-sad-l01-classification
   - id: knowledge-sad-l01-course-map
     title: From description to inference and prediction
     summary: Descriptive statistics summarize observed data; probability models uncertainty; inference
       reasons about populations; data science and machine learning use the resulting structure to predict.
-    builds_on: [knowledge-sad-l01-sampling-context, knowledge-sad-l01-base-rates]
+    builds_on:
+    - knowledge-sad-l01-sampling-context
+    - knowledge-sad-l01-base-rates
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -55,4 +62,6 @@ source_selections: []
 artifacts:
   ultimate_reference: note-sad-l01-introduction
   exercise_bank: note-sad-l01-exercise-bank
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l01

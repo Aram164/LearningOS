@@ -1,0 +1,491 @@
+id: study-map-m2-sad-l12
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l12
+status: not-started
+current_stage: stage-sad-l12-tree-model
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l12-tree-model
+  number: 1
+  title: Decision trees, rules, and preference bias
+  status: pending
+  objective: Internal nodes test features, branches partition the instance space, and leaves predict;
+    simpler rules encode a generalization preference rather than merely memorizing IDs.
+  done_when:
+  - 'Reproduce without notes: Internal nodes test features, branches partition the instance space, and
+    leaves predict; simpler rules encode a generalization preference rather than merely memorizing IDs.'
+  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-decision-trees
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: Decision Trees, Clearly Explained; Random Forests, Clearly Explained — Visual first exposure
+      to recursive splits and variance reduction by ensembles; the current deck and Kelleher retain entropy/ID3
+      and full ensemble scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kelleher Chapter 4 — information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially §4.2.3 — Primary course-aligned tree source with worked toy datasets,
+      entropy/information gain, ID3, pruning, and ensemble context in an exam-friendly style.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP §§8.1–8.2 — trees and ensembles
+    source_id: source-islp
+    locator: §§8.1–8.2 — Statistical-learning treatment of classification/regression trees, cost-complexity
+      pruning, bagging, random forests, and boosting with code/application context.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese Chapter 8 — tree methods
+    source_id: source-kroese-dsml
+    locator: Chapter 8 selections — Independent mathematical/computational reference for trees and ensembles
+      after Kelleher or ISLP; use when one method needs a third formulation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Stanford CS229 — tree/ensemble lecture selections
+    source_id: source-cs229-2022-videos
+    locator: Topic-matched tree/ensemble lecture — Full university-lecture depth on selected tree or ensemble
+      topics; use only the matching lecture after SaD scope, never the entire course.
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW8 — trees and AdaBoost
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW8; 2018Spring/HW8 — Local solution-backed tree construction and boosting problems;
+      select only the relevant tasks from the course-year variants.
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 6.034 quizzes — ID3/tree tracing
+    source_id: source-mit-6034-quizzes
+    locator: Tree/ID3 quiz selections — Solution-backed hand construction and information-gain questions
+      close to SaD's algorithm-tracing demands.
+    scope_triage: helpful-now
+  - kind: read
+    label: Brandon Rohrer — friendly decision-tree explanation
+    source_id: source-rohrer-e2eml
+    locator: Decision-tree article/video selections — Visual, plain-language intuition for recursive splitting
+      and tree behavior when the entropy formulas are computable but the model picture is missing.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 6 - trees you can grow and prune
+    source_id: source-geron-handson
+    locator: 'Chapter 6, pp. 203-216 — Executes the L12 induction story: impurity-driven splits, the regression
+      criterion, and the regularisation hyperparameters that stand in for the deck''s pre-pruning discussion,
+      so the ID3 trace has a machine-checked counterpart.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL - the ensemble chapters behind the L12 summary slide
+    source_id: source-esl
+    locator: 'Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623 — Supplies
+      the derivations the deck summarises in four bullets: why AdaBoost fits an additive model under exponential
+      loss, what random forests do to variance, and the model-averaging view that stacking belongs to.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-entropy-id3
+  number: 2
+  title: Entropy, information gain, and ID3
+  status: pending
+  objective: Entropy measures class impurity, information gain measures the reduction after a split, and
+    ID3 greedily chooses the feature that produces the largest gain.
+  done_when:
+  - 'Reproduce without notes: Entropy measures class impurity, information gain measures the reduction
+    after a split, and ID3 greedily chooses the feature that produces the largest gain.'
+  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
+    step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-information-gain
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher Chapter 4 — information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially §4.2.3 — Primary course-aligned tree source with worked toy datasets,
+      entropy/information gain, ID3, pruning, and ensemble context in an exam-friendly style.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS229 — decision-tree and boosting derivations
+    source_id: source-cs229-notes
+    locator: Decision-tree and boosting selections — Compact advanced mathematical depth for tree and
+      boosting ideas; not needed for the first course- aligned pass or hand ID3 trace.
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW8 — trees and AdaBoost
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW8; 2018Spring/HW8 — Local solution-backed tree construction and boosting problems;
+      select only the relevant tasks from the course-year variants.
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 6.034 quizzes — ID3/tree tracing
+    source_id: source-mit-6034-quizzes
+    locator: Tree/ID3 quiz selections — Solution-backed hand construction and information-gain questions
+      close to SaD's algorithm-tracing demands.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 6 - trees you can grow and prune
+    source_id: source-geron-handson
+    locator: 'Chapter 6, pp. 203-216 — Executes the L12 induction story: impurity-driven splits, the regression
+      criterion, and the regularisation hyperparameters that stand in for the deck''s pre-pruning discussion,
+      so the ID3 trace has a machine-checked counterpart.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
+    source_id: source-marsland-ml-algorithmic
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296) — Presents ID3 as code with entropy, information
+      gain and Gini side by side, then boosting, bagging and random forests as procedures, which is the
+      algorithmic reading of L12 that the slide pseudocode compresses.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-regression
+  number: 3
+  title: Regression trees and variance reduction
+  status: pending
+  objective: Numeric targets replace class impurity with within-node squared-error or variance reduction
+    while retaining the same recursive partition structure.
+  done_when:
+  - 'Reproduce without notes: Numeric targets replace class impurity with within-node squared-error or
+    variance reduction while retaining the same recursive partition structure.'
+  exam_critical: true
+  concepts:
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: read
+    label: ISLP §§8.1–8.2 — trees and ensembles
+    source_id: source-islp
+    locator: §§8.1–8.2 — Statistical-learning treatment of classification/regression trees, cost-complexity
+      pruning, bagging, random forests, and boosting with code/application context.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese Chapter 8 — tree methods
+    source_id: source-kroese-dsml
+    locator: Chapter 8 selections — Independent mathematical/computational reference for trees and ensembles
+      after Kelleher or ISLP; use when one method needs a third formulation.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 6 - trees you can grow and prune
+    source_id: source-geron-handson
+    locator: 'Chapter 6, pp. 203-216 — Executes the L12 induction story: impurity-driven splits, the regression
+      criterion, and the regularisation hyperparameters that stand in for the deck''s pre-pruning discussion,
+      so the ID3 trace has a machine-checked counterpart.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
+    source_id: source-marsland-ml-algorithmic
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296) — Presents ID3 as code with entropy, information
+      gain and Gini side by side, then boosting, bagging and random forests as procedures, which is the
+      algorithmic reading of L12 that the slide pseudocode compresses.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-pruning
+  number: 4
+  title: Tree growth, stopping, and pruning
+  status: pending
+  objective: Depth, minimum samples, purity thresholds, and post-pruning control complexity; an unpruned
+    tree can fit noise and generalize poorly.
+  done_when:
+  - 'Reproduce without notes: Depth, minimum samples, purity thresholds, and post-pruning control complexity;
+    an unpruned tree can fit noise and generalize poorly.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: Decision Trees, Clearly Explained; Random Forests, Clearly Explained — Visual first exposure
+      to recursive splits and variance reduction by ensembles; the current deck and Kelleher retain entropy/ID3
+      and full ensemble scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kelleher Chapter 4 — information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially §4.2.3 — Primary course-aligned tree source with worked toy datasets,
+      entropy/information gain, ID3, pruning, and ensemble context in an exam-friendly style.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP §§8.1–8.2 — trees and ensembles
+    source_id: source-islp
+    locator: §§8.1–8.2 — Statistical-learning treatment of classification/regression trees, cost-complexity
+      pruning, bagging, random forests, and boosting with code/application context.
+    scope_triage: helpful-now
+  - kind: read
+    label: Brandon Rohrer — friendly decision-tree explanation
+    source_id: source-rohrer-e2eml
+    locator: Decision-tree article/video selections — Visual, plain-language intuition for recursive splitting
+      and tree behavior when the entropy formulas are computable but the model picture is missing.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 6 - trees you can grow and prune
+    source_id: source-geron-handson
+    locator: 'Chapter 6, pp. 203-216 — Executes the L12 induction story: impurity-driven splits, the regression
+      criterion, and the regularisation hyperparameters that stand in for the deck''s pre-pruning discussion,
+      so the ID3 trace has a machine-checked counterpart.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
+    source_id: source-marsland-ml-algorithmic
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296) — Presents ID3 as code with entropy, information
+      gain and Gini side by side, then boosting, bagging and random forests as procedures, which is the
+      algorithmic reading of L12 that the slide pseudocode compresses.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-bagging-forest
+  number: 5
+  title: Bagging and random forests
+  status: pending
+  objective: Bootstrap aggregation averages unstable learners, while random forests add feature subsampling
+    to decorrelate trees and reduce ensemble variance.
+  done_when:
+  - 'Reproduce without notes: Bootstrap aggregation averages unstable learners, while random forests add
+    feature subsampling to decorrelate trees and reduce ensemble variance.'
+  exam_critical: true
+  concepts:
+  - concept-random-forest
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: Decision Trees, Clearly Explained; Random Forests, Clearly Explained — Visual first exposure
+      to recursive splits and variance reduction by ensembles; the current deck and Kelleher retain entropy/ID3
+      and full ensemble scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kelleher Chapter 4 — information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially §4.2.3 — Primary course-aligned tree source with worked toy datasets,
+      entropy/information gain, ID3, pruning, and ensemble context in an exam-friendly style.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP §§8.1–8.2 — trees and ensembles
+    source_id: source-islp
+    locator: §§8.1–8.2 — Statistical-learning treatment of classification/regression trees, cost-complexity
+      pruning, bagging, random forests, and boosting with code/application context.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese Chapter 8 — tree methods
+    source_id: source-kroese-dsml
+    locator: Chapter 8 selections — Independent mathematical/computational reference for trees and ensembles
+      after Kelleher or ISLP; use when one method needs a third formulation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Stanford CS229 — tree/ensemble lecture selections
+    source_id: source-cs229-2022-videos
+    locator: Topic-matched tree/ensemble lecture — Full university-lecture depth on selected tree or ensemble
+      topics; use only the matching lecture after SaD scope, never the entire course.
+    scope_triage: reference-only
+  - kind: read
+    label: Geron Ch 7 - the three ensemble families side by side
+    source_id: source-geron-handson
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236) — L12 slide 34 names stacking in one line and no other registered
+      source covers it; this chapter builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient
+      boosting and a stacking blender in one place, which is exactly the comparison the deck asks for.
+    scope_triage: helpful-now
+  - kind: read
+    label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
+    source_id: source-marsland-ml-algorithmic
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296) — Presents ID3 as code with entropy, information
+      gain and Gini side by side, then boosting, bagging and random forests as procedures, which is the
+      algorithmic reading of L12 that the slide pseudocode compresses.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL - the ensemble chapters behind the L12 summary slide
+    source_id: source-esl
+    locator: 'Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623 — Supplies
+      the derivations the deck summarises in four bullets: why AdaBoost fits an additive model under exponential
+      loss, what random forests do to variance, and the model-averaging view that stacking belongs to.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-boosting
+  number: 6
+  title: Boosting
+  status: pending
+  objective: Sequential weak learners focus on residuals or misclassified examples, trading a coordinated
+    bias reduction against sensitivity to noise and tuning.
+  done_when:
+  - 'Reproduce without notes: Sequential weak learners focus on residuals or misclassified examples, trading
+    a coordinated bias reduction against sensitivity to noise and tuning.'
+  - Work Cornell CS4780 HW8 — trees and AdaBoost, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-random-forest
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher Chapter 4 — information-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 4, especially §4.2.3 — Primary course-aligned tree source with worked toy datasets,
+      entropy/information gain, ID3, pruning, and ensemble context in an exam-friendly style.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP §§8.1–8.2 — trees and ensembles
+    source_id: source-islp
+    locator: §§8.1–8.2 — Statistical-learning treatment of classification/regression trees, cost-complexity
+      pruning, bagging, random forests, and boosting with code/application context.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese Chapter 8 — tree methods
+    source_id: source-kroese-dsml
+    locator: Chapter 8 selections — Independent mathematical/computational reference for trees and ensembles
+      after Kelleher or ISLP; use when one method needs a third formulation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS229 — decision-tree and boosting derivations
+    source_id: source-cs229-notes
+    locator: Decision-tree and boosting selections — Compact advanced mathematical depth for tree and
+      boosting ideas; not needed for the first course- aligned pass or hand ID3 trace.
+    scope_triage: reference-only
+  - kind: reference
+    label: Stanford CS229 — tree/ensemble lecture selections
+    source_id: source-cs229-2022-videos
+    locator: Topic-matched tree/ensemble lecture — Full university-lecture depth on selected tree or ensemble
+      topics; use only the matching lecture after SaD scope, never the entire course.
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW8 — trees and AdaBoost
+    source_id: source-cs4780-homeworks
+    locator: 2018Fall/HW8; 2018Spring/HW8 — Local solution-backed tree construction and boosting problems;
+      select only the relevant tasks from the course-year variants.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 7 - the three ensemble families side by side
+    source_id: source-geron-handson
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236) — L12 slide 34 names stacking in one line and no other registered
+      source covers it; this chapter builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient
+      boosting and a stacking blender in one place, which is exactly the comparison the deck asks for.
+    scope_triage: helpful-now
+  - kind: read
+    label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
+    source_id: source-marsland-ml-algorithmic
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296) — Presents ID3 as code with entropy, information
+      gain and Gini side by side, then boosting, bagging and random forests as procedures, which is the
+      algorithmic reading of L12 that the slide pseudocode compresses.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL - the ensemble chapters behind the L12 summary slide
+    source_id: source-esl
+    locator: 'Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623 — Supplies
+      the derivations the deck summarises in four bullets: why AdaBoost fits an additive model under exponential
+      loss, what random forests do to variance, and the model-averaging view that stacking belongs to.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-stacking
+  number: 7
+  title: Stacking and ensemble tradeoffs
+  status: pending
+  objective: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction,
+    diversity, interpretability, compute, and calibration decide whether an ensemble is worthwhile.
+  done_when:
+  - 'Reproduce without notes: A meta-learner combines diverse base predictions; leakage-safe out-of-fold
+    construction, diversity, interpretability, compute, and calibration decide whether an ensemble is
+    worthwhile.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: 'lecture-slides/12_tree_based.pdf (36 pages) — The only current tree scope: preference bias,
+      entropy/information gain/ID3, regression splitting, pruning, and the bagging/random-forest/boosting/stacking
+      ensemble family.'
+    scope_triage: required-now
+  - kind: read
+    label: Geron Ch 7 - the three ensemble families side by side
+    source_id: source-geron-handson
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236) — L12 slide 34 names stacking in one line and no other registered
+      source covers it; this chapter builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient
+      boosting and a stacking blender in one place, which is exactly the comparison the deck asks for.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL - the ensemble chapters behind the L12 summary slide
+    source_id: source-esl
+    locator: 'Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623 — Supplies
+      the derivations the deck summarises in four bullets: why AdaBoost fits an additive model under exponential
+      loss, what random forests do to variance, and the model-averaging view that stacking belongs to.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md
+  attachments: []
+  source_feedback: []

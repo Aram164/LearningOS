@@ -1,0 +1,416 @@
+id: study-map-m2-sad-l03
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l03
+status: not-started
+current_stage: stage-sad-l03-paired-data
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l03-paired-data
+  number: 1
+  title: Paired data and scatterplots
+  status: pending
+  objective: Correlation is defined on corresponding measurements; scatterplots reveal direction, form,
+    outliers, and nonlinearity before any coefficient is calculated.
+  done_when:
+  - 'Reproduce without notes: Correlation is defined on corresponding measurements; scatterplots reveal
+    direction, form, outliers, and nonlinearity before any coefficient is calculated.'
+  - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: practise
+    label: UE2 and Blatt 2 — correlation and regression practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf correlation/regression section; exercise-slides/blatt-02.pdf — The
+      current worked route for paired features, covariance/correlation, linear regression, coefficient
+      interpretation, and the bridge from descriptive calculations to fitted models.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 3 — multivariate description and regression
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 3 — German statistics treatment of covariance, correlation, scatterplots, and regression
+      for matching lecture notation and interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — correlation and linear regression
+    source_id: source-openintro-statistics
+    locator: Correlation and linear-regression chapter selections — Gentle data-analysis treatment of
+      scatterplots, correlation, residuals, least squares, interpretation, and regression limitations.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-covariance
+  number: 2
+  title: Covariance and Pearson correlation
+  status: pending
+  objective: Covariance measures joint signed deviation, while Pearson normalization produces a scale-free
+    coefficient in [-1,1] for linear association.
+  done_when:
+  - 'Reproduce without notes: Covariance measures joint signed deviation, while Pearson normalization
+    produces a scale-free coefficient in [-1,1] for linear association.'
+  - Work UE2 and Blatt 2 — correlation and regression practice, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-correlation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: practise
+    label: UE2 and Blatt 2 — correlation and regression practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf correlation/regression section; exercise-slides/blatt-02.pdf — The
+      current worked route for paired features, covariance/correlation, linear regression, coefficient
+      interpretation, and the bridge from descriptive calculations to fitted models.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 3 — multivariate description and regression
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 3 — German statistics treatment of covariance, correlation, scatterplots, and regression
+      for matching lecture notation and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 3 — correlation and regression drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 3 — Worked German problems for covariance/Pearson correlation and simple regression
+      once the current UE material is exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — correlation and linear regression
+    source_id: source-openintro-statistics
+    locator: Correlation and linear-regression chapter selections — Gentle data-analysis treatment of
+      scatterplots, correlation, residuals, least squares, interpretation, and regression limitations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — correlation and regression exercises
+    source_id: source-dekking-mips
+    locator: Correlation and regression selections — Answer-backed practice for covariance, Pearson correlation,
+      simple regression, and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — correlation item
+    source_id: source-fau-klausur-ws1415
+    locator: Correlation question and solution — Transfer practice for computing and interpreting correlation
+      under time pressure, including the difference between an observed association and a statistical
+      conclusion.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — correlation/regression block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; correlation and regression questions — Gap-targeted German transfer questions
+      for correlation and regression computation/interpretation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — Pearson correlation, least squares, and gradient descent
+    source_id: source-statquest
+    locator: Pearson's Correlation; Linear Regression/Least Squares; Gradient Descent Step-by-Step — Three
+      surgical animations for association, fitted-line loss, and iterative optimization; use the specific
+      clip matching the blocked node rather than watching a playlist.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-covariance/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-interpretation
+  number: 3
+  title: Correlation is not causation
+  status: pending
+  objective: A numerical association can reflect confounding, reverse causality, selection, coincidence,
+    or a real mechanism; computation alone cannot choose among these explanations.
+  done_when:
+  - 'Reproduce without notes: A numerical association can reflect confounding, reverse causality, selection,
+    coincidence, or a real mechanism; computation alone cannot choose among these explanations.'
+  - Work Dekking — correlation and regression exercises, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-correlation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 3 — multivariate description and regression
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 3 — German statistics treatment of covariance, correlation, scatterplots, and regression
+      for matching lecture notation and interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — correlation and linear regression
+    source_id: source-openintro-statistics
+    locator: Correlation and linear-regression chapter selections — Gentle data-analysis treatment of
+      scatterplots, correlation, residuals, least squares, interpretation, and regression limitations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — correlation and regression exercises
+    source_id: source-dekking-mips
+    locator: Correlation and regression selections — Answer-backed practice for covariance, Pearson correlation,
+      simple regression, and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — correlation item
+    source_id: source-fau-klausur-ws1415
+    locator: Correlation question and solution — Transfer practice for computing and interpreting correlation
+      under time pressure, including the difference between an observed association and a statistical
+      conclusion.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — correlation/regression block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; correlation and regression questions — Gap-targeted German transfer questions
+      for correlation and regression computation/interpretation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-simple-regression
+  number: 4
+  title: Simple linear regression and least squares
+  status: pending
+  objective: A line predicts one variable from another; residuals measure errors, and minimizing squared
+    error determines slope and intercept.
+  done_when:
+  - 'Reproduce without notes: A line predicts one variable from another; residuals measure errors, and
+    minimizing squared error determines slope and intercept.'
+  - Work UE2 and Blatt 2 — correlation and regression practice, then the remaining 3, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: practise
+    label: UE2 and Blatt 2 — correlation and regression practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf correlation/regression section; exercise-slides/blatt-02.pdf — The
+      current worked route for paired features, covariance/correlation, linear regression, coefficient
+      interpretation, and the bridge from descriptive calculations to fitted models.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 3 — multivariate description and regression
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 3 — German statistics treatment of covariance, correlation, scatterplots, and regression
+      for matching lecture notation and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 3 — correlation and regression drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 3 — Worked German problems for covariance/Pearson correlation and simple regression
+      once the current UE material is exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — correlation and linear regression
+    source_id: source-openintro-statistics
+    locator: Correlation and linear-regression chapter selections — Gentle data-analysis treatment of
+      scatterplots, correlation, residuals, least squares, interpretation, and regression limitations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — correlation and regression exercises
+    source_id: source-dekking-mips
+    locator: Correlation and regression selections — Answer-backed practice for covariance, Pearson correlation,
+      simple regression, and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — correlation/regression block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; correlation and regression questions — Gap-targeted German transfer questions
+      for correlation and regression computation/interpretation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — Pearson correlation, least squares, and gradient descent
+    source_id: source-statquest
+    locator: Pearson's Correlation; Linear Regression/Least Squares; Gradient Descent Step-by-Step — Three
+      surgical animations for association, fitted-line loss, and iterative optimization; use the specific
+      clip matching the blocked node rather than watching a playlist.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP Chapter 3 — statistical regression bridge
+    source_id: source-islp
+    locator: Chapter 3 via Regression Bridge §§2, 4, and 7 — Adds fit assessment, inference, qualitative
+      predictors, and a broader statistical-learning view to the course's correlation/least-squares core;
+      selected sections only.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-simple-regression/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-multivariate
+  number: 5
+  title: Multivariate linear regression and the design matrix
+  status: pending
+  objective: Several predictors become columns of a matrix, one parameter vector produces predictions,
+    and the normal equation expresses the closed-form least-squares solution.
+  done_when:
+  - 'Reproduce without notes: Several predictors become columns of a matrix, one parameter vector produces
+    predictions, and the normal equation expresses the closed-form least-squares solution.'
+  exam_critical: true
+  concepts:
+  - concept-linear-regression
+  - concept-normal-equation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: read
+    label: ISLP Chapter 3 — statistical regression bridge
+    source_id: source-islp
+    locator: Chapter 3 via Regression Bridge §§2, 4, and 7 — Adds fit assessment, inference, qualitative
+      predictors, and a broader statistical-learning view to the course's correlation/least-squares core;
+      selected sections only.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — vectors, dot products, and matrix transformations
+    source_id: source-3b1b-linear-algebra
+    locator: Essence of Linear Algebra — vectors, dot products, and matrix multiplication episodes — Targeted
+      visual prerequisite repair for the multivariate design-matrix and normal-equation geometry; use
+      only the blocked concept, not the full playlist by default.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 4 - the normal equation and gradient descent side by side
+    source_id: source-geron-handson
+    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
+      p. 142; learning rate p. 146; feature scaling p. 148) — L03 presents the closed-form normal equation
+      and gradient descent as two routes to the same fit; this chapter runs both on the same data, shows
+      what the learning rate does to convergence and why unscaled features distort the descent path -
+      the two claims the deck makes without demonstration.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-multivariate/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-gradient-descent
+  number: 6
+  title: Gradient descent as an alternative optimizer
+  status: pending
+  objective: Iterative updates follow the negative loss gradient; learning rate, initialization, scaling,
+    and convergence determine whether the fitted parameters are reached reliably.
+  done_when:
+  - 'Reproduce without notes: Iterative updates follow the negative loss gradient; learning rate, initialization,
+    scaling, and convergence determine whether the fitted parameters are reached reliably.'
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — Pearson correlation, least squares, and gradient descent
+    source_id: source-statquest
+    locator: Pearson's Correlation; Linear Regression/Least Squares; Gradient Descent Step-by-Step — Three
+      surgical animations for association, fitted-line loss, and iterative optimization; use the specific
+      clip matching the blocked node rather than watching a playlist.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kelleher Chapter 7 — error surfaces and gradient descent
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 7 error-based learning selections — The course-named ML text's rent example visualizes
+      loss surfaces, learning rates, and iterative fitting; it complements rather than replaces the lecture's
+      regression derivation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — vectors, dot products, and matrix transformations
+    source_id: source-3b1b-linear-algebra
+    locator: Essence of Linear Algebra — vectors, dot products, and matrix multiplication episodes — Targeted
+      visual prerequisite repair for the multivariate design-matrix and normal-equation geometry; use
+      only the blocked concept, not the full playlist by default.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 4 - the normal equation and gradient descent side by side
+    source_id: source-geron-handson
+    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
+      p. 142; learning rate p. 146; feature scaling p. 148) — L03 presents the closed-form normal equation
+      and gradient descent as two routes to the same fit; this chapter runs both on the same data, shows
+      what the learning rate does to convergence and why unscaled features distort the descent path -
+      the two claims the deck makes without demonstration.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-gradient-descent/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l03-scaling-weights
+  number: 7
+  title: Scaling, coefficient interpretation, and model limits
+  status: pending
+  objective: Feature units change coefficient magnitudes and optimization geometry; weights require context,
+    and linear fit quality does not by itself establish generalization or causality.
+  done_when:
+  - 'Reproduce without notes: Feature units change coefficient magnitudes and optimization geometry; weights
+    require context, and linear fit quality does not by itself establish generalization or causality.'
+  - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L03 correlation and regression deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/03_correlation_regression.pdf (48 pages) — The course's own path from scatterplots
+      and Pearson correlation through least squares, multivariate regression, the normal equation, and
+      gradient descent.
+    scope_triage: required-now
+  - kind: practise
+    label: UE2 and Blatt 2 — correlation and regression practice
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf correlation/regression section; exercise-slides/blatt-02.pdf — The
+      current worked route for paired features, covariance/correlation, linear regression, coefficient
+      interpretation, and the bridge from descriptive calculations to fitted models.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher Chapter 7 — error surfaces and gradient descent
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 7 error-based learning selections — The course-named ML text's rent example visualizes
+      loss surfaces, learning rates, and iterative fitting; it complements rather than replaces the lecture's
+      regression derivation.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP Chapter 3 — statistical regression bridge
+    source_id: source-islp
+    locator: Chapter 3 via Regression Bridge §§2, 4, and 7 — Adds fit assessment, inference, qualitative
+      predictors, and a broader statistical-learning view to the course's correlation/least-squares core;
+      selected sections only.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md
+  attachments: []
+  source_feedback: []

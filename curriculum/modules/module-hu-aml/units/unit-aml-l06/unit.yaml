@@ -7,17 +7,19 @@ order: 6
 scope: Current 2026 L06 deck; gradients and local search, batch/stochastic/mini-batch gradient descent,
   learning-rate behaviour, convergence diagnostics, feature scaling, convexity and Hessians, momentum,
   RMSProp, Adam, Newton's method, and practical optimization tradeoffs.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture turns the gradients from regression and classification into iterative algorithms,
     explains their failure modes, and compares the main improvements used in modern training.
   nodes:
   - id: knowledge-aml-l06-gradient
     title: Gradient and descent direction
-    summary: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours, and local search.
+    summary: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours,
+      and local search.
   - id: knowledge-aml-l06-batch-gd
     title: Batch gradient descent
-    summary: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic examples.
+    summary: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic
+      examples.
     builds_on:
     - knowledge-aml-l06-gradient
   - id: knowledge-aml-l06-rate-scaling
@@ -32,12 +34,14 @@ knowledge_map:
     - knowledge-aml-l06-batch-gd
   - id: knowledge-aml-l06-convexity
     title: Convexity, optima, and Hessians
-    summary: Local versus global optima, positive-semidefinite Hessians, and why the regression objectives are well behaved.
+    summary: Local versus global optima, positive-semidefinite Hessians, and why the regression objectives
+      are well behaved.
     builds_on:
     - knowledge-aml-l06-gradient
   - id: knowledge-aml-l06-optimizers
     title: Momentum, RMSProp, and Adam
-    summary: Moving averages of gradients and squared gradients, adaptive steps, bias correction, and combined updates.
+    summary: Moving averages of gradients and squared gradients, adaptive steps, bias correction, and
+      combined updates.
     builds_on:
     - knowledge-aml-l06-stochastic
   - id: knowledge-aml-l06-newton
@@ -59,3 +63,4 @@ artifacts:
   mock_exam: note-aml-l06-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l06

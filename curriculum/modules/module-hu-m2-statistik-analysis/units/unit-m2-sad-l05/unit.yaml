@@ -8,45 +8,53 @@ order: 5
 scope: Current 2026 L05 deck; the order/replacement/all-versus-k decision grid, permutations, variations,
   combinations, repeated and indistinguishable objects, multinomial counting, stars and bars, probability
   by counting, binomial identities, and Stirling's approximation.
-status: not-started
+status: ready
 knowledge_map:
-  summary: The lecture turns verbal counting problems into a small decision system based on order,
-    replacement, and selection size, then uses those counts as probability denominators and numerators.
+  summary: The lecture turns verbal counting problems into a small decision system based on order, replacement,
+    and selection size, then uses those counts as probability denominators and numerators.
   nodes:
   - id: knowledge-sad-l05-decision-grid
     title: The combinatorics decision grid
-    summary: First decide whether order matters, whether replacement/repetition is allowed, and whether all n
-      objects or only k are used; the formula follows from those choices.
+    summary: First decide whether order matters, whether replacement/repetition is allowed, and whether
+      all n objects or only k are used; the formula follows from those choices.
   - id: knowledge-sad-l05-permutations
     title: Permutations and indistinguishable objects
-    summary: Ordering all objects gives n!; repeated or indistinguishable groups divide away permutations that
-      do not create a new arrangement.
-    builds_on: [knowledge-sad-l05-decision-grid]
+    summary: Ordering all objects gives n!; repeated or indistinguishable groups divide away permutations
+      that do not create a new arrangement.
+    builds_on:
+    - knowledge-sad-l05-decision-grid
   - id: knowledge-sad-l05-variations
     title: Ordered selections (variations)
     summary: Choosing k positions with order yields falling-factorial counts without replacement and n^k
       sequences with replacement.
-    builds_on: [knowledge-sad-l05-decision-grid]
+    builds_on:
+    - knowledge-sad-l05-decision-grid
   - id: knowledge-sad-l05-combinations
     title: Unordered selections and binomial coefficients
-    summary: Choosing k objects without order gives n choose k, whose symmetry and recursive identities recur
-      throughout probability and algorithms.
-    builds_on: [knowledge-sad-l05-decision-grid]
+    summary: Choosing k objects without order gives n choose k, whose symmetry and recursive identities
+      recur throughout probability and algorithms.
+    builds_on:
+    - knowledge-sad-l05-decision-grid
   - id: knowledge-sad-l05-repetition
     title: Combinations with repetition and stars and bars
-    summary: Multisets and allocations become separator problems; the model must distinguish selecting types
-      repeatedly from ordering individual draws.
-    builds_on: [knowledge-sad-l05-combinations]
+    summary: Multisets and allocations become separator problems; the model must distinguish selecting
+      types repeatedly from ordering individual draws.
+    builds_on:
+    - knowledge-sad-l05-combinations
   - id: knowledge-sad-l05-counting-probability
     title: Laplace probability, complements, and hypergeometric counting
     summary: In equally likely finite spaces, probability is favorable counts over total counts; complements
       simplify at-least-one events, and without-replacement samples produce hypergeometric terms.
-    builds_on: [knowledge-sad-l05-permutations, knowledge-sad-l05-variations, knowledge-sad-l05-combinations]
+    builds_on:
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-combinations
   - id: knowledge-sad-l05-identities
     title: Binomial identities and Stirling approximation
     summary: Algebraic identities reorganize repeated counting arguments, while Stirling estimates factorial
       growth when exact evaluation is impractical.
-    builds_on: [knowledge-sad-l05-combinations]
+    builds_on:
+    - knowledge-sad-l05-combinations
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -55,4 +63,6 @@ source_selections: []
 artifacts:
   ultimate_reference: note-sad-l05-combinatorics
   exercise_bank: note-sad-l05-exercise-bank
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l05

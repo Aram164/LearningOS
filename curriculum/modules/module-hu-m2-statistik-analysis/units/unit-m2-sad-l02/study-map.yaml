@@ -1,0 +1,416 @@
+id: study-map-m2-sad-l02
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l02
+status: not-started
+current_stage: stage-sad-l02-vocabulary
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l02-vocabulary
+  number: 1
+  title: Population, sample, object, feature, and realization
+  status: pending
+  objective: Statistics observes feature values on sampled objects to learn about a larger population;
+    each term identifies a different part of that inference problem.
+  done_when:
+  - 'Reproduce without notes: Statistics observes feature values on sampled objects to learn about a larger
+    population; each term identifies a different part of that inference problem.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Grundbegriffe and Skalenniveaus
+    source_id: source-kurzes-tutorium-statistik
+    locator: Statistische Grundbegriffe; Skalenniveaus; Lagemaße/Streuungsmaße — German vocabulary repair
+      for population/sample, feature types, measurement scales, and descriptive summaries.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-vocabulary/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-scales
+  number: 2
+  title: Feature types and measurement scales
+  status: pending
+  objective: Nominal, ordinal, interval, and ratio scales determine which ordering, distance, averaging,
+    and arithmetic operations are legitimate.
+  done_when:
+  - 'Reproduce without notes: Nominal, ordinal, interval, and ratio scales determine which ordering, distance,
+    averaging, and arithmetic operations are legitimate.'
+  - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — descriptive-statistics calculations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf — Computes and interprets scale types,
+      frequencies, location and dispersion from course data, making the L02 definitions operational.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — univariate descriptive statistics
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 — The closest book match to the course's German terms and formulas for scales,
+      frequencies, quantiles, boxplots, location, and dispersion.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — descriptive block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; descriptive-statistics questions — Additional German exam questions for
+      scale, frequency, location, dispersion, and sample interpretation; select by diagnosed gap rather
+      than completing every paper.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — data types, histograms, center, and spread
+    source_id: source-jbstatistics
+    locator: Types of Data; Frequency Distributions/Histograms; Mean/Median/Mode; Variance/SD — Calm calculation-exact
+      explanations for scale types, frequency displays, mean/median/mode, variance, standard deviation,
+      and boxplots.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Grundbegriffe and Skalenniveaus
+    source_id: source-kurzes-tutorium-statistik
+    locator: Statistische Grundbegriffe; Skalenniveaus; Lagemaße/Streuungsmaße — German vocabulary repair
+      for population/sample, feature types, measurement scales, and descriptive summaries.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-scales/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-frequencies
+  number: 3
+  title: Frequency distributions and histograms
+  status: pending
+  objective: Absolute, relative, and cumulative frequencies organize raw observations; bin choices and
+    scale can change the visual claim a histogram appears to make.
+  done_when:
+  - 'Reproduce without notes: Absolute, relative, and cumulative frequencies organize raw observations;
+    bin choices and scale can change the visual claim a histogram appears to make.'
+  - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 3, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — descriptive-statistics calculations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf — Computes and interprets scale types,
+      frequencies, location and dispersion from course data, making the L02 definitions operational.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — univariate descriptive statistics
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 — The closest book match to the course's German terms and formulas for scales,
+      frequencies, quantiles, boxplots, location, and dispersion.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 2 — descriptive-statistics drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 2 — Chapter-matched German calculations for frequencies, quantiles, boxplots, location,
+      and dispersion with worked solutions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive-statistics exercise bank
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics exercise selections — Additional answer-backed practice for frequencies,
+      center, spread, and sampling when the current UE and Fahrmeir workbook are exhausted.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — descriptive block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; descriptive-statistics questions — Additional German exam questions for
+      scale, frequency, location, dispersion, and sample interpretation; select by diagnosed gap rather
+      than completing every paper.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — data types, histograms, center, and spread
+    source_id: source-jbstatistics
+    locator: Types of Data; Frequency Distributions/Histograms; Mean/Median/Mode; Variance/SD — Calm calculation-exact
+      explanations for scale types, frequency displays, mean/median/mode, variance, standard deviation,
+      and boxplots.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-frequencies/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-location
+  number: 4
+  title: Location, quantiles, and boxplots
+  status: pending
+  objective: Mean, median, mode, quantiles, and five-number summaries describe where data lie and support
+    a compact comparison of skew and outliers.
+  done_when:
+  - 'Reproduce without notes: Mean, median, mode, quantiles, and five-number summaries describe where
+    data lie and support a compact comparison of skew and outliers.'
+  - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — descriptive-statistics calculations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf — Computes and interprets scale types,
+      frequencies, location and dispersion from course data, making the L02 definitions operational.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — univariate descriptive statistics
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 — The closest book match to the course's German terms and formulas for scales,
+      frequencies, quantiles, boxplots, location, and dispersion.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 2 — descriptive-statistics drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 2 — Chapter-matched German calculations for frequencies, quantiles, boxplots, location,
+      and dispersion with worked solutions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive-statistics exercise bank
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics exercise selections — Additional answer-backed practice for frequencies,
+      center, spread, and sampling when the current UE and Fahrmeir workbook are exhausted.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — descriptive-statistics block
+    source_id: source-fau-klausur-ws1415
+    locator: Descriptive-statistics questions and solutions — German exam-format median, quartile, range,
+      skewness, and descriptive interpretation with a complete solution for self-grading.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — descriptive block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; descriptive-statistics questions — Additional German exam questions for
+      scale, frequency, location, dispersion, and sample interpretation; select by diagnosed gap rather
+      than completing every paper.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — data types, histograms, center, and spread
+    source_id: source-jbstatistics
+    locator: Types of Data; Frequency Distributions/Histograms; Mean/Median/Mode; Variance/SD — Calm calculation-exact
+      explanations for scale types, frequency displays, mean/median/mode, variance, standard deviation,
+      and boxplots.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Grundbegriffe and Skalenniveaus
+    source_id: source-kurzes-tutorium-statistik
+    locator: Statistische Grundbegriffe; Skalenniveaus; Lagemaße/Streuungsmaße — German vocabulary repair
+      for population/sample, feature types, measurement scales, and descriptive summaries.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-location/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-dispersion
+  number: 5
+  title: Range, variance, standard deviation, and divisors
+  status: pending
+  objective: Dispersion measures complement location; population variance divides by n, while the familiar
+    sample estimator uses n-1 for a later inferential reason.
+  done_when:
+  - 'Reproduce without notes: Dispersion measures complement location; population variance divides by
+    n, while the familiar sample estimator uses n-1 for a later inferential reason.'
+  - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — descriptive-statistics calculations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf — Computes and interprets scale types,
+      frequencies, location and dispersion from course data, making the L02 definitions operational.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — univariate descriptive statistics
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 — The closest book match to the course's German terms and formulas for scales,
+      frequencies, quantiles, boxplots, location, and dispersion.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 2 — descriptive-statistics drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 2 — Chapter-matched German calculations for frequencies, quantiles, boxplots, location,
+      and dispersion with worked solutions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive-statistics exercise bank
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics exercise selections — Additional answer-backed practice for frequencies,
+      center, spread, and sampling when the current UE and Fahrmeir workbook are exhausted.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — descriptive-statistics block
+    source_id: source-fau-klausur-ws1415
+    locator: Descriptive-statistics questions and solutions — German exam-format median, quartile, range,
+      skewness, and descriptive interpretation with a complete solution for self-grading.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — descriptive block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; descriptive-statistics questions — Additional German exam questions for
+      scale, frequency, location, dispersion, and sample interpretation; select by diagnosed gap rather
+      than completing every paper.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — data types, histograms, center, and spread
+    source_id: source-jbstatistics
+    locator: Types of Data; Frequency Distributions/Histograms; Mean/Median/Mode; Variance/SD — Calm calculation-exact
+      explanations for scale types, frequency displays, mean/median/mode, variance, standard deviation,
+      and boxplots.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Grundbegriffe and Skalenniveaus
+    source_id: source-kurzes-tutorium-statistik
+    locator: Statistische Grundbegriffe; Skalenniveaus; Lagemaße/Streuungsmaße — German vocabulary repair
+      for population/sample, feature types, measurement scales, and descriptive summaries.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-dispersion/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-simpson
+  number: 6
+  title: Aggregation and Simpson's paradox
+  status: pending
+  objective: A trend can reverse after groups are combined because group sizes and hidden variables alter
+    the weighting; stratification is part of interpretation, not cosmetic reporting.
+  done_when:
+  - 'Reproduce without notes: A trend can reverse after groups are combined because group sizes and hidden
+    variables alter the weighting; stratification is part of interpretation, not cosmetic reporting.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-simpson/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l02-sampling
+  number: 7
+  title: Representative samples and sampling bias
+  status: pending
+  objective: Randomness, coverage, nonresponse, survivorship, and convenience sampling decide whether
+    a descriptive result can support a population claim.
+  done_when:
+  - 'Reproduce without notes: Randomness, coverage, nonresponse, survivorship, and convenience sampling
+    decide whether a descriptive result can support a population claim.'
+  - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L02 basic-concepts deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/02_basics.pdf (39 pages) — Defines the exact course vocabulary and calculation
+      conventions for populations, samples, scales, frequencies, location, dispersion, Simpson's paradox,
+      and sampling bias.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — descriptive-statistics calculations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf — Computes and interprets scale types,
+      frequencies, location and dispersion from course data, making the L02 definitions operational.
+    scope_triage: required-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — descriptive foundations
+    source_id: source-openintro-statistics
+    locator: §§1.2–1.3 and §2.1 selections — Accessible explanations and data examples for variables,
+      sampling, distributions, center, spread, outliers, and misleading aggregation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive-statistics exercise bank
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics exercise selections — Additional answer-backed practice for frequencies,
+      center, spread, and sampling when the current UE and Fahrmeir workbook are exhausted.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — descriptive block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; descriptive-statistics questions — Additional German exam questions for
+      scale, frequency, location, dispersion, and sample interpretation; select by diagnosed gap rather
+      than completing every paper.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-sampling/notes.md
+  attachments: []
+  source_feedback: []

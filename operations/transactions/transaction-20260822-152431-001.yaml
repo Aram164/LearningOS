@@ -1,0 +1,54 @@
+schema_version: 1
+id: transaction-20260822-152431-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:24:31+02:00'
+snapshot_before: sha256:60a9a93324738bcc6b26b85ae9ccfb8e274fc972e8f7b4429669bfb3bef0efb4
+snapshot_after: sha256:0ef80c800f037b7f192cd1fa268bf041cf537e0ff6bf439d3ed1a93ed823277e
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l11:
+    before: 0
+    after: 1
+  unit-m2-sad-l11:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/study-map.yaml
+  sha256_before: null
+  sha256_after: f5e8b4ea42e5e3b3e2a2581d9a896a5ad53a2a466c327d9b02d87a100ccfd297
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/unit.yaml
+  sha256_before: aa413838c051cf6546b1920278e050498d7b958b8550e08ffc4605ba28586a3e
+  sha256_after: 2c36d0cbd9bb727eb4473e0f770b53fa0d0430ba3e48e0e86b49b99e38b54d1e
+  created: false
+metadata: {}

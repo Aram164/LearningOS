@@ -1,0 +1,54 @@
+schema_version: 1
+id: transaction-20260822-152040-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:20:40+02:00'
+snapshot_before: sha256:f24933aa4b2742d4218d916f0ec29daf84a8498c37abf050f9fe8e9a15bf3cbc
+snapshot_after: sha256:bc8a57c78e4042bff071475481b4cd023e8986335d6492c957045bc66959278a
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-l05:
+    before: 0
+    after: 1
+  unit-m2-sad-l05:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml
+  sha256_before: null
+  sha256_after: a6fe7b117a985a5429cb52c92ab1a6c25613bd3830b6331bc86a950cccb8e3ec
+  created: true
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/unit.yaml
+  sha256_before: 6a0af96a9447ef8b7378277b6c1c2dbf13d57fbd193872bc9bc9feead1971064
+  sha256_after: d1c377648fe47cfd19cc5a5152163267bef2bff7523784f23155a77558435663
+  created: false
+metadata: {}

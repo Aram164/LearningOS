@@ -6,9 +6,9 @@ kind: lecture
 title: SaD Lecture 03 — Correlation & Regression
 order: 3
 scope: Current 2026 L03 deck; paired observations and scatterplots, covariance and Pearson correlation,
-  interpretation versus causation, simple least-squares regression, residuals and squared error,
-  multivariate linear regression and the normal equation, gradient descent, scaling, and weight interpretation.
-status: not-started
+  interpretation versus causation, simple least-squares regression, residuals and squared error, multivariate
+  linear regression and the normal equation, gradient descent, scaling, and weight interpretation.
+status: ready
 knowledge_map:
   summary: The lecture moves from describing paired variation to fitting a predictive linear relationship,
     while separating computational association from causal explanation.
@@ -21,32 +21,39 @@ knowledge_map:
     title: Covariance and Pearson correlation
     summary: Covariance measures joint signed deviation, while Pearson normalization produces a scale-free
       coefficient in [-1,1] for linear association.
-    builds_on: [knowledge-sad-l03-paired-data]
+    builds_on:
+    - knowledge-sad-l03-paired-data
   - id: knowledge-sad-l03-interpretation
     title: Correlation is not causation
-    summary: A numerical association can reflect confounding, reverse causality, selection, coincidence, or
-      a real mechanism; computation alone cannot choose among these explanations.
-    builds_on: [knowledge-sad-l03-covariance]
+    summary: A numerical association can reflect confounding, reverse causality, selection, coincidence,
+      or a real mechanism; computation alone cannot choose among these explanations.
+    builds_on:
+    - knowledge-sad-l03-covariance
   - id: knowledge-sad-l03-simple-regression
     title: Simple linear regression and least squares
-    summary: A line predicts one variable from another; residuals measure errors, and minimizing squared error
-      determines slope and intercept.
-    builds_on: [knowledge-sad-l03-covariance]
+    summary: A line predicts one variable from another; residuals measure errors, and minimizing squared
+      error determines slope and intercept.
+    builds_on:
+    - knowledge-sad-l03-covariance
   - id: knowledge-sad-l03-multivariate
     title: Multivariate linear regression and the design matrix
-    summary: Several predictors become columns of a matrix, one parameter vector produces predictions, and
-      the normal equation expresses the closed-form least-squares solution.
-    builds_on: [knowledge-sad-l03-simple-regression]
+    summary: Several predictors become columns of a matrix, one parameter vector produces predictions,
+      and the normal equation expresses the closed-form least-squares solution.
+    builds_on:
+    - knowledge-sad-l03-simple-regression
   - id: knowledge-sad-l03-gradient-descent
     title: Gradient descent as an alternative optimizer
-    summary: Iterative updates follow the negative loss gradient; learning rate, initialization, scaling, and
-      convergence determine whether the fitted parameters are reached reliably.
-    builds_on: [knowledge-sad-l03-simple-regression]
+    summary: Iterative updates follow the negative loss gradient; learning rate, initialization, scaling,
+      and convergence determine whether the fitted parameters are reached reliably.
+    builds_on:
+    - knowledge-sad-l03-simple-regression
   - id: knowledge-sad-l03-scaling-weights
     title: Scaling, coefficient interpretation, and model limits
     summary: Feature units change coefficient magnitudes and optimization geometry; weights require context,
       and linear fit quality does not by itself establish generalization or causality.
-    builds_on: [knowledge-sad-l03-multivariate, knowledge-sad-l03-gradient-descent]
+    builds_on:
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-gradient-descent
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -55,4 +62,6 @@ source_selections: []
 artifacts:
   ultimate_reference: note-sad-l03-correlation-regression
   exercise_bank: note-sad-l03-exercise-bank
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l03

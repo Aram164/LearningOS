@@ -1,0 +1,505 @@
+id: study-map-m2-sad-l09
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l09
+status: not-started
+current_stage: stage-sad-l09-estimator
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l09-estimator
+  number: 1
+  title: Statistics, estimators, and estimates
+  status: pending
+  objective: An estimator is a rule applied to random samples and is therefore random; an estimate is
+    its realized numerical value for one observed sample.
+  done_when:
+  - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random;
+    an estimate is its realized numerical value for one observed sample.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 point and interval estimation deck
+    source_id: source-sad-2025-recordings
+    locator: 09_point_interval_estimation (1).pdf — A prior-year same-topic explanation of estimator properties
+      and confidence intervals with additional course examples.
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 9 — parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9 — The German estimation spine for estimator quality, sampling distributions, standard
+      errors, and confidence intervals.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — estimation and confidence intervals
+    source_id: source-mit-1805
+    locator: Estimation and confidence-interval notes/exams — Solution-backed estimation problems and
+      exams with an independent English explanation of standard errors and interval coverage.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 3–5 — parametric inference
+    source_id: source-mit-18650
+    locator: Lectures 3–5 — Formal estimator, Fisher-information, and MLE context beyond the SaD interval-calculation
+      scope; use for a diagnosed theory gap only.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-properties
+  number: 2
+  title: Bias, consistency, efficiency, and mean squared error
+  status: pending
+  objective: Good estimators trade systematic error and variability; MSE decomposes into variance plus
+    squared bias, while consistency describes large-sample convergence.
+  done_when:
+  - 'Reproduce without notes: Good estimators trade systematic error and variability; MSE decomposes into
+    variance plus squared bias, while consistency describes large-sample convergence.'
+  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 3, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-mean-squared-error
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4 and UE5 — estimation and confidence intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf — Computes estimator
+      properties, standard errors, and confidence intervals, with the tutorial walkthrough exposing the
+      required interpretation language.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 point and interval estimation deck
+    source_id: source-sad-2025-recordings
+    locator: 09_point_interval_estimation (1).pdf — A prior-year same-topic explanation of estimator properties
+      and confidence intervals with additional course examples.
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 9 — parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9 — The German estimation spine for estimator quality, sampling distributions, standard
+      errors, and confidence intervals.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 9 — estimation drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 9 — Solved German confidence-interval and estimator-quality problems, especially
+      useful for checking standard-error and t-versus-z decisions.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — estimation exercises
+    source_id: source-dekking-mips
+    locator: Estimation selections — Additional answer-backed estimator, standard-error, and confidence-interval
+      work outside the German course wording layer.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 3–5 — parametric inference
+    source_id: source-mit-18650
+    locator: Lectures 3–5 — Formal estimator, Fisher-information, and MLE context beyond the SaD interval-calculation
+      scope; use for a diagnosed theory gap only.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — estimation block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; estimation questions — Additional confidence-interval and estimator questions
+      for independent timed practice after FAU and the course sheets.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-standard-error
+  number: 3
+  title: Sampling distributions and standard errors
+  status: pending
+  objective: The standard error is the standard deviation of an estimator's sampling distribution and
+    usually shrinks with sample size; it is not the spread of the raw data.
+  done_when:
+  - 'Reproduce without notes: The standard error is the standard deviation of an estimator''s sampling
+    distribution and usually shrinks with sample size; it is not the spread of the raw data.'
+  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4 and UE5 — estimation and confidence intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf — Computes estimator
+      properties, standard errors, and confidence intervals, with the tutorial walkthrough exposing the
+      required interpretation language.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 point and interval estimation deck
+    source_id: source-sad-2025-recordings
+    locator: 09_point_interval_estimation (1).pdf — A prior-year same-topic explanation of estimator properties
+      and confidence intervals with additional course examples.
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 9 — parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9 — The German estimation spine for estimator quality, sampling distributions, standard
+      errors, and confidence intervals.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 9 — estimation drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 9 — Solved German confidence-interval and estimator-quality problems, especially
+      useful for checking standard-error and t-versus-z decisions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 5 — confidence intervals
+    source_id: source-openintro-statistics
+    locator: Chapter 5 confidence-interval sections — The most accessible first pass for standard errors,
+      repeated-sampling interval meaning, and z/t-style interval construction.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — estimation exercises
+    source_id: source-dekking-mips
+    locator: Estimation selections — Additional answer-backed estimator, standard-error, and confidence-interval
+      work outside the German course wording layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — estimation and confidence intervals
+    source_id: source-mit-1805
+    locator: Estimation and confidence-interval notes/exams — Solution-backed estimation problems and
+      exams with an independent English explanation of standard errors and interval coverage.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 3–5 — parametric inference
+    source_id: source-mit-18650
+    locator: Lectures 3–5 — Formal estimator, Fisher-information, and MLE context beyond the SaD interval-calculation
+      scope; use for a diagnosed theory gap only.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — proportion confidence interval
+    source_id: source-fau-klausur-ws1415
+    locator: Proportion confidence-interval question and solution — Timed interval construction and interpretation
+      for a proportion, useful for checking standard-error, quantile, and coverage language.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — estimation block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; estimation questions — Additional confidence-interval and estimator questions
+      for independent timed practice after FAU and the course sheets.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — standard error, confidence intervals, and bootstrap
+    source_id: source-statquest
+    locator: 'Standard Error; Confidence Intervals; Bootstrapping to Calculate p-values — Short visual
+      clarification of three often-conflated objects: raw spread, estimator uncertainty, and resampling-based
+      interval construction.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — t distribution and confidence intervals
+    source_id: source-jbstatistics
+    locator: Confidence intervals and t-distribution series — Slower interval arithmetic and interpretation,
+      especially useful for the t-versus-z choice and degrees-of-freedom step.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Konfidenzintervalle
+    source_id: source-kurzes-tutorium-statistik
+    locator: Konfidenzintervall videos — German compact interval construction and interpretation, useful
+      for aligning the English sources with Klausur wording.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — confidence-interval walkthroughs
+    source_id: source-brandon-foltz
+    locator: Confidence interval videos — Long-form, calm arithmetic and interpretation for z/t confidence
+      intervals.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-z-interval
+  number: 4
+  title: z confidence intervals
+  status: pending
+  objective: With known population variance or an adequate Normal approximation, estimate plus/minus a
+    z quantile times standard error gives a repeated-sampling coverage procedure.
+  done_when:
+  - 'Reproduce without notes: With known population variance or an adequate Normal approximation, estimate
+    plus/minus a z quantile times standard error gives a repeated-sampling coverage procedure.'
+  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4 and UE5 — estimation and confidence intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf — Computes estimator
+      properties, standard errors, and confidence intervals, with the tutorial walkthrough exposing the
+      required interpretation language.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 point and interval estimation deck
+    source_id: source-sad-2025-recordings
+    locator: 09_point_interval_estimation (1).pdf — A prior-year same-topic explanation of estimator properties
+      and confidence intervals with additional course examples.
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 9 — parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9 — The German estimation spine for estimator quality, sampling distributions, standard
+      errors, and confidence intervals.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 9 — estimation drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 9 — Solved German confidence-interval and estimator-quality problems, especially
+      useful for checking standard-error and t-versus-z decisions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 5 — confidence intervals
+    source_id: source-openintro-statistics
+    locator: Chapter 5 confidence-interval sections — The most accessible first pass for standard errors,
+      repeated-sampling interval meaning, and z/t-style interval construction.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — estimation exercises
+    source_id: source-dekking-mips
+    locator: Estimation selections — Additional answer-backed estimator, standard-error, and confidence-interval
+      work outside the German course wording layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — estimation and confidence intervals
+    source_id: source-mit-1805
+    locator: Estimation and confidence-interval notes/exams — Solution-backed estimation problems and
+      exams with an independent English explanation of standard errors and interval coverage.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — proportion confidence interval
+    source_id: source-fau-klausur-ws1415
+    locator: Proportion confidence-interval question and solution — Timed interval construction and interpretation
+      for a proportion, useful for checking standard-error, quantile, and coverage language.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — estimation block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; estimation questions — Additional confidence-interval and estimator questions
+      for independent timed practice after FAU and the course sheets.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — standard error, confidence intervals, and bootstrap
+    source_id: source-statquest
+    locator: 'Standard Error; Confidence Intervals; Bootstrapping to Calculate p-values — Short visual
+      clarification of three often-conflated objects: raw spread, estimator uncertainty, and resampling-based
+      interval construction.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — t distribution and confidence intervals
+    source_id: source-jbstatistics
+    locator: Confidence intervals and t-distribution series — Slower interval arithmetic and interpretation,
+      especially useful for the t-versus-z choice and degrees-of-freedom step.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Konfidenzintervalle
+    source_id: source-kurzes-tutorium-statistik
+    locator: Konfidenzintervall videos — German compact interval construction and interpretation, useful
+      for aligning the English sources with Klausur wording.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — confidence-interval walkthroughs
+    source_id: source-brandon-foltz
+    locator: Confidence interval videos — Long-form, calm arithmetic and interpretation for z/t confidence
+      intervals.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-t-interval
+  number: 5
+  title: t confidence intervals
+  status: pending
+  objective: Estimating variance from small samples introduces extra uncertainty captured by Student's
+    t and its degrees of freedom.
+  done_when:
+  - 'Reproduce without notes: Estimating variance from small samples introduces extra uncertainty captured
+    by Student''s t and its degrees of freedom.'
+  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 3, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4 and UE5 — estimation and confidence intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf — Computes estimator
+      properties, standard errors, and confidence intervals, with the tutorial walkthrough exposing the
+      required interpretation language.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 point and interval estimation deck
+    source_id: source-sad-2025-recordings
+    locator: 09_point_interval_estimation (1).pdf — A prior-year same-topic explanation of estimator properties
+      and confidence intervals with additional course examples.
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 9 — parameter estimation
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 9 — The German estimation spine for estimator quality, sampling distributions, standard
+      errors, and confidence intervals.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 9 — estimation drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 9 — Solved German confidence-interval and estimator-quality problems, especially
+      useful for checking standard-error and t-versus-z decisions.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 5 — confidence intervals
+    source_id: source-openintro-statistics
+    locator: Chapter 5 confidence-interval sections — The most accessible first pass for standard errors,
+      repeated-sampling interval meaning, and z/t-style interval construction.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — estimation exercises
+    source_id: source-dekking-mips
+    locator: Estimation selections — Additional answer-backed estimator, standard-error, and confidence-interval
+      work outside the German course wording layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — estimation and confidence intervals
+    source_id: source-mit-1805
+    locator: Estimation and confidence-interval notes/exams — Solution-backed estimation problems and
+      exams with an independent English explanation of standard errors and interval coverage.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — estimation block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; estimation questions — Additional confidence-interval and estimator questions
+      for independent timed practice after FAU and the course sheets.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — t distribution and confidence intervals
+    source_id: source-jbstatistics
+    locator: Confidence intervals and t-distribution series — Slower interval arithmetic and interpretation,
+      especially useful for the t-versus-z choice and degrees-of-freedom step.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Konfidenzintervalle
+    source_id: source-kurzes-tutorium-statistik
+    locator: Konfidenzintervall videos — German compact interval construction and interpretation, useful
+      for aligning the English sources with Klausur wording.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — confidence-interval walkthroughs
+    source_id: source-brandon-foltz
+    locator: Confidence interval videos — Long-form, calm arithmetic and interpretation for z/t confidence
+      intervals.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-bootstrap
+  number: 6
+  title: Bootstrap estimation
+  status: pending
+  objective: Resampling observations with replacement approximates an estimator's sampling distribution
+    when a convenient analytic standard error is unavailable.
+  done_when:
+  - 'Reproduce without notes: Resampling observations with replacement approximates an estimator''s sampling
+    distribution when a convenient analytic standard error is unavailable.'
+  exam_critical: true
+  concepts:
+  - concept-bootstrap
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — standard error, confidence intervals, and bootstrap
+    source_id: source-statquest
+    locator: 'Standard Error; Confidence Intervals; Bootstrapping to Calculate p-values — Short visual
+      clarification of three often-conflated objects: raw spread, estimator uncertainty, and resampling-based
+      interval construction.'
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP 5.2 - the bootstrap as a resampling estimate of standard error
+    source_id: source-islp
+    locator: Section 5.2 the bootstrap, pp. 220-223; lab section 5.3, pp. 223-231; exercises section 5.4,
+      p. 232 — L09 introduces the bootstrap as a way to quantify uncertainty without a formula; this section
+      builds the resampled standard error on a concrete estimator and then repeats it in a lab, which
+      is the arithmetic the deck asserts.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l09-data-bias
+  number: 7
+  title: Statistical uncertainty versus data bias
+  status: pending
+  objective: Narrow intervals cannot repair selection bias, measurement error, dependence, or population
+    drift; the inferential model is only as credible as its sampling assumptions.
+  done_when:
+  - 'Reproduce without notes: Narrow intervals cannot repair selection bias, measurement error, dependence,
+    or population drift; the inferential model is only as credible as its sampling assumptions.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L09 estimation deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/09_estimating.pdf (45 pages) — The exam-notation authority for estimator properties,
+      standard errors, z/t confidence intervals, bootstrap reasoning, and the distinction between statistical
+      uncertainty and biased data.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md
+  attachments: []
+  source_feedback: []

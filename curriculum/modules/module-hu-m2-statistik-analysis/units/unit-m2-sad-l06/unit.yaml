@@ -5,10 +5,10 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 06 — Random Variables, Expectation & Variance
 order: 6
-scope: Current 2026 L06 deck; random variables and realizations, discrete/continuous distributions,
-  probability mass/density and cumulative distribution functions, transformations, expectation, variance,
-  covariance, IID sample means, Chebyshev's inequality, and the law of large numbers.
-status: not-started
+scope: Current 2026 L06 deck; random variables and realizations, discrete/continuous distributions, probability
+  mass/density and cumulative distribution functions, transformations, expectation, variance, covariance,
+  IID sample means, Chebyshev's inequality, and the law of large numbers.
+status: ready
 knowledge_map:
   summary: The lecture converts uncertain outcomes into numerical variables and develops the moment and
     concentration language used by every later distribution and inference result.
@@ -21,32 +21,38 @@ knowledge_map:
     title: PMF, density, and CDF
     summary: Discrete mass and continuous density assign probability differently, while the cumulative
       distribution function uniformly represents P(X less than or equal to x).
-    builds_on: [knowledge-sad-l06-random-variable]
+    builds_on:
+    - knowledge-sad-l06-random-variable
   - id: knowledge-sad-l06-transformations
     title: Functions and transformations of random variables
     summary: A transformation g(X) changes the possible values and distribution; probabilities and moments
       must be recomputed from the mapping rather than by treating X as a fixed number.
-    builds_on: [knowledge-sad-l06-distribution-functions]
+    builds_on:
+    - knowledge-sad-l06-distribution-functions
   - id: knowledge-sad-l06-expectation
     title: Expected value and linearity
-    summary: Expectation is a probability-weighted long-run average; linearity holds without independence and
-      extends from X to functions and sums of random variables.
-    builds_on: [knowledge-sad-l06-distribution-functions]
+    summary: Expectation is a probability-weighted long-run average; linearity holds without independence
+      and extends from X to functions and sums of random variables.
+    builds_on:
+    - knowledge-sad-l06-distribution-functions
   - id: knowledge-sad-l06-variance-covariance
     title: Variance, standard deviation, and covariance
-    summary: Variance measures squared deviation from expectation, affine scaling squares the multiplier, and
-      covariance records joint variation needed for sums and sample means.
-    builds_on: [knowledge-sad-l06-expectation]
+    summary: Variance measures squared deviation from expectation, affine scaling squares the multiplier,
+      and covariance records joint variation needed for sums and sample means.
+    builds_on:
+    - knowledge-sad-l06-expectation
   - id: knowledge-sad-l06-sample-mean
     title: IID samples and the random sample mean
-    summary: The sample mean is itself random; under IID sampling its expectation is the population mean and
-      its variance shrinks as sigma squared divided by n.
-    builds_on: [knowledge-sad-l06-variance-covariance]
+    summary: The sample mean is itself random; under IID sampling its expectation is the population mean
+      and its variance shrinks as sigma squared divided by n.
+    builds_on:
+    - knowledge-sad-l06-variance-covariance
   - id: knowledge-sad-l06-concentration
     title: Chebyshev bounds and the law of large numbers
-    summary: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why sample
-      averages stabilize as data accumulate.
-    builds_on: [knowledge-sad-l06-sample-mean]
+    summary: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why
+      sample averages stabilize as data accumulate.
+    builds_on:
+    - knowledge-sad-l06-sample-mean
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -56,4 +62,6 @@ scope_sources:
   locator: 05_random_variables.pdf + 06_expected_values.pptx-1.pdf
 source_selections: []
 artifacts: {}
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l06

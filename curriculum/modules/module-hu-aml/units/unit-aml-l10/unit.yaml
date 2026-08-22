@@ -7,22 +7,25 @@ order: 10
 scope: Current 2026 L10 deck; convolution versus cross-correlation, filters, padding/stride/output shapes,
   multi-channel computation, parameter counts, pooling, complete CNNs, and the LeNet/AlexNet/GoogLeNet/ResNet
   architecture lineage.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture replaces dense image processing with local shared filters, builds complete convolutional
     networks through exact shape arithmetic, and uses landmark architectures to explain major design ideas.
   nodes:
   - id: knowledge-aml-l10-motivation
     title: Spatial structure and weight sharing
-    summary: Why flattening images is inefficient and how locality, translation structure, and shared filters address it.
+    summary: Why flattening images is inefficient and how locality, translation structure, and shared
+      filters address it.
   - id: knowledge-aml-l10-convolution
     title: Convolution and cross-correlation
-    summary: Sliding filters, elementwise multiply-and-sum, mathematical convolution versus the DL convention, and feature maps.
+    summary: Sliding filters, elementwise multiply-and-sum, mathematical convolution versus the DL convention,
+      and feature maps.
     builds_on:
     - knowledge-aml-l10-motivation
   - id: knowledge-aml-l10-shapes
     title: Padding, stride, channels, and shapes
-    summary: Output-size formula, multi-channel filters, multiple feature maps, receptive fields, and parameter counting.
+    summary: Output-size formula, multi-channel filters, multiple feature maps, receptive fields, and
+      parameter counting.
     builds_on:
     - knowledge-aml-l10-convolution
   - id: knowledge-aml-l10-pooling
@@ -38,7 +41,8 @@ knowledge_map:
     - knowledge-aml-l10-pooling
   - id: knowledge-aml-l10-architectures
     title: LeNet, AlexNet, GoogLeNet, and ResNet
-    summary: The course-level contribution of each architecture, including depth, inception modules, and residual connections.
+    summary: The course-level contribution of each architecture, including depth, inception modules, and
+      residual connections.
     builds_on:
     - knowledge-aml-l10-network
 scope_sources:
@@ -55,3 +59,4 @@ artifacts:
   mock_exam: note-aml-l10-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l10

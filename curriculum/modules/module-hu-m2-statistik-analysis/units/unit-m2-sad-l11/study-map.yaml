@@ -1,0 +1,409 @@
+id: study-map-m2-sad-l11
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l11
+status: not-started
+current_stage: stage-sad-l11-pipeline
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l11-pipeline
+  number: 1
+  title: The data-science pipeline
+  status: pending
+  objective: Data acquisition, cleaning, integration, exploration, feature construction, modeling, validation,
+    communication, and action are coupled steps; modeling is only one part of the work.
+  done_when:
+  - 'Reproduce without notes: Data acquisition, cleaning, integration, exploration, feature construction,
+    modeling, validation, communication, and action are coupled steps; modeling is only one part of the
+    work.'
+  exam_critical: true
+  concepts:
+  - concept-ml-lifecycle
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher — predictive-analytics workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters — Course-named introductory text for how data, features,
+      models, evaluation, and deployment fit together across the four learning families used in L12–L15.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese — data-science workflow and evaluation
+    source_id: source-kroese-dsml
+    locator: Workflow selections and §7.2 — Independent, broader reference for pipelines, model evaluation,
+      and data-science practice; §7.2 is the compact metric layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 2 - the pipeline executed end to end
+    source_id: source-geron-handson
+    locator: 'Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102) — Turns the L11 pipeline slide into an executed
+      sequence: building the test set before looking at the data, scaling features, composing transformation
+      pipelines, and scoring with cross-validation - the leakage-avoidance ordering the deck asserts but
+      never demonstrates.'
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-tasks
+  number: 2
+  title: Supervised and unsupervised tasks
+  status: pending
+  objective: Classification predicts categories, regression predicts quantities, and unsupervised methods
+    seek structure without labels; the learning setup must match the target and available supervision.
+  done_when:
+  - 'Reproduce without notes: Classification predicts categories, regression predicts quantities, and
+    unsupervised methods seek structure without labels; the learning setup must match the target and available
+    supervision.'
+  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher — predictive-analytics workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters — Course-named introductory text for how data, features,
+      models, evaluation, and deployment fit together across the four learning families used in L12–L15.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP Chapter 2 — statistical-learning workflow
+    source_id: source-islp
+    locator: Chapter 2 — Gentle theory of prediction versus inference, supervised/unsupervised tasks,
+      train/test behavior, flexibility, bias-variance, and resampling.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 1 - the ML vocabulary with failure cases attached
+    source_id: source-geron-handson
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60) — L11 states supervised/unsupervised,
+      over- and underfitting and the train/test split in single bullets; Geron spends thirty pages on
+      that same vocabulary with concrete data-quality and sampling failures, so each term Leser asserts
+      arrives with a worked counterexample.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Geron Ch 1 exercises - the L11 vocabulary tested back
+    source_id: source-geron-handson
+    locator: 'Chapter 1 exercises, pp. 60-61 — Nineteen short questions on labelled data, supervised versus
+      unsupervised tasks, overfitting, the validation set and why tuning on the test set breaks - the
+      retrieval check for the framing half of L11, which otherwise has no practice asset at all. Note:
+      this copy is an early-release ebook and its solutions cross-reference on p. 61 is unresolved, so
+      answers must be checked against the chapter body.'
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-representation
+  number: 3
+  title: Data types, features, and representation
+  status: pending
+  objective: Structured, text, image, graph, and temporal data require different preprocessing and representations;
+    domain knowledge determines which transformations preserve useful information.
+  done_when:
+  - 'Reproduce without notes: Structured, text, image, graph, and temporal data require different preprocessing
+    and representations; domain knowledge determines which transformations preserve useful information.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher — predictive-analytics workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters — Course-named introductory text for how data, features,
+      models, evaluation, and deployment fit together across the four learning families used in L12–L15.
+    scope_triage: helpful-now
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    locator: Complete article — One concise conceptual essay on generalization, representation, overfitting,
+      data, and inductive bias; perspective rather than formulas or exam practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 1 - the ML vocabulary with failure cases attached
+    source_id: source-geron-handson
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60) — L11 states supervised/unsupervised,
+      over- and underfitting and the train/test split in single bullets; Geron spends thirty pages on
+      that same vocabulary with concrete data-quality and sampling failures, so each term Leser asserts
+      arrives with a worked counterexample.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 2 - the pipeline executed end to end
+    source_id: source-geron-handson
+    locator: 'Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102) — Turns the L11 pipeline slide into an executed
+      sequence: building the test set before looking at the data, scaling features, composing transformation
+      pipelines, and scoring with cross-validation - the leakage-avoidance ordering the deck asserts but
+      never demonstrates.'
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-resampling
+  number: 4
+  title: Train, validation, test, cross-validation, and bootstrap
+  status: pending
+  objective: Separate data roles prevent evaluation leakage; repeated splits, cross-validation, and bootstrap
+    estimate different aspects of out-of-sample uncertainty.
+  done_when:
+  - 'Reproduce without notes: Separate data roles prevent evaluation leakage; repeated splits, cross-validation,
+    and bootstrap estimate different aspects of out-of-sample uncertainty.'
+  exam_critical: true
+  concepts:
+  - concept-bootstrap
+  - concept-cross-validation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: ISLP Chapter 2 — statistical-learning workflow
+    source_id: source-islp
+    locator: Chapter 2 — Gentle theory of prediction versus inference, supervised/unsupervised tasks,
+      train/test behavior, flexibility, bias-variance, and resampling.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese — data-science workflow and evaluation
+    source_id: source-kroese-dsml
+    locator: Workflow selections and §7.2 — Independent, broader reference for pipelines, model evaluation,
+      and data-science practice; §7.2 is the compact metric layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 2 - the pipeline executed end to end
+    source_id: source-geron-handson
+    locator: 'Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102) — Turns the L11 pipeline slide into an executed
+      sequence: building the test set before looking at the data, scaling features, composing transformation
+      pipelines, and scoring with cross-validation - the leakage-avoidance ordering the deck asserts but
+      never demonstrates.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 5 - evaluating a classifier by hand
+    source_id: source-zacharski-data-mining
+    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
+      203) — Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked
+      data set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without
+      ever running it.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
+    source_id: source-esl
+    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
+      methods, p. 268 — L11 presents cross-validation and bootstrapping as confidence-raising procedures;
+      this chapter separates the bias-variance decomposition from the estimator of test error, which is
+      the distinction the deck's 'which k?' slide leaves open. Open only when a recorded error needs it.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-objectives
+  number: 5
+  title: Loss functions, hypotheses, and inductive bias
+  status: pending
+  objective: A learner searches a hypothesis space using an objective; architecture, regularization, features,
+    and optimization encode assumptions about which solutions should generalize.
+  done_when:
+  - 'Reproduce without notes: A learner searches a hypothesis space using an objective; architecture,
+    regularization, features, and optimization encode assumptions about which solutions should generalize.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher — predictive-analytics workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters — Course-named introductory text for how data, features,
+      models, evaluation, and deployment fit together across the four learning families used in L12–L15.
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP Chapter 2 — statistical-learning workflow
+    source_id: source-islp
+    locator: Chapter 2 — Gentle theory of prediction versus inference, supervised/unsupervised tasks,
+      train/test behavior, flexibility, bias-variance, and resampling.
+    scope_triage: helpful-now
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    locator: Complete article — One concise conceptual essay on generalization, representation, overfitting,
+      data, and inductive bias; perspective rather than formulas or exam practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 4 - the loss functions L11 names in one line
+    source_id: source-geron-handson
+    locator: Chapter 4, pp. 139-180 (cross-entropy cost function, equation 4-22, p. 177) — L11 slides
+      30-31 name MSE and cross-entropy as the popular losses and move on; this chapter derives both and
+      the softmax output they attach to, with the cost function written out at equation 4-22. It supplies
+      the loss half of the node only - inductive bias stays with the Domingos article.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-evaluation
+  number: 6
+  title: Evaluation metrics and class imbalance
+  status: pending
+  objective: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses
+    answer different questions; metric choice follows costs, prevalence, and deployment context.
+  done_when:
+  - 'Reproduce without notes: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression
+    losses answer different questions; metric choice follows costs, prevalence, and deployment context.'
+  - Work Blatt 5 and UE7 — multiclass metrics, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5 and UE7 — multiclass metrics
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-05.pdf Aufgabe 3; exercise-slides/UE7.pdf slides 22–30 — Builds multiclass
+      confusion data and computes/compares metric averaging, grounding L11's abstract evaluation choices
+      in a course-owned worked example.
+    scope_triage: required-now
+  - kind: read
+    label: Kelleher — predictive-analytics workflow framing
+    source_id: source-kelleher-fmlpda
+    locator: Introductory and workflow chapters — Course-named introductory text for how data, features,
+      models, evaluation, and deployment fit together across the four learning families used in L12–L15.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese — data-science workflow and evaluation
+    source_id: source-kroese-dsml
+    locator: Workflow selections and §7.2 — Independent, broader reference for pipelines, model evaluation,
+      and data-science practice; §7.2 is the compact metric layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 3 - the evaluation metrics of L11 as drills
+    source_id: source-geron-handson
+    locator: Chapter 3, pp. 113-137 (ROC p. 117; confusion matrix p. 118; precision/recall trade-off p.
+      121; AUC p. 126; multiclass p. 128; multilabel p. 134) — The deck's ROC/AUC pair (slides 38-39)
+      had no practice source in the module at all; this chapter builds the confusion matrix, the precision/recall
+      trade-off, the ROC curve and AUC, then extends to multiclass and multilabel, each with exercises.
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 5 - evaluating a classifier by hand
+    source_id: source-zacharski-data-mining
+    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
+      203) — Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked
+      data set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without
+      ever running it.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l11-generalization
+  number: 7
+  title: Underfitting, overfitting, and bias-variance
+  status: pending
+  objective: Model complexity trades approximation bias against sensitivity to samples; data volume, regularization,
+    validation, and compute shape the attainable generalization performance.
+  done_when:
+  - 'Reproduce without notes: Model complexity trades approximation bias against sensitivity to samples;
+    data volume, regularization, validation, and compute shape the attainable generalization performance.'
+  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L11 data-science introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/11_datascience_intro.pdf (49 pages) — Places learning algorithms inside a
+      data pipeline and defines the task, resampling, objective, evaluation, generalization, and compute
+      concepts used by L12-L15.
+    scope_triage: required-now
+  - kind: read
+    label: ISLP Chapter 2 — statistical-learning workflow
+    source_id: source-islp
+    locator: Chapter 2 — Gentle theory of prediction versus inference, supervised/unsupervised tasks,
+      train/test behavior, flexibility, bias-variance, and resampling.
+    scope_triage: helpful-now
+  - kind: read
+    label: Kroese — data-science workflow and evaluation
+    source_id: source-kroese-dsml
+    locator: Workflow selections and §7.2 — Independent, broader reference for pipelines, model evaluation,
+      and data-science practice; §7.2 is the compact metric layer.
+    scope_triage: helpful-now
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    locator: Complete article — One concise conceptual essay on generalization, representation, overfitting,
+      data, and inductive bias; perspective rather than formulas or exam practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 1 - the ML vocabulary with failure cases attached
+    source_id: source-geron-handson
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60) — L11 states supervised/unsupervised,
+      over- and underfitting and the train/test split in single bullets; Geron spends thirty pages on
+      that same vocabulary with concrete data-quality and sampling failures, so each term Leser asserts
+      arrives with a worked counterexample.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Geron Ch 1 exercises - the L11 vocabulary tested back
+    source_id: source-geron-handson
+    locator: 'Chapter 1 exercises, pp. 60-61 — Nineteen short questions on labelled data, supervised versus
+      unsupervised tasks, overfitting, the validation set and why tuning on the test set breaks - the
+      retrieval check for the framing half of L11, which otherwise has no practice asset at all. Note:
+      this copy is an early-release ebook and its solutions cross-reference on p. 61 is unresolved, so
+      answers must be checked against the chapter body.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
+    source_id: source-esl
+    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
+      methods, p. 268 — L11 presents cross-validation and bootstrapping as confidence-raising procedures;
+      this chapter separates the bias-variance decomposition from the estimator of test error, which is
+      the distinction the deck's 'which k?' slide leaves open. Open only when a recorded error needs it.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
+  attachments: []
+  source_feedback: []
