@@ -9,9 +9,10 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import subprocess
 from collections.abc import Sequence
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 READABLE_ROOTS = frozenset({
     "notes", "workspace-job-deem", "papers", "legacy-plans", "plans",
@@ -30,6 +31,18 @@ WRITABLE_ROOTS = (
 # future attempt to add it to the write allowlist fail with the domain rule,
 # rather than with a generic containment message.
 FORBIDDEN_WRITE_ROOTS = ("stratum",)
+
+# This is a system invariant, not a UI preference.  LearningOS may ask the
+# checkout one narrowly-scoped question (whether an exact component changed),
+# but neither the worktree nor its Git metadata is a write target.
+STRATUM_ACCESS = {
+    "mode": "read-only",
+    "worktree_writes_allowed": False,
+    "git_metadata_writes_allowed": False,
+}
+
+_STRATUM_REVISION = re.compile(r"^[0-9a-fA-F]{7,64}$")
+_PATHSPEC_META = frozenset("*?[")
 
 # Transaction receipts are bookkeeping, not Job domain state, and therefore do
 # not stale a dashboard immediately after a successful write.
@@ -105,6 +118,53 @@ def writable_job_path(root: Path, value: object) -> Path:
 FRESHNESS_LABELS = ("current", "drifting", "stale", "unverified")
 
 
+def validate_stratum_revision(value: object) -> str:
+    """Return one inert commit id or refuse it before Git sees an argument.
+
+    A revision occupies an option-sensitive position in ``git diff``.  Accepting
+    arbitrary authored text there would let a value such as ``--output=...``
+    turn a read into a write.  Hash-only stamps make that impossible.
+    """
+    revision = str(value or "").strip()
+    if not _STRATUM_REVISION.fullmatch(revision):
+        raise JobDashboardError(
+            "Stratum revisions must be 7-64 hexadecimal characters"
+        )
+    return revision
+
+
+def validate_stratum_components(value: str | Sequence[str]) -> list[str]:
+    """Return exact repo-relative paths safe to pass after Git's ``--``.
+
+    Components are provenance anchors, never pathspec programs.  Canonical
+    relative spelling, no traversal, no glob/pathspec syntax, and no ``.git``
+    target keep the only permitted Stratum operation a literal read query.
+    Deleted files remain valid anchors, so existence is deliberately not part
+    of this lexical boundary.
+    """
+    raw = [value] if isinstance(value, str) else list(value)
+    paths: list[str] = []
+    for item in raw:
+        component = str(item or "").strip()
+        canonical = component[:-1] if component.endswith("/") else component
+        path = PurePosixPath(canonical)
+        if (
+            not canonical
+            or "\\" in component
+            or component.startswith(("/", "-", ":"))
+            or component.endswith("//")
+            or any(char.isspace() or char == "\x00" for char in component)
+            or any(char in component for char in _PATHSPEC_META)
+            or path.as_posix() != canonical
+            or any(part in {"", ".", "..", ".git"} for part in path.parts)
+        ):
+            raise JobDashboardError(
+                f"unsafe Stratum component path refused: {component or '<empty>'}"
+            )
+        paths.append(canonical)
+    return paths
+
+
 def stratum_component_changed(
     repo: Path, revision: str, component: str | Sequence[str]
 ) -> bool | None:
@@ -127,13 +187,19 @@ def stratum_component_changed(
     all: a missing stamp, an unreadable checkout, an unknown revision. The
     caller must not read that as evidence of freshness.
     """
-    paths = [component] if isinstance(component, str) else list(component)
-    paths = [str(path).strip() for path in paths if str(path).strip()]
-    if not revision or not paths:
+    paths = validate_stratum_components(component)
+    if not paths:
         return None
+    revision = str(revision or "").strip()
+    if not revision:
+        return None
+    revision = validate_stratum_revision(revision)
     try:
         result = subprocess.run(
-            ["git", "diff", "--quiet", revision, "--", *paths],
+            [
+                "git", "--no-optional-locks", "diff", "--quiet",
+                "--no-ext-diff", "--no-textconv", revision, "--", *paths,
+            ],
             cwd=repo,
             capture_output=True,
             timeout=10,

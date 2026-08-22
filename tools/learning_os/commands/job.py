@@ -18,6 +18,7 @@ from ..contracts import ContractValidationError, validate_contract
 from ..transactions import artifact_revision
 from .job_boundary import (
     READABLE_ROOTS,
+    STRATUM_ACCESS,
     JobDashboardError,
     component_freshness,
     job_fingerprint,
@@ -717,6 +718,7 @@ def cmd_job_dashboard(args) -> int:
             "excluded_from_search": True,
             "excluded_from_ai": True,
             "writes_through_gateway": True,
+            "stratum": dict(STRATUM_ACCESS),
             "allowed_roots": sorted(ALLOWED_TOP_LEVELS),
             "snapshot_id": f"sha256:{job_fingerprint(job_root)}",
         },

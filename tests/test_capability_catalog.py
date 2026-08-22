@@ -68,6 +68,17 @@ def test_a_domain_capability_cannot_skip_its_write_scope(mini_repo: Path):
         domain_capability_definitions(mini_repo)
 
 
+def test_no_declared_command_can_make_stratum_writable(mini_repo: Path):
+    import yaml
+
+    path = mini_repo / "system/contracts/capabilities.yaml"
+    catalogue = yaml.safe_load(path.read_text(encoding="utf-8"))
+    catalogue["commands"]["job.task.save"]["writes"].append("Job/stratum/**")
+    path.write_text(yaml.safe_dump(catalogue, sort_keys=False), encoding="utf-8")
+    with pytest.raises(CapabilityCatalogError, match="immutable Stratum write scope"):
+        command_definitions(mini_repo)
+
+
 def test_unknown_generic_capability_fails_before_payload_read(repo_root: Path):
     result = subprocess.run(
         [sys.executable, str(repo_root / "tools/los.py"), "capability", "unknown.write", "--payload-file", "/does/not/exist"],

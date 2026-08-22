@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 8
-schema_fingerprint: sha256:308bc2e5cd503ef2cdf10dfe07a2e541789b234d478db29e9701134a9ab5a933
+contract_version: 9
+schema_fingerprint: sha256:7ddec830698f6d087d4755c68fec912f7acbbcd0904d9ef10f937cf255571492
 record_schemas: 23
 history:
 - version: 1
@@ -89,3 +89,10 @@ history:
     ''unverified'' rather than ''current''.'
   migration: null
   fixture: tests/fixtures/formats/v8/
+- version: 9
+  adopted: '2026-08-22'
+  note: Tighten Job Stratum anchors to inert repo-relative component paths and 7-64
+    digit hexadecimal commit ids; existing valid anchors remain unchanged, so no migration
+    is required.
+  migration: null
+  fixture: tests/fixtures/formats/v9/

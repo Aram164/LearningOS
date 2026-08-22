@@ -20,13 +20,21 @@
       "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+"
     },
     "horizon": {"enum": ["now", "next", "later"]},
+    "stratumComponent": {
+      "type": "string",
+      "pattern": "^(?![/:\\-])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*[\\\\*?\\[])[^\\s]+$"
+    },
+    "stratumRevision": {
+      "type": "string",
+      "pattern": "^$|^[0-9a-fA-F]{7,64}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$"
+    },
     "access": {
       "type": "object",
       "additionalProperties": false,
       "required": [
         "scope", "read_only", "ephemeral", "excluded_from_manifest",
         "excluded_from_search", "excluded_from_ai", "writes_through_gateway",
-        "allowed_roots", "snapshot_id"
+        "stratum", "allowed_roots", "snapshot_id"
       ],
       "properties": {
         "scope": {"const": "job-dashboard"},
@@ -36,6 +44,16 @@
         "excluded_from_search": {"const": true},
         "excluded_from_ai": {"const": true},
         "writes_through_gateway": {"const": true},
+        "stratum": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "worktree_writes_allowed", "git_metadata_writes_allowed"],
+          "properties": {
+            "mode": {"const": "read-only"},
+            "worktree_writes_allowed": {"const": false},
+            "git_metadata_writes_allowed": {"const": false}
+          }
+        },
         "allowed_roots": {
           "type": "array",
           "uniqueItems": true,
@@ -159,8 +177,8 @@
       "properties": {
         "mental_models": {"type": "array", "items": {"$ref": "#/$defs/mentalModel"}},
         "read_only_anchor": {"$ref": "#/$defs/text"},
-        "component": {"type": "array", "items": {"$ref": "#/$defs/text"}},
-        "verified_against": {"$ref": "#/$defs/text"},
+        "component": {"type": "array", "items": {"$ref": "#/$defs/stratumComponent"}},
+        "verified_against": {"$ref": "#/$defs/stratumRevision"},
         "freshness": {
           "description": "Computed by the producer, never authored. Empty for a stage with no read-only anchor; otherwise one of the four labels the note surface already uses. `unverified` means the checkout could not answer — it is not a synonym for `current`.",
           "enum": ["", "current", "drifting", "stale", "unverified"]

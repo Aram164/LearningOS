@@ -86,7 +86,7 @@ def write_job(mini_repo: Path, *, workspace_path: str = "workspace-job-deem/CONT
         type: note
         title: Logical IR
         component: stratum/optimizer/ir.py
-        verified_against: abc123 (2026-01-01)
+        verified_against: abc1234 (2026-01-01)
         status: current
         ---
 
@@ -185,6 +185,7 @@ def test_job_dashboard_is_bounded_and_not_projected(mini_repo):
     assert {key: access[key] for key in (
         "scope", "read_only", "ephemeral", "excluded_from_manifest",
         "excluded_from_search", "excluded_from_ai", "writes_through_gateway",
+        "stratum",
     )} == {
         "scope": "job-dashboard",
         "read_only": True,
@@ -193,6 +194,11 @@ def test_job_dashboard_is_bounded_and_not_projected(mini_repo):
         "excluded_from_search": True,
         "excluded_from_ai": True,
         "writes_through_gateway": True,
+        "stratum": {
+            "mode": "read-only",
+            "worktree_writes_allowed": False,
+            "git_metadata_writes_allowed": False,
+        },
     }
     assert access["snapshot_id"].startswith("sha256:")
     assert set(access["allowed_roots"]) == {
@@ -312,6 +318,30 @@ def test_job_writes_never_touch_the_canon(mini_repo, command, extra):
     proc = run_los(mini_repo, command, "--confirm-job-access", *extra)
     assert proc.returncode == 0, proc.stderr
     assert canonical_state(mini_repo) == before
+
+
+@pytest.mark.parametrize("command,extra", WRITE_COMMANDS)
+def test_job_writes_leave_the_entire_stratum_checkout_byte_identical(
+    mini_repo, command, extra
+):
+    job = write_job(mini_repo)
+    (job / "stratum" / ".git").mkdir(parents=True)
+    (job / "stratum" / "source.py").write_text("VALUE = 1\n", encoding="utf-8")
+    (job / "stratum" / ".git" / "index").write_bytes(b"immutable-index")
+
+    def state() -> dict[str, tuple[bytes, int]]:
+        return {
+            path.relative_to(job / "stratum").as_posix(): (
+                path.read_bytes(), path.stat().st_mtime_ns,
+            )
+            for path in sorted((job / "stratum").rglob("*"))
+            if path.is_file()
+        }
+
+    before = state()
+    proc = run_los(mini_repo, command, "--confirm-job-access", *extra)
+    assert proc.returncode == 0, proc.stderr
+    assert state() == before
 
 
 def test_job_session_log_appends_and_receipts(mini_repo):
@@ -592,6 +622,59 @@ def test_the_stratum_checkout_is_never_writable(mini_repo):
         assert "read-only" in str(caught.value) or "escapes" in str(caught.value)
 
 
+def test_central_job_commit_guard_refuses_stratum_even_if_a_caller_forgets(mini_repo):
+    from learning_os.commands.job import JobDashboardError
+    from learning_os.commands.job_write import _commit
+
+    job = write_job(mini_repo)
+    target = job / "stratum" / "would-be-write.txt"
+    with pytest.raises(JobDashboardError, match="read-only"):
+        _commit(
+            job,
+            {target: "must never land\n"},
+            capability="test.forbidden",
+            artifact_ids=["forbidden"],
+        )
+    assert not target.exists()
+    assert not (job / "operations" / "transactions").exists()
+
+
+def test_stratum_git_inputs_are_inert_before_any_subprocess_runs(monkeypatch, tmp_path):
+    from learning_os.commands.job import JobDashboardError
+    from learning_os.commands.job_boundary import stratum_component_changed
+
+    def unexpected(*_args, **_kwargs):
+        raise AssertionError("unsafe input reached git")
+
+    monkeypatch.setattr(subprocess, "run", unexpected)
+    for revision, component in (
+        ("--output=/tmp/forbidden", "stratum/ir.py"),
+        ("abc1234", "../outside.py"),
+        ("abc1234", ":(attr:filter)stratum/ir.py"),
+        ("abc1234", ".git/index"),
+        ("abc1234", "stratum/**/*.py"),
+    ):
+        with pytest.raises(JobDashboardError):
+            stratum_component_changed(tmp_path, revision, component)
+
+
+def test_job_note_stamp_refuses_a_git_option_as_a_commit(mini_repo):
+    job = write_job(mini_repo)
+    note = job / "notes" / "stratum" / "note-system.md"
+    before = note.read_bytes()
+    proc = run_los(
+        mini_repo,
+        "job-note-stamp",
+        "--confirm-job-access",
+        "--note",
+        "note-system",
+        "--commit=--output=/tmp/forbidden",
+    )
+    assert proc.returncode == 2
+    assert "7-64 hexadecimal" in proc.stderr
+    assert note.read_bytes() == before
+
+
 def test_job_read_and_write_paths_share_one_boundary_policy(mini_repo):
     from learning_os.commands.job import JobDashboardError, _safe_job_path
     from learning_os.commands.job_write import _writable_path
@@ -604,6 +687,11 @@ def test_job_read_and_write_paths_share_one_boundary_policy(mini_repo):
         _safe_job_path(job, "operations/tasks.yaml")
     with pytest.raises(JobDashboardError, match="write allowlist"):
         _writable_path(job, "papers/paper.pdf")
+
+    (job / "stratum").mkdir()
+    (job / "notes" / "stratum-alias").symlink_to(job / "stratum", target_is_directory=True)
+    with pytest.raises(JobDashboardError, match="read-only"):
+        _writable_path(job, "notes/stratum-alias/source.py")
 
 
 def test_job_fingerprint_excludes_transaction_receipts(mini_repo):
@@ -632,11 +720,14 @@ def test_drift_detection_leaves_no_trace_in_the_read_only_checkout(mini_repo):
     commands = Path(__file__).resolve().parent.parent / "tools" / "learning_os" / "commands"
     callers = [
         path for path in sorted(commands.glob("*.py"))
-        if '"git", "diff"' in path.read_text(encoding="utf-8")
+        if '"git", "--no-optional-locks", "diff"' in path.read_text(encoding="utf-8")
     ]
     assert callers, "no module runs `git diff` — has drift detection moved out of commands/?"
     for path in callers:
-        assert 'GIT_OPTIONAL_LOCKS": "0"' in path.read_text(encoding="utf-8"), path.name
+        text = path.read_text(encoding="utf-8")
+        assert 'GIT_OPTIONAL_LOCKS": "0"' in text, path.name
+        assert '"--no-ext-diff", "--no-textconv"' in text, path.name
+        assert "validate_stratum_revision(revision)" in text, path.name
 
 
 def test_job_track_progress_rejects_an_undeclared_track(mini_repo):
@@ -718,9 +809,19 @@ def test_plan_anchor_freshness_is_computed_not_declared(mini_repo):
     )
     assert proc.returncode == 0, proc.stderr
 
+    def checkout_state() -> dict[str, tuple[bytes, int]]:
+        return {
+            path.relative_to(stratum).as_posix(): (path.read_bytes(), path.stat().st_mtime_ns)
+            for path in sorted(stratum.rglob("*"))
+            if path.is_file()
+        }
+
+    before_dashboard = checkout_state()
+
     dashboard = json.loads(run_los(
         mini_repo, "job-dashboard", "--confirm-job-access",
     ).stdout)["dashboard"]
+    assert checkout_state() == before_dashboard
     track = next(t for t in dashboard["learning_tracks"] if t["id"] == "drift")
     freshness = {s["id"]: s["job_context"]["freshness"] for s in track["stages"]}
     assert freshness == {
