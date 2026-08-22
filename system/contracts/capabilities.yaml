@@ -13,6 +13,15 @@ queries:
     - Stratum worktree and Git metadata are immutable; only exact hash-and-path drift queries are permitted
     - absent from manifest, search, AI, and generated views
     - publishes a Job-specific optimistic-concurrency snapshot
+  plan.template:
+    handler: plan_template
+    result: plan-template-v1
+    schema: system/schema/plan-template.schema.json
+    invariants:
+    - read-only; generates a record and touches no repository file
+    - always the current plan-template version, never a copy of an existing plan
+    - the generated record is validated against its own domain schema before it is answered
+    - curriculum requires unit_id and module_id; job requires neither
   project.list:
     handler: project_list
     result: project-list

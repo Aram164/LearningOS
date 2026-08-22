@@ -3,14 +3,27 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+from pathlib import Path
 
+import pytest
 import yaml
 
 from learning_os.contracts import build_plan_template, validate_contract
+from learning_os.contracts.capability_catalog import query_definitions
 from learning_os.loader import load_repo
 
 
 SHARED_PLAN_SCHEMA = "https://learningos.local/schema/learning-plan-v1"
+
+
+def _plan_template(repo_root: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, str(repo_root / "tools" / "los.py"), "--root", str(repo_root),
+         "plan-template", *args],
+        capture_output=True, text=True, timeout=120,
+    )
 
 
 def test_plan_profiles_reference_the_same_stage_contract(repo_root):
@@ -56,3 +69,65 @@ def test_module_import_template_carries_current_plan_contract(repo_root):
     assert template["plan_contract"]["plan_template_version"] == 1
     study_map = template["units"][0]["study_map"]
     validate_contract(repo_root, "study-map.schema.json", study_map)
+
+
+# --------------------------------------------------------------- reachability
+#
+# A creation standard that only a terminal can reach is not enforced on the
+# surface people actually author from. These four pin the route the interface
+# uses, so the template cannot quietly become CLI-only again.
+
+
+def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root: Path):
+    definition = query_definitions(repo_root)["plan.template"]
+    assert definition.result == "plan-template-v1"
+    assert definition.schema == "system/schema/plan-template.schema.json"
+    assert (repo_root / definition.schema).is_file()
+
+    import los
+    from learning_os.contracts.payloads import subparsers
+
+    parser = subparsers(los.build_parser()).get("plan-template")
+    assert parser is not None, "the declared query has no executable CLI route"
+    assert parser.get_default("func").__name__ == f"cmd_{definition.handler}"
+
+
+@pytest.mark.parametrize(
+    ("profile", "extra", "record_type"),
+    [
+        ("job", (), "job-learning-plan"),
+        (
+            "curriculum",
+            ("--unit-id", "unit-example-l01", "--module-id", "module-example"),
+            "study-map",
+        ),
+    ],
+)
+def test_the_query_answers_the_shape_it_declares(repo_root, profile, extra, record_type):
+    result = _plan_template(repo_root, profile, "--title", "Example plan", "--json", *extra)
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)
+    validate_contract(repo_root, "plan-template.schema.json", response)
+    assert response["contract"] == "plan-template-v1"
+    assert response["profile"] == profile
+    assert response["plan"]["type"] == record_type
+    # The envelope must not be able to claim a template version the record
+    # itself does not carry — that divergence is the whole failure mode.
+    assert response["plan_template_version"] == response["plan"]["plan_template_version"] == 1
+    validate_contract(repo_root, response["schema"], response["plan"])
+
+
+def test_json_and_yaml_answer_the_same_record(repo_root: Path):
+    text = _plan_template(repo_root, "job", "--title", "Example plan")
+    envelope = _plan_template(repo_root, "job", "--title", "Example plan", "--json")
+    assert text.returncode == envelope.returncode == 0
+    assert yaml.safe_load(text.stdout) == json.loads(envelope.stdout)["plan"]
+
+
+def test_a_refused_query_reports_its_reason_as_json(repo_root: Path):
+    """The interface reads stdout as JSON; a bare stderr line is invisible there."""
+    result = _plan_template(repo_root, "curriculum", "--title", "Example plan", "--json")
+    assert result.returncode == 2
+    body = json.loads(result.stdout)
+    assert body["ok"] is False
+    assert "unit_id" in body["error"]

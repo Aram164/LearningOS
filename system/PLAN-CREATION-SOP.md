@@ -31,6 +31,20 @@ The curriculum and Job schemas both reference that shared contract. The Core
 Job gateway expands editor drafts using it. Legacy records remain readable as
 history, but creation gateways reject them as templates.
 
+The interface reads the same generator rather than carrying its own defaults.
+`plan.template` is a declared read-only query (`system/contracts/capabilities.yaml`)
+answering the `plan-template-v1` envelope in `system/schema/plan-template.schema.json`:
+
+```bash
+.venv/bin/python tools/los.py plan-template job --title "Rust systems track" --json
+```
+
+Obsidian's *Create study plan* prefills from that answer, and the Job dashboard
+projects each plan's `plan_template_version` so a record that predates the
+standard is labelled rather than silently shown as conforming. Anything that
+authors a plan — SOP, gateway, or interface — must go through this generator;
+a second copy of the defaults is the drift this standard exists to remove.
+
 Use the project environment. If `.venv/bin/python` does not exist, run
 `make setup` once. Do not assume a global `los` executable exists.
 

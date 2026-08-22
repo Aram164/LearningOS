@@ -150,6 +150,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--title", required=True)
     p.add_argument("--unit-id", default=None)
     p.add_argument("--module-id", default=None)
+    p.add_argument(
+        "--json",
+        action="store_true",
+        help="answer the plan-template-v1 query envelope instead of YAML (used by the interface)",
+    )
     p.set_defaults(func=cmd_plan_template)
 
     p = sub.add_parser(

@@ -514,6 +514,20 @@ def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
     assert stored["schema_version"] == 2
     assert stored["plan_template_version"] == 1
     assert "stages" in stored and "sessions" not in stored
+    # Stamped on the way in and readable on the way out. Without the second
+    # half the interface cannot tell a standardized plan from a legacy one,
+    # which is what made the standard invisible in the first place.
+    assert dashboard["learning_tracks"][0]["plan_template_version"] == 1
+
+
+def test_a_legacy_markdown_track_reports_no_template_rather_than_a_wrong_one(mini_repo):
+    write_job(mini_repo)
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)["dashboard"]
+    track = dashboard["learning_tracks"][0]
+    assert track["source_kind"] == "legacy-markdown"
+    assert track["plan_template_version"] is None
 
 
 def test_job_plan_save_expands_a_minimal_stage_with_the_shared_template(mini_repo):
