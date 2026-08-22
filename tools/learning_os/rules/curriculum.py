@@ -92,11 +92,40 @@ class ChecksCurriculum:
             if len(component_ids) != len(set(component_ids)):
                 self.err("COMPONENT-DUP", f"module '{mid}' has duplicate component ids", where)
             ordered = module.get("unit_order", []) or []
-            actual = [u.id for u in r.units.values() if u.module_id == mid]
+            owned_units = [u for u in r.units.values() if u.module_id == mid]
+            actual = [u.id for u in owned_units]
             if set(ordered) != set(actual) or len(ordered) != len(actual):
                 self.err("UNIT-ORDER",
                          f"module '{mid}' unit_order must contain every owned unit exactly once",
                          where)
+            else:
+                declared_orders = [unit.data.get("order") for unit in owned_units]
+                # Schema validation reports a missing/non-integer order. Do not
+                # let this semantic comparison turn the same bad input into an
+                # exception that aborts the rest of validation.
+                valid_orders = all(
+                    isinstance(value, int) and not isinstance(value, bool)
+                    for value in declared_orders
+                )
+                if valid_orders:
+                    numeric_order = sorted(
+                        owned_units,
+                        key=lambda unit: (unit.data["order"], unit.id),
+                    )
+                    numeric_ids = [unit.id for unit in numeric_order]
+                    order_values = [unit.data["order"] for unit in numeric_order]
+                    if len(order_values) != len(set(order_values)):
+                        self.err(
+                            "UNIT-ORDER-DUP",
+                            f"module '{mid}' unit order values must be unique",
+                            where,
+                        )
+                    elif list(ordered) != numeric_ids:
+                        self.err(
+                            "UNIT-ORDER-MISMATCH",
+                            f"module '{mid}' unit_order disagrees with unit order values",
+                            where,
+                        )
             source_map = r.module_source_maps.get(mid, {})
             joins = [(e.get("source_id"), e.get("role"))
                      for e in source_map.get("sources", []) or [] if isinstance(e, dict)]

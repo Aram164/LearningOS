@@ -72,6 +72,15 @@ dashboard and structured Job plans. Those records live outside the canonical
 data tree, so the frozen canonical fixture is byte-identical to `v6`; that is
 the compatibility claim being recorded, not a regenerated fixture.
 
+`v8` (adopted 2026-08-21) adds the optional anchor stamp on Job plan stages —
+`job_context.component` and `job_context.verified_against`, the same pair
+`notes/stratum/` frontmatter has always carried. Like `v7`, the change is
+confined to the quarantined Job schemas, so the frozen canonical fixture is
+byte-identical to `v7`; the recorded claim is that nothing in the canonical tree
+had to move. Both new fields are optional, so every plan written under `v7`
+still validates — a stage without them simply reports its anchor freshness as
+`unverified` rather than as `current`.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

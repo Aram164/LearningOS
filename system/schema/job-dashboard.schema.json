@@ -155,10 +155,16 @@
     "jobContext": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mental_models", "read_only_anchor"],
+      "required": ["mental_models", "read_only_anchor", "component", "verified_against", "freshness"],
       "properties": {
         "mental_models": {"type": "array", "items": {"$ref": "#/$defs/mentalModel"}},
-        "read_only_anchor": {"$ref": "#/$defs/text"}
+        "read_only_anchor": {"$ref": "#/$defs/text"},
+        "component": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "verified_against": {"$ref": "#/$defs/text"},
+        "freshness": {
+          "description": "Computed by the producer, never authored. Empty for a stage with no read-only anchor; otherwise one of the four labels the note surface already uses. `unverified` means the checkout could not answer — it is not a synonym for `current`.",
+          "enum": ["", "current", "drifting", "stale", "unverified"]
+        }
       }
     },
     "stage": {

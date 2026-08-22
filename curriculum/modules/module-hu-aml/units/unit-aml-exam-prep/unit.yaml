@@ -63,9 +63,9 @@ scope_sources:
   locator: exercise-slides/Übung 10.pdf slides 2–3 — first-sitting rules and L01–L11 Themen list
 source_selections:
 - source_id: source-aml-ss26-lectures
-  locator: current L01–L11 decks, Übung 02–11 and Bonusblatt 01–04
-  purpose: Scope, notation, course-native practice and exam-format baseline for every execution stage;
-    external sources remain selected only inside a lecture unit after a diagnosed miss.
+  locator: exercise-slides/Übung 02-11.pdf and bonus-exercises/zusatz-blatt01-04.pdf; exercise-slides/Übung
+    10.pdf, slides 2–3; lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf
+  purpose: Scope, notation, course-native practice and exam-format baseline for every execution stage.
   stage_ids:
   - stage-aml-calibration
   - stage-aml-foundations-repair
@@ -77,11 +77,40 @@ source_selections:
   - stage-aml-mock-two
   - stage-aml-final-repair
   - stage-aml-taper
-- source_id: source-jurafsky-slp3
-  locator: Chapter 8 — Transformers
-  purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use
-    only if the current deck, bank and mock leave an attention/block gap.
+- source_id: source-d2l
+  locator: Chapter 11 sections 11.1, 11.3, 11.5, 11.6 and 11.7 with their Exercises subsections. Verified
+    2026-08-22.
+  purpose: Chapter 11 carries a worked exercise set behind every L11 node and stands in for the lecturer-worked
+    Transformer sheet that the course never issued.
   stage_ids:
+  - stage-aml-neural-transformer-loop
+  - stage-aml-mock-one-repair
+  - stage-aml-final-repair
+- source_id: source-geron-handson
+  locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176, Ch 11 optimizers pdf pp.
+    485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention pdf pp. 772–795
+  purpose: 'The executable counterpart, from the complete 3rd-edition file: Ch 3 metrics, Ch 11 optimizers,
+    Ch 14 CNN motivation and exercises, Ch 16 attention and its exercises 5–6.'
+  stage_ids:
+  - stage-aml-foundations-repair
+  - stage-aml-linear-optimization-repair
+  - stage-aml-neural-transformer-loop
+- source_id: source-jurafsky-slp3
+  locator: Chapter 8 — Transformers (January 6, 2026 draft)
+  purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use
+    only if the current deck, bank and mock leave an attention or block gap.
+  stage_ids:
+  - stage-aml-neural-transformer-loop
+  - stage-aml-mock-one-repair
+  - stage-aml-final-repair
+- source_id: source-murphy-pml1
+  locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
+    solution manual §10.1 and §13.1
+  purpose: 'Section-addressed derivation bank for a diagnosed miss: Ch 8 for convexity, Newton and the
+    adaptive optimizers, §15.4–15.5 for attention and the Transformer block.'
+  stage_ids:
+  - stage-aml-foundations-repair
+  - stage-aml-linear-optimization-repair
   - stage-aml-neural-transformer-loop
 current_study_map: study-map-aml-exam-prep
 artifacts:

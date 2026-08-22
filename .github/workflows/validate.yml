@@ -59,6 +59,12 @@ jobs:
         run: npm run contract:check
       - name: validate (schemas + VALIDATION.md rules)
         run: python tools/validate.py
+      # The Job tree is quarantined and never pushed, so this is a no-op here
+      # and a real gate on the machine that has it. It runs in CI anyway so the
+      # script itself stays executable — a checker that only ever runs on one
+      # laptop is the failure mode §1.5 was written about.
+      - name: check Job plan anchors, resources and concepts
+        run: python tools/check_job_plans.py
       - name: URL-rot audit (weekly only)
         if: github.event_name == 'schedule'
         run: python tools/validate.py --online

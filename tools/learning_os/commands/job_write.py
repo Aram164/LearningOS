@@ -374,7 +374,7 @@ def _normalise_plan_resource(value: object) -> object:
 
 def _normalise_job_context(value: object) -> object:
     if value is None:
-        return {"mental_models": [], "read_only_anchor": ""}
+        return {"mental_models": [], "read_only_anchor": "", "component": [], "verified_against": ""}
     if not isinstance(value, dict):
         return value
     raw_models = value.get("mental_models", [])
@@ -389,9 +389,15 @@ def _normalise_job_context(value: object) -> object:
         ]
     else:
         models = raw_models
+    # `component` and `verified_against` are the same stamp the notes/stratum/
+    # frontmatter carries. They are preserved verbatim rather than defaulted
+    # away, so a save round-trip through the editor cannot silently drop the
+    # thing drift detection reads.
     return {
         "mental_models": models,
         "read_only_anchor": _trim(value.get("read_only_anchor", "")),
+        "component": _trimmed_list(value.get("component", [])),
+        "verified_against": _trim(value.get("verified_against", "")),
     }
 
 
@@ -424,6 +430,10 @@ def _legacy_plan_stage(raw: dict, plan_id: str, index: int) -> dict:
         "job_context": {
             "mental_models": ([{"label": "Mental model", "text": concept}] if concept else []),
             "read_only_anchor": str(raw.get("anchor") or "").strip(),
+            # Legacy Markdown plans have no stamp; an unstamped anchor reports
+            # `unverified`, which is the correct answer for prose nobody dated.
+            "component": [],
+            "verified_against": "",
         },
     }
 

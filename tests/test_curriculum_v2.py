@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import json
 import subprocess
 import sys
@@ -469,7 +470,7 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
         },
         "units": [{
             "unit": {"id": "unit-demo-l02", "type": "unit", "module_id": "module-demo",
-                     "kind": "lecture", "title": "Variance", "order": 1,
+                     "kind": "lecture", "title": "Variance", "order": 0,
                      "scope": "Lecture 2 as taught.", "status": "ready",
                      "scope_sources": [{"source_id": "source-demo-book", "authority": "slides"}],
                      "source_selections": [], "current_study_map": "study-map-demo-l02",
@@ -528,6 +529,61 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     assert (mini_repo / note_rel).is_file()
     rendered_map = (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02/study-map.yaml").read_text(encoding="utf-8")
     assert "&id" not in rendered_map and "*id" not in rendered_map
+
+    # Expanding an existing plan may add stages, but it may not silently move
+    # the stages already in use. A deliberate reorder needs a scoped reason in
+    # the review contract, so the package cannot acquire one accidentally.
+    map_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02/study-map.yaml"
+    current_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    review_note = (
+        "curriculum/modules/module-demo/units/unit-demo-l02/"
+        "stages/stage-variance-review/notes.md"
+    )
+    current_map["stages"].append({
+        "id": "stage-variance-review", "title": "Review variance",
+        "status": "pending", "objective": "Review the derivation.",
+        "done_when": ["Reproduce it cold."], "scope_triage": "required-now",
+        "resources": [], "working_note": review_note, "attachments": [],
+        "source_feedback": [],
+    })
+    write_yaml(map_path, current_map)
+    (mini_repo / review_note).parent.mkdir(parents=True, exist_ok=True)
+    (mini_repo / review_note).write_text("", encoding="utf-8")
+
+    reordered_units = copy.deepcopy(package_data)
+    reordered_units["module_patch"]["unit_order"].reverse()
+    reordered_units["units"][0]["study_map"] = copy.deepcopy(current_map)
+    reordered_units_package = tmp_path / "reordered-units-module-plan.yaml"
+    write_yaml(reordered_units_package, reordered_units)
+    rejected_unit_order = run_los(
+        mini_repo, "module-plan-import", "module-demo",
+        "--file", str(reordered_units_package), "--check",
+    )
+    assert rejected_unit_order.returncode == 1
+    assert "reorders existing units" in rejected_unit_order.stderr
+
+    reordered = copy.deepcopy(package_data)
+    reordered["units"][0]["study_map"] = copy.deepcopy(current_map)
+    reordered["units"][0]["study_map"]["stages"].reverse()
+    reordered_package = tmp_path / "reordered-module-plan.yaml"
+    write_yaml(reordered_package, reordered)
+    rejected_order = run_los(
+        mini_repo, "module-plan-import", "module-demo",
+        "--file", str(reordered_package), "--check",
+    )
+    assert rejected_order.returncode == 1
+    assert "reorders existing stages" in rejected_order.stderr
+
+    reordered["plan_contract"]["intentional_reorders"] = [{
+        "target": "study-map-stage-order", "id": "study-map-demo-l02",
+        "reason": "The review must precede the derivation after a curriculum change.",
+    }]
+    write_yaml(reordered_package, reordered)
+    reviewed_order = run_los(
+        mini_repo, "module-plan-import", "module-demo",
+        "--file", str(reordered_package), "--check",
+    )
+    assert reviewed_order.returncode == 0, reviewed_order.stderr
 
 
 def test_note_revise_is_approval_gated_and_preserves_identity_and_role(mini_repo, tmp_path):
@@ -860,7 +916,7 @@ def test_live_migration_is_idempotent_in_dry_run(repo_root):
 AMLS_INVENTORY = Path(__file__).resolve().parent / "fixtures" / "amls-paper-inventory.yaml"
 AMLS_READING_LIST = (
     ROOT.parent
-    / "materials/ML/AMLS/course/amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md"
+    / "materials/.flat/source-amls-ss26-lectures/AMLS-Source-Papers-Reading-List.md"
 )
 
 
@@ -1327,6 +1383,47 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
                 None,
                 False,
             }
+
+
+# ORDERING REGRESSION
+
+
+@pytest.mark.full_repo
+def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(repo_root):
+    """Expanded material menus must not rearrange the AML learning surface."""
+    repo = load_repo(repo_root)
+    module = repo.modules["module-hu-aml"]
+    expected_units = [
+        *[f"unit-aml-l{lecture:02d}" for lecture in range(1, 12)],
+        "unit-aml-exam-prep",
+    ]
+    assert module["unit_order"] == expected_units
+    assert [
+        unit.id
+        for unit in sorted(
+            (unit for unit in repo.units.values() if unit.module_id == "module-hu-aml"),
+            key=lambda unit: unit.data["order"],
+        )
+    ] == expected_units
+
+    study_map = repo.study_maps["study-map-aml-exam-prep"].data
+    expected_stages = [
+        "stage-aml-calibration",
+        "stage-aml-foundations-repair",
+        "stage-aml-linear-optimization-repair",
+        "stage-aml-neural-transformer-loop",
+        "stage-aml-integration-sheet",
+        "stage-aml-mock-one",
+        "stage-aml-mock-one-repair",
+        "stage-aml-mock-two",
+        "stage-aml-final-repair",
+        "stage-aml-taper",
+    ]
+    assert [stage["id"] for stage in study_map["stages"]] == expected_stages
+    assert study_map["current_stage"] == expected_stages[0]
+    assert [stage["status"] for stage in study_map["stages"]] == [
+        "active", *(["pending"] * 9),
+    ]
 
 
 # RESOURCE IDENTITY (ADR-009)

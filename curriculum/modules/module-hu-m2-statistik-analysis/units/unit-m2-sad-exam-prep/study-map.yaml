@@ -40,7 +40,9 @@ stages:
   - kind: practise
     label: Representative current exercise diagnostic
     source_id: source-sad-uebungen
-    locator: 'Blatt1, blatt-02, Übung-3, Blatt4/UE5, Blatt5/UE7: one representative item per cluster'
+    locator: 'Blatt1, blatt-02, Übung-3, UE5, blatt-05/UE7: one representative item per cluster. No Blatt3
+      or Blatt4 exists in the material root; Statistics_And_Data_Science.pdf is the unnumbered sheet covering
+      that range and stands in for it.'
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md
   attachments: []

@@ -5,6 +5,9 @@ module_id: module-example
 plan_contract:
   version: 1
   coverage_audit: work/active/workspace-example/outputs/example-coverage-audit.md
+  # Expansion preserves existing unit/stage order by default. Add a reasoned
+  # declaration here only for a deliberate pedagogical reorder.
+  intentional_reorders: []
   checks:
     local_inventory_complete: true
     linked_inventory_complete: true

@@ -65,6 +65,7 @@ sources:
 - source-karpathy-micrograd
 - source-kelleher-fmlpda
 - source-kroese-dsml
+- source-lineare-algebra-archive
 - source-mit-6034-quizzes
 - source-mit-6036
 - source-mml
@@ -110,6 +111,8 @@ Use four AML study sessions plus two M2 anchor sessions per week through the L08
 **Administration:** register the AML second sitting in AGNES during the registration window recorded in `curriculum/modules/module-hu-aml/module.yaml`, and take the sitting time and room from that same owner. Übung 10 confirms a 120-minute first-sitting baseline; until a current second-sitting notice says otherwise, mixed mocks use 120 minutes and the room slot is not treated as proof of working time.
 
 **Scope correction:** L11 is the current 81-slide Transformers lecture and is confirmed by the Übung 10 Themen list. The older RNN/GRU/LSTM deck is superseded and removed from the current L11 menu. L11 still has no lecturer-worked Übung; its exercise bank and mock carry the diagnostic load.
+
+**Material completeness pass (2026-08-22).** Measured per knowledge node, twenty of seventy-eight had no practice- or implementation-depth material; after `AML-material-completeness-plan.yaml` six remain, and all six are framing or optional-bridge nodes. L11 went from nine unworkable nodes to one. `estimate_minutes` is gone from all ten execution stages: the dated windows above and the closed-book test lengths inside each stage's `done_when` are the only times that remain.
 
 ## Open Questions
 

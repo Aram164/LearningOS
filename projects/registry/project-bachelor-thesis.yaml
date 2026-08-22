@@ -19,7 +19,6 @@ milestone_ids:
 linked_module_ids:
 - module-hu-aml
 - module-hu-amls
-- module-hu-ppds
 unit_ids:
 - unit-thesis-landscape
 - unit-thesis-experiments
