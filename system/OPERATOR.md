@@ -62,10 +62,15 @@ Skills and projects use modules and units without false academic metadata.
 5. Academic administrative facts live only in the owning partitioned
    `curriculum/modules/<module-id>/module.yaml`; coordination decisions live
    only in `work/COORDINATION.md`.
-6. Units may own a personal study map and stage work after source choice.
-   Knowledge maps and complete material menus do not require one. Workspaces coordinate efforts through
-   explicit `program_ids`, `module_ids`, and `unit_ids`; they do not own the
-   curriculum hierarchy.
+6. Every unit of an active or enrolled module owes a study map. A knowledge map
+   and a complete material menu say what a lecture covers and what may be used;
+   they are not an ordered path and do not discharge the obligation. A unit that
+   is complete or archived, or one whose module is dropped or archived, is owed
+   nothing. The producer answers this per unit as `needs_study_map`, derived
+   from the records rather than declared, so the count, the badge and the Review
+   queue cannot disagree. Workspaces coordinate efforts through explicit
+   `program_ids`, `module_ids`, and `unit_ids`; they do not own the curriculum
+   hierarchy.
 7. Durable notes remain globally canonical under `knowledge/`; units reference
    Ultimate References, Exercise Banks, Mock Exams, and other artifacts by ID.
 8. Source identity/evaluation, module role, unit selection, and stage action are

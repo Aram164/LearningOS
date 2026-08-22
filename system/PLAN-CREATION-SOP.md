@@ -66,8 +66,12 @@ A plan is complete only when all of the following are true:
 5. every usable material appears as a lecture-specific option with title,
    format, explanation angle, covered knowledge nodes, depth, scope status, and
    exact locator; the overview is complete even when nothing is selected;
-6. `source_selections` records actual learner choices, and a `study-map.yaml` is
-   optional—created only when the learner wants an ordered progress path;
+6. `source_selections` records actual learner choices, and every unit of an
+   active or enrolled module carries a `study-map.yaml` on plan template v1
+   (OPERATOR.md rule 6). A complete material menu is not a substitute: it says
+   what may be used, not in what order or against what proof. Until 2026-08-22
+   the map was optional here, and the result was 27 enrolled lecture units with
+   a full menu, a knowledge map, and nothing to work through;
 7. the package passes the no-write preflight;
 8. the snapshot-guarded import succeeds once; and
 9. validation, generation, focused tests, and the final diff are clean.

@@ -22,7 +22,7 @@ def build_progress(modules_v2: list[dict], units_v2: list[dict],
         progress[module["id"]] = {
             "units_total": len(module_units),
             "units_complete": sum(1 for unit in module_units if unit.get("status") == "complete"),
-            "units_needing_map": sum(1 for unit in module_units if unit.get("status") == "needs-map"),
+            "units_needing_map": sum(1 for unit in module_units if unit.get("needs_study_map")),
             "stages_total": len(stage_rows),
             "stages_complete": sum(1 for stage in stage_rows if stage.get("status") == "complete"),
         }
@@ -56,7 +56,7 @@ def build_counts(repo: Repo, *, thematic_groups: list[dict], topics_v2: list[dic
         "stages_complete": sum(1 for stage in stages_v2 if stage.get("status") == "complete"),
         "source_feedback_records": sum(
             len(stage.get("source_feedback", []) or []) for stage in stages_v2),
-        "units_needing_map": sum(1 for unit in units_v2 if unit.get("status") == "needs-map"),
+        "units_needing_map": sum(1 for unit in units_v2 if unit.get("needs_study_map")),
         "inbox_items": inbox_items,
         "garden_entries": len(garden_entries),
         "ai_action_requests": len(ai_requests),

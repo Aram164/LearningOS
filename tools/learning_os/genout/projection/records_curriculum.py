@@ -89,9 +89,44 @@ def project_modules(repo: Repo, revision: Revision) -> list[dict]:
     return records
 
 
+# A module whose units are still being studied. A dropped or archived module
+# keeps its records as history and is never asked for new plans.
+_STUDIED_MODULE_STATUSES = frozenset({"active", "enrolled"})
+
+# A unit that is finished, or explicitly set aside, is not owed a plan either.
+_UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({"complete", "archived"})
+
+
+def _needs_study_map(unit_data: dict, module_status: str | None,
+                     has_study_map: bool) -> bool:
+    """Whether this unit still owes an ordered study map.
+
+    Derived, not declared. `status: needs-map` was the only signal before, and
+    an authored label is a claim someone has to remember to set: 26 lecture
+    units across two enrolled modules had no map and none of them carried it,
+    so every count and badge downstream read zero while the Review queue —
+    which had always filtered on the map itself — listed all of them. One
+    derivation ends that disagreement.
+    """
+    if unit_data.get("status") == "needs-map":
+        return True
+    if has_study_map:
+        return False
+    if module_status not in _STUDIED_MODULE_STATUSES:
+        return False
+    return unit_data.get("status") not in _UNIT_STATUSES_WITHOUT_OBLIGATION
+
+
 def project_units(repo: Repo, revision: Revision,
                   unit_to_projects: dict[str, list[str]]) -> list[dict]:
     records = []
+    module_status = {
+        mid: (module.data if hasattr(module, "data") else module).get("status")
+        for mid, module in repo.modules.items()
+    }
+    mapped_units = {
+        study_map.unit_id for study_map in repo.study_maps.values()
+    }
     for unit in sorted(repo.units.values(), key=lambda u: u.id):
         data = unit.data
         note_ref = data.get("working_note")
@@ -106,6 +141,13 @@ def project_units(repo: Repo, revision: Revision,
             # module_id remains for compatibility until Gate F, while interfaces
             # receive the first-class ownership edge directly from the core.
             "project_ids": unit_to_projects.get(unit.id, []),
+            # The producer answers the obligation once so the count, the badge
+            # and the Review queue cannot disagree about it.
+            "needs_study_map": _needs_study_map(
+                data,
+                module_status.get(str(data.get("module_id") or "")),
+                unit.id in mapped_units,
+            ),
             "notes_text": note_text,
             "note_sections": unit_note_sections(note_text),
             "notes_updated": _git_last_commit(
