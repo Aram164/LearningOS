@@ -1,8 +1,9 @@
 #!/bin/sh
 # Learning OS v3 — pre-commit gate (canonical copy: tools/hooks/pre-commit).
 #
-# Blocks the commit if the offline validator reports errors. Warnings are
-# printed but never block (mirrors validate.py semantics: FAIL = errors only).
+# Blocks the commit if defect-oriented static checks or the offline validator
+# report errors. Warnings are printed but never block (mirrors validate.py
+# semantics: FAIL = errors only).
 #
 # Install (once per clone):
 #   cp tools/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
@@ -11,6 +12,16 @@
 #   git commit --no-verify
 
 cd "$(git rev-parse --show-toplevel)" || exit 1
+
+# Hooks live outside Git's tracked tree after installation. A copied hook that
+# silently lags its canonical source recreates the 2026-08-03 failure where the
+# installed gate still invoked retired tooling and blocked every commit. Refuse
+# that split-brain state while the repair is one deterministic command.
+INSTALLED_HOOK="$(git rev-parse --git-path hooks/pre-commit)"
+if [ -f "$INSTALLED_HOOK" ] && ! cmp -s "$INSTALLED_HOOK" tools/hooks/pre-commit; then
+    echo "pre-commit: installed hook is stale — run 'make hooks' and retry" >&2
+    exit 1
+fi
 
 # Prefer the project venv (created by `make setup`) so validation runs against
 # the same interpreter and pinned deps everywhere; fall back to a system Python.
@@ -21,6 +32,13 @@ else
 fi
 if [ -z "$PY" ]; then
     echo "pre-commit: no python found — commit blocked (run 'make setup', or install Python 3.10+, or use --no-verify)." >&2
+    exit 1
+fi
+
+if ! "$PY" -m ruff check tools tests; then
+    echo "" >&2
+    echo "COMMIT BLOCKED: static checks failed (see above)." >&2
+    echo "Fix the reported code defect, then commit again." >&2
     exit 1
 fi
 

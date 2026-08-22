@@ -30,6 +30,11 @@ import argparse
 import re
 from pathlib import Path
 
+from learning_os.contracts.migration_lifecycle import (
+    refuse_retired_apply,
+    retired_migration,
+)
+
 ROOT = Path(__file__).resolve().parents[2]
 G = "thematic-group-"
 
@@ -276,6 +281,10 @@ def main() -> int:
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
+
+    retired = retired_migration(ROOT, "library-taxonomy-v1", supported_through=1)
+    if refuse_retired_apply(retired, apply=args.apply):
+        return 2 if args.apply else 0
 
     from learning_os.loader import load_repo
 

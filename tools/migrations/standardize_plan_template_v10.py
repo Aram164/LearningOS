@@ -13,6 +13,11 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts.migration_lifecycle import (
+    refuse_retired_apply,
+    retired_migration,
+)
+
 
 def migrate_text(text: str) -> str:
     data = yaml.safe_load(text)
@@ -64,9 +69,15 @@ def migrate_text(text: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[2])
-    parser.add_argument("--check", action="store_true")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--apply", action="store_true")
+    mode.add_argument("--check", action="store_true")
     args = parser.parse_args()
-    paths = sorted((args.root / "curriculum" / "modules").glob("**/study-map.yaml"))
+    root = args.root.resolve()
+    retired = retired_migration(root, "standardize-plan-template-v10", supported_through=10)
+    if refuse_retired_apply(retired, apply=args.apply):
+        return 2 if args.apply else 0
+    paths = sorted((root / "curriculum" / "modules").glob("**/study-map.yaml"))
     changed = 0
     for path in paths:
         before = path.read_text(encoding="utf-8")
@@ -74,9 +85,10 @@ def main() -> int:
         if after == before:
             continue
         changed += 1
-        if not args.check:
+        if args.apply:
             path.write_text(after, encoding="utf-8")
-    print(f"{changed} study map(s) {'need migration' if args.check else 'migrated'}")
+    outcome = "migrated" if args.apply else "need migration"
+    print(f"{changed} study map(s) {outcome}")
     return 1 if args.check and changed else 0
 
 

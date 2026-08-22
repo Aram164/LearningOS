@@ -466,7 +466,8 @@ Obsidian layer installed:
    this document's workflows, and every session that touched canonical files
    ends with §22 (validate → commit → push). The post-commit hook rebuilds
    `generated/`.
-3. **Obsidian presents and delegates** — it reads only atomic manifest v2 and
+3. **Obsidian presents and delegates** — it reads only the atomic manifest at
+   the version declared by `system/contracts/manifest-contract.yaml`, and
    sends mutations to action-specific CLI commands with snapshot guards. It
    never parses or writes canonical YAML/Markdown. The app remains optional;
    plain files and CLI retain the whole system.

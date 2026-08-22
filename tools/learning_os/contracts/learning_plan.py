@@ -115,7 +115,10 @@ def normalise_job_stage(value: object, plan_id: str, index: int) -> object:
         "status": _trim(value.get("status") or "pending"),
         "objective": objective,
         "done_when": done_when,
-        "estimate_minutes": value.get("estimate_minutes", 90),
+        # Absence is honest. A default estimate looks like learner-specific
+        # information even though nobody chose it, and the old 90-minute
+        # constant propagated into every plan created from the template.
+        "estimate_minutes": value.get("estimate_minutes"),
         "exam_critical": value.get("exam_critical") is True,
         "concepts": _trimmed_list(value.get("concepts", [])),
         "scope_triage": _trim(value.get("scope_triage") or "required-now"),
@@ -155,6 +158,13 @@ def current_template_problems(value: object, profile: str) -> list[str]:
         problems.append(
             f"stage numbers must be sequential in authored order: expected {expected}, got {numbers}"
         )
+    if profile == "curriculum":
+        source_plan = value.get("source_plan")
+        source_path = source_plan.get("path") if isinstance(source_plan, Mapping) else None
+        if source_path == "replace-with-reviewed-plan.yaml":
+            problems.append(
+                "source_plan.path is still the template placeholder; name the reviewed plan"
+            )
     return problems
 
 
@@ -171,7 +181,12 @@ def build_plan_template(
     unit_id: str | None = None,
     module_id: str | None = None,
 ) -> dict:
-    """Build the official valid starting record for either plan boundary."""
+    """Build the official schema-valid starting record for either plan boundary.
+
+    Curriculum keeps an explicit source-plan placeholder so the missing review
+    evidence is visible while authoring. The import gate refuses that sentinel;
+    a starting template is not evidence that its placeholders were completed.
+    """
     if profile not in PLAN_PROFILES:
         raise PlanTemplateError(f"unknown plan profile: {profile}")
     clean_title = str(title or "").strip()
@@ -212,7 +227,6 @@ def build_plan_template(
             "status": "pending",
             "objective": f"Build working fluency in {clean_title}.",
             "done_when": [f"Explain and apply {clean_title} without notes."],
-            "estimate_minutes": 90,
             "exam_critical": False,
             "concepts": [],
             "scope_triage": "required-now",

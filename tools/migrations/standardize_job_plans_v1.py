@@ -11,6 +11,11 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts.migration_lifecycle import (
+    refuse_retired_apply,
+    retired_migration,
+)
+
 
 def main() -> int:
     parser = argparse.ArgumentParser()
@@ -20,8 +25,19 @@ def main() -> int:
         default=Path(__file__).resolve().parents[2],
     )
     parser.add_argument("--job-root", type=Path, required=True)
+    parser.add_argument("--apply", action="store_true")
     args = parser.parse_args()
     repository_root = args.repository_root.resolve()
+    retired = retired_migration(
+        repository_root,
+        "standardize-job-plans-v1",
+        supported_through=10,
+    )
+    if refuse_retired_apply(retired, apply=args.apply):
+        return 2 if args.apply else 0
+    if not args.apply:
+        print("dry-run: pass --apply to migrate eligible Job plans through the gateway")
+        return 0
     job_root = args.job_root.resolve()
     plans = sorted((job_root / "plans").glob("*.yaml"))
     migrated = 0

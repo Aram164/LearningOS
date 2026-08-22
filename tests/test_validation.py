@@ -26,6 +26,15 @@ def test_mini_repo_is_clean(mini_repo):
     assert codes(issues, "E") == [], [str(i) for i in issues]
 
 
+def test_living_docs_cannot_copy_a_manifest_version(mini_repo):
+    readme = mini_repo / "README.md"
+    readme.write_text(
+        "Read manifest v99 and hope this prose changes when the producer does.\n",
+        encoding="utf-8",
+    )
+    assert "CONTRACT-DOC-STATIC-VERSION" in codes(run(mini_repo), "E")
+
+
 @pytest.mark.full_repo
 def test_real_repository_has_no_errors(repo_root):
     issues = run(repo_root)

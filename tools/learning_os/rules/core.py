@@ -123,6 +123,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_parse_failures()
         self.check_data_contract()
         self.check_manifest_contract()
+        self.check_contract_documentation()
         self.check_schemas()
         self.check_identity()
         self.check_references()

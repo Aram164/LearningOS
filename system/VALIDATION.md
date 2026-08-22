@@ -82,6 +82,9 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 ## Operating contract
 
 - The operating contract is a single canonical file, `system/CLAUDE.md`. Root `CLAUDE.md` and the `LearningOS/` project-root entry are symlinks to it, so the copies cannot drift — the former hand-maintained `CLAUDE-SYNC` warning is retired (2026-07-17).
+- **E** Living operator instructions never copy the current data or manifest
+  contract number. They point to the producer-owned declaration, while dated
+  ADRs and contract history remain free to name historical versions.
 
 ## Files
 

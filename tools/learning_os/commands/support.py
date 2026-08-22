@@ -16,7 +16,7 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.fingerprint import source_fingerprint
+from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout import (
     build_backlinks,
     build_manifest,
@@ -85,7 +85,10 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
         print("los: --expected-snapshot was empty; refusing to write without a "
               "concurrency token", file=sys.stderr)
         return False
-    actual = f"sha256:{source_fingerprint(load_repo(root))}"
+    # The snapshot is a content digest, not a loaded-domain property. Loading
+    # the whole repository only to call the same path-based digest added a full
+    # parse to every UI write and did not strengthen the concurrency check.
+    actual = f"sha256:{canonical_fingerprint(root)}"
     if actual == expected:
         return True
     print("los: projection conflict — authored files changed since the app loaded; "
