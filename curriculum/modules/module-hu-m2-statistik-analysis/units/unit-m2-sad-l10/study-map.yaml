@@ -23,7 +23,8 @@ stages:
   - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
   scope_triage: required-now
   resources:
   - kind: read
@@ -137,7 +138,8 @@ stages:
   - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
   scope_triage: required-now
   resources:
   - kind: read
@@ -245,7 +247,8 @@ stages:
   - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
   scope_triage: required-now
   resources:
   - kind: read
@@ -310,7 +313,9 @@ stages:
   - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
+  - concept-normal-distribution
   scope_triage: required-now
   resources:
   - kind: read
@@ -433,7 +438,9 @@ stages:
   - Work Arbeitsbuch Chapters 10–11 — testing drills, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-chi-square-test
+  - concept-hypothesis-testing
   scope_triage: required-now
   resources:
   - kind: read
@@ -500,7 +507,9 @@ stages:
   - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
+  - concept-nonparametric-tests
   scope_triage: required-now
   resources:
   - kind: read
@@ -542,7 +551,9 @@ stages:
   - 'Reproduce without notes: Repeating tests inflates the chance of at least one false positive; family-wise
     and false-discovery controls answer different error-management questions.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-hypothesis-testing
+  - concept-multiple-testing
   scope_triage: required-now
   resources:
   - kind: read

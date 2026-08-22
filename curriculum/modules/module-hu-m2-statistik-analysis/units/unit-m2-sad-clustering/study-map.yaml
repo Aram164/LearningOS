@@ -23,7 +23,9 @@ stages:
   - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-clustering
+  - concept-supervised-learning
   scope_triage: required-now
   resources:
   - kind: read
@@ -137,7 +139,9 @@ stages:
   - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-clustering
+  - concept-k-means
   scope_triage: required-now
   resources:
   - kind: practise
@@ -204,7 +208,9 @@ stages:
   - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-clustering
+  - concept-k-means
   scope_triage: required-now
   resources:
   - kind: practise
@@ -265,7 +271,9 @@ stages:
   - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-clustering
+  - concept-distance-metrics
   scope_triage: required-now
   resources:
   - kind: practise

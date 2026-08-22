@@ -23,7 +23,9 @@ stages:
   - Work Übung 06 — gradient-descent bridge, then the remaining 1, and record every miss with the step
     it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convexity
+  - concept-gradient-descent
   scope_triage: required-now
   resources:
   - kind: read
@@ -305,7 +307,8 @@ stages:
   - Work Bonusblatt 03 — gradient descent, then the remaining 1, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-gradient-descent
   scope_triage: required-now
   resources:
   - kind: read
@@ -551,7 +554,9 @@ stages:
   done_when:
   - 'Reproduce without notes: Curvature-aware updates, Hessian cost, and comparison with first-order methods.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-gradient-descent
+  - concept-newton-method
   scope_triage: required-now
   resources:
   - kind: read

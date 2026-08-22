@@ -24,6 +24,7 @@ stages:
     the step it failed at.
   exam_critical: true
   concepts:
+  - concept-conditional-independence
   - concept-naive-bayes
   scope_triage: required-now
   resources:
@@ -181,7 +182,9 @@ stages:
     class-conditional density; binning changes information and probability estimates.'
   - Work UE6 — probability-based classification tasks, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-gaussian-naive-bayes
+  - concept-naive-bayes
   scope_triage: required-now
   resources:
   - kind: read
@@ -358,7 +361,8 @@ stages:
   - 'Reproduce without notes: A directed acyclic graph encodes local conditional dependencies, factorizing
     a joint distribution without assuming that all features are independent given the class.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-bayesian-network
   scope_triage: required-now
   resources:
   - kind: read
@@ -389,7 +393,9 @@ stages:
   - 'Reproduce without notes: Graph structure determines which variables become independent when others
     are observed; a node''s Markov blanket contains the local information needed for its conditional distribution.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-bayesian-network
+  - concept-conditional-independence
   scope_triage: required-now
   resources:
   - kind: read

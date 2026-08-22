@@ -21,7 +21,8 @@ stages:
   - 'Reproduce without notes: Why flattening images is inefficient and how locality, translation structure,
     and shared filters address it.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convolutional-networks
   scope_triage: required-now
   resources:
   - kind: read
@@ -235,7 +236,8 @@ stages:
   - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convolutional-networks
   scope_triage: required-now
   resources:
   - kind: read
@@ -340,7 +342,8 @@ stages:
     changes.'
   - Work Übung 11 — CNN calculations and fourth sheet, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convolutional-networks
   scope_triage: required-now
   resources:
   - kind: read
@@ -407,7 +410,8 @@ stages:
   - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convolutional-networks
   scope_triage: required-now
   resources:
   - kind: read
@@ -534,7 +538,9 @@ stages:
     modules, and residual connections.'
   - Work Übung 11 — CNN calculations and fourth sheet, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-convolutional-networks
+  - concept-residual-connection
   scope_triage: required-now
   resources:
   - kind: read

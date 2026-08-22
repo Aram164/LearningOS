@@ -107,7 +107,10 @@ stages:
   - Work Cornell CS4780 HW9 — neural networks and ReLU, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-activation-function
+  - concept-neural-network
+  - concept-xor-problem
   scope_triage: required-now
   resources:
   - kind: read
@@ -191,7 +194,9 @@ stages:
   - Work Blatt 5 and UE7 — neural-network forward task, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-neural-network
+  - concept-softmax
   scope_triage: required-now
   resources:
   - kind: read
@@ -250,7 +255,9 @@ stages:
   - Work Blatt 5 and UE7 — neural-network forward task, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-algebra
+  - concept-neural-network
   scope_triage: required-now
   resources:
   - kind: read
@@ -573,7 +580,8 @@ stages:
   - 'Reproduce without notes: Sufficiently wide nonlinear networks can approximate broad function classes,
     but the theorem does not guarantee efficient learning, good generalization, or a practical architecture.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-universal-approximation
   scope_triage: required-now
   resources:
   - kind: read

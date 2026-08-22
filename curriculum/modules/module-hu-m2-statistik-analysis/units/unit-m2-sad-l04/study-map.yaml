@@ -47,7 +47,8 @@ stages:
   - Work Blatt 2 and UE3 — probability and Bayes tasks, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-probability
   scope_triage: required-now
   resources:
   - kind: read
@@ -340,7 +341,9 @@ stages:
   - Work Blatt 2 and UE3 — probability and Bayes tasks, then the remaining 5, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-bayes-theorem
+  - concept-conditional-probability
   scope_triage: required-now
   resources:
   - kind: read
@@ -472,7 +475,9 @@ stages:
   - Work Arbeitsbuch Chapter 4 — conditional probability and Bayes, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-conditional-independence
+  - concept-probability
   scope_triage: required-now
   resources:
   - kind: read

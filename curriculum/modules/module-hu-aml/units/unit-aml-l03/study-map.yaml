@@ -22,7 +22,8 @@ stages:
   - Work Bonusblatt 02 — linear-regression task, then the remaining 1, and record every miss with the
     step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-regression
   scope_triage: required-now
   resources:
   - kind: read
@@ -90,7 +91,8 @@ stages:
   - Work Übung 03 — vectorization and linear regression, then the remaining 3, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-mean-squared-error
   scope_triage: required-now
   resources:
   - kind: read
@@ -219,7 +221,9 @@ stages:
   - Work Bonusblatt 02 — linear-regression task, then the remaining 2, and record every miss with the
     step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-regression
+  - concept-normal-equation
   scope_triage: required-now
   resources:
   - kind: read
@@ -341,7 +345,8 @@ stages:
   - Work Übung 03 — vectorization and linear regression, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-algebra
   scope_triage: required-now
   resources:
   - kind: read
@@ -386,7 +391,9 @@ stages:
   - Work Übung 03 — vectorization and linear regression, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-algebra
+  - concept-linear-regression
   scope_triage: required-now
   resources:
   - kind: read

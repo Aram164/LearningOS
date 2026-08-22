@@ -98,7 +98,8 @@ stages:
   - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-k-nearest-neighbors
   scope_triage: required-now
   resources:
   - kind: read
@@ -162,7 +163,8 @@ stages:
   - 'Reproduce without notes: Non-negativity, identity, symmetry, and triangle inequality define a metric;
     not every useful similarity is a metric, which affects algorithms and indexes.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-distance-metrics
   scope_triage: required-now
   resources:
   - kind: read
@@ -275,7 +277,8 @@ stages:
   - 'Reproduce without notes: Directional, set-valued, and covariance-aware data require different measures;
     each encodes a distinct invariance and assumption about what “similar” should mean.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-distance-metrics
   scope_triage: required-now
   resources:
   - kind: read
@@ -320,7 +323,9 @@ stages:
   - 'Reproduce without notes: kd-trees, k-means-style partitions, and metric trees prune search using
     geometric or metric structure, but effectiveness degrades with dimension and data geometry.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-k-nearest-neighbors
+  - concept-similarity-search
   scope_triage: required-now
   resources:
   - kind: read

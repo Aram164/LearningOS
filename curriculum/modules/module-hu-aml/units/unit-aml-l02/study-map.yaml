@@ -23,7 +23,9 @@ stages:
   - Work Übung 02 — k-NN search with vector embeddings, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-embedding
+  - concept-k-nearest-neighbors
   scope_triage: required-now
   resources:
   - kind: read
@@ -64,7 +66,8 @@ stages:
   - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-k-nearest-neighbors
   scope_triage: required-now
   resources:
   - kind: read
@@ -167,7 +170,10 @@ stages:
   - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-distance-metrics
+  - concept-feature-scaling
+  - concept-k-nearest-neighbors
   scope_triage: required-now
   resources:
   - kind: read

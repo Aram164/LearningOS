@@ -21,7 +21,8 @@ stages:
   - 'Reproduce without notes: Statistics observes feature values on sampled objects to learn about a larger
     population; each term identifies a different part of that inference problem.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -58,7 +59,8 @@ stages:
   - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 1, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -121,7 +123,8 @@ stages:
   - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 3, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -190,7 +193,8 @@ stages:
   - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -351,7 +355,8 @@ stages:
   - 'Reproduce without notes: A trend can reverse after groups are combined because group sizes and hidden
     variables alter the weighting; stratification is part of interpretation, not cosmetic reporting.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-simpsons-paradox
   scope_triage: required-now
   resources:
   - kind: read
@@ -376,7 +381,8 @@ stages:
   - Work Blatt 1 and UE2 — descriptive-statistics calculations, then the remaining 2, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-sampling-bias
   scope_triage: required-now
   resources:
   - kind: read

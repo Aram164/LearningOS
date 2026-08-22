@@ -390,3 +390,103 @@ concepts:
     label: Fast Fourier transform
     aliases: [FFT, schnelle Fourier-Transformation, polynomial multiplication]
     domain_hints: [algorithms]
+  # ------------------------------------------ registered 2026-08-22 to close the
+  # concept gap on the AML and SaD lecture maps. Every entry below is taught by a
+  # current 2026 deck and was previously unnameable, so 97 stages carried no
+  # coverage at all: the mechanism that decides what does not need re-teaching
+  # could not see half the semester.
+  - id: concept-supervised-learning
+    label: Supervised and unsupervised learning
+    aliases: [supervised learning, unsupervised learning, überwachtes Lernen, learning task, labelled data]
+    description: The distinction between learning from labelled examples and seeking structure without labels, and what each licenses.
+    domain_hints: [machine-learning]
+  - id: concept-linear-algebra
+    label: Vectors, matrices, and linear-algebra mechanics
+    aliases: [linear algebra, lineare Algebra, dot product, Skalarprodukt, matrix product, transpose, design matrix, vectorization]
+    description: Vectors, transposes, dot and matrix products, shapes, inverses, and the design-matrix form predictions and losses are written in.
+    domain_hints: [mathematics, machine-learning]
+  - id: concept-newton-method
+    label: Newton and second-order optimization
+    aliases: [Newton method, Newton-Verfahren, second-order optimization, Hessian, Hesse-Matrix]
+    description: Curvature-aware updates, the cost of the Hessian, and how they compare with first-order descent.
+    domain_hints: [machine-learning, mathematics]
+  - id: concept-activation-function
+    label: Activation functions
+    aliases: [activation function, Aktivierungsfunktion, ReLU, tanh, nonlinearity, Nichtlinearität]
+    description: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU and relatives change what a network can represent.
+    domain_hints: [machine-learning]
+  - id: concept-vanishing-gradients
+    label: Vanishing and exploding gradients
+    aliases: [vanishing gradient, exploding gradient, verschwindende Gradienten, gradient health]
+    description: Repeated Jacobian factors with depth, saturation, the symptoms that diagnose them, and the remedies the course covers.
+    domain_hints: [machine-learning]
+  - id: concept-universal-approximation
+    label: Universal approximation
+    aliases: [universal approximation, Universalitätssatz, expressiveness, approximation theorem]
+    description: Sufficiently wide nonlinear networks approximate broad function classes, without any guarantee of efficient learning or generalization.
+    domain_hints: [machine-learning]
+  - id: concept-clustering
+    label: Clustering
+    aliases: [clustering, Clusteranalyse, cluster analysis, grouping without labels]
+    description: Grouping unlabelled data, where representation, similarity, objective and algorithm each change the answer.
+    domain_hints: [machine-learning]
+  - id: concept-k-means
+    label: k-means
+    aliases: [k-means, k-Means, Lloyd algorithm, centroid, within-cluster sum of squares]
+    description: Alternating assignment and centroid recomputation, its monotone objective, and its dependence on k, initialization and scale.
+    domain_hints: [machine-learning]
+  - id: concept-ensemble-methods
+    label: Ensembles and stacking
+    aliases: [ensemble, Ensemble-Methoden, stacking, meta-learner, out-of-fold]
+    description: Combining diverse base predictors, and the leakage-safe out-of-fold construction that makes a meta-learner honest.
+    domain_hints: [machine-learning]
+  - id: concept-distance-metrics
+    label: Distances, similarities, and metric axioms
+    aliases: [metric axioms, Metrik, triangle inequality, Dreiecksungleichung, cosine similarity, Jaccard, Mahalanobis]
+    description: What makes a similarity a metric, and which invariance each of the directional, set-valued and covariance-aware measures encodes.
+    domain_hints: [machine-learning, mathematics]
+  - id: concept-similarity-search
+    label: Similarity-search indexing
+    aliases: [similarity search, kd-tree, metric tree, nearest-neighbour index, Ähnlichkeitssuche]
+    description: Pruning search with geometric or metric structure, and why that pruning degrades as dimensionality grows.
+    domain_hints: [machine-learning, algorithms]
+  - id: concept-simpsons-paradox
+    label: Simpson's paradox
+    aliases: [Simpson paradox, Simpsons Paradox, aggregation paradox, stratification, confounding]
+    description: A trend that reverses once groups are combined, because group sizes and hidden variables change the weighting.
+    domain_hints: [statistics]
+  - id: concept-sampling-bias
+    label: Sampling bias and representativeness
+    aliases: [sampling bias, Stichprobenverzerrung, nonresponse, survivorship bias, selection bias, representative sample]
+    description: Coverage, nonresponse, survivorship and convenience decide whether a sample supports a population claim; no interval repairs a biased sample.
+    domain_hints: [statistics]
+  - id: concept-law-of-large-numbers
+    label: Law of large numbers and Chebyshev bounds
+    aliases: [law of large numbers, Gesetz der grossen Zahlen, Chebyshev, Tschebyscheff, concentration inequality]
+    description: A distribution-free tail bound, and why sample averages stabilize as observations accumulate.
+    domain_hints: [statistics, mathematics]
+  - id: concept-chi-square-test
+    label: Chi-square tests
+    aliases: [chi-square, Chi-Quadrat, goodness of fit, test of independence, expected counts]
+    description: Goodness-of-fit and independence tests from observed against expected counts, with their degrees-of-freedom and count-size conditions.
+    domain_hints: [statistics]
+  - id: concept-nonparametric-tests
+    label: Rank and permutation tests
+    aliases: [nonparametric test, rank test, Rangtest, permutation test, Permutationstest, exchangeability]
+    description: Reducing distributional assumptions by ranking, or building the null distribution directly from exchangeability.
+    domain_hints: [statistics]
+  - id: concept-multiple-testing
+    label: Multiple testing and false discovery
+    aliases: [multiple testing, multiples Testen, family-wise error rate, false discovery rate, Bonferroni]
+    description: Repeated tests inflate the chance of at least one false positive; family-wise and false-discovery control answer different questions.
+    domain_hints: [statistics]
+  - id: concept-bayesian-network
+    label: Bayesian networks
+    aliases: [Bayesian network, Bayes-Netz, directed acyclic graph, factorization]
+    description: A DAG encoding local conditional dependencies, factorizing a joint distribution without assuming every feature is independent.
+    domain_hints: [machine-learning, statistics]
+  - id: concept-conditional-independence
+    label: Conditional independence
+    aliases: [conditional independence, bedingte Unabhängigkeit, independence, Unabhängigkeit, Markov blanket]
+    description: Independence that holds or fails only once a third variable is known — a different claim from joint factorization.
+    domain_hints: [statistics, machine-learning]

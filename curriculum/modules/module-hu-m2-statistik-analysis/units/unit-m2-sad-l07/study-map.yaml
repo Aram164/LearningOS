@@ -23,7 +23,8 @@ stages:
   - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 5, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-discrete-distributions
   scope_triage: required-now
   resources:
   - kind: read
@@ -282,7 +283,8 @@ stages:
   - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-discrete-distributions
   scope_triage: required-now
   resources:
   - kind: read
@@ -398,7 +400,8 @@ stages:
   - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 1, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-discrete-distributions
   scope_triage: required-now
   resources:
   - kind: read
@@ -483,7 +486,8 @@ stages:
   - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-discrete-distributions
   scope_triage: required-now
   resources:
   - kind: read
@@ -609,7 +613,10 @@ stages:
   - 'Reproduce without notes: Rare-event Binomials approach Poisson; distribution moments provide fast
     checks, but approximation conditions must be stated rather than assumed.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-discrete-distributions
+  - concept-expected-value
+  - concept-variance
   scope_triage: required-now
   resources:
   - kind: read

@@ -23,7 +23,8 @@ stages:
   - Work Bonusblatt 03 — model choice and decision boundary, then the remaining 2, and record every miss
     with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-decision-boundary
   scope_triage: required-now
   resources:
   - kind: read
@@ -237,7 +238,9 @@ stages:
     of one linear boundary.'
   - Work Bonusblatt 04 — perceptron and separability, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-perceptron
+  - concept-xor-problem
   scope_triage: required-now
   resources:
   - kind: read
@@ -392,7 +395,9 @@ stages:
   - Work Cornell CS4780 HW2/HW7 — perceptron and kernels, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-bias-variance-tradeoff
+  - concept-kernel-trick
   scope_triage: required-now
   resources:
   - kind: read
