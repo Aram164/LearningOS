@@ -5,10 +5,10 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 08 — Normal Distribution, CLT & Likelihood
 order: 8
-scope: Current 2026 L08 deck; Normal distribution and standardization, quantiles, linear transformations and
-  sums of independent Normals, law of large numbers and central limit theorem, normal approximation,
+scope: Current 2026 L08 deck; Normal distribution and standardization, quantiles, linear transformations
+  and sums of independent Normals, law of large numbers and central limit theorem, normal approximation,
   likelihood and maximum-likelihood estimation, and the normal-errors-to-MSE bridge.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture explains why Normal models dominate sampling-based inference and connects probabilistic
     data models to the optimization objectives used in regression and machine learning.
@@ -21,12 +21,14 @@ knowledge_map:
     title: Standardization, CDFs, and quantiles
     summary: Z=(X-mu)/sigma maps any Normal variable to N(0,1), enabling probability and inverse-probability
       calculations through Phi and its quantiles.
-    builds_on: [knowledge-sad-l08-normal]
+    builds_on:
+    - knowledge-sad-l08-normal
   - id: knowledge-sad-l08-transform-sum
     title: Linear transforms and sums of independent Normals
-    summary: Affine transformations change mean and variance predictably, and independent Normal sums remain
-      Normal with variances adding.
-    builds_on: [knowledge-sad-l08-normal]
+    summary: Affine transformations change mean and variance predictably, and independent Normal sums
+      remain Normal with variances adding.
+    builds_on:
+    - knowledge-sad-l08-normal
   - id: knowledge-sad-l08-clt
     title: Law of large numbers versus central limit theorem
     summary: The LLN concerns convergence of an average to its expectation; the CLT concerns the approximately
@@ -35,17 +37,21 @@ knowledge_map:
     title: Normal approximation and continuity correction
     summary: Sums and counts may be approximated by a Normal law when conditions are adequate; discrete
       boundaries require a continuity correction and approximation error remains explicit.
-    builds_on: [knowledge-sad-l08-standardization, knowledge-sad-l08-clt]
+    builds_on:
+    - knowledge-sad-l08-standardization
+    - knowledge-sad-l08-clt
   - id: knowledge-sad-l08-likelihood
     title: Probability versus likelihood
-    summary: A probability distribution varies data with parameters fixed; a likelihood treats observed data
-      as fixed and compares parameter values by how well they explain it.
-    builds_on: [knowledge-sad-l08-normal]
+    summary: A probability distribution varies data with parameters fixed; a likelihood treats observed
+      data as fixed and compares parameter values by how well they explain it.
+    builds_on:
+    - knowledge-sad-l08-normal
   - id: knowledge-sad-l08-mle
     title: Maximum likelihood and the MSE bridge
     summary: Maximizing a product of densities becomes maximizing a log-likelihood; Gaussian error assumptions
       turn this into minimizing squared residuals.
-    builds_on: [knowledge-sad-l08-likelihood]
+    builds_on:
+    - knowledge-sad-l08-likelihood
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -55,4 +61,6 @@ scope_sources:
   locator: 08_normal_distribution_no_notes.pdf
 source_selections: []
 artifacts: {}
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l08

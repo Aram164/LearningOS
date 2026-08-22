@@ -1,0 +1,593 @@
+id: study-map-aml-l10
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-l10
+status: not-started
+current_stage: stage-aml-l10-motivation
+source_plan:
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-l10-motivation
+  number: 1
+  title: Spatial structure and weight sharing
+  status: pending
+  objective: Why flattening images is inefficient and how locality, translation structure, and shared
+    filters address it.
+  done_when:
+  - 'Reproduce without notes: Why flattening images is inefficient and how locality, translation structure,
+    and shared filters address it.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: read
+    label: ISLP convolutional-neural-network section
+    source_id: source-islp
+    locator: §10.3, pp. 406–415 — A gentle full CNN pass through convolutional layers, pooling, architecture,
+      and data augmentation; ideal before deeper shape and architecture references.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL early weight-sharing example
+    source_id: source-esl
+    locator: §11.7 — LeCun ZIP-code networks show the historical origin of local connectivity and weight
+      sharing, but ESL has no modern full CNN treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Murphy convolution and classic CNN architectures
+    source_id: source-murphy-pml1
+    locator: '§§14.1–14.3 — The deepest aligned book source: exact output arithmetic plus one-to-one LeNet,
+      AlexNet, GoogLeNet, and ResNet coverage.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS229 convolutional-network overview
+    source_id: source-cs229-notes
+    locator: CNN overview selections — A broad neural-network reference only; use CS231n or Murphy for
+      exact convolution arithmetic and architecture depth.
+    scope_triage: helpful-now
+  - kind: watch
+    label: CS229 CNN segments
+    source_id: source-cs229-2022-videos
+    locator: CNN overview segments — Broad deep-learning context only; use the course deck, EECS 498,
+      or CS231n for detailed CNN arithmetic.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest convolutional-network intuition
+    source_id: source-statquest
+    locator: CNN explainer selections — Short visual intuition for filters, feature maps, and CNN structure;
+      not a substitute for hand shape arithmetic.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron 3rd ed. Ch 14 — why not simply flatten the image
+    source_id: source-geron-handson
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
+      Layers' pdf p. 621 — Answers the deck's opening question from the visual-cortex analogy and then
+      in parameter counts, which is the argument the motivation slide compresses to one line.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron 3rd ed. Ch 14 exercises — the motivation asked back
+    source_id: source-geron-handson
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN,
+      Q2 three 3×3 stride-2 'same' convolutional layers) — Q1 asks for the CNN-versus-dense argument in
+      your own words and Q2 is a three-layer 3×3 stride-2 'same' shape and parameter count; the only local
+      drill that tests the motivation node rather than the arithmetic alone.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Deep Learning book Ch 9 — convolutional networks
+    source_id: source-goodfellow-dl
+    locator: Ch 9 Convolutional Networks — The canonical conceptual treatment of convolution, sparse interactions,
+      parameter sharing, equivariance, pooling, and CNN variants.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-motivation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-convolution
+  number: 2
+  title: Convolution and cross-correlation
+  status: pending
+  objective: Sliding filters, elementwise multiply-and-sum, mathematical convolution versus the DL convention,
+    and feature maps.
+  done_when:
+  - 'Reproduce without notes: Sliding filters, elementwise multiply-and-sum, mathematical convolution
+    versus the DL convention, and feature maps.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-convolutional-networks
+  - concept-correlation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Older L10 lecture variant
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf — Prior-year alternate filter
+      and architecture examples; no local L10 exercise sheet is present.
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Übung 11 — CNN calculations and fourth sheet
+    source_id: source-aml-ss26-lectures
+    locator: 'exercise-slides/Übung 11.pdf — The current lecturer-worked CNN session: convolution arithmetic,
+      stride and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.'
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - kind: read
+    label: ISLP convolutional-neural-network section
+    source_id: source-islp
+    locator: §10.3, pp. 406–415 — A gentle full CNN pass through convolutional layers, pooling, architecture,
+      and data augmentation; ideal before deeper shape and architecture references.
+    scope_triage: helpful-now
+  - kind: read
+    label: Murphy convolution and classic CNN architectures
+    source_id: source-murphy-pml1
+    locator: '§§14.1–14.3 — The deepest aligned book source: exact output arithmetic plus one-to-one LeNet,
+      AlexNet, GoogLeNet, and ResNet coverage.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: CSC411 CNN notes
+    source_id: source-csc411-notes
+    locator: CNN selections — A compact independent reference for convolutional layers, shape flow, and
+      architecture structure.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Kroese CNN reference
+    source_id: source-kroese-dsml
+    locator: CNN selections — A dense independent account of convolutional networks and implementation-oriented
+      examples.
+    scope_triage: reference-only
+  - kind: watch
+    label: EECS 498 Lectures 7–8 — CNNs and architectures
+    source_id: source-eecs498
+    locator: Lectures 7–8 — Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet
+      design reasoning; batch-normalization segments exceed AML scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: CS231n Convolutional Networks notes
+    source_id: source-cs231n-notes
+    locator: Convolutional Networks — The standard written CNN reference for output shapes, channels,
+      parameter counts, pooling, receptive fields, and architecture patterns.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS231n 2017 convolution and architecture lectures
+    source_id: source-cs231n-2017-videos
+    locator: CNN and architecture lectures — The original full-lecture alternative for convolutional layers
+      and classic architectures; use selected CNN lectures rather than the entire playlist.
+    scope_triage: reference-only
+  - kind: watch
+    label: StatQuest convolutional-network intuition
+    source_id: source-statquest
+    locator: CNN explainer selections — Short visual intuition for filters, feature maps, and CNN structure;
+      not a substitute for hand shape arithmetic.
+    scope_triage: helpful-now
+  - kind: read
+    label: Rohrer convolution and CNN chapters
+    source_id: source-rohrer-e2eml
+    locator: Chapters 14, 22–23, and 31 — Starts with explicit 1D/2D convolution arithmetic, then moves
+      to CNN structure and a CIFAR-10 case study.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron convolutional-network implementation
+    source_id: source-geron-handson
+    locator: CNN chapter selections — Runnable CNN construction and training that connects filter/shape
+      formulas to framework layers.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron 3rd ed. Ch 14 — why not simply flatten the image
+    source_id: source-geron-handson
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
+      Layers' pdf p. 621 — Answers the deck's opening question from the visual-cortex analogy and then
+      in parameter counts, which is the argument the motivation slide compresses to one line.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Cornell CS4780 HW9 — CNN tasks
+    source_id: source-cs4780-homeworks
+    locator: 2018 Spring/Fall HW9 CNN tasks and solutions — Local solution-backed convolutional-network
+      and shape questions; the only registered external solved CNN bank in the AML shelf.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Official PyTorch CIFAR-10 CNN tutorial
+    source_id: source-pytorch-tutorials
+    locator: Training a Classifier tutorial — A small complete CNN that turns convolution/pooling/shape
+      concepts into framework layers and a training loop.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Deep Learning book Ch 9 — convolutional networks
+    source_id: source-goodfellow-dl
+    locator: Ch 9 Convolutional Networks — The canonical conceptual treatment of convolution, sparse interactions,
+      parameter sharing, equivariance, pooling, and CNN variants.
+    scope_triage: reference-only
+  - kind: read
+    label: D2L Chapters 7–8 — executable CNNs
+    source_id: source-d2l
+    locator: Chapters 7–8 — Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures;
+      best for connecting tensor shapes to code.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-shapes
+  number: 3
+  title: Padding, stride, channels, and shapes
+  status: pending
+  objective: Output-size formula, multi-channel filters, multiple feature maps, receptive fields, and
+    parameter counting.
+  done_when:
+  - 'Reproduce without notes: Output-size formula, multi-channel filters, multiple feature maps, receptive
+    fields, and parameter counting.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Older L10 lecture variant
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf — Prior-year alternate filter
+      and architecture examples; no local L10 exercise sheet is present.
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Übung 11 — CNN calculations and fourth sheet
+    source_id: source-aml-ss26-lectures
+    locator: 'exercise-slides/Übung 11.pdf — The current lecturer-worked CNN session: convolution arithmetic,
+      stride and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.'
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Murphy convolution and classic CNN architectures
+    source_id: source-murphy-pml1
+    locator: '§§14.1–14.3 — The deepest aligned book source: exact output arithmetic plus one-to-one LeNet,
+      AlexNet, GoogLeNet, and ResNet coverage.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: CSC411 CNN notes
+    source_id: source-csc411-notes
+    locator: CNN selections — A compact independent reference for convolutional layers, shape flow, and
+      architecture structure.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Kroese CNN reference
+    source_id: source-kroese-dsml
+    locator: CNN selections — A dense independent account of convolutional networks and implementation-oriented
+      examples.
+    scope_triage: reference-only
+  - kind: watch
+    label: EECS 498 Lectures 7–8 — CNNs and architectures
+    source_id: source-eecs498
+    locator: Lectures 7–8 — Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet
+      design reasoning; batch-normalization segments exceed AML scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: CS231n Convolutional Networks notes
+    source_id: source-cs231n-notes
+    locator: Convolutional Networks — The standard written CNN reference for output shapes, channels,
+      parameter counts, pooling, receptive fields, and architecture patterns.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS231n 2017 convolution and architecture lectures
+    source_id: source-cs231n-2017-videos
+    locator: CNN and architecture lectures — The original full-lecture alternative for convolutional layers
+      and classic architectures; use selected CNN lectures rather than the entire playlist.
+    scope_triage: reference-only
+  - kind: read
+    label: Rohrer convolution and CNN chapters
+    source_id: source-rohrer-e2eml
+    locator: Chapters 14, 22–23, and 31 — Starts with explicit 1D/2D convolution arithmetic, then moves
+      to CNN structure and a CIFAR-10 case study.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron convolutional-network implementation
+    source_id: source-geron-handson
+    locator: CNN chapter selections — Runnable CNN construction and training that connects filter/shape
+      formulas to framework layers.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron 3rd ed. Ch 14 exercises — the motivation asked back
+    source_id: source-geron-handson
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN,
+      Q2 three 3×3 stride-2 'same' convolutional layers) — Q1 asks for the CNN-versus-dense argument in
+      your own words and Q2 is a three-layer 3×3 stride-2 'same' shape and parameter count; the only local
+      drill that tests the motivation node rather than the arithmetic alone.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Cornell CS4780 HW9 — CNN tasks
+    source_id: source-cs4780-homeworks
+    locator: 2018 Spring/Fall HW9 CNN tasks and solutions — Local solution-backed convolutional-network
+      and shape questions; the only registered external solved CNN bank in the AML shelf.
+    scope_triage: helpful-now
+  - kind: read
+    label: D2L Chapters 7–8 — executable CNNs
+    source_id: source-d2l
+    locator: Chapters 7–8 — Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures;
+      best for connecting tensor shapes to code.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-pooling
+  number: 4
+  title: Pooling
+  status: pending
+  objective: Max/average pooling, spatial downsampling, invariance intuition, and shape changes.
+  done_when:
+  - 'Reproduce without notes: Max/average pooling, spatial downsampling, invariance intuition, and shape
+    changes.'
+  - Work Übung 11 — CNN calculations and fourth sheet, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Übung 11 — CNN calculations and fourth sheet
+    source_id: source-aml-ss26-lectures
+    locator: 'exercise-slides/Übung 11.pdf — The current lecturer-worked CNN session: convolution arithmetic,
+      stride and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.'
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - kind: read
+    label: ISLP convolutional-neural-network section
+    source_id: source-islp
+    locator: §10.3, pp. 406–415 — A gentle full CNN pass through convolutional layers, pooling, architecture,
+      and data augmentation; ideal before deeper shape and architecture references.
+    scope_triage: helpful-now
+  - kind: read
+    label: CS231n Convolutional Networks notes
+    source_id: source-cs231n-notes
+    locator: Convolutional Networks — The standard written CNN reference for output shapes, channels,
+      parameter counts, pooling, receptive fields, and architecture patterns.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron convolutional-network implementation
+    source_id: source-geron-handson
+    locator: CNN chapter selections — Runnable CNN construction and training that connects filter/shape
+      formulas to framework layers.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Official PyTorch CIFAR-10 CNN tutorial
+    source_id: source-pytorch-tutorials
+    locator: Training a Classifier tutorial — A small complete CNN that turns convolution/pooling/shape
+      concepts into framework layers and a training loop.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Deep Learning book Ch 9 — convolutional networks
+    source_id: source-goodfellow-dl
+    locator: Ch 9 Convolutional Networks — The canonical conceptual treatment of convolution, sparse interactions,
+      parameter sharing, equivariance, pooling, and CNN variants.
+    scope_triage: reference-only
+  - kind: read
+    label: D2L Chapters 7–8 — executable CNNs
+    source_id: source-d2l
+    locator: Chapters 7–8 — Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures;
+      best for connecting tensor shapes to code.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-network
+  number: 5
+  title: Complete CNN architecture
+  status: pending
+  objective: Conv-activation-pool stacks, flattening/classifier heads, end-to-end shapes, and design tradeoffs.
+  done_when:
+  - 'Reproduce without notes: Conv-activation-pool stacks, flattening/classifier heads, end-to-end shapes,
+    and design tradeoffs.'
+  - Work Übung 11 — CNN calculations and fourth sheet, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Übung 11 — CNN calculations and fourth sheet
+    source_id: source-aml-ss26-lectures
+    locator: 'exercise-slides/Übung 11.pdf — The current lecturer-worked CNN session: convolution arithmetic,
+      stride and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.'
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - kind: read
+    label: ISLP convolutional-neural-network section
+    source_id: source-islp
+    locator: §10.3, pp. 406–415 — A gentle full CNN pass through convolutional layers, pooling, architecture,
+      and data augmentation; ideal before deeper shape and architecture references.
+    scope_triage: helpful-now
+  - kind: read
+    label: Murphy convolution and classic CNN architectures
+    source_id: source-murphy-pml1
+    locator: '§§14.1–14.3 — The deepest aligned book source: exact output arithmetic plus one-to-one LeNet,
+      AlexNet, GoogLeNet, and ResNet coverage.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: CSC411 CNN notes
+    source_id: source-csc411-notes
+    locator: CNN selections — A compact independent reference for convolutional layers, shape flow, and
+      architecture structure.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Kroese CNN reference
+    source_id: source-kroese-dsml
+    locator: CNN selections — A dense independent account of convolutional networks and implementation-oriented
+      examples.
+    scope_triage: reference-only
+  - kind: reference
+    label: CS229 convolutional-network overview
+    source_id: source-cs229-notes
+    locator: CNN overview selections — A broad neural-network reference only; use CS231n or Murphy for
+      exact convolution arithmetic and architecture depth.
+    scope_triage: helpful-now
+  - kind: watch
+    label: CS229 CNN segments
+    source_id: source-cs229-2022-videos
+    locator: CNN overview segments — Broad deep-learning context only; use the course deck, EECS 498,
+      or CS231n for detailed CNN arithmetic.
+    scope_triage: helpful-now
+  - kind: watch
+    label: EECS 498 Lectures 7–8 — CNNs and architectures
+    source_id: source-eecs498
+    locator: Lectures 7–8 — Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet
+      design reasoning; batch-normalization segments exceed AML scope.
+    scope_triage: helpful-now
+  - kind: read
+    label: CS231n Convolutional Networks notes
+    source_id: source-cs231n-notes
+    locator: Convolutional Networks — The standard written CNN reference for output shapes, channels,
+      parameter counts, pooling, receptive fields, and architecture patterns.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS231n 2017 convolution and architecture lectures
+    source_id: source-cs231n-2017-videos
+    locator: CNN and architecture lectures — The original full-lecture alternative for convolutional layers
+      and classic architectures; use selected CNN lectures rather than the entire playlist.
+    scope_triage: reference-only
+  - kind: watch
+    label: StatQuest convolutional-network intuition
+    source_id: source-statquest
+    locator: CNN explainer selections — Short visual intuition for filters, feature maps, and CNN structure;
+      not a substitute for hand shape arithmetic.
+    scope_triage: helpful-now
+  - kind: read
+    label: Rohrer convolution and CNN chapters
+    source_id: source-rohrer-e2eml
+    locator: Chapters 14, 22–23, and 31 — Starts with explicit 1D/2D convolution arithmetic, then moves
+      to CNN structure and a CIFAR-10 case study.
+    scope_triage: helpful-now
+  - kind: read
+    label: Géron convolutional-network implementation
+    source_id: source-geron-handson
+    locator: CNN chapter selections — Runnable CNN construction and training that connects filter/shape
+      formulas to framework layers.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Cornell CS4780 HW9 — CNN tasks
+    source_id: source-cs4780-homeworks
+    locator: 2018 Spring/Fall HW9 CNN tasks and solutions — Local solution-backed convolutional-network
+      and shape questions; the only registered external solved CNN bank in the AML shelf.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Official PyTorch CIFAR-10 CNN tutorial
+    source_id: source-pytorch-tutorials
+    locator: Training a Classifier tutorial — A small complete CNN that turns convolution/pooling/shape
+      concepts into framework layers and a training loop.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Deep Learning book Ch 9 — convolutional networks
+    source_id: source-goodfellow-dl
+    locator: Ch 9 Convolutional Networks — The canonical conceptual treatment of convolution, sparse interactions,
+      parameter sharing, equivariance, pooling, and CNN variants.
+    scope_triage: reference-only
+  - kind: read
+    label: D2L Chapters 7–8 — executable CNNs
+    source_id: source-d2l
+    locator: Chapters 7–8 — Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures;
+      best for connecting tensor shapes to code.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-network/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-aml-l10-architectures
+  number: 6
+  title: LeNet, AlexNet, GoogLeNet, and ResNet
+  status: pending
+  objective: The course-level contribution of each architecture, including depth, inception modules, and
+    residual connections.
+  done_when:
+  - 'Reproduce without notes: The course-level contribution of each architecture, including depth, inception
+    modules, and residual connections.'
+  - Work Übung 11 — CNN calculations and fourth sheet, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 lecture deck
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 10-cnn.pdf — The 2026 scope authority for cross-correlation, filters, padding/stride/channel
+      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Older L10 lecture variant
+    source_id: source-aml-ss26-lectures
+    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf — Prior-year alternate filter
+      and architecture examples; no local L10 exercise sheet is present.
+    vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Übung 11 — CNN calculations and fourth sheet
+    source_id: source-aml-ss26-lectures
+    locator: 'exercise-slides/Übung 11.pdf — The current lecturer-worked CNN session: convolution arithmetic,
+      stride and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.'
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: ESL early weight-sharing example
+    source_id: source-esl
+    locator: §11.7 — LeCun ZIP-code networks show the historical origin of local connectivity and weight
+      sharing, but ESL has no modern full CNN treatment.
+    scope_triage: reference-only
+  - kind: read
+    label: Murphy convolution and classic CNN architectures
+    source_id: source-murphy-pml1
+    locator: '§§14.1–14.3 — The deepest aligned book source: exact output arithmetic plus one-to-one LeNet,
+      AlexNet, GoogLeNet, and ResNet coverage.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: EECS 498 Lectures 7–8 — CNNs and architectures
+    source_id: source-eecs498
+    locator: Lectures 7–8 — Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet
+      design reasoning; batch-normalization segments exceed AML scope.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS231n 2017 convolution and architecture lectures
+    source_id: source-cs231n-2017-videos
+    locator: CNN and architecture lectures — The original full-lecture alternative for convolutional layers
+      and classic architectures; use selected CNN lectures rather than the entire playlist.
+    scope_triage: reference-only
+  - kind: read
+    label: D2L Chapters 7–8 — executable CNNs
+    source_id: source-d2l
+    locator: Chapters 7–8 — Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures;
+      best for connecting tensor shapes to code.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,374 @@
+id: study-map-m2-sad-l13
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l13
+status: not-started
+current_stage: stage-sad-l13-neighbors
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l13-neighbors
+  number: 1
+  title: 1-NN and k-NN as lazy learners
+  status: pending
+  objective: Neighbor methods store the training data and defer computation until prediction; k controls
+    the local smoothness and bias-variance tradeoff.
+  done_when:
+  - 'Reproduce without notes: Neighbor methods store the training data and defer computation until prediction;
+    k controls the local smoothness and bias-variance tradeoff.'
+  - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-bias-variance-tradeoff
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: read
+    label: Kelleher Chapter 5 — similarity-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 5, especially §5.2.2 — Primary course-aligned k-NN text with worked neighbor, aggregation,
+      and distance examples; its focus is predictive behavior rather than Leser's full indexing section.
+    scope_triage: helpful-now
+  - kind: reference
+    label: AML L02 — k-NN deepening
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf — Current AML expansion of representation, neighbor
+      search, Lp distance, scaling, irrelevant features, cross-validation, and bias-variance. Use only
+      after the SaD L13 scope pass.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW1 — k-NN
+    source_id: source-cs4780-homeworks
+    locator: 2017Spring/hw1; 2018Fall/HW1; 2018Spring/HW1 — Local solution-backed neighbor, distance,
+      and decision-boundary practice across three course-year variants; broader than the missing current
+      SaD k-NN sheet.
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 6.034 quizzes — nearest-neighbor tracing
+    source_id: source-mit-6034-quizzes
+    locator: Nearest-neighbor quiz selections — Solution-backed small-data neighbor and distance questions
+      for manual prediction practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
+    source_id: source-zacharski-data-mining
+    locator: Chapter 5, pp. 184-225 — Runs k-NN with different k and different aggregation on a data set
+      where class imbalance actually bites, which is the case L13 slide 14 raises and no current exercise
+      sheet exercises.
+    scope_triage: helpful-now
+  - kind: reference
+    label: ESL Ch 13 - nearest neighbours and the cost of searching them
+    source_id: source-esl
+    locator: 'Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations,
+      p. 499 (editing and condensing) — Section 13.5 is the closest registered treatment of the L13 indexing
+      problem: it states the computational cost of exact nearest-neighbour search and the editing/condensing
+      responses, though it does not cover kd-trees, M-trees or LSH.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-neighbors/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-aggregation
+  number: 2
+  title: Classification, regression, voting, and weighting
+  status: pending
+  objective: Nominal labels use majority or weighted voting, numeric targets use local averages, and ties,
+    imbalance, and distance weighting alter the decision.
+  done_when:
+  - 'Reproduce without notes: Nominal labels use majority or weighted voting, numeric targets use local
+    averages, and ties, imbalance, and distance weighting alter the decision.'
+  - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: read
+    label: Kelleher Chapter 5 — similarity-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 5, especially §5.2.2 — Primary course-aligned k-NN text with worked neighbor, aggregation,
+      and distance examples; its focus is predictive behavior rather than Leser's full indexing section.
+    scope_triage: helpful-now
+  - kind: reference
+    label: AML L02 — k-NN deepening
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf — Current AML expansion of representation, neighbor
+      search, Lp distance, scaling, irrelevant features, cross-validation, and bias-variance. Use only
+      after the SaD L13 scope pass.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW1 — k-NN
+    source_id: source-cs4780-homeworks
+    locator: 2017Spring/hw1; 2018Fall/HW1; 2018Spring/HW1 — Local solution-backed neighbor, distance,
+      and decision-boundary practice across three course-year variants; broader than the missing current
+      SaD k-NN sheet.
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 6.034 quizzes — nearest-neighbor tracing
+    source_id: source-mit-6034-quizzes
+    locator: Nearest-neighbor quiz selections — Solution-backed small-data neighbor and distance questions
+      for manual prediction practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
+    source_id: source-zacharski-data-mining
+    locator: Chapter 5, pp. 184-225 — Runs k-NN with different k and different aggregation on a data set
+      where class imbalance actually bites, which is the case L13 slide 14 raises and no current exercise
+      sheet exercises.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-aggregation/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-metrics
+  number: 3
+  title: Similarities, distances, and metric axioms
+  status: pending
+  objective: Non-negativity, identity, symmetry, and triangle inequality define a metric; not every useful
+    similarity is a metric, which affects algorithms and indexes.
+  done_when:
+  - 'Reproduce without notes: Non-negativity, identity, symmetry, and triangle inequality define a metric;
+    not every useful similarity is a metric, which affects algorithms and indexes.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: read
+    label: Kelleher Chapter 5 — similarity-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 5, especially §5.2.2 — Primary course-aligned k-NN text with worked neighbor, aggregation,
+      and distance examples; its focus is predictive behavior rather than Leser's full indexing section.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-metrics/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-minkowski
+  number: 4
+  title: Minkowski distances and feature scaling
+  status: pending
+  objective: Manhattan and Euclidean distance are Lp cases; units and high-dimensional irrelevant features
+    can dominate neighborhoods unless representation and normalization are chosen deliberately.
+  done_when:
+  - 'Reproduce without notes: Manhattan and Euclidean distance are Lp cases; units and high-dimensional
+    irrelevant features can dominate neighborhoods unless representation and normalization are chosen
+    deliberately.'
+  - Work UE7 clustering distances — similarity bridge only, then the remaining 2, and record every miss
+    with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-feature-scaling
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: practise
+    label: UE7 clustering distances — similarity bridge only
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf slides 32–75 — The distance and assignment calculations transfer
+      to similarity reasoning, but this is not a current k-NN exercise sheet and must not be presented
+      as one.
+    scope_triage: helpful-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: read
+    label: Kelleher Chapter 5 — similarity-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 5, especially §5.2.2 — Primary course-aligned k-NN text with worked neighbor, aggregation,
+      and distance examples; its focus is predictive behavior rather than Leser's full indexing section.
+    scope_triage: helpful-now
+  - kind: reference
+    label: AML L02 — k-NN deepening
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf — Current AML expansion of representation, neighbor
+      search, Lp distance, scaling, irrelevant features, cross-validation, and bias-variance. Use only
+      after the SaD L13 scope pass.
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Cornell CS4780 HW1 — k-NN
+    source_id: source-cs4780-homeworks
+    locator: 2017Spring/hw1; 2018Fall/HW1; 2018Spring/HW1 — Local solution-backed neighbor, distance,
+      and decision-boundary practice across three course-year variants; broader than the missing current
+      SaD k-NN sheet.
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 6.034 quizzes — nearest-neighbor tracing
+    source_id: source-mit-6034-quizzes
+    locator: Nearest-neighbor quiz selections — Solution-backed small-data neighbor and distance questions
+      for manual prediction practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
+    source_id: source-zacharski-data-mining
+    locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest
+      neighbours p. 62) — L13 introduces Manhattan, Euclidean and cosine as definitions; this chapter
+      implements each in Python over one recommender data set, so the difference between the measures
+      and the effect of unscaled features becomes something you run rather than something you are told.
+      It does not treat the metric axioms of slide 32.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-minkowski/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-special-measures
+  number: 5
+  title: Cosine, Jaccard, and Mahalanobis measures
+  status: pending
+  objective: Directional, set-valued, and covariance-aware data require different measures; each encodes
+    a distinct invariance and assumption about what “similar” should mean.
+  done_when:
+  - 'Reproduce without notes: Directional, set-valued, and covariance-aware data require different measures;
+    each encodes a distinct invariance and assumption about what “similar” should mean.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: read
+    label: Kelleher Chapter 5 — similarity-based learning
+    source_id: source-kelleher-fmlpda
+    locator: Chapter 5, especially §5.2.2 — Primary course-aligned k-NN text with worked neighbor, aggregation,
+      and distance examples; its focus is predictive behavior rather than Leser's full indexing section.
+    scope_triage: helpful-now
+  - kind: read
+    label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
+    source_id: source-zacharski-data-mining
+    locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest
+      neighbours p. 62) — L13 introduces Manhattan, Euclidean and cosine as definitions; this chapter
+      implements each in Python over one recommender data set, so the difference between the measures
+      and the effect of unscaled features becomes something you run rather than something you are told.
+      It does not treat the metric axioms of slide 32.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-special-measures/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-exact-indexing
+  number: 6
+  title: Exact similarity-search indexes
+  status: pending
+  objective: kd-trees, k-means-style partitions, and metric trees prune search using geometric or metric
+    structure, but effectiveness degrades with dimension and data geometry.
+  done_when:
+  - 'Reproduce without notes: kd-trees, k-means-style partitions, and metric trees prune search using
+    geometric or metric structure, but effectiveness degrades with dimension and data geometry.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 instance- and similarity-based pair
+    source_id: source-sad-2025-recordings
+    locator: '11_instance-based.pdf; 13_similarity_based_part3.pdf — The verified older match for current
+      L13: one full instance-based deck plus a later similarity-depth deck. Numbering differs, so content—not
+      lecture number—controls the route.'
+    scope_triage: reference-only
+  - kind: reference
+    label: ESL Ch 13 - nearest neighbours and the cost of searching them
+    source_id: source-esl
+    locator: 'Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations,
+      p. 499 (editing and condensing) — Section 13.5 is the closest registered treatment of the L13 indexing
+      problem: it states the computational cost of exact nearest-neighbour search and the editing/condensing
+      responses, though it does not cover kd-trees, M-trees or LSH.'
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l13-lsh
+  number: 7
+  title: Approximate search and locality-sensitive hashing
+  status: pending
+  objective: LSH trades guaranteed exact neighbors for sublinear candidate retrieval by making collision
+    probability track similarity.
+  done_when:
+  - 'Reproduce without notes: LSH trades guaranteed exact neighbors for sublinear candidate retrieval
+    by making collision probability track similarity.'
+  exam_critical: true
+  concepts:
+  - concept-data-access-optimization
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L13 similarity-based learning deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/13_similarity_based.pdf (32 pages) — The scope authority for k-NN prediction,
+      metric choice and normalization, and Leser's systems-oriented exact/approximate similarity-indexing
+      section.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md
+  attachments: []
+  source_feedback: []

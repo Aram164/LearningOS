@@ -7,7 +7,7 @@ order: 3
 scope: Current 2026 L03 deck; regression with one predictor, hypothesis and parameter notation, residuals
   and mean-squared error, the closed-form optimum, differentiation, linear-algebra refreshers, vectorization,
   and the design-matrix representation.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture develops the complete one-variable least-squares model and then rewrites it in
     vector/matrix language so the same machinery scales to later lectures.
@@ -17,7 +17,8 @@ knowledge_map:
     summary: Real-valued targets, a line parameterized by intercept and slope, predictions, and residuals.
   - id: knowledge-aml-l03-loss
     title: Mean-squared-error objective
-    summary: Squared residuals, averaging conventions, differentiability, and what minimizing MSE means geometrically.
+    summary: Squared residuals, averaging conventions, differentiability, and what minimizing MSE means
+      geometrically.
     builds_on:
     - knowledge-aml-l03-problem
   - id: knowledge-aml-l03-solution
@@ -30,13 +31,15 @@ knowledge_map:
     summary: Vectors, transposes, dot products, matrix-vector/matrix-matrix products, shapes, and inverses.
   - id: knowledge-aml-l03-vectorization
     title: Vectorization and design matrix
-    summary: Adding the intercept feature, stacking examples, and expressing prediction and loss as matrix operations.
+    summary: Adding the intercept feature, stacking examples, and expressing prediction and loss as matrix
+      operations.
     builds_on:
     - knowledge-aml-l03-problem
     - knowledge-aml-l03-linear-algebra
   - id: knowledge-aml-l03-probabilistic
     title: Probabilistic interpretation
-    summary: Optional bridge showing why Gaussian noise plus maximum likelihood produces the squared-error objective.
+    summary: Optional bridge showing why Gaussian noise plus maximum likelihood produces the squared-error
+      objective.
     builds_on:
     - knowledge-aml-l03-loss
 scope_sources:
@@ -53,3 +56,4 @@ artifacts:
   mock_exam: note-aml-l03-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l03

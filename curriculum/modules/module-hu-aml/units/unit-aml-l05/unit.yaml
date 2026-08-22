@@ -7,14 +7,15 @@ order: 5
 scope: Current 2026 L05 deck; binary classification, failure of thresholded linear regression, linear
   decision boundaries, the sigmoid/logit model, basis-expanded nonlinear boundaries, Bernoulli likelihood,
   cross-entropy, the vectorized gradient, convexity, and the absence of a closed-form optimum.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture builds logistic regression from a geometric classifier and a probabilistic model,
     then derives the loss and gradient that will be optimized in L06.
   nodes:
   - id: knowledge-aml-l05-classification
     title: Binary classification problem
-    summary: Positive/negative classes, discrete outputs, and why ordinary linear regression plus a threshold is unstable.
+    summary: Positive/negative classes, discrete outputs, and why ordinary linear regression plus a threshold
+      is unstable.
   - id: knowledge-aml-l05-boundary
     title: Linear decision boundary
     summary: The separator w·x=0, score signs, threshold geometry, and basis expansion for curved boundaries.
@@ -27,7 +28,8 @@ knowledge_map:
     - knowledge-aml-l05-boundary
   - id: knowledge-aml-l05-likelihood
     title: Bernoulli likelihood
-    summary: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood estimation.
+    summary: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood
+      estimation.
     builds_on:
     - knowledge-aml-l05-sigmoid
   - id: knowledge-aml-l05-cross-entropy
@@ -54,3 +56,4 @@ artifacts:
   mock_exam: note-aml-l05-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l05

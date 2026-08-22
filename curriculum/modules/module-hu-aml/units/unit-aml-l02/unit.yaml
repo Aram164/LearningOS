@@ -7,14 +7,15 @@ order: 2
 scope: Current 2026 L02 deck; nearest-neighbour classification, k-NN voting, lazy learning and computational
   cost, distance functions, feature scaling, the curse of dimensionality, bias/variance, generalization,
   cross-validation, and evaluation connections.
-status: not-started
+status: ready
 knowledge_map:
   summary: 'The lecture uses k-NN to connect similarity-based prediction with the central model-selection
     problem: distance and k define inductive bias, while validation estimates which choice generalizes.'
   nodes:
   - id: knowledge-aml-l02-representation
     title: Embeddings and neighbourhoods
-    summary: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature space.
+    summary: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature
+      space.
   - id: knowledge-aml-l02-algorithm
     title: 1-NN and k-NN prediction
     summary: Lazy training, nearest-neighbour search, majority voting for classification, averaging for
@@ -29,7 +30,8 @@ knowledge_map:
     - knowledge-aml-l02-representation
   - id: knowledge-aml-l02-dimensionality
     title: Curse of dimensionality
-    summary: Why distances become less informative and data requirements grow rapidly in high-dimensional spaces.
+    summary: Why distances become less informative and data requirements grow rapidly in high-dimensional
+      spaces.
     builds_on:
     - knowledge-aml-l02-distance
   - id: knowledge-aml-l02-bias-variance
@@ -58,3 +60,4 @@ artifacts:
   mock_exam: note-aml-l02-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l02

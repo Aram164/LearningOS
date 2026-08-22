@@ -1,0 +1,620 @@
+id: study-map-m2-sad-l04
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l04
+status: not-started
+current_stage: stage-sad-l04-framing
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l04-framing
+  number: 1
+  title: Human probability judgments and framing
+  status: pending
+  objective: Equivalent outcomes can trigger different decisions when expressed as gains or losses, motivating
+    a formal calculus instead of unaided intuition.
+  done_when:
+  - 'Reproduce without notes: Equivalent outcomes can trigger different decisions when expressed as gains
+    or losses, motivating a formal calculus instead of unaided intuition.'
+  exam_critical: true
+  concepts:
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-events
+  number: 2
+  title: Random experiments, outcomes, and event spaces
+  status: pending
+  objective: A sample space contains possible outcomes; events are subsets, and set operations encode
+    the logical structure of compound probability questions.
+  done_when:
+  - 'Reproduce without notes: A sample space contains possible outcomes; events are subsets, and set operations
+    encode the logical structure of compound probability questions.'
+  - Work Blatt 2 and UE3 — probability and Bayes tasks, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2 and UE3 — probability and Bayes tasks
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section — Course-native
+      event, conditional-probability, Bayes, and classifier calculations; it tests whether the reference
+      population and conditioning direction are explicit.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 probability deck with notes
+    source_id: source-sad-2025-recordings
+    locator: 04_probability_with_notes (1).pdf — A prior-year same-course second explanation of event
+      probability, conditioning, Bayes, and independence. Use it only after the current L04 deck when
+      one derivation needs another telling.
+    vault_path: material://source-sad-2025-recordings/04_probability_with_notes (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 4 — probability foundations
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 4 probability sections — Course-compatible German derivations for event algebra,
+      conditional probability, total probability, Bayes, and independence.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — probability foundations
+    source_id: source-openintro-statistics
+    locator: Probability chapter selections — Accessible event, conditional-probability, independence,
+      and Bayes examples before returning to the lecture's formal notation and Naive Bayes model.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — probability notes and solved problems
+    source_id: source-mit-1805
+    locator: Probability and conditional-probability notes/problem sets — Official university notes plus
+      solution-backed exercises for events, conditioning, Bayes, and independence; use selected topics,
+      not the whole course.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes — German first exposure
+      to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
+      derivation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-axioms
+  number: 3
+  title: Probability axioms and derived rules
+  status: pending
+  objective: Non-negativity, normalization, and additivity generate complement, union, inclusion-exclusion,
+    monotonicity, and bounds.
+  done_when:
+  - 'Reproduce without notes: Non-negativity, normalization, and additivity generate complement, union,
+    inclusion-exclusion, monotonicity, and bounds.'
+  - Work Blatt 2 and UE3 — probability and Bayes tasks, then the remaining 4, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2 and UE3 — probability and Bayes tasks
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section — Course-native
+      event, conditional-probability, Bayes, and classifier calculations; it tests whether the reference
+      population and conditioning direction are explicit.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 probability deck with notes
+    source_id: source-sad-2025-recordings
+    locator: 04_probability_with_notes (1).pdf — A prior-year same-course second explanation of event
+      probability, conditioning, Bayes, and independence. Use it only after the current L04 deck when
+      one derivation needs another telling.
+    vault_path: material://source-sad-2025-recordings/04_probability_with_notes (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 4 — probability foundations
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 4 probability sections — Course-compatible German derivations for event algebra,
+      conditional probability, total probability, Bayes, and independence.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 4 probability selections — German worked event-algebra, conditioning, Bayes, and
+      independence calculations for repeated formula-selection practice.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — conditional probability selections
+    source_id: source-pitman-probability
+    locator: Probability axioms, conditioning, and Bayes selections — An intermediate, theorem-aware alternative
+      for event algebra, conditioning, Bayes, and independence when Blitzstein is too story-driven or
+      too compressed.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — formal probability foundations
+    source_id: source-ross-first-course
+    locator: Probability axioms and conditioning chapters — Proof-heavier treatment of event probability,
+      conditioning, Bayes, and independence for later depth; it is deliberately not the first pass for
+      this exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — probability and Bayes worked problems
+    source_id: source-schaums-probability
+    locator: Probability and conditional-probability problem sets — High-volume worked calculations for
+      event algebra, conditional probability, Bayes, and independence after the underlying meaning is
+      understood.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — probability exercise bank
+    source_id: source-dekking-mips
+    locator: Probability selections — Broad answer-backed event, conditional-probability, Bayes, and independence
+      problems after the course calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — probability and Bayes block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; probability/Bayes questions — Additional event, conditioning, independence,
+      and Bayes problems with solutions once course and FAU material no longer expose mistakes.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes — German first exposure
+      to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
+      derivation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-conditional
+  number: 4
+  title: Conditional probability and total probability
+  status: pending
+  objective: Conditioning restricts the reference population; partitions decompose an event into mutually
+    exclusive cases whose weighted probabilities sum to the whole.
+  done_when:
+  - 'Reproduce without notes: Conditioning restricts the reference population; partitions decompose an
+    event into mutually exclusive cases whose weighted probabilities sum to the whole.'
+  - Work Blatt 2 and UE3 — probability and Bayes tasks, then the remaining 5, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-conditional-probability
+  - concept-probability
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2 and UE3 — probability and Bayes tasks
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section — Course-native
+      event, conditional-probability, Bayes, and classifier calculations; it tests whether the reference
+      population and conditioning direction are explicit.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 probability deck with notes
+    source_id: source-sad-2025-recordings
+    locator: 04_probability_with_notes (1).pdf — A prior-year same-course second explanation of event
+      probability, conditioning, Bayes, and independence. Use it only after the current L04 deck when
+      one derivation needs another telling.
+    vault_path: material://source-sad-2025-recordings/04_probability_with_notes (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 4 — probability foundations
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 4 probability sections — Course-compatible German derivations for event algebra,
+      conditional probability, total probability, Bayes, and independence.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 4 probability selections — German worked event-algebra, conditioning, Bayes, and
+      independence calculations for repeated formula-selection practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapter 2 — conditioning and Bayes
+    source_id: source-blitzstein-hwang
+    locator: Chapter 2, especially §§2.1–2.3 and §2.8 — Story-first probability reasoning that explains
+      why conditioning changes the reference space, how Bayes reverses information, and where independence
+      intuition fails.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — conditional probability selections
+    source_id: source-pitman-probability
+    locator: Probability axioms, conditioning, and Bayes selections — An intermediate, theorem-aware alternative
+      for event algebra, conditioning, Bayes, and independence when Blitzstein is too story-driven or
+      too compressed.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — simulation-first probability intuition
+    source_id: source-tijms-understanding-probability
+    locator: Conditional probability and Bayes selections — Uses repeated experiments and numerical examples
+      to make conditioning, Bayes, and long-run frequency tangible before returning to the course formulas.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — formal probability foundations
+    source_id: source-ross-first-course
+    locator: Probability axioms and conditioning chapters — Proof-heavier treatment of event probability,
+      conditioning, Bayes, and independence for later depth; it is deliberately not the first pass for
+      this exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — probability and Bayes worked problems
+    source_id: source-schaums-probability
+    locator: Probability and conditional-probability problem sets — High-volume worked calculations for
+      event algebra, conditional probability, Bayes, and independence after the underlying meaning is
+      understood.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — probability foundations
+    source_id: source-openintro-statistics
+    locator: Probability chapter selections — Accessible event, conditional-probability, independence,
+      and Bayes examples before returning to the lecture's formal notation and Naive Bayes model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — probability exercise bank
+    source_id: source-dekking-mips
+    locator: Probability selections — Broad answer-backed event, conditional-probability, Bayes, and independence
+      problems after the course calculations.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — probability notes and solved problems
+    source_id: source-mit-1805
+    locator: Probability and conditional-probability notes/problem sets — Official university notes plus
+      solution-backed exercises for events, conditioning, Bayes, and independence; use selected topics,
+      not the whole course.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 — conditioning and Bayes lectures
+    source_id: source-stat110
+    locator: Conditional probability and Bayes lectures/notes — Rigorous classroom explanations and strategic-practice
+      problems for conditional probability and Bayes; use selected lectures only after the course scope
+      is clear.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — independence and Bayes
+    source_id: source-fau-klausur-ws1415
+    locator: Independence/4-Feldertafel/Bayes questions and solutions — The best local German full-exam
+      match for translating a contingency table into conditional probabilities, checking independence,
+      and applying Bayes.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — probability and Bayes block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; probability/Bayes questions — Additional event, conditioning, independence,
+      and Bayes problems with solutions once course and FAU material no longer expose mistakes.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes — German first exposure
+      to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
+      derivation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-bayes
+  number: 5
+  title: Bayes' law and posterior reasoning
+  status: pending
+  objective: Bayes reverses a conditional using likelihoods and prior/base rates, explaining medical-test
+    and classification paradoxes that raw accuracy obscures.
+  done_when:
+  - 'Reproduce without notes: Bayes reverses a conditional using likelihoods and prior/base rates, explaining
+    medical-test and classification paradoxes that raw accuracy obscures.'
+  - Work Blatt 2 and UE3 — probability and Bayes tasks, then the remaining 5, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2 and UE3 — probability and Bayes tasks
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section — Course-native
+      event, conditional-probability, Bayes, and classifier calculations; it tests whether the reference
+      population and conditioning direction are explicit.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 probability deck with notes
+    source_id: source-sad-2025-recordings
+    locator: 04_probability_with_notes (1).pdf — A prior-year same-course second explanation of event
+      probability, conditioning, Bayes, and independence. Use it only after the current L04 deck when
+      one derivation needs another telling.
+    vault_path: material://source-sad-2025-recordings/04_probability_with_notes (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 4 — probability foundations
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 4 probability sections — Course-compatible German derivations for event algebra,
+      conditional probability, total probability, Bayes, and independence.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 4 probability selections — German worked event-algebra, conditioning, Bayes, and
+      independence calculations for repeated formula-selection practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapter 2 — conditioning and Bayes
+    source_id: source-blitzstein-hwang
+    locator: Chapter 2, especially §§2.1–2.3 and §2.8 — Story-first probability reasoning that explains
+      why conditioning changes the reference space, how Bayes reverses information, and where independence
+      intuition fails.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — conditional probability selections
+    source_id: source-pitman-probability
+    locator: Probability axioms, conditioning, and Bayes selections — An intermediate, theorem-aware alternative
+      for event algebra, conditioning, Bayes, and independence when Blitzstein is too story-driven or
+      too compressed.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — simulation-first probability intuition
+    source_id: source-tijms-understanding-probability
+    locator: Conditional probability and Bayes selections — Uses repeated experiments and numerical examples
+      to make conditioning, Bayes, and long-run frequency tangible before returning to the course formulas.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — formal probability foundations
+    source_id: source-ross-first-course
+    locator: Probability axioms and conditioning chapters — Proof-heavier treatment of event probability,
+      conditioning, Bayes, and independence for later depth; it is deliberately not the first pass for
+      this exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — probability and Bayes worked problems
+    source_id: source-schaums-probability
+    locator: Probability and conditional-probability problem sets — High-volume worked calculations for
+      event algebra, conditional probability, Bayes, and independence after the underlying meaning is
+      understood.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — probability foundations
+    source_id: source-openintro-statistics
+    locator: Probability chapter selections — Accessible event, conditional-probability, independence,
+      and Bayes examples before returning to the lecture's formal notation and Naive Bayes model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — probability exercise bank
+    source_id: source-dekking-mips
+    locator: Probability selections — Broad answer-backed event, conditional-probability, Bayes, and independence
+      problems after the course calculations.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — probability notes and solved problems
+    source_id: source-mit-1805
+    locator: Probability and conditional-probability notes/problem sets — Official university notes plus
+      solution-backed exercises for events, conditioning, Bayes, and independence; use selected topics,
+      not the whole course.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 — conditioning and Bayes lectures
+    source_id: source-stat110
+    locator: Conditional probability and Bayes lectures/notes — Rigorous classroom explanations and strategic-practice
+      problems for conditional probability and Bayes; use selected lectures only after the course scope
+      is clear.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — independence and Bayes
+    source_id: source-fau-klausur-ws1415
+    locator: Independence/4-Feldertafel/Bayes questions and solutions — The best local German full-exam
+      match for translating a contingency table into conditional probabilities, checking independence,
+      and applying Bayes.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — probability and Bayes block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; probability/Bayes questions — Additional event, conditioning, independence,
+      and Bayes problems with solutions once course and FAU material no longer expose mistakes.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
+    source_id: source-kurzes-tutorium-statistik
+    locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes — German first exposure
+      to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
+      derivation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-independence
+  number: 6
+  title: Independence and conditional independence
+  status: pending
+  objective: Independent events factorize jointly; conditional independence is a different claim that
+    can hold or fail after a third variable is known.
+  done_when:
+  - 'Reproduce without notes: Independent events factorize jointly; conditional independence is a different
+    claim that can hold or fail after a third variable is known.'
+  - Work Arbeitsbuch Chapter 4 — conditional probability and Bayes, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 probability deck with notes
+    source_id: source-sad-2025-recordings
+    locator: 04_probability_with_notes (1).pdf — A prior-year same-course second explanation of event
+      probability, conditioning, Bayes, and independence. Use it only after the current L04 deck when
+      one derivation needs another telling.
+    vault_path: material://source-sad-2025-recordings/04_probability_with_notes (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 4 — probability foundations
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 4 probability sections — Course-compatible German derivations for event algebra,
+      conditional probability, total probability, Bayes, and independence.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 4 probability selections — German worked event-algebra, conditioning, Bayes, and
+      independence calculations for repeated formula-selection practice.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapter 2 — conditioning and Bayes
+    source_id: source-blitzstein-hwang
+    locator: Chapter 2, especially §§2.1–2.3 and §2.8 — Story-first probability reasoning that explains
+      why conditioning changes the reference space, how Bayes reverses information, and where independence
+      intuition fails.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — conditional probability selections
+    source_id: source-pitman-probability
+    locator: Probability axioms, conditioning, and Bayes selections — An intermediate, theorem-aware alternative
+      for event algebra, conditioning, Bayes, and independence when Blitzstein is too story-driven or
+      too compressed.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — formal probability foundations
+    source_id: source-ross-first-course
+    locator: Probability axioms and conditioning chapters — Proof-heavier treatment of event probability,
+      conditioning, Bayes, and independence for later depth; it is deliberately not the first pass for
+      this exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — probability and Bayes worked problems
+    source_id: source-schaums-probability
+    locator: Probability and conditional-probability problem sets — High-volume worked calculations for
+      event algebra, conditional probability, Bayes, and independence after the underlying meaning is
+      understood.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — probability foundations
+    source_id: source-openintro-statistics
+    locator: Probability chapter selections — Accessible event, conditional-probability, independence,
+      and Bayes examples before returning to the lecture's formal notation and Naive Bayes model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — probability exercise bank
+    source_id: source-dekking-mips
+    locator: Probability selections — Broad answer-backed event, conditional-probability, Bayes, and independence
+      problems after the course calculations.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — probability notes and solved problems
+    source_id: source-mit-1805
+    locator: Probability and conditional-probability notes/problem sets — Official university notes plus
+      solution-backed exercises for events, conditioning, Bayes, and independence; use selected topics,
+      not the whole course.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 — conditioning and Bayes lectures
+    source_id: source-stat110
+    locator: Conditional probability and Bayes lectures/notes — Rigorous classroom explanations and strategic-practice
+      problems for conditional probability and Bayes; use selected lectures only after the course scope
+      is clear.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — independence and Bayes
+    source_id: source-fau-klausur-ws1415
+    locator: Independence/4-Feldertafel/Bayes questions and solutions — The best local German full-exam
+      match for translating a contingency table into conditional probabilities, checking independence,
+      and applying Bayes.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — probability and Bayes block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; probability/Bayes questions — Additional event, conditioning, independence,
+      and Bayes problems with solutions once course and FAU material no longer expose mistakes.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l04-naive-bayes
+  number: 7
+  title: Categorical Naive Bayes classifier
+  status: pending
+  objective: Class priors and per-feature likelihoods produce a posterior score under a conditional-independence
+    assumption; missing combinations and zero counts preview the smoothing problem in L14.
+  done_when:
+  - 'Reproduce without notes: Class priors and per-feature likelihoods produce a posterior score under
+    a conditional-independence assumption; missing combinations and zero counts preview the smoothing
+    problem in L14.'
+  - Work Blatt 2 and UE3 — probability and Bayes tasks, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts:
+  - concept-naive-bayes
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L04 probability and Naive Bayes deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
+      event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
+      construction. It controls exam notation.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2 and UE3 — probability and Bayes tasks
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf; exercise-slides/UE3.pdf probability section — Course-native
+      event, conditional-probability, Bayes, and classifier calculations; it tests whether the reference
+      population and conditioning direction are explicit.
+    scope_triage: required-now
+  - kind: watch
+    label: StatQuest — Naive Bayes
+    source_id: source-statquest
+    locator: Naive Bayes, Clearly Explained — Visual explanation of how class priors and conditionally
+      independent feature likelihoods combine; use after Bayes law itself is understood.
+    scope_triage: helpful-now
+  - kind: reference
+    label: CS229 §4.2 — Naive Bayes event models
+    source_id: source-cs229-notes
+    locator: §4.2 selections — More formal Naive Bayes derivation and event-model view after the course's
+      categorical spam example; smoothing and multinomial depth mainly belong to L14.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,54 @@
+schema_version: 1
+id: transaction-20260822-151510-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:15:10+02:00'
+snapshot_before: sha256:488e567e15ba23173434eb48b55abb6bdc718ee0c802b31bde748fa423e9d478
+snapshot_after: sha256:2f71e534973426b0bffecb055dc2650c221e7bd384973a59d9abae7fced262f2
+expected_revisions: {}
+artifact_revisions:
+  study-map-aml-l09:
+    before: 0
+    after: 1
+  unit-aml-l09:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-chain-rule/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-graph/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-stopping/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml
+  sha256_before: null
+  sha256_after: 62f0096a473dc6e6f446a29ab5dcefdf3b6799af7eb541ef56c25b110deb8d85
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/unit.yaml
+  sha256_before: 360c6cf2fa166c3ef709b1f6bbf589827f8caa5defad491f6a6e353c7225ce09
+  sha256_after: a1c9ca889370a952a27d92f61e2d072b5bf59f65a83322b11c4b8f579ae670cb
+  created: false
+metadata: {}

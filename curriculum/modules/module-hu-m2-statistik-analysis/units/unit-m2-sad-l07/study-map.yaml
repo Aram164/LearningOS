@@ -1,0 +1,630 @@
+id: study-map-m2-sad-l07
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l07
+status: not-started
+current_stage: stage-sad-l07-model-selection
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l07-model-selection
+  number: 1
+  title: Distribution choice from assumptions
+  status: pending
+  objective: Number of trials, independence, replacement, changing versus fixed success probability, stopping
+    rule, and count interval determine which discrete model is valid.
+  done_when:
+  - 'Reproduce without notes: Number of trials, independence, replacement, changing versus fixed success
+    probability, stopping rule, and count interval determine which discrete model is valid.'
+  - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 5, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — discrete-distribution selection
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Converts word problems into Binomial,
+      Hypergeometric, Geometric, or Poisson assumptions before computing probabilities and moments.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 discrete-distributions deck
+    source_id: source-sad-2025-recordings
+    locator: 07_discrete_distributions.pptx (1).pdf — Same-topic prior-year examples for selecting and
+      calculating the named discrete distributions; current L07 wording and scope remain authoritative.
+    vault_path: material://source-sad-2025-recordings/07_discrete_distributions.pptx (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 5 — discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5 — Formula- and notation-aligned definitions of the named distributions, with expectation,
+      variance, and model assumptions in the same German statistical layer as the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 5 — distribution drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 5 selections — Repeated German word-problem practice for distinguishing and calculating
+      the discrete models.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 — distribution-generating stories
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4 selections — Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson
+      families through the experiments that create them, making assumption recognition the main skill.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Tijms — discrete-distribution modeling examples
+    source_id: source-tijms-understanding-probability
+    locator: Discrete-distribution selections — Application- and simulation-heavy examples for recognizing
+      Binomial, Hypergeometric, Geometric, and Poisson assumptions.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — discrete-distribution drills
+    source_id: source-schaums-probability
+    locator: Discrete-distribution problem sets — Large worked bank for distribution selection and formula
+      fluency when course and Fahrmeir tasks are exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 4 — common distributions
+    source_id: source-openintro-statistics
+    locator: Chapter 4 distribution selections — Application-first Binomial and related distribution examples,
+      useful as a gentle first pass but not complete coverage of every named L07 model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — discrete-distribution exercises
+    source_id: source-dekking-mips
+    locator: Discrete-distribution selections — Distribution-identification and probability calculations
+      with short answers across the L07 model family.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — discrete-distribution problems
+    source_id: source-mit-1805
+    locator: Discrete-distribution notes and problem sets — Solution-backed model-selection and calculation
+      tasks for the standard discrete distribution family.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — discrete distributions
+    source_id: source-stat110
+    locator: Units 3–4 plus distribution handout — Distribution-generating stories, relationships, and
+      strategic practice for Binomial, Hypergeometric, Geometric, and Poisson models.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — Binomial modeling
+    source_id: source-fau-klausur-ws1415
+    locator: Binomial question and solution — A complete German exam application of the Binomial model
+      with solution-backed parameter and probability calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — distributions block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; discrete-distribution questions — Additional German word problems for
+      identifying and calculating Binomial, Hypergeometric, and Poisson models.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — Binomial distribution and sampling
+    source_id: source-statquest
+    locator: Binomial Distribution in 30 Seconds; Sampling from a Distribution — Fast visual refresh of
+      Binomial counts and drawing from a distribution; not a complete substitute for the Hypergeometric/Geometric/Poisson
+      scope.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — discrete distributions
+    source_id: source-jbstatistics
+    locator: Discrete-distribution video series — Calm, calculation-exact Binomial, Hypergeometric, Geometric,
+      and Poisson walkthroughs close to the style of SaD exam tasks.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — discrete distributions
+    source_id: source-kurzes-tutorium-statistik
+    locator: Binomial-, Hypergeometrische-, and Poisson-Verteilung videos — German vocabulary and formula
+      walkthroughs for the standard discrete models, supporting exam-language recognition.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-bernoulli-binomial
+  number: 2
+  title: Bernoulli trials and the Binomial distribution
+  status: pending
+  objective: A Bernoulli variable records one success/failure, while Binomial(n,p) counts successes in
+    n independent trials with constant p; combinatorics explains its PMF.
+  done_when:
+  - 'Reproduce without notes: A Bernoulli variable records one success/failure, while Binomial(n,p) counts
+    successes in n independent trials with constant p; combinatorics explains its PMF.'
+  - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 5, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-discrete-distributions
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — discrete-distribution selection
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Converts word problems into Binomial,
+      Hypergeometric, Geometric, or Poisson assumptions before computing probabilities and moments.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 discrete-distributions deck
+    source_id: source-sad-2025-recordings
+    locator: 07_discrete_distributions.pptx (1).pdf — Same-topic prior-year examples for selecting and
+      calculating the named discrete distributions; current L07 wording and scope remain authoritative.
+    vault_path: material://source-sad-2025-recordings/07_discrete_distributions.pptx (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 5 — discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5 — Formula- and notation-aligned definitions of the named distributions, with expectation,
+      variance, and model assumptions in the same German statistical layer as the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 5 — distribution drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 5 selections — Repeated German word-problem practice for distinguishing and calculating
+      the discrete models.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 — distribution-generating stories
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4 selections — Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson
+      families through the experiments that create them, making assumption recognition the main skill.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman Chapters 2–3 — discrete distributions
+    source_id: source-pitman-probability
+    locator: Chapters 2–3 selections — Intermediate derivations and examples for the standard discrete
+      families after the course deck.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — discrete-distribution modeling examples
+    source_id: source-tijms-understanding-probability
+    locator: Discrete-distribution selections — Application- and simulation-heavy examples for recognizing
+      Binomial, Hypergeometric, Geometric, and Poisson assumptions.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — named discrete distributions
+    source_id: source-ross-first-course
+    locator: Discrete random-variable chapters — Derivations, relationships, and a larger problem bank
+      for the standard discrete families after exam scope is secure.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — discrete-distribution drills
+    source_id: source-schaums-probability
+    locator: Discrete-distribution problem sets — Large worked bank for distribution selection and formula
+      fluency when course and Fahrmeir tasks are exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 4 — common distributions
+    source_id: source-openintro-statistics
+    locator: Chapter 4 distribution selections — Application-first Binomial and related distribution examples,
+      useful as a gentle first pass but not complete coverage of every named L07 model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — discrete-distribution exercises
+    source_id: source-dekking-mips
+    locator: Discrete-distribution selections — Distribution-identification and probability calculations
+      with short answers across the L07 model family.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — discrete-distribution problems
+    source_id: source-mit-1805
+    locator: Discrete-distribution notes and problem sets — Solution-backed model-selection and calculation
+      tasks for the standard discrete distribution family.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — discrete distributions
+    source_id: source-stat110
+    locator: Units 3–4 plus distribution handout — Distribution-generating stories, relationships, and
+      strategic practice for Binomial, Hypergeometric, Geometric, and Poisson models.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — Binomial modeling
+    source_id: source-fau-klausur-ws1415
+    locator: Binomial question and solution — A complete German exam application of the Binomial model
+      with solution-backed parameter and probability calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — distributions block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; discrete-distribution questions — Additional German word problems for
+      identifying and calculating Binomial, Hypergeometric, and Poisson models.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — Binomial distribution and sampling
+    source_id: source-statquest
+    locator: Binomial Distribution in 30 Seconds; Sampling from a Distribution — Fast visual refresh of
+      Binomial counts and drawing from a distribution; not a complete substitute for the Hypergeometric/Geometric/Poisson
+      scope.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — discrete distributions
+    source_id: source-jbstatistics
+    locator: Discrete-distribution video series — Calm, calculation-exact Binomial, Hypergeometric, Geometric,
+      and Poisson walkthroughs close to the style of SaD exam tasks.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — discrete distributions
+    source_id: source-kurzes-tutorium-statistik
+    locator: Binomial-, Hypergeometrische-, and Poisson-Verteilung videos — German vocabulary and formula
+      walkthroughs for the standard discrete models, supporting exam-language recognition.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-hypergeometric
+  number: 3
+  title: Hypergeometric sampling without replacement
+  status: pending
+  objective: Drawing from a finite population without replacement makes trials dependent and adds the
+    finite population correction absent from the Binomial model.
+  done_when:
+  - 'Reproduce without notes: Drawing from a finite population without replacement makes trials dependent
+    and adds the finite population correction absent from the Binomial model.'
+  - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — discrete-distribution selection
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Converts word problems into Binomial,
+      Hypergeometric, Geometric, or Poisson assumptions before computing probabilities and moments.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 discrete-distributions deck
+    source_id: source-sad-2025-recordings
+    locator: 07_discrete_distributions.pptx (1).pdf — Same-topic prior-year examples for selecting and
+      calculating the named discrete distributions; current L07 wording and scope remain authoritative.
+    vault_path: material://source-sad-2025-recordings/07_discrete_distributions.pptx (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 5 — discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5 — Formula- and notation-aligned definitions of the named distributions, with expectation,
+      variance, and model assumptions in the same German statistical layer as the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 5 — distribution drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 5 selections — Repeated German word-problem practice for distinguishing and calculating
+      the discrete models.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 — distribution-generating stories
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4 selections — Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson
+      families through the experiments that create them, making assumption recognition the main skill.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman Chapters 2–3 — discrete distributions
+    source_id: source-pitman-probability
+    locator: Chapters 2–3 selections — Intermediate derivations and examples for the standard discrete
+      families after the course deck.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — discrete-distribution modeling examples
+    source_id: source-tijms-understanding-probability
+    locator: Discrete-distribution selections — Application- and simulation-heavy examples for recognizing
+      Binomial, Hypergeometric, Geometric, and Poisson assumptions.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — named discrete distributions
+    source_id: source-ross-first-course
+    locator: Discrete random-variable chapters — Derivations, relationships, and a larger problem bank
+      for the standard discrete families after exam scope is secure.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — discrete-distribution drills
+    source_id: source-schaums-probability
+    locator: Discrete-distribution problem sets — Large worked bank for distribution selection and formula
+      fluency when course and Fahrmeir tasks are exhausted.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — discrete-distribution exercises
+    source_id: source-dekking-mips
+    locator: Discrete-distribution selections — Distribution-identification and probability calculations
+      with short answers across the L07 model family.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — discrete-distribution problems
+    source_id: source-mit-1805
+    locator: Discrete-distribution notes and problem sets — Solution-backed model-selection and calculation
+      tasks for the standard discrete distribution family.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — discrete distributions
+    source_id: source-stat110
+    locator: Units 3–4 plus distribution handout — Distribution-generating stories, relationships, and
+      strategic practice for Binomial, Hypergeometric, Geometric, and Poisson models.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — distributions block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; discrete-distribution questions — Additional German word problems for
+      identifying and calculating Binomial, Hypergeometric, and Poisson models.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — discrete distributions
+    source_id: source-jbstatistics
+    locator: Discrete-distribution video series — Calm, calculation-exact Binomial, Hypergeometric, Geometric,
+      and Poisson walkthroughs close to the style of SaD exam tasks.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — discrete distributions
+    source_id: source-kurzes-tutorium-statistik
+    locator: Binomial-, Hypergeometrische-, and Poisson-Verteilung videos — German vocabulary and formula
+      walkthroughs for the standard discrete models, supporting exam-language recognition.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-geometric
+  number: 4
+  title: Geometric waiting times
+  status: pending
+  objective: The Geometric model counts trials until the first success, introducing a stopping-time story
+    and the memoryless property rather than a fixed number of trials.
+  done_when:
+  - 'Reproduce without notes: The Geometric model counts trials until the first success, introducing a
+    stopping-time story and the memoryless property rather than a fixed number of trials.'
+  - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — discrete-distribution selection
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Converts word problems into Binomial,
+      Hypergeometric, Geometric, or Poisson assumptions before computing probabilities and moments.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 5 — discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5 — Formula- and notation-aligned definitions of the named distributions, with expectation,
+      variance, and model assumptions in the same German statistical layer as the exam.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 — distribution-generating stories
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4 selections — Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson
+      families through the experiments that create them, making assumption recognition the main skill.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman Chapters 2–3 — discrete distributions
+    source_id: source-pitman-probability
+    locator: Chapters 2–3 selections — Intermediate derivations and examples for the standard discrete
+      families after the course deck.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — discrete-distribution modeling examples
+    source_id: source-tijms-understanding-probability
+    locator: Discrete-distribution selections — Application- and simulation-heavy examples for recognizing
+      Binomial, Hypergeometric, Geometric, and Poisson assumptions.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — named discrete distributions
+    source_id: source-ross-first-course
+    locator: Discrete random-variable chapters — Derivations, relationships, and a larger problem bank
+      for the standard discrete families after exam scope is secure.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — discrete-distribution drills
+    source_id: source-schaums-probability
+    locator: Discrete-distribution problem sets — Large worked bank for distribution selection and formula
+      fluency when course and Fahrmeir tasks are exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — discrete-distribution problems
+    source_id: source-mit-1805
+    locator: Discrete-distribution notes and problem sets — Solution-backed model-selection and calculation
+      tasks for the standard discrete distribution family.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — discrete distributions
+    source_id: source-stat110
+    locator: Units 3–4 plus distribution handout — Distribution-generating stories, relationships, and
+      strategic practice for Binomial, Hypergeometric, Geometric, and Poisson models.
+    scope_triage: reference-only
+  - kind: watch
+    label: jbstatistics — discrete distributions
+    source_id: source-jbstatistics
+    locator: Discrete-distribution video series — Calm, calculation-exact Binomial, Hypergeometric, Geometric,
+      and Poisson walkthroughs close to the style of SaD exam tasks.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-poisson
+  number: 5
+  title: Poisson event counts
+  status: pending
+  objective: Poisson(lambda) models independent events occurring at a stable rate in an interval, with
+    equal expectation and variance.
+  done_when:
+  - 'Reproduce without notes: Poisson(lambda) models independent events occurring at a stable rate in
+    an interval, with equal expectation and variance.'
+  - Work Übungsblatt 3 and UE4 — discrete-distribution selection, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: practise
+    label: Übungsblatt 3 and UE4 — discrete-distribution selection
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf — Converts word problems into Binomial,
+      Hypergeometric, Geometric, or Poisson assumptions before computing probabilities and moments.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 discrete-distributions deck
+    source_id: source-sad-2025-recordings
+    locator: 07_discrete_distributions.pptx (1).pdf — Same-topic prior-year examples for selecting and
+      calculating the named discrete distributions; current L07 wording and scope remain authoritative.
+    vault_path: material://source-sad-2025-recordings/07_discrete_distributions.pptx (1).pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapter 5 — discrete distributions
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 5 — Formula- and notation-aligned definitions of the named distributions, with expectation,
+      variance, and model assumptions in the same German statistical layer as the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 5 — distribution drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 5 selections — Repeated German word-problem practice for distinguishing and calculating
+      the discrete models.
+    scope_triage: helpful-now
+  - kind: read
+    label: Blitzstein Chapters 3–4 — distribution-generating stories
+    source_id: source-blitzstein-hwang
+    locator: Chapters 3–4 selections — Explains the Bernoulli/Binomial/Hypergeometric/Geometric/Poisson
+      families through the experiments that create them, making assumption recognition the main skill.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman Chapters 2–3 — discrete distributions
+    source_id: source-pitman-probability
+    locator: Chapters 2–3 selections — Intermediate derivations and examples for the standard discrete
+      families after the course deck.
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — discrete-distribution modeling examples
+    source_id: source-tijms-understanding-probability
+    locator: Discrete-distribution selections — Application- and simulation-heavy examples for recognizing
+      Binomial, Hypergeometric, Geometric, and Poisson assumptions.
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — named discrete distributions
+    source_id: source-ross-first-course
+    locator: Discrete random-variable chapters — Derivations, relationships, and a larger problem bank
+      for the standard discrete families after exam scope is secure.
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — discrete-distribution drills
+    source_id: source-schaums-probability
+    locator: Discrete-distribution problem sets — Large worked bank for distribution selection and formula
+      fluency when course and Fahrmeir tasks are exhausted.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapter 4 — common distributions
+    source_id: source-openintro-statistics
+    locator: Chapter 4 distribution selections — Application-first Binomial and related distribution examples,
+      useful as a gentle first pass but not complete coverage of every named L07 model.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — discrete-distribution exercises
+    source_id: source-dekking-mips
+    locator: Discrete-distribution selections — Distribution-identification and probability calculations
+      with short answers across the L07 model family.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — discrete-distribution problems
+    source_id: source-mit-1805
+    locator: Discrete-distribution notes and problem sets — Solution-backed model-selection and calculation
+      tasks for the standard discrete distribution family.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Harvard Stat 110 Units 3–4 — discrete distributions
+    source_id: source-stat110
+    locator: Units 3–4 plus distribution handout — Distribution-generating stories, relationships, and
+      strategic practice for Binomial, Hypergeometric, Geometric, and Poisson models.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — distributions block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; discrete-distribution questions — Additional German word problems for
+      identifying and calculating Binomial, Hypergeometric, and Poisson models.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — discrete distributions
+    source_id: source-jbstatistics
+    locator: Discrete-distribution video series — Calm, calculation-exact Binomial, Hypergeometric, Geometric,
+      and Poisson walkthroughs close to the style of SaD exam tasks.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — discrete distributions
+    source_id: source-kurzes-tutorium-statistik
+    locator: Binomial-, Hypergeometrische-, and Poisson-Verteilung videos — German vocabulary and formula
+      walkthroughs for the standard discrete models, supporting exam-language recognition.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — Poisson distribution walkthrough
+    source_id: source-brandon-foltz
+    locator: Introduction to the Poisson Distribution — Slow, every-step explanation of the Poisson model
+      and calculations when the shorter channels move too quickly.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l07-relationships
+  number: 6
+  title: Limits, approximations, and moment signatures
+  status: pending
+  objective: Rare-event Binomials approach Poisson; distribution moments provide fast checks, but approximation
+    conditions must be stated rather than assumed.
+  done_when:
+  - 'Reproduce without notes: Rare-event Binomials approach Poisson; distribution moments provide fast
+    checks, but approximation conditions must be stated rather than assumed.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L07 discrete-distributions deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/07_discrete_distributions.pdf (33 pages) — Defines the distribution-identification
+      conditions and formulas for Bernoulli/Binomial, Hypergeometric, Geometric, and Poisson models, including
+      their moments and relationships.
+    scope_triage: required-now
+  - kind: reference
+    label: Ross — named discrete distributions
+    source_id: source-ross-first-course
+    locator: Discrete random-variable chapters — Derivations, relationships, and a larger problem bank
+      for the standard discrete families after exam scope is secure.
+    scope_triage: reference-only
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md
+  attachments: []
+  source_feedback: []

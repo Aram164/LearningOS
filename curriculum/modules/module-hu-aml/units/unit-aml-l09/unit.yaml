@@ -7,7 +7,7 @@ order: 9
 scope: Current 2026 L09 deck; computation graphs, chain rule/backprop and the shared worked example, training,
   Frobenius/L2 regularization, dropout, early stopping, double descent, vanishing/exploding gradients,
   and PyTorch autograd. Batch normalization is not in this deck.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture treats backpropagation as reverse-mode differentiation on a computation graph,
     then connects the resulting gradients to regularization, training dynamics, and automatic differentiation.
@@ -22,27 +22,32 @@ knowledge_map:
     - knowledge-aml-l09-graph
   - id: knowledge-aml-l09-backprop
     title: Layer-wise backpropagation
-    summary: dz, dW, db, and da rules, the full worked network, and connection to stochastic gradient updates.
+    summary: dz, dW, db, and da rules, the full worked network, and connection to stochastic gradient
+      updates.
     builds_on:
     - knowledge-aml-l09-chain-rule
   - id: knowledge-aml-l09-regularization
     title: Weight decay and dropout
-    summary: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation behaviour.
+    summary: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation
+      behaviour.
     builds_on:
     - knowledge-aml-l09-backprop
   - id: knowledge-aml-l09-stopping
     title: Early stopping and double descent
-    summary: Validation-controlled training, classical U-curves, interpolation threshold, and modern risk behaviour.
+    summary: Validation-controlled training, classical U-curves, interpolation threshold, and modern risk
+      behaviour.
     builds_on:
     - knowledge-aml-l09-regularization
   - id: knowledge-aml-l09-gradient-health
     title: Vanishing and exploding gradients
-    summary: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies included by the lecture.
+    summary: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies included
+      by the lecture.
     builds_on:
     - knowledge-aml-l09-backprop
   - id: knowledge-aml-l09-autograd
     title: Automatic differentiation
-    summary: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and no_grad as an executable model.
+    summary: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and no_grad as
+      an executable model.
     builds_on:
     - knowledge-aml-l09-graph
     - knowledge-aml-l09-backprop
@@ -64,3 +69,4 @@ workspace_ids:
 - workspace-aml-exam-prep
 related_module_ids:
 - module-hu-m2-statistik-analysis
+current_study_map: study-map-aml-l09

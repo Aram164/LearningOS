@@ -7,7 +7,7 @@ order: 4
 scope: Current 2026 L04 deck; multivariate regression, design matrices and the normal equation, polynomial
   basis expansion, overfitting and model complexity, cross-validation, Ridge/L2 and Lasso/L1 regularization,
   closed-form Ridge, and shrinkage/sparsity geometry.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture generalizes linear regression across variables and nonlinear feature maps, then
     controls the resulting flexibility with validation and regularization.
@@ -17,22 +17,26 @@ knowledge_map:
     summary: Multiple predictors, augmented design matrices, vectorized prediction, gradients, and dimensions.
   - id: knowledge-aml-l04-normal-equation
     title: Normal equation
-    summary: The matrix closed form, invertibility and singularity, and when direct solution differs from iterative optimization.
+    summary: The matrix closed form, invertibility and singularity, and when direct solution differs from
+      iterative optimization.
     builds_on:
     - knowledge-aml-l04-multivariate
   - id: knowledge-aml-l04-basis
     title: Polynomial basis expansion
-    summary: Nonlinear functions learned by transforming inputs while retaining a model linear in its parameters.
+    summary: Nonlinear functions learned by transforming inputs while retaining a model linear in its
+      parameters.
     builds_on:
     - knowledge-aml-l04-multivariate
   - id: knowledge-aml-l04-overfitting
     title: Complexity and overfitting
-    summary: Flexible polynomial features, train/test behaviour, bias-variance, and validation-based model choice.
+    summary: Flexible polynomial features, train/test behaviour, bias-variance, and validation-based model
+      choice.
     builds_on:
     - knowledge-aml-l04-basis
   - id: knowledge-aml-l04-ridge
     title: Ridge and L2 regularization
-    summary: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the closed-form Ridge solution.
+    summary: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the closed-form Ridge
+      solution.
     builds_on:
     - knowledge-aml-l04-overfitting
   - id: knowledge-aml-l04-lasso
@@ -54,3 +58,4 @@ artifacts:
   mock_exam: note-aml-l04-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l04

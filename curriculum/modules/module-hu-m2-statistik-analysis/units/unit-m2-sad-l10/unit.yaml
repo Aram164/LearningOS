@@ -8,50 +8,57 @@ order: 10
 scope: Current 2026 L10 deck; null and alternative hypotheses, test statistics and null distributions,
   one- and two-sided tests, critical regions and p-values, Type I/II errors and power, z and t tests,
   confidence-interval duality, chi-square, rank and permutation tests, and multiple testing.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture converts a scientific claim into a controlled decision under uncertainty, separating
     evidence against a null model from the probability that a substantive theory is true.
   nodes:
   - id: knowledge-sad-l10-test-model
     title: Null model, alternative, statistic, and reference distribution
-    summary: A test specifies a falsifiable null, an alternative, a statistic computed from the sample, and
-      the statistic's distribution if the null were true.
+    summary: A test specifies a falsifiable null, an alternative, a statistic computed from the sample,
+      and the statistic's distribution if the null were true.
   - id: knowledge-sad-l10-tails-pvalue
     title: Tails, critical regions, and p-values
-    summary: The alternative determines one- versus two-sided evidence; a p-value is the null probability of
-      a result at least as extreme, not the probability that the null is true.
-    builds_on: [knowledge-sad-l10-test-model]
+    summary: The alternative determines one- versus two-sided evidence; a p-value is the null probability
+      of a result at least as extreme, not the probability that the null is true.
+    builds_on:
+    - knowledge-sad-l10-test-model
   - id: knowledge-sad-l10-errors-power
     title: Type I error, Type II error, and power
     summary: Alpha controls false rejection under the null, beta describes missed effects under an alternative,
       and power depends on effect size, noise, sample size, and the decision threshold.
-    builds_on: [knowledge-sad-l10-tails-pvalue]
+    builds_on:
+    - knowledge-sad-l10-tails-pvalue
   - id: knowledge-sad-l10-z-t
     title: z and t tests for means
-    summary: Standardized mean differences use z when variance assumptions justify it and t when variance is
-      estimated; paired and independent designs require different standard errors.
-    builds_on: [knowledge-sad-l10-test-model]
+    summary: Standardized mean differences use z when variance assumptions justify it and t when variance
+      is estimated; paired and independent designs require different standard errors.
+    builds_on:
+    - knowledge-sad-l10-test-model
   - id: knowledge-sad-l10-ci-duality
     title: Confidence intervals and test duality
-    summary: A two-sided level-alpha test rejects exactly the parameter values outside the matching
-      1-alpha confidence interval under the same assumptions.
-    builds_on: [knowledge-sad-l10-z-t]
+    summary: A two-sided level-alpha test rejects exactly the parameter values outside the matching 1-alpha
+      confidence interval under the same assumptions.
+    builds_on:
+    - knowledge-sad-l10-z-t
   - id: knowledge-sad-l10-chi-square
     title: Chi-square tests for categorical data
-    summary: Observed and expected counts support goodness-of-fit and independence tests, with degrees of
-      freedom and count-size assumptions controlling the reference approximation.
-    builds_on: [knowledge-sad-l10-test-model]
+    summary: Observed and expected counts support goodness-of-fit and independence tests, with degrees
+      of freedom and count-size assumptions controlling the reference approximation.
+    builds_on:
+    - knowledge-sad-l10-test-model
   - id: knowledge-sad-l10-nonparametric
     title: Rank and permutation tests
-    summary: Rank tests reduce distributional assumptions, while permutation tests construct a null
-      distribution from exchangeability by reassigning labels.
-    builds_on: [knowledge-sad-l10-test-model]
+    summary: Rank tests reduce distributional assumptions, while permutation tests construct a null distribution
+      from exchangeability by reassigning labels.
+    builds_on:
+    - knowledge-sad-l10-test-model
   - id: knowledge-sad-l10-multiple
     title: Multiple testing and false discoveries
     summary: Repeating tests inflates the chance of at least one false positive; family-wise and false-discovery
       controls answer different error-management questions.
-    builds_on: [knowledge-sad-l10-errors-power]
+    builds_on:
+    - knowledge-sad-l10-errors-power
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -61,5 +68,8 @@ scope_sources:
   locator: 10_statistical_significance.pdf
 source_selections: []
 artifacts:
-  other: [note-sad-hypothesis-testing-handwritten]
-workspace_ids: [workspace-m2-exam-prep]
+  other:
+  - note-sad-hypothesis-testing-handwritten
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l10

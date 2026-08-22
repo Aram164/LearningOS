@@ -1,0 +1,46 @@
+schema_version: 1
+id: transaction-20260822-151349-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:13:49+02:00'
+snapshot_before: sha256:d7f8f8cf2a55e362b2987e92ac85ff4386e950deb17a589a7a5591c3765a16b3
+snapshot_after: sha256:60b01641c4f45501b9dc43c3c6473cc3157ecc113add4e584f4b5c4069c15ad9
+expected_revisions: {}
+artifact_revisions:
+  study-map-aml-l01:
+    before: 0
+    after: 1
+  unit-aml-l01:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-data/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-generalization/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-history/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+  sha256_before: null
+  sha256_after: 9078ffe3b26c7be7b55cee0d576a84726325124762318a6e9463c8fd6e8686ce
+  created: true
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/unit.yaml
+  sha256_before: f06db608dd24fa024d853d445925b81dcbd986872a5231ea9cd12c9fb91a003b
+  sha256_after: 75a16102de5f64a7e348d742cc9d82b8f5b2284c410e532b5c2ed5439499cc36
+  created: false
+metadata: {}

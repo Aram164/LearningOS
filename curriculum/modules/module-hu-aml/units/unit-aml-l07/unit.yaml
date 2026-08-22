@@ -6,39 +6,47 @@ title: AML Lecture 07 — Linear Classifiers
 order: 7
 scope: Current 2026 L07 deck; linear-classifier geometry, separability, the perceptron algorithm in primal
   and dual form, convergence intuition, Boolean gates and XOR, explicit feature maps, the kernel trick,
-  polynomial and RBF kernels, landmark similarities, one-vs-rest, and multiclass perceptrons. SVMs are not covered.
-status: not-started
+  polynomial and RBF kernels, landmark similarities, one-vs-rest, and multiclass perceptrons. SVMs are
+  not covered.
+status: ready
 knowledge_map:
   summary: The lecture begins with the perceptron's linear decision rule, exposes the XOR limitation,
-    and resolves nonlinear structure through feature maps and kernels before extending scores to multiple classes.
+    and resolves nonlinear structure through feature maps and kernels before extending scores to multiple
+    classes.
   nodes:
   - id: knowledge-aml-l07-linear-geometry
     title: Linear classifiers and separability
-    summary: Scores, thresholds, hyperplane boundaries, class overlap, and linearly separable versus nonseparable data.
+    summary: Scores, thresholds, hyperplane boundaries, class overlap, and linearly separable versus nonseparable
+      data.
   - id: knowledge-aml-l07-perceptron
     title: Perceptron learning
-    summary: Sign activation, mistake-driven updates, primal form, convergence assumptions, and classifier behaviour.
+    summary: Sign activation, mistake-driven updates, primal form, convergence assumptions, and classifier
+      behaviour.
     builds_on:
     - knowledge-aml-l07-linear-geometry
   - id: knowledge-aml-l07-dual
     title: Dual perceptron
-    summary: Expressing weights as training-point combinations, Gram matrices, and predictions through dot products.
+    summary: Expressing weights as training-point combinations, Gram matrices, and predictions through
+      dot products.
     builds_on:
     - knowledge-aml-l07-perceptron
   - id: knowledge-aml-l07-xor
     title: Boolean gates and the XOR wall
-    summary: AND/OR realizations, the XOR contradiction, and the representational limit of one linear boundary.
+    summary: AND/OR realizations, the XOR contradiction, and the representational limit of one linear
+      boundary.
     builds_on:
     - knowledge-aml-l07-linear-geometry
   - id: knowledge-aml-l07-kernels
     title: Feature maps and kernel trick
-    summary: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and efficient dot-product substitution.
+    summary: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and efficient dot-product
+      substitution.
     builds_on:
     - knowledge-aml-l07-dual
     - knowledge-aml-l07-xor
   - id: knowledge-aml-l07-rbf
     title: RBF kernels and landmarks
-    summary: Gaussian similarity, bandwidth effects, landmark features, nonlinear boundaries, and bias-variance behaviour.
+    summary: Gaussian similarity, bandwidth effects, landmark features, nonlinear boundaries, and bias-variance
+      behaviour.
     builds_on:
     - knowledge-aml-l07-kernels
   - id: knowledge-aml-l07-multiclass
@@ -60,3 +68,4 @@ artifacts:
   mock_exam: note-aml-l07-mock-exam
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l07

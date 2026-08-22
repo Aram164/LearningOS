@@ -5,48 +5,54 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 09 — Point & Interval Estimation
 order: 9
-scope: Current 2026 L09 deck; estimators as random variables, unbiasedness, consistency, efficiency and MSE,
-  sampling distributions and standard errors, z and t confidence intervals, interpretation and sample-size
+scope: Current 2026 L09 deck; estimators as random variables, unbiasedness, consistency, efficiency and
+  MSE, sampling distributions and standard errors, z and t confidence intervals, interpretation and sample-size
   effects, bootstrap intervals, and bias caused by data quality or sampling.
-status: not-started
+status: ready
 knowledge_map:
-  summary: The lecture formalizes the jump from a finite sample to an unknown population parameter and makes
-    uncertainty part of the estimate rather than an afterthought.
+  summary: The lecture formalizes the jump from a finite sample to an unknown population parameter and
+    makes uncertainty part of the estimate rather than an afterthought.
   nodes:
   - id: knowledge-sad-l09-estimator
     title: Statistics, estimators, and estimates
-    summary: An estimator is a rule applied to random samples and is therefore random; an estimate is its
-      realized numerical value for one observed sample.
+    summary: An estimator is a rule applied to random samples and is therefore random; an estimate is
+      its realized numerical value for one observed sample.
   - id: knowledge-sad-l09-properties
     title: Bias, consistency, efficiency, and mean squared error
-    summary: Good estimators trade systematic error and variability; MSE decomposes into variance plus squared
-      bias, while consistency describes large-sample convergence.
-    builds_on: [knowledge-sad-l09-estimator]
+    summary: Good estimators trade systematic error and variability; MSE decomposes into variance plus
+      squared bias, while consistency describes large-sample convergence.
+    builds_on:
+    - knowledge-sad-l09-estimator
   - id: knowledge-sad-l09-standard-error
     title: Sampling distributions and standard errors
-    summary: The standard error is the standard deviation of an estimator's sampling distribution and usually
-      shrinks with sample size; it is not the spread of the raw data.
-    builds_on: [knowledge-sad-l09-estimator]
+    summary: The standard error is the standard deviation of an estimator's sampling distribution and
+      usually shrinks with sample size; it is not the spread of the raw data.
+    builds_on:
+    - knowledge-sad-l09-estimator
   - id: knowledge-sad-l09-z-interval
     title: z confidence intervals
-    summary: With known population variance or an adequate Normal approximation, estimate plus/minus a z
-      quantile times standard error gives a repeated-sampling coverage procedure.
-    builds_on: [knowledge-sad-l09-standard-error]
+    summary: With known population variance or an adequate Normal approximation, estimate plus/minus a
+      z quantile times standard error gives a repeated-sampling coverage procedure.
+    builds_on:
+    - knowledge-sad-l09-standard-error
   - id: knowledge-sad-l09-t-interval
     title: t confidence intervals
-    summary: Estimating variance from small samples introduces extra uncertainty captured by Student's t and
-      its degrees of freedom.
-    builds_on: [knowledge-sad-l09-z-interval]
+    summary: Estimating variance from small samples introduces extra uncertainty captured by Student's
+      t and its degrees of freedom.
+    builds_on:
+    - knowledge-sad-l09-z-interval
   - id: knowledge-sad-l09-bootstrap
     title: Bootstrap estimation
-    summary: Resampling observations with replacement approximates an estimator's sampling distribution when
-      a convenient analytic standard error is unavailable.
-    builds_on: [knowledge-sad-l09-standard-error]
+    summary: Resampling observations with replacement approximates an estimator's sampling distribution
+      when a convenient analytic standard error is unavailable.
+    builds_on:
+    - knowledge-sad-l09-standard-error
   - id: knowledge-sad-l09-data-bias
     title: Statistical uncertainty versus data bias
-    summary: Narrow intervals cannot repair selection bias, measurement error, dependence, or population drift;
-      the inferential model is only as credible as its sampling assumptions.
-    builds_on: [knowledge-sad-l09-properties]
+    summary: Narrow intervals cannot repair selection bias, measurement error, dependence, or population
+      drift; the inferential model is only as credible as its sampling assumptions.
+    builds_on:
+    - knowledge-sad-l09-properties
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -56,4 +62,6 @@ scope_sources:
   locator: 09_point_interval_estimation (1).pdf
 source_selections: []
 artifacts: {}
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l09

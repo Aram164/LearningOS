@@ -1,0 +1,331 @@
+id: study-map-m2-sad-l01
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l01
+status: not-started
+current_stage: stage-sad-l01-data-questions
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l01-data-questions
+  number: 1
+  title: One dataset, several legitimate questions
+  status: pending
+  objective: A statistic is useful only relative to a question; totals, typical cases, likely cases, and
+    decisions can require different summaries of the same observations.
+  done_when:
+  - 'Reproduce without notes: A statistic is useful only relative to a question; totals, typical cases,
+    likely cases, and decisions can require different summaries of the same observations.'
+  - Work Blatt 1 and UE2 — data and feature foundations, and record every miss with the step it failed
+    at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — data and feature foundations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf introductory section — Course-native
+      questions on features, observations, descriptive summaries, and the first interpretation decisions;
+      use the walkthrough language as the exam vocabulary layer.
+    scope_triage: required-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — accessible data summaries
+    source_id: source-openintro-statistics
+    locator: Chapters 1–2 selections — Gentle English first exposure to data questions, samples, distributions,
+      center, and variability before the German course notation layer.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-data-questions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-location
+  number: 2
+  title: Mean, median, mode, and robustness
+  status: pending
+  objective: Central-tendency summaries answer different questions, while outliers move the mean much
+    more strongly than the median or mode.
+  done_when:
+  - 'Reproduce without notes: Central-tendency summaries answer different questions, while outliers move
+    the mean much more strongly than the median or mode.'
+  - Work Blatt 1 and UE2 — data and feature foundations, then the remaining 3, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — data and feature foundations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf introductory section — Course-native
+      questions on features, observations, descriptive summaries, and the first interpretation decisions;
+      use the walkthrough language as the exam vocabulary layer.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — descriptive-statistics reference
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 selections — German notation-matched depth for location, empirical distributions,
+      robustness, and the sample/population distinction introduced informally by L01.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 2 — descriptive warm-ups
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 2 introductory selections — German worked problems for location and empirical distributions
+      after the lecture examples; this is repetition, not a second conceptual source.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — accessible data summaries
+    source_id: source-openintro-statistics
+    locator: Chapters 1–2 selections — Gentle English first exposure to data questions, samples, distributions,
+      center, and variability before the German course notation layer.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive review and answer-backed exercises
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics selections — Broad review source with short answers for sample summaries
+      and distribution interpretation after the course-owned exercises.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — introduction transfer
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; choose only matching descriptive/contingency questions — Gap-targeted
+      contingency-table, descriptive, and interpretation items from HS Harz, Köln, Leuphana, and Regensburg
+      after the FAU match is exhausted.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Lagemaße und Streuung
+    source_id: source-kurzes-tutorium-statistik
+    locator: Lagemaße; Streuungsmaße — German everyday-language introduction to mean, median, mode, and
+      spread, useful for matching the lecture's vocabulary before deeper probability or metric discussions.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-location/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-distributions
+  number: 3
+  title: Frequencies, histograms, and empirical distributions
+  status: pending
+  objective: Counts become relative frequencies and distributions, making samples of different sizes and
+    ranges comparable without pretending that the sample is the population.
+  done_when:
+  - 'Reproduce without notes: Counts become relative frequencies and distributions, making samples of
+    different sizes and ranges comparable without pretending that the sample is the population.'
+  - Work Arbeitsbuch Chapter 2 — descriptive warm-ups, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — descriptive-statistics reference
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 selections — German notation-matched depth for location, empirical distributions,
+      robustness, and the sample/population distinction introduced informally by L01.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapter 2 — descriptive warm-ups
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapter 2 introductory selections — German worked problems for location and empirical distributions
+      after the lecture examples; this is repetition, not a second conceptual source.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — accessible data summaries
+    source_id: source-openintro-statistics
+    locator: Chapters 1–2 selections — Gentle English first exposure to data questions, samples, distributions,
+      center, and variability before the German course notation layer.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive review and answer-backed exercises
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics selections — Broad review source with short answers for sample summaries
+      and distribution interpretation after the course-owned exercises.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-distributions/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-sampling-context
+  number: 4
+  title: Samples, populations, and context
+  status: pending
+  objective: A result changes with the sampled group; the same-looking numbers can describe different
+    populations, and comparison requires attention to selection and context.
+  done_when:
+  - 'Reproduce without notes: A result changes with the sampled group; the same-looking numbers can describe
+    different populations, and comparison requires attention to selection and context.'
+  - Work Blatt 1 and UE2 — data and feature foundations, then the remaining 1, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 1 and UE2 — data and feature foundations
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf; exercise-slides/UE2.pdf introductory section — Course-native
+      questions on features, observations, descriptive summaries, and the first interpretation decisions;
+      use the walkthrough language as the exam vocabulary layer.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapter 2 — descriptive-statistics reference
+    source_id: source-fahrmeir-statistik
+    locator: Chapter 2 selections — German notation-matched depth for location, empirical distributions,
+      robustness, and the sample/population distinction introduced informally by L01.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 1–2 — accessible data summaries
+    source_id: source-openintro-statistics
+    locator: Chapters 1–2 selections — Gentle English first exposure to data questions, samples, distributions,
+      center, and variability before the German course notation layer.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — descriptive review and answer-backed exercises
+    source_id: source-dekking-mips
+    locator: Descriptive-statistics selections — Broad review source with short answers for sample summaries
+      and distribution interpretation after the course-owned exercises.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-sampling-context/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-classification
+  number: 5
+  title: Confusion matrices and classification metrics
+  status: pending
+  objective: True/false positives and negatives support accuracy, precision, recall, sensitivity, and
+    specificity; the useful metric depends on the error costs and class prevalence.
+  done_when:
+  - 'Reproduce without notes: True/false positives and negatives support accuracy, precision, recall,
+    sensitivity, and specificity; the useful metric depends on the error costs and class prevalence.'
+  - Work FAU solved exam — contingency-table and Bayes transfer, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-classification-metrics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: practise
+    label: FAU solved exam — contingency-table and Bayes transfer
+    source_id: source-fau-klausur-ws1415
+    locator: 4-Feldertafel/Bayes item with solution — A German timed transfer item using four-field tables
+      and posterior reasoning; it tests whether the L01 metric/base-rate ideas survive outside the lecture
+      examples.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — introduction transfer
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; choose only matching descriptive/contingency questions — Gap-targeted
+      contingency-table, descriptive, and interpretation items from HS Harz, Köln, Leuphana, and Regensburg
+      after the FAU match is exhausted.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — confusion matrix, sensitivity, and specificity
+    source_id: source-statquest
+    locator: The Confusion Matrix; Sensitivity and Specificity — Short visual decoding of TP/FP/FN/TN
+      and the corresponding metrics; ideal when names are being confused, but the course examples still
+      determine terminology and scope.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-base-rates
+  number: 6
+  title: Base rates and Bayes by counting
+  status: pending
+  objective: Medical-test and classification examples expose why a high sensitivity need not imply a high
+    posterior probability when the positive class is rare.
+  done_when:
+  - 'Reproduce without notes: Medical-test and classification examples expose why a high sensitivity need
+    not imply a high posterior probability when the positive class is rare.'
+  - Work FAU solved exam — contingency-table and Bayes transfer, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-combinatorics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  - kind: practise
+    label: FAU solved exam — contingency-table and Bayes transfer
+    source_id: source-fau-klausur-ws1415
+    locator: 4-Feldertafel/Bayes item with solution — A German timed transfer item using four-field tables
+      and posterior reasoning; it tests whether the L01 metric/base-rate ideas survive outside the lecture
+      examples.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — introduction transfer
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; choose only matching descriptive/contingency questions — Gap-targeted
+      contingency-table, descriptive, and interpretation items from HS Harz, Köln, Leuphana, and Regensburg
+      after the FAU match is exhausted.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l01-course-map
+  number: 7
+  title: From description to inference and prediction
+  status: pending
+  objective: Descriptive statistics summarize observed data; probability models uncertainty; inference
+    reasons about populations; data science and machine learning use the resulting structure to predict.
+  done_when:
+  - 'Reproduce without notes: Descriptive statistics summarize observed data; probability models uncertainty;
+    inference reasons about populations; data science and machine learning use the resulting structure
+    to predict.'
+  exam_critical: true
+  concepts:
+  - concept-descriptive-statistics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L01 introduction deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
+      mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
+      different questions. This is the 2026 scope authority.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md
+  attachments: []
+  source_feedback: []

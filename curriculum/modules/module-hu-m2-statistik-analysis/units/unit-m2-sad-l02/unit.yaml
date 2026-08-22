@@ -8,45 +8,53 @@ order: 2
 scope: Current 2026 L02 deck; statistical vocabulary, populations and samples, feature and scale types,
   absolute/relative/cumulative frequencies, histograms, location and quantiles, boxplots, dispersion,
   population-versus-sample variance, Simpson's paradox, sampling bias, and representative data.
-status: not-started
+status: ready
 knowledge_map:
-  summary: The lecture establishes the descriptive-statistics language and the measurement constraints that
-    determine which summaries and comparisons are mathematically meaningful.
+  summary: The lecture establishes the descriptive-statistics language and the measurement constraints
+    that determine which summaries and comparisons are mathematically meaningful.
   nodes:
   - id: knowledge-sad-l02-vocabulary
     title: Population, sample, object, feature, and realization
-    summary: Statistics observes feature values on sampled objects to learn about a larger population; each
-      term identifies a different part of that inference problem.
+    summary: Statistics observes feature values on sampled objects to learn about a larger population;
+      each term identifies a different part of that inference problem.
   - id: knowledge-sad-l02-scales
     title: Feature types and measurement scales
-    summary: Nominal, ordinal, interval, and ratio scales determine which ordering, distance, averaging, and
-      arithmetic operations are legitimate.
-    builds_on: [knowledge-sad-l02-vocabulary]
+    summary: Nominal, ordinal, interval, and ratio scales determine which ordering, distance, averaging,
+      and arithmetic operations are legitimate.
+    builds_on:
+    - knowledge-sad-l02-vocabulary
   - id: knowledge-sad-l02-frequencies
     title: Frequency distributions and histograms
-    summary: Absolute, relative, and cumulative frequencies organize raw observations; bin choices and scale
-      can change the visual claim a histogram appears to make.
-    builds_on: [knowledge-sad-l02-vocabulary]
+    summary: Absolute, relative, and cumulative frequencies organize raw observations; bin choices and
+      scale can change the visual claim a histogram appears to make.
+    builds_on:
+    - knowledge-sad-l02-vocabulary
   - id: knowledge-sad-l02-location
     title: Location, quantiles, and boxplots
-    summary: Mean, median, mode, quantiles, and five-number summaries describe where data lie and support a
-      compact comparison of skew and outliers.
-    builds_on: [knowledge-sad-l02-scales, knowledge-sad-l02-frequencies]
+    summary: Mean, median, mode, quantiles, and five-number summaries describe where data lie and support
+      a compact comparison of skew and outliers.
+    builds_on:
+    - knowledge-sad-l02-scales
+    - knowledge-sad-l02-frequencies
   - id: knowledge-sad-l02-dispersion
     title: Range, variance, standard deviation, and divisors
     summary: Dispersion measures complement location; population variance divides by n, while the familiar
       sample estimator uses n-1 for a later inferential reason.
-    builds_on: [knowledge-sad-l02-location]
+    builds_on:
+    - knowledge-sad-l02-location
   - id: knowledge-sad-l02-simpson
     title: Aggregation and Simpson's paradox
-    summary: A trend can reverse after groups are combined because group sizes and hidden variables alter the
-      weighting; stratification is part of interpretation, not cosmetic reporting.
-    builds_on: [knowledge-sad-l02-frequencies]
+    summary: A trend can reverse after groups are combined because group sizes and hidden variables alter
+      the weighting; stratification is part of interpretation, not cosmetic reporting.
+    builds_on:
+    - knowledge-sad-l02-frequencies
   - id: knowledge-sad-l02-sampling
     title: Representative samples and sampling bias
-    summary: Randomness, coverage, nonresponse, survivorship, and convenience sampling decide whether a
-      descriptive result can support a population claim.
-    builds_on: [knowledge-sad-l02-vocabulary, knowledge-sad-l02-simpson]
+    summary: Randomness, coverage, nonresponse, survivorship, and convenience sampling decide whether
+      a descriptive result can support a population claim.
+    builds_on:
+    - knowledge-sad-l02-vocabulary
+    - knowledge-sad-l02-simpson
 scope_sources:
 - source_id: source-sad-ss26-lectures
   authority: slides
@@ -55,4 +63,6 @@ source_selections: []
 artifacts:
   ultimate_reference: note-sad-l02-descriptive-basics
   exercise_bank: note-sad-l02-exercise-bank
-workspace_ids: [workspace-m2-exam-prep]
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-sad-l02

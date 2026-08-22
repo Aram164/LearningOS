@@ -7,7 +7,7 @@ order: 1
 scope: Current 2026 L01 deck; ML definitions and course orientation, historical milestones as a concept
   map, datasets/features/labels, learning tasks, train/test reasoning, MNIST/Iris examples, and the linear-algebra/tooling
   prerequisite shelf.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture moves from the historical motivation for machine learning to the vocabulary needed
     to formulate a learning problem, then identifies the mathematical and tooling prerequisites used later.
@@ -49,3 +49,4 @@ workspace_ids:
 - workspace-aml-exam-prep
 related_module_ids:
 - module-hu-m2-statistik-analysis
+current_study_map: study-map-aml-l01

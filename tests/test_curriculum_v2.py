@@ -1459,8 +1459,13 @@ def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root)
         unit = repo.units[uid].data
         knowledge_map = unit.get("knowledge_map")
         assert knowledge_map and knowledge_map["nodes"], f"{uid} has no knowledge map"
-        assert "current_study_map" not in unit
-        assert not (module_dir / f"units/{uid}/study-map.yaml").exists()
+        # Until 2026-08-22 these two lines asserted the opposite: that a
+        # lecture carrying a knowledge map and a complete menu had *no* study
+        # map. That was the policy, and it left sixteen SaD units with nothing
+        # to work through. OPERATOR.md rule 6 now says a unit of an enrolled
+        # module owes an ordered map, so the assertion inverts with it.
+        assert unit.get("current_study_map"), f"{uid} owes a study map"
+        assert (module_dir / f"units/{uid}/study-map.yaml").exists()
         node_ids_by_unit[uid] = {node["id"] for node in knowledge_map["nodes"]}
 
     source_map = yaml.safe_load(

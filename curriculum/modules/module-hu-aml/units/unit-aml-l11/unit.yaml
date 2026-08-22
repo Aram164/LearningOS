@@ -8,7 +8,7 @@ scope: Current 2026 L11 deck; words and tokens, static and contextual embeddings
   simplified and Q/K/V multi-head attention, positional information, Transformer blocks with residual
   connections and layer normalization, cross-entropy training, and the bonus parallelization/causal-masking
   section. RNNs, GRUs and LSTMs are not in the 2026 lecture.
-status: not-started
+status: ready
 knowledge_map:
   summary: The lecture starts from next-token prediction, turns tokens into contextual representations
     through attention, assembles the Transformer block, and returns to language-model training with the
@@ -86,3 +86,4 @@ artifacts:
   - note-aml-sad-master-wiring
 workspace_ids:
 - workspace-aml-exam-prep
+current_study_map: study-map-aml-l11

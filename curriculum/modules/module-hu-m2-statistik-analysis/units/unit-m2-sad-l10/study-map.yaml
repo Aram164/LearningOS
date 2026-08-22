@@ -1,0 +1,566 @@
+id: study-map-m2-sad-l10
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l10
+status: not-started
+current_stage: stage-sad-l10-test-model
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l10-test-model
+  number: 1
+  title: Null model, alternative, statistic, and reference distribution
+  status: pending
+  objective: A test specifies a falsifiable null, an alternative, a statistic computed from the sample,
+    and the statistic's distribution if the null were true.
+  done_when:
+  - 'Reproduce without notes: A test specifies a falsifiable null, an alternative, a statistic computed
+    from the sample, and the statistic''s distribution if the null were true.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5, UE6, and UE7 — testing and permutation test
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
+      tails, p-value interpretation, decision wording, and nonparametric logic.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 statistical-significance deck
+    source_id: source-sad-2025-recordings
+    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
+      and statistical significance; use after the current deck for a blocked interpretation, not as a
+      separate syllabus.
+    vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 10–11 — testing drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
+      rejection/p-value argument without skipping interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 5–7 — tests by data type
+    source_id: source-openintro-statistics
+    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
+      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — hypothesis-testing exercises
+    source_id: source-dekking-mips
+    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
+      after the course and German exam banks.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — hypothesis-testing notes and solved exams
+    source_id: source-mit-1805
+    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
+      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
+    source_id: source-mit-18650
+    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
+      logic is secure; broader than the M2 exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — t tests, p-values, and decisions
+    source_id: source-fau-klausur-ws1415
+    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
+      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
+      local exam-format test practice.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — testing block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
+      mean/categorical tests, and interpretation in German exam format.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — hypothesis tests and p-values
+    source_id: source-statquest
+    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values; One- or Two-Tailed p-values
+      — A targeted interpretation set for null hypotheses, calculated p-values, and one- versus two-tailed
+      evidence; use the deck for the complete test taxonomy.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — hypothesis-testing calculations
+    source_id: source-jbstatistics
+    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
+      p-value walkthroughs for mean/proportion tests.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Hypothesentests
+    source_id: source-kurzes-tutorium-statistik
+    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
+      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — hypothesis-testing walkthroughs
+    source_id: source-brandon-foltz
+    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
+      statistic, critical value, and conclusion written explicitly.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-tails-pvalue
+  number: 2
+  title: Tails, critical regions, and p-values
+  status: pending
+  objective: The alternative determines one- versus two-sided evidence; a p-value is the null probability
+    of a result at least as extreme, not the probability that the null is true.
+  done_when:
+  - 'Reproduce without notes: The alternative determines one- versus two-sided evidence; a p-value is
+    the null probability of a result at least as extreme, not the probability that the null is true.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5, UE6, and UE7 — testing and permutation test
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
+      tails, p-value interpretation, decision wording, and nonparametric logic.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 statistical-significance deck
+    source_id: source-sad-2025-recordings
+    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
+      and statistical significance; use after the current deck for a blocked interpretation, not as a
+      separate syllabus.
+    vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 10–11 — testing drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
+      rejection/p-value argument without skipping interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 5–7 — tests by data type
+    source_id: source-openintro-statistics
+    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
+      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — hypothesis-testing exercises
+    source_id: source-dekking-mips
+    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
+      after the course and German exam banks.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — hypothesis-testing notes and solved exams
+    source_id: source-mit-1805
+    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
+      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    scope_triage: helpful-now
+  - kind: practise
+    label: FAU solved exam — t tests, p-values, and decisions
+    source_id: source-fau-klausur-ws1415
+    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
+      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
+      local exam-format test practice.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — testing block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
+      mean/categorical tests, and interpretation in German exam format.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — hypothesis tests and p-values
+    source_id: source-statquest
+    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values; One- or Two-Tailed p-values
+      — A targeted interpretation set for null hypotheses, calculated p-values, and one- versus two-tailed
+      evidence; use the deck for the complete test taxonomy.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — hypothesis-testing calculations
+    source_id: source-jbstatistics
+    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
+      p-value walkthroughs for mean/proportion tests.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Hypothesentests
+    source_id: source-kurzes-tutorium-statistik
+    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
+      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — hypothesis-testing walkthroughs
+    source_id: source-brandon-foltz
+    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
+      statistic, critical value, and conclusion written explicitly.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-errors-power
+  number: 3
+  title: Type I error, Type II error, and power
+  status: pending
+  objective: Alpha controls false rejection under the null, beta describes missed effects under an alternative,
+    and power depends on effect size, noise, sample size, and the decision threshold.
+  done_when:
+  - 'Reproduce without notes: Alpha controls false rejection under the null, beta describes missed effects
+    under an alternative, and power depends on effect size, noise, sample size, and the decision threshold.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5, UE6, and UE7 — testing and permutation test
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
+      tails, p-value interpretation, decision wording, and nonparametric logic.
+    scope_triage: required-now
+  - kind: reference
+    label: 2025 statistical-significance deck
+    source_id: source-sad-2025-recordings
+    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
+      and statistical significance; use after the current deck for a blocked interpretation, not as a
+      separate syllabus.
+    vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
+    scope_triage: reference-only
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — hypothesis-testing notes and solved exams
+    source_id: source-mit-1805
+    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
+      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
+    source_id: source-mit-18650
+    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
+      logic is secure; broader than the M2 exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — t tests, p-values, and decisions
+    source_id: source-fau-klausur-ws1415
+    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
+      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
+      local exam-format test practice.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-z-t
+  number: 4
+  title: z and t tests for means
+  status: pending
+  objective: Standardized mean differences use z when variance assumptions justify it and t when variance
+    is estimated; paired and independent designs require different standard errors.
+  done_when:
+  - 'Reproduce without notes: Standardized mean differences use z when variance assumptions justify it
+    and t when variance is estimated; paired and independent designs require different standard errors.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5, UE6, and UE7 — testing and permutation test
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
+      tails, p-value interpretation, decision wording, and nonparametric logic.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 10–11 — testing drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
+      rejection/p-value argument without skipping interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 5–7 — tests by data type
+    source_id: source-openintro-statistics
+    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
+      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — hypothesis-testing exercises
+    source_id: source-dekking-mips
+    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
+      after the course and German exam banks.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — hypothesis-testing notes and solved exams
+    source_id: source-mit-1805
+    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
+      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
+    source_id: source-mit-18650
+    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
+      logic is secure; broader than the M2 exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: FAU solved exam — t tests, p-values, and decisions
+    source_id: source-fau-klausur-ws1415
+    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
+      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
+      local exam-format test practice.
+    scope_triage: helpful-now
+  - kind: practise
+    label: External German solved exams — testing block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
+      mean/categorical tests, and interpretation in German exam format.
+    scope_triage: helpful-now
+  - kind: watch
+    label: jbstatistics — hypothesis-testing calculations
+    source_id: source-jbstatistics
+    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
+      p-value walkthroughs for mean/proportion tests.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Kurzes Tutorium Statistik — Hypothesentests
+    source_id: source-kurzes-tutorium-statistik
+    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
+      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    scope_triage: helpful-now
+  - kind: watch
+    label: Brandon Foltz — hypothesis-testing walkthroughs
+    source_id: source-brandon-foltz
+    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
+      statistic, critical value, and conclusion written explicitly.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-ci-duality
+  number: 5
+  title: Confidence intervals and test duality
+  status: pending
+  objective: A two-sided level-alpha test rejects exactly the parameter values outside the matching 1-alpha
+    confidence interval under the same assumptions.
+  done_when:
+  - 'Reproduce without notes: A two-sided level-alpha test rejects exactly the parameter values outside
+    the matching 1-alpha confidence interval under the same assumptions.'
+  exam_critical: true
+  concepts:
+  - concept-statistical-estimation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-chi-square
+  number: 6
+  title: Chi-square tests for categorical data
+  status: pending
+  objective: Observed and expected counts support goodness-of-fit and independence tests, with degrees
+    of freedom and count-size assumptions controlling the reference approximation.
+  done_when:
+  - 'Reproduce without notes: Observed and expected counts support goodness-of-fit and independence tests,
+    with degrees of freedom and count-size assumptions controlling the reference approximation.'
+  - Work Arbeitsbuch Chapters 10–11 — testing drills, then the remaining 2, and record every miss with
+    the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 10–11 — testing drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
+      rejection/p-value argument without skipping interpretation.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro Chapters 5–7 — tests by data type
+    source_id: source-openintro-statistics
+    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
+      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — hypothesis-testing exercises
+    source_id: source-dekking-mips
+    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
+      after the course and German exam banks.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — hypothesis-testing notes and solved exams
+    source_id: source-mit-1805
+    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
+      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    scope_triage: helpful-now
+  - kind: reference
+    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
+    source_id: source-mit-18650
+    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
+      logic is secure; broader than the M2 exam.
+    scope_triage: reference-only
+  - kind: practise
+    label: External German solved exams — testing block
+    source_id: source-sad-klausuren-extern
+    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
+      mean/categorical tests, and interpretation in German exam format.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-nonparametric
+  number: 7
+  title: Rank and permutation tests
+  status: pending
+  objective: Rank tests reduce distributional assumptions, while permutation tests construct a null distribution
+    from exchangeability by reassigning labels.
+  done_when:
+  - 'Reproduce without notes: Rank tests reduce distributional assumptions, while permutation tests construct
+    a null distribution from exchangeability by reassigning labels.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 5, UE6, and UE7 — testing and permutation test
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
+      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
+      tails, p-value interpretation, decision wording, and nonparametric logic.
+    scope_triage: required-now
+  - kind: read
+    label: Fahrmeir Chapters 10–11 — hypothesis tests
+    source_id: source-fahrmeir-statistik
+    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
+      categorical tests, nonparametric alternatives, and test selection.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Arbeitsbuch Chapters 10–11 — testing drills
+    source_id: source-fahrmeir-arbeitsbuch
+    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
+      rejection/p-value argument without skipping interpretation.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l10-multiple
+  number: 8
+  title: Multiple testing and false discoveries
+  status: pending
+  objective: Repeating tests inflates the chance of at least one false positive; family-wise and false-discovery
+    controls answer different error-management questions.
+  done_when:
+  - 'Reproduce without notes: Repeating tests inflates the chance of at least one false positive; family-wise
+    and false-discovery controls answer different error-management questions.'
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L10 hypothesis-testing deck
+    source_id: source-sad-ss26-lectures
+    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
+      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
+      duality, and multiple testing.
+    scope_triage: required-now
+  - kind: read
+    label: ISLP Ch 13 - the multiple-testing slide worked out with labs and exercises
+    source_id: source-islp
+    locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni
+      and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599)
+      — L10's closing slides name family-wise error and false discoveries and stop; this chapter separates
+      the two error-management questions, gives Bonferroni and Holm for FWER and Benjamini-Hochberg for
+      FDR, and ends with a lab and exercise set - the only registered practice for the node.
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
+  attachments: []
+  source_feedback: []
