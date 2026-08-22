@@ -8,9 +8,8 @@ this module.  It is reached only through ``los job-dashboard
 from __future__ import annotations
 
 import json
-import os
 import re
-import subprocess
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 import yaml
@@ -20,9 +19,11 @@ from ..transactions import artifact_revision
 from .job_boundary import (
     READABLE_ROOTS,
     JobDashboardError,
+    component_freshness,
     job_fingerprint,
     job_root,
     safe_job_path,
+    stratum_component_changed,
 )
 from .support import _fresh_manifest, _root
 
@@ -116,34 +117,11 @@ def _note_summary(body: str) -> str:
     return _first_paragraph(tail)
 
 
-def _git_changed(repo: Path, revision: str, component: str) -> bool | None:
-    """Has *component* moved since *revision*? Asked without touching the repo.
-
-    The Stratum checkout is strictly read-only (Aram's standing rule): nothing
-    may change there in any shape or form. A plain ``git diff`` still refreshes
-    ``.git/index`` as a stat cache, which is a write to a repository we have no
-    permission to write to. ``GIT_OPTIONAL_LOCKS=0`` tells git to skip every
-    lock and index refresh it would otherwise take for a read command, so drift
-    detection observes the checkout without leaving a trace in it.
-    """
-    if not revision or not component:
-        return None
-    try:
-        result = subprocess.run(
-            ["git", "diff", "--quiet", revision, "--", component],
-            cwd=repo,
-            capture_output=True,
-            timeout=10,
-            check=False,
-            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    if result.returncode == 0:
-        return False
-    if result.returncode == 1:
-        return True
-    return None
+# Drift detection now lives on the Job boundary, so the note surface, the plan
+# surface and the offline checker all ask the checkout the same question in the
+# same way. Kept as a module-level alias because this name is how the command
+# module has always referred to it.
+_git_changed = stratum_component_changed
 
 
 #: Stratum's own pipeline, capture → run. `notes/README.md` already groups the
@@ -208,20 +186,13 @@ def _note_record(path: Path, job_root: Path) -> dict | None:
     revision = verified.split()[0] if verified else ""
     component = str(meta.get("component") or "").strip()
     declared = str(meta.get("status") or meta.get("state") or "reference").strip()
-    changed = _git_changed(job_root / "stratum", revision, component) if kind == "stratum" else None
-    if declared == "stale":
-        freshness = "stale"
-    elif changed is True:
-        freshness = "drifting"
-    elif changed is False:
-        freshness = "current"
-    elif kind == "stratum" and component:
-        # A missing/invalid revision or an unreadable checkout is not evidence
-        # that a code note is current. Report the uncertainty instead of
-        # falling back to a hand-written `current` label.
-        freshness = "unverified"
-    else:
-        freshness = declared
+    changed = (
+        stratum_component_changed(job_root / "stratum", revision, component)
+        if kind == "stratum" else None
+    )
+    freshness = component_freshness(
+        declared, changed, stamped=(kind == "stratum" and bool(component))
+    )
     concepts = [str(item) for item in (meta.get("concepts") or []) if str(item).strip()]
     family = next((item.removesuffix("-family") for item in concepts if item.endswith("-family")), "")
     return {
@@ -333,6 +304,11 @@ def _legacy_stage(number: int, title: str, concept: str, source: str,
         "job_context": {
             "mental_models": ([{"label": "Mental model", "text": concept}] if concept else []),
             "read_only_anchor": anchor,
+            # Legacy Markdown plans carry no stamp, so their anchors report
+            # `unverified` rather than borrowing a freshness they never earned.
+            "component": [],
+            "verified_against": "",
+            "freshness": "unverified" if anchor else "",
         },
     }
 
@@ -356,7 +332,32 @@ def _structured_resource(value: object, stage_id: str) -> dict:
     }
 
 
-def _structured_stage(value: object) -> dict:
+def _stage_freshness_resolver(job_root: Path) -> Callable[[Sequence[str], str], str]:
+    """One drift question per distinct (component, revision) pair, per build.
+
+    Ninety-one stages can easily point at a few dozen distinct source files, and
+    every uncached lookup is a `git diff` subprocess. The cache is created per
+    dashboard build rather than held on the module so that a long-lived process
+    (or a test) cannot serve an answer from a checkout that has since moved.
+    """
+    repo = job_root / "stratum"
+    cache: dict[tuple[tuple[str, ...], str], str] = {}
+
+    def resolve(component: Sequence[str], verified: str) -> str:
+        key = (tuple(component), verified)
+        if key not in cache:
+            revision = verified.split()[0] if verified else ""
+            changed = stratum_component_changed(repo, revision, component)
+            # `stamped` is true whenever the stage names source files: those
+            # are a checkable claim, so an unanswerable question is
+            # `unverified` rather than a silent pass.
+            cache[key] = component_freshness("", changed, stamped=bool(key[0]))
+        return cache[key]
+
+    return resolve
+
+
+def _structured_stage(value: object, freshness: Callable[[str, str], str]) -> dict:
     if not isinstance(value, dict):
         raise JobDashboardError("learning plan has an invalid stage")
     stage_id = str(value.get("id") or "").strip()
@@ -381,6 +382,11 @@ def _structured_stage(value: object) -> dict:
         text = str(model.get("text") or "").strip()
         if label and text:
             models.append({"label": label, "text": text})
+    anchor = str(context.get("read_only_anchor") or "").strip()
+    component = [
+        str(item).strip() for item in (context.get("component") or []) if str(item).strip()
+    ]
+    verified = str(context.get("verified_against") or "").strip()
     estimate = value.get("estimate_minutes")
     return {
         "id": stage_id,
@@ -401,7 +407,16 @@ def _structured_stage(value: object) -> dict:
         "source_feedback": list(value.get("source_feedback") or []),
         "job_context": {
             "mental_models": models,
-            "read_only_anchor": str(context.get("read_only_anchor") or "").strip(),
+            "read_only_anchor": anchor,
+            "component": component,
+            "verified_against": verified,
+            # Computed, never authored. A stage that names components gets the
+            # same treatment a Stratum note gets: the checkout is asked, and an
+            # unanswerable question reports `unverified` rather than `current`.
+            # A stage whose anchor names no source file at all — the git track
+            # anchors are about git commands, not code — reports nothing, because
+            # there is nothing that could drift.
+            "freshness": freshness(component, verified) if component else "",
         },
     }
 
@@ -475,10 +490,11 @@ def _structured_track(
         raise JobDashboardError(f"learning plan {path.name} needs id and title")
     stages = []
     seen: set[int] = set()
+    freshness = _stage_freshness_resolver(job_root)
     rows = data.get("stages") if version == 2 else data.get("sessions")
     for row in rows or []:
         if version == 2:
-            stage = _structured_stage(row)
+            stage = _structured_stage(row, freshness)
         elif isinstance(row, dict):
             stage = _legacy_stage(
                 row.get("number"),

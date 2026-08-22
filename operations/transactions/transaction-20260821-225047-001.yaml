@@ -1,0 +1,26 @@
+schema_version: 1
+id: transaction-20260821-225047-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-21T22:50:47+02:00'
+snapshot_before: sha256:f120daad8eedb0029305a28fd93cdb8929e9717012aa02e129d40e81d48b963c
+snapshot_after: sha256:8b2185c087f614105e7db3aa30960d4882b146dff1b4694df44147e90dc33e1f
+expected_revisions: {}
+artifact_revisions:
+  study-map-m2-sad-exam-prep:
+    before: 0
+    after: 1
+  unit-m2-sad-exam-prep:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  sha256_before: af7bb6669db15138ad089be48050291a21371f2291d4191411e4c9c1a6d7dd08
+  sha256_after: 70cdae49792cd0e680276f73c6775df38437e615be93dcba313c2b8bbfb5a8d6
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml
+  sha256_before: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  sha256_after: 82d031f2848daa92b6b4770503a52fe835112532c709e8de03a98601645acda8
+  created: false
+metadata: {}

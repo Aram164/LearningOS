@@ -15,7 +15,9 @@ PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYT
 .PHONY: help check views materials inventory verify-materials contract test test-fast all setup garden status
 
 help:
-	@echo "make check  - validate the repository (schemas + semantic rules)"
+	@echo "make check  - validate the repository (schemas + semantic rules), then check"
+	@echo "                the Job plans against the world they point at (anchors, vault"
+	@echo "                paths, concept ids, anchor drift). Silent when Job is absent."
 	@echo "make views  - rebuild everything under generated/ (the dashboards)"
 	@echo "make status - one-screen repository state (tools/los.py; --json for machines)"
 	@echo "make materials - rebuild the materials catalogue (materials/README.md + FILES.txt;"
@@ -34,6 +36,7 @@ help:
 
 check:
 	$(PY) tools/validate.py
+	$(PY) tools/check_job_plans.py --quiet
 
 status:
 	$(PY) tools/los.py status

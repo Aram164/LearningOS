@@ -2,7 +2,7 @@ id: module-hu-ppds
 institution: HU Berlin
 title: PPDS — Praktische Projektarbeit Datenbanksysteme (mlprov)
 semester: sose-2026
-status: enrolled
+status: archived
 examination:
   type: project
   notes: 'Project module: the mlprov provenance library (team project), submitted 2026-07-15. Taken as

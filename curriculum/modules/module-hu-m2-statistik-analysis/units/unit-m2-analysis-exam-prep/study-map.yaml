@@ -14,9 +14,9 @@ stages:
   title: Calibrate the script-led method and exam boundary
   status: pending
   objective: 'Keep Analysis independent from Statistics. Calibrate the script-led loop: 10-minute cold
-    diagnostic; at most 20 minutes of intuition support only if blocked; active pass through unser skript;
-    current HU tasks before external drills; proof repair only when it explains a failed application;
-    closed-book retrieval to finish.'
+    diagnostic; intuition support from the stage menu only when the diagnostic shows a block; active pass
+    through unser skript; current HU tasks before external drills; proof repair only when it explains
+    a failed application; closed-book retrieval to finish.'
   done_when:
   - 'Explain from memory how Wiederholung, Ausflug, and Exkurs change study priority: Wiederholung is
     required, Ausflug is exam-light application context, and Exkurs is not exam-relevant.'
@@ -25,7 +25,6 @@ stages:
   - Read the disclaimer in kleine_beweise.pdf and treat it as a repair list, not an exam prediction.
   - Complete one 20-minute cold sample from ana_inf_serieWV.pdf and start an error ledger classified as
     definition, theorem-condition, method-choice, algebra, or time error.
-  estimate_minutes: 60
   exam_critical: true
   concepts:
   - concept-proof-technique
@@ -46,6 +45,12 @@ stages:
     source_id: source-analysis-skript
     locator: 'ana_inf_serieWV.pdf: choose one subproblem from WV1.1-WV1.4'
     scope_triage: required-now
+  - kind: read
+    label: Maths220 — Proofs in Calculus — how a limit or series proof is actually written on paper
+    source_id: source-analysis-grundlagen-handouts
+    locator: Maths220_Proofs-in-Calculus.pdf (17 pp) — read alongside kleine_beweise to see the same arguments
+      written out
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md
   attachments: []
   source_feedback: []
@@ -63,7 +68,6 @@ stages:
     proof-drill time on it.
   - Pass a 15-minute closed-book gate containing one induction item, one sup/inf item, and one interval/absolute-value
     item.
-  estimate_minutes: 210
   exam_critical: true
   concepts:
   - concept-real-numbers
@@ -81,16 +85,70 @@ stages:
     source_id: source-analysis-skript
     locator: 'ana_inf_serie05.pdf: Aufgabe 5.4'
     scope_triage: required-now
-  - kind: reference
-    label: Prerequisite repair only when notation or relations block the script
-    source_id: source-analysis-grundlagen-handouts
-    locator: 'Mengen-und-Abbildungen.pdf and Relationen.pdf: exact missing subsection only'
+  - kind: practise
+    label: Fritzsche Kap. 1 — Die Sprache der Analysis — explained German solutions for the prerequisite
+      layer the script assumes
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §§1.1-1.4 (pp. 9-38); Lösungen in Kap. 5 Anhang from p. 253
     scope_triage: helpful-now
   - kind: practise
-    label: Gentle solved companion after the HU task
-    source_id: source-fritzsche-trainingsbuch
-    locator: 'Kapitel 1 - Sprache der Analysis: matching problems only'
+    label: Bestimmt_Scan.pdf — handwritten field and order axioms — the field and order axioms in handwriting,
+      if seeing them written helps
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Bestimmt_Scan.pdf (12 pp; scanned, weak text layer)
     scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Grundlagen p. 5, Übungsaufgaben p. 17'
+    scope_triage: helpful-now
+  - kind: read
+    label: Mengen und Abbildungen / Relationen handouts — the set and mapping language the script assumes
+      without building it
+    source_id: source-analysis-grundlagen-handouts
+    locator: Mengen-und-Abbildungen.pdf (22 pp), Relationen.pdf (9 pp) — targeted subsection only
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§1-9 — Induktion bis Punktmengen — terse but complete German solutions — per
+      its record, the exam points live here
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §1 Vollständige Induktion p. 11, §2 Körperaxiome p. 15, §3 Anordnungsaxiome
+      p. 18, §9 Punktmengen p. 31; Lösungen §1 p. 68, §2 p. 78, §3 p. 84, §9 p. 118
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 1-2 — Grundlagen und die reellen Zahlen — third bank, held back for when the others
+      are spent; Aufgaben and Lösungen in separate halves
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 1 Grundlagen p. 12 (Aussagen, Mengen, Abbildungen, vollständige Induktion),
+      Kap. 2 Die reellen Zahlen p. 19 (Körper, Anordnung, Intervalle, Dedekind-Vollständigkeit); Lösungen
+      Kap. 21 p. 130 and Kap. 22 p. 138
+    scope_triage: helpful-now
+  - kind: reference
+    label: Grieser — Analysis I — the German second voice — motivation, with Hinweise and Lösungen on
+      the exercises
+    source_id: source-grieser-analysis1
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Ch 0-1 (real numbers)
+    scope_triage: reference-only
+  - kind: reference
+    label: Mathematik für Informatiker (Teil 1-3) — no contextual evaluation registered — visibility debt,
+      repay on first use
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+      (669 pp); located by the 2026-08-03 coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: Mathe für Nicht-Freaks — Analysis 1 — no contextual evaluation registered — visibility debt,
+      repay on first use
+    source_id: source-mfnf-analysis1
+    locator: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf (383 pp); located by the 2026-08-03
+      coverage audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-an0/notes.md
   attachments: []
   source_feedback: []
@@ -108,7 +166,6 @@ stages:
   - Use kleine_beweise only to repair a failed theorem application, then explain the proof idea in three
     to five sentences rather than memorizing it.
   - Pass a 30-minute closed-book mixed sequence test and update the error ledger.
-  estimate_minutes: 360
   exam_critical: true
   concepts:
   - concept-sequences-convergence
@@ -126,26 +183,101 @@ stages:
     source_id: source-analysis-skript
     locator: ana_inf_serie05.pdf Aufgaben 5.1-5.3; ana_inf_serie06.pdf all; ana_inf_serie07.pdf all
     scope_triage: required-now
-  - kind: practise
-    label: Solved gap drills after the HU series
-    source_id: source-analysis-drill-blaetter-extern
-    locator: Grenzwerte-von-Folgen.pdf; Loesungen4.pdf; auf-2-2_Folgen_Loesungen.pdf
-    scope_triage: helpful-now
   - kind: watch
-    label: Optional intuition unlock - sequences only, maximum 20 minutes before returning to the script
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
     source_id: source-professor-leonard
-    locator: 'Calculus 2: Introduction to Sequences selection'
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche Kap. 2 — Der Grenzwertbegriff — explained German solutions across the whole convergence
+      chain in one sequence
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.1 Konvergenz p. 52; Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved sequence and series drill sheets (7 files) — repetition volume with solutions attached
+      — ten more of the same technique, not a new explanation
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Grenzwerte-von-Folgen.pdf (26 pp), auf-2-2_Folgen_Loesungen.pdf (30 pp), Loesungen4.pdf (3
+      pp), AS-Ana1.pdf sequence sections
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 10 Folgen und Reihen (§§10.1-10.5)'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1_Loesung.pdf — mixed solved bank — seven pages crossing the whole syllabus
+      — a mixed-topic check rather than a topic drill
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Aufgabensammlung-M1_Loesung.pdf (7 pp; Aufgabe 13 is the integration item)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg: the epsilon-N and rekursive-Folgen archetypes, with solutions'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Folgen p. 19, Übungsaufgaben p. 25'
     scope_triage: helpful-now
   - kind: reference
-    label: Optional rigorous second voice for one blocked theorem
+    label: MIT 18.100A — Real Analysis — full rigour, more than this exam needs; for a definition that
+      refuses to make sense
     source_id: source-mit-18100a
-    locator: Lectures 7-9 only
+    locator: Lectures 7-9 (sequences) only
+    scope_triage: reference-only
+  - kind: practise
+    label: Forster/Wessoly §§1-9 — Induktion bis Punktmengen — terse but complete German solutions — per
+      its record, the exam points live here
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §4 Folgen/Grenzwerte p. 20, §5 Vollständigkeitsaxiom p. 23,
+      §6 Wurzeln p. 24; Lösungen §4 p. 88, §5 p. 93, §6 p. 101
     scope_triage: helpful-now
   - kind: practise
-    label: Forster/Wessoly — fresh German reserve drill
-    source_id: source-forster-wessoly
-    locator: Folgen and convergence sections; topic-matched problems only
+    label: Deitmar Kap. 3 — Folgen und Reihen — fresh convergence problems in reserve, solutions in the
+      back half
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §3.1 Konvergenz p. 24, §3.2 Reihen p. 29; Lösungen Kap. 23 p. 142
     scope_triage: helpful-now
+  - kind: reference
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 2 (sequences and series)
+    scope_triage: reference-only
+  - kind: reference
+    label: Grieser — Analysis I — the German second voice — motivation, with Hinweise and Lösungen on
+      the exercises
+    source_id: source-grieser-analysis1
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Ch 2 (sequences)
+    scope_triage: reference-only
+  - kind: reference
+    label: Mathe für Nicht-Freaks — Analysis 1 — no contextual evaluation registered — visibility debt,
+      repay on first use
+    source_id: source-mfnf-analysis1
+    locator: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf (383 pp); located by the 2026-08-03
+      coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — Elementary Analysis — no contextual evaluation registered — visibility debt, repay on
+      first use
+    source_id: source-ross-elementary-analysis
+    locator: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf (416 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ana/notes.md
   attachments: []
   source_feedback: []
@@ -162,7 +294,6 @@ stages:
   - Treat §4.5 product series as a non-exam Exkurs and §4.4 rearrangements as an exam-light Ausflug.
   - Pass a 30-minute closed-book series classification test with no criterion chosen from surface appearance
     alone.
-  estimate_minutes: 270
   exam_critical: true
   concepts:
   - concept-series
@@ -178,21 +309,100 @@ stages:
     source_id: source-analysis-skript
     locator: Pd3szO-ana_inf_serie08.pdf Aufgaben 8.1-8.3; ana_inf_serieWV.pdf WV1.3
     scope_triage: required-now
-  - kind: practise
-    label: External solved drill after the HU tasks
-    source_id: source-analysis-drill-blaetter-extern
-    locator: KIT_Blatt-Reihen.pdf; Tutorium-Musterloesung-Reihen.pdf; auf-2-3_Reihen_Loesungen.pdf
-    scope_triage: helpful-now
   - kind: watch
-    label: Optional intuition unlock - introduction and geometric series only
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
     source_id: source-professor-leonard
-    locator: 'Calculus 2: Introduction to Series and Geometric Series selections'
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
     scope_triage: helpful-now
   - kind: practise
-    label: Forster/Wessoly — fresh German reserve drill
-    source_id: source-forster-wessoly
-    locator: Reihen and convergence-test sections; topic-matched problems only
+    label: Fritzsche Kap. 2 — Der Grenzwertbegriff — explained German solutions across the whole convergence
+      chain in one sequence
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.2 Unendliche Reihen p. 68; Lösungen from p. 253
     scope_triage: helpful-now
+  - kind: practise
+    label: Solved sequence and series drill sheets (7 files) — repetition volume with solutions attached
+      — ten more of the same technique, not a new explanation
+    source_id: source-analysis-drill-blaetter-extern
+    locator: KIT_Blatt-Reihen.pdf (4 pp), Tutorium-Musterloesung-Reihen.pdf (6 pp), auf-2-3_Reihen_Loesungen.pdf
+      (20 pp), AS-Ana1.pdf series sections
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: §10.6 Konvergenzkriterien für Reihen'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1_Loesung.pdf — mixed solved bank — seven pages crossing the whole syllabus
+      — a mixed-topic check rather than a topic drill
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Aufgabensammlung-M1_Loesung.pdf (7 pp; Aufgabe 13 is the integration item)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg: series-classification tasks, with solutions'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Reihen p. 26, Übungsaufgaben p. 31'
+    scope_triage: helpful-now
+  - kind: read
+    label: Maths220 — Proofs in Calculus — how a limit or series proof is actually written on paper
+    source_id: source-analysis-grundlagen-handouts
+    locator: Maths220_Proofs-in-Calculus.pdf (17 pp)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§1-9 — Induktion bis Punktmengen — terse but complete German solutions — per
+      its record, the exam points live here
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §7 Konvergenzkriterien für Reihen p. 26, §8 Exponentialreihe
+      p. 30; Lösungen §7 p. 106, §8 p. 114
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 3 — Folgen und Reihen — fresh convergence problems in reserve, solutions in the
+      back half
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §3.1 Konvergenz p. 24, §3.2 Reihen p. 29; Lösungen Kap. 23 p. 142
+    scope_triage: helpful-now
+  - kind: reference
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 2 (series, §2.7)
+    scope_triage: reference-only
+  - kind: reference
+    label: Grieser — Analysis I — the German second voice — motivation, with Hinweise and Lösungen on
+      the exercises
+    source_id: source-grieser-analysis1
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf §§2.5-2.6 (series)
+    scope_triage: reference-only
+  - kind: reference
+    label: Mathe für Nicht-Freaks — Analysis 1 — no contextual evaluation registered — visibility debt,
+      repay on first use
+    source_id: source-mfnf-analysis1
+    locator: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf (383 pp); located by the 2026-08-03
+      coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — Elementary Analysis — no contextual evaluation registered — visibility debt, repay on
+      first use
+    source_id: source-ross-elementary-analysis
+    locator: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf (416 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anb/notes.md
   attachments: []
   source_feedback: []
@@ -209,17 +419,11 @@ stages:
     assumption.
   - Pass a 35-minute closed-book test containing a piecewise-continuity problem, a one-sided limit, and
     an IVT/existence argument.
-  estimate_minutes: 300
   exam_critical: true
   concepts:
   - concept-limits-continuity
   scope_triage: required-now
   resources:
-  - kind: watch
-    label: Optional visual preview only when the cold diagnostic fails
-    source_id: source-3b1b-essence-of-calculus
-    locator: Limits/continuity selections; maximum 20 minutes
-    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 5 through §5.5
     source_id: source-analysis-skript
@@ -231,11 +435,106 @@ stages:
     locator: Pd3szO-ana_inf_serie08.pdf Aufgabe 8.4; ana_inf_serie09.pdf all; ana_inf_serieWV.pdf WV1.2
       and WV1.4
     scope_triage: required-now
-  - kind: practise
-    label: Direct continuity drills after the HU tasks
-    source_id: source-analysis-drill-blaetter-extern
-    locator: 'u10_Loesung.pdf: G31-G33, H37-H40'
+  - kind: watch
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
+    source_id: source-professor-leonard
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
     scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Essence of Calculus — the geometric picture of why the definition takes the shape
+      it does; no technique
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus episodes: derivative and chain rule, limits (with l''Hôpital), integration
+      and the fundamental theorem, Taylor series'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche Kap. 2 — Der Grenzwertbegriff — explained German solutions across the whole convergence
+      chain in one sequence
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: u10_Loesung.pdf — epsilon-delta continuity worked out — epsilon-delta continuity, power series
+      and exp written out in full
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'u10_Loesung.pdf (4 pp): G31-G33, H37-H40'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen (§11.4 Grenzwerte von Funktionen)'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1_Loesung.pdf — mixed solved bank — seven pages crossing the whole syllabus
+      — a mixed-topic check rather than a topic drill
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Aufgabensammlung-M1_Loesung.pdf (7 pp; Aufgabe 13 is the integration item)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg: Stetigkeitsparameter and Zwischenwertsatz tasks; Regensburg: the IVT proof task'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Stetigkeit p. 33, Übungsaufgaben p. 38'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang — Calculus — applied-first mechanics — what it computes before how it is constructed
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf (derivatives, limits) — reserve intuition
+    scope_triage: helpful-now
+  - kind: read
+    label: Maths220 — Proofs in Calculus — how a limit or series proof is actually written on paper
+    source_id: source-analysis-grundlagen-handouts
+    locator: Maths220_Proofs-in-Calculus.pdf (17 pp)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-14 — Stetigkeit, Logarithmus, Exponentialfunktion — hypothesis-checking
+      drilled on the continuity theorems, in Klausur vocabulary
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen/Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37; Lösungen §10 p. 124, §11 p. 127, §12 p. 132.
+      §§13-14 (komplexe Exponentialfunktion, trigonometrische Funktionen) go past the script.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 — Funktionen und Stetigkeit — continuity and the Exponentialfunktion as fresh
+      reserve problems
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §4.1 Stetige Funktionen p. 31, §4.2 Monotone Funktionen p. 34, §4.3 Die Exponentialfunktion
+      p. 35, §4.4 Anwendungen p. 36; Lösungen Kap. 24 p. 150. §4.5 Komplexe Zahlen is outside the script.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 4 (continuity)
+    scope_triage: reference-only
+  - kind: reference
+    label: Grieser — Analysis I — the German second voice — motivation, with Hinweise and Lösungen on
+      the exercises
+    source_id: source-grieser-analysis1
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Ch 3 (continuity)
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — Elementary Analysis — no contextual evaluation registered — visibility debt, repay on
+      first use
+    source_id: source-ross-elementary-analysis
+    locator: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf (416 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anc/notes.md
   attachments: []
   source_feedback: []
@@ -251,7 +550,6 @@ stages:
     limits needs stronger control.
   - Mark §5.8 power series as Exkurs and do not expand it into a second course.
   - Pass a 20-minute closed-book gate with one log/exp manipulation and one uniform-convergence diagnosis.
-  estimate_minutes: 150
   exam_critical: true
   concepts:
   - concept-uniform-convergence
@@ -264,15 +562,74 @@ stages:
     locator: 'unser skript.pdf: printed pp. 122-129 (PDF pp. 132-139); §5.8 Exkurs excluded'
     scope_triage: required-now
   - kind: practise
-    label: Explained companion exercises
+    label: Fritzsche Kap. 4 — Vertauschung von Grenzprozessen — German solution-backed Taylor, uniform
+      convergence and improper integrals in one chapter
     source_id: source-fritzsche-trainingsbuch
-    locator: 'Kapitel 4: gleichmäßige Konvergenz selection only'
+    locator: fritzsche.pdf §4.1 Gleichmäßige Konvergenz p. 189; Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: u10_Loesung.pdf — epsilon-delta continuity worked out — epsilon-delta continuity, power series
+      and exp written out in full
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'u10_Loesung.pdf (4 pp): the power-series and exp tasks'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: §12.2 Potenzreihen, §12.3 Exponential- und Logarithmusfunktion'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Funktionenfolgen p. 62, Übungsaufgaben p. 65'
     scope_triage: helpful-now
   - kind: reference
-    label: Optional rigorous repair for the pointwise/uniform distinction
+    label: MIT 18.100A — Real Analysis — full rigour, more than this exam needs; for a definition that
+      refuses to make sense
     source_id: source-mit-18100a
-    locator: Lectures 23-24 only
+    locator: Lectures 23-24 (pointwise vs uniform convergence) only
+    scope_triage: reference-only
+  - kind: practise
+    label: Forster/Wessoly §§10-14 — Stetigkeit, Logarithmus, Exponentialfunktion — hypothesis-checking
+      drilled on the continuity theorems, in Klausur vocabulary
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen/Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37; Lösungen §10 p. 124, §11 p. 127, §12 p. 132.
+      §§13-14 (komplexe Exponentialfunktion, trigonometrische Funktionen) go past the script.
     scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen — solved Taylor tasks in
+      German, paired with uniform convergence
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §21 Gleichmäßige Konvergenz p. 59, §22 Taylor-Reihen p. 61;
+      Lösungen §21 p. 192, §22 p. 195. §23 Fourier-Reihen is outside the script.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 — Funktionen und Stetigkeit — continuity and the Exponentialfunktion as fresh
+      reserve problems
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §4.1 Stetige Funktionen p. 31, §4.2 Monotone Funktionen p. 34, §4.3 Die Exponentialfunktion
+      p. 35, §4.4 Anwendungen p. 36; Lösungen Kap. 24 p. 150. §4.5 Komplexe Zahlen is outside the script.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §7.1 — Gleichmäßige Konvergenz — one short reserve set on the pointwise/uniform diagnosis
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §7.2 Potenzreihen
+      matches the script's §5.8 Exkurs; §7.3 Fourier-Reihen is out of scope.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 6 (uniform convergence)
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf §§6.1-6.2 (uniform convergence)
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-and/notes.md
   attachments: []
   source_feedback: []
@@ -288,38 +645,115 @@ stages:
   - Treat §§6.2 and 6.6 as non-exam Exkurse and §6.4 as an exam-light Ausflug; retain §6.7 higher derivatives.
   - Pass a 40-minute closed-book test with derivative-from-definition, MVT, extrema/monotonicity, and
     l'Hospital items.
-  estimate_minutes: 330
   exam_critical: true
   concepts:
   - concept-differentiation
   scope_triage: required-now
   resources:
-  - kind: watch
-    label: Optional intuition unlock for derivative or MVT only
-    source_id: source-professor-leonard
-    locator: 'Calculus 1: definition of derivative and Mean Value Theorem selections'
-    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 6 core before Taylor
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §§6.1, 6.3-6.5, and 6.7; printed pp. 137-167 (PDF pp. 147-177); §§6.2
       and 6.6 excluded'
     scope_triage: required-now
-  - kind: practise
-    label: Targeted solved calculations after the script examples
-    source_id: source-analysis-drill-blaetter-extern
-    locator: 'IngMath2_Aufgaben.pdf: Ch. 13 and §§14.1-14.2; AS-Ana1.pdf: matching differentiation tasks'
+  - kind: watch
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
+    source_id: source-professor-leonard
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Essence of Calculus — the geometric picture of why the definition takes the shape
+      it does; no technique
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus episodes: derivative and chain rule, limits (with l''Hôpital), integration
+      and the fundamental theorem, Taylor series'
     scope_triage: helpful-now
   - kind: practise
-    label: Gentle German companion when the external collection is too terse
+    label: Fritzsche Kap. 3 — Der Calculus — differentiation and integration drilled as one chapter, solution
+      reasoning written out
     source_id: source-fritzsche-trainingsbuch
-    locator: 'Kapitel 3: Differenzierbarkeit and Mittelwertsatz selections'
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126; Lösungen
+      from p. 253
     scope_triage: helpful-now
   - kind: practise
-    label: Forster/Wessoly — fresh German reserve drill
-    source_id: source-forster-wessoly
-    locator: Differentiability, mean-value theorem, and l'Hospital sections
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare Funktionen, §14.1 Mittelwertsätze, §14.2
+      Regeln von de l''Hospital, §14.4 Kurvendiskussion'
     scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1_Loesung.pdf — mixed solved bank — seven pages crossing the whole syllabus
+      — a mixed-topic check rather than a topic drill
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Aufgabensammlung-M1_Loesung.pdf (7 pp; Aufgabe 13 is the integration item)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
+    source_id: source-analysis-klausuren-extern
+    locator: 'Regensburg: the MVT contradiction task; Paderborn: its differentiation items — the only
+      Ch 6 exam tasks in the bank'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Differenzierbarkeit p. 39, Übungsaufgaben p. 49'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang — Calculus — applied-first mechanics — what it computes before how it is constructed
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf-ch04.pdf (derivatives and their applications) — reserve intuition
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§15-20 — Differentiation und Riemann-Integral — solved German drill for the
+      Ch 6-7 core, in the notation a German exam uses
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema/Mittelwertsatz/Konvexität
+      p. 45; Lösungen §15 p. 150, §16 p. 156
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5-6 — Differential- und Integralrechnung — fresh German Ch 6-7 problems — the
+      book that was in the menu and in no stage
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §5.1 Differenzierbarkeit p. 38, §5.2 Lokale Extrema/Mittelwertsatz p. 39, §5.3
+      de l'Hospital p. 42; Lösungen Kap. 25 p. 158
+    scope_triage: helpful-now
+  - kind: reference
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 5 (differentiation)
+    scope_triage: reference-only
+  - kind: reference
+    label: Grieser — Analysis I — the German second voice — motivation, with Hinweise and Lösungen on
+      the exercises
+    source_id: source-grieser-analysis1
+    locator: Topic-matched; exercises carry Hinweise + Lösungen
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Ch 4 (differentiation)
+    scope_triage: reference-only
+  - kind: reference
+    label: 'Thomas'' Calculus: Early Transcendentals — no contextual evaluation registered — visibility
+      debt, repay on first use'
+    source_id: source-thomas-calculus
+    locator: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf (1205 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: 'Stewart — Calculus: Early Transcendentals (8th ed.) — no contextual evaluation registered
+      — visibility debt, repay on first use'
+    source_id: source-stewart-calculus
+    locator: material://source-stewart-calculus/Stewart.pdf (1404 pp); located by the 2026-08-03 coverage
+      audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ane/notes.md
   attachments: []
   source_feedback: []
@@ -329,38 +763,75 @@ stages:
   objective: Make Taylor polynomials, the remainder/error bound, and approximation useable from §6.8;
     keep §6.9 excluded and §6.10 at Ausflug overview depth.
   done_when:
+  - 'Note before drilling: no current HU sheet reaches §6.8, so every Taylor exercise on this stage is
+    a substitute — each is listed with the exact section it lives in.'
   - Construct Taylor polynomials through at least order three at a general expansion point.
   - Use the script's remainder statement to bound an approximation error and to evaluate one limit.
   - Explain the interpolation Ausflug's purpose and workflow without turning it into a full numerical-analysis
     unit.
   - Pass a 30-minute closed-book Taylor/error-bound test.
-  estimate_minutes: 210
   exam_critical: true
   concepts:
   - concept-taylor-series
   - concept-differentiation
   scope_triage: required-now
   resources:
-  - kind: watch
-    label: Optional visual preview for Taylor approximation
-    source_id: source-3b1b-essence-of-calculus
-    locator: Taylor-series selection; maximum 20 minutes
-    scope_triage: helpful-now
   - kind: read
     label: Main source - Taylor and interpolation boundary
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §6.8 and §6.10, printed pp. 168-190 (PDF pp. 178-200); §6.9 Exkurs excluded'
     scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
+    source_id: source-professor-leonard
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Essence of Calculus — the geometric picture of why the definition takes the shape
+      it does; no technique
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus episodes: derivative and chain rule, limits (with l''Hôpital), integration
+      and the fundamental theorem, Taylor series'
+    scope_triage: helpful-now
   - kind: practise
-    label: Solved Taylor and curve-analysis tasks
+    label: Fritzsche Kap. 4 — Vertauschung von Grenzprozessen — German solution-backed Taylor, uniform
+      convergence and improper integrals in one chapter
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §4.2 Die Taylorentwicklung p. 200; Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
     source_id: source-analysis-drill-blaetter-extern
-    locator: 'IngMath2_Aufgaben.pdf: §14.3 and selected §14.4 tasks'
+    locator: 'IngMath2_Aufgaben.pdf: §14.3 Der Satz von Taylor, plus §14.4 Kurvendiskussion tasks that
+      use it'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Satz von Taylor pp. 47-48, Übungsaufgaben pp. 49-50'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang — Calculus — applied-first mechanics — what it computes before how it is constructed
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch10.pdf (infinite series and Taylor), with guide_ch10.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen — solved Taylor tasks in
+      German, paired with uniform convergence
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §21 Gleichmäßige Konvergenz p. 59, §22 Taylor-Reihen p. 61;
+      Lösungen §21 p. 192, §22 p. 195. §23 Fourier-Reihen is outside the script.
     scope_triage: helpful-now
   - kind: reference
-    label: Gentle alternative explanation
-    source_id: source-strang-calculus
-    locator: 'Chapter 10: Taylor/infinite-series selection only'
-    scope_triage: helpful-now
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf §4.3 (Taylor)
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anf/notes.md
   attachments: []
   source_feedback: []
@@ -376,37 +847,116 @@ stages:
     decisions.
   - Treat §7.4 numerical integration as a non-exam Exkurs.
   - Pass a 40-minute closed-book integration test and explain one density-CDF cross-wire to the SaD half.
-  estimate_minutes: 330
   exam_critical: true
   concepts:
   - concept-riemann-integral
   scope_triage: required-now
   resources:
-  - kind: watch
-    label: Optional intuition unlock for the fundamental theorem
-    source_id: source-professor-leonard
-    locator: 'Calculus 2: Fundamental Theorem of Calculus selection'
-    scope_triage: helpful-now
   - kind: read
     label: Main source - Chapter 7 core
     source_id: source-analysis-skript
     locator: 'unser skript.pdf: §§7.1-7.3, printed pp. 191-214 (PDF pp. 201-224); §7.4 Exkurs excluded'
     scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1/2 — video pace — the computation done in full where the script
+      compresses it to a result
+    source_id: source-professor-leonard
+    locator: 'Topic-matched selections: Calculus 1 (limits and continuity, the derivative, Mittelwertsatz,
+      l''Hospital, the definite integral and FTC); Calculus 2 (integration techniques, improper integrals,
+      sequences, series and convergence tests, Taylor and power series)'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Essence of Calculus — the geometric picture of why the definition takes the shape
+      it does; no technique
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus episodes: derivative and chain rule, limits (with l''Hôpital), integration
+      and the fundamental theorem, Taylor series'
+    scope_triage: helpful-now
   - kind: practise
-    label: Solved Riemann/integration/improper-integral tasks
+    label: Fritzsche Kap. 3 — Der Calculus — differentiation and integration drilled as one chapter, solution
+      reasoning written out
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159;
+      Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche Kap. 4 — Vertauschung von Grenzprozessen — German solution-backed Taylor, uniform
+      convergence and improper integrals in one chapter
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §4.4 Uneigentliche Integrale p. 225; Lösungen from p. 253
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
     source_id: source-analysis-drill-blaetter-extern
-    locator: 'IngMath2_Aufgaben.pdf: Ch. 16-18 selections; Aufgabensammlung-M1_Loesung.pdf: Aufgabe 13'
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 16-17 Riemann-Integral und Integrationstechniken, Kap. 18 Uneigentliche
+      Integrale'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1_Loesung.pdf — mixed solved bank — seven pages crossing the whole syllabus
+      — a mixed-topic check rather than a topic drill
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'Aufgabensammlung-M1_Loesung.pdf: Aufgabe 13 (integration)'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
+    source_id: source-analysis-klausuren-extern
+    locator: 'Regensburg: Hauptsatz state-and-prove plus partielle Integration; Paderborn: its integration
+      items'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Riemann-Integral p. 51, Integrationstechniken p.
+      54, uneigentliche Integrale p. 56, Übungsaufgaben p. 59'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang — Calculus — applied-first mechanics — what it computes before how it is constructed
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch05.pdf (integrals), ch07.pdf (techniques of integration), with the matching
+      guides
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§15-20 — Differentiation und Riemann-Integral — solved German drill for the
+      Ch 6-7 core, in the notation a German exam uses
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §18 Das Riemannsche Integral p. 49, §19 Integration und Differentiation
+      p. 51, §20 Uneigentliche Integrale p. 57; Lösungen §18 p. 174, §19 p. 177, §20 p. 186
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5-6 — Differential- und Integralrechnung — fresh German Ch 6-7 problems — the
+      book that was in the menu and in no stage
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §6.1 Hauptsatz p. 43, §6.2 Uneigentliche Integrale p. 44; Lösungen Kap. 26 p.
+      162
     scope_triage: helpful-now
   - kind: reference
-    label: Gentle Riemann-sum and technique companion
-    source_id: source-strang-calculus
-    locator: Chapters 5 and 7 only
-    scope_triage: helpful-now
-  - kind: practise
-    label: Forster/Wessoly — fresh German reserve drill
-    source_id: source-forster-wessoly
-    locator: Riemann integration, FTC, substitution, parts, and improper-integral sections
-    scope_triage: helpful-now
+    label: Abbott — Understanding Analysis — readable English rigour; why each definition takes the form
+      it does
+    source_id: source-abbott-understanding-analysis
+    locator: Ch 7 (the Riemann integral)
+    scope_triage: reference-only
+  - kind: reference
+    label: Lebl — Basic Analysis I + II — the free English text closest in structure to the script
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Ch 5 (the Riemann integral)
+    scope_triage: reference-only
+  - kind: reference
+    label: 'Thomas'' Calculus: Early Transcendentals — no contextual evaluation registered — visibility
+      debt, repay on first use'
+    source_id: source-thomas-calculus
+    locator: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf (1205 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: 'Stewart — Calculus: Early Transcendentals (8th ed.) — no contextual evaluation registered
+      — visibility debt, repay on first use'
+    source_id: source-stewart-calculus
+    locator: material://source-stewart-calculus/Stewart.pdf (1404 pp); located by the 2026-08-03 coverage
+      audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-ang/notes.md
   attachments: []
   source_feedback: []
@@ -417,6 +967,10 @@ stages:
     from the script, HU-style tasks, gap-targeted external questions, and two timed Analysis half-mocks.
     Combined switching and the full three-hour simulation belong only to the joint unit.
   done_when:
+  - 'Record before assembling either half-mock: no paper in the external Klausur bank contains a Taylor
+    task, and only Regensburg and Paderborn carry differentiation or integration items. Build the Chapter
+    6-7 half from the German Taylor-bearing routes listed on this stage (Fritzsche §4.2, Forster/Wessoly
+    §22, TUM Übungsaufgaben, IngMath2 §14.3) and label the mock as an assembly, not a paper.'
   - Produce a closed-book theorem ledger containing each exam-relevant definition/result, all assumptions,
     its trigger, and one application; do not copy full proofs.
   - Complete ana_inf_serieWV.pdf under its stated 30-45-minute-per-problem conditions and correct it against
@@ -427,7 +981,6 @@ stages:
     fresh second 90-minute Analysis-only mock at least one day later.
   - Enter the joint unit only when every Analysis block has a passed cold gate or an explicit remaining
     repair item; do not add new sources in the final 72 hours.
-  estimate_minutes: 540
   exam_critical: true
   concepts:
   - concept-real-numbers
@@ -452,21 +1005,82 @@ stages:
     locator: 'kleine_beweise.pdf: only the theorem behind an error-ledger item'
     scope_triage: required-now
   - kind: practise
-    label: German solved gap checks
-    source_id: source-analysis-klausuren-extern
-    locator: 'Marburg and Regensburg: topic-matched tasks only; compare notation and scope back to unser
-      skript'
+    label: Fritzsche Kap. 4 — Vertauschung von Grenzprozessen — German solution-backed Taylor, uniform
+      convergence and improper integrals in one chapter
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §4.2 Die Taylorentwicklung p. 200 with Lösungen from p. 253 — solution-backed
+      German Taylor practice, since no exam paper in the bank carries a Taylor task
     scope_triage: helpful-now
   - kind: practise
-    label: Fresh timed external paper for transfer
+    label: IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection — computational technique
+      at volume, engineering-style; the only Ch 6-7 drill in the collection
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: §14.3 Der Satz von Taylor — the Taylor tasks the Klausur bank does
+      not have'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn) — German exam wording WITH
+      solutions — spend on diagnosed gaps, never as a test
     source_id: source-analysis-klausuren-extern
-    locator: 'Ulm or Leipzig: one timed selection; exclude topics absent from unser skript'
+    locator: Marburg (35 pp, three papers) and Regensburg (14 pp, with Häufige-Fehler commentary) first;
+      Darmstadt (7 pp) and Paderborn (9 pp) in reserve — topic-matched tasks only, compared back to unser
+      skript. Expect sequences and series; only Regensburg and Paderborn carry Ch 6-7 tasks
+    scope_triage: helpful-now
+  - kind: practise
+    label: Unsolved German papers held for timed sittings (Ulm, Leipzig, Stuttgart) — kept unsolved on
+      purpose — reading the answer first destroys the timed sitting
+    source_id: source-analysis-klausuren-extern
+    locator: Ulm (2 pp) and Leipzig (2 pp), both Analysis für Informatiker, one per timed sitting; "Aufgabe
+      3 ist gut.pdf" task 3 only. Neither paper reaches Ch 6-7
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben — German revision script with exercise
+      sets — the only Taylor tasks in the Klausur folder
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Taylor Übungsaufgaben pp. 49-50 and Riemann-Integral
+      Übungsaufgaben p. 59 — the Ch 6-7 tasks missing from the Klausur bank; "Wichtige Hinweise zum Beweisen
+      und Rechnen" p. 82'
+    scope_triage: helpful-now
+  - kind: practise
+    label: MIT 18.100C exam set (English, proof-heavy) — proof-writing under time, in English, on a syllabus
+      that is not this one
+    source_id: source-analysis-klausuren-extern
+    locator: MIT18100C_Final.pdf (7 pp) + MIT18100C_Final-Solutions.pdf (6 pp), MIT18100C_Midterm2.pdf
+      (5 pp), MIT18100C_Practice-Final.pdf (2 pp), MIT18100C_Practice-Midterm1.pdf (3 pp), MIT18100C_Practice-Midterm2.pdf
+      (2 pp)
+    scope_triage: reference-only
+  - kind: read
+    label: Maths220 — Proofs in Calculus — how a limit or series proof is actually written on paper
+    source_id: source-analysis-grundlagen-handouts
+    locator: Maths220_Proofs-in-Calculus.pdf (17 pp)
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen — solved Taylor tasks in
+      German, paired with uniform convergence
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §22 Taylor-Reihen p. 61, Lösungen §22 p. 195 — the second German
+      Taylor route standing in for the missing exam tasks
+    scope_triage: helpful-now
+  - kind: practise
+    label: Ableitinger — Musterlösungen — model solutions as writing samples — what a marker expects a
+      proof to look like
+    source_id: source-ableitinger-musterloesungen
+    locator: One example matching the diagnosed error
     scope_triage: helpful-now
   - kind: reference
-    label: Proof-writing repair only after a diagnosed presentation error
-    source_id: source-ableitinger-musterloesungen
-    locator: Analysis examples only; one matching Musterlösung
-    scope_triage: helpful-now
+    label: Design Patterns für mathematische Beweise — no contextual evaluation registered — visibility
+      debt, repay on first use
+    source_id: source-ohlbach-eisinger-beweise
+    locator: material://source-ohlbach-eisinger-beweise/Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf
+      (183 pp); located by the 2026-08-03 coverage audit
+    scope_triage: reference-only
+  - kind: reference
+    label: How To Prove It — A Structured Approach — no contextual evaluation registered — visibility
+      debt, repay on first use
+    source_id: source-velleman-how-to-prove-it
+    locator: material://source-velleman-how-to-prove-it/Velleman_How-To-Prove-It.pdf (569 pp); located
+      by the 2026-08-03 coverage audit
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
   attachments: []
   source_feedback: []
@@ -479,7 +1093,6 @@ stages:
     numerical root finding, or numerical integration.'
   - Record that Chapter 8 and sections explicitly labelled Exkurs are not exam-relevant according to the
     script's own course contract.
-  estimate_minutes: 90
   exam_critical: false
   concepts:
   - concept-differentiation

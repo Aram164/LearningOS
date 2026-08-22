@@ -623,10 +623,20 @@ def test_job_fingerprint_excludes_transaction_receipts(mini_repo):
 
 
 def test_drift_detection_leaves_no_trace_in_the_read_only_checkout(mini_repo):
-    """Even the stat-cache refresh a plain `git diff` performs is a write."""
-    source = (Path(__file__).resolve().parent.parent
-              / "tools/learning_os/commands/job.py").read_text(encoding="utf-8")
-    assert 'GIT_OPTIONAL_LOCKS": "0"' in source
+    """Even the stat-cache refresh a plain `git diff` performs is a write.
+
+    Asserted over every module that runs `git diff` rather than over one named
+    file, so moving the call — or adding a second one — cannot escape the rule
+    by landing somewhere the test was not looking.
+    """
+    commands = Path(__file__).resolve().parent.parent / "tools" / "learning_os" / "commands"
+    callers = [
+        path for path in sorted(commands.glob("*.py"))
+        if '"git", "diff"' in path.read_text(encoding="utf-8")
+    ]
+    assert callers, "no module runs `git diff` — has drift detection moved out of commands/?"
+    for path in callers:
+        assert 'GIT_OPTIONAL_LOCKS": "0"' in path.read_text(encoding="utf-8"), path.name
 
 
 def test_job_track_progress_rejects_an_undeclared_track(mini_repo):
@@ -635,3 +645,114 @@ def test_job_track_progress_rejects_an_undeclared_track(mini_repo):
                    "--track", "not-a-track", "--session", "1")
     assert proc.returncode == 2
     assert "unknown learning track" in proc.stderr
+
+
+def _stage(number: int, name: str, *, component: list[str], verified: str = "") -> dict:
+    return {
+        "id": f"stage-drift-{name}",
+        "number": number,
+        "title": name.replace("-", " "),
+        "status": "pending",
+        "objective": "Read the anchor and explain what it does.",
+        "done_when": ["A written explanation checked against the source."],
+        "estimate_minutes": 90,
+        "exam_critical": False,
+        "concepts": [],
+        "scope_triage": "required-now",
+        "resources": [],
+        "attachments": [],
+        "source_feedback": [],
+        "job_context": {
+            "mental_models": [],
+            "read_only_anchor": "Read-only: stratum/ir.py.",
+            "component": component,
+            "verified_against": verified,
+        },
+    }
+
+
+def test_plan_anchor_freshness_is_computed_not_declared(mini_repo):
+    """A stage stamped against a commit reports what the checkout says.
+
+    The four states are asserted together because the failure that matters is
+    not any one of them being wrong — it is `unverified` or `drifting` quietly
+    collapsing into `current`, which would make the whole stamp decorative.
+    """
+    job = write_job(mini_repo)
+    stratum = job / "stratum"
+    (stratum / "stratum").mkdir(parents=True)
+    (stratum / "stratum" / "ir.py").write_text("VERSION = 1\n", encoding="utf-8")
+    (stratum / "stratum" / "runtime.py").write_text("SPEED = 1\n", encoding="utf-8")
+
+    def git(*args: str) -> subprocess.CompletedProcess:
+        return subprocess.run(
+            ["git", *args], cwd=stratum, capture_output=True, text=True, timeout=60,
+        )
+
+    git("init", "--quiet")
+    git("config", "user.email", "test@example.invalid")
+    git("config", "user.name", "Test")
+    git("add", "-A")
+    git("commit", "--quiet", "-m", "first")
+    head = git("rev-parse", "HEAD").stdout.strip()[:7]
+    # Only `ir.py` moves after the stamp, so a stage anchored on `runtime.py`
+    # must stay current while one anchored on `ir.py` must not.
+    (stratum / "stratum" / "ir.py").write_text("VERSION = 2\n", encoding="utf-8")
+    git("add", "-A")
+    git("commit", "--quiet", "-m", "second")
+
+    stamp = f"{head} (2026-01-01)"
+    plan = {
+        "id": "drift", "title": "Drift", "horizon": "now",
+        "cadence": "One stage per week", "outcome": "Read the code as it is.",
+        "stages": [
+            _stage(1, "moved", component=["stratum/ir.py"], verified=stamp),
+            _stage(2, "unmoved", component=["stratum/runtime.py"], verified=stamp),
+            _stage(3, "unstamped", component=["stratum/ir.py"]),
+            _stage(4, "no-source", component=[]),
+        ],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode == 0, proc.stderr
+
+    dashboard = json.loads(run_los(
+        mini_repo, "job-dashboard", "--confirm-job-access",
+    ).stdout)["dashboard"]
+    track = next(t for t in dashboard["learning_tracks"] if t["id"] == "drift")
+    freshness = {s["id"]: s["job_context"]["freshness"] for s in track["stages"]}
+    assert freshness == {
+        "stage-drift-moved": "drifting",
+        "stage-drift-unmoved": "current",
+        # Named source with no stamp is an unanswered question, not a clean one.
+        "stage-drift-unstamped": "unverified",
+        # Nothing to check, so nothing is claimed.
+        "stage-drift-no-source": "",
+    }
+
+
+def test_plan_save_round_trip_preserves_the_anchor_stamp(mini_repo):
+    """An edit to any other field must not drop the stamp on the way through.
+
+    This is the failure the field was added to prevent: a save path that
+    normalises `job_context` down to the two keys it knew about would silently
+    un-stamp every stage the next time the plan was touched.
+    """
+    job = write_job(mini_repo)
+    stage = _stage(1, "kept", component=["stratum/ir.py"], verified="abc1234 (2026-01-01)")
+    plan = {
+        "id": "keep", "title": "Keep", "horizon": "now",
+        "cadence": "One stage per week", "outcome": "Keep the stamp.",
+        "stages": [stage],
+    }
+    assert run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    ).returncode == 0
+
+    stored = yaml.safe_load((job / "plans" / "keep.yaml").read_text("utf-8"))
+    context = stored["stages"][0]["job_context"]
+    assert context["component"] == ["stratum/ir.py"]
+    assert context["verified_against"] == "abc1234 (2026-01-01)"

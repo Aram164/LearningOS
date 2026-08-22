@@ -82,6 +82,127 @@ def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
         for key in _PLAN_COMPLETENESS_CHECKS:
             if checks.get(key) is not True:
                 problems.append(f"plan_contract.checks.{key} must be true")
+    intentional_reorders = contract.get("intentional_reorders", [])
+    if not isinstance(intentional_reorders, list):
+        problems.append("plan_contract.intentional_reorders must be a list")
+    else:
+        seen: set[tuple[str, str]] = set()
+        for index, declaration in enumerate(intentional_reorders):
+            if not isinstance(declaration, dict):
+                problems.append(
+                    f"plan_contract.intentional_reorders[{index}] must be a mapping"
+                )
+                continue
+            target = declaration.get("target")
+            record_id = declaration.get("id")
+            reason = declaration.get("reason")
+            if target not in {"module-unit-order", "study-map-stage-order"}:
+                problems.append(
+                    f"plan_contract.intentional_reorders[{index}].target must be "
+                    "module-unit-order or study-map-stage-order"
+                )
+            if not isinstance(record_id, str) or not record_id.strip():
+                problems.append(
+                    f"plan_contract.intentional_reorders[{index}].id must name the reordered record"
+                )
+            if not isinstance(reason, str) or not reason.strip():
+                problems.append(
+                    f"plan_contract.intentional_reorders[{index}].reason must explain the pedagogical change"
+                )
+            key = (str(target), str(record_id))
+            if key in seen:
+                problems.append(
+                    f"plan_contract.intentional_reorders repeats {key[0]} for {key[1]}"
+                )
+            seen.add(key)
+    return problems
+
+
+def _relative_order_changed(before: list[str], after: list[str]) -> bool:
+    """Return whether records present in both sequences changed relative order.
+
+    Adding a new unit or stage is not a reorder. Moving existing records around
+    the insertion is. That distinction lets plan expansion stay convenient
+    while making accidental reshuffles fail closed.
+    """
+    shared = set(before) & set(after)
+    return (
+        [record_id for record_id in before if record_id in shared]
+        != [record_id for record_id in after if record_id in shared]
+    )
+
+
+def _declared_reorders(package: dict) -> set[tuple[str, str]]:
+    contract = package.get("plan_contract") or {}
+    declarations = contract.get("intentional_reorders", []) or []
+    return {
+        (str(row.get("target")), str(row.get("id")))
+        for row in declarations
+        if isinstance(row, dict)
+    }
+
+
+def _module_plan_ordering_problems(repo, module_id: str, package: dict) -> list[str]:
+    """Reject silent reordering while allowing explicit reviewed changes."""
+    declared = _declared_reorders(package)
+    actual_changes: set[tuple[str, str]] = set()
+    problems: list[str] = []
+
+    module_patch = package.get("module_patch", {}) or {}
+    proposed_units = module_patch.get("unit_order")
+    if isinstance(proposed_units, list):
+        before_units = list(repo.modules[module_id].get("unit_order", []) or [])
+        after_units = [str(record_id) for record_id in proposed_units]
+        key = ("module-unit-order", module_id)
+        if _relative_order_changed(before_units, after_units):
+            actual_changes.add(key)
+            if key not in declared:
+                problems.append(
+                    f"{module_id} reorders existing units; preserve their relative order or "
+                    "declare an intentional module-unit-order change with a reason"
+                )
+
+    for entry in package.get("units", []) or []:
+        if not isinstance(entry, dict) or not isinstance(entry.get("unit"), dict):
+            continue
+        uid = entry["unit"].get("id")
+        proposed_map = entry.get("study_map")
+        if not isinstance(uid, str) or not isinstance(proposed_map, dict):
+            continue
+        current_unit = repo.units.get(uid)
+        current_id = (
+            current_unit.data.get("current_study_map")
+            if current_unit is not None
+            else None
+        )
+        current_map = repo.study_maps.get(current_id) if current_id else None
+        if current_map is None:
+            continue
+        before_stages = [
+            str(stage.get("id"))
+            for stage in current_map.data.get("stages", []) or []
+            if isinstance(stage, dict) and stage.get("id")
+        ]
+        after_stages = [
+            str(stage.get("id"))
+            for stage in proposed_map.get("stages", []) or []
+            if isinstance(stage, dict) and stage.get("id")
+        ]
+        key = ("study-map-stage-order", str(current_map.id))
+        if _relative_order_changed(before_stages, after_stages):
+            actual_changes.add(key)
+            if key not in declared:
+                problems.append(
+                    f"{current_map.id} reorders existing stages; plan expansion must preserve "
+                    "their relative order unless an intentional study-map-stage-order change "
+                    "is declared with a reason"
+                )
+
+    for target, record_id in sorted(declared - actual_changes):
+        problems.append(
+            f"intentional reorder declared for {target} {record_id}, but the package does not "
+            "reorder existing records"
+        )
     return problems
 
 
@@ -342,6 +463,16 @@ def cmd_module_plan_import(args) -> int:
                 print(f"los: {exc}", file=sys.stderr)
                 return 2
             writes[workspace.path] = _render_frontmatter(meta, body)
+
+        ordering_problems = _module_plan_ordering_problems(
+            repo, args.module_id, package
+        )
+        if ordering_problems:
+            print("los: module plan ordering preflight failed; no canonical files were written",
+                  file=sys.stderr)
+            for problem in ordering_problems:
+                print(f"- {problem}", file=sys.stderr)
+            return 1
 
         routing_problems = _module_plan_routing_problems(repo, args.module_id, package)
         if routing_problems:

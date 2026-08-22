@@ -95,8 +95,9 @@ scope_sources:
     HU exercise evidence
 source_selections:
 - source_id: source-analysis-skript
-  locator: unser skript.pdf Chapters 1-7; Serie 05-09 and WV; kleine_beweise selectively
-  purpose: Scope, notation, current HU practice, and correction authority.
+  locator: unser skript.pdf — the scope authority; HU exercise series 05-09 + WV
+  purpose: Scope, notation, current HU practice, and correction authority. The HU series stops at §5.5;
+    Chapters 6-7 have no HU sheet.
   stage_ids:
   - stage-m2-analysis-calibrate
   - stage-m2-analysis-an0
@@ -108,70 +109,198 @@ source_selections:
   - stage-m2-analysis-anf
   - stage-m2-analysis-ang
   - stage-m2-analysis-anx
-- source_id: source-analysis-grundlagen-handouts
-  locator: Mengen-und-Abbildungen.pdf and Relationen.pdf
-  purpose: Exact prerequisite repair only.
-  stage_ids:
-  - stage-m2-analysis-an0
-- source_id: source-fritzsche-trainingsbuch
-  locator: Chapters 1-4, topic matched
-  purpose: Gentle worked companion after current HU tasks.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-and
-- source_id: source-analysis-drill-blaetter-extern
-  locator: exact stage locators
-  purpose: Fresh calculation and proof-application drills after HU tasks.
+  - stage-m2-analysis-exkurse
+- source_id: source-professor-leonard
+  locator: Professor Leonard — Calculus 1/2
+  purpose: Conditional intuition unlock, chosen per diagnosed block rather than watched through.
   stage_ids:
   - stage-m2-analysis-ana
   - stage-m2-analysis-anb
   - stage-m2-analysis-anc
   - stage-m2-analysis-ane
   - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-- source_id: source-forster-wessoly
-  locator: topic-matched Analysis I sections
-  purpose: Fresh German reserve problems only after the named HU/external tasks.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-ang
-- source_id: source-professor-leonard
-  locator: topic-matched Calculus 1/2 selection; maximum 20 minutes per gap
-  purpose: Conditional intuition unlock, never a parallel course.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-ane
   - stage-m2-analysis-ang
 - source_id: source-3b1b-essence-of-calculus
-  locator: limits/continuity and Taylor selections
-  purpose: Short visual preview only after a failed cold diagnostic.
+  locator: 3Blue1Brown — Essence of Calculus
+  purpose: Short visual preview when the mental picture, not the technique, is missing.
   stage_ids:
   - stage-m2-analysis-anc
+  - stage-m2-analysis-ane
   - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+- source_id: source-fritzsche-trainingsbuch
+  locator: Fritzsche Kap. 1 — Die Sprache der Analysis; Fritzsche Kap. 2 — Der Grenzwertbegriff; Fritzsche
+    Kap. 3 — Der Calculus; Fritzsche Kap. 4 — Vertauschung von Grenzprozessen
+  purpose: Explained German solutions, chapter-matched to every script block including Taylor and integration.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+  - stage-m2-analysis-anx
+- source_id: source-analysis-drill-blaetter-extern
+  locator: Solved sequence and series drill sheets (7 files); u10_Loesung.pdf — epsilon-delta continuity
+    worked out; IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection; Aufgabensammlung-M1_Loesung.pdf
+    — mixed solved bank; Bestimmt_Scan.pdf — handwritten field and order axioms
+  purpose: Solved calculation drills after the HU tasks; IngMath2_Aufgaben.pdf carries the Chapter 6-7
+    half by itself.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+  - stage-m2-analysis-anx
+- source_id: source-analysis-klausuren-extern
+  locator: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn); Unsolved German papers
+    held for timed sittings (Ulm, Leipzig, Stuttgart); TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben;
+    MIT 18.100C exam set (English, proof-heavy)
+  purpose: German exam wording, timed transfer, and the TUM Skriptum’s Chapter 6-7 exercise sets.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+  - stage-m2-analysis-anx
+- source_id: source-strang-calculus
+  locator: Strang — Calculus
+  purpose: Applied-first local intuition for integration, Taylor, and (in reserve) derivatives.
+  stage_ids:
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
 - source_id: source-mit-18100a
-  locator: Lectures 7-9 and 23-24
+  locator: MIT 18.100A — Real Analysis
   purpose: One blocked rigorous distinction, not linear viewing.
   stage_ids:
   - stage-m2-analysis-ana
   - stage-m2-analysis-and
-- source_id: source-strang-calculus
-  locator: Chapters 5, 7, and 10 selections
-  purpose: Gentle local intuition for Taylor or integration when needed.
+- source_id: source-analysis-grundlagen-handouts
+  locator: Mengen und Abbildungen / Relationen handouts; Maths220 — Proofs in Calculus
+  purpose: Prerequisite repair, plus the Maths220 handout on how a limit or series proof is written.
   stage_ids:
+  - stage-m2-analysis-calibrate
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-anx
+- source_id: source-forster-wessoly
+  locator: Forster/Wessoly §§1-9 — Induktion bis Punktmengen; Forster/Wessoly §§10-14 — Stetigkeit, Logarithmus,
+    Exponentialfunktion; Forster/Wessoly §§15-20 — Differentiation und Riemann-Integral; Forster/Wessoly
+    §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen
+  purpose: Terse solved German problems matched paragraph by paragraph, Taylor-Reihen §22 included.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
   - stage-m2-analysis-anf
   - stage-m2-analysis-ang
-- source_id: source-analysis-klausuren-extern
-  locator: scope-matched German papers; fresh selections
-  purpose: Two independent Analysis half-mocks and transfer repair.
-  stage_ids:
   - stage-m2-analysis-anx
+- source_id: source-deitmar-uebungsbuch
+  locator: Deitmar Kap. 1-2 — Grundlagen und die reellen Zahlen; Deitmar Kap. 3 — Folgen und Reihen; Deitmar
+    Kap. 4 — Funktionen und Stetigkeit; Deitmar Kap. 5-6 — Differential- und Integralrechnung; Deitmar
+    §7.1 — Gleichmäßige Konvergenz
+  purpose: Third solved bank; fresh problems once Fritzsche and Forster are spent on a topic.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-ang
 - source_id: source-ableitinger-musterloesungen
-  locator: one Analysis example matching a diagnosed presentation error
+  locator: Ableitinger — Musterlösungen
   purpose: Proof-writing repair only.
   stage_ids:
   - stage-m2-analysis-anx
+- source_id: source-abbott-understanding-analysis
+  locator: Abbott — Understanding Analysis
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-ang
+- source_id: source-grieser-analysis1
+  locator: Grieser — Analysis I
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-ane
+- source_id: source-lebl-basic-analysis
+  locator: Lebl — Basic Analysis I + II
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+  - stage-m2-analysis-and
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-anf
+  - stage-m2-analysis-ang
+- source_id: source-labs-schreyer-mathe-informatiker
+  locator: Mathematik für Informatiker (Teil 1-3)
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-an0
+- source_id: source-mfnf-analysis1
+  locator: Mathe für Nicht-Freaks — Analysis 1
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-an0
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+- source_id: source-ohlbach-eisinger-beweise
+  locator: Design Patterns für mathematische Beweise
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-anx
+- source_id: source-velleman-how-to-prove-it
+  locator: How To Prove It — A Structured Approach
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-anx
+- source_id: source-ross-elementary-analysis
+  locator: Ross — Elementary Analysis
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-ana
+  - stage-m2-analysis-anb
+  - stage-m2-analysis-anc
+- source_id: source-thomas-calculus
+  locator: 'Thomas'' Calculus: Early Transcendentals'
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-ang
+- source_id: source-stewart-calculus
+  locator: 'Stewart — Calculus: Early Transcendentals (8th ed.)'
+  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
+  stage_ids:
+  - stage-m2-analysis-ane
+  - stage-m2-analysis-ang
 current_study_map: study-map-m2-analysis-exam-prep
 artifacts:
   ultimate_reference: note-an-source-crosswalk

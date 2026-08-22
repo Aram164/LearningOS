@@ -25,7 +25,7 @@ import pytest
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 
-FORMATS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7"]
+FORMATS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"]
 
 
 def _materialise(version: str, repo_root, tmp_path):

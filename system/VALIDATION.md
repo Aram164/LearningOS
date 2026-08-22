@@ -52,7 +52,8 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
   and Thesis/Projects are non-semester active areas.
 - **E** Partitioned module records are complete against the frozen legacy
   registry during migration; once a partition exists, it is authoritative.
-- **E** Every module's `unit_order` contains all and only its units, once each.
+- **E** Every module's `unit_order` contains all and only its units, once each,
+  and agrees with the numeric `order` on those units.
 - **E** Every component ID is stable and owned by the same module as its units.
 - **E** Every unit has one owning module, a valid kind/status, resolvable scope
   sources and artifacts, and at most one current study map.

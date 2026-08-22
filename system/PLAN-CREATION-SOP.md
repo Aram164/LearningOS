@@ -133,8 +133,17 @@ punctuation. The gateway also serializes without aliases so shared defaults
 cannot leak anchors into authored files.
 
 The package must contain `plan_contract.version: 1`, the repository-relative
-coverage-audit path, and all six completeness checks set to `true`. These are
-truth claims: do not set one until its audit work is complete.
+coverage-audit path, all six completeness checks set to `true`, and an
+`intentional_reorders` list (normally empty). These are truth claims: do not set
+one until its audit work is complete.
+
+Plan expansion must preserve the relative order of every existing module unit
+and study-map stage. The preflight enforces this mechanically: adding a new
+record is allowed, but silently moving existing records is rejected. A genuine
+pedagogical reorder must be listed in `intentional_reorders` with target
+`module-unit-order` or `study-map-stage-order`, the affected module/map ID, and
+a concrete reason. A declaration that does not correspond to an actual reorder
+is also rejected, so stale approvals cannot linger in reusable packages.
 
 Use only schema enums. Module source-map roles are:
 
@@ -160,7 +169,11 @@ mapped lecture must use rich routes so the interface can explain the choice.
 Additional package invariants:
 
 - `module_patch.unit_order` lists every final owned unit exactly once, including
-  pre-existing units not changed by this package;
+  pre-existing units not changed by this package, and agrees with the numeric
+  `order` on those units;
+- the `stages` list is the study-map ordering authority; plan expansion keeps
+  the relative sequence of existing stage IDs unless an intentional reorder is
+  explicitly declared and reviewed;
 - every unit, knowledge-node, and optional map/stage ID is unique and
   module-scoped;
 - every material `covers` reference resolves inside its target unit;
@@ -248,6 +261,7 @@ changes must remain untouched.
 | A generated plan silently became the only way to view a lecture | Knowledge maps and complete material menus are permanent; study maps are optional personal projections. |
 | YAML anchors changed serialized canonical files | Template forbids anchors and the gateway emits alias-free YAML. |
 | Discovering schema errors only after canonical writes | `--check` validates a shadow repository and writes zero files. |
+| Expanding a plan silently reshuffled existing units or stages | Preflight preserves relative order by default; deliberate reorders require a reasoned declaration. |
 | Applying against stale state | The real import requires `--expected-snapshot`. |
 | A compatibility migration recreated old units after planning | Post-import migration dry-run must be idempotent. |
 | A combined lecture range hid missing individual coverage | One ordinary lecture equals one unit knowledge/material map; synthesis is auxiliary. |

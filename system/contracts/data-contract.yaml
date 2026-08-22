@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 7
-schema_fingerprint: sha256:1fe3f50785ef58f8323341cca9d88e60a70674d03ca04e3b464d735454796474
+contract_version: 8
+schema_fingerprint: sha256:308bc2e5cd503ef2cdf10dfe07a2e541789b234d478db29e9701134a9ab5a933
 record_schemas: 23
 history:
 - version: 1
@@ -80,3 +80,12 @@ history:
   note: Add producer-owned Job dashboard and structured Job plan schemas
   migration: null
   fixture: tests/fixtures/formats/v7/
+- version: 8
+  adopted: '2026-08-21'
+  note: 'job plan stages may carry an anchor stamp: job_context gained optional ''component''
+    (list of repo-root-relative Stratum paths) and ''verified_against'' (''<sha> (YYYY-MM-DD)''),
+    the same contract notes/stratum/ frontmatter already uses. Both optional, so every
+    plan written before this version stays valid; an unstamped stage reports freshness
+    ''unverified'' rather than ''current''.'
+  migration: null
+  fixture: tests/fixtures/formats/v8/

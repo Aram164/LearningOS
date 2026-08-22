@@ -937,6 +937,126 @@ sources:
     depth: derivation
     scope: complementary
     locator: §§14.1–14.3
+  - unit_id: unit-aml-l03
+    title: Murphy §11.2.2 — least squares as a negative log-likelihood
+    format: book
+    angle: Introduces the regression objective as the negative log likelihood rather than as a chosen
+      loss, which is the bridge the deck marks optional; §11.2.4 then reads the same fit as goodness of
+      fit.
+    covers:
+    - knowledge-aml-l03-probabilistic
+    depth: derivation
+    scope: complementary
+    locator: §11.2.2 Least squares estimation p. 372; §11.2.4 Measuring goodness of fit p. 380
+  - unit_id: unit-aml-l06
+    title: Murphy §8.1.3 — convex versus nonconvex, and the Hessian test
+    format: book
+    angle: States the convexity condition the lecture asserts, and gives the positive-(semi)definite Hessian
+      test that decides whether the regression objectives are well behaved.
+    covers:
+    - knowledge-aml-l06-convexity
+    depth: derivation
+    scope: complementary
+    locator: §8.1.3 Convex vs nonconvex optimization pp. 277–281 (Hessian and positive-definite test on
+      pp. 277 and 280)
+  - unit_id: unit-aml-l06
+    title: Murphy §8.3 — Newton and the quasi-Newton family
+    format: book
+    angle: 'Derives the curvature-aware update the deck compares against first-order methods, and prices
+      the Hessian: BFGS and trust regions are what you use when you cannot afford it.'
+    covers:
+    - knowledge-aml-l06-newton
+    depth: derivation
+    scope: complementary
+    locator: §8.3 Second-order methods pp. 289–291 (Newton's method p. 289, BFGS and quasi-Newton p. 290,
+      trust region p. 291)
+  - unit_id: unit-aml-l06
+    title: Murphy §8.4.6 — the adaptive optimizers derived in one place
+    format: book
+    angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
+      bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
+    covers:
+    - knowledge-aml-l06-optimizers
+    - knowledge-aml-l06-stochastic
+    depth: derivation
+    scope: complementary
+    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300,
+      Adam p. 300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
+  - unit_id: unit-aml-l06
+    title: Murphy solution manual §10.1 — gradient and Hessian worked out
+    format: book
+    angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic
+      log-likelihood: the one place on the shelf where the convexity claim and the Newton update are computed
+      rather than asserted.'
+    covers:
+    - knowledge-aml-l06-convexity
+    - knowledge-aml-l06-newton
+    depth: practice
+    scope: complementary
+    locator: solutions-public.pdf §10.1 'Gradient and Hessian of log-likelihood for multinomial logistic
+      regression' (solves exercise 10.1 of the main text)
+  - unit_id: unit-aml-l11
+    title: Murphy §15.4 — attention as a soft dictionary lookup
+    format: book
+    angle: 'Gives the interpretation the deck''s first worked example leaves implicit: attention weights
+      are a softmax over similarity scores, i.e. a differentiable dictionary lookup, before any learned
+      projection appears.'
+    covers:
+    - knowledge-aml-l11-attention
+    depth: derivation
+    scope: complementary
+    locator: §15.4 Attention pp. 518–525 (attention as soft dictionary lookup p. 519, parametric attention
+      p. 521)
+  - unit_id: unit-aml-l11
+    title: Murphy §15.5 — the Transformer assembled step by step
+    format: book
+    angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional
+      encoding, then the assembled block — in equations, and closes with the comparison against CNNs and
+      RNNs that the lecture only gestures at.
+    covers:
+    - knowledge-aml-l11-attention
+    - knowledge-aml-l11-qkv
+    - knowledge-aml-l11-position
+    - knowledge-aml-l11-block
+    depth: derivation
+    scope: complementary
+    locator: §15.5 Transformers pp. 526–532 (self-attention p. 526, multi-headed attention p. 527, positional
+      encoding p. 528, putting it all together p. 529, comparing transformers, CNNs and RNNs p. 531)
+  - unit_id: unit-aml-l11
+    title: Murphy §15.7 — language modelling as the training objective
+    format: book
+    angle: Connects the block's outputs back to next-token prediction and the same cross-entropy introduced
+      in L05; read for the objective, not for the LLM survey.
+    covers:
+    - knowledge-aml-l11-language-task
+    - knowledge-aml-l11-training
+    depth: advanced-reference
+    scope: optional
+    locator: §15.7 Language models and unsupervised representation learning pp. 537–546 (non-generative
+      models p. 538, generative causal LLMs p. 542)
+  - unit_id: unit-aml-l11
+    title: Murphy §20.5 — where static embeddings come from
+    format: book
+    angle: The deck states that embedding lookup maps tokens to vectors; this section is how those vectors
+      are learned, which is the contrast that makes 'contextual' mean something.
+    covers:
+    - knowledge-aml-l11-embeddings
+    depth: derivation
+    scope: complementary
+    locator: §20.5 Word embeddings pp. 705–712 (latent semantic analysis p. 705, word2vec p. 707, GloVe
+      p. 710, word analogies p. 710)
+  - unit_id: unit-aml-exam-prep
+    title: Murphy — the derivation bank behind the two repair clusters
+    format: book
+    angle: 'Consulted by section after a diagnosed miss, never read linearly: Ch 8 for the optimizer and
+      convexity cluster, §15.4–15.5 for the Transformer cluster.'
+    covers:
+    - knowledge-aml-exam-classical
+    - knowledge-aml-exam-neural
+    depth: derivation
+    scope: complementary
+    locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
+      solution manual §10.1 and §13.1
 - source_id: source-csc411-notes
   role: reference
   why: Compact independent notes for regression, classifiers, metrics, neural networks, backpropagation,
@@ -2024,6 +2144,136 @@ sources:
     depth: implementation
     scope: optional
     locator: CNN chapter selections
+  - unit_id: unit-aml-l01
+    title: Géron 3rd ed. Ch 10 — from biological to artificial neurons
+    format: book
+    angle: Retells the deck's landmark chain — perceptron, the XOR objection, backpropagation, the winters
+      — as one causal story, which is what a concept map is for; not a chronology to memorize.
+    covers:
+    - knowledge-aml-l01-history
+    depth: intuition
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed., Oct 2022) Ch 10 'From Biological to Artificial Neurons' pdf pp.
+      380–389, 'The Perceptron' pdf p. 384
+  - unit_id: unit-aml-l06
+    title: Géron 3rd ed. Ch 11 — the same optimizers, as code you can run
+    format: book
+    angle: Each optimizer the deck names appears as a two-line Keras call next to its update rule, so
+      the comparison becomes an experiment rather than a table.
+    covers:
+    - knowledge-aml-l06-optimizers
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum p. 486, Nesterov
+      p. 487, AdaGrad p. 489, RMSProp p. 490, Adam p. 491)
+  - unit_id: unit-aml-l08
+    title: Géron 3rd ed. Ch 3 — the confusion matrix computed on real predictions
+    format: book
+    angle: Runs the exact metric chain of the deck's last slides on a real classifier, including the precision/recall
+      trade-off and the ROC curve the lecture only defines.
+    covers:
+    - knowledge-aml-l08-metrics
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 3 — confusion matrix pdf p. 164, precision and recall pdf p.
+      167, the ROC curve pdf p. 173
+  - unit_id: unit-aml-l10
+    title: Géron 3rd ed. Ch 14 — why not simply flatten the image
+    format: book
+    angle: Answers the deck's opening question from the visual-cortex analogy and then in parameter counts,
+      which is the argument the motivation slide compresses to one line.
+    covers:
+    - knowledge-aml-l10-motivation
+    - knowledge-aml-l10-convolution
+    depth: intuition
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
+      Layers' pdf p. 621
+  - unit_id: unit-aml-l10
+    title: Géron 3rd ed. Ch 14 exercises — the motivation asked back
+    format: book
+    angle: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is a three-layer 3×3 stride-2
+      'same' shape and parameter count; the only local drill that tests the motivation node rather than
+      the arithmetic alone.
+    covers:
+    - knowledge-aml-l10-motivation
+    - knowledge-aml-l10-shapes
+    depth: practice
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN,
+      Q2 three 3×3 stride-2 'same' convolutional layers)
+  - unit_id: unit-aml-l11
+    title: Géron 3rd ed. Ch 16 — tokens and the vocabulary, in code
+    format: book
+    angle: 'Builds the token vocabulary the deck assumes: text to ids to sequences, with the length and
+      vocabulary choices made explicit. Character-level here; subword tokenizers are named in the footnotes,
+      not taught.'
+    covers:
+    - knowledge-aml-l11-tokenization
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 16 pdf pp. 750–762 (TextVectorization and the character vocabulary)
+  - unit_id: unit-aml-l11
+    title: Géron 3rd ed. Ch 16 — embeddings, static then contextual
+    format: book
+    angle: Shows the lookup table and then what changes when representations are produced by a pretrained
+      model instead — the deck's static-versus-contextual distinction made executable.
+    covers:
+    - knowledge-aml-l11-embeddings
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 16 'Reusing Pretrained Embeddings and Language Models' pdf pp.
+      763–769
+  - unit_id: unit-aml-l11
+    title: Géron 3rd ed. Ch 16 — attention, then the original Transformer
+    format: book
+    angle: Walks the same path as the lecture and then writes a positional-encoding layer from scratch,
+      including the sine/cosine equation the deck shows without deriving.
+    covers:
+    - knowledge-aml-l11-attention
+    - knowledge-aml-l11-block
+    - knowledge-aml-l11-position
+    depth: implementation
+    scope: complementary
+    locator: 'geron-copy2.pdf (3rd ed.) Ch 16 ''Attention Mechanisms'' pdf p. 772, ''Attention Is All
+      You Need: The Original Transformer Architecture'' pdf p. 776, ''Positional encodings'' pdf pp. 779–780
+      (Equation 16-2)'
+  - unit_id: unit-aml-l11
+    title: Géron 3rd ed. Ch 16 — multi-head attention and masking
+    format: book
+    angle: Q/K/V projections and heads as shapes in code, with the masked decoder attention that is the
+      deck's bonus causal-masking slide.
+    covers:
+    - knowledge-aml-l11-qkv
+    - knowledge-aml-l11-parallelization
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 16 'Multi-head attention' pdf pp. 781–785 (masked attention
+      pdf p. 784)
+  - unit_id: unit-aml-l11
+    title: Géron 3rd ed. Ch 16 exercises 5 and 6
+    format: book
+    angle: 'Two closed-book retrieval items on scope: what an attention mechanism is and how it helps,
+      and which layer of the transformer matters most and why. Q8–Q9 are RNN coding tasks and are out
+      of the 2026 scope.'
+    covers:
+    - knowledge-aml-l11-attention
+    - knowledge-aml-l11-block
+    depth: practice
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed.) Ch 16 Exercises pdf pp. 794–795, questions 5 and 6
+  - unit_id: unit-aml-exam-prep
+    title: Géron 3rd ed. — the executable half of both repair clusters
+    format: book
+    angle: 'Opened only for a diagnosed miss, and only at the named section: metrics, optimizers, CNN
+      motivation, attention. The 3rd-edition file is the complete one.'
+    covers:
+    - knowledge-aml-exam-classical
+    - knowledge-aml-exam-neural
+    depth: implementation
+    scope: complementary
+    locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176, Ch 11 optimizers pdf
+      pp. 485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention pdf pp. 772–795
 - source_id: source-caltech-lfd
   role: practice
   why: Selected bias/variance, regression, and learning-theory homework; neural-network gaps are better
@@ -2513,8 +2763,9 @@ sources:
     url: https://www.deeplearningbook.org/contents/convnets.html
 - source_id: source-d2l
   role: optional-depth
-  why: Executable neural-network and CNN reference for current L08-L10. Its RNN chapters are outside the
-    2026 AML L11 scope.
+  why: Executable neural-network, CNN and attention reference for current L08–L11. Its RNN chapters (Ch
+    10) stay outside the 2026 scope, but Chapter 11 is the attention/transformer chapter and is the only
+    practice-depth Transformer material on the menu.
   priority: 29
   unit_routes:
   - unit_id: unit-aml-l08
@@ -2561,6 +2812,38 @@ sources:
     scope: optional
     locator: Chapters 7–8
     url: https://d2l.ai/
+  - unit_id: unit-aml-l11
+    title: D2L Chapter 11 — attention and transformers, with exercises
+    format: website
+    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
+      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
+      each section ending in Exercises.'
+    covers:
+    - knowledge-aml-l11-attention
+    - knowledge-aml-l11-qkv
+    - knowledge-aml-l11-position
+    - knowledge-aml-l11-block
+    - knowledge-aml-l11-training
+    depth: practice
+    scope: optional
+    locator: 11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention;
+      11.6 Self-Attention and Positional Encoding; 11.7 The Transformer Architecture — each with an Exercises
+      subsection. 11.4 Bahdanau attention is RNN-era and 11.8–11.9 (vision, large-scale pretraining) are
+      outside the 2026 scope. Verified 2026-08-22.
+    url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
+  - unit_id: unit-aml-exam-prep
+    title: D2L Chapter 11 exercises — the L11 practice the course never issued
+    format: website
+    angle: Stands in for the lecturer-worked Transformer sheet that does not exist; use its per-section
+      exercises to convert the operator-drafted L11 bank into worked evidence.
+    covers:
+    - knowledge-aml-exam-neural
+    - knowledge-aml-exam-error-control
+    depth: practice
+    scope: optional
+    locator: Chapter 11 sections 11.1, 11.3, 11.5, 11.6 and 11.7 with their Exercises subsections. Verified
+      2026-08-22.
+    url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
 - source_id: source-sutton-barto-rl
   role: reference
   why: Present on the shared AML shelf but reinforcement learning is outside the locally posted L01–L10
@@ -2621,3 +2904,21 @@ sources:
     scope: complementary
     locator: Chapter 8 — Transformers (January 6, 2026 draft)
     url: https://web.stanford.edu/~jurafsky/slp3/
+- source_id: source-lineare-algebra-archive
+  role: practice
+  why: The L01 primer is a 36-page diagnostic with no drill behind it. This archive is the only registered
+    material that can actually test the prerequisite it diagnoses; it is a gap-filler for a failed primer
+    check, never a course text.
+  priority: 30
+  unit_routes:
+  - unit_id: unit-aml-l01
+    title: Solved Lineare-Algebra Übungen and Klausuren
+    format: exercise
+    angle: Solution-backed vector, matrix, product and shape drills for whichever primer item came back
+      red; German, and unrelated to AML scope beyond the prerequisite check.
+    covers:
+    - knowledge-aml-l01-prerequisites
+    depth: practice
+    scope: prerequisite
+    locator: LA/Übungen mit lösungen.pdf; LA/Übungsblatt mit lösungen.pdf; LA/Klausur31-07-23-Losungen
+      2.pdf; LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf
