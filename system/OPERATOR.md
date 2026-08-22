@@ -54,6 +54,9 @@ Skills and projects use modules and units without false academic metadata.
    exception is the ephemeral `job-dashboard` query: deliberately opening Job
    confirms one read-only session against the bounded `Job/dashboard.yaml`
    catalogue. It cannot feed search, AI context, recommendations, or writes.
+   The nested `Job/stratum/` checkout is immutable to the whole system: neither
+   its worktree nor `.git/` metadata may be written. The only permitted access
+   is an exact, option-free hash-and-path drift query with Git locks disabled.
 4. Master's Planning is Git-tracked under `curriculum/quarantine/`, excluded
    from normal loading and search, and represented only by a boundary record.
 5. Academic administrative facts live only in the owning partitioned

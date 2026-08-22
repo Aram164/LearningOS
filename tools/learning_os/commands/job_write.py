@@ -36,7 +36,11 @@ from .job import (
     _read_yaml,
     job_fingerprint,
 )
-from .job_boundary import FORBIDDEN_WRITE_ROOTS, writable_job_path
+from .job_boundary import (
+    FORBIDDEN_WRITE_ROOTS,
+    validate_stratum_revision,
+    writable_job_path,
+)
 from .support import _operator_lock, _root
 
 CONTRACT = "job-write-v1"
@@ -88,6 +92,18 @@ def _commit(job_root: Path, writes: dict[Path, str], *, capability: str,
     """Commit one Job transaction and return its confirmation block."""
     service = TransactionService(job_root)
     for path in writes:
+        try:
+            relative = path.relative_to(job_root).as_posix()
+        except ValueError as exc:
+            raise JobDashboardError(
+                f"Job transaction target escapes the quarantine: {path}"
+            ) from exc
+        # Defense in depth: callers resolve their target before building the
+        # transaction, and the central commit gate resolves it again.  A future
+        # Job capability therefore cannot reach Stratum merely by forgetting
+        # one helper call at its own edge.
+        if writable_job_path(job_root, relative) != path.resolve():
+            raise JobDashboardError(f"Job transaction target changed while resolving: {path}")
         if path.exists() and not path.is_file():
             raise JobDashboardError(f"cannot write {path}: target is not a regular file")
     try:
@@ -235,9 +251,7 @@ def cmd_job_note_stamp(args) -> int:
             raise JobDashboardError(
                 f"status must be current, drifting or stale (got '{status}')"
             )
-        stamp = args.commit.strip()
-        if not stamp:
-            raise JobDashboardError("a stamp needs a commit")
+        stamp = validate_stratum_revision(args.commit)
         if getattr(args, "date", None):
             stamp = f"{stamp} ({args.date})"
         elif "(" not in stamp:

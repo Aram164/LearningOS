@@ -43,14 +43,14 @@
           "description": "The Stratum files this stage's anchor is about, repo-root-relative. A list rather than the single string a note carries, because a note is about one component and a stage's anchor usually spans several. Drift is `has any of them moved`.",
           "items": {
             "type": "string",
-            "pattern": "^(?!/)(?!.*\\.\\.)[^\\s]+$"
+            "pattern": "^(?![/:\\-])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*[\\\\*?\\[])[^\\s]+$"
           },
           "uniqueItems": true
         },
         "verified_against": {
           "type": "string",
           "description": "The Stratum commit the anchor prose was last checked against, as `<sha> (YYYY-MM-DD)`. An empty string means unstamped: freshness is reported as `unverified`, never as `current`.",
-          "pattern": "^$|^[0-9a-fA-F]{7,40}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$"
+          "pattern": "^$|^[0-9a-fA-F]{7,64}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$"
         }
       }
     },

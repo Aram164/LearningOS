@@ -186,3 +186,26 @@ The implementation is distributed by responsibility:
 
 Legacy Markdown study plans remain readable and can become editable by creating
 a structured plan with the same stable id. No migration rewrites the original.
+
+## Amendment 2026-08-22 — Stratum is immutable to the entire system
+
+The Stratum checkout nested under `Job/` is a provenance source, never a Job
+write target. This applies to both the worktree and `.git/`; even an index stat
+refresh is outside the contract. LearningOS may ask only whether exact,
+repo-relative component paths changed since an exact hexadecimal commit id.
+That query disables optional Git locks, external diffs, and text conversion.
+
+The rule is enforced at four independent boundaries:
+
+- the producer contract publishes `stratum.mode: read-only` and two constant
+  `false` write permissions for the worktree and Git metadata;
+- the central Job transaction gate re-validates every target against the
+  allowlist, even if a future command forgets to validate its own path;
+- Stratum revisions and components are inert values before Git receives them,
+  preventing option injection and pathspec execution;
+- the UI rejects grants with missing/unknown roots or a weaker Stratum policy,
+  and resolves symlinks before opening an allowlisted Job file.
+
+Tests snapshot the checkout, including `.git/`, around reads and every Job write
+capability. A future implementation must prove byte-for-byte preservation; a
+generic claim that a route is "read only" is not sufficient.

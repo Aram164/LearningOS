@@ -52,6 +52,29 @@ def _string_list(value, *, label: str, required: bool = False) -> tuple[str, ...
     return tuple(item.strip() for item in value)
 
 
+_ALLOWED_JOB_WRITE_SCOPES = frozenset({
+    "Job/workspace-job-deem/scratch/**",
+    "Job/notes/**",
+    "Job/plans/**",
+    "Job/operations/tasks.yaml",
+    "Job/operations/progress.yaml",
+})
+
+
+def _refuse_stratum_write_scopes(writes: tuple[str, ...], *, label: str) -> None:
+    """A declaration can use an audited Job scope, never broaden it."""
+    for value in writes:
+        normalized = value.replace("\\", "/").rstrip("/")
+        if normalized == "Job/stratum" or normalized.startswith("Job/stratum/"):
+            raise CapabilityCatalogError(
+                f"{label} declares forbidden immutable Stratum write scope: {value}"
+            )
+        if normalized.startswith("Job/") and value not in _ALLOWED_JOB_WRITE_SCOPES:
+            raise CapabilityCatalogError(
+                f"{label} declares unaudited Job write scope: {value}"
+            )
+
+
 def load_capability_catalog(root: Path) -> dict:
     path = root / "system" / "contracts" / "capabilities.yaml"
     if not path.is_file():
@@ -99,9 +122,10 @@ def load_capability_catalog(root: Path) -> dict:
                             f"query {name} schema does not exist: {schema}"
                         )
             else:
-                _string_list(
+                writes = _string_list(
                     row.get("writes"), label=f"capability {name} writes", required=True
                 )
+                _refuse_stratum_write_scopes(writes, label=f"capability {name}")
                 cli_command = row.get("cli_command")
                 if section == "commands" and (
                     not isinstance(cli_command, str) or not cli_command.strip()

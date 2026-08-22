@@ -10,6 +10,7 @@ queries:
     invariants:
     - explicit access confirmation is required
     - read-only and in-memory only
+    - Stratum worktree and Git metadata are immutable; only exact hash-and-path drift queries are permitted
     - absent from manifest, search, AI, and generated views
     - publishes a Job-specific optimistic-concurrency snapshot
   project.list:
@@ -261,6 +262,7 @@ internal_commands:
 forbidden:
 - direct interface filesystem writes
 - writes under Job/ outside the job.* capabilities (ADR-010)
+- writes under Job/stratum/**, including Job/stratum/.git/**, from every query and capability
 - partial application of a validated transaction
 - deletion of transaction receipts
 - repository.read-job

@@ -49,9 +49,11 @@ except ImportError:  # pragma: no cover - environment problem, not a finding
 
 from learning_os.commands.job_boundary import (  # noqa: E402
     READABLE_ROOTS,
+    JobDashboardError,
     component_freshness,
     job_root,
     stratum_component_changed,
+    validate_stratum_components,
 )
 
 #: Tokens that are unambiguously source paths rather than prose.  Deliberately
@@ -129,6 +131,11 @@ def _check_stage(
     #    vault-prefixed path, and the bare module names.
     for token in dict.fromkeys(SOURCE_TOKEN.findall(anchor)):
         token = token.rstrip(".,;:")
+        try:
+            validate_stratum_components(token)
+        except JobDashboardError as exc:
+            report("unsafe anchor path", str(exc))
+            continue
         if (stratum / token).exists():
             continue
         shorthand = stratum / "stratum" / token
@@ -144,7 +151,16 @@ def _check_stage(
     # 2. Declared components are pathspecs handed to `git diff`.  A component
     #    that does not resolve makes the diff silently empty, which reads as
     #    `current` — the one wrong answer this whole mechanism exists to avoid.
-    declared = [str(item).strip() for item in (context.get("component") or []) if str(item).strip()]
+    raw_declared = [
+        str(item).strip()
+        for item in (context.get("component") or [])
+        if str(item).strip()
+    ]
+    try:
+        declared = validate_stratum_components(raw_declared)
+    except JobDashboardError as exc:
+        report("unsafe component", str(exc))
+        declared = []
     for component in declared:
         if not (stratum / component).exists():
             report(
