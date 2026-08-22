@@ -10,10 +10,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from learning_os.contracts import build_plan_template, validate_contract
+from learning_os.contracts import (
+    build_plan_template,
+    current_template_problems,
+    validate_contract,
+)
 from learning_os.contracts.capability_catalog import query_definitions
 from learning_os.loader import load_repo
-
 
 SHARED_PLAN_SCHEMA = "https://learningos.local/schema/learning-plan-v1"
 
@@ -49,6 +52,19 @@ def test_official_plan_templates_are_schema_valid(repo_root):
     for plan in (curriculum, job):
         assert plan["plan_template_version"] == 1
         assert [stage["number"] for stage in plan["stages"]] == [1]
+        assert "estimate_minutes" not in plan["stages"][0]
+
+
+def test_curriculum_import_refuses_the_unreplaced_source_plan_placeholder():
+    plan = build_plan_template(
+        "curriculum",
+        title="Example lecture",
+        module_id="module-example",
+        unit_id="unit-example-l01",
+    )
+    assert current_template_problems(plan, "curriculum") == [
+        "source_plan.path is still the template placeholder; name the reviewed plan"
+    ]
 
 
 def test_every_active_curriculum_plan_uses_current_template(repo_root):
@@ -69,6 +85,7 @@ def test_module_import_template_carries_current_plan_contract(repo_root):
     assert template["plan_contract"]["plan_template_version"] == 1
     study_map = template["units"][0]["study_map"]
     validate_contract(repo_root, "study-map.schema.json", study_map)
+    assert "estimate_minutes" not in study_map["stages"][0]
 
 
 # --------------------------------------------------------------- reachability

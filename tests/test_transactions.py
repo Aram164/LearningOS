@@ -133,6 +133,18 @@ def test_validation_and_publication_share_one_loaded_repository(
     assert loads == 1
 
 
+def test_snapshot_check_does_not_parse_the_repository(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+
+    def unexpected_load(_root: Path):
+        raise AssertionError("a content digest must not require a domain parse")
+
+    monkeypatch.setattr(command_support, "load_repo", unexpected_load)
+
+    assert command_support._expected_ok(mini_repo, expected) is True
+
+
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     canvas = mini_repo / "Untitled 37.canvas"
     regular = mini_repo / "work/inbox/kept.md"

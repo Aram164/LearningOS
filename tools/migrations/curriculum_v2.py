@@ -21,6 +21,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
+from learning_os.contracts.migration_lifecycle import (  # noqa: E402
+    refuse_retired_apply,
+    retired_migration,
+)
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 
 TODAY = "2026-08-03"
@@ -820,7 +824,11 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true", help="write the migration (default: dry-run)")
     parser.add_argument("--report", action="store_true", help="print all planned/applied actions")
     args = parser.parse_args()
-    migration = run(Path(args.root).resolve(), args.apply)
+    root = Path(args.root).resolve()
+    retired = retired_migration(root, "curriculum-v2", supported_through=0)
+    if refuse_retired_apply(retired, apply=args.apply):
+        return 2 if args.apply else 0
+    migration = run(root, args.apply)
     mode = "applied" if args.apply else "dry-run"
     print(f"curriculum-v2 migration {mode}: {len(migration.actions)} action(s)")
     if args.report:

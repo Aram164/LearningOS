@@ -13,12 +13,13 @@ python tools/los.py capabilities --json
 python tools/los.py bootstrap
 ```
 
-The stable read contract is the single atomic `generated/manifest.json`,
-`contract_version: 5` — declared in `system/contracts/manifest-contract.yaml`
-and enforced by the producer on every build, so the version announced and the
-shape published cannot disagree. (This is not the canonical record format,
-which is `data-contract.yaml` v5; the two version different things and move
-independently.) It contains programs, semesters, partitioned modules,
+The stable read contract is the single atomic `generated/manifest.json`. Its
+current version is declared in `system/contracts/manifest-contract.yaml` and
+enforced by the producer on every build, so the version announced and the shape
+published cannot disagree. This is separate from the canonical record format,
+whose current version is declared in `system/contracts/data-contract.yaml`.
+They version different things and move independently. The manifest contains
+programs, semesters, partitioned modules,
 components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
 sittings, and registration windows), and boundary-only quarantine records. Interfaces must not reconstruct

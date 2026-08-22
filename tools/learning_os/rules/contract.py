@@ -19,7 +19,29 @@ See tools/schema_contract.py for the reasoning and the bump procedure.
 
 from __future__ import annotations
 
+import re
+
 from ..contracts import data_contract
+
+_LIVING_CONTRACT_DOCS = (
+    "README.md",
+    "system/OPERATOR.md",
+    "system/CLAUDE.md",
+    "system/WORKFLOWS.md",
+    "system/ACCEPTANCE-TESTS.md",
+    "system/contracts/manifest-contract.yaml",
+    "tools/learning_os/commands/query.py",
+)
+
+# Historical ADRs and the data-contract history may name the versions that
+# existed at an event. Living operator instructions must not: copied current
+# versions became false repeatedly while every executable contract stayed green.
+_STATIC_CONTRACT_VERSION = re.compile(
+    r"\bmanifest(?:\s+contract)?\s+v\d+\b"
+    r"|data-contract\.yaml`?\s+v\d+\b"
+    r"|\(currently\s+v\d+\)",
+    re.IGNORECASE,
+)
 
 
 class ChecksContract:
@@ -66,3 +88,36 @@ class ChecksContract:
         except ManifestContractError as exc:
             self.err("MANIFEST-CONTRACT-UNREADABLE", str(exc).replace("\n", " "),
                      "system/contracts/manifest-contract.yaml")
+
+    def check_contract_documentation(self):
+        """Living instructions point to contract owners instead of copying versions."""
+        root = self.repo.root
+        for relative in _LIVING_CONTRACT_DOCS:
+            path = root / relative
+            if not path.is_file():
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError as exc:
+                self.err("CONTRACT-DOC-UNREADABLE", str(exc), relative)
+                continue
+            if relative == "system/contracts/manifest-contract.yaml":
+                # The leading comments are living instructions; YAML history
+                # below them is dated evidence and may name historical versions.
+                header: list[str] = []
+                for line in text.splitlines():
+                    if line and not line.startswith("#"):
+                        break
+                    header.append(line)
+                text = "\n".join(header)
+            match = _STATIC_CONTRACT_VERSION.search(text)
+            if match is None:
+                continue
+            line = text.count("\n", 0, match.start()) + 1
+            self.err(
+                "CONTRACT-DOC-STATIC-VERSION",
+                f"living instructions copy '{match.group(0)}' on line {line}; "
+                "point to the producer-owned contract file instead, so the "
+                "documentation cannot lag the executable declaration",
+                relative,
+            )

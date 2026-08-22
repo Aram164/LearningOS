@@ -5,7 +5,7 @@ Plain-file knowledge repository for deep technical learning. Fresh Git repositor
 Operational learning is module-first: program/area → module → optional
 component → unit → one current study map → ordered stages. The physical
 tree is under `curriculum/`; workspaces coordinate units through explicit IDs,
-and durable knowledge remains under `knowledge/`. The manifest v2 resume
+and durable knowledge remains under `knowledge/`. The manifest resume
 pointer is a shortcut only—it never hides other modules or study maps.
 
 ## Quick start
@@ -102,13 +102,14 @@ anything — a text editor and Git are enough to operate this repository forever
 ## Commands
 
 ```bash
-make setup      # once per clone/move: create .venv, install deps, install both Git hooks
+make setup      # once per clone/move: create .venv, install deps, install Git hooks
 make check      # validate (schemas + VALIDATION.md rules)
 make views      # rebuild everything under the gitignored output tree
 make status     # one-screen repository state
 make inventory  # rebuild the materials manifest (see "Materials durability")
 make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
 make test       # complete suite, including full-repository integration checks
+make system-check # Core lint/validation/tests + the sibling UI's complete check
 make            # list the one-word commands
 ```
 
@@ -124,7 +125,7 @@ The loader stays the single authority; the CLI only delegates.
 and installs the package with its `dev` dependencies from `pyproject.toml`, so
 the tooling never touches your system Python —
 this sidesteps the PEP 668 / Homebrew "externally-managed-environment" error you
-hit on a clean macOS install. Every later `make` target and both Git hooks use
+hit on a clean macOS install. Every later `make` target and the Core Git hooks use
 `.venv/bin/python` automatically when it exists, and fall back to the system
 `python3` otherwise. Build with a specific interpreter via
 `make setup PYTHON=python3.14`.
@@ -136,10 +137,15 @@ Requires Python 3.12+, `pyyaml`, `jsonschema>=4`,
 `pytest` — the tools fail fast with the exact fix if a dependency is missing or
 too old.
 
-Two Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
+Three Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings
-print but never block); **post-commit** rebuilds `generated/` so the local
-dashboards are never stale.
+print but never block) and runs the defect-oriented static checks; **post-commit** rebuilds `generated/` so the local
+dashboards are never stale; **pre-push** requires clean Core and UI worktrees
+and runs `make system-check`, so the release pair is verified through one
+command instead of two remembered checklists. The paired pre-push hook is also
+installed into the sibling UI checkout when it is present. Each installed hook
+checks itself against its tracked canonical source; if they differ, the gate
+fails with the single repair command `make hooks`.
 
 ## Changing a schema (the data contract)
 
@@ -159,7 +165,9 @@ deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
    frozen snapshot of each historical format and is loaded against the *current*
    schemas. If those tests still pass, the change is backward-compatible.
 2. **If not, write the migration** under `tools/migrations/` — idempotent,
-   dry-run by default, in the style of `curriculum_v2.py`.
+   dry-run by default, and bounded to the last data-contract generation it
+   understands. A completed migration cannot be replayed on a later live
+   format; write a new migration instead. See `tools/migrations/README.md`.
 3. **Bump the contract:**
    `python tools/schema_contract.py --bump --note "…" [--migration …]`
 4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
@@ -182,10 +190,10 @@ They are versioned independently and deliberately: a record can gain an optional
 field without changing the projection, and the projection can be reshaped
 without touching a single stored record.
 
-| what | contract | version |
+| what | contract | version owner |
 |---|---|---|
-| canonical record format | `system/contracts/data-contract.yaml` | 4 |
-| published manifest shape | `system/contracts/manifest-contract.yaml` | 3 |
+| canonical record format | `system/contracts/data-contract.yaml` | read from this file; `make contract` reports it |
+| published manifest shape | `system/contracts/manifest-contract.yaml` | read from this file; `make contract` reports it |
 
 `build_manifest` checks itself against that declaration on every build, so a
 change to the published shape fails here rather than downstream. That is the
@@ -253,4 +261,4 @@ Canonical UI/CLI mutations are declared in
 shared transaction service. Successful writes produce receipts and increment
 only the affected artifact revisions. The Bachelor thesis is the first
 first-class Project; its former module ID remains a compatibility alias while
-manifest v2 is still supported.
+the legacy module identifier is still supported.

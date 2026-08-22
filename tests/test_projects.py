@@ -49,9 +49,10 @@ def test_project_cli_resolves_compatibility_alias(repo_root: Path):
     assert payload["resolved_from"] == "module-project-bachelor-thesis"
 
 
-def test_project_migration_is_idempotent(repo_root: Path):
+def test_project_migration_is_retired_on_current_contract(repo_root: Path):
     result = subprocess.run(
         [sys.executable, str(repo_root / "tools/migrations/projects_v1.py"), "--apply", "--root", str(repo_root)],
-        cwd=repo_root, text=True, capture_output=True, check=True,
+        cwd=repo_root, text=True, capture_output=True,
     )
-    assert json.loads(result.stdout)["changed"] is False
+    assert result.returncode == 2
+    assert "migration projects-v1 is retired" in result.stdout

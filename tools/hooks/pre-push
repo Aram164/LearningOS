@@ -1,0 +1,49 @@
+#!/bin/sh
+# Verify the two-repository release pair, not whichever half was remembered.
+
+set -eu
+
+current="$(git rev-parse --show-toplevel)"
+case "$(basename "$current")" in
+    repository)
+        core="$current"
+        ui="$(dirname "$current")/obsidian-ui"
+        ;;
+    obsidian-ui)
+        ui="$current"
+        core="$(dirname "$current")/repository"
+        ;;
+    *)
+        echo "pre-push: expected LearningOS repository or obsidian-ui checkout" >&2
+        exit 1
+        ;;
+esac
+
+
+# The installed copy is deliberately checked before it is trusted. Once this
+# version has been installed, every later edit to the canonical gate becomes a
+# hard failure until `make hooks` refreshes both repositories.
+installed="$(git -C "$current" rev-parse --git-path hooks/pre-push)"
+case "$installed" in
+    /*) ;;
+    *) installed="$current/$installed" ;;
+esac
+if [ -f "$installed" ] && ! cmp -s "$installed" "$core/tools/hooks/pre-push"; then
+    echo "pre-push: installed hook is stale — run 'make -C $core hooks' and retry" >&2
+    exit 1
+fi
+
+for repo in "$core" "$ui"; do
+    if [ ! -d "$repo/.git" ]; then
+        echo "pre-push: paired repository is missing: $repo" >&2
+        exit 1
+    fi
+    if [ -n "$(git -C "$repo" status --porcelain)" ]; then
+        echo "pre-push: paired verification requires clean Core and UI worktrees" >&2
+        git -C "$repo" status --short >&2
+        exit 1
+    fi
+done
+
+echo "pre-push: verifying LearningOS Core + Obsidian UI release pair"
+make -C "$core" system-check

@@ -176,6 +176,23 @@ anchors, aliases, or merge keys. Quote text containing colons or YAML-sensitive
 punctuation. The gateway also serializes without aliases so shared defaults
 cannot leak anchors into authored files.
 
+When an ordinary lecture already has its knowledge nodes and complete rich
+source routing, use the tracked draft assembler instead of rebuilding the join
+in an ignored workbench script:
+
+```bash
+.venv/bin/python tools/assemble_lecture_study_maps.py \
+  --out work/active/<workspace>/outputs/lecture-map-drafts \
+  --unit <unit-id>
+```
+
+It writes no canonical file. Before it writes a draft, it refuses stale curated
+concept edges, missing concept coverage, uncovered knowledge nodes, a drifting
+plan template, or a schema-invalid map. Review the resulting YAML, then apply it
+through `unit.map.import` (or include it in the module package). This preserves
+the reproducible creation operation without treating a deterministic draft as
+learner-approved pedagogy.
+
 The package must contain `plan_contract.version: 2`,
 `plan_contract.plan_template_version: 1`, the repository-relative coverage-audit
 path, all six completeness checks set to `true`, and an `intentional_reorders`

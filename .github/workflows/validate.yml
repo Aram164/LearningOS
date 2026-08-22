@@ -29,17 +29,29 @@ jobs:
       # producer-owned manifest contract removed: Core can pass while shipping
       # a shape the UI cannot decode.
       #
-      # No `ref:` — the consumer is checked out at its default branch. The pin
-      # that stood here until 2026-08-21 said "until the contract work lands on
-      # both default branches, then drop `ref:`". It has now landed: both
-      # engineering-review-tier1 branches were fast-forwarded onto their mains.
-      # Until that happened the two workflows pinned each other at the same
-      # branch name, which verified the pair against itself and left both mains
-      # untested.
+      # Prefer a same-named consumer branch when one exists, otherwise use main.
+      # This makes a two-repository change test the pair being reviewed without
+      # reintroducing a permanent branch pin. The old static pin verified one
+      # historical branch forever; the old unpinned form verified every Core
+      # feature branch against UI main even when its matching UI branch existed.
+      - name: Resolve the matching consumer branch
+        id: consumer-ref
+        env:
+          REQUESTED_REF: ${{ github.head_ref || github.ref_name }}
+        run: |
+          if git ls-remote --exit-code --heads \
+            https://github.com/Aram164/learningos-obsidian-ui.git \
+            "refs/heads/$REQUESTED_REF" >/dev/null 2>&1; then
+            echo "ref=$REQUESTED_REF" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=main" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Check out the Job dashboard consumer
         uses: actions/checkout@v4
         with:
           repository: Aram164/learningos-obsidian-ui
+          ref: ${{ steps.consumer-ref.outputs.ref }}
           path: obsidian-ui
 
       - uses: actions/setup-python@v5

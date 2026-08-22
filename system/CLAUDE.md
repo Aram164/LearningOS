@@ -13,7 +13,7 @@
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
 > 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
-> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from manifest v2 plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone.
+> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **`Job/` is quarantined** (§13) — no reading, scanning, indexing or citing without Aram's explicit command; permission lasts one task.
 > 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints 0 errors, 0 warnings (a pre-commit hook enforces this on commits).

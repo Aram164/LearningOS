@@ -112,7 +112,7 @@ units:
           objective: State the problem, assumptions, and core result in the course's notation.
           done_when:
             - Reproduce the formulation and explain the result without notes.
-          estimate_minutes: 90
+          # Add estimate_minutes only when someone has actually estimated this stage.
           exam_critical: true
           concepts: []
           scope_triage: required-now

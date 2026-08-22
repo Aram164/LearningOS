@@ -23,6 +23,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[2]
 
+from learning_os.contracts.migration_lifecycle import (  # noqa: E402
+    refuse_retired_apply,
+    retired_migration,
+)
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402
 from learning_os.rules import validate  # noqa: E402
@@ -357,6 +361,9 @@ def main() -> int:
     mode.add_argument("--rollback", action="store_true")
     args = parser.parse_args()
     root = Path(args.root).resolve()
+    retired = retired_migration(root, "projects-v1", supported_through=0)
+    if refuse_retired_apply(retired, apply=args.apply or args.rollback):
+        return 2 if args.apply or args.rollback else 0
     if args.apply:
         return apply(root)
     if args.rollback:

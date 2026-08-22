@@ -22,8 +22,8 @@ from pathlib import Path
 import yaml
 
 from ..contracts import (
-    ContractValidationError,
     PLAN_TEMPLATE_VERSION,
+    ContractValidationError,
     PlanTemplateError,
     normalise_job_stage,
     require_current_template,

@@ -2,8 +2,8 @@
 #
 # This is a different contract from system/contracts/data-contract.yaml:
 #
-#     canonical record format        data-contract.yaml       (currently v5)
-#     manifest/interface projection  this file                (currently v5)
+#     canonical record format        data-contract.yaml       (read its declaration)
+#     manifest/interface projection  this file                (read below)
 #
 # Canonical records are what Core stores. The manifest is what Core *publishes*
 # to consumers (the Obsidian UI, los.py --json, any future interface). The two

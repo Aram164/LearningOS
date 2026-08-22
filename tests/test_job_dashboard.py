@@ -603,7 +603,7 @@ def test_job_plan_save_expands_a_minimal_stage_with_the_shared_template(mini_rep
     assert stored["plan_template_version"] == 1
     stage = stored["stages"][0]
     assert stage["number"] == 1
-    assert stage["estimate_minutes"] == 90
+    assert "estimate_minutes" not in stage
     assert stage["resources"][0]["url"] == "https://example.test/guide"
     assert stage["job_context"]["read_only_anchor"].startswith("Compare")
 

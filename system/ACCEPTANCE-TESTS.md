@@ -150,12 +150,13 @@ Cutover only when: all critical structural, ownership, reference, module, genera
 
 ---
 
-## Module-first curriculum v2 acceptance (2026-08-03)
+## Module-first curriculum baseline acceptance (2026-08-03)
 
-These checks supersede any earlier assumption that one workspace learning path
-is the whole learning interface.
+This dated baseline records the cutover checks. The current operator contract
+and producer-owned contracts supersede any version number or later workflow
+detail here; the list must not become a second owner of a live contract.
 
-- [ ] Manifest contract v5 atomically exposes programs, semesters, modules,
+- [ ] The current manifest contract atomically exposes programs, semesters, modules,
   structured components, units, maps, stages/notes, source maps, artifacts,
   workspace joins, progress, reverse indexes, boundaries, and resume snapshot.
 - [ ] Bachelor's is active/default; every current Bachelor module is visible.
@@ -185,7 +186,7 @@ is the whole learning interface.
 - [ ] German aliases retrieve the correct records. Default search excludes
   generated, archive, system, registries, migration, Master's quarantine and
   Job; Omnisearch PDF/image extraction uses English and German OCR locally.
-- [ ] Deleting generated outputs and regenerating recreates contract v2 with
+- [ ] Deleting generated outputs and regenerating recreates the declared manifest contract with
   the same canonical fingerprint for the same authored state.
 - [ ] Migration dry-run is idempotent, original paths/records are backed up and
   mapped, and quarantine retains all prospective Master's files in Git.
@@ -195,4 +196,4 @@ is the whole learning interface.
   navigates module → unit → stage, performs a guarded unit-note mutation after the relevant stages,
   survives reload, and remains usable in light/dark and narrow/wide layouts.
 - [ ] `los session-end` shows exact owned/unrelated files, commits only its
-  ledger, and never stages the three protected Canvas files.
+  ledger, and never stages Canvas files.

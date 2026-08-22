@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views materials inventory verify-materials contract test test-fast all setup garden status
+.PHONY: help check views materials inventory verify-materials contract test test-fast lint all setup hooks garden status system-check
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules), then check"
@@ -31,8 +31,11 @@ help:
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
 	@echo "make test   - run the complete test suite, including full-repository checks"
+	@echo "make lint   - run the defect-oriented static checks used by CI"
+	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make all    - check + views + materials + test"
-	@echo "make setup  - create .venv, install deps, install both Git hooks (run once per clone/move)"
+	@echo "make hooks  - install the canonical Core hooks and the paired pre-push gate"
+	@echo "make setup  - create .venv, install deps, install Git hooks (run once per clone/move)"
 
 check:
 	$(PY) tools/validate.py
@@ -66,12 +69,33 @@ test:
 test-fast:
 	$(PY) -m pytest -q -m "not full_repo"
 
+lint:
+	$(PY) -m ruff check tools tests
+
+# One command answers the question agents repeatedly had to reconstruct by
+# hand: "is the pair I am about to rely on coherent?" It intentionally changes
+# no canonical data. The UI build is deterministic and its own check refuses a
+# stale contract mirror or hand-edited bundle.
+system-check:
+	$(MAKE) lint
+	$(PY) tools/validate.py --no-report
+	$(PY) -m pytest -q
+	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
+	npm --prefix ../obsidian-ui run check
+
 all: check views materials test
 
 setup:
 	$(PYTHON) -m venv $(VENV)
 	$(VENV)/bin/python -m pip install --upgrade pip
 	$(VENV)/bin/python -m pip install -e ".[dev]"
-	cp tools/hooks/pre-commit tools/hooks/post-commit .git/hooks/
-	chmod +x .git/hooks/pre-commit .git/hooks/post-commit
+	$(MAKE) hooks
 	@echo "setup complete: .venv created, deps installed, hooks active."
+
+hooks:
+	install -m 0755 tools/hooks/pre-commit .git/hooks/pre-commit
+	install -m 0755 tools/hooks/post-commit .git/hooks/post-commit
+	install -m 0755 tools/hooks/pre-push .git/hooks/pre-push
+	@if [ -d ../obsidian-ui/.git/hooks ]; then \
+		install -m 0755 tools/hooks/pre-push ../obsidian-ui/.git/hooks/pre-push; \
+	fi
