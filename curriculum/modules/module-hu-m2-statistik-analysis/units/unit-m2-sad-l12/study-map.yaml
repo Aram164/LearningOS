@@ -229,7 +229,8 @@ stages:
   - 'Reproduce without notes: Depth, minimum samples, purity thresholds, and post-pruning control complexity;
     an unpruned tree can fit noise and generalize poorly.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-decision-trees
   scope_triage: required-now
   resources:
   - kind: read
@@ -460,7 +461,8 @@ stages:
     construction, diversity, interpretability, compute, and calibration decide whether an ensemble is
     worthwhile.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-ensemble-methods
   scope_triage: required-now
   resources:
   - kind: read

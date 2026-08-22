@@ -21,7 +21,13 @@ stages:
   - 'Reproduce without notes: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks
     that explain why later model families exist rather than as a chronology to memorize.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-perceptron
+  - concept-recurrent-networks
+  - concept-transformer
+  - concept-xor-problem
   scope_triage: required-now
   resources:
   - kind: read
@@ -66,7 +72,8 @@ stages:
   - 'Reproduce without notes: Examples, features, labels, hypotheses, learning algorithms, losses, and
     the distinction between classification, regression, supervised, and unsupervised learning.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-supervised-learning
   scope_triage: required-now
   resources:
   - kind: read
@@ -152,7 +159,9 @@ stages:
   done_when:
   - 'Reproduce without notes: Datasets as matrices and vectors, illustrated through MNIST, Iris, and embeddings.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-embedding
+  - concept-linear-algebra
   scope_triage: required-now
   resources:
   - kind: read
@@ -303,7 +312,9 @@ stages:
     notebooks as the working language assumed by later lectures.'
   - Work Solved Lineare-Algebra Übungen and Klausuren, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-linear-algebra
+  - concept-python
   scope_triage: required-now
   resources:
   - kind: read

@@ -70,7 +70,8 @@ stages:
   - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-supervised-learning
   scope_triage: required-now
   resources:
   - kind: read
@@ -123,7 +124,8 @@ stages:
   - 'Reproduce without notes: Structured, text, image, graph, and temporal data require different preprocessing
     and representations; domain knowledge determines which transformations preserve useful information.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-supervised-learning
   scope_triage: required-now
   resources:
   - kind: read
@@ -238,7 +240,9 @@ stages:
   - 'Reproduce without notes: A learner searches a hypothesis space using an objective; architecture,
     regularization, features, and optimization encode assumptions about which solutions should generalize.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-regularization
+  - concept-supervised-learning
   scope_triage: required-now
   resources:
   - kind: read
@@ -288,7 +292,8 @@ stages:
     losses answer different questions; metric choice follows costs, prevalence, and deployment context.'
   - Work Blatt 5 and UE7 — multiclass metrics, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-classification-metrics
   scope_triage: required-now
   resources:
   - kind: read

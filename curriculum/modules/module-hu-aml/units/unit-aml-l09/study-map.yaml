@@ -21,7 +21,9 @@ stages:
     traversal.'
   - Work Übung 10 — computation graphs and autodiff, and record every miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-backpropagation
+  - concept-chain-rule
   scope_triage: required-now
   resources:
   - kind: read
@@ -515,7 +517,9 @@ stages:
   - 'Reproduce without notes: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the
     remedies included by the lecture.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-backpropagation
+  - concept-vanishing-gradients
   scope_triage: required-now
   resources:
   - kind: read

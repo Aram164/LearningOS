@@ -1,0 +1,26 @@
+schema_version: 1
+id: transaction-20260822-155942-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-08-22T15:59:42+02:00'
+snapshot_before: sha256:ed7a90cec92d15037349f008d178a9c215dfa20bbe8dea31c89b98a3c8b2ce70
+snapshot_after: sha256:1e34fec0045fd71259fd969276e1812c9b2e8de250cb4e48f61735c0ec4365f8
+expected_revisions: {}
+artifact_revisions:
+  study-map-aml-l02:
+    before: 1
+    after: 2
+  unit-aml-l02:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml
+  sha256_before: 5fbdc7571c127acfff00c1e9ab415525604347d00df0057298778076022f9b2c
+  sha256_after: f21f58df20fa9dd51396cd91184b01e94c19d1dc6c9f8361c0fa3c79b2af84ae
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l02/unit.yaml
+  sha256_before: 231e3a1362fa693c6e51c21ba312277a3b47480c7a8ffdf0035a2eadb1e460c1
+  sha256_after: 231e3a1362fa693c6e51c21ba312277a3b47480c7a8ffdf0035a2eadb1e460c1
+  created: false
+metadata: {}

@@ -21,7 +21,8 @@ stages:
   - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random;
     an estimate is its realized numerical value for one observed sample.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-statistical-estimation
   scope_triage: required-now
   resources:
   - kind: read
@@ -254,7 +255,8 @@ stages:
   - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 4, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-statistical-estimation
   scope_triage: required-now
   resources:
   - kind: read
@@ -360,7 +362,8 @@ stages:
   - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 3, and record every
     miss with the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-statistical-estimation
   scope_triage: required-now
   resources:
   - kind: read
@@ -490,7 +493,9 @@ stages:
   - 'Reproduce without notes: Narrow intervals cannot repair selection bias, measurement error, dependence,
     or population drift; the inferential model is only as credible as its sampling assumptions.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-sampling-bias
+  - concept-statistical-estimation
   scope_triage: required-now
   resources:
   - kind: read

@@ -53,7 +53,8 @@ stages:
   - 'Reproduce without notes: Text is converted into token identities; vocabulary, token instances, sequence
     length and subword choices determine the model''s discrete input representation.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-tokenization
   scope_triage: required-now
   resources:
   - kind: read
@@ -91,7 +92,9 @@ stages:
   - 'Reproduce without notes: Embedding lookup maps token identities to vectors, while contextual embeddings
     let the same token acquire a different representation from surrounding tokens.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-contextual-embedding
+  - concept-embedding
   scope_triage: required-now
   resources:
   - kind: read
@@ -265,7 +268,9 @@ stages:
   - 'Reproduce without notes: Because attention itself is permutation-insensitive, positional representations
     inject order before tokens enter the block.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-attention
+  - concept-positional-encoding
   scope_triage: required-now
   resources:
   - kind: read
@@ -389,7 +394,10 @@ stages:
   - 'Reproduce without notes: Block outputs become vocabulary logits and softmax probabilities, and cross-entropy
     trains the model to predict the observed next token.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-cross-entropy
+  - concept-language-modelling
+  - concept-softmax
   scope_triage: required-now
   resources:
   - kind: read

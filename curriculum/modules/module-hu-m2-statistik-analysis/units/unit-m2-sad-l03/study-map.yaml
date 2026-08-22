@@ -23,7 +23,8 @@ stages:
   - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-correlation
   scope_triage: required-now
   resources:
   - kind: read
@@ -277,6 +278,7 @@ stages:
     predictions, and the normal equation expresses the closed-form least-squares solution.'
   exam_critical: true
   concepts:
+  - concept-linear-algebra
   - concept-linear-regression
   - concept-normal-equation
   scope_triage: required-now
@@ -380,7 +382,9 @@ stages:
   - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it
     failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-feature-scaling
+  - concept-linear-regression
   scope_triage: required-now
   resources:
   - kind: read

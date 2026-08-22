@@ -123,7 +123,8 @@ stages:
   - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 1, and record every miss with the
     step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-combinatorics
   scope_triage: required-now
   resources:
   - kind: read
@@ -179,7 +180,8 @@ stages:
   - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 1, and record every miss with the
     step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-combinatorics
   scope_triage: required-now
   resources:
   - kind: read
@@ -235,7 +237,8 @@ stages:
   - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 4, and record every miss with the
     step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-combinatorics
   scope_triage: required-now
   resources:
   - kind: read
@@ -332,7 +335,8 @@ stages:
   - 'Reproduce without notes: Multisets and allocations become separator problems; the model must distinguish
     selecting types repeatedly from ordering individual draws.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-combinatorics
   scope_triage: required-now
   resources:
   - kind: read
@@ -488,7 +492,8 @@ stages:
   - 'Reproduce without notes: Algebraic identities reorganize repeated counting arguments, while Stirling
     estimates factorial growth when exact evaluation is impractical.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-combinatorics
   scope_triage: required-now
   resources:
   - kind: read

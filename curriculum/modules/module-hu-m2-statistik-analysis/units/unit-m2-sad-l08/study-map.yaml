@@ -21,7 +21,8 @@ stages:
   - 'Reproduce without notes: Mean locates the bell curve and variance controls spread; symmetry, density,
     and the 68-95-99.7 rule support qualitative checks before calculation.'
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-normal-distribution
   scope_triage: required-now
   resources:
   - kind: read
@@ -202,7 +203,9 @@ stages:
   - Work Blatt 4 and UE5 — Normal and CLT calculations, then the remaining 2, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-normal-distribution
+  - concept-variance
   scope_triage: required-now
   resources:
   - kind: read
@@ -273,6 +276,7 @@ stages:
   exam_critical: true
   concepts:
   - concept-central-limit-theorem
+  - concept-law-of-large-numbers
   scope_triage: required-now
   resources:
   - kind: read
@@ -403,7 +407,9 @@ stages:
   - Work Blatt 4 and UE5 — Normal and CLT calculations, then the remaining 4, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-central-limit-theorem
+  - concept-normal-distribution
   scope_triage: required-now
   resources:
   - kind: read

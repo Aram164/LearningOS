@@ -23,7 +23,8 @@ stages:
   - Work Blatt 1 and UE2 — data and feature foundations, and record every miss with the step it failed
     at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -61,7 +62,8 @@ stages:
   - Work Blatt 1 and UE2 — data and feature foundations, then the remaining 3, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -130,7 +132,8 @@ stages:
   - Work Arbeitsbuch Chapter 2 — descriptive warm-ups, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
   scope_triage: required-now
   resources:
   - kind: read
@@ -179,7 +182,9 @@ stages:
   - Work Blatt 1 and UE2 — data and feature foundations, then the remaining 1, and record every miss with
     the step it failed at.
   exam_critical: true
-  concepts: []
+  concepts:
+  - concept-descriptive-statistics
+  - concept-sampling-bias
   scope_triage: required-now
   resources:
   - kind: read
