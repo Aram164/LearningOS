@@ -417,11 +417,14 @@ def test_unit_map_import_creates_one_current_map(mini_repo, tmp_path):
     incoming = tmp_path / "map.yaml"
     write_yaml(incoming, {
         "id": "study-map-demo-l02", "type": "study-map", "unit_id": "unit-demo-l02",
+        "plan_template_version": 1,
         "status": "ready", "current_stage": "stage-variance",
         "source_plan": {"path": "proposal.json", "provenance": "ai-proposed"},
         "detours": [], "shelving": {"state": "none"},
-        "stages": [{"id": "stage-variance", "title": "Variance", "status": "pending",
+        "stages": [{"id": "stage-variance", "number": 1,
+                    "title": "Variance", "status": "pending",
                     "objective": "Derive variance.", "done_when": ["Derive it."],
+                    "exam_critical": False, "concepts": [],
                     "scope_triage": "required-now", "resources": [],
                     "working_note": note_rel, "attachments": [], "source_feedback": []}],
     })
@@ -448,7 +451,8 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     package_data = {
         "module_id": "module-demo",
         "plan_contract": {
-            "version": 1,
+            "version": 2,
+            "plan_template_version": 1,
             "coverage_audit": audit_rel,
             "checks": {
                 "local_inventory_complete": True,
@@ -476,14 +480,17 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
                      "source_selections": [], "current_study_map": "study-map-demo-l02",
                      "artifacts": {}, "workspace_ids": ["workspace-demo"]},
             "study_map": {"id": "study-map-demo-l02", "type": "study-map",
+                          "plan_template_version": 1,
                           "unit_id": "unit-demo-l02", "status": "ready",
                           "current_stage": "stage-variance",
                           "source_plan": {"path": "work/active/workspace-demo/CONTEXT.md",
                                           "provenance": "operator"},
                           "detours": [], "shelving": {"state": "none"},
-                          "stages": [{"id": "stage-variance", "title": "Variance",
+                          "stages": [{"id": "stage-variance", "number": 1,
+                                      "title": "Variance",
                                       "status": "pending", "objective": "Derive variance.",
                                       "done_when": ["Derive it."],
+                                      "exam_critical": False, "concepts": [],
                                       "scope_triage": "required-now", "resources": [],
                                       "working_note": note_rel,
                                       "attachments": shared_empty,
@@ -540,9 +547,10 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
         "stages/stage-variance-review/notes.md"
     )
     current_map["stages"].append({
-        "id": "stage-variance-review", "title": "Review variance",
+        "id": "stage-variance-review", "number": 2, "title": "Review variance",
         "status": "pending", "objective": "Review the derivation.",
-        "done_when": ["Reproduce it cold."], "scope_triage": "required-now",
+        "done_when": ["Reproduce it cold."], "exam_critical": False,
+        "concepts": [], "scope_triage": "required-now",
         "resources": [], "working_note": review_note, "attachments": [],
         "source_feedback": [],
     })
@@ -565,6 +573,8 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     reordered = copy.deepcopy(package_data)
     reordered["units"][0]["study_map"] = copy.deepcopy(current_map)
     reordered["units"][0]["study_map"]["stages"].reverse()
+    for number, stage in enumerate(reordered["units"][0]["study_map"]["stages"], start=1):
+        stage["number"] = number
     reordered_package = tmp_path / "reordered-module-plan.yaml"
     write_yaml(reordered_package, reordered)
     rejected_order = run_los(

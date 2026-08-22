@@ -1,5 +1,6 @@
 id: study-map-amls-l10
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l10
 status: paused
 current_stage: stage-amls-l10-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l10-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Trace a raw dataset through the acquisition and preparation operations taught.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l10-integrate
+  number: 2
   title: Integrate data-engineering and lifecycle views
   status: pending
   objective: Relate the deck pipeline to MLSysBook, Huyen and DMMLS while preserving exam scope. Read
@@ -120,6 +123,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l10-evidence
+  number: 3
   title: Light evidence — reference and recall
   status: pending
   objective: Produce one preparation reference and complete the official hand-transformation task.

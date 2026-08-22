@@ -1,5 +1,6 @@
 id: study-map-amls-l11
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l11
 status: paused
 current_stage: stage-amls-l11-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l11-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Connect search strategies to their systems costs and model-management reuse.
@@ -34,6 +36,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l11-integrate
+  number: 2
   title: Integrate management, benchmarking and evaluation views
   status: pending
   objective: Add only source detail that sharpens search cost, evaluation or lineage reasoning. Read the
@@ -134,6 +137,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l11-evidence
+  number: 3
   title: Mid-tier evidence — reference and drills
   status: pending
   objective: Answer model-selection calculations and mechanism questions in written form.

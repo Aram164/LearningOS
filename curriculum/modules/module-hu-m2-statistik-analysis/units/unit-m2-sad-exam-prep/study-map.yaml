@@ -1,5 +1,6 @@
 id: study-map-m2-sad-exam-prep
 type: study-map
+plan_template_version: 1
 unit_id: unit-m2-sad-exam-prep
 status: ready
 current_stage: stage-m2-sad-calibrate
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-m2-sad-calibrate
+  number: 1
   title: SaD.0 — cold diagnostic and scope calibration
   status: pending
   objective: Treat Statistics & Data Analysis as its own module. Attempt one representative task from
@@ -48,6 +50,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s01-descriptive
+  number: 2
   title: SaD.1 — descriptive statistics, data quality, and base rates (L01–L02)
   status: pending
   objective: Use the current L01-L02 decks as authority, then repair only the cold failures in scales,
@@ -92,6 +95,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s02-regression
+  number: 3
   title: SaD.2 — correlation, regression, and optimization (L03)
   status: pending
   objective: 'Close the L03 chain independently: paired data to covariance/Pearson, least squares, multivariate
@@ -133,6 +137,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s03-probability-counting
+  number: 4
   title: SaD.3 — probability, Bayes, independence, and counting (L04–L05)
   status: pending
   objective: 'Make method recognition automatic: event algebra and axioms, conditional probability/Bayes,
@@ -176,6 +181,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s04-random-variables
+  number: 5
   title: SaD.4 — random variables, expectation, variance, and CDFs (L06)
   status: pending
   objective: Begin the probability-to-inference chain with PMF/PDF/CDF, expectation, variance, transformation
@@ -215,6 +221,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s05-discrete-distributions
+  number: 6
   title: SaD.5 — discrete distributions and model choice (L07)
   status: pending
   objective: Turn Binomial, Hypergeometric, and Poisson into a model-selection decision rather than a
@@ -257,6 +264,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s06-normal-clt-likelihood
+  number: 7
   title: SaD.6 — Normal distribution, CLT, approximations, and likelihood (L08)
   status: pending
   objective: Connect standardization and Normal calculations to the CLT, sampling distributions, approximations,
@@ -302,6 +310,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s07-estimation
+  number: 8
   title: SaD.7 — estimators, uncertainty, and confidence intervals (L09)
   status: pending
   objective: Treat an estimator as a random variable, compare quality criteria, and construct and interpret
@@ -344,6 +353,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s08-testing
+  number: 9
   title: SaD.8 — hypothesis tests, p-values, errors, and power (L10)
   status: pending
   objective: Run the entire test workflow with correct assumptions and language, including z/t/chi-square
@@ -388,6 +398,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s09-workflow-evaluation
+  number: 10
   title: SaD.9 — data-science workflow, leakage, and evaluation (L11)
   status: pending
   objective: Make the workflow and evaluation vocabulary operational without importing AML's larger syllabus.
@@ -422,6 +433,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s10-trees-ensembles
+  number: 11
   title: SaD.10 — decision trees and ensembles (L12)
   status: pending
   objective: Learn the current L12 tree scope and deliberately fill its missing current exercise sheet
@@ -463,6 +475,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s11-similarity-clustering
+  number: 12
   title: SaD.11 — similarity, k-NN, search, and clustering (L13 + UE7)
   status: pending
   objective: Keep the current L13 k-NN/similarity lecture and the exercise-defined clustering topic together
@@ -505,6 +518,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s12-probabilistic-learning
+  number: 13
   title: SaD.12 — Naive Bayes extensions and Bayesian networks (L14)
   status: pending
   objective: Extend the L04 classifier to numeric and count data, stable log-space computation, and explicit
@@ -542,6 +556,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s13-neural-networks
+  number: 14
   title: SaD.13 — neural networks, backpropagation, and training (L15)
   status: pending
   objective: 'Stay at SaD scope: forward shapes and parameters, the need for nonlinearity, chain-rule
@@ -584,6 +599,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s14-exam-transfer
+  number: 15
   title: SaD.X — Statistics-only retrieval and timed half-mocks
   status: pending
   objective: Convert the completed Statistics lane into independent exam performance before entering the

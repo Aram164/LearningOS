@@ -1,5 +1,6 @@
 id: study-map-algo2-exam-prep
 type: study-map
+plan_template_version: 1
 unit_id: unit-algo2-exam-prep
 # Paused with the unit and the workspace (2026-08-08 audit; a validator invariant
 # enforces that the three move together). Rebuilt 2026-08-16 from a single stub
@@ -16,6 +17,7 @@ shelving:
   state: none
 stages:
 - id: stage-algo2-phase0
+  number: 1
   title: Phase 0 - run the prerequisite diagnostics
   status: pending
   objective: Run the nine Phase 0 diagnostics cold and repair only what fails. This is triage, not a course
@@ -50,6 +52,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t01-fast-multiplication
+  number: 2
   title: T01 - Schnellere Multiplikation
   status: pending
   objective: Karatsuba, both recurrences, and the master theorem application.
@@ -86,6 +89,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t02-amortized-analysis
+  number: 3
   title: T02 - Amortisierte Analyse
   status: pending
   objective: All three methods across both running examples. This gates T04 and T05 - do not start either
@@ -129,6 +133,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t03-b-trees
+  number: 4
   title: T03 - B-Bäume
   status: pending
   objective: The disk-access cost model, the height bound, one-pass insertion, and the deletion cases.
@@ -166,6 +171,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t04-fibonacci-heaps
+  number: 5
   title: T04 - Fibonacci-Heaps
   status: pending
   objective: Structure, marking, the potential t + 2m, all six operations, and the degree bound.
@@ -203,6 +209,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t05-splay-trees
+  number: 6
   title: T05 - Splay-Bäume
   status: pending
   objective: The splay operation and the rank-potential analysis - the hardest proof in the course.
@@ -246,6 +253,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t06-cuckoo-hashing
+  number: 7
   title: T06 - Cuckoo Hashing
   status: pending
   objective: Two positions, worst-case constant lookup, and the probabilistic analysis. The precision
@@ -284,6 +292,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t07-shortest-paths
+  number: 8
   title: T07 - Kürzeste Wege
   status: pending
   objective: Bellman-Ford with correctness and negative-cycle detection, and Johnson's reweighting.
@@ -326,6 +335,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t08-maximum-flow
+  number: 9
   title: T08 - Maximaler Fluss
   status: pending
   objective: The residual network, Ford-Fulkerson and Edmonds-Karp, and max-flow min-cut with its proof.
@@ -375,6 +385,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t09-bipartite-matching
+  number: 10
   title: T09 - Bipartites Matching
   status: pending
   objective: Berge's theorem and Hopcroft-Karp, including the flow reduction the deck sets as its Übung.
@@ -417,6 +428,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t10-stable-matching
+  number: 11
   title: T10 - Stable Matching
   status: pending
   objective: Gale-Shapley and its three results, plus the optimality/pessimality pair. The only topic
@@ -458,6 +470,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t11-computational-geometry
+  number: 12
   title: T11 - Algorithmische Geometrie
   status: pending
   objective: Orientation tests, sweep line, convex hull, closest pair. The most drawing-dependent topic.
@@ -500,6 +513,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t12-fft
+  number: 13
   title: T12 - Schnelle Fourier-Transformation
   status: pending
   objective: Representations, roots of unity, the FFT and its inverse, and fast multiplication - closing
@@ -544,6 +558,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-oral-delivery
+  number: 14
   title: Oral delivery - the skill with no written substitute
   status: pending
   objective: Convert twelve topics into a 30-minute Zoom viva. Timed five-minute summaries, follow-up

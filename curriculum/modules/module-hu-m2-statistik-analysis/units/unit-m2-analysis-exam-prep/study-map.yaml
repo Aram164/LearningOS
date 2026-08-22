@@ -1,5 +1,6 @@
 id: study-map-m2-analysis-exam-prep
 type: study-map
+plan_template_version: 1
 unit_id: unit-m2-analysis-exam-prep
 status: ready
 current_stage: stage-m2-analysis-calibrate
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-m2-analysis-calibrate
+  number: 1
   title: Calibrate the script-led method and exam boundary
   status: pending
   objective: 'Keep Analysis independent from Statistics. Calibrate the script-led loop: 10-minute cold
@@ -55,6 +57,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-an0
+  number: 2
   title: AN.0 - foundations and the real numbers
   status: pending
   objective: Rebuild only the prerequisites the script assumes, then make the real-number axioms, order,
@@ -153,6 +156,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-ana
+  number: 3
   title: AN.A - sequences and convergence
   status: pending
   objective: Use Chapter 3 as the spine for sequence definitions, epsilon-N work, accumulation points,
@@ -282,6 +286,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-anb
+  number: 4
   title: AN.B - series and convergence criteria
   status: pending
   objective: Turn Chapter 4 into a decision process for necessary conditions, geometric/telescoping series,
@@ -407,6 +412,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-anc
+  number: 5
   title: AN.C - function limits and continuity
   status: pending
   objective: Work through §§5.1-5.5 so sequence criteria, one-sided/improper limits, continuity, IVT,
@@ -539,6 +545,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-and
+  number: 6
   title: AN.D - exponential/logarithm and uniform convergence
   status: pending
   objective: Learn §§5.6-5.7 at script depth, keeping exponential/log laws computational and distinguishing
@@ -634,6 +641,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-ane
+  number: 7
   title: AN.E - differentiation, mean-value theorems, and l'Hospital
   status: pending
   objective: Use the script's derivative definition and theorem chain to calculate derivatives, justify
@@ -758,6 +766,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-anf
+  number: 8
   title: AN.F - Taylor approximation and interpolation overview
   status: pending
   objective: Make Taylor polynomials, the remainder/error bound, and approximation useable from §6.8;
@@ -836,6 +845,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-ang
+  number: 9
   title: AN.G - Riemann integration and the fundamental theorem
   status: pending
   objective: Use §§7.1-7.3 to connect Riemann sums, integrability, the fundamental theorem, substitution,
@@ -961,6 +971,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-anx
+  number: 10
   title: AN.X — Analysis retrieval and timed half-mocks
   status: pending
   objective: Convert the completed Analysis blocks into independent subject performance using definitions/results
@@ -1085,6 +1096,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-analysis-exkurse
+  number: 11
   title: Deferred - Chapter 8 and non-exam Exkurse
   status: pending
   objective: Preserve the script's computer-science connections without displacing exam preparation.

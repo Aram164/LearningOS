@@ -1,5 +1,6 @@
 id: study-map-amls-l02
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l02
 status: paused
 current_stage: stage-amls-l02-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l02-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Build the taught stack/landscape and distinguish language, compilation, runtime and hardware
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l02-integrate
+  number: 2
   title: Integrate lecturer landscape and build-first architecture
   status: pending
   objective: Use DMMLS, Vol 1 and CMU to clarify categories already present in the deck. Read the lecture's
@@ -111,6 +114,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l02-evidence
+  number: 3
   title: Light evidence — reference and recall
   status: pending
   objective: Produce one landscape reference and classify unfamiliar systems.

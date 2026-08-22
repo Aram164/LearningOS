@@ -1,5 +1,6 @@
 id: study-map-thesis-landscape
 type: study-map
+plan_template_version: 1
 unit_id: unit-thesis-landscape
 status: active
 current_stage: stage-01-research-landscape-and-question-framing
@@ -11,6 +12,9 @@ shelving:
   state: none
 stages:
 - id: stage-01-research-landscape-and-question-framing
+  number: 1
+  exam_critical: false
+  concepts: []
   title: Research landscape and question framing
   status: active
   objective: Use the existing thesis landscape and brief to frame the next milestone.

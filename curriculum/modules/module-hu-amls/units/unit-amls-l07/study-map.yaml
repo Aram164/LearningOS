@@ -1,5 +1,6 @@
 id: study-map-amls-l07
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l07
 status: paused
 current_stage: stage-amls-l07-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l07-scope
+  number: 1
   title: Scope from the SS26 deck
   status: pending
   objective: Trace the systems costs of transformer training, post-training and inference.
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l07-integrate
+  number: 2
   title: Integrate scaling, FLOP and inference views
   status: pending
   objective: Use Ultra-Scale, HTSYM and Vol 2 to quantify the lecture's training/inference mechanisms.
@@ -127,6 +130,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l07-evidence
+  number: 3
   title: Mid-tier evidence — reference and drills
   status: pending
   objective: Produce a systems reference and solve one end-to-end scaling/inference scenario.

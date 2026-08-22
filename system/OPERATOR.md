@@ -83,6 +83,11 @@ Skills and projects use modules and units without false academic metadata.
     reachable and be explicitly selected, reference-only, or deferred with a
     reason. Registered-source counts never prove inventory completeness, and
     silent omission is forbidden.
+15. Every newly authored curriculum or Job learning plan uses
+    `plan_template_version: 1` and the shared numbered-stage/resource contract
+    in `system/schema/learning-plan.schema.json`. Domain fields extend that
+    contract; they never redefine it. Old plans are readable evidence, not
+    creation templates.
 
 ## Unit workflow
 

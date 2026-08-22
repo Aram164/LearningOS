@@ -19,13 +19,21 @@ evidence of what the old format was.
 from __future__ import annotations
 
 import shutil
+from pathlib import Path
 
 import pytest
 
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 
-FORMATS = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8"]
+FORMATS = [
+    path.name
+    for path in sorted(
+        (Path(__file__).parent / "fixtures" / "formats").glob("v[0-9]*"),
+        key=lambda path: int(path.name.removeprefix("v")),
+    )
+    if path.is_dir()
+]
 
 
 def _materialise(version: str, repo_root, tmp_path):

@@ -1,5 +1,6 @@
 id: study-map-aml-exam-prep
 type: study-map
+plan_template_version: 1
 unit_id: unit-aml-exam-prep
 status: active
 current_stage: stage-aml-calibration
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-aml-calibration
+  number: 1
   title: AML.0 — cold L01–L11 calibration (19–22 August)
   status: active
   objective: Before further reading, run a 120-minute closed-book diagnostic across all eleven announced
@@ -64,6 +66,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-foundations-repair
+  number: 2
   title: AML.1 — L02–L04 foundations repair (23–29 August)
   status: pending
   objective: Repair only the diagnosed k-NN, regression, vectorization, basis-expansion and regularization
@@ -121,6 +124,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-linear-optimization-repair
+  number: 3
   title: AML.2 — L05–L07 classification and optimization (30 August–5 September)
   status: pending
   objective: Make the logistic-loss derivation, optimizer mechanics, perceptron updates and kernel calculations
@@ -179,6 +183,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-neural-transformer-loop
+  number: 4
   title: AML.3 — L08→L09→L10→L11 full loop (6–13 September)
   status: pending
   objective: 'Work the unverified late-course arc in strict dependency order: forward pass, backpropagation,
@@ -259,6 +264,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-integration-sheet
+  number: 5
   title: AML.4 — full-course integration and A4 sheet v1 (14–16 September)
   status: pending
   objective: Compress L01–L11 into a retrieval map and a usable handwritten sheet, emphasizing decisions
@@ -297,6 +303,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-mock-one
+  number: 6
   title: AML.5 — mixed mock 1 (17 September)
   status: pending
   objective: 'Sit the first full-course paper under confirmed first-sitting conditions: 120 minutes, closed
@@ -336,6 +343,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-mock-one-repair
+  number: 7
   title: AML.6 — mock 1 repair (18–21 September)
   status: pending
   objective: Repair only errors that cost points or time in mock 1, then retest them cold; no new broad
@@ -379,6 +387,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-mock-two
+  number: 8
   title: AML.7 — mixed mock 2 (22–23 September)
   status: pending
   objective: Run a second independent full-course paper to test whether mock-1 repairs transfer under
@@ -415,6 +424,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-final-repair
+  number: 9
   title: AML.8 — final repair and dress rehearsal (24–27 September)
   status: pending
   objective: Close only the residual red topics, rehearse the opening and time-allocation strategy, and
@@ -467,6 +477,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-taper
+  number: 10
   title: AML.9 — taper (28–29 September)
   status: pending
   objective: Protect recall and sleep in the final forty-eight hours; use only the A4 sheet, error ledger

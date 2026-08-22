@@ -7,10 +7,28 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
+from referencing import Registry, Resource
 
 
 class ContractValidationError(ValueError):
     """A value does not satisfy the producer-owned contract named by its schema."""
+
+
+def schema_registry(schema_dir: Path) -> Registry:
+    """Register every producer-owned schema so cross-schema refs fail closed."""
+    registry = Registry()
+    for candidate in sorted(schema_dir.glob("*.schema.json")):
+        try:
+            schema = json.loads(candidate.read_text(encoding="utf-8"))
+            resource = Resource.from_contents(schema)
+        except (OSError, json.JSONDecodeError, ValueError) as exc:
+            raise ContractValidationError(
+                f"cannot register contract schema {candidate.name}: {exc}"
+            ) from exc
+        schema_id = schema.get("$id")
+        if isinstance(schema_id, str) and schema_id:
+            registry = registry.with_resource(schema_id, resource)
+    return registry
 
 
 def validate_contract(
@@ -35,7 +53,11 @@ def validate_contract(
         raise ContractValidationError(f"cannot read contract schema {schema_name}: {exc}") from exc
 
     errors = sorted(
-        Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value),
+        Draft202012Validator(
+            schema,
+            registry=schema_registry(path.parent),
+            format_checker=FormatChecker(),
+        ).iter_errors(value),
         key=lambda error: [str(part) for part in error.absolute_path],
     )
     if not errors:

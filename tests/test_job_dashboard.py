@@ -512,7 +512,34 @@ def test_job_plan_save_shadows_legacy_without_rewriting_it(mini_repo):
     assert stage["job_context"]["mental_models"][0]["label"] == "Core model"
     stored = yaml.safe_load((job / "plans" / "polars.yaml").read_text("utf-8"))
     assert stored["schema_version"] == 2
+    assert stored["plan_template_version"] == 1
     assert "stages" in stored and "sessions" not in stored
+
+
+def test_job_plan_save_expands_a_minimal_stage_with_the_shared_template(mini_repo):
+    job = write_job(mini_repo)
+    plan = {
+        "title": "Minimal track",
+        "stages": [{
+            "title": "Trace one plan",
+            "resource_link": "https://example.test/guide",
+            "read_only_anchor": "Compare the result without changing Stratum.",
+        }],
+    }
+    proc = run_los(
+        mini_repo, "job-plan-save", "--confirm-job-access", "--approve",
+        "--plan", json.dumps(plan),
+    )
+    assert proc.returncode == 0, proc.stderr
+    stored = yaml.safe_load(
+        (job / "plans" / "job-plan-minimal-track.yaml").read_text(encoding="utf-8")
+    )
+    assert stored["plan_template_version"] == 1
+    stage = stored["stages"][0]
+    assert stage["number"] == 1
+    assert stage["estimate_minutes"] == 90
+    assert stage["resources"][0]["url"] == "https://example.test/guide"
+    assert stage["job_context"]["read_only_anchor"].startswith("Compare")
 
 
 def test_job_plan_save_rejects_an_unstructured_stage(mini_repo):

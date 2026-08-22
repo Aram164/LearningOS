@@ -1,5 +1,6 @@
 id: study-map-amls-l12
 type: study-map
+plan_template_version: 1
 unit_id: unit-amls-l12
 status: paused
 current_stage: stage-amls-l12-scope
@@ -11,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-amls-l12-scope
+  number: 1
   title: Scope from the local deck and record its anomaly
   status: pending
   objective: Scope debugging, explainability and fairness from the 38-page local deck while preserving
@@ -35,6 +37,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l12-integrate
+  number: 2
   title: Integrate responsible and robust ML-system views
   status: pending
   objective: Use both MLSysBook volumes and Huyen only to clarify deck mechanisms and production consequences.
@@ -119,6 +122,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-amls-l12-evidence
+  number: 3
   title: Light evidence — reference and recall
   status: pending
   objective: Build one exam-facing reference and complete the official debugging questions.
