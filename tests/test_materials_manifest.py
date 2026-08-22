@@ -11,6 +11,7 @@ from __future__ import annotations
 import textwrap
 
 import materials_manifest as mm
+import pytest
 import yaml
 
 from learning_os.loader import load_repo
@@ -177,3 +178,68 @@ def test_offline_tree_warns_once_instead_of_erroring_per_file(mini_repo):
     issues = _wire(mini_repo, uri="material://f0.pdf", manifest_files=manifest)
     assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
     assert "MATERIAL-MISSING" not in codes(issues, "E")
+
+
+# --------------------------------------------------------------- URI carriers
+#
+# The sweep is a regex over documents, not a field walk, so how far a reference
+# extends is decided by its delimiter. Both readings below are wrong for the
+# other's input, which is why the field's contract decides between them.
+
+@pytest.mark.parametrize(
+    ("text", "expected", "why"),
+    [
+        (
+            "vault_path: material://source-a/lecture-slides/VL 01-Introduction.pdf\n",
+            "source-a/lecture-slides/VL 01-Introduction.pdf",
+            "a carrier scalar runs to end of line; filenames legitimately "
+            "contain spaces and truncating one reports it missing under a name "
+            "nobody wrote",
+        ),
+        (
+            '  vault_path: "material://source-a/exercise-slides/Übung 02 .pdf"\n',
+            "source-a/exercise-slides/Übung 02 .pdf",
+            "a quoted scalar resolves identically to a bare one",
+        ),
+        (
+            "- material: material://source-b/x y.pdf\n",
+            "source-b/x y.pdf",
+            "a carrier inside a sequence item is still a carrier",
+        ),
+        (
+            "    locator: material://source-v/Velleman.pdf (569 pp); located by\n",
+            "source-v/Velleman.pdf",
+            "locator is prose that may continue past the URI, so it keeps the "
+            "whitespace-delimited reading",
+        ),
+        (
+            "See `material://source-c/a b.pdf` inline\n",
+            "source-c/a b.pdf",
+            "the Markdown code span keeps working",
+        ),
+    ],
+)
+def test_a_material_reference_extends_as_far_as_its_field_says(text, expected, why):
+    from learning_os.rules.materials import _uris_in
+
+    assert expected in _uris_in(text), why
+
+
+def test_one_filename_in_two_normal_forms_is_one_filename():
+    """The inventory is walked off a macOS filesystem; the URIs are not.
+
+    APFS hands back decomposed names (NFD) and resolves either form to the same
+    file, so a reference can verify against the tree and then fail to match its
+    own inventory entry — reported as never inventoried, under a name identical
+    on screen to the one that is right there in the manifest.
+    """
+    import unicodedata
+
+    from learning_os.rules.materials import _nfc
+
+    name = "machine-learning/classical/aml-ss26-lectures/exercise-slides/Übung 02 .pdf"
+    decomposed = unicodedata.normalize("NFD", name)
+    composed = unicodedata.normalize("NFC", name)
+    assert decomposed != composed, "the fixture must actually differ, or it proves nothing"
+    assert _nfc(decomposed) == _nfc(composed)
+    assert {_nfc(composed)} - {_nfc(decomposed)} == set()

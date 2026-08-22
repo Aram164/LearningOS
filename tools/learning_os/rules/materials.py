@@ -20,6 +20,7 @@ pre-commit hook. ``python tools/materials_manifest.py --deep`` verifies content.
 from __future__ import annotations
 
 import re
+import unicodedata
 from pathlib import Path
 
 import yaml
@@ -33,6 +34,22 @@ from .common import CANONICAL_TREES, _in_garden, _in_quarantine
 MATERIAL_URI_DELIMITED = (
     re.compile(r"`material://([^`\n]+)`"),        # `material://…` code span
     re.compile(r"\]\(material://([^)\n]+)\)"),    # [text](material://…) link
+    # `vault_path: material://…` — for a field whose whole contract is "one
+    # material URI", the YAML scalar runs to the end of its line and is exactly
+    # as delimited as a code span. Without this the bare pattern below truncates
+    # at the first space and reports the reference missing under a filename
+    # nobody wrote: a deck recorded as `lecture-slides/VL 01-Introduction.pdf`
+    # fails as `lecture-slides/VL`.
+    #
+    # Only the pure carrier fields qualify. `locator` is prose that may *open*
+    # with a URI and continue past it ("…/Velleman.pdf (569 pp); located by …"),
+    # so it keeps the whitespace-delimited reading — the ambiguity is real and
+    # is resolved by the field's contract, not by guessing at the value.
+    re.compile(
+        r"^[^\S\n]*(?:-[^\S\n]*)?(?:vault_path|material|material_uri|material_path)"
+        r"[^\S\n]*:[^\S\n]*[\"']?material://([^\"'\n]+?)[\"']?[^\S\n]*$",
+        re.MULTILINE,
+    ),
 )
 MATERIAL_URI_BARE = re.compile(r"material://([^\s`)\]\"'<>,;]+)")
 
@@ -113,7 +130,15 @@ class ChecksMaterials:
 
         # A reference the inventory never captured cannot be restored from any
         # backup, because no backup was ever known to need it.
-        unregistered = sorted(referenced - set(recorded))
+        # macOS hands back decomposed filenames (NFD), so the inventory — built
+        # by walking the tree — records "Übung 02 .pdf" with a combining
+        # diaeresis, while a URI copied out of a record or the projection is
+        # composed (NFC). APFS resolves both to the same file, so the reference
+        # verifies and then fails to match its own inventory entry: the same
+        # name, reported as never inventoried. Compare on one normal form.
+        unregistered = sorted(
+            {_nfc(key) for key in referenced} - {_nfc(key) for key in recorded}
+        )
         for rel in unregistered[:_MAX_LISTED]:
             self.err("MATERIAL-UNREGISTERED",
                      f"'{rel}' is referenced but absent from the materials "
@@ -233,6 +258,16 @@ def _uris_in(text: str) -> set[str]:
     for target in MATERIAL_URI_BARE.findall(text):
         found.add(_normalise(target.rstrip(".,;:")))
     return found
+
+
+def _nfc(value: str) -> str:
+    """One Unicode normal form for filename comparison.
+
+    Composed, because that is what a record written by a human or emitted by
+    the projection carries; the decomposed spelling only ever arrives from a
+    filesystem walk.
+    """
+    return unicodedata.normalize("NFC", str(value))
 
 
 def _normalise(target: str) -> str:
