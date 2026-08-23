@@ -45,7 +45,13 @@ At the beginning of repository work, read:
    lines; rebuild if stale) — the cross-domain map of every domain's notes,
    shelves and deliberately excluded strata. Skimming it each session keeps
    retrieval from collapsing to the active workspace's domain (ADR-005).
-9. other generated indexes only as navigation aids
+9. `system/CRITIQUE-POINTS.md` — the standing log of what Aram already judges
+   wrong or not-yet-rigorous-enough about the system. Skim the open points so a
+   known defect is not re-raised as a discovery, and so one is not "fixed" as a
+   side effect of unrelated work. ⚠️ **An open point is not a work item.** It is
+   recorded precisely so it can be deferred; never act on one unless Aram says
+   so in that session.
+10. other generated indexes only as navigation aids
 
 Generated files are never authoritative over canonical artifacts.
 
@@ -66,6 +72,7 @@ Claude may perform the following without separate approval:
 - rebuild all generated files, including coordination and module views;
 - record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document;
 - update `COORDINATION.md` facts exactly as stated by the user;
+- append a numbered point to `system/CRITIQUE-POINTS.md` carrying the user's complaint verbatim, and add measured evidence under an existing open point — but never act on a point in the same breath as recording it, and never soften or rewrite the user's statement of it (that file's own rules govern);
 - run validators and tests;
 - update paths after approved moves;
 - transcribe handwritten notes faithfully;
