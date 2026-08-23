@@ -491,13 +491,50 @@ When a Core result is consumed by the interface, change it as one release:
 Contract versions are data. Keep stable source module names and discover the
 single versioned lock; do not put the current version in import paths.
 
+## 25a. Revise an existing plan
+
+§23 covers a lecture arriving. This covers the far more common case: a plan
+that already exists and needs changing — a locator sharpened, an angle written,
+a source routed to a stage it was missing from, a stage's material menu
+extended.
+
+**The revision path is the creation path.** There is no lighter-weight route
+and there is deliberately no "small edit" exemption, because the size of a
+change says nothing about its risk: an edited locator that no longer resolves
+breaks a stage exactly as thoroughly whether it arrived alone or in a batch.
+
+1. **Draft.** Regenerate the affected maps with
+   `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
+   module source map, or edit a copy of the map when it is not. The assembler
+   writes only to its out-directory and refuses the whole batch if any unit
+   fails the template or the schema, so the draft is already checked before
+   anyone reads it.
+2. **Review** the draft as a diff against what is live. This is the step the
+   gateway cannot do for you.
+3. **Apply through the gateway**, never by writing the canonical file directly:
+   - `module-plan-import --module-id … --file … --check`, then again with
+     `--expected-snapshot`, when the change touches a module's `source-map.yaml`
+     or several units together;
+   - `unit-map-import` when it is one unit's `study-map.yaml`;
+   - the stage capabilities (`stage-progress`, `stage-note`, `source-feedback`,
+     `detour-create`) for work *inside* a stage, which is not a plan revision.
+
+Hand-editing a `study-map.yaml` or a `source-map.yaml` produces a file the
+validator accepts and the pre-commit hook passes, so nothing will object — but
+it skips the snapshot guard, the artifact-revision check, and the append-only
+receipt, and afterwards nothing distinguishes it from a mediated write.
+`tools/plan_write_audit.py` measures how much of the plan surface has changed
+that way. A migration under `tools/migrations/` is the one legitimate exception,
+and it is legitimate because it is recorded.
+
 ## 26. Source routing and feedback
 
 Register one global source identity first. Add a module source-map entry only
 for its role in that module. Add exact unit selections only for confirmed
 scope, then put the smallest actionable watch/read/practise/reference locator
 on a stage. Routing one source to two modules creates two joins, never a second
-source record.
+source record. Changing any of that afterwards is a plan revision and goes
+through §25a.
 
 Use `source-feedback` for lightweight personal evidence (`helpful`,
 `too-advanced`, `wrong-perspective`, `useful-for-derivation`,

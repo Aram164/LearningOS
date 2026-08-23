@@ -94,7 +94,17 @@ Skills and projects use modules and units without false academic metadata.
     in `system/schema/learning-plan.schema.json`. Domain fields extend that
     contract; they never redefine it. Old plans are readable evidence, not
     creation templates.
-16. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
+16. A plan is created **and revised** through the declared capabilities —
+    `module.plan.import` for a module's source map and its units,
+    `unit.map.import` for one unit's study map — never by writing the canonical
+    file directly. Drafting happens outside the repository
+    (`tools/assemble_lecture_study_maps.py --out …`), review happens on the
+    draft, and the gateway applies it under a snapshot guard with an
+    append-only receipt. A hand edit is not a faster version of this path: it
+    produces a file the validator accepts while skipping every guarantee the
+    path exists for, and leaves nothing behind to say it happened. Migrations
+    under `tools/migrations/` are the one exception, because they are recorded.
+17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
     about the system itself. **An open point is not a work item.** It is
     recorded precisely so it can be deferred, and acting on one — fixing it,
     or "improving" it as a side effect of unrelated work — requires Aram to say
