@@ -143,6 +143,42 @@ $$P(B\mid A) = \frac{P(A\cap B)}{P(A)}$$
 - **Law of total probability:** if E₁,…,Eₙ **partition** Ω (disjoint, union = Ω), then
 $$P(A) = \sum_i P(A\cap E_i) = \sum_i P(E_i)\,P(A\mid E_i).$$
 
+#### 7.2a Proof of total probability — the step slide 46 omits
+
+**[Not in the deck: slide 46 states the lemma and prints "Proof: Omitted". Added 2026-08-23 to close that gap; nothing here goes beyond rules already on this page.]**
+
+Three steps, each one a rule stated earlier in this note.
+
+**1 — Split A along the partition.** Because the Eᵢ cover Ω,
+$$A = A\cap\Omega = A\cap\Big(\bigcup_i E_i\Big) = \bigcup_i (A\cap E_i)$$
+by distributivity of ∩ over ∪. *Nothing probabilistic yet — this is set algebra.*
+
+**2 — The pieces are disjoint, so the axiom applies.** For i ≠ j, $(A\cap E_i)\cap(A\cap E_j)\subseteq E_i\cap E_j=\varnothing$, so Kolmogorov's third axiom (§5, additivity for disjoint events) extends by induction to n parts:
+$$P(A) = P\Big(\bigcup_i (A\cap E_i)\Big) = \sum_i P(A\cap E_i).$$
+*This is the only place an axiom is used — and disjointness is exactly what buys it.*
+
+**3 — Rewrite each joint with the multiplication rule** (the bullet above): $P(A\cap E_i) = P(E_i)\,P(A\mid E_i)$. Substituting,
+$$P(A) = \sum_i P(E_i)\,P(A\mid E_i).\qquad\blacksquare$$
+
+*Fine print:* P(A|Eᵢ) is undefined when P(Eᵢ) = 0 — but then P(A∩Eᵢ) = 0 as well, so those terms are simply dropped and the sum is unchanged.
+
+**Bayes now costs one further line.** Apply the definition, then replace the numerator by step 3 and the denominator by the lemma:
+$$P(E_i\mid A) = \frac{P(A\cap E_i)}{P(A)} = \frac{P(A\mid E_i)\,P(E_i)}{\sum_j P(E_j)\,P(A\mid E_j)}.$$
+
+> **⚠️ Slide-46 index slip (verified against the PDF):** the deck's Bayes denominator prints $\sum P(E_j)*P(A|E_i)$ — the index slides from *j* back to *i*. The summation variable must be *j* in **both** factors, as in §7.3. Write it correctly in the Klausur.
+
+**What each step is, in the L01 four-field table.** Take the partition E = {ill, healthy} and A = "positive test", with the 100,000 people of L01 §5:
+
+| proof step | in the table |
+|---|---|
+| 1 — split A along the partition | the *positive* row **is** its two cells: pos = (pos∩ill) ∪ (pos∩healthy) |
+| 2 — additivity over disjoint pieces | you may **add** the cell counts, because no person sits in two cells: 1,980 + 9,800 |
+| 3 — multiplication rule per piece | each cell = column total × that column's positive rate: 1,980 = 2,000·0.99, 9,800 = 98,000·0.10 |
+| the denominator P(A) | the **row total**, 11,780 |
+| the posterior P(ill\|pos) | one cell's share of its row: 1,980/11,780 ≈ 0.17 |
+
+**The one sentence to keep:** the law of total probability is *summing a row across the columns of the table* — marginalising out the cause to get the raw chance of the evidence. Bayes is then only "what fraction of that row came from this column?" The N never mattered; it cancels top and bottom, which is why L01 could answer by counting and L04 by formula and get the same 0.17.
+
 ### 7.3 Bayes' theorem
 
 $$\boxed{\,P(E_i\mid A) = \frac{P(A\mid E_i)\,P(E_i)}{P(A)} = \frac{P(A\mid E_i)\,P(E_i)}{\sum_j P(E_j)\,P(A\mid E_j)}\,}$$

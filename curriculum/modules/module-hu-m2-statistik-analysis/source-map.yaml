@@ -3078,6 +3078,21 @@ sources:
     locator: Bayes theorem, the geometry of changing beliefs; The medical test paradox, and redesigning
       Bayes' rule; optionally The quick proof of Bayes' theorem
     url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
+  - unit_id: unit-m2-sad-l04
+    title: 3Blue1Brown — the geometry behind conditional probability and Bayes
+    format: video
+    angle: The formal home of the L01 example — the same rectangle picture now carries the deck's own
+      definitions, with P(B|A) as the intersection restricted to A (slide 36's Venn diagram), the partition
+      as the columns you sum across, and the posterior as one column's share of a row. 'The quick proof'
+      is the three-line argument the deck replaces with 'Proof - Omitted' on slide 46.
+    covers:
+    - knowledge-sad-l04-conditional
+    - knowledge-sad-l04-bayes
+    depth: intuition
+    scope: complementary
+    locator: Bayes theorem, the geometry of changing beliefs; The quick proof of Bayes' theorem; The medical
+      test paradox, and redesigning Bayes' rule
+    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
 - source_id: source-3b1b-linear-algebra
   role: intuition
   why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and

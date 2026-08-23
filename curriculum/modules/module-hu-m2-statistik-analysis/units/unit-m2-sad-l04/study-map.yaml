@@ -31,6 +31,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
   attachments: []
@@ -57,6 +58,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 2 and UE3 — probability and Bayes tasks
@@ -124,6 +126,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 2 and UE3 — probability and Bayes tasks
@@ -218,6 +221,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 2 and UE3 — probability and Bayes tasks
@@ -325,6 +329,16 @@ stages:
     locator: Zufallsexperiment/Ereignisse; bedingte Wahrscheinlichkeit; Bayes — German first exposure
       to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
       derivation.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the geometry behind conditional probability and Bayes
+    source_id: source-3b1b-bayes-theorem
+    locator: Bayes theorem, the geometry of changing beliefs; The quick proof of Bayes' theorem; The medical
+      test paradox, and redesigning Bayes' rule — The formal home of the L01 example — the same rectangle
+      picture now carries the deck's own definitions, with P(B|A) as the intersection restricted to A
+      (slide 36's Venn diagram), the partition as the columns you sum across, and the posterior as one
+      column's share of a row. 'The quick proof' is the three-line argument the deck replaces with 'Proof
+      - Omitted' on slide 46.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
   attachments: []
@@ -352,6 +366,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 2 and UE3 — probability and Bayes tasks
@@ -460,6 +475,16 @@ stages:
       to sample spaces, events, elementary probability, conditioning, and Bayes before the formal course
       derivation.
     scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the geometry behind conditional probability and Bayes
+    source_id: source-3b1b-bayes-theorem
+    locator: Bayes theorem, the geometry of changing beliefs; The quick proof of Bayes' theorem; The medical
+      test paradox, and redesigning Bayes' rule — The formal home of the L01 example — the same rectangle
+      picture now carries the deck's own definitions, with P(B|A) as the intersection restricted to A
+      (slide 36's Venn diagram), the partition as the columns you sum across, and the posterior as one
+      column's share of a row. 'The quick proof' is the three-line argument the deck replaces with 'Proof
+      - Omitted' on slide 46.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
   attachments: []
   source_feedback: []
@@ -486,6 +511,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: reference
     label: 2025 probability deck with notes
@@ -600,6 +626,7 @@ stages:
     locator: lecture-slides/04_probability.pdf (59 pages) — Starts from human framing errors, formalizes
       event probability, conditioning, Bayes and independence, and ends with the categorical spam-classifier
       construction. It controls exam notation.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/04_probability.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 2 and UE3 — probability and Bayes tasks
