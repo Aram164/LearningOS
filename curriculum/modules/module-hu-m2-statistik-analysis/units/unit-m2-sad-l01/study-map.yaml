@@ -33,6 +33,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 1 and UE2 — data and feature foundations
@@ -72,6 +73,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 1 and UE2 — data and feature foundations
@@ -142,6 +144,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 2 — descriptive-statistics reference
@@ -193,6 +196,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: practise
     label: Blatt 1 and UE2 — data and feature foundations
@@ -244,6 +248,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: practise
     label: FAU solved exam — contingency-table and Bayes transfer
@@ -265,6 +270,16 @@ stages:
     locator: The Confusion Matrix; Sensitivity and Specificity — Short visual decoding of TP/FP/FN/TN
       and the corresponding metrics; ideal when names are being confused, but the course examples still
       determine terminology and scope.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
+    source_id: source-3b1b-bayes-theorem
+    locator: Bayes theorem, the geometry of changing beliefs; The medical test paradox, and redesigning
+      Bayes' rule; optionally The quick proof of Bayes' theorem — Builds the counting/area rectangle behind
+      Bayes before any formula, then runs the medical-test example itself — a 1% prevalence with a 99%-sensitive
+      test — to show why the posterior stays low and why sensitivity and specificity alone do not answer
+      the patient's question. Use it to picture the four-field table the deck computes; the deck still
+      owns the notation and the exam scope.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md
   attachments: []
@@ -291,6 +306,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   - kind: practise
     label: FAU solved exam — contingency-table and Bayes transfer
@@ -305,6 +321,16 @@ stages:
     locator: Local solved bank; choose only matching descriptive/contingency questions — Gap-targeted
       contingency-table, descriptive, and interpretation items from HS Harz, Köln, Leuphana, and Regensburg
       after the FAU match is exhausted.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
+    source_id: source-3b1b-bayes-theorem
+    locator: Bayes theorem, the geometry of changing beliefs; The medical test paradox, and redesigning
+      Bayes' rule; optionally The quick proof of Bayes' theorem — Builds the counting/area rectangle behind
+      Bayes before any formula, then runs the medical-test example itself — a 1% prevalence with a 99%-sensitive
+      test — to show why the posterior stays low and why sensitivity and specificity alone do not answer
+      the patient's question. Use it to picture the four-field table the deck computes; the deck still
+      owns the notation and the exam scope.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md
   attachments: []
@@ -330,6 +356,7 @@ stages:
     locator: lecture-slides/01_introduction.pdf (42 pages) — Uses one study-duration dataset to show why
       mean, median, mode, robustness, distributions, samples, classification metrics, and base rates answer
       different questions. This is the 2026 scope authority.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md
   attachments: []

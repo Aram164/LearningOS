@@ -3057,6 +3057,27 @@ sources:
     depth: orientation
     scope: complementary
     locator: Episodes 1–4
+- source_id: source-3b1b-bayes-theorem
+  role: intuition
+  why: The L01 medical-test example is exactly the base-rate picture these videos animate; visual support
+    for why sensitivity and posterior probability come apart when the positive class is rare.
+  priority: 32
+  unit_routes:
+  - unit_id: unit-m2-sad-l01
+    title: 3Blue1Brown — Bayes' theorem and the medical-test paradox
+    format: video
+    angle: Builds the counting/area rectangle behind Bayes before any formula, then runs the medical-test
+      example itself — a 1% prevalence with a 99%-sensitive test — to show why the posterior stays low
+      and why sensitivity and specificity alone do not answer the patient's question. Use it to picture
+      the four-field table the deck computes; the deck still owns the notation and the exam scope.
+    covers:
+    - knowledge-sad-l01-classification
+    - knowledge-sad-l01-base-rates
+    depth: intuition
+    scope: complementary
+    locator: Bayes theorem, the geometry of changing beliefs; The medical test paradox, and redesigning
+      Bayes' rule; optionally The quick proof of Bayes' theorem
+    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
 - source_id: source-3b1b-linear-algebra
   role: intuition
   why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and
