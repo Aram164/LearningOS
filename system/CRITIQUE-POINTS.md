@@ -96,6 +96,69 @@ hand-authored 23 units rather than for all of them. It is invisible everywhere
 regardless, because it lives inside the locator string rather than in a field
 of its own — so the complaint lands either way.
 
+### Evidence for complaint 1 — plan manipulation (measured 2026-08-24)
+
+Complaint 1 asks two things: is there **one designed way** to create and change
+a plan, and is it the **right** design. Measured against the code, not the
+documentation:
+
+**There is one designed way, and it is better than the complaint assumes.**
+Every canonical plan write in the CLI goes through one helper,
+`commands/support.py::_write_transaction`, which loads the repository, runs the
+full validator, refuses on any error, publishes the projection, guards artifact
+revisions, and writes an append-only receipt. 14 of the 19 command modules use
+it; the ones that do not are read-only (`plan.py`, `query.py`, `capability.py`)
+or are Job, which runs its own `TransactionService` against the quarantined root
+by design. Above it sit the declared capabilities: `module.plan.import` carries
+a module's source map, its units and their study maps as one snapshot-guarded
+batch with a `--check` preflight; `unit.map.import` carries a single unit's map;
+`plan.template` mints a conforming starting record; the stage capabilities carry
+progress, notes, feedback and detours. `tools/assemble_lecture_study_maps.py`
+never writes into the repository at all — it validates each draft against the
+template and the schema, refuses the whole batch if any unit fails, and writes
+to an out-directory for review. That is a coherent design, and the pieces are
+individually well made.
+
+**The defect is that the path is optional and its absence is invisible.**
+`tools/plan_write_audit.py` re-measures this at any time. Today:
+
+- **19 commits have changed a plan record** (study map, module source map, or
+  learning path). **5 carry a transaction receipt — 26%.** Fourteen do not.
+- A hand edit and a gateway write are indistinguishable afterwards. Both produce
+  a schema-valid file, both pass `make check`, and nothing in the record says
+  which happened.
+
+**The clearest instance is this session's own commit.** `4401f30` rewrote 3,885
+resource rows across 27 study maps and replaced a module source map, using
+ad-hoc scripts. The designed path for exactly that change existed —
+`module.plan.import` accepts a `source_map` and writes it transactionally — and
+it was not used. Nothing pointed at it and nothing objected. That is complaint 1
+demonstrated by the operator inside the same session that was asked about it,
+which is the strongest evidence available that the problem is real and is not
+about the design being wrong.
+
+**What was done about it (Aram's decision, 2026-08-24): route the operator, do
+not enforce.** The gateway stays optional; what changes is that it is now named
+where an operator actually reads, so the next session cannot bypass it without
+noticing. WORKFLOWS gains §25a "Revise an existing plan" — the revision path is
+the creation path, with the draft/review/apply steps and the explicit statement
+that a hand edit validates clean and is therefore not self-correcting.
+`CLAUDE.md` §3 and `OPERATOR.md` boundary 16 carry the same rule.
+`tools/plan_write_audit.py` makes the receipt share re-measurable.
+
+Deliberately **not** done, and still open if the routing turns out not to be
+enough: promoting the gap to a counted warning or to an error. Both were
+offered and declined for now — enforcement is an architectural change, and the
+cheaper fix should be given a chance to work first.
+
+**Status of the prior review.** `plan-standardization-review-2026-08-22.md` §3
+listed eight problems. Re-checked against current code: §3.1, §3.2 and §3.6 are
+closed; §3.3 survives only inside `_legacy_plan_stage`, the retired `sessions`
+decoder, so closing §3.8 closes it; §3.4 (`exam_critical` and stage-level
+`scope_triage` mandatory with no recorded decision) and §3.5 (concept tagging)
+remain open judgement calls. §3.5 and the Job half of §3.3 could not be
+re-measured here without reading `Job/`, which is quarantined.
+
 ### Work done under this point — 2026-08-24, on Aram's instruction
 
 Aram authorised acting on complaints 2 and 3 in the session of 2026-08-24

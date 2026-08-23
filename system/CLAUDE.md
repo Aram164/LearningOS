@@ -73,6 +73,7 @@ Claude may perform the following without separate approval:
 - record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document;
 - update `COORDINATION.md` facts exactly as stated by the user;
 - append a numbered point to `system/CRITIQUE-POINTS.md` carrying the user's complaint verbatim, and add measured evidence under an existing open point — but never act on a point in the same breath as recording it, and never soften or rewrite the user's statement of it (that file's own rules govern);
+- draft a plan revision with `tools/assemble_lecture_study_maps.py --out …` and apply it through `module-plan-import` or `unit-map-import` (WORKFLOWS §25a) — but **never write a `study-map.yaml` or a `source-map.yaml` directly**: a hand edit validates clean and passes the hook, so nothing objects, while skipping the snapshot guard, the revision check and the receipt. Measured 2026-08-24: only 26% of plan-changing commits carry a receipt, and the largest offender was the operator (CRITIQUE-POINTS §1);
 - run validators and tests;
 - update paths after approved moves;
 - transcribe handwritten notes faithfully;
