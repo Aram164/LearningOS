@@ -15,13 +15,12 @@ stages:
   number: 1
   title: XOR and layered representation
   status: pending
-  objective: Hidden units build intermediate features so multiple linear boundaries compose into a nonlinear
-    classifier.
+  objective: Hidden units build intermediate features so multiple linear boundaries compose into a nonlinear classifier.
   done_when:
-  - 'Reproduce without notes: Hidden units build intermediate features so multiple linear boundaries compose
-    into a nonlinear classifier.'
-  - Work Bonusblatt 04 — neural-network tasks, then the remaining 1, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Hidden units build intermediate features so multiple linear boundaries compose into
+    a nonlinear classifier.'
+  - Work Bonusblatt 04 — neural-network tasks, then the remaining 1, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-neural-network
@@ -31,62 +30,67 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: practise
     label: Bonusblatt 04 — neural-network tasks
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 3–4 move from a single-layer gate to a multilayer
-      network and are the only local dedicated L08 practice; Aufgaben 1–2 remain L07.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 3–4 move from a single-layer gate to a multilayer network and are the only local dedicated
+      L08 practice; Aufgaben 1–2 remain L07.
   - kind: practise
     label: Übung 08–09 — MLP and feedforward practice
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf — Current worked sessions that
-      bridge perceptrons into MLPs and drill the feedforward network, activations, output heads and course-sheet
-      calculations.
+    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
     scope_triage: required-now
+    angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+      output heads and course-sheet calculations.
   - kind: read
     label: Murphy MLPs, XOR, and activations
     source_id: source-murphy-pml1
-    locator: §13.2 — A derivation-oriented telling of XOR by stacking, layer equations, and why saturation
-      and ReLU matter.
+    locator: §13.2
     scope_triage: helpful-now
+    angle: A derivation-oriented telling of XOR by stacking, layer equations, and why saturation and ReLU matter.
   - kind: read
     label: MIT 6.036 neural-network fundamentals
     source_id: source-mit-6036
-    locator: Neural-network fundamentals units — Structured forward-pass, activation, and architecture
-      exercises with feedback.
+    locator: Neural-network fundamentals units
     scope_triage: helpful-now
+    angle: Structured forward-pass, activation, and architecture exercises with feedback.
   - kind: read
     label: Kelleher et al. Ch 7 — neural networks as error-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 7 Error-based Learning — A gentle bridge from linear prediction to neurons, layered models,
-      activations, and error surfaces using worked toy examples.
+    locator: Ch 7 Error-based Learning
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: A gentle bridge from linear prediction to neurons, layered models, activations, and error surfaces
+      using worked toy examples.
   - kind: read
     label: SaD L15 — perceptron-to-MLP bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — Neural networks — Shows a perceptron as a one-neuron network, connects
-      multivariate linear regression to a one-layer ANN, and introduces MLPs, softmax, and parameter counting.
+    locator: lecture-slides/L15 — Neural networks
     scope_triage: helpful-now
+    angle: Shows a perceptron as a one-neuron network, connects multivariate linear regression to a one-layer
+      ANN, and introduces MLPs, softmax, and parameter counting.
   - kind: reference
     label: Deep Learning book Ch 6 — feedforward networks
     source_id: source-goodfellow-dl
-    locator: Ch 6 Deep Feedforward Networks — The canonical theory reference for layered computation,
-      hidden units, universal approximation, output units, and architecture design; deeper than the lecture.
+    locator: Ch 6 Deep Feedforward Networks
     scope_triage: reference-only
+    angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+      units, and architecture design; deeper than the lecture.
   - kind: read
     label: D2L Chapters 5–6 — executable MLPs
     source_id: source-d2l
-    locator: Chapters 5–6 — An interactive PyTorch route from perceptrons and multilayer networks to concise
-      implementations, output shapes, activations, and softmax classifiers.
+    locator: Chapters 5–6
     scope_triage: helpful-now
+    angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations, output
+      shapes, activations, and softmax classifiers.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-xor-stacking/notes.md
   attachments: []
   source_feedback: []
@@ -94,13 +98,13 @@ stages:
   number: 2
   title: Forward propagation and shapes
   status: pending
-  objective: Layer equations, weights, biases, activations, batch dimensions, parameter counts, and the
-    shared worked example.
+  objective: Layer equations, weights, biases, activations, batch dimensions, parameter counts, and the shared
+    worked example.
   done_when:
-  - 'Reproduce without notes: Layer equations, weights, biases, activations, batch dimensions, parameter
-    counts, and the shared worked example.'
-  - Work Bonusblatt 04 — neural-network tasks, then the remaining 3, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Layer equations, weights, biases, activations, batch dimensions, parameter counts,
+    and the shared worked example.'
+  - Work Bonusblatt 04 — neural-network tasks, then the remaining 3, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -110,148 +114,158 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: practise
     label: Bonusblatt 04 — neural-network tasks
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 3–4 move from a single-layer gate to a multilayer
-      network and are the only local dedicated L08 practice; Aufgaben 1–2 remain L07.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 3–4 move from a single-layer gate to a multilayer network and are the only local dedicated
+      L08 practice; Aufgaben 1–2 remain L07.
   - kind: reference
     label: Older L08 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf —
-      Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics
-      scope.
+    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics scope.
   - kind: practise
     label: Übung 08–09 — MLP and feedforward practice
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf — Current worked sessions that
-      bridge perceptrons into MLPs and drill the feedforward network, activations, output heads and course-sheet
-      calculations.
+    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
     scope_triage: required-now
+    angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+      output heads and course-sheet calculations.
   - kind: read
     label: ISLP feedforward-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — The gentlest book-length account of network notation, forward passes, parameter
-      counting, and output construction; good when the deck moves too quickly through shapes.
+    locator: §§10.1–10.2
     scope_triage: helpful-now
+    angle: The gentlest book-length account of network notation, forward passes, parameter counting, and output
+      construction; good when the deck moves too quickly through shapes.
   - kind: reference
     label: ESL neural-network historical and statistical view
     source_id: source-esl
-    locator: Chapter 11 selected sections — A graduate statistical-learning perspective on feedforward
-      networks; useful for context after the simpler forward-pass sources.
+    locator: Chapter 11 selected sections
     scope_triage: reference-only
+    angle: A graduate statistical-learning perspective on feedforward networks; useful for context after the simpler
+      forward-pass sources.
   - kind: read
     label: Murphy MLPs, XOR, and activations
     source_id: source-murphy-pml1
-    locator: §13.2 — A derivation-oriented telling of XOR by stacking, layer equations, and why saturation
-      and ReLU matter.
+    locator: §13.2
     scope_triage: helpful-now
+    angle: A derivation-oriented telling of XOR by stacking, layer equations, and why saturation and ReLU matter.
   - kind: reference
     label: CSC411 network and metrics notes
     source_id: source-csc411-notes
-    locator: §3.3 and §8.3 selections — A compact alternate notation for feedforward networks plus classification
-      evaluation definitions.
+    locator: §3.3 and §8.3 selections
     scope_triage: helpful-now
+    angle: A compact alternate notation for feedforward networks plus classification evaluation definitions.
   - kind: read
     label: Kroese networks and evaluation
     source_id: source-kroese-dsml
-    locator: §9.2 and §7.2 — Rigorous matrix notation for forward networks paired with an independent
-      metric reference.
+    locator: §9.2 and §7.2
     scope_triage: helpful-now
+    angle: Rigorous matrix notation for forward networks paired with an independent metric reference.
   - kind: reference
     label: CS229 neural-network fundamentals
     source_id: source-cs229-notes
-    locator: §§7.1–7.2 and §7.4 — Builds from a neuron to multilayer ReLU networks and vectorized forward
-      propagation in compact notation.
+    locator: §§7.1–7.2 and §7.4
     scope_triage: helpful-now
+    angle: Builds from a neuron to multilayer ReLU networks and vectorized forward propagation in compact notation.
   - kind: reference
     label: CS229 neural-networks lecture I
     source_id: source-cs229-2022-videos
-    locator: Lecture 8 — Neural Networks — A university-level alternative for network construction, activations,
-      and forward propagation.
+    locator: Lecture 8 — Neural Networks
     scope_triage: reference-only
+    angle: A university-level alternative for network construction, activations, and forward propagation.
   - kind: read
     label: MIT 6.036 neural-network fundamentals
     source_id: source-mit-6036
-    locator: Neural-network fundamentals units — Structured forward-pass, activation, and architecture
-      exercises with feedback.
+    locator: Neural-network fundamentals units
     scope_triage: helpful-now
+    angle: Structured forward-pass, activation, and architecture exercises with feedback.
   - kind: reference
     label: EECS 498 Lecture 5 — Neural Networks
     source_id: source-eecs498
-    locator: Lecture 5 — Neural Networks — A deeper computer-vision-course explanation of fully connected
-      networks, activations, forward passes, and design choices.
+    locator: Lecture 5 — Neural Networks
     scope_triage: reference-only
+    angle: A deeper computer-vision-course explanation of fully connected networks, activations, forward passes,
+      and design choices.
   - kind: watch
     label: StatQuest Neural Networks Part 1
     source_id: source-statquest
-    locator: Neural Networks Part 1 — A short first exposure to neurons, layers, weighted sums, activations,
-      and forward prediction.
+    locator: Neural Networks Part 1
     scope_triage: helpful-now
+    angle: A short first exposure to neurons, layers, weighted sums, activations, and forward prediction.
   - kind: watch
     label: 3Blue1Brown neural-networks videos 1–2
     source_id: source-3b1b-neural-networks
-    locator: Videos 1–2 — The best visual first exposure to network structure, weighted activations, and
-      gradient-descent learning before formal shapes and output heads.
+    locator: Videos 1–2
     scope_triage: helpful-now
+    angle: The best visual first exposure to network structure, weighted activations, and gradient-descent learning
+      before formal shapes and output heads.
   - kind: read
     label: Rohrer fully connected networks and softmax
     source_id: source-rohrer-e2eml
-    locator: Chapters 17 and 19 — Visual explanations of multilayer networks and softmax as differentiable
-      argmax, especially useful for output-head intuition.
+    locator: Chapters 17 and 19
     scope_triage: helpful-now
+    angle: Visual explanations of multilayer networks and softmax as differentiable argmax, especially useful
+      for output-head intuition.
   - kind: read
     label: Géron feedforward-network implementation
     source_id: source-geron-handson
-    locator: Artificial-neural-network chapters, dense-network selections — Applied Keras/PyTorch-style
-      construction of dense networks, activations, output heads, and multiclass prediction.
+    locator: Artificial-neural-network chapters, dense-network selections
     scope_triage: helpful-now
+    angle: Applied Keras/PyTorch-style construction of dense networks, activations, output heads, and multiclass
+      prediction.
   - kind: practise
     label: Cornell CS4780 HW9 — forward/ReLU tasks
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed forward-pass, activation,
-      and neural-network questions.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed forward-pass, activation, and neural-network questions.
   - kind: practise
     label: MIT 6.034 neural-network tracing questions
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selections — Written-exam-style forward calculations and activation traces
-      with solutions.
+    locator: Neural-network quiz selections
     scope_triage: helpful-now
+    angle: Written-exam-style forward calculations and activation traces with solutions.
   - kind: read
     label: Kelleher et al. Ch 7 — neural networks as error-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 7 Error-based Learning — A gentle bridge from linear prediction to neurons, layered models,
-      activations, and error surfaces using worked toy examples.
+    locator: Ch 7 Error-based Learning
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: A gentle bridge from linear prediction to neurons, layered models, activations, and error surfaces
+      using worked toy examples.
   - kind: read
     label: SaD L15 — perceptron-to-MLP bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — Neural networks — Shows a perceptron as a one-neuron network, connects
-      multivariate linear regression to a one-layer ANN, and introduces MLPs, softmax, and parameter counting.
+    locator: lecture-slides/L15 — Neural networks
     scope_triage: helpful-now
+    angle: Shows a perceptron as a one-neuron network, connects multivariate linear regression to a one-layer
+      ANN, and introduces MLPs, softmax, and parameter counting.
   - kind: reference
     label: Deep Learning book Ch 6 — feedforward networks
     source_id: source-goodfellow-dl
-    locator: Ch 6 Deep Feedforward Networks — The canonical theory reference for layered computation,
-      hidden units, universal approximation, output units, and architecture design; deeper than the lecture.
+    locator: Ch 6 Deep Feedforward Networks
     scope_triage: reference-only
+    angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+      units, and architecture design; deeper than the lecture.
   - kind: read
     label: D2L Chapters 5–6 — executable MLPs
     source_id: source-d2l
-    locator: Chapters 5–6 — An interactive PyTorch route from perceptrons and multilayer networks to concise
-      implementations, output shapes, activations, and softmax classifiers.
+    locator: Chapters 5–6
     scope_triage: helpful-now
+    angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations, output
+      shapes, activations, and softmax classifiers.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-forward/notes.md
   attachments: []
   source_feedback: []
@@ -259,13 +273,13 @@ stages:
   number: 3
   title: Activations and expressiveness
   status: pending
-  objective: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU, and related nonlinearities
-    change capacity.
+  objective: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU, and related nonlinearities change
+    capacity.
   done_when:
-  - 'Reproduce without notes: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU, and related
-    nonlinearities change capacity.'
-  - Work Bonusblatt 04 — neural-network tasks, then the remaining 3, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Why stacked linear layers collapse, and how sigmoid, tanh, ReLU, and related nonlinearities
+    change capacity.'
+  - Work Bonusblatt 04 — neural-network tasks, then the remaining 3, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-activation-function
@@ -277,136 +291,145 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: practise
     label: Bonusblatt 04 — neural-network tasks
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 3–4 move from a single-layer gate to a multilayer
-      network and are the only local dedicated L08 practice; Aufgaben 1–2 remain L07.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 3–4 move from a single-layer gate to a multilayer network and are the only local dedicated
+      L08 practice; Aufgaben 1–2 remain L07.
   - kind: reference
     label: Older L08 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf —
-      Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics
-      scope.
+    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics scope.
   - kind: practise
     label: Übung 08–09 — MLP and feedforward practice
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf — Current worked sessions that
-      bridge perceptrons into MLPs and drill the feedforward network, activations, output heads and course-sheet
-      calculations.
+    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
     scope_triage: required-now
+    angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+      output heads and course-sheet calculations.
   - kind: read
     label: ISLP feedforward-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — The gentlest book-length account of network notation, forward passes, parameter
-      counting, and output construction; good when the deck moves too quickly through shapes.
+    locator: §§10.1–10.2
     scope_triage: helpful-now
+    angle: The gentlest book-length account of network notation, forward passes, parameter counting, and output
+      construction; good when the deck moves too quickly through shapes.
   - kind: reference
     label: ESL neural-network historical and statistical view
     source_id: source-esl
-    locator: Chapter 11 selected sections — A graduate statistical-learning perspective on feedforward
-      networks; useful for context after the simpler forward-pass sources.
+    locator: Chapter 11 selected sections
     scope_triage: reference-only
+    angle: A graduate statistical-learning perspective on feedforward networks; useful for context after the simpler
+      forward-pass sources.
   - kind: read
     label: Murphy MLPs, XOR, and activations
     source_id: source-murphy-pml1
-    locator: §13.2 — A derivation-oriented telling of XOR by stacking, layer equations, and why saturation
-      and ReLU matter.
+    locator: §13.2
     scope_triage: helpful-now
+    angle: A derivation-oriented telling of XOR by stacking, layer equations, and why saturation and ReLU matter.
   - kind: reference
     label: CSC411 network and metrics notes
     source_id: source-csc411-notes
-    locator: §3.3 and §8.3 selections — A compact alternate notation for feedforward networks plus classification
-      evaluation definitions.
+    locator: §3.3 and §8.3 selections
     scope_triage: helpful-now
+    angle: A compact alternate notation for feedforward networks plus classification evaluation definitions.
   - kind: reference
     label: CS229 neural-network fundamentals
     source_id: source-cs229-notes
-    locator: §§7.1–7.2 and §7.4 — Builds from a neuron to multilayer ReLU networks and vectorized forward
-      propagation in compact notation.
+    locator: §§7.1–7.2 and §7.4
     scope_triage: helpful-now
+    angle: Builds from a neuron to multilayer ReLU networks and vectorized forward propagation in compact notation.
   - kind: reference
     label: CS229 neural-networks lecture I
     source_id: source-cs229-2022-videos
-    locator: Lecture 8 — Neural Networks — A university-level alternative for network construction, activations,
-      and forward propagation.
+    locator: Lecture 8 — Neural Networks
     scope_triage: reference-only
+    angle: A university-level alternative for network construction, activations, and forward propagation.
   - kind: read
     label: MIT 6.036 neural-network fundamentals
     source_id: source-mit-6036
-    locator: Neural-network fundamentals units — Structured forward-pass, activation, and architecture
-      exercises with feedback.
+    locator: Neural-network fundamentals units
     scope_triage: helpful-now
+    angle: Structured forward-pass, activation, and architecture exercises with feedback.
   - kind: reference
     label: EECS 498 Lecture 5 — Neural Networks
     source_id: source-eecs498
-    locator: Lecture 5 — Neural Networks — A deeper computer-vision-course explanation of fully connected
-      networks, activations, forward passes, and design choices.
+    locator: Lecture 5 — Neural Networks
     scope_triage: reference-only
+    angle: A deeper computer-vision-course explanation of fully connected networks, activations, forward passes,
+      and design choices.
   - kind: watch
     label: StatQuest Neural Networks Part 1
     source_id: source-statquest
-    locator: Neural Networks Part 1 — A short first exposure to neurons, layers, weighted sums, activations,
-      and forward prediction.
+    locator: Neural Networks Part 1
     scope_triage: helpful-now
+    angle: A short first exposure to neurons, layers, weighted sums, activations, and forward prediction.
   - kind: watch
     label: 3Blue1Brown neural-networks videos 1–2
     source_id: source-3b1b-neural-networks
-    locator: Videos 1–2 — The best visual first exposure to network structure, weighted activations, and
-      gradient-descent learning before formal shapes and output heads.
+    locator: Videos 1–2
     scope_triage: helpful-now
+    angle: The best visual first exposure to network structure, weighted activations, and gradient-descent learning
+      before formal shapes and output heads.
   - kind: read
     label: Rohrer fully connected networks and softmax
     source_id: source-rohrer-e2eml
-    locator: Chapters 17 and 19 — Visual explanations of multilayer networks and softmax as differentiable
-      argmax, especially useful for output-head intuition.
+    locator: Chapters 17 and 19
     scope_triage: helpful-now
+    angle: Visual explanations of multilayer networks and softmax as differentiable argmax, especially useful
+      for output-head intuition.
   - kind: read
     label: Géron feedforward-network implementation
     source_id: source-geron-handson
-    locator: Artificial-neural-network chapters, dense-network selections — Applied Keras/PyTorch-style
-      construction of dense networks, activations, output heads, and multiclass prediction.
+    locator: Artificial-neural-network chapters, dense-network selections
     scope_triage: helpful-now
+    angle: Applied Keras/PyTorch-style construction of dense networks, activations, output heads, and multiclass
+      prediction.
   - kind: practise
     label: Cornell CS4780 HW9 — forward/ReLU tasks
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed forward-pass, activation,
-      and neural-network questions.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed forward-pass, activation, and neural-network questions.
   - kind: practise
     label: MIT 6.034 neural-network tracing questions
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selections — Written-exam-style forward calculations and activation traces
-      with solutions.
+    locator: Neural-network quiz selections
     scope_triage: helpful-now
+    angle: Written-exam-style forward calculations and activation traces with solutions.
   - kind: read
     label: Kelleher et al. Ch 7 — neural networks as error-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 7 Error-based Learning — A gentle bridge from linear prediction to neurons, layered models,
-      activations, and error surfaces using worked toy examples.
+    locator: Ch 7 Error-based Learning
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: A gentle bridge from linear prediction to neurons, layered models, activations, and error surfaces
+      using worked toy examples.
   - kind: reference
     label: Deep Learning book Ch 6 — feedforward networks
     source_id: source-goodfellow-dl
-    locator: Ch 6 Deep Feedforward Networks — The canonical theory reference for layered computation,
-      hidden units, universal approximation, output units, and architecture design; deeper than the lecture.
+    locator: Ch 6 Deep Feedforward Networks
     scope_triage: reference-only
+    angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+      units, and architecture design; deeper than the lecture.
   - kind: read
     label: D2L Chapters 5–6 — executable MLPs
     source_id: source-d2l
-    locator: Chapters 5–6 — An interactive PyTorch route from perceptrons and multilayer networks to concise
-      implementations, output shapes, activations, and softmax classifiers.
+    locator: Chapters 5–6
     scope_triage: helpful-now
+    angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations, output
+      shapes, activations, and softmax classifiers.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-activations/notes.md
   attachments: []
   source_feedback: []
@@ -414,13 +437,13 @@ stages:
   number: 4
   title: Output layers by task
   status: pending
-  objective: Identity outputs for regression, sigmoid for binary/multilabel prediction, and softmax for
-    multiclass probabilities.
+  objective: Identity outputs for regression, sigmoid for binary/multilabel prediction, and softmax for multiclass
+    probabilities.
   done_when:
-  - 'Reproduce without notes: Identity outputs for regression, sigmoid for binary/multilabel prediction,
-    and softmax for multiclass probabilities.'
-  - Work Übung 08–09 — MLP and feedforward practice, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Identity outputs for regression, sigmoid for binary/multilabel prediction, and softmax
+    for multiclass probabilities.'
+  - Work Übung 08–09 — MLP and feedforward practice, then the remaining 1, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-cross-entropy
@@ -431,98 +454,103 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: reference
     label: Older L08 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf —
-      Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics
-      scope.
+    locator: older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/08-feedforward-neural-network_953c2f291a61db5a2b6cae1711b40edd.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate network examples; the current 81-page deck controls output-layer and metrics scope.
   - kind: practise
     label: Übung 08–09 — MLP and feedforward practice
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf — Current worked sessions that
-      bridge perceptrons into MLPs and drill the feedforward network, activations, output heads and course-sheet
-      calculations.
+    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
     scope_triage: required-now
+    angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+      output heads and course-sheet calculations.
   - kind: read
     label: ISLP feedforward-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — The gentlest book-length account of network notation, forward passes, parameter
-      counting, and output construction; good when the deck moves too quickly through shapes.
+    locator: §§10.1–10.2
     scope_triage: helpful-now
+    angle: The gentlest book-length account of network notation, forward passes, parameter counting, and output
+      construction; good when the deck moves too quickly through shapes.
   - kind: read
     label: Murphy MLPs, XOR, and activations
     source_id: source-murphy-pml1
-    locator: §13.2 — A derivation-oriented telling of XOR by stacking, layer equations, and why saturation
-      and ReLU matter.
+    locator: §13.2
     scope_triage: helpful-now
+    angle: A derivation-oriented telling of XOR by stacking, layer equations, and why saturation and ReLU matter.
   - kind: reference
     label: CSC411 network and metrics notes
     source_id: source-csc411-notes
-    locator: §3.3 and §8.3 selections — A compact alternate notation for feedforward networks plus classification
-      evaluation definitions.
+    locator: §3.3 and §8.3 selections
     scope_triage: helpful-now
+    angle: A compact alternate notation for feedforward networks plus classification evaluation definitions.
   - kind: read
     label: Kroese networks and evaluation
     source_id: source-kroese-dsml
-    locator: §9.2 and §7.2 — Rigorous matrix notation for forward networks paired with an independent
-      metric reference.
+    locator: §9.2 and §7.2
     scope_triage: helpful-now
+    angle: Rigorous matrix notation for forward networks paired with an independent metric reference.
   - kind: reference
     label: CS229 neural-network fundamentals
     source_id: source-cs229-notes
-    locator: §§7.1–7.2 and §7.4 — Builds from a neuron to multilayer ReLU networks and vectorized forward
-      propagation in compact notation.
+    locator: §§7.1–7.2 and §7.4
     scope_triage: helpful-now
+    angle: Builds from a neuron to multilayer ReLU networks and vectorized forward propagation in compact notation.
   - kind: reference
     label: CS229 neural-networks lecture I
     source_id: source-cs229-2022-videos
-    locator: Lecture 8 — Neural Networks — A university-level alternative for network construction, activations,
-      and forward propagation.
+    locator: Lecture 8 — Neural Networks
     scope_triage: reference-only
+    angle: A university-level alternative for network construction, activations, and forward propagation.
   - kind: reference
     label: EECS 498 Lecture 5 — Neural Networks
     source_id: source-eecs498
-    locator: Lecture 5 — Neural Networks — A deeper computer-vision-course explanation of fully connected
-      networks, activations, forward passes, and design choices.
+    locator: Lecture 5 — Neural Networks
     scope_triage: reference-only
+    angle: A deeper computer-vision-course explanation of fully connected networks, activations, forward passes,
+      and design choices.
   - kind: read
     label: Géron feedforward-network implementation
     source_id: source-geron-handson
-    locator: Artificial-neural-network chapters, dense-network selections — Applied Keras/PyTorch-style
-      construction of dense networks, activations, output heads, and multiclass prediction.
+    locator: Artificial-neural-network chapters, dense-network selections
     scope_triage: helpful-now
+    angle: Applied Keras/PyTorch-style construction of dense networks, activations, output heads, and multiclass
+      prediction.
   - kind: practise
     label: Cornell CS4780 HW9 — forward/ReLU tasks
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed forward-pass, activation,
-      and neural-network questions.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed forward-pass, activation, and neural-network questions.
   - kind: read
     label: SaD L15 — perceptron-to-MLP bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — Neural networks — Shows a perceptron as a one-neuron network, connects
-      multivariate linear regression to a one-layer ANN, and introduces MLPs, softmax, and parameter counting.
+    locator: lecture-slides/L15 — Neural networks
     scope_triage: helpful-now
+    angle: Shows a perceptron as a one-neuron network, connects multivariate linear regression to a one-layer
+      ANN, and introduces MLPs, softmax, and parameter counting.
   - kind: reference
     label: Deep Learning book Ch 6 — feedforward networks
     source_id: source-goodfellow-dl
-    locator: Ch 6 Deep Feedforward Networks — The canonical theory reference for layered computation,
-      hidden units, universal approximation, output units, and architecture design; deeper than the lecture.
+    locator: Ch 6 Deep Feedforward Networks
     scope_triage: reference-only
+    angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+      units, and architecture design; deeper than the lecture.
   - kind: read
     label: D2L Chapters 5–6 — executable MLPs
     source_id: source-d2l
-    locator: Chapters 5–6 — An interactive PyTorch route from perceptrons and multilayer networks to concise
-      implementations, output shapes, activations, and softmax classifiers.
+    locator: Chapters 5–6
     scope_triage: helpful-now
+    angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations, output
+      shapes, activations, and softmax classifiers.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-output/notes.md
   attachments: []
   source_feedback: []
@@ -530,8 +558,7 @@ stages:
   number: 5
   title: Softmax and multiclass scores
   status: pending
-  objective: Normalized exponentials, differentiable argmax intuition, probability interpretation, and
-    class prediction.
+  objective: Normalized exponentials, differentiable argmax intuition, probability interpretation, and class prediction.
   done_when:
   - 'Reproduce without notes: Normalized exponentials, differentiable argmax intuition, probability interpretation,
     and class prediction.'
@@ -544,48 +571,53 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: practise
     label: Übung 08–09 — MLP and feedforward practice
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf — Current worked sessions that
-      bridge perceptrons into MLPs and drill the feedforward network, activations, output heads and course-sheet
-      calculations.
+    locator: exercise-slides/Übung 08.pdf; exercise-slides/Übung 09.pdf
     scope_triage: required-now
+    angle: Current worked sessions that bridge perceptrons into MLPs and drill the feedforward network, activations,
+      output heads and course-sheet calculations.
   - kind: read
     label: Rohrer fully connected networks and softmax
     source_id: source-rohrer-e2eml
-    locator: Chapters 17 and 19 — Visual explanations of multilayer networks and softmax as differentiable
-      argmax, especially useful for output-head intuition.
+    locator: Chapters 17 and 19
     scope_triage: helpful-now
+    angle: Visual explanations of multilayer networks and softmax as differentiable argmax, especially useful
+      for output-head intuition.
   - kind: read
     label: Géron feedforward-network implementation
     source_id: source-geron-handson
-    locator: Artificial-neural-network chapters, dense-network selections — Applied Keras/PyTorch-style
-      construction of dense networks, activations, output heads, and multiclass prediction.
+    locator: Artificial-neural-network chapters, dense-network selections
     scope_triage: helpful-now
+    angle: Applied Keras/PyTorch-style construction of dense networks, activations, output heads, and multiclass
+      prediction.
   - kind: read
     label: SaD L15 — perceptron-to-MLP bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — Neural networks — Shows a perceptron as a one-neuron network, connects
-      multivariate linear regression to a one-layer ANN, and introduces MLPs, softmax, and parameter counting.
+    locator: lecture-slides/L15 — Neural networks
     scope_triage: helpful-now
+    angle: Shows a perceptron as a one-neuron network, connects multivariate linear regression to a one-layer
+      ANN, and introduces MLPs, softmax, and parameter counting.
   - kind: reference
     label: Deep Learning book Ch 6 — feedforward networks
     source_id: source-goodfellow-dl
-    locator: Ch 6 Deep Feedforward Networks — The canonical theory reference for layered computation,
-      hidden units, universal approximation, output units, and architecture design; deeper than the lecture.
+    locator: Ch 6 Deep Feedforward Networks
     scope_triage: reference-only
+    angle: The canonical theory reference for layered computation, hidden units, universal approximation, output
+      units, and architecture design; deeper than the lecture.
   - kind: read
     label: D2L Chapters 5–6 — executable MLPs
     source_id: source-d2l
-    locator: Chapters 5–6 — An interactive PyTorch route from perceptrons and multilayer networks to concise
-      implementations, output shapes, activations, and softmax classifiers.
+    locator: Chapters 5–6
     scope_triage: helpful-now
+    angle: An interactive PyTorch route from perceptrons and multilayer networks to concise implementations, output
+      shapes, activations, and softmax classifiers.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-softmax/notes.md
   attachments: []
   source_feedback: []
@@ -593,8 +625,7 @@ stages:
   number: 6
   title: Classification metrics
   status: pending
-  objective: Confusion-matrix counts, accuracy, precision, recall, F1, and micro/macro/weighted multiclass
-    averaging.
+  objective: Confusion-matrix counts, accuracy, precision, recall, F1, and micro/macro/weighted multiclass averaging.
   done_when:
   - 'Reproduce without notes: Confusion-matrix counts, accuracy, precision, recall, F1, and micro/macro/weighted
     multiclass averaging.'
@@ -606,30 +637,31 @@ stages:
   - kind: read
     label: Current L08 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf — The 2026 scope authority for XOR by
-      stacking, forward propagation, shapes, activations, output heads, softmax, and the full accuracy/precision/recall/F1
-      averaging block.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 08-feedforward-neural-network.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for XOR by stacking, forward propagation, shapes, activations, output heads,
+      softmax, and the full accuracy/precision/recall/F1 averaging block.
   - kind: reference
     label: CSC411 network and metrics notes
     source_id: source-csc411-notes
-    locator: §3.3 and §8.3 selections — A compact alternate notation for feedforward networks plus classification
-      evaluation definitions.
+    locator: §3.3 and §8.3 selections
     scope_triage: helpful-now
+    angle: A compact alternate notation for feedforward networks plus classification evaluation definitions.
   - kind: read
     label: Kroese networks and evaluation
     source_id: source-kroese-dsml
-    locator: §9.2 and §7.2 — Rigorous matrix notation for forward networks paired with an independent
-      metric reference.
+    locator: §9.2 and §7.2
     scope_triage: helpful-now
+    angle: Rigorous matrix notation for forward networks paired with an independent metric reference.
   - kind: read
     label: Géron 3rd ed. Ch 3 — the confusion matrix computed on real predictions
     source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 3 — confusion matrix pdf p. 164, precision and recall pdf p.
-      167, the ROC curve pdf p. 173 — Runs the exact metric chain of the deck's last slides on a real
-      classifier, including the precision/recall trade-off and the ROC curve the lecture only defines.
+    locator: geron-copy2.pdf (3rd ed.) Ch 3 — confusion matrix pdf p. 164, precision and recall pdf p. 167, the
+      ROC curve pdf p. 173
     scope_triage: helpful-now
+    angle: Runs the exact metric chain of the deck's last slides on a real classifier, including the precision/recall
+      trade-off and the ROC curve the lecture only defines.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l08/stages/stage-aml-l08-metrics/notes.md
   attachments: []
   source_feedback: []

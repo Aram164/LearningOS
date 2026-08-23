@@ -17,8 +17,7 @@ stages:
   status: pending
   objective: Atomic operations, cached forward values, dependencies, and efficient reverse traversal.
   done_when:
-  - 'Reproduce without notes: Atomic operations, cached forward values, dependencies, and efficient reverse
-    traversal.'
+  - 'Reproduce without notes: Atomic operations, cached forward values, dependencies, and efficient reverse traversal.'
   - Work Übung 10 — computation graphs and autodiff, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -29,49 +28,53 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: practise
     label: Übung 10 — computation graphs and autodiff
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections — The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection.
+    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
     scope_triage: required-now
+    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
+      backpropagation and the framework/autodiff connection.
   - kind: read
     label: Murphy reverse-mode backprop and training
     source_id: source-murphy-pml1
-    locator: '§§13.3–13.5 — The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers.'
+    locator: §§13.3–13.5
     scope_triage: helpful-now
+    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+      products, gradient pathologies, and all three regularizers.'
   - kind: watch
     label: EECS 498 Lecture 6 — Backpropagation
     source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation — Teaches backprop as computation-graph reverse traversal, closely
-      matching the AML deck and adding worked gradient traces.
+    locator: Lecture 6 — Backpropagation
     scope_triage: helpful-now
+    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and adding worked
+      gradient traces.
   - kind: watch
     label: Karpathy — micrograd from scratch
     source_id: source-karpathy-micrograd
-    locator: Complete video — Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation.
+    locator: Complete video
     scope_triage: helpful-now
+    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals explicit
+      after the analytical derivation.
   - kind: reference
     label: Official PyTorch autograd tutorial
     source_id: source-pytorch-tutorials
-    locator: Autograd tutorial — The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad.
+    locator: Autograd tutorial
     scope_triage: helpful-now
+    angle: The authoritative executable connection between computation graphs, requires_grad, backward, gradient
+      accumulation, zeroing, and no_grad.
   - kind: read
     label: D2L — automatic differentiation and network training
     source_id: source-d2l
-    locator: Automatic differentiation, MLP training, weight decay, and dropout sections — Runnable explanations
-      of computation graphs, automatic differentiation, backpropagation, parameter updates, regularization,
-      and dropout.
+    locator: Automatic differentiation, MLP training, weight decay, and dropout sections
     scope_triage: helpful-now
+    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
+      updates, regularization, and dropout.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-graph/notes.md
   attachments: []
   source_feedback: []
@@ -81,10 +84,10 @@ stages:
   status: pending
   objective: Gradient paths, accumulation through branches, shapes, and vector/matrix derivative bookkeeping.
   done_when:
-  - 'Reproduce without notes: Gradient paths, accumulation through branches, shapes, and vector/matrix
-    derivative bookkeeping.'
-  - Work Übung 10 — computation graphs and autodiff, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Gradient paths, accumulation through branches, shapes, and vector/matrix derivative
+    bookkeeping.'
+  - Work Übung 10 — computation graphs and autodiff, then the remaining 1, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-chain-rule
@@ -93,90 +96,97 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: practise
     label: Übung 10 — computation graphs and autodiff
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections — The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection.
+    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
     scope_triage: required-now
+    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
+      backpropagation and the framework/autodiff connection.
   - kind: read
     label: Murphy reverse-mode backprop and training
     source_id: source-murphy-pml1
-    locator: '§§13.3–13.5 — The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers.'
+    locator: §§13.3–13.5
     scope_triage: helpful-now
+    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+      products, gradient pathologies, and all three regularizers.'
   - kind: reference
     label: CSC411 backpropagation notes
     source_id: source-csc411-notes
-    locator: Neural-network training selections — A concise second derivation for backward passes and
-      training when the full books are too slow.
+    locator: Neural-network training selections
     scope_triage: helpful-now
+    angle: A concise second derivation for backward passes and training when the full books are too slow.
   - kind: read
     label: Kroese layer-wise backpropagation
     source_id: source-kroese-dsml
-    locator: §9.3 — The four backward rules in rigorous matrix notation; particularly useful for verifying
-      shapes.
+    locator: §9.3
     scope_triage: helpful-now
+    angle: The four backward rules in rigorous matrix notation; particularly useful for verifying shapes.
   - kind: read
     label: MML chain rule and matrix calculus
     source_id: source-mml
-    locator: §5.6 — A targeted mathematical safety net for understanding why layer-wise backpropagation
-      rules are correct.
+    locator: §5.6
     scope_triage: helpful-now
+    angle: A targeted mathematical safety net for understanding why layer-wise backpropagation rules are correct.
   - kind: reference
     label: CS229 backprop, regularization, and double descent
     source_id: source-cs229-notes
-    locator: §7.3, §8.2, and §9.1 — A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment.
+    locator: §7.3, §8.2, and §9.1
     scope_triage: helpful-now
+    angle: A compact written derivation close to the four layer rules, plus weight decay and a second strong double-descent
+      treatment.
   - kind: read
     label: MIT 6.036 neural-network training exercises
     source_id: source-mit-6036
-    locator: Neural-network training units — Practice for gradients and network training at an introductory
-      level; use deeper sources for the full computation-graph derivation.
+    locator: Neural-network training units
     scope_triage: helpful-now
+    angle: Practice for gradients and network training at an introductory level; use deeper sources for the full
+      computation-graph derivation.
   - kind: watch
     label: EECS 498 Lecture 6 — Backpropagation
     source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation — Teaches backprop as computation-graph reverse traversal, closely
-      matching the AML deck and adding worked gradient traces.
+    locator: Lecture 6 — Backpropagation
     scope_triage: helpful-now
+    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and adding worked
+      gradient traces.
   - kind: watch
     label: StatQuest Backpropagation Main Ideas
     source_id: source-statquest
-    locator: Backpropagation Main Ideas — A visual conceptual pass over backward credit assignment before
-      or after the algebraic layer rules.
+    locator: Backpropagation Main Ideas
     scope_triage: helpful-now
+    angle: A visual conceptual pass over backward credit assignment before or after the algebraic layer rules.
   - kind: watch
     label: 3Blue1Brown neural-networks videos 3–4
     source_id: source-3b1b-neural-networks
-    locator: Videos 3–4 — Visual backpropagation and calculus intuition that explains gradient flow without
-      replacing the exact matrix rules.
+    locator: Videos 3–4
     scope_triage: helpful-now
+    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing the exact
+      matrix rules.
   - kind: watch
     label: Karpathy — micrograd from scratch
     source_id: source-karpathy-micrograd
-    locator: Complete video — Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation.
+    locator: Complete video
     scope_triage: helpful-now
+    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals explicit
+      after the analytical derivation.
   - kind: practise
     label: Cornell CS4780 HW9 — neural-network training
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed network-gradient
-      and ReLU training problems for testing the backward mechanics.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward mechanics.
   - kind: read
     label: SaD L15 — backpropagation preview
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — backpropagation overview — A compact same-degree-course preview of backward
-      learning; read before AML L09 when the full computation-graph derivation feels abrupt.
+    locator: lecture-slides/L15 — backpropagation overview
     scope_triage: helpful-now
+    angle: A compact same-degree-course preview of backward learning; read before AML L09 when the full computation-graph
+      derivation feels abrupt.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-chain-rule/notes.md
   attachments: []
   source_feedback: []
@@ -184,13 +194,12 @@ stages:
   number: 3
   title: Layer-wise backpropagation
   status: pending
-  objective: dz, dW, db, and da rules, the full worked network, and connection to stochastic gradient
-    updates.
+  objective: dz, dW, db, and da rules, the full worked network, and connection to stochastic gradient updates.
   done_when:
   - 'Reproduce without notes: dz, dW, db, and da rules, the full worked network, and connection to stochastic
     gradient updates.'
-  - Work Übung 10 — computation graphs and autodiff, then the remaining 2, and record every miss with
-    the step it failed at.
+  - Work Übung 10 — computation graphs and autodiff, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-backpropagation
@@ -199,154 +208,168 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: reference
     label: Older L09 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf — Prior-year
-      second telling of backpropagation and training; current slides establish that batch normalization
-      is not in scope.
+    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
+    angle: Prior-year second telling of backpropagation and training; current slides establish that batch normalization
+      is not in scope.
   - kind: practise
     label: Übung 10 — computation graphs and autodiff
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections — The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection.
+    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
     scope_triage: required-now
+    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
+      backpropagation and the framework/autodiff connection.
   - kind: read
     label: ISLP training, regularization, and double descent
     source_id: source-islp
-    locator: §§10.7–10.8 — Covers backprop/SGD at a gentle level and is unusually well aligned on weight
-      decay, dropout, and the interpolation-threshold picture of double descent.
+    locator: §§10.7–10.8
     scope_triage: helpful-now
+    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout, and the
+      interpolation-threshold picture of double descent.
   - kind: reference
     label: ESL neural-network training depth
     source_id: source-esl
-    locator: Chapter 11 training selections — Historical/statistical treatment of fitting and regularization;
-      broader but less directly aligned with the deck computation-graph notation.
+    locator: Chapter 11 training selections
     scope_triage: reference-only
+    angle: Historical/statistical treatment of fitting and regularization; broader but less directly aligned with
+      the deck computation-graph notation.
   - kind: read
     label: Murphy reverse-mode backprop and training
     source_id: source-murphy-pml1
-    locator: '§§13.3–13.5 — The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers.'
+    locator: §§13.3–13.5
     scope_triage: helpful-now
+    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+      products, gradient pathologies, and all three regularizers.'
   - kind: reference
     label: CSC411 backpropagation notes
     source_id: source-csc411-notes
-    locator: Neural-network training selections — A concise second derivation for backward passes and
-      training when the full books are too slow.
+    locator: Neural-network training selections
     scope_triage: helpful-now
+    angle: A concise second derivation for backward passes and training when the full books are too slow.
   - kind: read
     label: Kroese layer-wise backpropagation
     source_id: source-kroese-dsml
-    locator: §9.3 — The four backward rules in rigorous matrix notation; particularly useful for verifying
-      shapes.
+    locator: §9.3
     scope_triage: helpful-now
+    angle: The four backward rules in rigorous matrix notation; particularly useful for verifying shapes.
   - kind: read
     label: MML chain rule and matrix calculus
     source_id: source-mml
-    locator: §5.6 — A targeted mathematical safety net for understanding why layer-wise backpropagation
-      rules are correct.
+    locator: §5.6
     scope_triage: helpful-now
+    angle: A targeted mathematical safety net for understanding why layer-wise backpropagation rules are correct.
   - kind: reference
     label: CS229 backprop, regularization, and double descent
     source_id: source-cs229-notes
-    locator: §7.3, §8.2, and §9.1 — A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment.
+    locator: §7.3, §8.2, and §9.1
     scope_triage: helpful-now
+    angle: A compact written derivation close to the four layer rules, plus weight decay and a second strong double-descent
+      treatment.
   - kind: reference
     label: CS229 neural-networks lecture II
     source_id: source-cs229-2022-videos
-    locator: Lecture 9 — Neural Networks — A deeper alternative for backpropagation, regularization, and
-      training mechanics.
+    locator: Lecture 9 — Neural Networks
     scope_triage: reference-only
+    angle: A deeper alternative for backpropagation, regularization, and training mechanics.
   - kind: read
     label: MIT 6.036 neural-network training exercises
     source_id: source-mit-6036
-    locator: Neural-network training units — Practice for gradients and network training at an introductory
-      level; use deeper sources for the full computation-graph derivation.
+    locator: Neural-network training units
     scope_triage: helpful-now
+    angle: Practice for gradients and network training at an introductory level; use deeper sources for the full
+      computation-graph derivation.
   - kind: watch
     label: EECS 498 Lecture 6 — Backpropagation
     source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation — Teaches backprop as computation-graph reverse traversal, closely
-      matching the AML deck and adding worked gradient traces.
+    locator: Lecture 6 — Backpropagation
     scope_triage: helpful-now
+    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and adding worked
+      gradient traces.
   - kind: watch
     label: StatQuest Backpropagation Main Ideas
     source_id: source-statquest
-    locator: Backpropagation Main Ideas — A visual conceptual pass over backward credit assignment before
-      or after the algebraic layer rules.
+    locator: Backpropagation Main Ideas
     scope_triage: helpful-now
+    angle: A visual conceptual pass over backward credit assignment before or after the algebraic layer rules.
   - kind: watch
     label: 3Blue1Brown neural-networks videos 3–4
     source_id: source-3b1b-neural-networks
-    locator: Videos 3–4 — Visual backpropagation and calculus intuition that explains gradient flow without
-      replacing the exact matrix rules.
+    locator: Videos 3–4
     scope_triage: helpful-now
+    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing the exact
+      matrix rules.
   - kind: watch
     label: Karpathy — micrograd from scratch
     source_id: source-karpathy-micrograd
-    locator: Complete video — Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation.
+    locator: Complete video
     scope_triage: helpful-now
+    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals explicit
+      after the analytical derivation.
   - kind: read
     label: Rohrer backpropagation and regularization
     source_id: source-rohrer-e2eml
-    locator: Chapters 10 and 18 — A calm visual second explanation for reverse learning signals and regularization,
-      without the density of a textbook derivation.
+    locator: Chapters 10 and 18
     scope_triage: helpful-now
+    angle: A calm visual second explanation for reverse learning signals and regularization, without the density
+      of a textbook derivation.
   - kind: practise
     label: Cornell CS4780 HW9 — neural-network training
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed network-gradient
-      and ReLU training problems for testing the backward mechanics.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward mechanics.
   - kind: practise
     label: MIT 6.034 network learning questions
     source_id: source-mit-6034-quizzes
-    locator: Neural-network learning quiz selections — Selected solution-backed neural-network mechanics
-      questions; use as a short trace gate rather than a source of theory.
+    locator: Neural-network learning quiz selections
     scope_triage: helpful-now
+    angle: Selected solution-backed neural-network mechanics questions; use as a short trace gate rather than
+      a source of theory.
   - kind: reference
     label: Official PyTorch autograd tutorial
     source_id: source-pytorch-tutorials
-    locator: Autograd tutorial — The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad.
+    locator: Autograd tutorial
     scope_triage: helpful-now
+    angle: The authoritative executable connection between computation graphs, requires_grad, backward, gradient
+      accumulation, zeroing, and no_grad.
   - kind: read
     label: Kelleher et al. Ch 7 — learning rates and weight decay
     source_id: source-kelleher-fmlpda
-    locator: Ch 7 Error-based Learning — An accessible explanation of error surfaces, gradient-based weight
-      updates, and weight decay; lighter than the lecture derivation.
+    locator: Ch 7 Error-based Learning
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: An accessible explanation of error surfaces, gradient-based weight updates, and weight decay; lighter
+      than the lecture derivation.
   - kind: read
     label: SaD L15 — backpropagation preview
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L15 — backpropagation overview — A compact same-degree-course preview of backward
-      learning; read before AML L09 when the full computation-graph derivation feels abrupt.
+    locator: lecture-slides/L15 — backpropagation overview
     scope_triage: helpful-now
+    angle: A compact same-degree-course preview of backward learning; read before AML L09 when the full computation-graph
+      derivation feels abrupt.
   - kind: reference
     label: Deep Learning book Ch 7–8 — regularization and optimization
     source_id: source-goodfellow-dl
-    locator: Ch 7 Regularization and Ch 8 Optimization — The depth reference for weight decay, dropout,
-      early stopping, gradient propagation, and optimization; consult by concept rather than reading linearly.
+    locator: Ch 7 Regularization and Ch 8 Optimization
     scope_triage: reference-only
+    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
+      consult by concept rather than reading linearly.
   - kind: read
     label: D2L — automatic differentiation and network training
     source_id: source-d2l
-    locator: Automatic differentiation, MLP training, weight decay, and dropout sections — Runnable explanations
-      of computation graphs, automatic differentiation, backpropagation, parameter updates, regularization,
-      and dropout.
+    locator: Automatic differentiation, MLP training, weight decay, and dropout sections
     scope_triage: helpful-now
+    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
+      updates, regularization, and dropout.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
   attachments: []
   source_feedback: []
@@ -354,11 +377,10 @@ stages:
   number: 4
   title: Weight decay and dropout
   status: pending
-  objective: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation
-    behaviour.
+  objective: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation behaviour.
   done_when:
-  - 'Reproduce without notes: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and
-    train/evaluation behaviour.'
+  - 'Reproduce without notes: Frobenius/L2 penalties, parameter shrinkage, stochastic unit masking, and train/evaluation
+    behaviour.'
   - Work Cornell CS4780 HW9 — neural-network training, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -368,93 +390,101 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: reference
     label: Older L09 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf — Prior-year
-      second telling of backpropagation and training; current slides establish that batch normalization
-      is not in scope.
+    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
+    angle: Prior-year second telling of backpropagation and training; current slides establish that batch normalization
+      is not in scope.
   - kind: read
     label: ISLP training, regularization, and double descent
     source_id: source-islp
-    locator: §§10.7–10.8 — Covers backprop/SGD at a gentle level and is unusually well aligned on weight
-      decay, dropout, and the interpolation-threshold picture of double descent.
+    locator: §§10.7–10.8
     scope_triage: helpful-now
+    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout, and the
+      interpolation-threshold picture of double descent.
   - kind: reference
     label: ESL neural-network training depth
     source_id: source-esl
-    locator: Chapter 11 training selections — Historical/statistical treatment of fitting and regularization;
-      broader but less directly aligned with the deck computation-graph notation.
+    locator: Chapter 11 training selections
     scope_triage: reference-only
+    angle: Historical/statistical treatment of fitting and regularization; broader but less directly aligned with
+      the deck computation-graph notation.
   - kind: read
     label: Murphy reverse-mode backprop and training
     source_id: source-murphy-pml1
-    locator: '§§13.3–13.5 — The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers.'
+    locator: §§13.3–13.5
     scope_triage: helpful-now
+    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+      products, gradient pathologies, and all three regularizers.'
   - kind: reference
     label: CSC411 backpropagation notes
     source_id: source-csc411-notes
-    locator: Neural-network training selections — A concise second derivation for backward passes and
-      training when the full books are too slow.
+    locator: Neural-network training selections
     scope_triage: helpful-now
+    angle: A concise second derivation for backward passes and training when the full books are too slow.
   - kind: reference
     label: CS229 backprop, regularization, and double descent
     source_id: source-cs229-notes
-    locator: §7.3, §8.2, and §9.1 — A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment.
+    locator: §7.3, §8.2, and §9.1
     scope_triage: helpful-now
+    angle: A compact written derivation close to the four layer rules, plus weight decay and a second strong double-descent
+      treatment.
   - kind: reference
     label: CS229 neural-networks lecture II
     source_id: source-cs229-2022-videos
-    locator: Lecture 9 — Neural Networks — A deeper alternative for backpropagation, regularization, and
-      training mechanics.
+    locator: Lecture 9 — Neural Networks
     scope_triage: reference-only
+    angle: A deeper alternative for backpropagation, regularization, and training mechanics.
   - kind: read
     label: Rohrer backpropagation and regularization
     source_id: source-rohrer-e2eml
-    locator: Chapters 10 and 18 — A calm visual second explanation for reverse learning signals and regularization,
-      without the density of a textbook derivation.
+    locator: Chapters 10 and 18
     scope_triage: helpful-now
+    angle: A calm visual second explanation for reverse learning signals and regularization, without the density
+      of a textbook derivation.
   - kind: read
     label: Géron training deep neural networks
     source_id: source-geron-handson
-    locator: Training-deep-networks chapter selections — Implementation-oriented regularization, dropout,
-      early stopping, optimizer use, and training diagnostics; use after the hand derivation.
+    locator: Training-deep-networks chapter selections
     scope_triage: helpful-now
+    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training diagnostics;
+      use after the hand derivation.
   - kind: practise
     label: Cornell CS4780 HW9 — neural-network training
     source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions — Local solution-backed network-gradient
-      and ReLU training problems for testing the backward mechanics.
+    locator: 2018 Spring/Fall HW9 selected tasks and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward mechanics.
   - kind: read
     label: Kelleher et al. Ch 7 — learning rates and weight decay
     source_id: source-kelleher-fmlpda
-    locator: Ch 7 Error-based Learning — An accessible explanation of error surfaces, gradient-based weight
-      updates, and weight decay; lighter than the lecture derivation.
+    locator: Ch 7 Error-based Learning
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: An accessible explanation of error surfaces, gradient-based weight updates, and weight decay; lighter
+      than the lecture derivation.
   - kind: reference
     label: Deep Learning book Ch 7–8 — regularization and optimization
     source_id: source-goodfellow-dl
-    locator: Ch 7 Regularization and Ch 8 Optimization — The depth reference for weight decay, dropout,
-      early stopping, gradient propagation, and optimization; consult by concept rather than reading linearly.
+    locator: Ch 7 Regularization and Ch 8 Optimization
     scope_triage: reference-only
+    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
+      consult by concept rather than reading linearly.
   - kind: read
     label: D2L — automatic differentiation and network training
     source_id: source-d2l
-    locator: Automatic differentiation, MLP training, weight decay, and dropout sections — Runnable explanations
-      of computation graphs, automatic differentiation, backpropagation, parameter updates, regularization,
-      and dropout.
+    locator: Automatic differentiation, MLP training, weight decay, and dropout sections
     scope_triage: helpful-now
+    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
+      updates, regularization, and dropout.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
   attachments: []
   source_feedback: []
@@ -462,11 +492,10 @@ stages:
   number: 5
   title: Early stopping and double descent
   status: pending
-  objective: Validation-controlled training, classical U-curves, interpolation threshold, and modern risk
-    behaviour.
+  objective: Validation-controlled training, classical U-curves, interpolation threshold, and modern risk behaviour.
   done_when:
-  - 'Reproduce without notes: Validation-controlled training, classical U-curves, interpolation threshold,
-    and modern risk behaviour.'
+  - 'Reproduce without notes: Validation-controlled training, classical U-curves, interpolation threshold, and
+    modern risk behaviour.'
   exam_critical: true
   concepts:
   - concept-early-stopping
@@ -475,35 +504,39 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: read
     label: ISLP training, regularization, and double descent
     source_id: source-islp
-    locator: §§10.7–10.8 — Covers backprop/SGD at a gentle level and is unusually well aligned on weight
-      decay, dropout, and the interpolation-threshold picture of double descent.
+    locator: §§10.7–10.8
     scope_triage: helpful-now
+    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout, and the
+      interpolation-threshold picture of double descent.
   - kind: reference
     label: CS229 backprop, regularization, and double descent
     source_id: source-cs229-notes
-    locator: §7.3, §8.2, and §9.1 — A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment.
+    locator: §7.3, §8.2, and §9.1
     scope_triage: helpful-now
+    angle: A compact written derivation close to the four layer rules, plus weight decay and a second strong double-descent
+      treatment.
   - kind: read
     label: Géron training deep neural networks
     source_id: source-geron-handson
-    locator: Training-deep-networks chapter selections — Implementation-oriented regularization, dropout,
-      early stopping, optimizer use, and training diagnostics; use after the hand derivation.
+    locator: Training-deep-networks chapter selections
     scope_triage: helpful-now
+    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training diagnostics;
+      use after the hand derivation.
   - kind: reference
     label: Deep Learning book Ch 7–8 — regularization and optimization
     source_id: source-goodfellow-dl
-    locator: Ch 7 Regularization and Ch 8 Optimization — The depth reference for weight decay, dropout,
-      early stopping, gradient propagation, and optimization; consult by concept rather than reading linearly.
+    locator: Ch 7 Regularization and Ch 8 Optimization
     scope_triage: reference-only
+    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
+      consult by concept rather than reading linearly.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-stopping/notes.md
   attachments: []
   source_feedback: []
@@ -511,11 +544,11 @@ stages:
   number: 6
   title: Vanishing and exploding gradients
   status: pending
-  objective: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies included
-    by the lecture.
+  objective: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies included by the
+    lecture.
   done_when:
-  - 'Reproduce without notes: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the
-    remedies included by the lecture.'
+  - 'Reproduce without notes: Repeated Jacobian factors, depth, saturation, diagnostic symptoms, and the remedies
+    included by the lecture.'
   exam_critical: true
   concepts:
   - concept-backpropagation
@@ -525,43 +558,47 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: reference
     label: Older L09 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf — Prior-year
-      second telling of backpropagation and training; current slides establish that batch normalization
-      is not in scope.
+    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
+    angle: Prior-year second telling of backpropagation and training; current slides establish that batch normalization
+      is not in scope.
   - kind: read
     label: Murphy reverse-mode backprop and training
     source_id: source-murphy-pml1
-    locator: '§§13.3–13.5 — The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers.'
+    locator: §§13.3–13.5
     scope_triage: helpful-now
+    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
+      products, gradient pathologies, and all three regularizers.'
   - kind: watch
     label: 3Blue1Brown neural-networks videos 3–4
     source_id: source-3b1b-neural-networks
-    locator: Videos 3–4 — Visual backpropagation and calculus intuition that explains gradient flow without
-      replacing the exact matrix rules.
+    locator: Videos 3–4
     scope_triage: helpful-now
+    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing the exact
+      matrix rules.
   - kind: read
     label: Géron training deep neural networks
     source_id: source-geron-handson
-    locator: Training-deep-networks chapter selections — Implementation-oriented regularization, dropout,
-      early stopping, optimizer use, and training diagnostics; use after the hand derivation.
+    locator: Training-deep-networks chapter selections
     scope_triage: helpful-now
+    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training diagnostics;
+      use after the hand derivation.
   - kind: reference
     label: Deep Learning book Ch 7–8 — regularization and optimization
     source_id: source-goodfellow-dl
-    locator: Ch 7 Regularization and Ch 8 Optimization — The depth reference for weight decay, dropout,
-      early stopping, gradient propagation, and optimization; consult by concept rather than reading linearly.
+    locator: Ch 7 Regularization and Ch 8 Optimization
     scope_triage: reference-only
+    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
+      consult by concept rather than reading linearly.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
   attachments: []
   source_feedback: []
@@ -569,11 +606,11 @@ stages:
   number: 7
   title: Automatic differentiation
   status: pending
-  objective: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and no_grad as
-    an executable model.
+  objective: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and no_grad as an executable
+    model.
   done_when:
-  - 'Reproduce without notes: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing,
-    and no_grad as an executable model.'
+  - 'Reproduce without notes: PyTorch computation graphs, requires_grad, backward, accumulation, zeroing, and
+    no_grad as an executable model.'
   - Work Übung 10 — computation graphs and autodiff, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -583,43 +620,46 @@ stages:
   - kind: read
     label: Current L09 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf — The 2026 scope authority for computation graphs,
-      the four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd.
+    locator: lecture-slides/VL 09-neural-networks.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
+      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
   - kind: practise
     label: Übung 10 — computation graphs and autodiff
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections — The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection.
+    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
     scope_triage: required-now
+    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
+      backpropagation and the framework/autodiff connection.
   - kind: watch
     label: Karpathy — micrograd from scratch
     source_id: source-karpathy-micrograd
-    locator: Complete video — Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation.
+    locator: Complete video
     scope_triage: helpful-now
+    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals explicit
+      after the analytical derivation.
   - kind: read
     label: Géron training deep neural networks
     source_id: source-geron-handson
-    locator: Training-deep-networks chapter selections — Implementation-oriented regularization, dropout,
-      early stopping, optimizer use, and training diagnostics; use after the hand derivation.
+    locator: Training-deep-networks chapter selections
     scope_triage: helpful-now
+    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training diagnostics;
+      use after the hand derivation.
   - kind: reference
     label: Official PyTorch autograd tutorial
     source_id: source-pytorch-tutorials
-    locator: Autograd tutorial — The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad.
+    locator: Autograd tutorial
     scope_triage: helpful-now
+    angle: The authoritative executable connection between computation graphs, requires_grad, backward, gradient
+      accumulation, zeroing, and no_grad.
   - kind: read
     label: D2L — automatic differentiation and network training
     source_id: source-d2l
-    locator: Automatic differentiation, MLP training, weight decay, and dropout sections — Runnable explanations
-      of computation graphs, automatic differentiation, backpropagation, parameter updates, regularization,
-      and dropout.
+    locator: Automatic differentiation, MLP training, weight decay, and dropout sections
     scope_triage: helpful-now
+    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
+      updates, regularization, and dropout.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
   attachments: []
   source_feedback: []

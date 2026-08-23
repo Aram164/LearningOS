@@ -357,12 +357,20 @@ def _resource(route: dict) -> dict:
     if route.get("source_id"):
         row["source_id"] = route["source_id"]
     # The angle is why this material is on this stage rather than another. It
-    # is the one field a menu without it becomes a list of names.
-    locator_parts = [str(route.get("locator") or "").strip(),
-                     str(route.get("angle") or "").strip()]
-    locator = " — ".join(part for part in locator_parts if part)
+    # is the one field a menu without it becomes a list of names — so it is
+    # carried as a field. Until 2026-08-23 it was concatenated onto `locator`
+    # after an em dash, which meant nothing downstream could render it, sort by
+    # it, or check that it was present: the 30% of rows missing one had to be
+    # counted by string-searching for " — " (CRITIQUE-POINTS §1).
+    locator = str(route.get("locator") or "").strip()
     if locator:
         row["locator"] = locator
+    angle = str(route.get("angle") or "").strip()
+    if angle:
+        row["angle"] = angle
+    angle_detail = str(route.get("angle_detail") or "").strip()
+    if angle_detail:
+        row["angle_detail"] = angle_detail
     if route.get("material_uri"):
         row["vault_path"] = route["material_uri"]
     row["scope_triage"] = _triage(route)

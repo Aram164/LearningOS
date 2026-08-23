@@ -219,15 +219,60 @@ Each rich `unit_routes` entry is one source-to-lecture edge and must contain:
 - `unit_id`, a human-readable option `title`, and `format`;
 - `angle`, written for this lecture rather than copied from global source
   metadata;
+- `angle_detail`, the long form of the same judgment, shown on hover;
 - `covers`, containing only knowledge-node IDs declared by that unit;
 - `depth`: `orientation`, `intuition`, `course-aligned`, `derivation`,
   `implementation`, `practice`, or `advanced-reference`;
 - `scope`: `current`, `prerequisite`, `complementary`, `optional`, `prior-year`,
   or `out-of-scope`; and
-- the most exact safe `locator`, `url`, or `vault_path` available.
+- an **exact** `locator`, plus `url` or `vault_path` where they exist.
 
 Legacy string routes remain readable for backward compatibility, but a newly
 mapped lecture must use rich routes so the interface can explain the choice.
+
+### What "exact" means for a locator
+
+"Chapter 9" of a 700-page book is a direction, not a locator: it does not say
+where to start and nothing can check it later. A locator is exact when a reader
+who has never seen the material can open it at the right place without
+searching.
+
+- **Books and papers** need the numbered division **and** a page range —
+  `Ch 9 §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393`. Naming
+  the specific pages of the sub-parts that matter is better still.
+- **Page numbers are PDF pages** everywhere in this repository: the number a
+  viewer's page box takes, counting the cover as 1. Printed page numbers
+  disagree with the viewer by a per-book offset — which is precisely the
+  ambiguity an exact locator exists to remove — so they are never used alone.
+  `tools/material_toc.py --toc` prints a local material's own contents with
+  PDF pages, and `--verify --page N --expect "…"` checks a locator against the
+  file.
+- **Decks, exercise sheets and exam papers** name the file and the slide,
+  Blatt or Aufgabe — `exercise-slides/blatt-05.pdf Aufgabe 2`.
+- **Videos, courses and articles** have no pages: they are addressed by their
+  own title, quoted — `'The medical test paradox, and redesigning Bayes' rule'`
+  — or by a numbered lecture, episode or section.
+- **Never a hedge.** "selections", "topic-matched", "relevant", "selected"
+  name a direction and leave the reader to do the finding. The validator
+  reports them as `LOCATOR-VAGUE`.
+
+When no copy is registered — no local material and no URL — do not route the
+source at all. A route whose locator cannot be opened is worse than an absence,
+because it reads as coverage.
+
+### What an angle has to say
+
+`angle` answers one question: *what does this material do for this stage that
+the other options on it do not?* A sentence that would be equally true of three
+other rows is not an angle — "covers probability" says nothing. State the
+specific difference: a derivation the deck skips, a worked example at the right
+level, the German vocabulary the exam uses, a picture that fixes a confusion.
+
+`angle_detail` carries the same judgment at length for the hover, and must add
+information rather than restate: what the reader actually gets, what it
+assumes, where it departs from the taught deck, when to choose something else.
+Naming a route's *limits* is part of the job — "stops before Naive Bayes" is as
+useful as anything it does cover.
 
 Additional package invariants:
 

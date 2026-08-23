@@ -37,7 +37,16 @@
                       "description": "What kind of artifact this is, which governs how it is used. 'exam' (past papers) and 'solutions' (worked model answers) are deliberately separate from 'exercise': a past paper is spent once under timed conditions, and model solutions are read as writing samples rather than solved.",
                       "enum": ["course-material", "exercise", "exam", "solutions", "book", "video", "website", "course", "documentation", "code", "paper"]
                     },
-                    "angle": { "type": "string", "minLength": 1 },
+                    "angle": {
+                      "description": "One line: what this material does for this lecture that the other options on it do not. Written for this lecture, never copied from the global source record.",
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "angle_detail": {
+                      "description": "The long form of the same judgment, shown on hover: what the reader gets, what it assumes, and where it departs from the taught deck. Optional only because the 2026-08 backfill is incremental; a newly authored route writes it.",
+                      "type": "string",
+                      "minLength": 1
+                    },
                     "covers": {
                       "type": "array",
                       "minItems": 1,

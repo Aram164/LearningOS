@@ -15,11 +15,11 @@ stages:
   number: 1
   title: Historical concept map
   status: pending
-  objective: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks that explain
-    why later model families exist rather than as a chronology to memorize.
+  objective: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks that explain why later
+    model families exist rather than as a chronology to memorize.
   done_when:
-  - 'Reproduce without notes: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks
-    that explain why later model families exist rather than as a chronology to memorize.'
+  - 'Reproduce without notes: Perceptrons, XOR, backpropagation, CNNs, LSTMs, and Transformers as landmarks that
+    explain why later model families exist rather than as a chronology to memorize.'
   exam_critical: true
   concepts:
   - concept-backpropagation
@@ -33,32 +33,33 @@ stages:
   - kind: read
     label: Current L01 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf — The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine.
+    locator: lecture-slides/VL 01-Introduction.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
+    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
+      dataset notation, course expectations, and the examples the lecturer can examine.
   - kind: reference
     label: Older L01 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf — A prior-year
-      version useful only for alternate examples or explanations omitted from the current deck.
+    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     scope_triage: reference-only
+    angle: A prior-year version useful only for alternate examples or explanations omitted from the current deck.
   - kind: watch
     label: 3Blue1Brown — What is a neural network?
     source_id: source-3b1b-neural-networks
-    locator: Video 1 — A visual preview that makes the later neural-network milestones concrete; it is
-      not a substitute for the L01 history or formulation sections.
+    locator: Video 1
     scope_triage: helpful-now
+    angle: A visual preview that makes the later neural-network milestones concrete; it is not a substitute for
+      the L01 history or formulation sections.
   - kind: read
     label: Géron 3rd ed. Ch 10 — from biological to artificial neurons
     source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed., Oct 2022) Ch 10 'From Biological to Artificial Neurons' pdf pp.
-      380–389, 'The Perceptron' pdf p. 384 — Retells the deck's landmark chain — perceptron, the XOR objection,
-      backpropagation, the winters — as one causal story, which is what a concept map is for; not a chronology
-      to memorize.
+    locator: geron-copy2.pdf (3rd ed., Oct 2022) Ch 10 'From Biological to Artificial Neurons' pdf pp. 380–389,
+      'The Perceptron' pdf p. 384
     scope_triage: helpful-now
+    angle: Retells the deck's landmark chain — perceptron, the XOR objection, backpropagation, the winters — as
+      one causal story, which is what a concept map is for; not a chronology to memorize.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-history/notes.md
   attachments: []
   source_feedback: []
@@ -66,11 +67,11 @@ stages:
   number: 2
   title: Learning-problem formulation
   status: pending
-  objective: Examples, features, labels, hypotheses, learning algorithms, losses, and the distinction
-    between classification, regression, supervised, and unsupervised learning.
+  objective: Examples, features, labels, hypotheses, learning algorithms, losses, and the distinction between
+    classification, regression, supervised, and unsupervised learning.
   done_when:
-  - 'Reproduce without notes: Examples, features, labels, hypotheses, learning algorithms, losses, and
-    the distinction between classification, regression, supervised, and unsupervised learning.'
+  - 'Reproduce without notes: Examples, features, labels, hypotheses, learning algorithms, losses, and the distinction
+    between classification, regression, supervised, and unsupervised learning.'
   exam_critical: true
   concepts:
   - concept-supervised-learning
@@ -79,75 +80,81 @@ stages:
   - kind: read
     label: Current L01 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf — The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine.
+    locator: lecture-slides/VL 01-Introduction.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
+    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
+      dataset notation, course expectations, and the examples the lecturer can examine.
   - kind: reference
     label: Older L01 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf — A prior-year
-      version useful only for alternate examples or explanations omitted from the current deck.
+    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     scope_triage: reference-only
+    angle: A prior-year version useful only for alternate examples or explanations omitted from the current deck.
   - kind: read
     label: ISLP Chapter 2 — statistical learning
     source_id: source-islp
-    locator: Chapter 2, especially §§2.1–2.2 — A gentle, example-driven explanation of prediction, inference,
-      supervised/unsupervised tasks, model flexibility, train/test error, and the vocabulary behind problem
-      formulation.
+    locator: Chapter 2, especially §§2.1–2.2
     scope_triage: helpful-now
+    angle: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised tasks, model
+      flexibility, train/test error, and the vocabulary behind problem formulation.
   - kind: read
     label: Kroese ML workflow framing
     source_id: source-kroese-dsml
-    locator: Introductory ML and evaluation selections — An independent data-science view of models, data,
-      evaluation, and workflow; useful as a terminology cross-check.
+    locator: Introductory ML and evaluation selections
     scope_triage: helpful-now
+    angle: An independent data-science view of models, data, evaluation, and workflow; useful as a terminology
+      cross-check.
   - kind: read
     label: MIT 6.036 introduction and representations
     source_id: source-mit-6036
-    locator: Introduction and representations units — A structured independent course entry with representations,
-      task families, overfitting, and generalization checks.
+    locator: Introduction and representations units
     scope_triage: helpful-now
+    angle: A structured independent course entry with representations, task families, overfitting, and generalization
+      checks.
   - kind: read
     label: Rohrer model workflow and data splitting
     source_id: source-rohrer-e2eml
-    locator: Chapters 3–4 — Calm long-form intuition for choosing a loss, splitting data, and seeing ML
-      as an end-to-end workflow.
+    locator: Chapters 3–4
     scope_triage: helpful-now
+    angle: Calm long-form intuition for choosing a loss, splitting data, and seeing ML as an end-to-end workflow.
   - kind: read
     label: Géron end-to-end ML project overview
     source_id: source-geron-handson
-    locator: Chapter 2 selected workflow sections — An applied workflow view of framing, data preparation,
-      training, evaluation, and iteration; useful for seeing the introductory vocabulary in practice.
+    locator: Chapter 2 selected workflow sections
     scope_triage: helpful-now
+    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration; useful
+      for seeing the introductory vocabulary in practice.
   - kind: read
     label: Caltech Learning From Data orientation problems
     source_id: source-caltech-lfd
-    locator: Introductory homework selections — Solved learning-theory problems that sharpen hypotheses,
-      generalization, and the distinction between fitting and learning.
+    locator: Introductory homework selections
     scope_triage: helpful-now
+    angle: Solved learning-theory problems that sharpen hypotheses, generalization, and the distinction between
+      fitting and learning.
   - kind: read
     label: Kelleher et al. — predictive-analytics framing
     source_id: source-kelleher-fmlpda
-    locator: Introductory chapters — An introductory, worked-example view of learning problems and the
-      families of predictive models; useful when the lecture overview feels too compressed.
+    locator: Introductory chapters
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: An introductory, worked-example view of learning problems and the families of predictive models; useful
+      when the lecture overview feels too compressed.
   - kind: read
     label: Domingos — high-level map of machine learning
     source_id: source-domingos-useful-things
-    locator: Entire essay — A concise practitioner essay on representation, data, generalization, evaluation,
-      and the difference between fitting and learning.
+    locator: Entire essay
     scope_triage: helpful-now
+    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
+      between fitting and learning.
   - kind: read
     label: SaD L11 — data-science workflow and evaluation bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L11 — Data science intro (especially slides 23–38) — The neighbouring HU course
-      supplies the practical train/test, loss, metrics, pipeline, inductive-bias, and bias-variance frame
-      assumed by AML.
+    locator: lecture-slides/L11 — Data science intro (especially slides 23–38)
     scope_triage: helpful-now
+    angle: The neighbouring HU course supplies the practical train/test, loss, metrics, pipeline, inductive-bias,
+      and bias-variance frame assumed by AML.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
   attachments: []
   source_feedback: []
@@ -167,55 +174,62 @@ stages:
   - kind: read
     label: Current L01 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf — The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine.
+    locator: lecture-slides/VL 01-Introduction.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
+    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
+      dataset notation, course expectations, and the examples the lecturer can examine.
   - kind: read
     label: Linear-algebra primer
     source_id: source-aml-ss26-lectures
-    locator: Primer_Linear_Algebra.pdf — A 36-page diagnostic for vectors, matrices, products, dimensions,
-      and differentiation; use it to identify prerequisite gaps, not as a second full lecture.
+    locator: Primer_Linear_Algebra.pdf
     vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
     scope_triage: helpful-now
+    angle: A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use it to identify
+      prerequisite gaps, not as a second full lecture.
   - kind: read
     label: MIT 6.036 introduction and representations
     source_id: source-mit-6036
-    locator: Introduction and representations units — A structured independent course entry with representations,
-      task families, overfitting, and generalization checks.
+    locator: Introduction and representations units
     scope_triage: helpful-now
+    angle: A structured independent course entry with representations, task families, overfitting, and generalization
+      checks.
   - kind: watch
     label: 3Blue1Brown — What is a neural network?
     source_id: source-3b1b-neural-networks
-    locator: Video 1 — A visual preview that makes the later neural-network milestones concrete; it is
-      not a substitute for the L01 history or formulation sections.
+    locator: Video 1
     scope_triage: helpful-now
+    angle: A visual preview that makes the later neural-network milestones concrete; it is not a substitute for
+      the L01 history or formulation sections.
   - kind: watch
     label: Essence of Linear Algebra — targeted prerequisite repair
     source_id: source-3b1b-linear-algebra
-    locator: 'Targeted playlist chapters only — Use only the chapters matching primer gaps: vectors, linear
-      combinations, matrix transformations, multiplication, and dot products.'
+    locator: Targeted playlist chapters only
     scope_triage: helpful-now
+    angle: 'Use only the chapters matching primer gaps: vectors, linear combinations, matrix transformations,
+      multiplication, and dot products.'
   - kind: read
     label: Géron end-to-end ML project overview
     source_id: source-geron-handson
-    locator: Chapter 2 selected workflow sections — An applied workflow view of framing, data preparation,
-      training, evaluation, and iteration; useful for seeing the introductory vocabulary in practice.
+    locator: Chapter 2 selected workflow sections
     scope_triage: helpful-now
+    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration; useful
+      for seeing the introductory vocabulary in practice.
   - kind: read
     label: Kelleher et al. — predictive-analytics framing
     source_id: source-kelleher-fmlpda
-    locator: Introductory chapters — An introductory, worked-example view of learning problems and the
-      families of predictive models; useful when the lecture overview feels too compressed.
+    locator: Introductory chapters
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: An introductory, worked-example view of learning problems and the families of predictive models; useful
+      when the lecture overview feels too compressed.
   - kind: read
     label: Domingos — high-level map of machine learning
     source_id: source-domingos-useful-things
-    locator: Entire essay — A concise practitioner essay on representation, data, generalization, evaluation,
-      and the difference between fitting and learning.
+    locator: Entire essay
     scope_triage: helpful-now
+    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
+      between fitting and learning.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-data/notes.md
   attachments: []
   source_feedback: []
@@ -223,8 +237,8 @@ stages:
   number: 4
   title: Generalization and evaluation
   status: pending
-  objective: Why training performance is not evidence of future performance and why train/test separation
-    belongs in the problem definition.
+  objective: Why training performance is not evidence of future performance and why train/test separation belongs
+    in the problem definition.
   done_when:
   - 'Reproduce without notes: Why training performance is not evidence of future performance and why train/test
     separation belongs in the problem definition.'
@@ -236,68 +250,74 @@ stages:
   - kind: read
     label: Current L01 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf — The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine.
+    locator: lecture-slides/VL 01-Introduction.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
+    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
+      dataset notation, course expectations, and the examples the lecturer can examine.
   - kind: read
     label: ISLP Chapter 2 — statistical learning
     source_id: source-islp
-    locator: Chapter 2, especially §§2.1–2.2 — A gentle, example-driven explanation of prediction, inference,
-      supervised/unsupervised tasks, model flexibility, train/test error, and the vocabulary behind problem
-      formulation.
+    locator: Chapter 2, especially §§2.1–2.2
     scope_triage: helpful-now
+    angle: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised tasks, model
+      flexibility, train/test error, and the vocabulary behind problem formulation.
   - kind: read
     label: Kroese ML workflow framing
     source_id: source-kroese-dsml
-    locator: Introductory ML and evaluation selections — An independent data-science view of models, data,
-      evaluation, and workflow; useful as a terminology cross-check.
+    locator: Introductory ML and evaluation selections
     scope_triage: helpful-now
+    angle: An independent data-science view of models, data, evaluation, and workflow; useful as a terminology
+      cross-check.
   - kind: read
     label: MIT 6.036 introduction and representations
     source_id: source-mit-6036
-    locator: Introduction and representations units — A structured independent course entry with representations,
-      task families, overfitting, and generalization checks.
+    locator: Introduction and representations units
     scope_triage: helpful-now
+    angle: A structured independent course entry with representations, task families, overfitting, and generalization
+      checks.
   - kind: read
     label: Rohrer model workflow and data splitting
     source_id: source-rohrer-e2eml
-    locator: Chapters 3–4 — Calm long-form intuition for choosing a loss, splitting data, and seeing ML
-      as an end-to-end workflow.
+    locator: Chapters 3–4
     scope_triage: helpful-now
+    angle: Calm long-form intuition for choosing a loss, splitting data, and seeing ML as an end-to-end workflow.
   - kind: read
     label: Géron end-to-end ML project overview
     source_id: source-geron-handson
-    locator: Chapter 2 selected workflow sections — An applied workflow view of framing, data preparation,
-      training, evaluation, and iteration; useful for seeing the introductory vocabulary in practice.
+    locator: Chapter 2 selected workflow sections
     scope_triage: helpful-now
+    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration; useful
+      for seeing the introductory vocabulary in practice.
   - kind: read
     label: Caltech Learning From Data orientation problems
     source_id: source-caltech-lfd
-    locator: Introductory homework selections — Solved learning-theory problems that sharpen hypotheses,
-      generalization, and the distinction between fitting and learning.
+    locator: Introductory homework selections
     scope_triage: helpful-now
+    angle: Solved learning-theory problems that sharpen hypotheses, generalization, and the distinction between
+      fitting and learning.
   - kind: read
     label: Kelleher et al. — predictive-analytics framing
     source_id: source-kelleher-fmlpda
-    locator: Introductory chapters — An introductory, worked-example view of learning problems and the
-      families of predictive models; useful when the lecture overview feels too compressed.
+    locator: Introductory chapters
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    angle: An introductory, worked-example view of learning problems and the families of predictive models; useful
+      when the lecture overview feels too compressed.
   - kind: read
     label: Domingos — high-level map of machine learning
     source_id: source-domingos-useful-things
-    locator: Entire essay — A concise practitioner essay on representation, data, generalization, evaluation,
-      and the difference between fitting and learning.
+    locator: Entire essay
     scope_triage: helpful-now
+    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
+      between fitting and learning.
   - kind: read
     label: SaD L11 — data-science workflow and evaluation bridge
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L11 — Data science intro (especially slides 23–38) — The neighbouring HU course
-      supplies the practical train/test, loss, metrics, pipeline, inductive-bias, and bias-variance frame
-      assumed by AML.
+    locator: lecture-slides/L11 — Data science intro (especially slides 23–38)
     scope_triage: helpful-now
+    angle: The neighbouring HU course supplies the practical train/test, loss, metrics, pipeline, inductive-bias,
+      and bias-variance frame assumed by AML.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-generalization/notes.md
   attachments: []
   source_feedback: []
@@ -305,11 +325,11 @@ stages:
   number: 5
   title: Mathematical and tooling prerequisites
   status: pending
-  objective: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and notebooks as the
-    working language assumed by later lectures.
+  objective: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and notebooks as the working
+    language assumed by later lectures.
   done_when:
-  - 'Reproduce without notes: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and
-    notebooks as the working language assumed by later lectures.'
+  - 'Reproduce without notes: Vectors, matrices, dot products, shapes, derivatives, Python, NumPy, and notebooks
+    as the working language assumed by later lectures.'
   - Work Solved Lineare-Algebra Übungen and Klausuren, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -320,24 +340,26 @@ stages:
   - kind: read
     label: Linear-algebra primer
     source_id: source-aml-ss26-lectures
-    locator: Primer_Linear_Algebra.pdf — A 36-page diagnostic for vectors, matrices, products, dimensions,
-      and differentiation; use it to identify prerequisite gaps, not as a second full lecture.
+    locator: Primer_Linear_Algebra.pdf
     vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
     scope_triage: helpful-now
+    angle: A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use it to identify
+      prerequisite gaps, not as a second full lecture.
   - kind: watch
     label: Essence of Linear Algebra — targeted prerequisite repair
     source_id: source-3b1b-linear-algebra
-    locator: 'Targeted playlist chapters only — Use only the chapters matching primer gaps: vectors, linear
-      combinations, matrix transformations, multiplication, and dot products.'
+    locator: Targeted playlist chapters only
     scope_triage: helpful-now
+    angle: 'Use only the chapters matching primer gaps: vectors, linear combinations, matrix transformations,
+      multiplication, and dot products.'
   - kind: practise
     label: Solved Lineare-Algebra Übungen and Klausuren
     source_id: source-lineare-algebra-archive
-    locator: LA/Übungen mit lösungen.pdf; LA/Übungsblatt mit lösungen.pdf; LA/Klausur31-07-23-Losungen
-      2.pdf; LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf — Solution-backed vector, matrix,
-      product and shape drills for whichever primer item came back red; German, and unrelated to AML scope
-      beyond the prerequisite check.
+    locator: LA/Übungen mit lösungen.pdf; LA/Übungsblatt mit lösungen.pdf; LA/Klausur31-07-23-Losungen 2.pdf;
+      LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf
     scope_triage: helpful-now
+    angle: Solution-backed vector, matrix, product and shape drills for whichever primer item came back red; German,
+      and unrelated to AML scope beyond the prerequisite check.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
   attachments: []
   source_feedback: []

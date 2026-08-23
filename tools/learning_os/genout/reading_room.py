@@ -111,6 +111,7 @@ def build_reading_room(repo: Repo, generated_at: str) -> str:
     lines.append("## All views")
     lines.append("")
     lines.append("[domain-atlas.md](domain-atlas.md) (cross-domain map) · "
+                 "[study-plans.md](study-plans.md) (every stage's options and angles) · "
                  "[concept-index.md](concept-index.md) · "
                  "[concept-map.md](concept-map.md) · "
                  "[concept-canvas.canvas](concept-canvas.canvas) (Obsidian) · "

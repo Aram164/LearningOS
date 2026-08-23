@@ -23,6 +23,7 @@ from .manifest import build_manifest
 from .modules_view import build_module_view
 from .reading_room import build_reading_room
 from .sources import build_collection_view, build_source_index
+from .study_plan import build_study_plan_view
 
 
 def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
@@ -48,6 +49,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "reports/health.md": build_health(repo, generated_at) + "\n",
         "nebula.md": build_nebula(repo, generated_at) + "\n",
         "reading-room.md": build_reading_room(repo, generated_at) + "\n",
+        "study-plans.md": build_study_plan_view(repo, generated_at) + "\n",
         "concept-canvas.canvas": json.dumps(
             build_concept_canvas(repo, generated_at),
             indent=2, sort_keys=True, ensure_ascii=False) + "\n",

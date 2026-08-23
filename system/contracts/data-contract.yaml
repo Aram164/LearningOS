@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 11
-schema_fingerprint: sha256:1780ccd6dc3fbe57755e88cc91b6b0a35cf2287ae054ac5750229bea6fa1d242
+contract_version: 12
+schema_fingerprint: sha256:e77acb7da2c37e062c00a404cc3f88d8fd5e2aeb5f5ef00fec1ab365dcd1a736
 record_schemas: 25
 history:
 - version: 1
@@ -109,3 +109,9 @@ history:
     query responses, so the v10 fixture remains the frozen on-disk shape.'
   migration: null
   fixture: tests/fixtures/formats/v10/
+- version: 12
+  adopted: '2026-08-24'
+  note: resource rows and module source-map routes gain optional angle and angle_detail
+    fields; the angle stops being concatenated onto the locator (CRITIQUE-POINTS 1)
+  migration: null
+  fixture: tests/fixtures/formats/v12/

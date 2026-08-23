@@ -20,8 +20,7 @@ stages:
   done_when:
   - 'Reproduce without notes: Clustering seeks useful groups without labels; the result depends on representation,
     similarity, objective, and chosen algorithm rather than revealing a unique ground truth automatically.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -31,31 +30,32 @@ stages:
   - kind: read
     label: L11 supervised/unsupervised framing
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/11_datascience_intro.pdf supervised/unsupervised section — Supplies the current
-      lecture definition of unsupervised learning that UE7's clustering topic instantiates; it is a framing
-      bridge, not a missing clustering lecture.
+    locator: lecture-slides/11_datascience_intro.pdf supervised/unsupervised section
     scope_triage: helpful-now
+    angle: Supplies the current lecture definition of unsupervised learning that UE7's clustering topic instantiates;
+      it is a framing bridge, not a missing clustering lecture.
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87 — The current authority for this auxiliary topic, including
-      method families, a full assignment/ centroid-update walkthrough, local-optimum caveats, and final
-      exam questions.
+    locator: exercise-slides/UE7.pdf slides 32–87
     scope_triage: required-now
+    angle: The current authority for this auxiliary topic, including method families, a full assignment/ centroid-update
+      walkthrough, local-optimum caveats, and final exam questions.
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf — A verified same-topic full lecture that deepens UE7's clustering treatment.
-      It is not a source for current L12 trees despite sharing the number 12.
+    locator: 12_clustering.pdf
     vault_path: material://source-sad-2025-recordings/12_clustering.pdf
     scope_triage: reference-only
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
+      current L12 trees despite sharing the number 12.
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335) — The UE7 slides
-      define the clustering topic but supply no worked convergence trace; this chapter iterates assignment
-      and update on a small data set and shows the hierarchical alternative on the same points.
+    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
     scope_triage: helpful-now
+    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter iterates
+      assignment and update on a small data set and shows the hierarchical alternative on the same points.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
   attachments: []
   source_feedback: []
@@ -63,13 +63,12 @@ stages:
   number: 2
   title: Hierarchical, partitioning, and density families
   status: pending
-  objective: The main families express different assumptions about cluster nesting, number, compactness,
-    shape, density, noise, and outliers.
+  objective: The main families express different assumptions about cluster nesting, number, compactness, shape,
+    density, noise, and outliers.
   done_when:
-  - 'Reproduce without notes: The main families express different assumptions about cluster nesting, number,
-    compactness, shape, density, noise, and outliers.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: The main families express different assumptions about cluster nesting, number, compactness,
+    shape, density, noise, and outliers.'
+  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-data-access-optimization
@@ -78,52 +77,55 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87 — The current authority for this auxiliary topic, including
-      method families, a full assignment/ centroid-update walkthrough, local-optimum caveats, and final
-      exam questions.
+    locator: exercise-slides/UE7.pdf slides 32–87
     scope_triage: required-now
+    angle: The current authority for this auxiliary topic, including method families, a full assignment/ centroid-update
+      walkthrough, local-optimum caveats, and final exam questions.
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf — A verified same-topic full lecture that deepens UE7's clustering treatment.
-      It is not a source for current L12 trees despite sharing the number 12.
+    locator: 12_clustering.pdf
     vault_path: material://source-sad-2025-recordings/12_clustering.pdf
     scope_triage: reference-only
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
+      current L12 trees despite sharing the number 12.
   - kind: reference
     label: ISLP §12.2 — clustering algorithms and validation
     source_id: source-islp
-    locator: §12.2 — Optional depth on k-means, hierarchical clustering, practical choices, and validation
-      after the UE7 scope; it broadens rather than defines the exam topic.
+    locator: §12.2
     scope_triage: reference-only
+    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after the UE7
+      scope; it broadens rather than defines the exam topic.
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
-    locator: Clustering selections — Independent data-science treatment of clustering families, objectives,
-      and practical evaluation; optional after the UE7 trace.
+    locator: Clustering selections
     scope_triage: reference-only
+    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation; optional
+      after the UE7 trace.
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
     locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274) — The UE7 topic names hierarchical, partitioning and density families and
-      asks how clustering results are compared; this chapter supplies DBSCAN for the density family and
-      silhouette/elbow for the comparison question, neither of which any other registered source covers
-      at working depth.
+      score and elbow p. 274)
     scope_triage: helpful-now
+    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering results
+      are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for the comparison
+      question, neither of which any other registered source covers at working depth.
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335) — The UE7 slides
-      define the clustering topic but supply no worked convergence trace; this chapter iterates assignment
-      and update on a small data set and shows the hierarchical alternative on the same points.
+    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
     scope_triage: helpful-now
+    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter iterates
+      assignment and update on a small data set and shows the hierarchical alternative on the same points.
   - kind: reference
     label: ESL 14.3 - cluster analysis as an objective, not an algorithm
     source_id: source-esl
-    locator: Section 14.3 cluster analysis, pp. 520-546 — Frames clustering by its loss function and dissimilarity
-      choice before any algorithm, which is the 'no single true clustering' point the UE7 slides make
-      rhetorically.
+    locator: Section 14.3 cluster analysis, pp. 520-546
     scope_triage: reference-only
+    angle: Frames clustering by its loss function and dissimilarity choice before any algorithm, which is the
+      'no single true clustering' point the UE7 slides make rhetorically.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md
   attachments: []
   source_feedback: []
@@ -131,13 +133,12 @@ stages:
   number: 3
   title: k-means objective and iterations
   status: pending
-  objective: Alternating nearest-centroid assignment and centroid recomputation decreases within-cluster
-    squared distance until assignments stabilize.
+  objective: Alternating nearest-centroid assignment and centroid recomputation decreases within-cluster squared
+    distance until assignments stabilize.
   done_when:
-  - 'Reproduce without notes: Alternating nearest-centroid assignment and centroid recomputation decreases
-    within-cluster squared distance until assignments stabilize.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: Alternating nearest-centroid assignment and centroid recomputation decreases within-cluster
+    squared distance until assignments stabilize.'
+  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -147,52 +148,55 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87 — The current authority for this auxiliary topic, including
-      method families, a full assignment/ centroid-update walkthrough, local-optimum caveats, and final
-      exam questions.
+    locator: exercise-slides/UE7.pdf slides 32–87
     scope_triage: required-now
+    angle: The current authority for this auxiliary topic, including method families, a full assignment/ centroid-update
+      walkthrough, local-optimum caveats, and final exam questions.
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf — A verified same-topic full lecture that deepens UE7's clustering treatment.
-      It is not a source for current L12 trees despite sharing the number 12.
+    locator: 12_clustering.pdf
     vault_path: material://source-sad-2025-recordings/12_clustering.pdf
     scope_triage: reference-only
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
+      current L12 trees despite sharing the number 12.
   - kind: reference
     label: ISLP §12.2 — clustering algorithms and validation
     source_id: source-islp
-    locator: §12.2 — Optional depth on k-means, hierarchical clustering, practical choices, and validation
-      after the UE7 scope; it broadens rather than defines the exam topic.
+    locator: §12.2
     scope_triage: reference-only
+    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after the UE7
+      scope; it broadens rather than defines the exam topic.
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
-    locator: Clustering selections — Independent data-science treatment of clustering families, objectives,
-      and practical evaluation; optional after the UE7 trace.
+    locator: Clustering selections
     scope_triage: reference-only
+    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation; optional
+      after the UE7 trace.
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
     locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274) — The UE7 topic names hierarchical, partitioning and density families and
-      asks how clustering results are compared; this chapter supplies DBSCAN for the density family and
-      silhouette/elbow for the comparison question, neither of which any other registered source covers
-      at working depth.
+      score and elbow p. 274)
     scope_triage: helpful-now
+    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering results
+      are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for the comparison
+      question, neither of which any other registered source covers at working depth.
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335) — The UE7 slides
-      define the clustering topic but supply no worked convergence trace; this chapter iterates assignment
-      and update on a small data set and shows the hierarchical alternative on the same points.
+    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
     scope_triage: helpful-now
+    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter iterates
+      assignment and update on a small data set and shows the hierarchical alternative on the same points.
   - kind: read
     label: Marsland Ch 14 - k-means as competitive learning
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation
-      p. 311) — Reframes the k-means update as competitive learning and vector quantisation, which explains
-      why initialisation decides the local optimum the UE7 slides warn about.
+    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation p. 311)
     scope_triage: helpful-now
+    angle: Reframes the k-means update as competitive learning and vector quantisation, which explains why initialisation
+      decides the local optimum the UE7 slides warn about.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
   attachments: []
   source_feedback: []
@@ -200,13 +204,12 @@ stages:
   number: 4
   title: Initialization, convergence, and local optima
   status: pending
-  objective: k, starting centroids, scale, and outliers can change the result; convergence guarantees
-    a stable local solution, not the global optimum or the right number of clusters.
+  objective: k, starting centroids, scale, and outliers can change the result; convergence guarantees a stable
+    local solution, not the global optimum or the right number of clusters.
   done_when:
-  - 'Reproduce without notes: k, starting centroids, scale, and outliers can change the result; convergence
-    guarantees a stable local solution, not the global optimum or the right number of clusters.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: k, starting centroids, scale, and outliers can change the result; convergence guarantees
+    a stable local solution, not the global optimum or the right number of clusters.'
+  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -216,46 +219,48 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87 — The current authority for this auxiliary topic, including
-      method families, a full assignment/ centroid-update walkthrough, local-optimum caveats, and final
-      exam questions.
+    locator: exercise-slides/UE7.pdf slides 32–87
     scope_triage: required-now
+    angle: The current authority for this auxiliary topic, including method families, a full assignment/ centroid-update
+      walkthrough, local-optimum caveats, and final exam questions.
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf — A verified same-topic full lecture that deepens UE7's clustering treatment.
-      It is not a source for current L12 trees despite sharing the number 12.
+    locator: 12_clustering.pdf
     vault_path: material://source-sad-2025-recordings/12_clustering.pdf
     scope_triage: reference-only
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
+      current L12 trees despite sharing the number 12.
   - kind: reference
     label: ISLP §12.2 — clustering algorithms and validation
     source_id: source-islp
-    locator: §12.2 — Optional depth on k-means, hierarchical clustering, practical choices, and validation
-      after the UE7 scope; it broadens rather than defines the exam topic.
+    locator: §12.2
     scope_triage: reference-only
+    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after the UE7
+      scope; it broadens rather than defines the exam topic.
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
     locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274) — The UE7 topic names hierarchical, partitioning and density families and
-      asks how clustering results are compared; this chapter supplies DBSCAN for the density family and
-      silhouette/elbow for the comparison question, neither of which any other registered source covers
-      at working depth.
+      score and elbow p. 274)
     scope_triage: helpful-now
+    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering results
+      are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for the comparison
+      question, neither of which any other registered source covers at working depth.
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335) — The UE7 slides
-      define the clustering topic but supply no worked convergence trace; this chapter iterates assignment
-      and update on a small data set and shows the hierarchical alternative on the same points.
+    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
     scope_triage: helpful-now
+    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter iterates
+      assignment and update on a small data set and shows the hierarchical alternative on the same points.
   - kind: read
     label: Marsland Ch 14 - k-means as competitive learning
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation
-      p. 311) — Reframes the k-means update as competitive learning and vector quantisation, which explains
-      why initialisation decides the local optimum the UE7 slides warn about.
+    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation p. 311)
     scope_triage: helpful-now
+    angle: Reframes the k-means update as competitive learning and vector quantisation, which explains why initialisation
+      decides the local optimum the UE7 slides warn about.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md
   attachments: []
   source_feedback: []
@@ -266,10 +271,9 @@ stages:
   objective: Within-cluster compactness, separation, stability, and domain usefulness offer partial validation,
     but every criterion imports assumptions and can favor different partitions.
   done_when:
-  - 'Reproduce without notes: Within-cluster compactness, separation, stability, and domain usefulness
-    offer partial validation, but every criterion imports assumptions and can favor different partitions.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: Within-cluster compactness, separation, stability, and domain usefulness offer partial
+    validation, but every criterion imports assumptions and can favor different partitions.'
+  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -279,45 +283,48 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87 — The current authority for this auxiliary topic, including
-      method families, a full assignment/ centroid-update walkthrough, local-optimum caveats, and final
-      exam questions.
+    locator: exercise-slides/UE7.pdf slides 32–87
     scope_triage: required-now
+    angle: The current authority for this auxiliary topic, including method families, a full assignment/ centroid-update
+      walkthrough, local-optimum caveats, and final exam questions.
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf — A verified same-topic full lecture that deepens UE7's clustering treatment.
-      It is not a source for current L12 trees despite sharing the number 12.
+    locator: 12_clustering.pdf
     vault_path: material://source-sad-2025-recordings/12_clustering.pdf
     scope_triage: reference-only
+    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source for
+      current L12 trees despite sharing the number 12.
   - kind: reference
     label: ISLP §12.2 — clustering algorithms and validation
     source_id: source-islp
-    locator: §12.2 — Optional depth on k-means, hierarchical clustering, practical choices, and validation
-      after the UE7 scope; it broadens rather than defines the exam topic.
+    locator: §12.2
     scope_triage: reference-only
+    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after the UE7
+      scope; it broadens rather than defines the exam topic.
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
-    locator: Clustering selections — Independent data-science treatment of clustering families, objectives,
-      and practical evaluation; optional after the UE7 trace.
+    locator: Clustering selections
     scope_triage: reference-only
+    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation; optional
+      after the UE7 trace.
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
     locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274) — The UE7 topic names hierarchical, partitioning and density families and
-      asks how clustering results are compared; this chapter supplies DBSCAN for the density family and
-      silhouette/elbow for the comparison question, neither of which any other registered source covers
-      at working depth.
+      score and elbow p. 274)
     scope_triage: helpful-now
+    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering results
+      are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for the comparison
+      question, neither of which any other registered source covers at working depth.
   - kind: reference
     label: ESL 14.3 - cluster analysis as an objective, not an algorithm
     source_id: source-esl
-    locator: Section 14.3 cluster analysis, pp. 520-546 — Frames clustering by its loss function and dissimilarity
-      choice before any algorithm, which is the 'no single true clustering' point the UE7 slides make
-      rhetorically.
+    locator: Section 14.3 cluster analysis, pp. 520-546
     scope_triage: reference-only
+    angle: Frames clustering by its loss function and dissimilarity choice before any algorithm, which is the
+      'no single true clustering' point the UE7 slides make rhetorically.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md
   attachments: []
   source_feedback: []

@@ -15,13 +15,11 @@ stages:
   number: 1
   title: Embeddings and neighbourhoods
   status: pending
-  objective: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature
-    space.
+  objective: Objects become feature vectors; similarity becomes geometric proximity in a chosen feature space.
   done_when:
-  - 'Reproduce without notes: Objects become feature vectors; similarity becomes geometric proximity in
-    a chosen feature space.'
-  - Work Übung 02 — k-NN search with vector embeddings, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Objects become feature vectors; similarity becomes geometric proximity in a chosen
+    feature space.'
+  - Work Übung 02 — k-NN search with vector embeddings, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-embedding
@@ -31,26 +29,26 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: practise
     label: Übung 02 — k-NN search with vector embeddings
     source_id: source-aml-ss26-lectures
-    locator: 'exercise-slides/Übung 02 .pdf — The current applied companion: CLIP embeddings, Stanford
-      Dogs, NumPy, neighbour search, scaling, and validation tasks turn the lecture geometry into executable
-      work.'
+    locator: exercise-slides/Übung 02 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 02 .pdf
     scope_triage: required-now
+    angle: 'The current applied companion: CLIP embeddings, Stanford Dogs, NumPy, neighbour search, scaling, and
+      validation tasks turn the lecture geometry into executable work.'
   - kind: read
     label: A Programmer's Guide to Data Mining — nearest-neighbour alternative
     source_id: source-zacharski-data-mining
-    locator: Similarity and nearest-neighbour sections — A practical, beginner-friendly similarity and
-      recommendation perspective with worked examples; useful as an alternate intuition source, not as
-      scope authority.
+    locator: Similarity and nearest-neighbour sections
     scope_triage: helpful-now
+    angle: A practical, beginner-friendly similarity and recommendation perspective with worked examples; useful
+      as an alternate intuition source, not as scope authority.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-representation/notes.md
   attachments: []
   source_feedback: []
@@ -58,13 +56,13 @@ stages:
   number: 2
   title: 1-NN and k-NN prediction
   status: pending
-  objective: Lazy training, nearest-neighbour search, majority voting for classification, averaging for
-    regression, computational cost, and memory cost.
+  objective: Lazy training, nearest-neighbour search, majority voting for classification, averaging for regression,
+    computational cost, and memory cost.
   done_when:
-  - 'Reproduce without notes: Lazy training, nearest-neighbour search, majority voting for classification,
-    averaging for regression, computational cost, and memory cost.'
-  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Lazy training, nearest-neighbour search, majority voting for classification, averaging
+    for regression, computational cost, and memory cost.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-k-nearest-neighbors
@@ -73,88 +71,95 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: practise
     label: Übung 02 — k-NN search with vector embeddings
     source_id: source-aml-ss26-lectures
-    locator: 'exercise-slides/Übung 02 .pdf — The current applied companion: CLIP embeddings, Stanford
-      Dogs, NumPy, neighbour search, scaling, and validation tasks turn the lecture geometry into executable
-      work.'
+    locator: exercise-slides/Übung 02 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 02 .pdf
     scope_triage: required-now
+    angle: 'The current applied companion: CLIP embeddings, Stanford Dogs, NumPy, neighbour search, scaling, and
+      validation tasks turn the lecture geometry into executable work.'
   - kind: practise
     label: Bonusblatt 01 — k-NN task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf — Hand-worked k-NN classification and distance reasoning;
-      Aufgabe 1 is vectorization support for L03, while Aufgabe 2 is the direct L02 practice.
+    locator: bonus-exercises/zusatz-blatt01.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
+    angle: Hand-worked k-NN classification and distance reasoning; Aufgabe 1 is vectorization support for L03,
+      while Aufgabe 2 is the direct L02 practice.
   - kind: reference
     label: Older L02 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf — Prior-year
-      alternate examples; the current 78-page deck remains the authority if wording or scope differs.
+    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples; the current 78-page deck remains the authority if wording or scope differs.
   - kind: read
     label: ISLP k-NN, flexibility, and validation selections
     source_id: source-islp
-    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4 — The clearest gentle reading for the
-      U-shaped test-error curve, k-NN versus linear models, bias-variance, and choosing k by validation.
+    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4
     scope_triage: helpful-now
+    angle: The clearest gentle reading for the U-shaped test-error curve, k-NN versus linear models, bias-variance,
+      and choosing k by validation.
   - kind: read
     label: ESL nearest-neighbour and model-selection depth
     source_id: source-esl
-    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3 — A rigorous account of k-NN, the least-squares-to-neighbours
-      flexibility spectrum, explicit bias-variance decomposition, and cross-validation.
+    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
     scope_triage: helpful-now
+    angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit bias-variance
+      decomposition, and cross-validation.
   - kind: read
     label: Murphy k-NN and dimensionality
     source_id: source-murphy-pml1
-    locator: §16.1; §4.7.6 — A concise derivation/reference for exemplar methods and the curse of dimensionality,
-      plus a careful bias-variance discussion.
+    locator: §16.1; §4.7.6
     scope_triage: helpful-now
+    angle: A concise derivation/reference for exemplar methods and the curse of dimensionality, plus a careful
+      bias-variance discussion.
   - kind: reference
     label: CSC411 compact k-NN notes
     source_id: source-csc411-notes
-    locator: §3.4 and §8.4 — A short independent notation check for nearest-neighbour algorithms and their
-      geometric/statistical interpretation.
+    locator: §3.4 and §8.4
     scope_triage: helpful-now
+    angle: A short independent notation check for nearest-neighbour algorithms and their geometric/statistical
+      interpretation.
   - kind: reference
     label: Kroese k-NN and cross-validation
     source_id: source-kroese-dsml
-    locator: §7.6 and §2.5.2 — Statistical phrasing of neighbour prediction and validation with denser
-      notation than ISLP.
+    locator: §7.6 and §2.5.2
     scope_triage: reference-only
+    angle: Statistical phrasing of neighbour prediction and validation with denser notation than ISLP.
   - kind: read
     label: MIT 6.036 nearest-neighbour and model-selection practice
     source_id: source-mit-6036
-    locator: Nearest-neighbour/model-selection units — Structured exercises around similarity, validation,
-      and generalization; useful when passive reading is not enough.
+    locator: Nearest-neighbour/model-selection units
     scope_triage: helpful-now
+    angle: Structured exercises around similarity, validation, and generalization; useful when passive reading
+      is not enough.
   - kind: read
     label: CS231n Image Classification notes
     source_id: source-cs231n-notes
-    locator: 'Image Classification: k-NN and validation — A concrete image-classification walkthrough
-      of k-NN, validation sets, and k-fold cross-validation that mirrors the local exercise.'
+    locator: 'Image Classification: k-NN and validation'
     scope_triage: helpful-now
+    angle: A concrete image-classification walkthrough of k-NN, validation sets, and k-fold cross-validation that
+      mirrors the local exercise.
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW1 selected problems and solutions — Local solution-backed neighbour-search, distance,
-      scaling, and generalization problems.
+    locator: 2017/2018 HW1 selected problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed neighbour-search, distance, scaling, and generalization problems.
   - kind: read
     label: A Programmer's Guide to Data Mining — nearest-neighbour alternative
     source_id: source-zacharski-data-mining
-    locator: Similarity and nearest-neighbour sections — A practical, beginner-friendly similarity and
-      recommendation perspective with worked examples; useful as an alternate intuition source, not as
-      scope authority.
+    locator: Similarity and nearest-neighbour sections
     scope_triage: helpful-now
+    angle: A practical, beginner-friendly similarity and recommendation perspective with worked examples; useful
+      as an alternate intuition source, not as scope authority.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-algorithm/notes.md
   attachments: []
   source_feedback: []
@@ -162,13 +167,13 @@ stages:
   number: 3
   title: Distance functions and scaling
   status: pending
-  objective: Lp distances, metric properties, feature scales, irrelevant features, and how the geometry
-    determines which examples count as neighbours.
+  objective: Lp distances, metric properties, feature scales, irrelevant features, and how the geometry determines
+    which examples count as neighbours.
   done_when:
-  - 'Reproduce without notes: Lp distances, metric properties, feature scales, irrelevant features, and
-    how the geometry determines which examples count as neighbours.'
-  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Lp distances, metric properties, feature scales, irrelevant features, and how the
+    geometry determines which examples count as neighbours.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-distance-metrics
@@ -179,45 +184,47 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: practise
     label: Übung 02 — k-NN search with vector embeddings
     source_id: source-aml-ss26-lectures
-    locator: 'exercise-slides/Übung 02 .pdf — The current applied companion: CLIP embeddings, Stanford
-      Dogs, NumPy, neighbour search, scaling, and validation tasks turn the lecture geometry into executable
-      work.'
+    locator: exercise-slides/Übung 02 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 02 .pdf
     scope_triage: required-now
+    angle: 'The current applied companion: CLIP embeddings, Stanford Dogs, NumPy, neighbour search, scaling, and
+      validation tasks turn the lecture geometry into executable work.'
   - kind: practise
     label: Bonusblatt 01 — k-NN task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf — Hand-worked k-NN classification and distance reasoning;
-      Aufgabe 1 is vectorization support for L03, while Aufgabe 2 is the direct L02 practice.
+    locator: bonus-exercises/zusatz-blatt01.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
+    angle: Hand-worked k-NN classification and distance reasoning; Aufgabe 1 is vectorization support for L03,
+      while Aufgabe 2 is the direct L02 practice.
   - kind: reference
     label: CSC411 compact k-NN notes
     source_id: source-csc411-notes
-    locator: §3.4 and §8.4 — A short independent notation check for nearest-neighbour algorithms and their
-      geometric/statistical interpretation.
+    locator: §3.4 and §8.4
     scope_triage: helpful-now
+    angle: A short independent notation check for nearest-neighbour algorithms and their geometric/statistical
+      interpretation.
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW1 selected problems and solutions — Local solution-backed neighbour-search, distance,
-      scaling, and generalization problems.
+    locator: 2017/2018 HW1 selected problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed neighbour-search, distance, scaling, and generalization problems.
   - kind: read
     label: A Programmer's Guide to Data Mining — nearest-neighbour alternative
     source_id: source-zacharski-data-mining
-    locator: Similarity and nearest-neighbour sections — A practical, beginner-friendly similarity and
-      recommendation perspective with worked examples; useful as an alternate intuition source, not as
-      scope authority.
+    locator: Similarity and nearest-neighbour sections
     scope_triage: helpful-now
+    angle: A practical, beginner-friendly similarity and recommendation perspective with worked examples; useful
+      as an alternate intuition source, not as scope authority.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-distance/notes.md
   attachments: []
   source_feedback: []
@@ -225,11 +232,10 @@ stages:
   number: 4
   title: Curse of dimensionality
   status: pending
-  objective: Why distances become less informative and data requirements grow rapidly in high-dimensional
-    spaces.
+  objective: Why distances become less informative and data requirements grow rapidly in high-dimensional spaces.
   done_when:
-  - 'Reproduce without notes: Why distances become less informative and data requirements grow rapidly
-    in high-dimensional spaces.'
+  - 'Reproduce without notes: Why distances become less informative and data requirements grow rapidly in high-dimensional
+    spaces.'
   - Work Cornell CS4780 HW1 — k-NN, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -239,36 +245,38 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: read
     label: ESL nearest-neighbour and model-selection depth
     source_id: source-esl
-    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3 — A rigorous account of k-NN, the least-squares-to-neighbours
-      flexibility spectrum, explicit bias-variance decomposition, and cross-validation.
+    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
     scope_triage: helpful-now
+    angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit bias-variance
+      decomposition, and cross-validation.
   - kind: read
     label: Murphy k-NN and dimensionality
     source_id: source-murphy-pml1
-    locator: §16.1; §4.7.6 — A concise derivation/reference for exemplar methods and the curse of dimensionality,
-      plus a careful bias-variance discussion.
+    locator: §16.1; §4.7.6
     scope_triage: helpful-now
+    angle: A concise derivation/reference for exemplar methods and the curse of dimensionality, plus a careful
+      bias-variance discussion.
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW1 selected problems and solutions — Local solution-backed neighbour-search, distance,
-      scaling, and generalization problems.
+    locator: 2017/2018 HW1 selected problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed neighbour-search, distance, scaling, and generalization problems.
   - kind: read
     label: Domingos — dimensionality and inductive-bias perspective
     source_id: source-domingos-useful-things
-    locator: Sections on dimensionality, representation, and generalization — Explains why similarity
-      deteriorates in high dimensions, why features matter, and why every learner carries assumptions;
-      conceptual rather than computational.
+    locator: Sections on dimensionality, representation, and generalization
     scope_triage: helpful-now
+    angle: Explains why similarity deteriorates in high dimensions, why features matter, and why every learner
+      carries assumptions; conceptual rather than computational.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-dimensionality/notes.md
   attachments: []
   source_feedback: []
@@ -276,13 +284,12 @@ stages:
   number: 5
   title: Bias, variance, and generalization
   status: pending
-  objective: Small k as flexible/high-variance behaviour, large k as smoother/high-bias behaviour, and
-    the difference between training and test error.
+  objective: Small k as flexible/high-variance behaviour, large k as smoother/high-bias behaviour, and the difference
+    between training and test error.
   done_when:
-  - 'Reproduce without notes: Small k as flexible/high-variance behaviour, large k as smoother/high-bias
-    behaviour, and the difference between training and test error.'
-  - Work Caltech bias-variance and validation problems, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Small k as flexible/high-variance behaviour, large k as smoother/high-bias behaviour,
+    and the difference between training and test error.'
+  - Work Caltech bias-variance and validation problems, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-bias-variance-tradeoff
@@ -292,73 +299,80 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: reference
     label: Older L02 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf — Prior-year
-      alternate examples; the current 78-page deck remains the authority if wording or scope differs.
+    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples; the current 78-page deck remains the authority if wording or scope differs.
   - kind: read
     label: ISLP k-NN, flexibility, and validation selections
     source_id: source-islp
-    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4 — The clearest gentle reading for the
-      U-shaped test-error curve, k-NN versus linear models, bias-variance, and choosing k by validation.
+    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4
     scope_triage: helpful-now
+    angle: The clearest gentle reading for the U-shaped test-error curve, k-NN versus linear models, bias-variance,
+      and choosing k by validation.
   - kind: read
     label: ESL nearest-neighbour and model-selection depth
     source_id: source-esl
-    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3 — A rigorous account of k-NN, the least-squares-to-neighbours
-      flexibility spectrum, explicit bias-variance decomposition, and cross-validation.
+    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
     scope_triage: helpful-now
+    angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit bias-variance
+      decomposition, and cross-validation.
   - kind: read
     label: Murphy k-NN and dimensionality
     source_id: source-murphy-pml1
-    locator: §16.1; §4.7.6 — A concise derivation/reference for exemplar methods and the curse of dimensionality,
-      plus a careful bias-variance discussion.
+    locator: §16.1; §4.7.6
     scope_triage: helpful-now
+    angle: A concise derivation/reference for exemplar methods and the curse of dimensionality, plus a careful
+      bias-variance discussion.
   - kind: reference
     label: CS229 bias-variance and model selection
     source_id: source-cs229-notes
-    locator: §8.1 and §9.3 — No k-NN algorithm coverage, but a concise Bias²+Variance+noise derivation
-      and cross-validation framework that transfers directly.
+    locator: §8.1 and §9.3
     scope_triage: helpful-now
+    angle: No k-NN algorithm coverage, but a concise Bias²+Variance+noise derivation and cross-validation framework
+      that transfers directly.
   - kind: reference
     label: CS229 model selection and bias-variance lecture
     source_id: source-cs229-2022-videos
-    locator: Bias-variance and model-selection lecture — A full university-lecture alternative for model
-      complexity and validation; it does not teach the k-NN mechanics themselves.
+    locator: Bias-variance and model-selection lecture
     scope_triage: reference-only
+    angle: A full university-lecture alternative for model complexity and validation; it does not teach the k-NN
+      mechanics themselves.
   - kind: read
     label: MIT 6.036 nearest-neighbour and model-selection practice
     source_id: source-mit-6036
-    locator: Nearest-neighbour/model-selection units — Structured exercises around similarity, validation,
-      and generalization; useful when passive reading is not enough.
+    locator: Nearest-neighbour/model-selection units
     scope_triage: helpful-now
+    angle: Structured exercises around similarity, validation, and generalization; useful when passive reading
+      is not enough.
   - kind: watch
     label: StatQuest bias-variance and cross-validation videos
     source_id: source-statquest
-    locator: Bias and Variance; Cross Validation — Short visual explainers for overfitting, the bias-variance
-      tradeoff, and validation when the formal texts feel abstract.
+    locator: Bias and Variance; Cross Validation
     scope_triage: helpful-now
+    angle: Short visual explainers for overfitting, the bias-variance tradeoff, and validation when the formal
+      texts feel abstract.
   - kind: practise
     label: Caltech bias-variance and validation problems
     source_id: source-caltech-lfd
-    locator: HW4 and HW6 selected problems — Solution-backed exam-style questions for overfitting, validation,
-      and generalization; skip SVM sets.
+    locator: HW4 and HW6 selected problems
     scope_triage: helpful-now
+    angle: Solution-backed exam-style questions for overfitting, validation, and generalization; skip SVM sets.
   - kind: read
     label: Domingos — dimensionality and inductive-bias perspective
     source_id: source-domingos-useful-things
-    locator: Sections on dimensionality, representation, and generalization — Explains why similarity
-      deteriorates in high dimensions, why features matter, and why every learner carries assumptions;
-      conceptual rather than computational.
+    locator: Sections on dimensionality, representation, and generalization
     scope_triage: helpful-now
+    angle: Explains why similarity deteriorates in high dimensions, why features matter, and why every learner
+      carries assumptions; conceptual rather than computational.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-bias-variance/notes.md
   attachments: []
   source_feedback: []
@@ -366,13 +380,13 @@ stages:
   number: 6
   title: Cross-validation and choosing k
   status: pending
-  objective: Validation folds, hyperparameter selection, leakage avoidance, and reliable comparison of
-    distance/scaling/k choices.
+  objective: Validation folds, hyperparameter selection, leakage avoidance, and reliable comparison of distance/scaling/k
+    choices.
   done_when:
-  - 'Reproduce without notes: Validation folds, hyperparameter selection, leakage avoidance, and reliable
-    comparison of distance/scaling/k choices.'
-  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Validation folds, hyperparameter selection, leakage avoidance, and reliable comparison
+    of distance/scaling/k choices.'
+  - Work Übung 02 — k-NN search with vector embeddings, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-cross-validation
@@ -381,86 +395,93 @@ stages:
   - kind: read
     label: Current L02 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: 'lecture-slides/VL 02-nearest-neighbor.pdf — The 2026 scope authority: vector embeddings,
-      1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation, Lp distances, scaling, and sensitivity
-      to irrelevant features.'
+    locator: lecture-slides/VL 02-nearest-neighbor.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 02-nearest-neighbor.pdf
     scope_triage: required-now
+    angle: 'The 2026 scope authority: vector embeddings, 1-NN/k-NN, lazy-learning cost, bias-variance, cross-validation,
+      Lp distances, scaling, and sensitivity to irrelevant features.'
   - kind: practise
     label: Übung 02 — k-NN search with vector embeddings
     source_id: source-aml-ss26-lectures
-    locator: 'exercise-slides/Übung 02 .pdf — The current applied companion: CLIP embeddings, Stanford
-      Dogs, NumPy, neighbour search, scaling, and validation tasks turn the lecture geometry into executable
-      work.'
+    locator: exercise-slides/Übung 02 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 02 .pdf
     scope_triage: required-now
+    angle: 'The current applied companion: CLIP embeddings, Stanford Dogs, NumPy, neighbour search, scaling, and
+      validation tasks turn the lecture geometry into executable work.'
   - kind: reference
     label: Older L02 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf — Prior-year
-      alternate examples; the current 78-page deck remains the authority if wording or scope differs.
+    locator: older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/02-nearest-neighbor_2318ef767717b743f0f452c1f4f0b0b9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples; the current 78-page deck remains the authority if wording or scope differs.
   - kind: read
     label: ISLP k-NN, flexibility, and validation selections
     source_id: source-islp
-    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4 — The clearest gentle reading for the
-      U-shaped test-error curve, k-NN versus linear models, bias-variance, and choosing k by validation.
+    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4
     scope_triage: helpful-now
+    angle: The clearest gentle reading for the U-shaped test-error curve, k-NN versus linear models, bias-variance,
+      and choosing k by validation.
   - kind: read
     label: ESL nearest-neighbour and model-selection depth
     source_id: source-esl
-    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3 — A rigorous account of k-NN, the least-squares-to-neighbours
-      flexibility spectrum, explicit bias-variance decomposition, and cross-validation.
+    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
     scope_triage: helpful-now
+    angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit bias-variance
+      decomposition, and cross-validation.
   - kind: reference
     label: Kroese k-NN and cross-validation
     source_id: source-kroese-dsml
-    locator: §7.6 and §2.5.2 — Statistical phrasing of neighbour prediction and validation with denser
-      notation than ISLP.
+    locator: §7.6 and §2.5.2
     scope_triage: reference-only
+    angle: Statistical phrasing of neighbour prediction and validation with denser notation than ISLP.
   - kind: reference
     label: CS229 bias-variance and model selection
     source_id: source-cs229-notes
-    locator: §8.1 and §9.3 — No k-NN algorithm coverage, but a concise Bias²+Variance+noise derivation
-      and cross-validation framework that transfers directly.
+    locator: §8.1 and §9.3
     scope_triage: helpful-now
+    angle: No k-NN algorithm coverage, but a concise Bias²+Variance+noise derivation and cross-validation framework
+      that transfers directly.
   - kind: reference
     label: CS229 model selection and bias-variance lecture
     source_id: source-cs229-2022-videos
-    locator: Bias-variance and model-selection lecture — A full university-lecture alternative for model
-      complexity and validation; it does not teach the k-NN mechanics themselves.
+    locator: Bias-variance and model-selection lecture
     scope_triage: reference-only
+    angle: A full university-lecture alternative for model complexity and validation; it does not teach the k-NN
+      mechanics themselves.
   - kind: read
     label: MIT 6.036 nearest-neighbour and model-selection practice
     source_id: source-mit-6036
-    locator: Nearest-neighbour/model-selection units — Structured exercises around similarity, validation,
-      and generalization; useful when passive reading is not enough.
+    locator: Nearest-neighbour/model-selection units
     scope_triage: helpful-now
+    angle: Structured exercises around similarity, validation, and generalization; useful when passive reading
+      is not enough.
   - kind: read
     label: CS231n Image Classification notes
     source_id: source-cs231n-notes
-    locator: 'Image Classification: k-NN and validation — A concrete image-classification walkthrough
-      of k-NN, validation sets, and k-fold cross-validation that mirrors the local exercise.'
+    locator: 'Image Classification: k-NN and validation'
     scope_triage: helpful-now
+    angle: A concrete image-classification walkthrough of k-NN, validation sets, and k-fold cross-validation that
+      mirrors the local exercise.
   - kind: watch
     label: StatQuest bias-variance and cross-validation videos
     source_id: source-statquest
-    locator: Bias and Variance; Cross Validation — Short visual explainers for overfitting, the bias-variance
-      tradeoff, and validation when the formal texts feel abstract.
+    locator: Bias and Variance; Cross Validation
     scope_triage: helpful-now
+    angle: Short visual explainers for overfitting, the bias-variance tradeoff, and validation when the formal
+      texts feel abstract.
   - kind: practise
     label: Caltech bias-variance and validation problems
     source_id: source-caltech-lfd
-    locator: HW4 and HW6 selected problems — Solution-backed exam-style questions for overfitting, validation,
-      and generalization; skip SVM sets.
+    locator: HW4 and HW6 selected problems
     scope_triage: helpful-now
+    angle: Solution-backed exam-style questions for overfitting, validation, and generalization; skip SVM sets.
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW1 selected problems and solutions — Local solution-backed neighbour-search, distance,
-      scaling, and generalization problems.
+    locator: 2017/2018 HW1 selected problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed neighbour-search, distance, scaling, and generalization problems.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l02/stages/stage-aml-l02-validation/notes.md
   attachments: []
   source_feedback: []
