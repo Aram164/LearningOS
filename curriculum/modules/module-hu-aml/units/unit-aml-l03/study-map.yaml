@@ -17,10 +17,10 @@ stages:
   status: pending
   objective: Real-valued targets, a line parameterized by intercept and slope, predictions, and residuals.
   done_when:
-  - 'Reproduce without notes: Real-valued targets, a line parameterized by intercept and slope, predictions,
-    and residuals.'
-  - Work Bonusblatt 02 — linear-regression task, then the remaining 1, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Real-valued targets, a line parameterized by intercept and slope, predictions, and
+    residuals.'
+  - Work Bonusblatt 02 — linear-regression task, then the remaining 1, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -29,53 +29,60 @@ stages:
   - kind: read
     label: Current L03 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf — The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix.
+    locator: lecture-slides/VL 03-linear-regression.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+      vectorization, and the design matrix.
   - kind: practise
     label: Bonusblatt 02 — linear-regression task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf — Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines.
+    locator: bonus-exercises/zusatz-blatt02.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
+    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted
+      lines.
   - kind: read
     label: ISLP Chapter 3 — linear regression
     source_id: source-islp
-    locator: §§3.1–3.3 — A readable statistical account of simple/multiple regression and fit assessment;
-      it adds interpretation and diagnostics beyond the deck's derivation-first treatment.
+    locator: §§3.1–3.3
     scope_triage: helpful-now
+    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
+      and diagnostics beyond the deck's derivation-first treatment.
   - kind: reference
     label: CSC411 linear-regression notes
     source_id: source-csc411-notes
-    locator: Chapter 2 — A concise second derivation of least squares with gradient descent foreshadowed
-      inline.
+    locator: Chapter 2
     scope_triage: helpful-now
+    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
   - kind: watch
     label: StatQuest linear regression and least squares
     source_id: source-statquest
-    locator: Linear Regression; Least Squares; R-squared — Surgical visual intuition for fitted lines,
-      least squares, residuals, and R²; lighter than the lecture derivation.
+    locator: Linear Regression; Least Squares; R-squared
     scope_triage: helpful-now
+    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than the lecture
+      derivation.
   - kind: practise
     label: Caltech HW2 — linear regression
     source_id: source-caltech-lfd
-    locator: Homework 2 and solution key — Solved exam-style least-squares and linear-regression questions
-      for testing the model and solution mechanics.
+    locator: Homework 2 and solution key
     scope_triage: helpful-now
+    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
+      mechanics.
   - kind: read
     label: Ng linear regression with one and multiple variables
     source_id: source-ng-coursera
-    locator: Regression lessons in Weeks 1–2 — The gentlest video/course explanation of fitted lines,
-      cost functions, vectorization, and the normal-equation bridge.
+    locator: Regression lessons in Weeks 1–2
     scope_triage: helpful-now
+    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the normal-equation
+      bridge.
   - kind: read
     label: Domingos — objective-versus-generalization perspective
     source_id: source-domingos-useful-things
-    locator: Sections on generalization and overfitting — Places loss minimization inside the larger learning
-      problem and warns that optimizing training error is not the same as obtaining a useful model.
+    locator: Sections on generalization and overfitting
     scope_triage: helpful-now
+    angle: Places loss minimization inside the larger learning problem and warns that optimizing training error
+      is not the same as obtaining a useful model.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-problem/notes.md
   attachments: []
   source_feedback: []
@@ -83,13 +90,12 @@ stages:
   number: 2
   title: Mean-squared-error objective
   status: pending
-  objective: Squared residuals, averaging conventions, differentiability, and what minimizing MSE means
-    geometrically.
+  objective: Squared residuals, averaging conventions, differentiability, and what minimizing MSE means geometrically.
   done_when:
   - 'Reproduce without notes: Squared residuals, averaging conventions, differentiability, and what minimizing
     MSE means geometrically.'
-  - Work Übung 03 — vectorization and linear regression, then the remaining 3, and record every miss with
-    the step it failed at.
+  - Work Übung 03 — vectorization and linear regression, then the remaining 3, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-mean-squared-error
@@ -98,115 +104,127 @@ stages:
   - kind: read
     label: Current L03 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf — The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix.
+    locator: lecture-slides/VL 03-linear-regression.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+      vectorization, and the design matrix.
   - kind: practise
     label: Übung 03 — vectorization and linear regression
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf — A computational bridge through dot products, multivariate
-      differentiation, NumPy vectorization, and a one-predictor regression implementation.
+    locator: exercise-slides/Übung 03.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
+    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization, and
+      a one-predictor regression implementation.
   - kind: practise
     label: Bonusblatt 02 — linear-regression task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf — Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines.
+    locator: bonus-exercises/zusatz-blatt02.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
+    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted
+      lines.
   - kind: reference
     label: Older L03 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf — Prior-year
-      alternate derivations and examples; consult only after the current deck if one explanation is unclear.
+    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
+      is unclear.
   - kind: read
     label: ISLP Chapter 3 — linear regression
     source_id: source-islp
-    locator: §§3.1–3.3 — A readable statistical account of simple/multiple regression and fit assessment;
-      it adds interpretation and diagnostics beyond the deck's derivation-first treatment.
+    locator: §§3.1–3.3
     scope_triage: helpful-now
+    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
+      and diagnostics beyond the deck's derivation-first treatment.
   - kind: reference
     label: ESL least-squares statistical depth
     source_id: source-esl
-    locator: Chapter 3 selected sections — Adds projection, sampling, and statistical interpretation to
-      linear regression; use only after the deck or ISLP.
+    locator: Chapter 3 selected sections
     scope_triage: reference-only
+    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after the
+      deck or ISLP.
   - kind: read
     label: Murphy linear regression and Gaussian MLE
     source_id: source-murphy-pml1
-    locator: Chapter 11 selected sections — Connects least squares to probabilistic modelling and maximum
-      likelihood while retaining compact matrix notation.
+    locator: Chapter 11 selected sections
     scope_triage: helpful-now
+    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact matrix
+      notation.
   - kind: reference
     label: CSC411 linear-regression notes
     source_id: source-csc411-notes
-    locator: Chapter 2 — A concise second derivation of least squares with gradient descent foreshadowed
-      inline.
+    locator: Chapter 2
     scope_triage: helpful-now
+    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
   - kind: reference
     label: Kroese regression reference
     source_id: source-kroese-dsml
-    locator: Regression selections — An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts.
+    locator: Regression selections
     scope_triage: reference-only
+    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation concepts.
   - kind: reference
     label: CS229 LMS and normal-equation notes
     source_id: source-cs229-notes
-    locator: §§1.1–1.3 — Derives gradient/LMS, the normal equation by matrix calculus, and squared error
-      as Gaussian MLE in lecture-compatible notation.
+    locator: §§1.1–1.3
     scope_triage: helpful-now
+    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian MLE in
+      lecture-compatible notation.
   - kind: watch
     label: CS229 linear-regression lecture
     source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent — A derivation-first video treatment of
-      LMS, least squares, and the probabilistic interpretation.
+    locator: Lecture 2 — Linear Regression and Gradient Descent
     scope_triage: helpful-now
+    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
   - kind: read
     label: MIT 6.036 regression unit
     source_id: source-mit-6036
-    locator: Regression units — Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning.
+    locator: Regression units
     scope_triage: helpful-now
+    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution reasoning.
   - kind: watch
     label: StatQuest linear regression and least squares
     source_id: source-statquest
-    locator: Linear Regression; Least Squares; R-squared — Surgical visual intuition for fitted lines,
-      least squares, residuals, and R²; lighter than the lecture derivation.
+    locator: Linear Regression; Least Squares; R-squared
     scope_triage: helpful-now
+    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than the lecture
+      derivation.
   - kind: read
     label: Géron linear regression implementations
     source_id: source-geron-handson
-    locator: Chapter 4 linear-regression sections and exercises — Runnable normal-equation and gradient-based
-      regression examples plus exercises with Appendix-A solutions.
+    locator: Chapter 4 linear-regression sections and exercises
     scope_triage: helpful-now
+    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A solutions.
   - kind: practise
     label: Caltech HW2 — linear regression
     source_id: source-caltech-lfd
-    locator: Homework 2 and solution key — Solved exam-style least-squares and linear-regression questions
-      for testing the model and solution mechanics.
+    locator: Homework 2 and solution key
     scope_triage: helpful-now
+    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
+      mechanics.
   - kind: read
     label: Ng linear regression with one and multiple variables
     source_id: source-ng-coursera
-    locator: Regression lessons in Weeks 1–2 — The gentlest video/course explanation of fitted lines,
-      cost functions, vectorization, and the normal-equation bridge.
+    locator: Regression lessons in Weeks 1–2
     scope_triage: helpful-now
+    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the normal-equation
+      bridge.
   - kind: practise
     label: Cornell CS4780 HW6 — regression selections
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions — Local solved linear-regression and gradient
-      questions for checking derivations and implementation logic.
+    locator: 2017/2018 HW6 regression problems and solutions
     scope_triage: helpful-now
+    angle: Local solved linear-regression and gradient questions for checking derivations and implementation logic.
   - kind: read
     label: Domingos — objective-versus-generalization perspective
     source_id: source-domingos-useful-things
-    locator: Sections on generalization and overfitting — Places loss minimization inside the larger learning
-      problem and warns that optimizing training error is not the same as obtaining a useful model.
+    locator: Sections on generalization and overfitting
     scope_triage: helpful-now
+    angle: Places loss minimization inside the larger learning problem and warns that optimizing training error
+      is not the same as obtaining a useful model.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-loss/notes.md
   attachments: []
   source_feedback: []
@@ -216,10 +234,10 @@ stages:
   status: pending
   objective: Partial derivatives set to zero, the optimal slope/intercept formulas, and their assumptions.
   done_when:
-  - 'Reproduce without notes: Partial derivatives set to zero, the optimal slope/intercept formulas, and
-    their assumptions.'
-  - Work Bonusblatt 02 — linear-regression task, then the remaining 2, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Partial derivatives set to zero, the optimal slope/intercept formulas, and their
+    assumptions.'
+  - Work Bonusblatt 02 — linear-regression task, then the remaining 2, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -229,108 +247,120 @@ stages:
   - kind: read
     label: Current L03 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf — The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix.
+    locator: lecture-slides/VL 03-linear-regression.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+      vectorization, and the design matrix.
   - kind: practise
     label: Bonusblatt 02 — linear-regression task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf — Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines.
+    locator: bonus-exercises/zusatz-blatt02.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
+    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted
+      lines.
   - kind: reference
     label: Older L03 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf — Prior-year
-      alternate derivations and examples; consult only after the current deck if one explanation is unclear.
+    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
+      is unclear.
   - kind: read
     label: ISLP Chapter 3 — linear regression
     source_id: source-islp
-    locator: §§3.1–3.3 — A readable statistical account of simple/multiple regression and fit assessment;
-      it adds interpretation and diagnostics beyond the deck's derivation-first treatment.
+    locator: §§3.1–3.3
     scope_triage: helpful-now
+    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
+      and diagnostics beyond the deck's derivation-first treatment.
   - kind: reference
     label: ESL least-squares statistical depth
     source_id: source-esl
-    locator: Chapter 3 selected sections — Adds projection, sampling, and statistical interpretation to
-      linear regression; use only after the deck or ISLP.
+    locator: Chapter 3 selected sections
     scope_triage: reference-only
+    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after the
+      deck or ISLP.
   - kind: read
     label: Murphy linear regression and Gaussian MLE
     source_id: source-murphy-pml1
-    locator: Chapter 11 selected sections — Connects least squares to probabilistic modelling and maximum
-      likelihood while retaining compact matrix notation.
+    locator: Chapter 11 selected sections
     scope_triage: helpful-now
+    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact matrix
+      notation.
   - kind: reference
     label: CSC411 linear-regression notes
     source_id: source-csc411-notes
-    locator: Chapter 2 — A concise second derivation of least squares with gradient descent foreshadowed
-      inline.
+    locator: Chapter 2
     scope_triage: helpful-now
+    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
   - kind: read
     label: MML linear regression as MLE
     source_id: source-mml
-    locator: Chapter 9 — The matrix-calculus and probabilistic foundation under the normal equation; use
-      when the algebra rather than the model intuition is the gap.
+    locator: Chapter 9
     scope_triage: helpful-now
+    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra rather
+      than the model intuition is the gap.
   - kind: reference
     label: CS229 LMS and normal-equation notes
     source_id: source-cs229-notes
-    locator: §§1.1–1.3 — Derives gradient/LMS, the normal equation by matrix calculus, and squared error
-      as Gaussian MLE in lecture-compatible notation.
+    locator: §§1.1–1.3
     scope_triage: helpful-now
+    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian MLE in
+      lecture-compatible notation.
   - kind: watch
     label: CS229 linear-regression lecture
     source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent — A derivation-first video treatment of
-      LMS, least squares, and the probabilistic interpretation.
+    locator: Lecture 2 — Linear Regression and Gradient Descent
     scope_triage: helpful-now
+    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
   - kind: read
     label: MIT 6.036 regression unit
     source_id: source-mit-6036
-    locator: Regression units — Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning.
+    locator: Regression units
     scope_triage: helpful-now
+    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution reasoning.
   - kind: watch
     label: StatQuest linear regression and least squares
     source_id: source-statquest
-    locator: Linear Regression; Least Squares; R-squared — Surgical visual intuition for fitted lines,
-      least squares, residuals, and R²; lighter than the lecture derivation.
+    locator: Linear Regression; Least Squares; R-squared
     scope_triage: helpful-now
+    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than the lecture
+      derivation.
   - kind: watch
     label: Essence of Linear Algebra — projections and products
     source_id: source-3b1b-linear-algebra
-    locator: Dot products, matrix multiplication, projections — Visualizes dot products, matrix multiplication,
-      and projection geometry behind vectorized regression and the normal equation.
+    locator: Dot products, matrix multiplication, projections
     scope_triage: helpful-now
+    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
+      and the normal equation.
   - kind: read
     label: Géron linear regression implementations
     source_id: source-geron-handson
-    locator: Chapter 4 linear-regression sections and exercises — Runnable normal-equation and gradient-based
-      regression examples plus exercises with Appendix-A solutions.
+    locator: Chapter 4 linear-regression sections and exercises
     scope_triage: helpful-now
+    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A solutions.
   - kind: practise
     label: Caltech HW2 — linear regression
     source_id: source-caltech-lfd
-    locator: Homework 2 and solution key — Solved exam-style least-squares and linear-regression questions
-      for testing the model and solution mechanics.
+    locator: Homework 2 and solution key
     scope_triage: helpful-now
+    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
+      mechanics.
   - kind: read
     label: Ng linear regression with one and multiple variables
     source_id: source-ng-coursera
-    locator: Regression lessons in Weeks 1–2 — The gentlest video/course explanation of fitted lines,
-      cost functions, vectorization, and the normal-equation bridge.
+    locator: Regression lessons in Weeks 1–2
     scope_triage: helpful-now
+    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the normal-equation
+      bridge.
   - kind: practise
     label: Cornell CS4780 HW6 — regression selections
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions — Local solved linear-regression and gradient
-      questions for checking derivations and implementation logic.
+    locator: 2017/2018 HW6 regression problems and solutions
     scope_triage: helpful-now
+    angle: Local solved linear-regression and gradient questions for checking derivations and implementation logic.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-solution/notes.md
   attachments: []
   source_feedback: []
@@ -340,10 +370,10 @@ stages:
   status: pending
   objective: Vectors, transposes, dot products, matrix-vector/matrix-matrix products, shapes, and inverses.
   done_when:
-  - 'Reproduce without notes: Vectors, transposes, dot products, matrix-vector/matrix-matrix products,
-    shapes, and inverses.'
-  - Work Übung 03 — vectorization and linear regression, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Vectors, transposes, dot products, matrix-vector/matrix-matrix products, shapes,
+    and inverses.'
+  - Work Übung 03 — vectorization and linear regression, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -352,30 +382,33 @@ stages:
   - kind: read
     label: Current L03 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf — The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix.
+    locator: lecture-slides/VL 03-linear-regression.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+      vectorization, and the design matrix.
   - kind: practise
     label: Übung 03 — vectorization and linear regression
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf — A computational bridge through dot products, multivariate
-      differentiation, NumPy vectorization, and a one-predictor regression implementation.
+    locator: exercise-slides/Übung 03.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
+    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization, and
+      a one-predictor regression implementation.
   - kind: practise
     label: Bonusblatt 01 — vectorization task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf — Dimension and vectorization checks that expose shape
-      mistakes before the design-matrix material.
+    locator: bonus-exercises/zusatz-blatt01.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
+    angle: Dimension and vectorization checks that expose shape mistakes before the design-matrix material.
   - kind: watch
     label: Essence of Linear Algebra — projections and products
     source_id: source-3b1b-linear-algebra
-    locator: Dot products, matrix multiplication, projections — Visualizes dot products, matrix multiplication,
-      and projection geometry behind vectorized regression and the normal equation.
+    locator: Dot products, matrix multiplication, projections
     scope_triage: helpful-now
+    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
+      and the normal equation.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-linear-algebra/notes.md
   attachments: []
   source_feedback: []
@@ -383,13 +416,12 @@ stages:
   number: 5
   title: Vectorization and design matrix
   status: pending
-  objective: Adding the intercept feature, stacking examples, and expressing prediction and loss as matrix
-    operations.
+  objective: Adding the intercept feature, stacking examples, and expressing prediction and loss as matrix operations.
   done_when:
-  - 'Reproduce without notes: Adding the intercept feature, stacking examples, and expressing prediction
-    and loss as matrix operations.'
-  - Work Übung 03 — vectorization and linear regression, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Adding the intercept feature, stacking examples, and expressing prediction and loss
+    as matrix operations.'
+  - Work Übung 03 — vectorization and linear regression, then the remaining 2, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -399,85 +431,93 @@ stages:
   - kind: read
     label: Current L03 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf — The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix.
+    locator: lecture-slides/VL 03-linear-regression.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
+      vectorization, and the design matrix.
   - kind: practise
     label: Übung 03 — vectorization and linear regression
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf — A computational bridge through dot products, multivariate
-      differentiation, NumPy vectorization, and a one-predictor regression implementation.
+    locator: exercise-slides/Übung 03.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
+    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization, and
+      a one-predictor regression implementation.
   - kind: practise
     label: Bonusblatt 01 — vectorization task
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf — Dimension and vectorization checks that expose shape
-      mistakes before the design-matrix material.
+    locator: bonus-exercises/zusatz-blatt01.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
+    angle: Dimension and vectorization checks that expose shape mistakes before the design-matrix material.
   - kind: reference
     label: Older L03 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf — Prior-year
-      alternate derivations and examples; consult only after the current deck if one explanation is unclear.
+    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
+      is unclear.
   - kind: read
     label: Murphy linear regression and Gaussian MLE
     source_id: source-murphy-pml1
-    locator: Chapter 11 selected sections — Connects least squares to probabilistic modelling and maximum
-      likelihood while retaining compact matrix notation.
+    locator: Chapter 11 selected sections
     scope_triage: helpful-now
+    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact matrix
+      notation.
   - kind: reference
     label: Kroese regression reference
     source_id: source-kroese-dsml
-    locator: Regression selections — An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts.
+    locator: Regression selections
     scope_triage: reference-only
+    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation concepts.
   - kind: read
     label: MML linear regression as MLE
     source_id: source-mml
-    locator: Chapter 9 — The matrix-calculus and probabilistic foundation under the normal equation; use
-      when the algebra rather than the model intuition is the gap.
+    locator: Chapter 9
     scope_triage: helpful-now
+    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra rather
+      than the model intuition is the gap.
   - kind: reference
     label: CS229 LMS and normal-equation notes
     source_id: source-cs229-notes
-    locator: §§1.1–1.3 — Derives gradient/LMS, the normal equation by matrix calculus, and squared error
-      as Gaussian MLE in lecture-compatible notation.
+    locator: §§1.1–1.3
     scope_triage: helpful-now
+    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian MLE in
+      lecture-compatible notation.
   - kind: read
     label: MIT 6.036 regression unit
     source_id: source-mit-6036
-    locator: Regression units — Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning.
+    locator: Regression units
     scope_triage: helpful-now
+    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution reasoning.
   - kind: watch
     label: Essence of Linear Algebra — projections and products
     source_id: source-3b1b-linear-algebra
-    locator: Dot products, matrix multiplication, projections — Visualizes dot products, matrix multiplication,
-      and projection geometry behind vectorized regression and the normal equation.
+    locator: Dot products, matrix multiplication, projections
     scope_triage: helpful-now
+    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
+      and the normal equation.
   - kind: read
     label: Géron linear regression implementations
     source_id: source-geron-handson
-    locator: Chapter 4 linear-regression sections and exercises — Runnable normal-equation and gradient-based
-      regression examples plus exercises with Appendix-A solutions.
+    locator: Chapter 4 linear-regression sections and exercises
     scope_triage: helpful-now
+    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A solutions.
   - kind: read
     label: Ng linear regression with one and multiple variables
     source_id: source-ng-coursera
-    locator: Regression lessons in Weeks 1–2 — The gentlest video/course explanation of fitted lines,
-      cost functions, vectorization, and the normal-equation bridge.
+    locator: Regression lessons in Weeks 1–2
     scope_triage: helpful-now
+    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the normal-equation
+      bridge.
   - kind: practise
     label: Cornell CS4780 HW6 — regression selections
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions — Local solved linear-regression and gradient
-      questions for checking derivations and implementation logic.
+    locator: 2017/2018 HW6 regression problems and solutions
     scope_triage: helpful-now
+    angle: Local solved linear-regression and gradient questions for checking derivations and implementation logic.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-vectorization/notes.md
   attachments: []
   source_feedback: []
@@ -485,11 +525,10 @@ stages:
   number: 6
   title: Probabilistic interpretation
   status: pending
-  objective: Optional bridge showing why Gaussian noise plus maximum likelihood produces the squared-error
-    objective.
+  objective: Optional bridge showing why Gaussian noise plus maximum likelihood produces the squared-error objective.
   done_when:
-  - 'Reproduce without notes: Optional bridge showing why Gaussian noise plus maximum likelihood produces
-    the squared-error objective.'
+  - 'Reproduce without notes: Optional bridge showing why Gaussian noise plus maximum likelihood produces the
+    squared-error objective.'
   exam_critical: true
   concepts:
   - concept-maximum-likelihood
@@ -498,46 +537,50 @@ stages:
   - kind: reference
     label: ESL least-squares statistical depth
     source_id: source-esl
-    locator: Chapter 3 selected sections — Adds projection, sampling, and statistical interpretation to
-      linear regression; use only after the deck or ISLP.
+    locator: Chapter 3 selected sections
     scope_triage: reference-only
+    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after the
+      deck or ISLP.
   - kind: read
     label: Murphy linear regression and Gaussian MLE
     source_id: source-murphy-pml1
-    locator: Chapter 11 selected sections — Connects least squares to probabilistic modelling and maximum
-      likelihood while retaining compact matrix notation.
+    locator: Chapter 11 selected sections
     scope_triage: helpful-now
+    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact matrix
+      notation.
   - kind: read
     label: Murphy §11.2.2 — least squares as a negative log-likelihood
     source_id: source-murphy-pml1
-    locator: §11.2.2 Least squares estimation p. 372; §11.2.4 Measuring goodness of fit p. 380 — Introduces
-      the regression objective as the negative log likelihood rather than as a chosen loss, which is the
-      bridge the deck marks optional; §11.2.4 then reads the same fit as goodness of fit.
+    locator: §11.2.2 Least squares estimation p. 372; §11.2.4 Measuring goodness of fit p. 380
     scope_triage: helpful-now
+    angle: Introduces the regression objective as the negative log likelihood rather than as a chosen loss, which
+      is the bridge the deck marks optional; §11.2.4 then reads the same fit as goodness of fit.
   - kind: reference
     label: Kroese regression reference
     source_id: source-kroese-dsml
-    locator: Regression selections — An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts.
+    locator: Regression selections
     scope_triage: reference-only
+    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation concepts.
   - kind: read
     label: MML linear regression as MLE
     source_id: source-mml
-    locator: Chapter 9 — The matrix-calculus and probabilistic foundation under the normal equation; use
-      when the algebra rather than the model intuition is the gap.
+    locator: Chapter 9
     scope_triage: helpful-now
+    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra rather
+      than the model intuition is the gap.
   - kind: reference
     label: CS229 LMS and normal-equation notes
     source_id: source-cs229-notes
-    locator: §§1.1–1.3 — Derives gradient/LMS, the normal equation by matrix calculus, and squared error
-      as Gaussian MLE in lecture-compatible notation.
+    locator: §§1.1–1.3
     scope_triage: helpful-now
+    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian MLE in
+      lecture-compatible notation.
   - kind: watch
     label: CS229 linear-regression lecture
     source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent — A derivation-first video treatment of
-      LMS, least squares, and the probabilistic interpretation.
+    locator: Lecture 2 — Linear Regression and Gradient Descent
     scope_triage: helpful-now
+    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-probabilistic/notes.md
   attachments: []
   source_feedback: []

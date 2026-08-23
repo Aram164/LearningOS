@@ -20,13 +20,14 @@ from .curriculum import ChecksCurriculum
 from .generated import ChecksGenerated
 from .hygiene import ChecksHygiene
 from .materials import ChecksMaterials
+from .plan_rigor import ChecksPlanRigor
 from .projects import ChecksProjects
 from .references import ChecksReferences
 from .registries import ChecksRegistries
 from .structure import ChecksStructure
 
 
-class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
+class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene, ChecksMaterials, ChecksPlanRigor, ChecksProjects, ChecksReferences, ChecksRegistries, ChecksStructure):
 
     def __init__(self, repo: Repo, online: bool = False):
         self.repo = repo
@@ -138,6 +139,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_files()
         self.check_workspaces()
         self.check_learning_paths()
+        self.check_plan_rigor()
         self.check_study_maps()
         self.check_links()
         self.check_generated()

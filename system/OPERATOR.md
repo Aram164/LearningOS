@@ -94,6 +94,12 @@ Skills and projects use modules and units without false academic metadata.
     in `system/schema/learning-plan.schema.json`. Domain fields extend that
     contract; they never redefine it. Old plans are readable evidence, not
     creation templates.
+16. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
+    about the system itself. **An open point is not a work item.** It is
+    recorded precisely so it can be deferred, and acting on one — fixing it,
+    or "improving" it as a side effect of unrelated work — requires Aram to say
+    so in that session. Appending a point verbatim and adding measured evidence
+    to an open one are always allowed; closing one is his alone.
 
 ## Unit workflow
 

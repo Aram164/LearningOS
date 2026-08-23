@@ -15,13 +15,13 @@ stages:
   number: 1
   title: Null model, alternative, statistic, and reference distribution
   status: pending
-  objective: A test specifies a falsifiable null, an alternative, a statistic computed from the sample,
-    and the statistic's distribution if the null were true.
+  objective: A test specifies a falsifiable null, an alternative, a statistic computed from the sample, and the
+    statistic's distribution if the null were true.
   done_when:
-  - 'Reproduce without notes: A test specifies a falsifiable null, an alternative, a statistic computed
-    from the sample, and the statistic''s distribution if the null were true.'
-  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
-    miss with the step it failed at.
+  - 'Reproduce without notes: A test specifies a falsifiable null, an alternative, a statistic computed from the
+    sample, and the statistic''s distribution if the null were true.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -30,99 +30,176 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: practise
     label: Blatt 5, UE6, and UE7 — testing and permutation test
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
-      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
-      tails, p-value interpretation, decision wording, and nonparametric logic.
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf slides 12-16
     scope_triage: required-now
+    angle: Complete test write-ups in the chair's expected form, which is the answer template for the exam.
+    angle_detail: L10's marks are heavily procedural — hypotheses stated formally, test named, critical value
+      given, conclusion written in context. These solutions are the definitive template for that sequence in this
+      course. Copy the structure exactly.
   - kind: reference
     label: 2025 statistical-significance deck
     source_id: source-sad-2025-recordings
-    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
-      and statistical significance; use after the current deck for a blocked interpretation, not as a
-      separate syllabus.
+    locator: sad-2025-recordings/10_statistical_significance.pdf
     vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
     scope_triage: reference-only
+    angle: Prior-year testing deck, titled around significance rather than testing.
+    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around what significance
+      means, 2026 around the testing procedure. Reading both gives two framings of the same material, which is
+      useful for a topic this conceptually slippery.'
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
+    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226, Lösungen
+      pdf pp. 227-242
     scope_triage: helpful-now
+    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision, sentence.'
+    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number — stating
+      H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence that answers
+      the question in context. These solutions are written in exactly that form, which makes them a template as
+      much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10 first and only reach Ch 11
+      if the exercises show those tests are in scope.
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     source_id: source-openintro-statistics
-    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
-      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness of
+      fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp. 240-248;
+      Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations, pdf pp. 278-284
     scope_triage: helpful-now
+    angle: Teaches the p-value through randomisation before any reference distribution appears, and has the only
+      real power section on the shelf.
+    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation from
+      Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed result.
+      Once that is concrete, the z and t reference distributions are recognisable as shortcuts for the same quantity.
+      §7.4 then does what almost nothing else here does: computes power and required sample size explicitly, rather
+      than defining power and moving on. §§6.3-6.4 cover both chi-square variants that L10 names.'
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     source_id: source-dekking-mips
-    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
-      after the course and German exam banks.
+    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic p. 375;
+      tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing hypotheses: elaboration,
+      pdf pp. 385-399 (significance level p. 385; critical region p. 388; type II error p. 392; relation with
+      confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
     scope_triage: helpful-now
+    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not all introduced
+      at once.
+    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality inside
+      one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25 gets you to a decision
+      with only three of those ideas, and Ch 26 revisits the same example to add significance level, critical
+      region, type II error and the confidence-interval duality one at a time. §26.4 on duality is the clearest
+      statement of that equivalence on the shelf, and duality is a recurring exam question. Ch 27 works the t-test
+      in a regression setting as well as the one-sample case.
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     source_id: source-mit-1805
-    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
-      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings (I,
+      II, III) and the chi-square reading; the Exams page for solved test questions'
     scope_triage: helpful-now
+    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values that
+      the lecture only gestures at.
+    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
+      and replication problems including a frank discussion of what a p-value does not tell you. That third part
+      is the intellectual content behind L10's multiple-testing node, and it is what makes the difference between
+      reciting the false-discovery definition and understanding why the topic is in the lecture at all. Solved
+      timed questions on the Exams page.
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     source_id: source-mit-18650
-    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
-      logic is secure; broader than the M2 exam.
+    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit tests);
+      graduate-level, reference only
     scope_triage: reference-only
+    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no SaD material
+      mentions.
+    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the question
+      the catalogue provokes — where did these particular statistics come from, and in what sense are they the
+      best available — by showing that the likelihood ratio is the optimal test statistic for a simple hypothesis
+      pair. Genuinely interesting and genuinely out of scope; six lectures.
   - kind: practise
     label: FAU solved exam — t tests, p-values, and decisions
     source_id: source-fau-klausur-ws1415
-    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
-      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
-      local exam-format test practice.
+    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the t-test, p-value and correlation-test
+      questions with solutions'
     scope_triage: helpful-now
+    angle: Three different test types in one paper, so the choice between them is part of the question.
+    angle_detail: 'In a real paper the test is not named for you. Having three types in one document makes it
+      usable as a selection drill: read all three stems first, decide which test each needs, and only then compute.
+      That is the exam skill L10 is ultimately assessed on.'
   - kind: practise
     label: External German solved exams — testing block
     source_id: source-sad-klausuren-extern
-    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
-      mean/categorical tests, and interpretation in German exam format.
+    locator: 'materials/.../sad-klausuren-extern/: the hypothesis-testing questions in the solved papers'
     scope_triage: helpful-now
+    angle: Full test write-ups from real papers, showing the expected answer structure and marking.
+    angle_detail: The closest available proxy for the L10 exam experience, and the place to discover whether your
+      written test procedure is complete. Do these last, timed, after the course's own exercises have set the
+      expected format.
   - kind: watch
     label: StatQuest — hypothesis tests and p-values
     source_id: source-statquest
-    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values; One- or Two-Tailed p-values
-      — A targeted interpretation set for null hypotheses, calculated p-values, and one- versus two-tailed
-      evidence; use the deck for the complete test taxonomy.
+    locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to Calculate
+      p-values''; ''One- or Two-Tailed p-values'''
     scope_triage: helpful-now
+    angle: A four-video sequence that separates what a p-value is from how it is computed and from how many tails
+      to use.
+    angle_detail: 'Those three questions get conflated in a single lecture and each is a separate source of lost
+      marks. Splitting them across four short videos means each can be checked independently: do I know what the
+      number means, can I produce it, and did I choose the right tail count for this alternative. The one-or-two-tailed
+      video in particular addresses the decision the exam most often penalises.'
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     source_id: source-jbstatistics
-    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
-      p-value walkthroughs for mean/proportion tests.
+    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II error videos
+      in the same playlist'
     scope_triage: helpful-now
+    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme habit.
+    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing the hypotheses
+      formally, in symbols, before touching the data. German exam marking awards points for that step independently
+      of the arithmetic, so the habit converts directly into marks.'
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     source_id: source-kurzes-tutorium-statistik
-    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
-      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
     scope_triage: helpful-now
+    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
+      exam item.
+    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked in
+      German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos build it.
+      Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     source_id: source-brandon-foltz
-    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
-      statistic, critical value, and conclusion written explicitly.
+    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
     scope_triage: helpful-now
+    angle: Walks a complete test end to end without cuts, including the parts other explanations skip as obvious.
+    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats as trivial
+      — choosing the critical value, deciding the direction, writing the conclusion. Foltz does not skip those.
+      Long; use as a repair route rather than a first pass.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
   attachments: []
   source_feedback: []
@@ -130,13 +207,13 @@ stages:
   number: 2
   title: Tails, critical regions, and p-values
   status: pending
-  objective: The alternative determines one- versus two-sided evidence; a p-value is the null probability
-    of a result at least as extreme, not the probability that the null is true.
+  objective: The alternative determines one- versus two-sided evidence; a p-value is the null probability of a
+    result at least as extreme, not the probability that the null is true.
   done_when:
-  - 'Reproduce without notes: The alternative determines one- versus two-sided evidence; a p-value is
-    the null probability of a result at least as extreme, not the probability that the null is true.'
-  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
-    miss with the step it failed at.
+  - 'Reproduce without notes: The alternative determines one- versus two-sided evidence; a p-value is the null
+    probability of a result at least as extreme, not the probability that the null is true.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -145,93 +222,164 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: practise
     label: Blatt 5, UE6, and UE7 — testing and permutation test
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
-      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
-      tails, p-value interpretation, decision wording, and nonparametric logic.
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf slides 12-16
     scope_triage: required-now
+    angle: Complete test write-ups in the chair's expected form, which is the answer template for the exam.
+    angle_detail: L10's marks are heavily procedural — hypotheses stated formally, test named, critical value
+      given, conclusion written in context. These solutions are the definitive template for that sequence in this
+      course. Copy the structure exactly.
   - kind: reference
     label: 2025 statistical-significance deck
     source_id: source-sad-2025-recordings
-    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
-      and statistical significance; use after the current deck for a blocked interpretation, not as a
-      separate syllabus.
+    locator: sad-2025-recordings/10_statistical_significance.pdf
     vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
     scope_triage: reference-only
+    angle: Prior-year testing deck, titled around significance rather than testing.
+    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around what significance
+      means, 2026 around the testing procedure. Reading both gives two framings of the same material, which is
+      useful for a topic this conceptually slippery.'
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
+    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226, Lösungen
+      pdf pp. 227-242
     scope_triage: helpful-now
+    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision, sentence.'
+    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number — stating
+      H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence that answers
+      the question in context. These solutions are written in exactly that form, which makes them a template as
+      much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10 first and only reach Ch 11
+      if the exercises show those tests are in scope.
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     source_id: source-openintro-statistics
-    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
-      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness of
+      fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp. 240-248;
+      Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations, pdf pp. 278-284
     scope_triage: helpful-now
+    angle: Teaches the p-value through randomisation before any reference distribution appears, and has the only
+      real power section on the shelf.
+    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation from
+      Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed result.
+      Once that is concrete, the z and t reference distributions are recognisable as shortcuts for the same quantity.
+      §7.4 then does what almost nothing else here does: computes power and required sample size explicitly, rather
+      than defining power and moving on. §§6.3-6.4 cover both chi-square variants that L10 names.'
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     source_id: source-dekking-mips
-    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
-      after the course and German exam banks.
+    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic p. 375;
+      tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing hypotheses: elaboration,
+      pdf pp. 385-399 (significance level p. 385; critical region p. 388; type II error p. 392; relation with
+      confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
     scope_triage: helpful-now
+    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not all introduced
+      at once.
+    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality inside
+      one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25 gets you to a decision
+      with only three of those ideas, and Ch 26 revisits the same example to add significance level, critical
+      region, type II error and the confidence-interval duality one at a time. §26.4 on duality is the clearest
+      statement of that equivalence on the shelf, and duality is a recurring exam question. Ch 27 works the t-test
+      in a regression setting as well as the one-sample case.
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     source_id: source-mit-1805
-    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
-      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings (I,
+      II, III) and the chi-square reading; the Exams page for solved test questions'
     scope_triage: helpful-now
+    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values that
+      the lecture only gestures at.
+    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
+      and replication problems including a frank discussion of what a p-value does not tell you. That third part
+      is the intellectual content behind L10's multiple-testing node, and it is what makes the difference between
+      reciting the false-discovery definition and understanding why the topic is in the lecture at all. Solved
+      timed questions on the Exams page.
   - kind: practise
     label: FAU solved exam — t tests, p-values, and decisions
     source_id: source-fau-klausur-ws1415
-    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
-      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
-      local exam-format test practice.
+    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the t-test, p-value and correlation-test
+      questions with solutions'
     scope_triage: helpful-now
+    angle: Three different test types in one paper, so the choice between them is part of the question.
+    angle_detail: 'In a real paper the test is not named for you. Having three types in one document makes it
+      usable as a selection drill: read all three stems first, decide which test each needs, and only then compute.
+      That is the exam skill L10 is ultimately assessed on.'
   - kind: practise
     label: External German solved exams — testing block
     source_id: source-sad-klausuren-extern
-    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
-      mean/categorical tests, and interpretation in German exam format.
+    locator: 'materials/.../sad-klausuren-extern/: the hypothesis-testing questions in the solved papers'
     scope_triage: helpful-now
+    angle: Full test write-ups from real papers, showing the expected answer structure and marking.
+    angle_detail: The closest available proxy for the L10 exam experience, and the place to discover whether your
+      written test procedure is complete. Do these last, timed, after the course's own exercises have set the
+      expected format.
   - kind: watch
     label: StatQuest — hypothesis tests and p-values
     source_id: source-statquest
-    locator: Hypothesis Testing; Null Hypothesis; p-values; Calculating p-values; One- or Two-Tailed p-values
-      — A targeted interpretation set for null hypotheses, calculated p-values, and one- versus two-tailed
-      evidence; use the deck for the complete test taxonomy.
+    locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to Calculate
+      p-values''; ''One- or Two-Tailed p-values'''
     scope_triage: helpful-now
+    angle: A four-video sequence that separates what a p-value is from how it is computed and from how many tails
+      to use.
+    angle_detail: 'Those three questions get conflated in a single lecture and each is a separate source of lost
+      marks. Splitting them across four short videos means each can be checked independently: do I know what the
+      number means, can I produce it, and did I choose the right tail count for this alternative. The one-or-two-tailed
+      video in particular addresses the decision the exam most often penalises.'
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     source_id: source-jbstatistics
-    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
-      p-value walkthroughs for mean/proportion tests.
+    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II error videos
+      in the same playlist'
     scope_triage: helpful-now
+    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme habit.
+    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing the hypotheses
+      formally, in symbols, before touching the data. German exam marking awards points for that step independently
+      of the arithmetic, so the habit converts directly into marks.'
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     source_id: source-kurzes-tutorium-statistik
-    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
-      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
     scope_triage: helpful-now
+    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
+      exam item.
+    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked in
+      German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos build it.
+      Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     source_id: source-brandon-foltz
-    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
-      statistic, critical value, and conclusion written explicitly.
+    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
     scope_triage: helpful-now
+    angle: Walks a complete test end to end without cuts, including the parts other explanations skip as obvious.
+    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats as trivial
+      — choosing the critical value, deciding the direction, writing the conclusion. Foltz does not skip those.
+      Long; use as a repair route rather than a first pass.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
   attachments: []
   source_feedback: []
@@ -242,10 +390,10 @@ stages:
   objective: Alpha controls false rejection under the null, beta describes missed effects under an alternative,
     and power depends on effect size, noise, sample size, and the decision threshold.
   done_when:
-  - 'Reproduce without notes: Alpha controls false rejection under the null, beta describes missed effects
-    under an alternative, and power depends on effect size, noise, sample size, and the decision threshold.'
-  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
-    miss with the step it failed at.
+  - 'Reproduce without notes: Alpha controls false rejection under the null, beta describes missed effects under
+    an alternative, and power depends on effect size, noise, sample size, and the decision threshold.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -254,50 +402,84 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: practise
     label: Blatt 5, UE6, and UE7 — testing and permutation test
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
-      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
-      tails, p-value interpretation, decision wording, and nonparametric logic.
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf slides 12-16
     scope_triage: required-now
+    angle: Complete test write-ups in the chair's expected form, which is the answer template for the exam.
+    angle_detail: L10's marks are heavily procedural — hypotheses stated formally, test named, critical value
+      given, conclusion written in context. These solutions are the definitive template for that sequence in this
+      course. Copy the structure exactly.
   - kind: reference
     label: 2025 statistical-significance deck
     source_id: source-sad-2025-recordings
-    locator: 10_statistical_significance.pdf — Same-course alternate explanation of test logic, p-values,
-      and statistical significance; use after the current deck for a blocked interpretation, not as a
-      separate syllabus.
+    locator: sad-2025-recordings/10_statistical_significance.pdf
     vault_path: material://source-sad-2025-recordings/10_statistical_significance.pdf
     scope_triage: reference-only
+    angle: Prior-year testing deck, titled around significance rather than testing.
+    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around what significance
+      means, 2026 around the testing procedure. Reading both gives two framings of the same material, which is
+      useful for a topic this conceptually slippery.'
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     source_id: source-mit-1805
-    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
-      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings (I,
+      II, III) and the chi-square reading; the Exams page for solved test questions'
     scope_triage: helpful-now
+    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values that
+      the lecture only gestures at.
+    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
+      and replication problems including a frank discussion of what a p-value does not tell you. That third part
+      is the intellectual content behind L10's multiple-testing node, and it is what makes the difference between
+      reciting the false-discovery definition and understanding why the topic is in the lecture at all. Solved
+      timed questions on the Exams page.
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     source_id: source-mit-18650
-    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
-      logic is secure; broader than the M2 exam.
+    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit tests);
+      graduate-level, reference only
     scope_triage: reference-only
+    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no SaD material
+      mentions.
+    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the question
+      the catalogue provokes — where did these particular statistics come from, and in what sense are they the
+      best available — by showing that the likelihood ratio is the optimal test statistic for a simple hypothesis
+      pair. Genuinely interesting and genuinely out of scope; six lectures.
   - kind: practise
     label: FAU solved exam — t tests, p-values, and decisions
     source_id: source-fau-klausur-ws1415
-    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
-      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
-      local exam-format test practice.
+    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the t-test, p-value and correlation-test
+      questions with solutions'
     scope_triage: helpful-now
+    angle: Three different test types in one paper, so the choice between them is part of the question.
+    angle_detail: 'In a real paper the test is not named for you. Having three types in one document makes it
+      usable as a selection drill: read all three stems first, decide which test each needs, and only then compute.
+      That is the exam skill L10 is ultimately assessed on.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
   attachments: []
   source_feedback: []
@@ -305,13 +487,13 @@ stages:
   number: 4
   title: z and t tests for means
   status: pending
-  objective: Standardized mean differences use z when variance assumptions justify it and t when variance
-    is estimated; paired and independent designs require different standard errors.
+  objective: Standardized mean differences use z when variance assumptions justify it and t when variance is estimated;
+    paired and independent designs require different standard errors.
   done_when:
-  - 'Reproduce without notes: Standardized mean differences use z when variance assumptions justify it
-    and t when variance is estimated; paired and independent designs require different standard errors.'
-  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every
-    miss with the step it failed at.
+  - 'Reproduce without notes: Standardized mean differences use z when variance assumptions justify it and t when
+    variance is estimated; paired and independent designs require different standard errors.'
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 4, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -321,84 +503,154 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: practise
     label: Blatt 5, UE6, and UE7 — testing and permutation test
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
-      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
-      tails, p-value interpretation, decision wording, and nonparametric logic.
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf slides 12-16
     scope_triage: required-now
+    angle: Complete test write-ups in the chair's expected form, which is the answer template for the exam.
+    angle_detail: L10's marks are heavily procedural — hypotheses stated formally, test named, critical value
+      given, conclusion written in context. These solutions are the definitive template for that sequence in this
+      course. Copy the structure exactly.
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
+    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226, Lösungen
+      pdf pp. 227-242
     scope_triage: helpful-now
+    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision, sentence.'
+    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number — stating
+      H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence that answers
+      the question in context. These solutions are written in exactly that form, which makes them a template as
+      much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10 first and only reach Ch 11
+      if the exercises show those tests are in scope.
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     source_id: source-openintro-statistics
-    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
-      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness of
+      fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp. 240-248;
+      Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations, pdf pp. 278-284
     scope_triage: helpful-now
+    angle: Teaches the p-value through randomisation before any reference distribution appears, and has the only
+      real power section on the shelf.
+    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation from
+      Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed result.
+      Once that is concrete, the z and t reference distributions are recognisable as shortcuts for the same quantity.
+      §7.4 then does what almost nothing else here does: computes power and required sample size explicitly, rather
+      than defining power and moving on. §§6.3-6.4 cover both chi-square variants that L10 names.'
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     source_id: source-dekking-mips
-    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
-      after the course and German exam banks.
+    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic p. 375;
+      tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing hypotheses: elaboration,
+      pdf pp. 385-399 (significance level p. 385; critical region p. 388; type II error p. 392; relation with
+      confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
     scope_triage: helpful-now
+    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not all introduced
+      at once.
+    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality inside
+      one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25 gets you to a decision
+      with only three of those ideas, and Ch 26 revisits the same example to add significance level, critical
+      region, type II error and the confidence-interval duality one at a time. §26.4 on duality is the clearest
+      statement of that equivalence on the shelf, and duality is a recurring exam question. Ch 27 works the t-test
+      in a regression setting as well as the one-sample case.
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     source_id: source-mit-1805
-    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
-      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings (I,
+      II, III) and the chi-square reading; the Exams page for solved test questions'
     scope_triage: helpful-now
+    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values that
+      the lecture only gestures at.
+    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
+      and replication problems including a frank discussion of what a p-value does not tell you. That third part
+      is the intellectual content behind L10's multiple-testing node, and it is what makes the difference between
+      reciting the false-discovery definition and understanding why the topic is in the lecture at all. Solved
+      timed questions on the Exams page.
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     source_id: source-mit-18650
-    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
-      logic is secure; broader than the M2 exam.
+    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit tests);
+      graduate-level, reference only
     scope_triage: reference-only
+    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no SaD material
+      mentions.
+    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the question
+      the catalogue provokes — where did these particular statistics come from, and in what sense are they the
+      best available — by showing that the likelihood ratio is the optimal test statistic for a simple hypothesis
+      pair. Genuinely interesting and genuinely out of scope; six lectures.
   - kind: practise
     label: FAU solved exam — t tests, p-values, and decisions
     source_id: source-fau-klausur-ws1415
-    locator: t-test, p-value, and correlation-test questions with solutions — German full-test setups
-      and solutions spanning t tests, p-value interpretation, and correlation significance; the closest
-      local exam-format test practice.
+    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the t-test, p-value and correlation-test
+      questions with solutions'
     scope_triage: helpful-now
+    angle: Three different test types in one paper, so the choice between them is part of the question.
+    angle_detail: 'In a real paper the test is not named for you. Having three types in one document makes it
+      usable as a selection drill: read all three stems first, decide which test each needs, and only then compute.
+      That is the exam skill L10 is ultimately assessed on.'
   - kind: practise
     label: External German solved exams — testing block
     source_id: source-sad-klausuren-extern
-    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
-      mean/categorical tests, and interpretation in German exam format.
+    locator: 'materials/.../sad-klausuren-extern/: the hypothesis-testing questions in the solved papers'
     scope_triage: helpful-now
+    angle: Full test write-ups from real papers, showing the expected answer structure and marking.
+    angle_detail: The closest available proxy for the L10 exam experience, and the place to discover whether your
+      written test procedure is complete. Do these last, timed, after the course's own exercises have set the
+      expected format.
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     source_id: source-jbstatistics
-    locator: Hypothesis-testing video series — Calculation-exact test-statistic, rejection-region, and
-      p-value walkthroughs for mean/proportion tests.
+    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II error videos
+      in the same playlist'
     scope_triage: helpful-now
+    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme habit.
+    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing the hypotheses
+      formally, in symbols, before touching the data. German exam marking awards points for that step independently
+      of the arithmetic, so the habit converts directly into marks.'
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     source_id: source-kurzes-tutorium-statistik
-    locator: Hypothesentest and p-Wert videos — German compact H0/H1, test-statistic, p-value, and decision-language
-      review; use exact clips for a vocabulary gap rather than following the entire channel.
+    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
     scope_triage: helpful-now
+    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
+      exam item.
+    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked in
+      German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos build it.
+      Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     source_id: source-brandon-foltz
-    locator: Hypothesis-testing videos — Slow complete test setups for learners who need every assumption,
-      statistic, critical value, and conclusion written explicitly.
+    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
     scope_triage: helpful-now
+    angle: Walks a complete test end to end without cuts, including the parts other explanations skip as obvious.
+    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats as trivial
+      — choosing the critical value, deciding the direction, writing the conclusion. Foltz does not skip those.
+      Long; use as a repair route rather than a first pass.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
   attachments: []
   source_feedback: []
@@ -406,11 +658,11 @@ stages:
   number: 5
   title: Confidence intervals and test duality
   status: pending
-  objective: A two-sided level-alpha test rejects exactly the parameter values outside the matching 1-alpha
-    confidence interval under the same assumptions.
+  objective: A two-sided level-alpha test rejects exactly the parameter values outside the matching 1-alpha confidence
+    interval under the same assumptions.
   done_when:
-  - 'Reproduce without notes: A two-sided level-alpha test rejects exactly the parameter values outside
-    the matching 1-alpha confidence interval under the same assumptions.'
+  - 'Reproduce without notes: A two-sided level-alpha test rejects exactly the parameter values outside the matching
+    1-alpha confidence interval under the same assumptions.'
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -419,10 +671,15 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
   attachments: []
   source_feedback: []
@@ -430,13 +687,13 @@ stages:
   number: 6
   title: Chi-square tests for categorical data
   status: pending
-  objective: Observed and expected counts support goodness-of-fit and independence tests, with degrees
-    of freedom and count-size assumptions controlling the reference approximation.
+  objective: Observed and expected counts support goodness-of-fit and independence tests, with degrees of freedom
+    and count-size assumptions controlling the reference approximation.
   done_when:
-  - 'Reproduce without notes: Observed and expected counts support goodness-of-fit and independence tests,
-    with degrees of freedom and count-size assumptions controlling the reference approximation.'
-  - Work Arbeitsbuch Chapters 10–11 — testing drills, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Observed and expected counts support goodness-of-fit and independence tests, with
+    degrees of freedom and count-size assumptions controlling the reference approximation.'
+  - Work Arbeitsbuch Chapters 10–11 — testing drills, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-chi-square-test
@@ -446,52 +703,106 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
+    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226, Lösungen
+      pdf pp. 227-242
     scope_triage: helpful-now
+    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision, sentence.'
+    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number — stating
+      H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence that answers
+      the question in context. These solutions are written in exactly that form, which makes them a template as
+      much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10 first and only reach Ch 11
+      if the exercises show those tests are in scope.
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     source_id: source-openintro-statistics
-    locator: Chapters 5–7 selected tests — Gentle test selection and interpretation for means, proportions,
-      categorical counts, and numerical comparisons, with assumptions visible alongside calculations.
+    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness of
+      fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp. 240-248;
+      Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations, pdf pp. 278-284
     scope_triage: helpful-now
+    angle: Teaches the p-value through randomisation before any reference distribution appears, and has the only
+      real power section on the shelf.
+    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation from
+      Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed result.
+      Once that is concrete, the z and t reference distributions are recognisable as shortcuts for the same quantity.
+      §7.4 then does what almost nothing else here does: computes power and required sample size explicitly, rather
+      than defining power and moving on. §§6.3-6.4 cover both chi-square variants that L10 names.'
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     source_id: source-dekking-mips
-    locator: Hypothesis-testing selections — Broad answer-backed testing problems for independent repetition
-      after the course and German exam banks.
+    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic p. 375;
+      tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing hypotheses: elaboration,
+      pdf pp. 385-399 (significance level p. 385; critical region p. 388; type II error p. 392; relation with
+      confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
     scope_triage: helpful-now
+    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not all introduced
+      at once.
+    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality inside
+      one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25 gets you to a decision
+      with only three of those ideas, and Ch 26 revisits the same example to add significance level, critical
+      region, type II error and the confidence-interval duality one at a time. §26.4 on duality is the clearest
+      statement of that equivalence on the shelf, and duality is a recurring exam question. Ch 27 works the t-test
+      in a regression setting as well as the one-sample case.
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     source_id: source-mit-1805
-    locator: Hypothesis-testing notes, problem sets, and solved exams — Official test-logic notes plus
-      solved exam questions for p-values, errors, mean tests, categorical tests, and interpretation.
+    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings (I,
+      II, III) and the chi-square reading; the Exams page for solved test questions'
     scope_triage: helpful-now
+    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values that
+      the lecture only gestures at.
+    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
+      and replication problems including a frank discussion of what a p-value does not tell you. That third part
+      is the intellectual content behind L10's multiple-testing node, and it is what makes the difference between
+      reciting the false-discovery definition and understanding why the topic is in the lecture at all. Solved
+      timed questions on the Exams page.
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     source_id: source-mit-18650
-    locator: Lectures 7–12 — Rigorous testing, asymptotic, and goodness-of-fit depth after the course
-      logic is secure; broader than the M2 exam.
+    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit tests);
+      graduate-level, reference only
     scope_triage: reference-only
+    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no SaD material
+      mentions.
+    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the question
+      the catalogue provokes — where did these particular statistics come from, and in what sense are they the
+      best available — by showing that the likelihood ratio is the optimal test statistic for a simple hypothesis
+      pair. Genuinely interesting and genuinely out of scope; six lectures.
   - kind: practise
     label: External German solved exams — testing block
     source_id: source-sad-klausuren-extern
-    locator: Local solved bank; hypothesis-testing questions — Gap-targeted complete test setups, p-values,
-      mean/categorical tests, and interpretation in German exam format.
+    locator: 'materials/.../sad-klausuren-extern/: the hypothesis-testing questions in the solved papers'
     scope_triage: helpful-now
+    angle: Full test write-ups from real papers, showing the expected answer structure and marking.
+    angle_detail: The closest available proxy for the L10 exam experience, and the place to discover whether your
+      written test procedure is complete. Do these last, timed, after the course's own exercises have set the
+      expected format.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
   attachments: []
   source_feedback: []
@@ -504,8 +815,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Rank tests reduce distributional assumptions, while permutation tests construct
     a null distribution from exchangeability by reassigning labels.'
-  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every
-    miss with the step it failed at.
+  - Work Blatt 5, UE6, and UE7 — testing and permutation test, then the remaining 1, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -515,29 +826,51 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: practise
     label: Blatt 5, UE6, and UE7 — testing and permutation test
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf
-      slides 12–16 — Full current test setups plus the Blatt-5 permutation-test solution; useful for checking
-      tails, p-value interpretation, decision wording, and nonparametric logic.
+    locator: exercise-slides/UE6.pdf; exercise-slides/blatt-05.pdf Aufgabe 1; exercise-slides/UE7.pdf slides 12-16
     scope_triage: required-now
+    angle: Complete test write-ups in the chair's expected form, which is the answer template for the exam.
+    angle_detail: L10's marks are heavily procedural — hypotheses stated formally, test named, critical value
+      given, conclusion written in context. These solutions are the definitive template for that sequence in this
+      course. Copy the structure exactly.
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10–11 — The German logic/formula reference for classical tests, errors, p-values,
-      categorical tests, nonparametric alternatives, and test selection.
+    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens, pdf pp.
+      430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469;
+      §11.5 Zusammenhangsanalyse, pdf pp. 482-485
     scope_triage: helpful-now
+    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of the lecture's
+      order, and the better order when the logic will not click.
+    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and then
+      instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses, statistic,
+      critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and the p-Wert as principles
+      from the worked case. If the abstract version did not land in the lecture, this inversion is the reason
+      to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest and the correlation test;
+      §10.3 is two pages on multiple testing, enough for the exam but thinner than ISLP Ch 13.'
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapters 10–11 — Fully worked German tests for building the complete H0/statistic/reference-distribution/
-      rejection/p-value argument without skipping interpretation.
+    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226, Lösungen
+      pdf pp. 227-242
     scope_triage: helpful-now
+    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision, sentence.'
+    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number — stating
+      H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence that answers
+      the question in context. These solutions are written in exactly that form, which makes them a template as
+      much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10 first and only reach Ch 11
+      if the exercises show those tests are in scope.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
   attachments: []
   source_feedback: []
@@ -559,19 +892,30 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/10_testing.pdf (65 pages) — The complete course logic from null models and
-      p-values through errors/power, z/t and categorical tests, nonparametric alternatives, confidence-interval
-      duality, and multiple testing.
+    locator: lecture-slides/10_testing.pdf, 65 slides
     scope_triage: required-now
+    angle: The largest deck in the module and the complete course logic of testing, from null models to multiple
+      testing.
+    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric alternatives,
+      confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's two-chapter split
+      (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content in two passes. Duality
+      and multiple testing are both exam-favoured and both sit at the end of the deck.
   - kind: read
     label: ISLP Ch 13 - the multiple-testing slide worked out with labs and exercises
     source_id: source-islp
-    locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni
-      and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599)
-      — L10's closing slides name family-wise error and false discoveries and stop; this chapter separates
-      the two error-management questions, gives Bonferroni and Holm for FWER and Benjamini-Hochberg for
-      FDR, and ends with a lab and exercise set - the only registered practice for the node.
+    locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni and
+      Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599)
     scope_triage: helpful-now
+    angle: L10's closing slides name family-wise error and false discoveries and stop; this chapter separates
+      the two error-management questions, gives Bonferroni and Holm for FWER and Benjamini-Hochberg for FDR, and
+      ends with a lab and exercise set - the only registered practice for the node.
+    angle_detail: 'The most complete multiple-testing treatment on the shelf, and L10''s multiplicity node is
+      one slide. The page map matters: family-wise error rate (p. 571) and Bonferroni/Holm (p. 573) are the conservative
+      classical corrections; false discovery rate (p. 564) and Benjamini-Hochberg (p. 581) are the modern alternative
+      that controls a different quantity entirely. Understanding that FWER and FDR are different targets — not
+      competing approximations of one target — is the conceptual point, and it is the kind of distinction a written
+      exam question can turn on. Lab at p. 589, exercises at p. 599.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
   attachments: []
   source_feedback: []

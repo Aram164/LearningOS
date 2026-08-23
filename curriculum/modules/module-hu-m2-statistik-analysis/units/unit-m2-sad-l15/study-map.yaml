@@ -18,8 +18,8 @@ stages:
   objective: A neuron computes an affine weighted sum followed by an activation; with the identity activation,
     a one-layer network is multivariate linear regression.
   done_when:
-  - 'Reproduce without notes: A neuron computes an affine weighted sum followed by an activation; with
-    the identity activation, a one-layer network is multivariate linear regression.'
+  - 'Reproduce without notes: A neuron computes an affine weighted sum followed by an activation; with the identity
+    activation, a one-layer network is multivariate linear regression.'
   - Work MIT 6.034 quizzes — neural-network tracing, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -29,69 +29,120 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     source_id: source-statquest
-    locator: Neural Networks Part 1; Backpropagation Main Ideas; Stochastic Gradient Descent — Surgical
-      intuition for neuron computation, gradient descent, and backpropagation when the algebraic graph
-      is hard to visualize.
+    locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
+      Gradient Descent, Clearly Explained'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Shows activation functions being scaled and summed into an arbitrary curve — the mechanical basis of
+      universal approximation.
+    angle_detail: Part 1's central demonstration is that two hidden units with a soft activation can be weighted
+      and added to produce a bent curve fitting the data, built up piece by piece on screen. That is L15's universality
+      node made visible without any theorem. The backpropagation video then updates one weight at a time with
+      the numbers shown, and the SGD video explains why the gradient is estimated on a batch rather than the full
+      data — a practical point L15 lists without motivating.
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7 — Primary course-aligned route from error surfaces and gradient updates to network
-      learning, with worked examples closer to SaD's level than advanced deep-learning texts.
+    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     scope_triage: helpful-now
+    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over — the
+      same route L15's first slides take.
+    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to multi-layer
+      networks, the continuity L15 asserts on its opening slide (a neuron without an activation is a linear model)
+      is the chapter's actual structure. Reading it in order makes backpropagation feel like the same gradient
+      descent applied through more layers, which is the correct impression and not the one a standalone treatment
+      gives.
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — Readable MLP and forward-pass explanation with statistical-learning context;
-      lighter than Murphy and closer to the lecture's first-pass level.
+    locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
+      neural networks p. 409; Ch 10 lab p. 439)
     scope_triage: helpful-now
+    angle: Written for readers who already know linear regression, so every neural-network idea is introduced
+      as a modification of something familiar.
+    angle_detail: '§10.1 literally begins by writing a single-layer network as a linear model with a nonlinear
+      transformation of derived features, which is L15''s own opening claim made precise. For a reader coming
+      from L03 rather than from a deep-learning course, this is the least disorienting introduction on the shelf.
+      It is also the shallowest: no backpropagation derivation, and the training discussion is brief. Pair with
+      Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selections — Solution-backed forward/activation/weight reasoning on compact
-      networks, useful for parameter and computation checks.
+    locator: The published 6.034 quizzes and finals — the neural-network forward/backward tracing questions, with
+      solutions
     scope_triage: helpful-now
+    angle: Small networks traced numerically under exam conditions, including weight updates.
+    angle_detail: 'The same procedural virtue as the tree questions: execute the computation, show the state.
+      For L15 that means a forward pass with given weights, a loss, and one update step — which is the realistic
+      scope of a neural-network exam question in a combined three-hour paper.'
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     source_id: source-3b1b-neural-networks
-    locator: Episodes 1–4 — The strongest visual intuition for layers, gradient descent, and backpropagation.
-      Episodes 1–2 support forward structure; 3–4 support gradients and credit assignment.
+    locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks learn'',
+      ''What is backpropagation really doing?'', ''Backpropagation calculus'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Episode 3 shows backpropagation as each training example 'voting' on how every weight should change
+      — the intuition before the calculus.
+    angle_detail: 'The four episodes are deliberately staged: what the network computes, what the loss surface
+      looks like, what backpropagation is doing conceptually, and only then the chain-rule algebra in episode
+      4. Watching 1-3 before reading any derivation is the highest-return hour available for L15, because the
+      derivation is bookkeeping once the picture exists. Episode 4 maps directly onto the deck''s gradient slides.'
   - kind: read
     label: Brandon Rohrer — friendly neural-network explanation
     source_id: source-rohrer-e2eml
-    locator: Neural-network article/video selections — Plain-language visual network intuition for a diagnosed
-      gap; use the course/Kelleher sources for calculations and backprop detail.
+    locator: The 'How neural networks work' article and companion video on e2eml.school
     scope_triage: helpful-now
+    angle: Builds a tiny network out of explicit arithmetic with no calculus at all.
+    angle_detail: Every quantity is a small number and every step is an addition or a multiplication, which removes
+      the notation barrier entirely. Useful as a first contact or as a reset if the gradients have become symbol-pushing.
+      The trade-off is that it stops well before anything examinable — follow it with 3Blue1Brown episode 4 or
+      Marsland Ch 4.
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     source_id: source-geron-handson
-    locator: 'Chapter 10, pp. 303-350 — Gives the L15 forward pass an executable form: layer widths, parameter
-      counts, activation choice and the output/loss pairing for regression, binary and multiclass targets
-      that the deck states as a table.'
+    locator: Chapter 10, pp. 303-350
     scope_triage: helpful-now
+    angle: 'Gives the L15 forward pass an executable form: layer widths, parameter counts, activation choice and
+      the output/loss pairing for regression, binary and multiclass targets that the deck states as a table.'
+    angle_detail: 'Forty-eight pages that make network shapes concrete: how many parameters a given architecture
+      has, what the output layer must look like for binary, multiclass and regression targets, and how the loss
+      must match the output. That is precisely what L15''s forward-pass and output nodes cover, and precisely
+      what the SaD Übungen ask you to compute. Working through the shapes here is direct exam preparation.'
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
-      p. 95; universal approximation p. 107) — Follows the exact L15 arc - perceptron, the XOR show-stopper,
-      hidden layers, back-propagation - and is the only registered source that states the universal-approximation
-      result the deck asserts on slide 36.
+    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation p.
+      95; universal approximation p. 107)
     scope_triage: helpful-now
+    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation - and
+      is the only registered source that states the universal-approximation result the deck asserts on slide 36.
+    angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place through
+      the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately by the hidden
+      layer that solves it (p. 94). That is L15''s activation node argued rather than asserted. Backpropagation
+      (p. 95) is then derived and implemented, and universal approximation (p. 107) is stated with its caveats.
+      Together this is the most complete L15 coverage on the shelf at course level.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-neuron/notes.md
   attachments: []
   source_feedback: []
@@ -99,13 +150,13 @@ stages:
   number: 2
   title: Nonlinearity, activation functions, and XOR
   status: pending
-  objective: Stacking purely linear layers remains linear; nonlinear activations such as sigmoid, tanh,
-    and ReLU let multilayer networks represent boundaries like XOR.
+  objective: Stacking purely linear layers remains linear; nonlinear activations such as sigmoid, tanh, and ReLU
+    let multilayer networks represent boundaries like XOR.
   done_when:
-  - 'Reproduce without notes: Stacking purely linear layers remains linear; nonlinear activations such
-    as sigmoid, tanh, and ReLU let multilayer networks represent boundaries like XOR.'
-  - Work Cornell CS4780 HW9 — neural networks and ReLU, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Stacking purely linear layers remains linear; nonlinear activations such as sigmoid,
+    tanh, and ReLU let multilayer networks represent boundaries like XOR.'
+  - Work Cornell CS4780 HW9 — neural networks and ReLU, then the remaining 1, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-activation-function
@@ -116,69 +167,118 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7 — Primary course-aligned route from error surfaces and gradient updates to network
-      learning, with worked examples closer to SaD's level than advanced deep-learning texts.
+    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     scope_triage: helpful-now
+    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over — the
+      same route L15's first slides take.
+    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to multi-layer
+      networks, the continuity L15 asserts on its opening slide (a neuron without an activation is a linear model)
+      is the chapter's actual structure. Reading it in order makes backpropagation feel like the same gradient
+      descent applied through more layers, which is the correct impression and not the one a standalone treatment
+      gives.
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — Readable MLP and forward-pass explanation with statistical-learning context;
-      lighter than Murphy and closer to the lecture's first-pass level.
+    locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
+      neural networks p. 409; Ch 10 lab p. 439)
     scope_triage: helpful-now
+    angle: Written for readers who already know linear regression, so every neural-network idea is introduced
+      as a modification of something familiar.
+    angle_detail: '§10.1 literally begins by writing a single-layer network as a linear model with a nonlinear
+      transformation of derived features, which is L15''s own opening claim made precise. For a reader coming
+      from L03 rather than from a deep-learning course, this is the least disorienting introduction on the shelf.
+      It is also the shallowest: no backpropagation derivation, and the training discussion is brief. Pair with
+      Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
-      — Current AML deepening of activations, output heads, forward shapes, computation graphs, full backpropagation,
-      regularization, gradient health, and autograd after SaD's overview.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
     scope_triage: reference-only
+    angle: The AML treatment of the same networks, with a whole deck devoted to training rather than a summary
+      slide.
+    angle_detail: SaD compresses initialisation, learning rates, regularization and the practicalities of training
+      into a handful of slides at the end of L15; AML gives them a lecture. Since both exams are in the same period,
+      reading the AML deck covers SaD's training node and AML's own material simultaneously. AML L09 owns the
+      neural-network regularization material and does not cover batch normalization — a distinction already recorded
+      in this repository's wiring notes.
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW9; 2018Spring/HW9 — Local solution-backed forward, activation, gradient, and network-reasoning
-      problems after the current Blatt 5 task.
+    locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
     scope_triage: helpful-now
+    angle: Forward and backward passes computed by hand on small networks, with the answers to check against.
+    angle_detail: Hand computation is the only reliable test of whether backpropagation is understood, and these
+      sets provide it at the right scale — networks small enough to finish, large enough to require the bookkeeping.
+      The ReLU problems also make the non-differentiability at zero explicit, which the deck passes over.
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selections — Solution-backed forward/activation/weight reasoning on compact
-      networks, useful for parameter and computation checks.
+    locator: The published 6.034 quizzes and finals — the neural-network forward/backward tracing questions, with
+      solutions
     scope_triage: helpful-now
+    angle: Small networks traced numerically under exam conditions, including weight updates.
+    angle_detail: 'The same procedural virtue as the tree questions: execute the computation, show the state.
+      For L15 that means a forward pass with given weights, a loss, and one update step — which is the realistic
+      scope of a neural-network exam question in a combined three-hour paper.'
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     source_id: source-3b1b-neural-networks
-    locator: Episodes 1–4 — The strongest visual intuition for layers, gradient descent, and backpropagation.
-      Episodes 1–2 support forward structure; 3–4 support gradients and credit assignment.
+    locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks learn'',
+      ''What is backpropagation really doing?'', ''Backpropagation calculus'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Episode 3 shows backpropagation as each training example 'voting' on how every weight should change
+      — the intuition before the calculus.
+    angle_detail: 'The four episodes are deliberately staged: what the network computes, what the loss surface
+      looks like, what backpropagation is doing conceptually, and only then the chain-rule algebra in episode
+      4. Watching 1-3 before reading any derivation is the highest-return hour available for L15, because the
+      derivation is bookkeeping once the picture exists. Episode 4 maps directly onto the deck''s gradient slides.'
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     source_id: source-geron-handson
-    locator: 'Chapter 10, pp. 303-350 — Gives the L15 forward pass an executable form: layer widths, parameter
-      counts, activation choice and the output/loss pairing for regression, binary and multiclass targets
-      that the deck states as a table.'
+    locator: Chapter 10, pp. 303-350
     scope_triage: helpful-now
+    angle: 'Gives the L15 forward pass an executable form: layer widths, parameter counts, activation choice and
+      the output/loss pairing for regression, binary and multiclass targets that the deck states as a table.'
+    angle_detail: 'Forty-eight pages that make network shapes concrete: how many parameters a given architecture
+      has, what the output layer must look like for binary, multiclass and regression targets, and how the loss
+      must match the output. That is precisely what L15''s forward-pass and output nodes cover, and precisely
+      what the SaD Übungen ask you to compute. Working through the shapes here is direct exam preparation.'
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
-      p. 95; universal approximation p. 107) — Follows the exact L15 arc - perceptron, the XOR show-stopper,
-      hidden layers, back-propagation - and is the only registered source that states the universal-approximation
-      result the deck asserts on slide 36.
+    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation p.
+      95; universal approximation p. 107)
     scope_triage: helpful-now
+    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation - and
+      is the only registered source that states the universal-approximation result the deck asserts on slide 36.
+    angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place through
+      the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately by the hidden
+      layer that solves it (p. 94). That is L15''s activation node argued rather than asserted. Backpropagation
+      (p. 95) is then derived and implemented, and universal approximation (p. 107) is stated with its caveats.
+      Together this is the most complete L15 coverage on the shelf at course level.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-activation/notes.md
   attachments: []
   source_feedback: []
@@ -186,13 +286,12 @@ stages:
   number: 3
   title: One-hot targets, output layers, and softmax
   status: pending
-  objective: Regression and classification require different output parameterizations; softmax converts
-    class scores into a normalized categorical distribution.
+  objective: Regression and classification require different output parameterizations; softmax converts class
+    scores into a normalized categorical distribution.
   done_when:
-  - 'Reproduce without notes: Regression and classification require different output parameterizations;
-    softmax converts class scores into a normalized categorical distribution.'
-  - Work Blatt 5 and UE7 — neural-network forward task, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Regression and classification require different output parameterizations; softmax
+    converts class scores into a normalized categorical distribution.'
+  - Work Blatt 5 and UE7 — neural-network forward task, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-neural-network
@@ -202,44 +301,72 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: practise
     label: Blatt 5 and UE7 — neural-network forward task
     source_id: source-sad-uebungen
-    locator: 'exercise-slides/blatt-05.pdf Aufgabe 2; exercise-slides/UE7.pdf slides 17–21 — The confirmed
-      current NN exercise: trace a forward pass, softmax/loss, and multiclass output; no separate standalone
-      L15 sheet exists.'
+    locator: exercise-slides/blatt-05.pdf Aufgabe 2; exercise-slides/UE7.pdf slides 17-21
     scope_triage: required-now
+    angle: The course's own forward-pass and parameter-count exercises, which is what L15 is realistically examined
+      on.
+    angle_detail: A three-hour combined paper cannot examine backpropagation by hand at length, so the likely
+      questions are shape and parameter counting plus a conceptual item. These exercises are the evidence for
+      that, and doing them is a better use of time than a full backprop derivation.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — Readable MLP and forward-pass explanation with statistical-learning context;
-      lighter than Murphy and closer to the lecture's first-pass level.
+    locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
+      neural networks p. 409; Ch 10 lab p. 439)
     scope_triage: helpful-now
+    angle: Written for readers who already know linear regression, so every neural-network idea is introduced
+      as a modification of something familiar.
+    angle_detail: '§10.1 literally begins by writing a single-layer network as a linear model with a nonlinear
+      transformation of derived features, which is L15''s own opening claim made precise. For a reader coming
+      from L03 rather than from a deep-learning course, this is the least disorienting introduction on the shelf.
+      It is also the shallowest: no backpropagation derivation, and the training discussion is brief. Pair with
+      Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
-      — Current AML deepening of activations, output heads, forward shapes, computation graphs, full backpropagation,
-      regularization, gradient health, and autograd after SaD's overview.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
     scope_triage: reference-only
+    angle: The AML treatment of the same networks, with a whole deck devoted to training rather than a summary
+      slide.
+    angle_detail: SaD compresses initialisation, learning rates, regularization and the practicalities of training
+      into a handful of slides at the end of L15; AML gives them a lecture. Since both exams are in the same period,
+      reading the AML deck covers SaD's training node and AML's own material simultaneously. AML L09 owns the
+      neural-network regularization material and does not cover batch normalization — a distinction already recorded
+      in this repository's wiring notes.
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     source_id: source-geron-handson
-    locator: 'Chapter 10, pp. 303-350 — Gives the L15 forward pass an executable form: layer widths, parameter
-      counts, activation choice and the output/loss pairing for regression, binary and multiclass targets
-      that the deck states as a table.'
+    locator: Chapter 10, pp. 303-350
     scope_triage: helpful-now
+    angle: 'Gives the L15 forward pass an executable form: layer widths, parameter counts, activation choice and
+      the output/loss pairing for regression, binary and multiclass targets that the deck states as a table.'
+    angle_detail: 'Forty-eight pages that make network shapes concrete: how many parameters a given architecture
+      has, what the output layer must look like for binary, multiclass and regression targets, and how the loss
+      must match the output. That is precisely what L15''s forward-pass and output nodes cover, and precisely
+      what the SaD Übungen ask you to compute. Working through the shapes here is direct exam preparation.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-output/notes.md
   attachments: []
   source_feedback: []
@@ -247,13 +374,13 @@ stages:
   number: 4
   title: Multilayer forward passes, shapes, and parameter counts
   status: pending
-  objective: Matrix multiplication, biases, activations, and layer dimensions define the forward graph;
-    parameter counting follows directly from adjacent widths and bias vectors.
+  objective: Matrix multiplication, biases, activations, and layer dimensions define the forward graph; parameter
+    counting follows directly from adjacent widths and bias vectors.
   done_when:
-  - 'Reproduce without notes: Matrix multiplication, biases, activations, and layer dimensions define
-    the forward graph; parameter counting follows directly from adjacent widths and bias vectors.'
-  - Work Blatt 5 and UE7 — neural-network forward task, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Matrix multiplication, biases, activations, and layer dimensions define the forward
+    graph; parameter counting follows directly from adjacent widths and bias vectors.'
+  - Work Blatt 5 and UE7 — neural-network forward task, then the remaining 2, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -263,125 +390,214 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: practise
     label: Blatt 5 and UE7 — neural-network forward task
     source_id: source-sad-uebungen
-    locator: 'exercise-slides/blatt-05.pdf Aufgabe 2; exercise-slides/UE7.pdf slides 17–21 — The confirmed
-      current NN exercise: trace a forward pass, softmax/loss, and multiclass output; no separate standalone
-      L15 sheet exists.'
+    locator: exercise-slides/blatt-05.pdf Aufgabe 2; exercise-slides/UE7.pdf slides 17-21
     scope_triage: required-now
+    angle: The course's own forward-pass and parameter-count exercises, which is what L15 is realistically examined
+      on.
+    angle_detail: A three-hour combined paper cannot examine backpropagation by hand at length, so the likely
+      questions are shape and parameter counting plus a conceptual item. These exercises are the evidence for
+      that, and doing them is a better use of time than a full backprop derivation.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     source_id: source-statquest
-    locator: Neural Networks Part 1; Backpropagation Main Ideas; Stochastic Gradient Descent — Surgical
-      intuition for neuron computation, gradient descent, and backpropagation when the algebraic graph
-      is hard to visualize.
+    locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
+      Gradient Descent, Clearly Explained'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Shows activation functions being scaled and summed into an arbitrary curve — the mechanical basis of
+      universal approximation.
+    angle_detail: Part 1's central demonstration is that two hidden units with a soft activation can be weighted
+      and added to produce a bent curve fitting the data, built up piece by piece on screen. That is L15's universality
+      node made visible without any theorem. The backpropagation video then updates one weight at a time with
+      the numbers shown, and the SGD video explains why the gradient is estimated on a batch rather than the full
+      data — a practical point L15 lists without motivating.
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7 — Primary course-aligned route from error surfaces and gradient updates to network
-      learning, with worked examples closer to SaD's level than advanced deep-learning texts.
+    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     scope_triage: helpful-now
+    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over — the
+      same route L15's first slides take.
+    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to multi-layer
+      networks, the continuity L15 asserts on its opening slide (a neuron without an activation is a linear model)
+      is the chapter's actual structure. Reading it in order makes backpropagation feel like the same gradient
+      descent applied through more layers, which is the correct impression and not the one a standalone treatment
+      gives.
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — Readable MLP and forward-pass explanation with statistical-learning context;
-      lighter than Murphy and closer to the lecture's first-pass level.
+    locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
+      neural networks p. 409; Ch 10 lab p. 439)
     scope_triage: helpful-now
+    angle: Written for readers who already know linear regression, so every neural-network idea is introduced
+      as a modification of something familiar.
+    angle_detail: '§10.1 literally begins by writing a single-layer network as a linear model with a nonlinear
+      transformation of derived features, which is L15''s own opening claim made precise. For a reader coming
+      from L03 rather than from a deep-learning course, this is the least disorienting introduction on the shelf.
+      It is also the shallowest: no backpropagation derivation, and the training discussion is brief. Pair with
+      Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
   - kind: read
     label: Kroese — neural-network reference
     source_id: source-kroese-dsml
-    locator: Neural-network selections — Broader mathematical and implementation context for MLPs and
-      training when the course/Kelleher level is secure.
+    locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization, pdf pp.
+      415-438
     scope_triage: helpful-now
+    angle: Keeps the matrix calculus needed for backpropagation in an appendix you can consult while reading the
+      chapter.
+    angle_detail: Backpropagation is chain-rule bookkeeping over matrices, and the usual obstacle is not the idea
+      but the notation for derivatives of vector-valued functions. Having App B in the same book, in the same
+      notation, means the gradient steps in Ch 9 can be checked rather than accepted. Denser than the deck requires;
+      useful if the derivation is what you want.
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     source_id: source-cs229-notes
-    locator: §7 — Dense mathematical derivation of forward propagation and backpropagation for readers
-      who want a compact formula reference after the SaD explanation.
+    locator: Main notes §7 Deep Learning (the neural-network and backpropagation sections)
     scope_triage: reference-only
+    angle: Backpropagation written out as matrix derivative bookkeeping, in the most compact correct form available
+      here.
+    angle_detail: Six pages that state the forward pass, define the loss, and derive the layer-by-layer gradients
+      with explicit shapes. If you already understand the chain rule and want the algorithm precisely, this is
+      faster than any book on the shelf. If you do not yet have the picture, it will be opaque — start with 3Blue1Brown
+      episodes 3-4 and return here.
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     source_id: source-cs229-2022-videos
-    locator: Topic-matched neural-network lecture — Full lecture-level forward/backprop derivation and
-      optimization context; optional after the compact SaD/Kelleher route.
+    locator: The 2022 neural-networks lecture (the first of the deep-learning lectures on the playlist)
     scope_triage: reference-only
+    angle: Motivates depth by showing what a single layer cannot represent, before showing what more layers buy.
+    angle_detail: The lecture spends real time on the representational question — what functions are and are not
+      reachable — which is L15's universality node treated as a question rather than a stated theorem. Also useful
+      for hearing how a practitioner describes the training loop, which the deck lists as practical choices.
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     source_id: source-murphy-pml1
-    locator: §§13.2–13.3 — Advanced probabilistic ML treatment of network parameterization and learning;
-      derivational depth, not an exam-first source.
+    locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf pp. 453-574)
     scope_triage: reference-only
+    angle: Presents backpropagation as reverse-mode automatic differentiation on a computation graph, which is
+      what frameworks actually implement.
+    angle_detail: L15 derives the gradients by hand for a small network. Murphy names the general algorithm that
+      generalises it and explains why the reverse sweep is the efficient direction when there are many parameters
+      and one scalar loss. That connection between the hand derivation and what PyTorch does is worth having,
+      especially given the thesis workstream. Well beyond exam scope.
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     source_id: source-csc411-notes
-    locator: Neural-network selections — Dense independent treatment of network forward computation and
-      gradient learning for formula checking.
+    locator: The neural-network and backpropagation lecture notes (Toronto CSC411/2515 course notes)
     scope_triage: reference-only
+    angle: Compact backprop reference with explicit matrix shapes at every step.
+    angle_detail: Shape errors are the most common failure when reproducing a forward or backward pass, and these
+      notes annotate every quantity's dimensions. That makes them a good checking reference beside the SaD Übungen's
+      parameter-counting exercises, which are the likeliest L15 exam form.
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
-      — Current AML deepening of activations, output heads, forward shapes, computation graphs, full backpropagation,
-      regularization, gradient health, and autograd after SaD's overview.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
     scope_triage: reference-only
+    angle: The AML treatment of the same networks, with a whole deck devoted to training rather than a summary
+      slide.
+    angle_detail: SaD compresses initialisation, learning rates, regularization and the practicalities of training
+      into a handful of slides at the end of L15; AML gives them a lecture. Since both exams are in the same period,
+      reading the AML deck covers SaD's training node and AML's own material simultaneously. AML L09 owns the
+      neural-network regularization material and does not cover batch normalization — a distinction already recorded
+      in this repository's wiring notes.
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW9; 2018Spring/HW9 — Local solution-backed forward, activation, gradient, and network-reasoning
-      problems after the current Blatt 5 task.
+    locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
     scope_triage: helpful-now
+    angle: Forward and backward passes computed by hand on small networks, with the answers to check against.
+    angle_detail: Hand computation is the only reliable test of whether backpropagation is understood, and these
+      sets provide it at the right scale — networks small enough to finish, large enough to require the bookkeeping.
+      The ReLU problems also make the non-differentiability at zero explicit, which the deck passes over.
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selections — Solution-backed forward/activation/weight reasoning on compact
-      networks, useful for parameter and computation checks.
+    locator: The published 6.034 quizzes and finals — the neural-network forward/backward tracing questions, with
+      solutions
     scope_triage: helpful-now
+    angle: Small networks traced numerically under exam conditions, including weight updates.
+    angle_detail: 'The same procedural virtue as the tree questions: execute the computation, show the state.
+      For L15 that means a forward pass with given weights, a loss, and one update step — which is the realistic
+      scope of a neural-network exam question in a combined three-hour paper.'
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     source_id: source-3b1b-neural-networks
-    locator: Episodes 1–4 — The strongest visual intuition for layers, gradient descent, and backpropagation.
-      Episodes 1–2 support forward structure; 3–4 support gradients and credit assignment.
+    locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks learn'',
+      ''What is backpropagation really doing?'', ''Backpropagation calculus'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Episode 3 shows backpropagation as each training example 'voting' on how every weight should change
+      — the intuition before the calculus.
+    angle_detail: 'The four episodes are deliberately staged: what the network computes, what the loss surface
+      looks like, what backpropagation is doing conceptually, and only then the chain-rule algebra in episode
+      4. Watching 1-3 before reading any derivation is the highest-return hour available for L15, because the
+      derivation is bookkeeping once the picture exists. Episode 4 maps directly onto the deck''s gradient slides.'
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     source_id: source-eecs498
-    locator: Selected fully connected and convolutional-network lectures — Deferred deep-learning lectures
-      for implementation and CNN context after SaD and AML scope; much deeper than the exam's MLP calculations.
+    locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan Deep
+      Learning for Computer Vision playlist)
     scope_triage: reference-only
+    angle: Draws the computation graph and propagates gradients through it node by node, on the board.
+    angle_detail: 'The computational-graph presentation is the one that generalises: instead of deriving gradients
+      for a specific architecture, you learn a local rule that composes. Watching it applied to a concrete graph
+      is the step between L15''s hand derivation and understanding what a framework does. Beyond SaD scope, and
+      directly useful for AML and the thesis workstream.'
   - kind: read
     label: Brandon Rohrer — friendly neural-network explanation
     source_id: source-rohrer-e2eml
-    locator: Neural-network article/video selections — Plain-language visual network intuition for a diagnosed
-      gap; use the course/Kelleher sources for calculations and backprop detail.
+    locator: The 'How neural networks work' article and companion video on e2eml.school
     scope_triage: helpful-now
+    angle: Builds a tiny network out of explicit arithmetic with no calculus at all.
+    angle_detail: Every quantity is a small number and every step is an addition or a multiplication, which removes
+      the notation barrier entirely. Useful as a first contact or as a reset if the gradients have become symbol-pushing.
+      The trade-off is that it stops well before anything examinable — follow it with 3Blue1Brown episode 4 or
+      Marsland Ch 4.
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     source_id: source-geron-handson
-    locator: 'Chapter 10, pp. 303-350 — Gives the L15 forward pass an executable form: layer widths, parameter
-      counts, activation choice and the output/loss pairing for regression, binary and multiclass targets
-      that the deck states as a table.'
+    locator: Chapter 10, pp. 303-350
     scope_triage: helpful-now
+    angle: 'Gives the L15 forward pass an executable form: layer widths, parameter counts, activation choice and
+      the output/loss pairing for regression, binary and multiclass targets that the deck states as a table.'
+    angle_detail: 'Forty-eight pages that make network shapes concrete: how many parameters a given architecture
+      has, what the output layer must look like for binary, multiclass and regression targets, and how the loss
+      must match the output. That is precisely what L15''s forward-pass and output nodes cover, and precisely
+      what the SaD Übungen ask you to compute. Working through the shapes here is direct exam preparation.'
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
-      p. 95; universal approximation p. 107) — Follows the exact L15 arc - perceptron, the XOR show-stopper,
-      hidden layers, back-propagation - and is the only registered source that states the universal-approximation
-      result the deck asserts on slide 36.
+    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation p.
+      95; universal approximation p. 107)
     scope_triage: helpful-now
+    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation - and
+      is the only registered source that states the universal-approximation result the deck asserts on slide 36.
+    angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place through
+      the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately by the hidden
+      layer that solves it (p. 94). That is L15''s activation node argued rather than asserted. Backpropagation
+      (p. 95) is then derived and implemented, and universal approximation (p. 107) is stated with its caveats.
+      Together this is the most complete L15 coverage on the shelf at course level.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-forward/notes.md
   attachments: []
   source_feedback: []
@@ -389,13 +605,12 @@ stages:
   number: 5
   title: Loss gradients and backpropagation
   status: pending
-  objective: The chain rule propagates output error backward through each operation, producing parameter
-    gradients reused by gradient-based optimizers.
+  objective: The chain rule propagates output error backward through each operation, producing parameter gradients
+    reused by gradient-based optimizers.
   done_when:
-  - 'Reproduce without notes: The chain rule propagates output error backward through each operation,
-    producing parameter gradients reused by gradient-based optimizers.'
-  - Work Cornell CS4780 HW9 — neural networks and ReLU, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: The chain rule propagates output error backward through each operation, producing
+    parameter gradients reused by gradient-based optimizers.'
+  - Work Cornell CS4780 HW9 — neural networks and ReLU, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-backpropagation
@@ -405,87 +620,149 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     source_id: source-statquest
-    locator: Neural Networks Part 1; Backpropagation Main Ideas; Stochastic Gradient Descent — Surgical
-      intuition for neuron computation, gradient descent, and backpropagation when the algebraic graph
-      is hard to visualize.
+    locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
+      Gradient Descent, Clearly Explained'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Shows activation functions being scaled and summed into an arbitrary curve — the mechanical basis of
+      universal approximation.
+    angle_detail: Part 1's central demonstration is that two hidden units with a soft activation can be weighted
+      and added to produce a bent curve fitting the data, built up piece by piece on screen. That is L15's universality
+      node made visible without any theorem. The backpropagation video then updates one weight at a time with
+      the numbers shown, and the SGD video explains why the gradient is estimated on a batch rather than the full
+      data — a practical point L15 lists without motivating.
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7 — Primary course-aligned route from error surfaces and gradient updates to network
-      learning, with worked examples closer to SaD's level than advanced deep-learning texts.
+    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     scope_triage: helpful-now
+    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over — the
+      same route L15's first slides take.
+    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to multi-layer
+      networks, the continuity L15 asserts on its opening slide (a neuron without an activation is a linear model)
+      is the chapter's actual structure. Reading it in order makes backpropagation feel like the same gradient
+      descent applied through more layers, which is the correct impression and not the one a standalone treatment
+      gives.
   - kind: read
     label: Kroese — neural-network reference
     source_id: source-kroese-dsml
-    locator: Neural-network selections — Broader mathematical and implementation context for MLPs and
-      training when the course/Kelleher level is secure.
+    locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization, pdf pp.
+      415-438
     scope_triage: helpful-now
+    angle: Keeps the matrix calculus needed for backpropagation in an appendix you can consult while reading the
+      chapter.
+    angle_detail: Backpropagation is chain-rule bookkeeping over matrices, and the usual obstacle is not the idea
+      but the notation for derivatives of vector-valued functions. Having App B in the same book, in the same
+      notation, means the gradient steps in Ch 9 can be checked rather than accepted. Denser than the deck requires;
+      useful if the derivation is what you want.
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     source_id: source-cs229-notes
-    locator: §7 — Dense mathematical derivation of forward propagation and backpropagation for readers
-      who want a compact formula reference after the SaD explanation.
+    locator: Main notes §7 Deep Learning (the neural-network and backpropagation sections)
     scope_triage: reference-only
+    angle: Backpropagation written out as matrix derivative bookkeeping, in the most compact correct form available
+      here.
+    angle_detail: Six pages that state the forward pass, define the loss, and derive the layer-by-layer gradients
+      with explicit shapes. If you already understand the chain rule and want the algorithm precisely, this is
+      faster than any book on the shelf. If you do not yet have the picture, it will be opaque — start with 3Blue1Brown
+      episodes 3-4 and return here.
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     source_id: source-cs229-2022-videos
-    locator: Topic-matched neural-network lecture — Full lecture-level forward/backprop derivation and
-      optimization context; optional after the compact SaD/Kelleher route.
+    locator: The 2022 neural-networks lecture (the first of the deep-learning lectures on the playlist)
     scope_triage: reference-only
+    angle: Motivates depth by showing what a single layer cannot represent, before showing what more layers buy.
+    angle_detail: The lecture spends real time on the representational question — what functions are and are not
+      reachable — which is L15's universality node treated as a question rather than a stated theorem. Also useful
+      for hearing how a practitioner describes the training loop, which the deck lists as practical choices.
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     source_id: source-murphy-pml1
-    locator: §§13.2–13.3 — Advanced probabilistic ML treatment of network parameterization and learning;
-      derivational depth, not an exam-first source.
+    locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf pp. 453-574)
     scope_triage: reference-only
+    angle: Presents backpropagation as reverse-mode automatic differentiation on a computation graph, which is
+      what frameworks actually implement.
+    angle_detail: L15 derives the gradients by hand for a small network. Murphy names the general algorithm that
+      generalises it and explains why the reverse sweep is the efficient direction when there are many parameters
+      and one scalar loss. That connection between the hand derivation and what PyTorch does is worth having,
+      especially given the thesis workstream. Well beyond exam scope.
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     source_id: source-csc411-notes
-    locator: Neural-network selections — Dense independent treatment of network forward computation and
-      gradient learning for formula checking.
+    locator: The neural-network and backpropagation lecture notes (Toronto CSC411/2515 course notes)
     scope_triage: reference-only
+    angle: Compact backprop reference with explicit matrix shapes at every step.
+    angle_detail: Shape errors are the most common failure when reproducing a forward or backward pass, and these
+      notes annotate every quantity's dimensions. That makes them a good checking reference beside the SaD Übungen's
+      parameter-counting exercises, which are the likeliest L15 exam form.
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
-      — Current AML deepening of activations, output heads, forward shapes, computation graphs, full backpropagation,
-      regularization, gradient health, and autograd after SaD's overview.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
     scope_triage: reference-only
+    angle: The AML treatment of the same networks, with a whole deck devoted to training rather than a summary
+      slide.
+    angle_detail: SaD compresses initialisation, learning rates, regularization and the practicalities of training
+      into a handful of slides at the end of L15; AML gives them a lecture. Since both exams are in the same period,
+      reading the AML deck covers SaD's training node and AML's own material simultaneously. AML L09 owns the
+      neural-network regularization material and does not cover batch normalization — a distinction already recorded
+      in this repository's wiring notes.
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW9; 2018Spring/HW9 — Local solution-backed forward, activation, gradient, and network-reasoning
-      problems after the current Blatt 5 task.
+    locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
     scope_triage: helpful-now
+    angle: Forward and backward passes computed by hand on small networks, with the answers to check against.
+    angle_detail: Hand computation is the only reliable test of whether backpropagation is understood, and these
+      sets provide it at the right scale — networks small enough to finish, large enough to require the bookkeeping.
+      The ReLU problems also make the non-differentiability at zero explicit, which the deck passes over.
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     source_id: source-3b1b-neural-networks
-    locator: Episodes 1–4 — The strongest visual intuition for layers, gradient descent, and backpropagation.
-      Episodes 1–2 support forward structure; 3–4 support gradients and credit assignment.
+    locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks learn'',
+      ''What is backpropagation really doing?'', ''Backpropagation calculus'' (≈15-20 min each)'
     scope_triage: helpful-now
+    angle: Episode 3 shows backpropagation as each training example 'voting' on how every weight should change
+      — the intuition before the calculus.
+    angle_detail: 'The four episodes are deliberately staged: what the network computes, what the loss surface
+      looks like, what backpropagation is doing conceptually, and only then the chain-rule algebra in episode
+      4. Watching 1-3 before reading any derivation is the highest-return hour available for L15, because the
+      derivation is bookkeeping once the picture exists. Episode 4 maps directly onto the deck''s gradient slides.'
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
-      p. 95; universal approximation p. 107) — Follows the exact L15 arc - perceptron, the XOR show-stopper,
-      hidden layers, back-propagation - and is the only registered source that states the universal-approximation
-      result the deck asserts on slide 36.
+    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation p.
+      95; universal approximation p. 107)
     scope_triage: helpful-now
+    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation - and
+      is the only registered source that states the universal-approximation result the deck asserts on slide 36.
+    angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place through
+      the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately by the hidden
+      layer that solves it (p. 94). That is L15''s activation node argued rather than asserted. Backpropagation
+      (p. 95) is then derived and implemented, and universal approximation (p. 107) is stated with its caveats.
+      Together this is the most complete L15 coverage on the shelf at course level.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-backprop/notes.md
   attachments: []
   source_feedback: []
@@ -493,11 +770,11 @@ stages:
   number: 6
   title: Training, generalization, and practical choices
   status: pending
-  objective: Initialization, batches, learning rate, stopping, data volume, regularization, and validation
-    interact; lower training loss alone is not evidence of a better model.
+  objective: Initialization, batches, learning rate, stopping, data volume, regularization, and validation interact;
+    lower training loss alone is not evidence of a better model.
   done_when:
-  - 'Reproduce without notes: Initialization, batches, learning rate, stopping, data volume, regularization,
-    and validation interact; lower training loss alone is not evidence of a better model.'
+  - 'Reproduce without notes: Initialization, batches, learning rate, stopping, data volume, regularization, and
+    validation interact; lower training loss alone is not evidence of a better model.'
   exam_critical: true
   concepts:
   - concept-bias-variance-tradeoff
@@ -506,67 +783,119 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: reference
     label: 2025 neural-networks Part 1 and Part 2
     source_id: source-sad-2025-recordings
-    locator: '14_neural_nets_part1.pdf; 15_neural_nets_part2.pdf — The strongest local same-course NN
-      depth: the two-deck sequence expands the current lecture''s forward, training, gradient, and backpropagation
-      overview.'
+    locator: sad-2025-recordings/14_neural_nets_part1.pdf and 15_neural_nets_part2.pdf
     scope_triage: reference-only
+    angle: Two prior-year decks for what 2026 delivers as one — the most detailed neural-network treatment the
+      course has produced.
+    angle_detail: 2025 spent two sessions on neural networks and 2026 spends one, so these two files together
+      contain material the current deck had to cut. That makes them the best course-level elaboration of L15 available,
+      particularly for the backpropagation steps the 2026 deck states compactly. Scope still comes from the 2026
+      deck.
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7 — Primary course-aligned route from error surfaces and gradient updates to network
-      learning, with worked examples closer to SaD's level than advanced deep-learning texts.
+    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     scope_triage: helpful-now
+    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over — the
+      same route L15's first slides take.
+    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to multi-layer
+      networks, the continuity L15 asserts on its opening slide (a neuron without an activation is a linear model)
+      is the chapter's actual structure. Reading it in order makes backpropagation feel like the same gradient
+      descent applied through more layers, which is the correct impression and not the one a standalone treatment
+      gives.
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     source_id: source-islp
-    locator: §§10.1–10.2 — Readable MLP and forward-pass explanation with statistical-learning context;
-      lighter than Murphy and closer to the lecture's first-pass level.
+    locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
+      neural networks p. 409; Ch 10 lab p. 439)
     scope_triage: helpful-now
+    angle: Written for readers who already know linear regression, so every neural-network idea is introduced
+      as a modification of something familiar.
+    angle_detail: '§10.1 literally begins by writing a single-layer network as a linear model with a nonlinear
+      transformation of derived features, which is L15''s own opening claim made precise. For a reader coming
+      from L03 rather than from a deep-learning course, this is the least disorienting introduction on the shelf.
+      It is also the shallowest: no backpropagation derivation, and the training discussion is brief. Pair with
+      Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
   - kind: read
     label: Kroese — neural-network reference
     source_id: source-kroese-dsml
-    locator: Neural-network selections — Broader mathematical and implementation context for MLPs and
-      training when the course/Kelleher level is secure.
+    locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization, pdf pp.
+      415-438
     scope_triage: helpful-now
+    angle: Keeps the matrix calculus needed for backpropagation in an appendix you can consult while reading the
+      chapter.
+    angle_detail: Backpropagation is chain-rule bookkeeping over matrices, and the usual obstacle is not the idea
+      but the notation for derivatives of vector-valued functions. Having App B in the same book, in the same
+      notation, means the gradient steps in Ch 9 can be checked rather than accepted. Denser than the deck requires;
+      useful if the derivation is what you want.
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     source_id: source-cs229-2022-videos
-    locator: Topic-matched neural-network lecture — Full lecture-level forward/backprop derivation and
-      optimization context; optional after the compact SaD/Kelleher route.
+    locator: The 2022 neural-networks lecture (the first of the deep-learning lectures on the playlist)
     scope_triage: reference-only
+    angle: Motivates depth by showing what a single layer cannot represent, before showing what more layers buy.
+    angle_detail: The lecture spends real time on the representational question — what functions are and are not
+      reachable — which is L15's universality node treated as a question rather than a stated theorem. Also useful
+      for hearing how a practitioner describes the training loop, which the deck lists as practical choices.
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     source_id: source-murphy-pml1
-    locator: §§13.2–13.3 — Advanced probabilistic ML treatment of network parameterization and learning;
-      derivational depth, not an exam-first source.
+    locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf pp. 453-574)
     scope_triage: reference-only
+    angle: Presents backpropagation as reverse-mode automatic differentiation on a computation graph, which is
+      what frameworks actually implement.
+    angle_detail: L15 derives the gradients by hand for a small network. Murphy names the general algorithm that
+      generalises it and explains why the reverse sweep is the efficient direction when there are many parameters
+      and one scalar loss. That connection between the hand derivation and what PyTorch does is worth having,
+      especially given the thesis workstream. Well beyond exam scope.
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 08-feedforward-neural-network.pdf; lecture-slides/VL 09-neural-networks.pdf
-      — Current AML deepening of activations, output heads, forward shapes, computation graphs, full backpropagation,
-      regularization, gradient health, and autograd after SaD's overview.
+    locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
     scope_triage: reference-only
+    angle: The AML treatment of the same networks, with a whole deck devoted to training rather than a summary
+      slide.
+    angle_detail: SaD compresses initialisation, learning rates, regularization and the practicalities of training
+      into a handful of slides at the end of L15; AML gives them a lecture. Since both exams are in the same period,
+      reading the AML deck covers SaD's training node and AML's own material simultaneously. AML L09 owns the
+      neural-network regularization material and does not cover batch normalization — a distinction already recorded
+      in this repository's wiring notes.
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     source_id: source-eecs498
-    locator: Selected fully connected and convolutional-network lectures — Deferred deep-learning lectures
-      for implementation and CNN context after SaD and AML scope; much deeper than the exam's MLP calculations.
+    locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan Deep
+      Learning for Computer Vision playlist)
     scope_triage: reference-only
+    angle: Draws the computation graph and propagates gradients through it node by node, on the board.
+    angle_detail: 'The computational-graph presentation is the one that generalises: instead of deriving gradients
+      for a specific architecture, you learn a local rule that composes. Watching it applied to a concrete graph
+      is the step between L15''s hand derivation and understanding what a framework does. Beyond SaD scope, and
+      directly useful for AML and the thesis workstream.'
   - kind: read
     label: Geron Ch 11 - the training choices L15 lists as tricks
     source_id: source-geron-handson
-    locator: Chapter 11, pp. 351-392 — The deck's 'practical tricks' slide (initialisation, learning rate,
-      stopping, regularisation) is one bullet list; this chapter is that list worked out, which is what
-      the stage's generalisation claim needs as evidence.
+    locator: Chapter 11, pp. 351-392
     scope_triage: helpful-now
+    angle: The deck's 'practical tricks' slide (initialisation, learning rate, stopping, regularisation) is one
+      bullet list; this chapter is that list worked out, which is what the stage's generalisation claim needs
+      as evidence.
+    angle_detail: 'L15 closes with a list of practical training choices — initialisation, activation, optimiser,
+      regularization — presented as things practitioners do. Ch 11 explains what each is solving: vanishing gradients,
+      dead units, slow convergence, overfitting. Turning a list of tricks into a list of problems-and-solutions
+      is what makes it retainable and is the difference between recognising the terms and being able to justify
+      a choice.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-training/notes.md
   attachments: []
   source_feedback: []
@@ -574,11 +903,11 @@ stages:
   number: 7
   title: Expressiveness and universal approximation
   status: pending
-  objective: Sufficiently wide nonlinear networks can approximate broad function classes, but the theorem
-    does not guarantee efficient learning, good generalization, or a practical architecture.
+  objective: Sufficiently wide nonlinear networks can approximate broad function classes, but the theorem does
+    not guarantee efficient learning, good generalization, or a practical architecture.
   done_when:
-  - 'Reproduce without notes: Sufficiently wide nonlinear networks can approximate broad function classes,
-    but the theorem does not guarantee efficient learning, good generalization, or a practical architecture.'
+  - 'Reproduce without notes: Sufficiently wide nonlinear networks can approximate broad function classes, but
+    the theorem does not guarantee efficient learning, good generalization, or a practical architecture.'
   exam_critical: true
   concepts:
   - concept-universal-approximation
@@ -587,18 +916,28 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
-      p. 95; universal approximation p. 107) — Follows the exact L15 arc - perceptron, the XOR show-stopper,
-      hidden layers, back-propagation - and is the only registered source that states the universal-approximation
-      result the deck asserts on slide 36.
+    locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation p.
+      95; universal approximation p. 107)
     scope_triage: helpful-now
+    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation - and
+      is the only registered source that states the universal-approximation result the deck asserts on slide 36.
+    angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place through
+      the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately by the hidden
+      layer that solves it (p. 94). That is L15''s activation node argued rather than asserted. Backpropagation
+      (p. 95) is then derived and implemented, and universal approximation (p. 107) is stated with its caveats.
+      Together this is the most complete L15 coverage on the shelf at course level.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-universality/notes.md
   attachments: []
   source_feedback: []
@@ -609,9 +948,8 @@ stages:
   objective: Convolutions encode locality and sharing, recurrent networks encode sequence state, and attention-based
     Transformers model interactions; these are orientation topics beyond the core MLP calculations.
   done_when:
-  - 'Reproduce without notes: Convolutions encode locality and sharing, recurrent networks encode sequence
-    state, and attention-based Transformers model interactions; these are orientation topics beyond the
-    core MLP calculations.'
+  - 'Reproduce without notes: Convolutions encode locality and sharing, recurrent networks encode sequence state,
+    and attention-based Transformers model interactions; these are orientation topics beyond the core MLP calculations.'
   exam_critical: true
   concepts:
   - concept-recurrent-networks
@@ -621,16 +959,26 @@ stages:
   - kind: read
     label: Current L15 neural-networks deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf (38 pages) — Builds the SaD neural-network model from
-      MLR equivalence through activations, softmax, MLP shapes/parameter counts, backpropagation, training,
-      universality, and an architecture outlook.
+    locator: lecture-slides/15_neural_networks.pdf, 38 slides
     scope_triage: required-now
+    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook that
+      connects SaD to AML.
+    angle_detail: The deck's most useful move is starting from the observation that a single neuron with no activation
+      is a linear model — which ties L15 back to L03 rather than presenting neural networks as a new subject.
+      Backpropagation is stated as the chain rule applied layer by layer; the deck does not run a numeric example,
+      which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill. The closing outlook slides are context,
+      not exam material.
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     source_id: source-eecs498
-    locator: Selected fully connected and convolutional-network lectures — Deferred deep-learning lectures
-      for implementation and CNN context after SaD and AML scope; much deeper than the exam's MLP calculations.
+    locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan Deep
+      Learning for Computer Vision playlist)
     scope_triage: reference-only
+    angle: Draws the computation graph and propagates gradients through it node by node, on the board.
+    angle_detail: 'The computational-graph presentation is the one that generalises: instead of deriving gradients
+      for a specific architecture, you learn a local rule that composes. Watching it applied to a concrete graph
+      is the step between L15''s hand derivation and understanding what a framework does. Beyond SaD scope, and
+      directly useful for AML and the thesis workstream.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-outlook/notes.md
   attachments: []
   source_feedback: []

@@ -79,6 +79,31 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 - **E** Session closure stages only its temporary action ledger and always
   excludes every `.canvas` file, regardless of the default name Obsidian assigns.
 
+## Plan rigour (CRITIQUE-POINTS 1, 2026-08-24)
+
+A plan can satisfy every rule above and still not tell you where to start or why
+this source rather than that one. These checks are about the *content* of a
+route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
+
+- **E** `LOCATOR-ANGLE-FUSED` — no locator carries the angle appended after an
+  em dash. The angle is a field (`angle`); the fused form was the pre-2026-08-24
+  representation and must not return. Detected as a sentence-shaped tail
+  carrying no page, section or file reference, so a legitimately titled locator
+  (`Lecture 2 — Linear Regression`) does not trip it.
+- **W** `LOCATOR-VAGUE` — a book or paper route names a chapter but no page
+  range; or a route of any format hedges ("selections", "topic-matched",
+  "relevant") instead of naming the material.
+- **W** `ROUTE-ANGLE-MISSING` — a rich route declares no `angle`.
+- **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
+  `angle_detail` for the hover.
+- **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
+
+These are warnings and not errors on purpose. The backfill is incremental
+(WORKFLOWS §6a repays visibility debt on use, never in bulk), and a rule that
+blocked every commit until 2,268 rows were rewritten would be switched off
+rather than satisfied. The counts are the point: they are the measured size of
+the debt, reported in `generated/study-plans.md`.
+
 ## Operating contract
 
 - The operating contract is a single canonical file, `system/CLAUDE.md`. Root `CLAUDE.md` and the `LearningOS/` project-root entry are symlinks to it, so the copies cannot drift — the former hand-maintained `CLAUDE-SYNC` warning is retired (2026-07-17).
@@ -104,7 +129,12 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
 ## Links
 
 - **E** Internal Markdown links (relative paths, `note://` etc.) resolve.
-- Online-only (`--online` flag): **W** external URL unreachable. External link rot never blocks offline validation.
+- Online-only (`--online` flag): **E** external URL unreachable after HEAD and bounded-GET checks.
+- Online-only (`--online` flag): **W** external URL is access-controlled (`401`, `403`, or `429`) and cannot be verified automatically.
+
+External checks never slow or block ordinary offline validation. The deliberate
+online gate blocks confirmed link rot while keeping authentication and rate
+limits advisory.
 
 ## Hygiene sweep (ADR-004, 2026-08-03)
 

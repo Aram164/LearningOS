@@ -97,6 +97,8 @@
         "label": {"type": "string", "minLength": 1},
         "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
         "locator": {"type": "string"},
+        "angle": {"type": "string", "pattern": "\\S"},
+        "angle_detail": {"type": "string", "pattern": "\\S"},
         "url": {"type": "string", "format": "uri"},
         "vault_path": {"type": "string"},
         "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]}

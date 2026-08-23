@@ -15,13 +15,13 @@ stages:
   number: 1
   title: Naive Bayes decision rule
   status: pending
-  objective: Class priors multiply with feature likelihoods under conditional independence, and the largest
-    posterior score determines the class without needing the shared evidence denominator.
+  objective: Class priors multiply with feature likelihoods under conditional independence, and the largest posterior
+    score determines the class without needing the shared evidence denominator.
   done_when:
-  - 'Reproduce without notes: Class priors multiply with feature likelihoods under conditional independence,
-    and the largest posterior score determines the class without needing the shared evidence denominator.'
-  - Work UE6 — probability-based classification tasks, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Class priors multiply with feature likelihoods under conditional independence, and
+    the largest posterior score determines the class without needing the shared evidence denominator.'
+  - Work UE6 — probability-based classification tasks, then the remaining 1, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-conditional-independence
@@ -31,82 +31,138 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: practise
     label: UE6 — probability-based classification tasks
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf probability-based learning section — Course-native Naive Bayes classification
-      and probability calculations, connecting the L04 base model to L14's smoothing and numeric-feature
-      extensions.
+    locator: exercise-slides/UE6.pdf, probability-based learning section
     scope_triage: required-now
+    angle: Naive Bayes with smoothing and numeric attributes, computed in the chair's notation.
+    angle_detail: Laplace smoothing has several conventions and the chair's choice matters for the arithmetic.
+      These are the authority for which one this course uses.
   - kind: reference
     label: MIT 18.650 Bayesian-statistics lectures — context only
     source_id: source-mit-18650
-    locator: Lectures 17–18 — Optional Bayesian inference context. It is not a Bayesian-network tutorial
-      and does not replace L14's graph/factorization material.
+    locator: 'Lectures 17-18 (Bayesian inference: priors, posteriors, and the Bayesian-frequentist contrast);
+      reference only'
     scope_triage: reference-only
+    angle: Places Naive Bayes inside the Bayesian inference framework it borrows its name from.
+    angle_detail: L14's classifier applies Bayes' rule to features but is otherwise a frequentist procedure with
+      plug-in estimates. These lectures set out what a genuinely Bayesian treatment would be — a prior over parameters,
+      a posterior, and prediction by integration — which clarifies exactly how much of 'Bayes' the classifier
+      actually uses. Useful for conceptual hygiene, not for the exam.
   - kind: watch
     label: StatQuest — Naive Bayes and Gaussian Naive Bayes
     source_id: source-statquest
-    locator: Naive Bayes; Gaussian Naive Bayes; Logistic Regression as contrast only — Visual refresh
-      of the base classifier and the Normal-density extension; Logistic Regression is only a discriminative
-      contrast, not part of the L14 model family.
+    locator: '''Naive Bayes, Clearly Explained''; ''Gaussian Naive Bayes, Clearly Explained'' (≈15 min each);
+      ''Logistic Regression'' only as a contrast'
     scope_triage: helpful-now
+    angle: The Gaussian video shows why a density replaces a count for numeric features, which is L14's least
+      intuitive step.
+    angle_detail: Moving from multinomial to Gaussian Naive Bayes means the likelihood stops being a proportion
+      and becomes a density evaluation, and the resulting number is no longer a probability. That shift is where
+      L14's numeric-attribute node loses people. The video draws the fitted Normal per class per feature and reads
+      values off it, which makes the substitution concrete. Watch the categorical video first even if you have
+      seen it for L04.
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 6, especially §6.4.2 — Primary course-aligned Naive Bayes source with worked categorical
-      and continuous-feature examples, supporting smoothing and Gaussian likelihoods.
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing and
+      continuous-feature sections)
     scope_triage: helpful-now
+    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
+      network rather than a separate method.
+    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection between
+      them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes as the network
+      in which every feature depends only on the class — at which point the 'naive' assumption is a graph statement
+      rather than an algebraic convenience. That is the cleanest available account of L14's structure. Smoothing
+      and the continuous-feature handling are worked with numbers.
   - kind: read
     label: ISLP §4.4.4 and lab — Naive Bayes in application
     source_id: source-islp
-    locator: §4.4.4 and relevant lab — Compact Gaussian Naive Bayes definition plus Python lab context;
-      useful for application, not for the Bayesian-network section.
+    locator: Ch 4 Classification, pdf pp. 144-208 — §4.4.4 Naive Bayes and the Ch 4 lab (Naive Bayes on the Smarket
+      data)
     scope_triage: helpful-now
+    angle: Places Naive Bayes beside LDA and QDA, so its assumption is visible as one point on a spectrum of covariance
+      assumptions.
+    angle_detail: '§4.4 develops LDA (shared covariance), QDA (per-class covariance) and then Naive Bayes (diagonal
+      covariance — features conditionally independent) as three points on the same spectrum. That framing answers
+      the question L14 leaves open: what is actually being given up by the naive assumption, and when does giving
+      it up pay. The lab then runs all three on the same data so the trade-off is observed rather than argued.'
   - kind: read
     label: Kroese — probability-based classifier selections
     source_id: source-kroese-dsml
-    locator: Probabilistic classification selections — Broader DS/ML reference for probabilistic classification
-      and density modeling; the lecture remains the authority for Laplace and Bayesian-network details.
+    locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
     scope_triage: helpful-now
+    angle: Derives the Bayes-optimal classifier first, so Naive Bayes is visibly an approximation to a known ideal.
+    angle_detail: The Bayes classifier — assign to the class with the highest true posterior — is the best possible
+      classifier and is unavailable because the posterior is unknown. Kroese establishes that baseline before
+      any practical method, which turns Naive Bayes into a specific, understandable approximation of it rather
+      than a standalone algorithm. That framing is missing from L14 and makes the smoothing and independence assumptions
+      easier to reason about.
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: §4.2 selections — Formal categorical/multinomial event-model treatment and log-likelihood
-      perspective beyond Kelleher; no Bayesian-network coverage.
+    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
+      (multinomial vs Bernoulli)
     scope_triage: reference-only
+    angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
+    angle_detail: These are two genuinely different models — one counts occurrences, one records presence — and
+      they give different answers on the same documents. L14 introduces multinomial Naive Bayes without naming
+      the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two pages and settles it.
+      Also gives the maximum-likelihood derivation of the smoothed estimates rather than presenting smoothing
+      as a hack.
   - kind: reference
     label: Stanford CS229 — generative-classifier lecture
     source_id: source-cs229-2022-videos
-    locator: Topic-matched generative learning/Naive Bayes lecture — Advanced lecture treatment of Naive
-      Bayes/event models for derivational depth beyond the current course examples.
+    locator: The 2022 lecture on generative learning algorithms (GDA and Naive Bayes)
     scope_triage: reference-only
+    angle: Sets up the generative-versus-discriminative distinction, which is the category Naive Bayes belongs
+      to and which L14 never names.
+    angle_detail: Modelling P(x|y) and P(y) and inverting with Bayes, versus modelling P(y|x) directly, is the
+      single most clarifying distinction in classification — it explains why Naive Bayes needs smoothing and logistic
+      regression does not, and why Naive Bayes can be trained on less data. L14 works entirely inside the generative
+      branch without saying so. One lecture, high return.
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: Naive Bayes selections — Independent concise classifier treatment when Kelleher and CS229
-      wording do not resolve a derivation gap.
+    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier set)
     scope_triage: reference-only
+    angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
+      for L14.
+    angle_detail: 'University lecture notes written to be revised from rather than learned from: model, assumption,
+      estimates, prediction rule, all on a couple of pages with the algebra intact. Use it the day before the
+      exam to check that you can still reconstruct the derivation, not to meet the topic.'
   - kind: practise
     label: Cornell CS4780 HW4 - solution-backed Naive Bayes problems
     source_id: source-cs4780-homeworks
     locator: 2018Fall/HW4 Problem 1 'Intuition for Naive Bayes' (hw4.pdf with hw4_solution.pdf); 2018Spring/HW4
-      Naive Bayes with smoothing (hw4.pdf, solutions in hw4_solutions.tex) — L14's only current practice
-      asset is the UE6 probability-based section; HW4 adds a solution-backed Naive Bayes intuition problem
-      and a smoothing exercise, which is the written-exam format the smoothing slides otherwise never
-      get tested in.
+      Naive Bayes with smoothing (hw4.pdf, solutions in hw4_solutions.tex)
     scope_triage: helpful-now
+    angle: One problem set explicitly built to test the intuition behind the independence assumption rather than
+      the arithmetic.
+    angle_detail: The problem's title is literal — it asks what goes wrong when the assumption fails and what
+      smoothing is compensating for. Those are exactly the short-answer questions L14 could pose, and they are
+      hard to practise from a textbook. Both terms' versions have published solutions; the Spring set adds the
+      smoothing computation.
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     source_id: source-zacharski-data-mining
-    locator: Chapter 6, pp. 226-296 — Builds the classifier on counts, hits the zero-probability case,
-      and applies smoothing - the same sequence as L14 slides 8-12, but with the intermediate tables visible
-      so the smoothed denominator can be checked.
+    locator: Chapter 6, pp. 226-296
     scope_triage: helpful-now
+    angle: Builds the classifier on counts, hits the zero-probability case, and applies smoothing - the same sequence
+      as L14 slides 8-12, but with the intermediate tables visible so the smoothed denominator can be checked.
+    angle_detail: Naive Bayes with the zero-frequency problem hit deliberately before smoothing is introduced,
+      so the fix arrives as a response to a failure you have already seen. That ordering is why this is worth
+      reading even though the level is elementary — L14 introduces smoothing as a rule, and the rule is much easier
+      to remember when you have watched a single unseen word drive the whole product to zero.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-nb-recap/notes.md
   attachments: []
   source_feedback: []
@@ -114,13 +170,13 @@ stages:
   number: 2
   title: Zero counts and Laplace smoothing
   status: pending
-  objective: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts prevent
-    collapse while preserving normalized conditional distributions.
+  objective: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts prevent collapse
+    while preserving normalized conditional distributions.
   done_when:
   - 'Reproduce without notes: Unseen feature-class pairs zero an entire likelihood product; additive pseudocounts
     prevent collapse while preserving normalized conditional distributions.'
-  - Work UE6 — probability-based classification tasks, then the remaining 1, and record every miss with
-    the step it failed at.
+  - Work UE6 — probability-based classification tasks, then the remaining 1, and record every miss with the step
+    it failed at.
   exam_critical: true
   concepts:
   - concept-laplace-smoothing
@@ -129,45 +185,70 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: practise
     label: UE6 — probability-based classification tasks
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf probability-based learning section — Course-native Naive Bayes classification
-      and probability calculations, connecting the L04 base model to L14's smoothing and numeric-feature
-      extensions.
+    locator: exercise-slides/UE6.pdf, probability-based learning section
     scope_triage: required-now
+    angle: Naive Bayes with smoothing and numeric attributes, computed in the chair's notation.
+    angle_detail: Laplace smoothing has several conventions and the chair's choice matters for the arithmetic.
+      These are the authority for which one this course uses.
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 6, especially §6.4.2 — Primary course-aligned Naive Bayes source with worked categorical
-      and continuous-feature examples, supporting smoothing and Gaussian likelihoods.
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing and
+      continuous-feature sections)
     scope_triage: helpful-now
+    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
+      network rather than a separate method.
+    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection between
+      them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes as the network
+      in which every feature depends only on the class — at which point the 'naive' assumption is a graph statement
+      rather than an algebraic convenience. That is the cleanest available account of L14's structure. Smoothing
+      and the continuous-feature handling are worked with numbers.
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: §4.2 selections — Formal categorical/multinomial event-model treatment and log-likelihood
-      perspective beyond Kelleher; no Bayesian-network coverage.
+    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
+      (multinomial vs Bernoulli)
     scope_triage: reference-only
+    angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
+    angle_detail: These are two genuinely different models — one counts occurrences, one records presence — and
+      they give different answers on the same documents. L14 introduces multinomial Naive Bayes without naming
+      the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two pages and settles it.
+      Also gives the maximum-likelihood derivation of the smoothed estimates rather than presenting smoothing
+      as a hack.
   - kind: practise
     label: Cornell CS4780 HW4 - solution-backed Naive Bayes problems
     source_id: source-cs4780-homeworks
     locator: 2018Fall/HW4 Problem 1 'Intuition for Naive Bayes' (hw4.pdf with hw4_solution.pdf); 2018Spring/HW4
-      Naive Bayes with smoothing (hw4.pdf, solutions in hw4_solutions.tex) — L14's only current practice
-      asset is the UE6 probability-based section; HW4 adds a solution-backed Naive Bayes intuition problem
-      and a smoothing exercise, which is the written-exam format the smoothing slides otherwise never
-      get tested in.
+      Naive Bayes with smoothing (hw4.pdf, solutions in hw4_solutions.tex)
     scope_triage: helpful-now
+    angle: One problem set explicitly built to test the intuition behind the independence assumption rather than
+      the arithmetic.
+    angle_detail: The problem's title is literal — it asks what goes wrong when the assumption fails and what
+      smoothing is compensating for. Those are exactly the short-answer questions L14 could pose, and they are
+      hard to practise from a textbook. Both terms' versions have published solutions; the Spring set adds the
+      smoothing computation.
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     source_id: source-zacharski-data-mining
-    locator: Chapter 6, pp. 226-296 — Builds the classifier on counts, hits the zero-probability case,
-      and applies smoothing - the same sequence as L14 slides 8-12, but with the intermediate tables visible
-      so the smoothed denominator can be checked.
+    locator: Chapter 6, pp. 226-296
     scope_triage: helpful-now
+    angle: Builds the classifier on counts, hits the zero-probability case, and applies smoothing - the same sequence
+      as L14 slides 8-12, but with the intermediate tables visible so the smoothed denominator can be checked.
+    angle_detail: Naive Bayes with the zero-frequency problem hit deliberately before smoothing is introduced,
+      so the fix arrives as a response to a failure you have already seen. That ordering is why this is worth
+      reading even though the level is elementary — L14 introduces smoothing as a rule, and the rule is much easier
+      to remember when you have watched a single unseen word drive the whole product to zero.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-smoothing/notes.md
   attachments: []
   source_feedback: []
@@ -175,11 +256,11 @@ stages:
   number: 3
   title: Numerical attributes and discretization
   status: pending
-  objective: Numeric features can be binned into categorical events or modeled with a class-conditional
-    density; binning changes information and probability estimates.
+  objective: Numeric features can be binned into categorical events or modeled with a class-conditional density;
+    binning changes information and probability estimates.
   done_when:
-  - 'Reproduce without notes: Numeric features can be binned into categorical events or modeled with a
-    class-conditional density; binning changes information and probability estimates.'
+  - 'Reproduce without notes: Numeric features can be binned into categorical events or modeled with a class-conditional
+    density; binning changes information and probability estimates.'
   - Work UE6 — probability-based classification tasks, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -190,36 +271,57 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: practise
     label: UE6 — probability-based classification tasks
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf probability-based learning section — Course-native Naive Bayes classification
-      and probability calculations, connecting the L04 base model to L14's smoothing and numeric-feature
-      extensions.
+    locator: exercise-slides/UE6.pdf, probability-based learning section
     scope_triage: required-now
+    angle: Naive Bayes with smoothing and numeric attributes, computed in the chair's notation.
+    angle_detail: Laplace smoothing has several conventions and the chair's choice matters for the arithmetic.
+      These are the authority for which one this course uses.
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 6, especially §6.4.2 — Primary course-aligned Naive Bayes source with worked categorical
-      and continuous-feature examples, supporting smoothing and Gaussian likelihoods.
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing and
+      continuous-feature sections)
     scope_triage: helpful-now
+    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
+      network rather than a separate method.
+    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection between
+      them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes as the network
+      in which every feature depends only on the class — at which point the 'naive' assumption is a graph statement
+      rather than an algebraic convenience. That is the cleanest available account of L14's structure. Smoothing
+      and the continuous-feature handling are worked with numbers.
   - kind: read
     label: Kroese — probability-based classifier selections
     source_id: source-kroese-dsml
-    locator: Probabilistic classification selections — Broader DS/ML reference for probabilistic classification
-      and density modeling; the lecture remains the authority for Laplace and Bayesian-network details.
+    locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
     scope_triage: helpful-now
+    angle: Derives the Bayes-optimal classifier first, so Naive Bayes is visibly an approximation to a known ideal.
+    angle_detail: The Bayes classifier — assign to the class with the highest true posterior — is the best possible
+      classifier and is unavailable because the posterior is unknown. Kroese establishes that baseline before
+      any practical method, which turns Naive Bayes into a specific, understandable approximation of it rather
+      than a standalone algorithm. That framing is missing from L14 and makes the smoothing and independence assumptions
+      easier to reason about.
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     source_id: source-zacharski-data-mining
-    locator: Chapter 6, pp. 226-296 — Builds the classifier on counts, hits the zero-probability case,
-      and applies smoothing - the same sequence as L14 slides 8-12, but with the intermediate tables visible
-      so the smoothed denominator can be checked.
+    locator: Chapter 6, pp. 226-296
     scope_triage: helpful-now
+    angle: Builds the classifier on counts, hits the zero-probability case, and applies smoothing - the same sequence
+      as L14 slides 8-12, but with the intermediate tables visible so the smoothed denominator can be checked.
+    angle_detail: Naive Bayes with the zero-frequency problem hit deliberately before smoothing is introduced,
+      so the fix arrives as a response to a failure you have already seen. That ordering is why this is worth
+      reading even though the level is elementary — L14 introduces smoothing as a rule, and the rule is much easier
+      to remember when you have watched a single unseen word drive the whole product to zero.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-numeric/notes.md
   attachments: []
   source_feedback: []
@@ -227,13 +329,13 @@ stages:
   number: 4
   title: Gaussian Naive Bayes
   status: pending
-  objective: Each class-feature pair is modeled by a Normal density with estimated mean and variance,
-    producing continuous likelihoods under the same conditional-independence factorization.
+  objective: Each class-feature pair is modeled by a Normal density with estimated mean and variance, producing
+    continuous likelihoods under the same conditional-independence factorization.
   done_when:
-  - 'Reproduce without notes: Each class-feature pair is modeled by a Normal density with estimated mean
-    and variance, producing continuous likelihoods under the same conditional-independence factorization.'
-  - Work Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Each class-feature pair is modeled by a Normal density with estimated mean and variance,
+    producing continuous likelihoods under the same conditional-independence factorization.'
+  - Work Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-gaussian-naive-bayes
@@ -243,56 +345,99 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: watch
     label: StatQuest — Naive Bayes and Gaussian Naive Bayes
     source_id: source-statquest
-    locator: Naive Bayes; Gaussian Naive Bayes; Logistic Regression as contrast only — Visual refresh
-      of the base classifier and the Normal-density extension; Logistic Regression is only a discriminative
-      contrast, not part of the L14 model family.
+    locator: '''Naive Bayes, Clearly Explained''; ''Gaussian Naive Bayes, Clearly Explained'' (≈15 min each);
+      ''Logistic Regression'' only as a contrast'
     scope_triage: helpful-now
+    angle: The Gaussian video shows why a density replaces a count for numeric features, which is L14's least
+      intuitive step.
+    angle_detail: Moving from multinomial to Gaussian Naive Bayes means the likelihood stops being a proportion
+      and becomes a density evaluation, and the resulting number is no longer a probability. That shift is where
+      L14's numeric-attribute node loses people. The video draws the fitted Normal per class per feature and reads
+      values off it, which makes the substitution concrete. Watch the categorical video first even if you have
+      seen it for L04.
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 6, especially §6.4.2 — Primary course-aligned Naive Bayes source with worked categorical
-      and continuous-feature examples, supporting smoothing and Gaussian likelihoods.
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing and
+      continuous-feature sections)
     scope_triage: helpful-now
+    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
+      network rather than a separate method.
+    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection between
+      them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes as the network
+      in which every feature depends only on the class — at which point the 'naive' assumption is a graph statement
+      rather than an algebraic convenience. That is the cleanest available account of L14's structure. Smoothing
+      and the continuous-feature handling are worked with numbers.
   - kind: practise
     label: Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data
     source_id: source-kelleher-fmlpda
     locator: 'Section 6.7 exercises, pp. 344-350 (exercise 3: naive Bayes with normally distributed descriptive
-      features) — L14 slides 14-18 introduce continuous features and density estimation but the current
-      UE6 sheet stops at the discrete classifier; exercise 3 asks for a naive Bayes model that uses probability
-      density functions with normally distributed features and then a prediction from it, which is the
-      only registered drill for the Gaussian variant.'
+      features)'
     scope_triage: helpful-now
+    angle: L14 slides 14-18 introduce continuous features and density estimation but the current UE6 sheet stops
+      at the discrete classifier; exercise 3 asks for a naive Bayes model that uses probability density functions
+      with normally distributed features and then a prediction from it, which is the only registered drill for
+      the Gaussian variant.
+    angle_detail: 'The Gaussian Naive Bayes exercise on pp. 344-350 — exercise 3 in particular — is the worked
+      numeric-attribute case L14 needs and the chapter body only sketches: fit a Normal per class per feature,
+      evaluate the densities at the query point, multiply, compare. Having the full solution means the arithmetic
+      can be checked step by step, which matters because the density values are not probabilities and the intermediate
+      numbers look wrong the first time.'
   - kind: read
     label: ISLP §4.4.4 and lab — Naive Bayes in application
     source_id: source-islp
-    locator: §4.4.4 and relevant lab — Compact Gaussian Naive Bayes definition plus Python lab context;
-      useful for application, not for the Bayesian-network section.
+    locator: Ch 4 Classification, pdf pp. 144-208 — §4.4.4 Naive Bayes and the Ch 4 lab (Naive Bayes on the Smarket
+      data)
     scope_triage: helpful-now
+    angle: Places Naive Bayes beside LDA and QDA, so its assumption is visible as one point on a spectrum of covariance
+      assumptions.
+    angle_detail: '§4.4 develops LDA (shared covariance), QDA (per-class covariance) and then Naive Bayes (diagonal
+      covariance — features conditionally independent) as three points on the same spectrum. That framing answers
+      the question L14 leaves open: what is actually being given up by the naive assumption, and when does giving
+      it up pay. The lab then runs all three on the same data so the trade-off is observed rather than argued.'
   - kind: read
     label: Kroese — probability-based classifier selections
     source_id: source-kroese-dsml
-    locator: Probabilistic classification selections — Broader DS/ML reference for probabilistic classification
-      and density modeling; the lecture remains the authority for Laplace and Bayesian-network details.
+    locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
     scope_triage: helpful-now
+    angle: Derives the Bayes-optimal classifier first, so Naive Bayes is visibly an approximation to a known ideal.
+    angle_detail: The Bayes classifier — assign to the class with the highest true posterior — is the best possible
+      classifier and is unavailable because the posterior is unknown. Kroese establishes that baseline before
+      any practical method, which turns Naive Bayes into a specific, understandable approximation of it rather
+      than a standalone algorithm. That framing is missing from L14 and makes the smoothing and independence assumptions
+      easier to reason about.
   - kind: reference
     label: Murphy §§9.3–9.4 — Gaussian and Multinomial Naive Bayes
     source_id: source-murphy-pml1
-    locator: §§9.3–9.4 — Probabilistic-modeling derivations and implementation detail beyond the course/Kelleher
-      layer; use for a specific Gaussian or Multinomial gap.
+    locator: §9.3 Naive Bayes classifiers and §9.4 generative vs discriminative classifiers (Part II Linear Models,
+      pdf pp. 351-452)
     scope_triage: reference-only
+    angle: States the conditions under which Naive Bayes beats a discriminative model despite its false assumption.
+    angle_detail: '§9.4 is the reason to come here: it explains that a wrong but low-variance model can beat a
+      correct high-variance one when data is scarce, which is why a classifier built on an assumption everyone
+      knows is false remains useful. That is the honest answer to the objection L14 invites and does not address.
+      Reference-level writing — precise, compressed, and assuming a probability background beyond SaD''s.'
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: Naive Bayes selections — Independent concise classifier treatment when Kelleher and CS229
-      wording do not resolve a derivation gap.
+    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier set)
     scope_triage: reference-only
+    angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
+      for L14.
+    angle_detail: 'University lecture notes written to be revised from rather than learned from: model, assumption,
+      estimates, prediction rule, all on a couple of pages with the algebra intact. Use it the day before the
+      exam to check that you can still reconstruct the derivation, not to meet the topic.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-gaussian/notes.md
   attachments: []
   source_feedback: []
@@ -300,8 +445,8 @@ stages:
   number: 5
   title: Multinomial Naive Bayes and log space
   status: pending
-  objective: Count features such as words use multinomial event probabilities; log probabilities turn
-    products into sums and prevent numerical underflow.
+  objective: Count features such as words use multinomial event probabilities; log probabilities turn products
+    into sums and prevent numerical underflow.
   done_when:
   - 'Reproduce without notes: Count features such as words use multinomial event probabilities; log probabilities
     turn products into sums and prevent numerical underflow.'
@@ -313,41 +458,69 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: §4.2 selections — Formal categorical/multinomial event-model treatment and log-likelihood
-      perspective beyond Kelleher; no Bayesian-network coverage.
+    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
+      (multinomial vs Bernoulli)
     scope_triage: reference-only
+    angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
+    angle_detail: These are two genuinely different models — one counts occurrences, one records presence — and
+      they give different answers on the same documents. L14 introduces multinomial Naive Bayes without naming
+      the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two pages and settles it.
+      Also gives the maximum-likelihood derivation of the smoothed estimates rather than presenting smoothing
+      as a hack.
   - kind: reference
     label: Stanford CS229 — generative-classifier lecture
     source_id: source-cs229-2022-videos
-    locator: Topic-matched generative learning/Naive Bayes lecture — Advanced lecture treatment of Naive
-      Bayes/event models for derivational depth beyond the current course examples.
+    locator: The 2022 lecture on generative learning algorithms (GDA and Naive Bayes)
     scope_triage: reference-only
+    angle: Sets up the generative-versus-discriminative distinction, which is the category Naive Bayes belongs
+      to and which L14 never names.
+    angle_detail: Modelling P(x|y) and P(y) and inverting with Bayes, versus modelling P(y|x) directly, is the
+      single most clarifying distinction in classification — it explains why Naive Bayes needs smoothing and logistic
+      regression does not, and why Naive Bayes can be trained on less data. L14 works entirely inside the generative
+      branch without saying so. One lecture, high return.
   - kind: reference
     label: Murphy §§9.3–9.4 — Gaussian and Multinomial Naive Bayes
     source_id: source-murphy-pml1
-    locator: §§9.3–9.4 — Probabilistic-modeling derivations and implementation detail beyond the course/Kelleher
-      layer; use for a specific Gaussian or Multinomial gap.
+    locator: §9.3 Naive Bayes classifiers and §9.4 generative vs discriminative classifiers (Part II Linear Models,
+      pdf pp. 351-452)
     scope_triage: reference-only
+    angle: States the conditions under which Naive Bayes beats a discriminative model despite its false assumption.
+    angle_detail: '§9.4 is the reason to come here: it explains that a wrong but low-variance model can beat a
+      correct high-variance one when data is scarce, which is why a classifier built on an assumption everyone
+      knows is false remains useful. That is the honest answer to the objection L14 invites and does not address.
+      Reference-level writing — precise, compressed, and assuming a probability background beyond SaD''s.'
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: Naive Bayes selections — Independent concise classifier treatment when Kelleher and CS229
-      wording do not resolve a derivation gap.
+    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier set)
     scope_triage: reference-only
+    angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
+      for L14.
+    angle_detail: 'University lecture notes written to be revised from rather than learned from: model, assumption,
+      estimates, prediction rule, all on a couple of pages with the algebra intact. Use it the day before the
+      exam to check that you can still reconstruct the derivation, not to meet the topic.'
   - kind: read
     label: Zacharski Ch 7 - the bag-of-words model behind Multinomial Bayes
     source_id: source-zacharski-data-mining
-    locator: Chapter 7, pp. 297-333 — L14 slides 20-23 introduce the multinomial model through documents
-      as bags of words; this chapter is that model implemented on text, including the log-space handling
-      the deck mentions only in passing.
+    locator: Chapter 7, pp. 297-333
     scope_triage: helpful-now
+    angle: L14 slides 20-23 introduce the multinomial model through documents as bags of words; this chapter is
+      that model implemented on text, including the log-space handling the deck mentions only in passing.
+    angle_detail: The bag-of-words representation built explicitly — tokenising documents, counting, and forming
+      the feature vector — which is the model multinomial Naive Bayes operates on. L14 assumes this representation;
+      without it, the multinomial likelihood is hard to interpret. Includes a worked sentiment-classification
+      example end to end.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-multinomial/notes.md
   attachments: []
   source_feedback: []
@@ -358,8 +531,8 @@ stages:
   objective: A directed acyclic graph encodes local conditional dependencies, factorizing a joint distribution
     without assuming that all features are independent given the class.
   done_when:
-  - 'Reproduce without notes: A directed acyclic graph encodes local conditional dependencies, factorizing
-    a joint distribution without assuming that all features are independent given the class.'
+  - 'Reproduce without notes: A directed acyclic graph encodes local conditional dependencies, factorizing a joint
+    distribution without assuming that all features are independent given the class.'
   exam_critical: true
   concepts:
   - concept-bayesian-network
@@ -368,18 +541,28 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: read
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
-      blanket p. 349) — L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation
-      and the Markov blanket, and no other registered source covered them; this chapter derives the factorisation
-      from the graph and defines the blanket as the locally sufficient set.
+    locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov blanket
+      p. 349)
     scope_triage: helpful-now
+    angle: L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation and the Markov
+      blanket, and no other registered source covered them; this chapter derives the factorisation from the graph
+      and defines the blanket as the locally sufficient set.
+    angle_detail: The only route on this stage that treats L14's last third — Bayesian networks — at real length.
+      Conditional independence (p. 342) is developed as a graph property, networks (p. 343) as factorisations
+      of a joint distribution, and the Markov blanket (p. 349) as the set that renders a node independent of everything
+      else. The deck introduces all three in a handful of slides. Read this if the network material is examined
+      conceptually, which the exercises suggest.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
   attachments: []
   source_feedback: []
@@ -387,11 +570,11 @@ stages:
   number: 7
   title: Conditional independence and Markov blankets
   status: pending
-  objective: Graph structure determines which variables become independent when others are observed; a
-    node's Markov blanket contains the local information needed for its conditional distribution.
+  objective: Graph structure determines which variables become independent when others are observed; a node's
+    Markov blanket contains the local information needed for its conditional distribution.
   done_when:
-  - 'Reproduce without notes: Graph structure determines which variables become independent when others
-    are observed; a node''s Markov blanket contains the local information needed for its conditional distribution.'
+  - 'Reproduce without notes: Graph structure determines which variables become independent when others are observed;
+    a node''s Markov blanket contains the local information needed for its conditional distribution.'
   exam_critical: true
   concepts:
   - concept-bayesian-network
@@ -401,18 +584,28 @@ stages:
   - kind: read
     label: Current L14 probability-based learning deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/14_probability_based.pdf (29 pages) — Extends L04's categorical classifier
-      through smoothing, numerical and count likelihoods, stable log computation, and Bayesian-network
-      dependence structure.
+    locator: lecture-slides/14_probability_based.pdf, 29 slides
     scope_triage: required-now
+    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial variants,
+      then opens Bayesian networks.
+    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions are examinable
+      computations; the network material is more likely to be examined conceptually. Marsland Ch 16 is the only
+      route here that treats the network half at comparable length.
   - kind: read
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
-      blanket p. 349) — L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation
-      and the Markov blanket, and no other registered source covered them; this chapter derives the factorisation
-      from the graph and defines the blanket as the locally sufficient set.
+    locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov blanket
+      p. 349)
     scope_triage: helpful-now
+    angle: L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation and the Markov
+      blanket, and no other registered source covered them; this chapter derives the factorisation from the graph
+      and defines the blanket as the locally sufficient set.
+    angle_detail: The only route on this stage that treats L14's last third — Bayesian networks — at real length.
+      Conditional independence (p. 342) is developed as a graph property, networks (p. 343) as factorisations
+      of a joint distribution, and the Markov blanket (p. 349) as the set that renders a node independent of everything
+      else. The deck introduces all three in a handful of slides. Read this if the network material is examined
+      conceptually, which the exercises suggest.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
   attachments: []
   source_feedback: []

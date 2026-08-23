@@ -15,13 +15,13 @@ stages:
   number: 1
   title: Gradient and descent direction
   status: pending
-  objective: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours,
-    and local search.
+  objective: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours, and local
+    search.
   done_when:
-  - 'Reproduce without notes: Partial derivatives as a vector, steepest increase, negative-gradient updates,
-    contours, and local search.'
-  - Work Übung 06 — gradient-descent bridge, then the remaining 1, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Partial derivatives as a vector, steepest increase, negative-gradient updates, contours,
+    and local search.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 1, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-convexity
@@ -31,72 +31,76 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: practise
     label: Übung 06 — gradient-descent bridge
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf — A numerical one-dimensional descent trace plus logistic-regression
-      gradient code; use its optimizer portions for L06 and its model/loss portions for L05.
+    locator: exercise-slides/Übung 06 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
+    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
+      portions for L06 and its model/loss portions for L05.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: reference
     label: CSC411 gradient-descent reference
     source_id: source-csc411-notes
-    locator: Optimization selections — A compact algorithm/notation reference for regression gradients
-      and iterative optimization.
+    locator: Optimization selections
     scope_triage: helpful-now
+    angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
   - kind: read
     label: MML continuous optimization
     source_id: source-mml
-    locator: Chapter 7 — The rigorous mathematics of descent directions, step size, momentum, conditioning,
-      and convexity.
+    locator: Chapter 7
     scope_triage: helpful-now
+    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
   - kind: reference
     label: CS229 gradient-descent derivation
     source_id: source-cs229-notes
-    locator: §1.1 and optimization selections — The best-aligned short written source for batch GD and
-      SGD from scratch, with optimization/model-selection extensions.
+    locator: §1.1 and optimization selections
     scope_triage: helpful-now
+    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
+      extensions.
   - kind: read
     label: MIT 6.036 optimization exercises
     source_id: source-mit-6036
-    locator: Optimization units — Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation.
+    locator: Optimization units
     scope_triage: helpful-now
+    angle: Structured gradient-update and learning-rate practice rather than another long theoretical explanation.
   - kind: read
     label: CS231n Optimization notes
     source_id: source-cs231n-notes
-    locator: 'Optimization: Stochastic Gradient Descent — The classic walking-downhill intuition plus
-      SGD update mechanics and practical optimization diagnostics.'
+    locator: 'Optimization: Stochastic Gradient Descent'
     scope_triage: helpful-now
+    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization diagnostics.
   - kind: watch
     label: StatQuest gradient descent and SGD
     source_id: source-statquest
-    locator: Gradient Descent; Stochastic Gradient Descent — Short visual explanations of the descent
-      update, learning-rate behaviour, and stochastic sampling.
+    locator: Gradient Descent; Stochastic Gradient Descent
     scope_triage: helpful-now
+    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
   - kind: watch
     label: Essence of Linear Algebra — gradient geometry support
     source_id: source-3b1b-linear-algebra
-    locator: Vectors, linear maps, and dot-product chapters — Targeted vector/linear-map intuition for
-      contours and multidimensional update directions; use only if the gradient picture is unclear.
+    locator: Vectors, linear maps, and dot-product chapters
     scope_triage: helpful-now
+    angle: Targeted vector/linear-map intuition for contours and multidimensional update directions; use only
+      if the gradient picture is unclear.
   - kind: practise
     label: Cornell CS4780 HW6 — gradient descent
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions — Local solution-backed update, convergence,
-      and optimization questions spanning regression and Ridge.
+    locator: 2017/2018 HW6 gradient-descent problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed update, convergence, and optimization questions spanning regression and Ridge.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-gradient/notes.md
   attachments: []
   source_feedback: []
@@ -104,13 +108,12 @@ stages:
   number: 2
   title: Batch gradient descent
   status: pending
-  objective: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic
-    examples.
+  objective: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic examples.
   done_when:
-  - 'Reproduce without notes: Initialization, simultaneous vectorized updates, convergence, loss curves,
-    and linear/logistic examples.'
-  - Work Übung 06 — gradient-descent bridge, then the remaining 2, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Initialization, simultaneous vectorized updates, convergence, loss curves, and linear/logistic
+    examples.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 2, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-gradient-descent
@@ -119,98 +122,104 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: practise
     label: Übung 06 — gradient-descent bridge
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf — A numerical one-dimensional descent trace plus logistic-regression
-      gradient code; use its optimizer portions for L06 and its model/loss portions for L05.
+    locator: exercise-slides/Übung 06 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
+    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
+      portions for L06 and its model/loss portions for L05.
   - kind: practise
     label: Bonusblatt 03 — gradient descent
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf — Conceptual comparison of batch and stochastic descent,
-      preprocessing/scaling, and learning-rate effects.
+    locator: bonus-exercises/zusatz-blatt03.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
+    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects.
   - kind: reference
     label: Older L06 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf — Prior-year
-      alternate derivations and optimizer examples; current slides decide scope.
+    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
   - kind: read
     label: ISLP neural-network optimization selection
     source_id: source-islp
-    locator: §10.7 — ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as
-      a compact training/SGD review after the lecture, not as the primary L06 explanation.
+    locator: §10.7
     scope_triage: helpful-now
+    angle: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as a compact training/SGD
+      review after the lecture, not as the primary L06 explanation.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: reference
     label: CSC411 gradient-descent reference
     source_id: source-csc411-notes
-    locator: Optimization selections — A compact algorithm/notation reference for regression gradients
-      and iterative optimization.
+    locator: Optimization selections
     scope_triage: helpful-now
+    angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
   - kind: reference
     label: CS229 gradient-descent derivation
     source_id: source-cs229-notes
-    locator: §1.1 and optimization selections — The best-aligned short written source for batch GD and
-      SGD from scratch, with optimization/model-selection extensions.
+    locator: §1.1 and optimization selections
     scope_triage: helpful-now
+    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
+      extensions.
   - kind: reference
     label: CS229 optimization segments
     source_id: source-cs229-2022-videos
-    locator: Gradient-descent and optimization segments — Selected explanations of gradient methods and
-      convergence at a deeper pace than AML.
+    locator: Gradient-descent and optimization segments
     scope_triage: reference-only
+    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
   - kind: read
     label: MIT 6.036 optimization exercises
     source_id: source-mit-6036
-    locator: Optimization units — Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation.
+    locator: Optimization units
     scope_triage: helpful-now
+    angle: Structured gradient-update and learning-rate practice rather than another long theoretical explanation.
   - kind: read
     label: CS231n Optimization notes
     source_id: source-cs231n-notes
-    locator: 'Optimization: Stochastic Gradient Descent — The classic walking-downhill intuition plus
-      SGD update mechanics and practical optimization diagnostics.'
+    locator: 'Optimization: Stochastic Gradient Descent'
     scope_triage: helpful-now
+    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization diagnostics.
   - kind: watch
     label: StatQuest gradient descent and SGD
     source_id: source-statquest
-    locator: Gradient Descent; Stochastic Gradient Descent — Short visual explanations of the descent
-      update, learning-rate behaviour, and stochastic sampling.
+    locator: Gradient Descent; Stochastic Gradient Descent
     scope_triage: helpful-now
+    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
   - kind: read
     label: Géron batch, stochastic, and mini-batch GD code
     source_id: source-geron-handson
-    locator: Chapter 4 gradient-descent sections — Concrete NumPy/scikit-learn optimizer implementations
-      and exercises showing how update variants differ in practice.
+    locator: Chapter 4 gradient-descent sections
     scope_triage: helpful-now
+    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants differ
+      in practice.
   - kind: read
     label: Ng gradient descent in practice
     source_id: source-ng-coursera
-    locator: Gradient Descent in Practice I–II — Feature scaling, learning-rate diagnosis, batch updates,
-      and practical convergence checks closely mirror the AML slides.
+    locator: Gradient Descent in Practice I–II
     scope_triage: helpful-now
+    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely mirror
+      the AML slides.
   - kind: practise
     label: Cornell CS4780 HW6 — gradient descent
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions — Local solution-backed update, convergence,
-      and optimization questions spanning regression and Ridge.
+    locator: 2017/2018 HW6 gradient-descent problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed update, convergence, and optimization questions spanning regression and Ridge.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-batch-gd/notes.md
   attachments: []
   source_feedback: []
@@ -220,10 +229,10 @@ stages:
   status: pending
   objective: Divergence versus slow progress, conditioning, normalized feature ranges, and practical diagnostics.
   done_when:
-  - 'Reproduce without notes: Divergence versus slow progress, conditioning, normalized feature ranges,
-    and practical diagnostics.'
-  - Work Übung 06 — gradient-descent bridge, then the remaining 1, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Divergence versus slow progress, conditioning, normalized feature ranges, and practical
+    diagnostics.'
+  - Work Übung 06 — gradient-descent bridge, then the remaining 1, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-feature-scaling
@@ -232,67 +241,72 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: practise
     label: Übung 06 — gradient-descent bridge
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf — A numerical one-dimensional descent trace plus logistic-regression
-      gradient code; use its optimizer portions for L06 and its model/loss portions for L05.
+    locator: exercise-slides/Übung 06 .pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
+    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
+      portions for L06 and its model/loss portions for L05.
   - kind: practise
     label: Bonusblatt 03 — gradient descent
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf — Conceptual comparison of batch and stochastic descent,
-      preprocessing/scaling, and learning-rate effects.
+    locator: bonus-exercises/zusatz-blatt03.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
+    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: read
     label: MML continuous optimization
     source_id: source-mml
-    locator: Chapter 7 — The rigorous mathematics of descent directions, step size, momentum, conditioning,
-      and convexity.
+    locator: Chapter 7
     scope_triage: helpful-now
+    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
   - kind: read
     label: CS231n Optimization notes
     source_id: source-cs231n-notes
-    locator: 'Optimization: Stochastic Gradient Descent — The classic walking-downhill intuition plus
-      SGD update mechanics and practical optimization diagnostics.'
+    locator: 'Optimization: Stochastic Gradient Descent'
     scope_triage: helpful-now
+    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization diagnostics.
   - kind: watch
     label: StatQuest gradient descent and SGD
     source_id: source-statquest
-    locator: Gradient Descent; Stochastic Gradient Descent — Short visual explanations of the descent
-      update, learning-rate behaviour, and stochastic sampling.
+    locator: Gradient Descent; Stochastic Gradient Descent
     scope_triage: helpful-now
+    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
   - kind: watch
     label: Essence of Linear Algebra — gradient geometry support
     source_id: source-3b1b-linear-algebra
-    locator: Vectors, linear maps, and dot-product chapters — Targeted vector/linear-map intuition for
-      contours and multidimensional update directions; use only if the gradient picture is unclear.
+    locator: Vectors, linear maps, and dot-product chapters
     scope_triage: helpful-now
+    angle: Targeted vector/linear-map intuition for contours and multidimensional update directions; use only
+      if the gradient picture is unclear.
   - kind: read
     label: Géron batch, stochastic, and mini-batch GD code
     source_id: source-geron-handson
-    locator: Chapter 4 gradient-descent sections — Concrete NumPy/scikit-learn optimizer implementations
-      and exercises showing how update variants differ in practice.
+    locator: Chapter 4 gradient-descent sections
     scope_triage: helpful-now
+    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants differ
+      in practice.
   - kind: read
     label: Ng gradient descent in practice
     source_id: source-ng-coursera
-    locator: Gradient Descent in Practice I–II — Feature scaling, learning-rate diagnosis, batch updates,
-      and practical convergence checks closely mirror the AML slides.
+    locator: Gradient Descent in Practice I–II
     scope_triage: helpful-now
+    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely mirror
+      the AML slides.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-rate-scaling/notes.md
   attachments: []
   source_feedback: []
@@ -304,8 +318,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Per-example/noisy updates, batching, epochs, efficiency, and the convergence-speed
     tradeoff.'
-  - Work Bonusblatt 03 — gradient descent, then the remaining 1, and record every miss with the step it
-    failed at.
+  - Work Bonusblatt 03 — gradient descent, then the remaining 1, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-gradient-descent
@@ -314,105 +328,111 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: practise
     label: Bonusblatt 03 — gradient descent
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf — Conceptual comparison of batch and stochastic descent,
-      preprocessing/scaling, and learning-rate effects.
+    locator: bonus-exercises/zusatz-blatt03.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
+    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects.
   - kind: reference
     label: Older L06 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf — Prior-year
-      alternate derivations and optimizer examples; current slides decide scope.
+    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
   - kind: read
     label: ISLP neural-network optimization selection
     source_id: source-islp
-    locator: §10.7 — ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as
-      a compact training/SGD review after the lecture, not as the primary L06 explanation.
+    locator: §10.7
     scope_triage: helpful-now
+    angle: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as a compact training/SGD
+      review after the lecture, not as the primary L06 explanation.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: read
     label: Murphy §8.4.6 — the adaptive optimizers derived in one place
     source_id: source-murphy-pml1
-    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300,
-      Adam p. 300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
-      — AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
-      bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
+    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300, Adam p.
+      300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
     scope_triage: helpful-now
+    angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's bias-correction
+      line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
   - kind: reference
     label: CSC411 gradient-descent reference
     source_id: source-csc411-notes
-    locator: Optimization selections — A compact algorithm/notation reference for regression gradients
-      and iterative optimization.
+    locator: Optimization selections
     scope_triage: helpful-now
+    angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
   - kind: reference
     label: CS229 gradient-descent derivation
     source_id: source-cs229-notes
-    locator: §1.1 and optimization selections — The best-aligned short written source for batch GD and
-      SGD from scratch, with optimization/model-selection extensions.
+    locator: §1.1 and optimization selections
     scope_triage: helpful-now
+    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
+      extensions.
   - kind: reference
     label: CS229 optimization segments
     source_id: source-cs229-2022-videos
-    locator: Gradient-descent and optimization segments — Selected explanations of gradient methods and
-      convergence at a deeper pace than AML.
+    locator: Gradient-descent and optimization segments
     scope_triage: reference-only
+    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
   - kind: read
     label: MIT 6.036 optimization exercises
     source_id: source-mit-6036
-    locator: Optimization units — Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation.
+    locator: Optimization units
     scope_triage: helpful-now
+    angle: Structured gradient-update and learning-rate practice rather than another long theoretical explanation.
   - kind: reference
     label: EECS 498 Lecture 4 — Optimization
     source_id: source-eecs498
-    locator: Lecture 4 — Optimization — A strong visual/deeper lecture from SGD through momentum, AdaGrad,
-      Adam, and second-order methods; almost one-to-one with the L06 optimizer outlook.
+    locator: Lecture 4 — Optimization
     scope_triage: reference-only
+    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
+      almost one-to-one with the L06 optimizer outlook.
   - kind: read
     label: CS231n Optimization notes
     source_id: source-cs231n-notes
-    locator: 'Optimization: Stochastic Gradient Descent — The classic walking-downhill intuition plus
-      SGD update mechanics and practical optimization diagnostics.'
+    locator: 'Optimization: Stochastic Gradient Descent'
     scope_triage: helpful-now
+    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization diagnostics.
   - kind: watch
     label: StatQuest gradient descent and SGD
     source_id: source-statquest
-    locator: Gradient Descent; Stochastic Gradient Descent — Short visual explanations of the descent
-      update, learning-rate behaviour, and stochastic sampling.
+    locator: Gradient Descent; Stochastic Gradient Descent
     scope_triage: helpful-now
+    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
   - kind: read
     label: Géron batch, stochastic, and mini-batch GD code
     source_id: source-geron-handson
-    locator: Chapter 4 gradient-descent sections — Concrete NumPy/scikit-learn optimizer implementations
-      and exercises showing how update variants differ in practice.
+    locator: Chapter 4 gradient-descent sections
     scope_triage: helpful-now
+    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants differ
+      in practice.
   - kind: read
     label: Ng gradient descent in practice
     source_id: source-ng-coursera
-    locator: Gradient Descent in Practice I–II — Feature scaling, learning-rate diagnosis, batch updates,
-      and practical convergence checks closely mirror the AML slides.
+    locator: Gradient Descent in Practice I–II
     scope_triage: helpful-now
+    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely mirror
+      the AML slides.
   - kind: practise
     label: Cornell CS4780 HW6 — gradient descent
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions — Local solution-backed update, convergence,
-      and optimization questions spanning regression and Ridge.
+    locator: 2017/2018 HW6 gradient-descent problems and solutions
     scope_triage: helpful-now
+    angle: Local solution-backed update, convergence, and optimization questions spanning regression and Ridge.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-stochastic/notes.md
   attachments: []
   source_feedback: []
@@ -420,11 +440,11 @@ stages:
   number: 5
   title: Convexity, optima, and Hessians
   status: pending
-  objective: Local versus global optima, positive-semidefinite Hessians, and why the regression objectives
-    are well behaved.
+  objective: Local versus global optima, positive-semidefinite Hessians, and why the regression objectives are
+    well behaved.
   done_when:
-  - 'Reproduce without notes: Local versus global optima, positive-semidefinite Hessians, and why the
-    regression objectives are well behaved.'
+  - 'Reproduce without notes: Local versus global optima, positive-semidefinite Hessians, and why the regression
+    objectives are well behaved.'
   exam_critical: true
   concepts:
   - concept-convexity
@@ -433,50 +453,53 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: read
     label: Murphy §8.1.3 — convex versus nonconvex, and the Hessian test
     source_id: source-murphy-pml1
-    locator: §8.1.3 Convex vs nonconvex optimization pp. 277–281 (Hessian and positive-definite test on
-      pp. 277 and 280) — States the convexity condition the lecture asserts, and gives the positive-(semi)definite
-      Hessian test that decides whether the regression objectives are well behaved.
+    locator: §8.1.3 Convex vs nonconvex optimization pp. 277–281 (Hessian and positive-definite test on pp. 277
+      and 280)
     scope_triage: helpful-now
+    angle: States the convexity condition the lecture asserts, and gives the positive-(semi)definite Hessian test
+      that decides whether the regression objectives are well behaved.
   - kind: read
     label: Murphy solution manual §10.1 — gradient and Hessian worked out
     source_id: source-murphy-pml1
-    locator: 'solutions-public.pdf §10.1 ''Gradient and Hessian of log-likelihood for multinomial logistic
-      regression'' (solves exercise 10.1 of the main text) — A solution-backed derivation of both the
-      gradient and the Hessian of the multinomial logistic log-likelihood: the one place on the shelf
-      where the convexity claim and the Newton update are computed rather than asserted.'
+    locator: solutions-public.pdf §10.1 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+      (solves exercise 10.1 of the main text)
     scope_triage: helpful-now
+    angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic log-likelihood:
+      the one place on the shelf where the convexity claim and the Newton update are computed rather than asserted.'
   - kind: read
     label: MML continuous optimization
     source_id: source-mml
-    locator: Chapter 7 — The rigorous mathematics of descent directions, step size, momentum, conditioning,
-      and convexity.
+    locator: Chapter 7
     scope_triage: helpful-now
+    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
   - kind: reference
     label: CS229 gradient-descent derivation
     source_id: source-cs229-notes
-    locator: §1.1 and optimization selections — The best-aligned short written source for batch GD and
-      SGD from scratch, with optimization/model-selection extensions.
+    locator: §1.1 and optimization selections
     scope_triage: helpful-now
+    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
+      extensions.
   - kind: reference
     label: CS229 optimization segments
     source_id: source-cs229-2022-videos
-    locator: Gradient-descent and optimization segments — Selected explanations of gradient methods and
-      convergence at a deeper pace than AML.
+    locator: Gradient-descent and optimization segments
     scope_triage: reference-only
+    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-convexity/notes.md
   attachments: []
   source_feedback: []
@@ -484,11 +507,11 @@ stages:
   number: 6
   title: Momentum, RMSProp, and Adam
   status: pending
-  objective: Moving averages of gradients and squared gradients, adaptive steps, bias correction, and
-    combined updates.
+  objective: Moving averages of gradients and squared gradients, adaptive steps, bias correction, and combined
+    updates.
   done_when:
-  - 'Reproduce without notes: Moving averages of gradients and squared gradients, adaptive steps, bias
-    correction, and combined updates.'
+  - 'Reproduce without notes: Moving averages of gradients and squared gradients, adaptive steps, bias correction,
+    and combined updates.'
   exam_critical: true
   concepts:
   - concept-adam-optimizer
@@ -497,52 +520,54 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: reference
     label: Older L06 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf — Prior-year
-      alternate derivations and optimizer examples; current slides decide scope.
+    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: read
     label: Murphy §8.4.6 — the adaptive optimizers derived in one place
     source_id: source-murphy-pml1
-    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300,
-      Adam p. 300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
-      — AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
-      bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
+    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300, Adam p.
+      300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
     scope_triage: helpful-now
+    angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's bias-correction
+      line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
   - kind: read
     label: MML continuous optimization
     source_id: source-mml
-    locator: Chapter 7 — The rigorous mathematics of descent directions, step size, momentum, conditioning,
-      and convexity.
+    locator: Chapter 7
     scope_triage: helpful-now
+    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
   - kind: reference
     label: EECS 498 Lecture 4 — Optimization
     source_id: source-eecs498
-    locator: Lecture 4 — Optimization — A strong visual/deeper lecture from SGD through momentum, AdaGrad,
-      Adam, and second-order methods; almost one-to-one with the L06 optimizer outlook.
+    locator: Lecture 4 — Optimization
     scope_triage: reference-only
+    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
+      almost one-to-one with the L06 optimizer outlook.
   - kind: read
     label: Géron 3rd ed. Ch 11 — the same optimizers, as code you can run
     source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum p. 486, Nesterov
-      p. 487, AdaGrad p. 489, RMSProp p. 490, Adam p. 491) — Each optimizer the deck names appears as
-      a two-line Keras call next to its update rule, so the comparison becomes an experiment rather than
-      a table.
+    locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum p. 486, Nesterov p.
+      487, AdaGrad p. 489, RMSProp p. 490, Adam p. 491)
     scope_triage: helpful-now
+    angle: Each optimizer the deck names appears as a two-line Keras call next to its update rule, so the comparison
+      becomes an experiment rather than a table.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-optimizers/notes.md
   attachments: []
   source_feedback: []
@@ -562,39 +587,41 @@ stages:
   - kind: read
     label: Current L06 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf — The 2026 scope authority from local search and
-      gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and
-      Newton/Hessian methods.
+    locator: lecture-slides/VL 06-gradient_descent.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
+      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
   - kind: read
     label: Murphy optimization chapter
     source_id: source-murphy-pml1
-    locator: Chapter 8, especially §8.4 — The most complete local book match for local/global optima,
-      convexity, learning rates, SGD, momentum/adaptive methods, and second-order ideas.
+    locator: Chapter 8, especially §8.4
     scope_triage: helpful-now
+    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
+      methods, and second-order ideas.
   - kind: read
     label: Murphy §8.3 — Newton and the quasi-Newton family
     source_id: source-murphy-pml1
-    locator: '§8.3 Second-order methods pp. 289–291 (Newton''s method p. 289, BFGS and quasi-Newton p.
-      290, trust region p. 291) — Derives the curvature-aware update the deck compares against first-order
-      methods, and prices the Hessian: BFGS and trust regions are what you use when you cannot afford
-      it.'
+    locator: §8.3 Second-order methods pp. 289–291 (Newton's method p. 289, BFGS and quasi-Newton p. 290, trust
+      region p. 291)
     scope_triage: helpful-now
+    angle: 'Derives the curvature-aware update the deck compares against first-order methods, and prices the Hessian:
+      BFGS and trust regions are what you use when you cannot afford it.'
   - kind: read
     label: Murphy solution manual §10.1 — gradient and Hessian worked out
     source_id: source-murphy-pml1
-    locator: 'solutions-public.pdf §10.1 ''Gradient and Hessian of log-likelihood for multinomial logistic
-      regression'' (solves exercise 10.1 of the main text) — A solution-backed derivation of both the
-      gradient and the Hessian of the multinomial logistic log-likelihood: the one place on the shelf
-      where the convexity claim and the Newton update are computed rather than asserted.'
+    locator: solutions-public.pdf §10.1 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+      (solves exercise 10.1 of the main text)
     scope_triage: helpful-now
+    angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic log-likelihood:
+      the one place on the shelf where the convexity claim and the Newton update are computed rather than asserted.'
   - kind: reference
     label: EECS 498 Lecture 4 — Optimization
     source_id: source-eecs498
-    locator: Lecture 4 — Optimization — A strong visual/deeper lecture from SGD through momentum, AdaGrad,
-      Adam, and second-order methods; almost one-to-one with the L06 optimizer outlook.
+    locator: Lecture 4 — Optimization
     scope_triage: reference-only
+    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
+      almost one-to-one with the L06 optimizer outlook.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-newton/notes.md
   attachments: []
   source_feedback: []

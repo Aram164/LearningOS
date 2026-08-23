@@ -75,8 +75,13 @@ def test_assembly_preserves_order_material_angles_and_absent_estimates():
         "source-demo-book",
         "source-demo-practice",
     ]
-    assert "Defines the notation" in stages[0]["resources"][0]["locator"]
-    assert "Tests transfer" in stages[1]["resources"][1]["locator"]
+    # The angle is a field of its own, not prose appended to the locator: an
+    # interface has to be able to render it, and the validator has to be able
+    # to tell a row that carries one from a row that does not.
+    assert "Defines the notation" in stages[0]["resources"][0]["angle"]
+    assert "Tests transfer" in stages[1]["resources"][1]["angle"]
+    assert "Defines the notation" not in stages[0]["resources"][0]["locator"]
+    assert stages[0]["resources"][0]["locator"] == "slides/VL 01.pdf"
     assert all("estimate_minutes" not in stage for stage in stages)
     assert all(stage["concepts"] == ["concept-expected-value"] for stage in stages)
     assert assembler.assembly_problems(unit, routes, record) == []

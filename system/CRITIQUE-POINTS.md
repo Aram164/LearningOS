@@ -95,3 +95,46 @@ assembler-built lecture maps (SaD and AML), so "not at all" holds for the
 hand-authored 23 units rather than for all of them. It is invisible everywhere
 regardless, because it lives inside the locator string rather than in a field
 of its own — so the complaint lands either way.
+
+### Work done under this point — 2026-08-24, on Aram's instruction
+
+Aram authorised acting on complaints 2 and 3 in the session of 2026-08-24
+("organize the learning map such that every possible source in the shelf is
+listed where it counts, the exact chapter numbers are listed, the angle it
+covers is described well"). **Complaint 1 — whether plan manipulation is
+standardized and well designed — was not addressed and stays open.** The point
+therefore remains `open`; closing it is Aram's.
+
+What changed:
+
+- **Angle is a field.** `angle` and `angle_detail` are properties of a resource
+  row (`learning-plan.schema.json`, `study-map.schema.json`) and of a source-map
+  route (`module-source-map.schema.json`). The assembler no longer concatenates
+  the angle onto `locator`; `tools/lift_angle_out_of_locator.py` un-fused the
+  3,885 rows already on disk. Data contract bumped v11 → v12, new format fixture
+  frozen at `tests/fixtures/formats/v12/`.
+- **The defect cannot return.** `LOCATOR-ANGLE-FUSED` is an error, so a locator
+  carrying a sentence-shaped angle fails validation. `LOCATOR-VAGUE`,
+  `ROUTE-ANGLE-MISSING` and `ROUTE-ANGLE-DETAIL-MISSING` are warnings, counted
+  rather than blocking (`VALIDATION.md`, "Plan rigour").
+- **What "exact" means is now written down.** `PLAN-CREATION-SOP.md` defines an
+  acceptable locator per format, fixes PDF pages as the page convention, and
+  forbids hedges. `tools/material_toc.py` reads a local material's own contents
+  and verifies a claimed page against the file, so a locator is checkable rather
+  than merely asserted.
+- **SaD is done end to end.** All 234 existing SaD lecture routes rewritten with
+  an exact locator, a one-line angle and a long `angle_detail`; every book page
+  range verified against the PDF where a copy is registered. 44 routes added
+  from an audit of all 243 registered sources against the 15 SaD units — sources
+  that cover SaD material and were routed nowhere. SaD lecture routes with no
+  `angle_detail`: 0.
+- **It is visible.** `generated/study-plans.md` enumerates every stage with its
+  full option set, each row showing kind, exact locator and angle, with
+  `angle_detail` on hover.
+
+What is still open beyond complaint 1: 49 SaD locators remain `LOCATOR-VAGUE`,
+almost all of them books with no registered copy (Grinstead & Snell, MML, D2L,
+Prince, Goodfellow, Bishop, Nielsen, Jurafsky) where a page range cannot be
+verified against a file. Repository-wide the counts are 546 warnings, of which
+311 are `ROUTE-ANGLE-DETAIL-MISSING` outside SaD — AML, AMLS, Algo 2, Python and
+the exam-prep units have not had this pass.

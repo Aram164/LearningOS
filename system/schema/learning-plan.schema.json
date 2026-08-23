@@ -28,7 +28,18 @@
           "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
         "locator": {
+          "description": "Where to start, exactly. For a book, paper or course this means the numbered chapter or section AND a page range in PDF pages (the number a viewer's page box takes, cover counted as 1) — see system/PLAN-CREATION-SOP.md. \"Chapter 9\" of a 700-page book is a direction, not a locator.",
           "type": "string"
+        },
+        "angle": {
+          "description": "What this material does for THIS stage that the others on it do not — one line, rendered beside the label. It is a field rather than a suffix on `locator` so an interface can show it, sort by it, and check that it is there.",
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "angle_detail": {
+          "description": "The same judgment at length, for the hover: what the reader actually gets, what it assumes, and how it differs from the lecture's own treatment. Never a restatement of `angle`.",
+          "type": "string",
+          "pattern": "\\S"
         },
         "url": {
           "type": "string",

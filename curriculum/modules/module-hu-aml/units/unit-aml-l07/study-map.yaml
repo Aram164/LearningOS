@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Scores, thresholds, hyperplane boundaries, class overlap, and linearly separable
     versus nonseparable data.'
-  - Work Bonusblatt 03 — model choice and decision boundary, then the remaining 2, and record every miss
-    with the step it failed at.
+  - Work Bonusblatt 03 — model choice and decision boundary, then the remaining 2, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-decision-boundary
@@ -30,49 +30,54 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Bonusblatt 03 — model choice and decision boundary
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf — Compare k-NN, logistic regression, and perceptron boundaries,
-      then reason about learning-rate and feature-scaling effects inherited from L06.
+    locator: bonus-exercises/zusatz-blatt03.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
+    angle: Compare k-NN, logistic regression, and perceptron boundaries, then reason about learning-rate and feature-scaling
+      effects inherited from L06.
   - kind: practise
     label: Bonusblatt 04 — perceptron and separability
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 1–2 trace the perceptron and test linear separability;
-      Aufgaben 3–4 belong to the L08 neural-network bridge.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 1–2 trace the perceptron and test linear separability; Aufgaben 3–4 belong to the L08 neural-network
+      bridge.
   - kind: read
     label: ESL perceptron convergence
     source_id: source-esl
-    locator: §4.5.1 — One of the few local book treatments of the Rosenblatt algorithm and its convergence
-      result; kernel chapters are SVM-heavy and therefore not the lecture spine.
+    locator: §4.5.1
     scope_triage: helpful-now
+    angle: One of the few local book treatments of the Rosenblatt algorithm and its convergence result; kernel
+      chapters are SVM-heavy and therefore not the lecture spine.
   - kind: reference
     label: CSC411 linear-classifier reference
     source_id: source-csc411-notes
-    locator: Linear-classifier selections — Independent notes for classifier scores, decision boundaries,
-      perceptron-style updates, and feature mappings.
+    locator: Linear-classifier selections
     scope_triage: helpful-now
+    angle: Independent notes for classifier scores, decision boundaries, perceptron-style updates, and feature
+      mappings.
   - kind: read
     label: MIT 6.036 perceptron and feature-transform units
     source_id: source-mit-6036
-    locator: Perceptron and feature-transform units — Auto-graded perceptron, separability, and feature-mapping
-      work closely aligned with written-exam mechanics.
+    locator: Perceptron and feature-transform units
     scope_triage: helpful-now
+    angle: Auto-graded perceptron, separability, and feature-mapping work closely aligned with written-exam mechanics.
   - kind: practise
     label: MIT 6.034 perceptron tracing questions
     source_id: source-mit-6034-quizzes
-    locator: Perceptron quiz selections — Short solution-backed written traces for mistake-driven linear
-      classifiers; use only the relevant quiz parts.
+    locator: Perceptron quiz selections
     scope_triage: helpful-now
+    angle: Short solution-backed written traces for mistake-driven linear classifiers; use only the relevant quiz
+      parts.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-linear-geometry/notes.md
   attachments: []
   source_feedback: []
@@ -80,13 +85,12 @@ stages:
   number: 2
   title: Perceptron learning
   status: pending
-  objective: Sign activation, mistake-driven updates, primal form, convergence assumptions, and classifier
-    behaviour.
+  objective: Sign activation, mistake-driven updates, primal form, convergence assumptions, and classifier behaviour.
   done_when:
-  - 'Reproduce without notes: Sign activation, mistake-driven updates, primal form, convergence assumptions,
-    and classifier behaviour.'
-  - Work Übung 07 — perceptron and kernel matrix, then the remaining 4, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Sign activation, mistake-driven updates, primal form, convergence assumptions, and
+    classifier behaviour.'
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 4, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-perceptron
@@ -95,75 +99,82 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Übung 07 — perceptron and kernel matrix
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 07.pdf — A worked perceptron update, primal-to-dual rewrite, Gram/kernel
-      matrix, common kernels, and exercise discussion.
+    locator: exercise-slides/Übung 07.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
     scope_triage: required-now
+    angle: A worked perceptron update, primal-to-dual rewrite, Gram/kernel matrix, common kernels, and exercise
+      discussion.
   - kind: practise
     label: Bonusblatt 03 — model choice and decision boundary
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf — Compare k-NN, logistic regression, and perceptron boundaries,
-      then reason about learning-rate and feature-scaling effects inherited from L06.
+    locator: bonus-exercises/zusatz-blatt03.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
+    angle: Compare k-NN, logistic regression, and perceptron boundaries, then reason about learning-rate and feature-scaling
+      effects inherited from L06.
   - kind: practise
     label: Bonusblatt 04 — perceptron and separability
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 1–2 trace the perceptron and test linear separability;
-      Aufgaben 3–4 belong to the L08 neural-network bridge.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 1–2 trace the perceptron and test linear separability; Aufgaben 3–4 belong to the L08 neural-network
+      bridge.
   - kind: reference
     label: Older L07 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf — Prior-year
-      alternate examples for perceptron and kernels; do not import SVM content from external sources.
+    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples for perceptron and kernels; do not import SVM content from external sources.
   - kind: read
     label: ESL perceptron convergence
     source_id: source-esl
-    locator: §4.5.1 — One of the few local book treatments of the Rosenblatt algorithm and its convergence
-      result; kernel chapters are SVM-heavy and therefore not the lecture spine.
+    locator: §4.5.1
     scope_triage: helpful-now
+    angle: One of the few local book treatments of the Rosenblatt algorithm and its convergence result; kernel
+      chapters are SVM-heavy and therefore not the lecture spine.
   - kind: read
     label: Murphy kernels and perceptron link
     source_id: source-murphy-pml1
-    locator: §§10.2.5, 17.1–17.1.2 — A reference for Mercer/popular kernels and the view of perceptron
-      as hard-threshold logistic regression; avoid unrelated SVM depth.
+    locator: §§10.2.5, 17.1–17.1.2
     scope_triage: helpful-now
+    angle: A reference for Mercer/popular kernels and the view of perceptron as hard-threshold logistic regression;
+      avoid unrelated SVM depth.
   - kind: reference
     label: CSC411 linear-classifier reference
     source_id: source-csc411-notes
-    locator: Linear-classifier selections — Independent notes for classifier scores, decision boundaries,
-      perceptron-style updates, and feature mappings.
+    locator: Linear-classifier selections
     scope_triage: helpful-now
+    angle: Independent notes for classifier scores, decision boundaries, perceptron-style updates, and feature
+      mappings.
   - kind: read
     label: MIT 6.036 perceptron and feature-transform units
     source_id: source-mit-6036
-    locator: Perceptron and feature-transform units — Auto-graded perceptron, separability, and feature-mapping
-      work closely aligned with written-exam mechanics.
+    locator: Perceptron and feature-transform units
     scope_triage: helpful-now
+    angle: Auto-graded perceptron, separability, and feature-mapping work closely aligned with written-exam mechanics.
   - kind: practise
     label: Cornell CS4780 HW2/HW7 — perceptron and kernels
     source_id: source-cs4780-homeworks
-    locator: HW2 perceptron and HW7 kernel selections with solutions — Local solved perceptron updates
-      and kernel-computation questions; exclude SVM-only problems.
+    locator: HW2 perceptron and HW7 kernel selections with solutions
     scope_triage: helpful-now
+    angle: Local solved perceptron updates and kernel-computation questions; exclude SVM-only problems.
   - kind: practise
     label: MIT 6.034 perceptron tracing questions
     source_id: source-mit-6034-quizzes
-    locator: Perceptron quiz selections — Short solution-backed written traces for mistake-driven linear
-      classifiers; use only the relevant quiz parts.
+    locator: Perceptron quiz selections
     scope_triage: helpful-now
+    angle: Short solution-backed written traces for mistake-driven linear classifiers; use only the relevant quiz
+      parts.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-perceptron/notes.md
   attachments: []
   source_feedback: []
@@ -171,13 +182,12 @@ stages:
   number: 3
   title: Dual perceptron
   status: pending
-  objective: Expressing weights as training-point combinations, Gram matrices, and predictions through
-    dot products.
+  objective: Expressing weights as training-point combinations, Gram matrices, and predictions through dot products.
   done_when:
   - 'Reproduce without notes: Expressing weights as training-point combinations, Gram matrices, and predictions
     through dot products.'
-  - Work Übung 07 — perceptron and kernel matrix, then the remaining 2, and record every miss with the
-    step it failed at.
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 2, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-perceptron
@@ -186,44 +196,47 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Übung 07 — perceptron and kernel matrix
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 07.pdf — A worked perceptron update, primal-to-dual rewrite, Gram/kernel
-      matrix, common kernels, and exercise discussion.
+    locator: exercise-slides/Übung 07.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
     scope_triage: required-now
+    angle: A worked perceptron update, primal-to-dual rewrite, Gram/kernel matrix, common kernels, and exercise
+      discussion.
   - kind: practise
     label: Übung 08 — dual and kernel perceptron
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf — The current lecturer-worked route through the dual perceptron,
-      Gram-matrix computations and the transition from kernelized linear classifiers toward multilayer
-      networks.
+    locator: exercise-slides/Übung 08.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
     scope_triage: required-now
+    angle: The current lecturer-worked route through the dual perceptron, Gram-matrix computations and the transition
+      from kernelized linear classifiers toward multilayer networks.
   - kind: reference
     label: CS229 kernels without an SVM dependency
     source_id: source-cs229-notes
-    locator: Chapter 5, §§5.1–5.4 — The only selected written route that develops feature maps, kernelized
-      LMS/perceptron thinking, and valid kernels without making SVM the topic.
+    locator: Chapter 5, §§5.1–5.4
     scope_triage: helpful-now
+    angle: The only selected written route that develops feature maps, kernelized LMS/perceptron thinking, and
+      valid kernels without making SVM the topic.
   - kind: watch
     label: Essence of Linear Algebra — feature-space geometry
     source_id: source-3b1b-linear-algebra
-    locator: Dot products and change-of-basis chapters — A visual repair source for dot products, transformations,
-      and basis changes underlying dual prediction and feature maps.
+    locator: Dot products and change-of-basis chapters
     scope_triage: helpful-now
+    angle: A visual repair source for dot products, transformations, and basis changes underlying dual prediction
+      and feature maps.
   - kind: practise
     label: Cornell CS4780 HW2/HW7 — perceptron and kernels
     source_id: source-cs4780-homeworks
-    locator: HW2 perceptron and HW7 kernel selections with solutions — Local solved perceptron updates
-      and kernel-computation questions; exclude SVM-only problems.
+    locator: HW2 perceptron and HW7 kernel selections with solutions
     scope_triage: helpful-now
+    angle: Local solved perceptron updates and kernel-computation questions; exclude SVM-only problems.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-dual/notes.md
   attachments: []
   source_feedback: []
@@ -231,11 +244,10 @@ stages:
   number: 4
   title: Boolean gates and the XOR wall
   status: pending
-  objective: AND/OR realizations, the XOR contradiction, and the representational limit of one linear
-    boundary.
+  objective: AND/OR realizations, the XOR contradiction, and the representational limit of one linear boundary.
   done_when:
-  - 'Reproduce without notes: AND/OR realizations, the XOR contradiction, and the representational limit
-    of one linear boundary.'
+  - 'Reproduce without notes: AND/OR realizations, the XOR contradiction, and the representational limit of one
+    linear boundary.'
   - Work Bonusblatt 04 — perceptron and separability, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -246,30 +258,32 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Bonusblatt 04 — perceptron and separability
     source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt04.pdf — Aufgaben 1–2 trace the perceptron and test linear separability;
-      Aufgaben 3–4 belong to the L08 neural-network bridge.
+    locator: bonus-exercises/zusatz-blatt04.pdf
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt04.pdf
     scope_triage: required-now
+    angle: Aufgaben 1–2 trace the perceptron and test linear separability; Aufgaben 3–4 belong to the L08 neural-network
+      bridge.
   - kind: read
     label: MIT 6.036 perceptron and feature-transform units
     source_id: source-mit-6036
-    locator: Perceptron and feature-transform units — Auto-graded perceptron, separability, and feature-mapping
-      work closely aligned with written-exam mechanics.
+    locator: Perceptron and feature-transform units
     scope_triage: helpful-now
+    angle: Auto-graded perceptron, separability, and feature-mapping work closely aligned with written-exam mechanics.
   - kind: watch
     label: StatQuest Kernel Trick
     source_id: source-statquest
-    locator: The Kernel Trick — A visual explanation of implicit feature mappings and nonlinear separation;
-      use the deck/CS229 for the exact dual computation.
+    locator: The Kernel Trick
     scope_triage: helpful-now
+    angle: A visual explanation of implicit feature mappings and nonlinear separation; use the deck/CS229 for
+      the exact dual computation.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-xor/notes.md
   attachments: []
   source_feedback: []
@@ -280,10 +294,10 @@ stages:
   objective: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and efficient dot-product
     substitution.
   done_when:
-  - 'Reproduce without notes: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and
-    efficient dot-product substitution.'
-  - Work Übung 07 — perceptron and kernel matrix, then the remaining 2, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Implicit high-dimensional mappings, valid kernels, polynomial kernels, and efficient
+    dot-product substitution.'
+  - Work Übung 07 — perceptron and kernel matrix, then the remaining 2, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-kernel-trick
@@ -292,94 +306,102 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Übung 07 — perceptron and kernel matrix
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 07.pdf — A worked perceptron update, primal-to-dual rewrite, Gram/kernel
-      matrix, common kernels, and exercise discussion.
+    locator: exercise-slides/Übung 07.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 07.pdf
     scope_triage: required-now
+    angle: A worked perceptron update, primal-to-dual rewrite, Gram/kernel matrix, common kernels, and exercise
+      discussion.
   - kind: reference
     label: Older L07 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf — Prior-year
-      alternate examples for perceptron and kernels; do not import SVM content from external sources.
+    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples for perceptron and kernels; do not import SVM content from external sources.
   - kind: practise
     label: Übung 08 — dual and kernel perceptron
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf — The current lecturer-worked route through the dual perceptron,
-      Gram-matrix computations and the transition from kernelized linear classifiers toward multilayer
-      networks.
+    locator: exercise-slides/Übung 08.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
     scope_triage: required-now
+    angle: The current lecturer-worked route through the dual perceptron, Gram-matrix computations and the transition
+      from kernelized linear classifiers toward multilayer networks.
   - kind: reference
     label: ISLP one-versus-all and kernel enrichment
     source_id: source-islp
-    locator: §9.4.2; optional §9.3.2 only — §9.4.2 is an exact one-page match for one-vs-rest. The kernel
-      material is taught through SVMs, so §9.3.2 is enrichment only and must not redefine the lecture
-      as an SVM unit.
+    locator: §9.4.2; optional §9.3.2 only
     scope_triage: reference-only
+    angle: §9.4.2 is an exact one-page match for one-vs-rest. The kernel material is taught through SVMs, so §9.3.2
+      is enrichment only and must not redefine the lecture as an SVM unit.
   - kind: read
     label: Murphy kernels and perceptron link
     source_id: source-murphy-pml1
-    locator: §§10.2.5, 17.1–17.1.2 — A reference for Mercer/popular kernels and the view of perceptron
-      as hard-threshold logistic regression; avoid unrelated SVM depth.
+    locator: §§10.2.5, 17.1–17.1.2
     scope_triage: helpful-now
+    angle: A reference for Mercer/popular kernels and the view of perceptron as hard-threshold logistic regression;
+      avoid unrelated SVM depth.
   - kind: reference
     label: CSC411 linear-classifier reference
     source_id: source-csc411-notes
-    locator: Linear-classifier selections — Independent notes for classifier scores, decision boundaries,
-      perceptron-style updates, and feature mappings.
+    locator: Linear-classifier selections
     scope_triage: helpful-now
+    angle: Independent notes for classifier scores, decision boundaries, perceptron-style updates, and feature
+      mappings.
   - kind: reference
     label: CS229 kernels without an SVM dependency
     source_id: source-cs229-notes
-    locator: Chapter 5, §§5.1–5.4 — The only selected written route that develops feature maps, kernelized
-      LMS/perceptron thinking, and valid kernels without making SVM the topic.
+    locator: Chapter 5, §§5.1–5.4
     scope_triage: helpful-now
+    angle: The only selected written route that develops feature maps, kernelized LMS/perceptron thinking, and
+      valid kernels without making SVM the topic.
   - kind: reference
     label: CS229 kernel lecture selections
     source_id: source-cs229-2022-videos
-    locator: Lecture 7 — kernel portions only — Watch only the feature-map/kernel construction; skip the
-      SVM half because maximum margin is absent from AML L07.
+    locator: Lecture 7 — kernel portions only
     scope_triage: reference-only
+    angle: Watch only the feature-map/kernel construction; skip the SVM half because maximum margin is absent
+      from AML L07.
   - kind: read
     label: MIT 6.036 perceptron and feature-transform units
     source_id: source-mit-6036
-    locator: Perceptron and feature-transform units — Auto-graded perceptron, separability, and feature-mapping
-      work closely aligned with written-exam mechanics.
+    locator: Perceptron and feature-transform units
     scope_triage: helpful-now
+    angle: Auto-graded perceptron, separability, and feature-mapping work closely aligned with written-exam mechanics.
   - kind: watch
     label: StatQuest Kernel Trick
     source_id: source-statquest
-    locator: The Kernel Trick — A visual explanation of implicit feature mappings and nonlinear separation;
-      use the deck/CS229 for the exact dual computation.
+    locator: The Kernel Trick
     scope_triage: helpful-now
+    angle: A visual explanation of implicit feature mappings and nonlinear separation; use the deck/CS229 for
+      the exact dual computation.
   - kind: watch
     label: Essence of Linear Algebra — feature-space geometry
     source_id: source-3b1b-linear-algebra
-    locator: Dot products and change-of-basis chapters — A visual repair source for dot products, transformations,
-      and basis changes underlying dual prediction and feature maps.
+    locator: Dot products and change-of-basis chapters
     scope_triage: helpful-now
+    angle: A visual repair source for dot products, transformations, and basis changes underlying dual prediction
+      and feature maps.
   - kind: read
     label: Ng Kernels I–II
     source_id: source-ng-coursera
-    locator: Kernels I and II — The landmark/similarity presentation is the closest match to the RBF portion
-      of the AML deck; ignore SVM objectives and margins.
+    locator: Kernels I and II
     scope_triage: helpful-now
+    angle: The landmark/similarity presentation is the closest match to the RBF portion of the AML deck; ignore
+      SVM objectives and margins.
   - kind: practise
     label: Cornell CS4780 HW2/HW7 — perceptron and kernels
     source_id: source-cs4780-homeworks
-    locator: HW2 perceptron and HW7 kernel selections with solutions — Local solved perceptron updates
-      and kernel-computation questions; exclude SVM-only problems.
+    locator: HW2 perceptron and HW7 kernel selections with solutions
     scope_triage: helpful-now
+    angle: Local solved perceptron updates and kernel-computation questions; exclude SVM-only problems.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-kernels/notes.md
   attachments: []
   source_feedback: []
@@ -392,8 +414,7 @@ stages:
   done_when:
   - 'Reproduce without notes: Gaussian similarity, bandwidth effects, landmark features, nonlinear boundaries,
     and bias-variance behaviour.'
-  - Work Cornell CS4780 HW2/HW7 — perceptron and kernels, and record every miss with the step it failed
-    at.
+  - Work Cornell CS4780 HW2/HW7 — perceptron and kernels, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-bias-variance-tradeoff
@@ -403,54 +424,59 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: reference
     label: Older L07 lecture variant
     source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf — Prior-year
-      alternate examples for perceptron and kernels; do not import SVM content from external sources.
+    locator: older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/07-linear-classifiers_638a9fa1f0244ce07bc12f7596ba47f9.pdf
     scope_triage: reference-only
+    angle: Prior-year alternate examples for perceptron and kernels; do not import SVM content from external sources.
   - kind: read
     label: Murphy kernels and perceptron link
     source_id: source-murphy-pml1
-    locator: §§10.2.5, 17.1–17.1.2 — A reference for Mercer/popular kernels and the view of perceptron
-      as hard-threshold logistic regression; avoid unrelated SVM depth.
+    locator: §§10.2.5, 17.1–17.1.2
     scope_triage: helpful-now
+    angle: A reference for Mercer/popular kernels and the view of perceptron as hard-threshold logistic regression;
+      avoid unrelated SVM depth.
   - kind: reference
     label: CS229 kernels without an SVM dependency
     source_id: source-cs229-notes
-    locator: Chapter 5, §§5.1–5.4 — The only selected written route that develops feature maps, kernelized
-      LMS/perceptron thinking, and valid kernels without making SVM the topic.
+    locator: Chapter 5, §§5.1–5.4
     scope_triage: helpful-now
+    angle: The only selected written route that develops feature maps, kernelized LMS/perceptron thinking, and
+      valid kernels without making SVM the topic.
   - kind: reference
     label: CS229 kernel lecture selections
     source_id: source-cs229-2022-videos
-    locator: Lecture 7 — kernel portions only — Watch only the feature-map/kernel construction; skip the
-      SVM half because maximum margin is absent from AML L07.
+    locator: Lecture 7 — kernel portions only
     scope_triage: reference-only
+    angle: Watch only the feature-map/kernel construction; skip the SVM half because maximum margin is absent
+      from AML L07.
   - kind: watch
     label: StatQuest Kernel Trick
     source_id: source-statquest
-    locator: The Kernel Trick — A visual explanation of implicit feature mappings and nonlinear separation;
-      use the deck/CS229 for the exact dual computation.
+    locator: The Kernel Trick
     scope_triage: helpful-now
+    angle: A visual explanation of implicit feature mappings and nonlinear separation; use the deck/CS229 for
+      the exact dual computation.
   - kind: read
     label: Ng Kernels I–II
     source_id: source-ng-coursera
-    locator: Kernels I and II — The landmark/similarity presentation is the closest match to the RBF portion
-      of the AML deck; ignore SVM objectives and margins.
+    locator: Kernels I and II
     scope_triage: helpful-now
+    angle: The landmark/similarity presentation is the closest match to the RBF portion of the AML deck; ignore
+      SVM objectives and margins.
   - kind: practise
     label: Cornell CS4780 HW2/HW7 — perceptron and kernels
     source_id: source-cs4780-homeworks
-    locator: HW2 perceptron and HW7 kernel selections with solutions — Local solved perceptron updates
-      and kernel-computation questions; exclude SVM-only problems.
+    locator: HW2 perceptron and HW7 kernel selections with solutions
     scope_triage: helpful-now
+    angle: Local solved perceptron updates and kernel-computation questions; exclude SVM-only problems.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-rbf/notes.md
   attachments: []
   source_feedback: []
@@ -470,26 +496,26 @@ stages:
   - kind: read
     label: Current L07 lecture deck
     source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 07-linear-classifiers.pdf — The 2026 scope authority for perceptron primal/dual
-      forms, separability and XOR, explicit feature maps, kernel computation, RBF landmarks, and multiclass
-      prediction. It contains no SVM material.
+    locator: lecture-slides/VL 07-linear-classifiers.pdf
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 07-linear-classifiers.pdf
     scope_triage: required-now
+    angle: The 2026 scope authority for perceptron primal/dual forms, separability and XOR, explicit feature maps,
+      kernel computation, RBF landmarks, and multiclass prediction. It contains no SVM material.
   - kind: practise
     label: Übung 08 — dual and kernel perceptron
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 08.pdf — The current lecturer-worked route through the dual perceptron,
-      Gram-matrix computations and the transition from kernelized linear classifiers toward multilayer
-      networks.
+    locator: exercise-slides/Übung 08.pdf
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 08.pdf
     scope_triage: required-now
+    angle: The current lecturer-worked route through the dual perceptron, Gram-matrix computations and the transition
+      from kernelized linear classifiers toward multilayer networks.
   - kind: reference
     label: ISLP one-versus-all and kernel enrichment
     source_id: source-islp
-    locator: §9.4.2; optional §9.3.2 only — §9.4.2 is an exact one-page match for one-vs-rest. The kernel
-      material is taught through SVMs, so §9.3.2 is enrichment only and must not redefine the lecture
-      as an SVM unit.
+    locator: §9.4.2; optional §9.3.2 only
     scope_triage: reference-only
+    angle: §9.4.2 is an exact one-page match for one-vs-rest. The kernel material is taught through SVMs, so §9.3.2
+      is enrichment only and must not redefine the lecture as an SVM unit.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l07/stages/stage-aml-l07-multiclass/notes.md
   attachments: []
   source_feedback: []
