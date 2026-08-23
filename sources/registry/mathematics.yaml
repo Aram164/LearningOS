@@ -9,6 +9,21 @@
 # Partitioning does not change semantics: this is the same registry as
 # sources/sources.yaml, and source ids are unchanged, so no reference moved.
 sources:
+  - id: source-3b1b-bayes-theorem
+    thematic_group_ids: [thematic-group-mathematics]
+    title: 3Blue1Brown — videos on Bayes' theorem (playlist)
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
+    evaluations:
+      - concepts: [concept-bayes-theorem, concept-conditional-probability,
+                   concept-classification-metrics]
+        roles: [intuition, first-learning]
+        level: introductory
+        strengths:
+          - "The medical-test picture BEFORE the formula: 'Bayes theorem, the geometry of changing beliefs' builds the counting/area rectangle that makes P(disease|positive) a ratio of areas, and 'The medical test paradox, and redesigning Bayes' rule' is the base-rate example itself — why 99% sensitivity does not mean a 99% posterior when prevalence is 1%"
+          - "'The quick proof of Bayes' theorem' (3 min) is the formula recovered from the same picture — watch it after, not instead of, the counting version"
+
   - id: source-3b1b-essence-of-calculus
     thematic_group_ids: [thematic-group-mathematics]
     title: 3Blue1Brown — Essence of Calculus
@@ -391,7 +406,7 @@ sources:
     title: Kurzes Tutorium Statistik (Bärtl, YouTube)
     type: video
     authors: [Marco Bärtl]
-    url: https://www.youtube.com/@KurzesTutoriumStatistik
+    url: https://www.youtube.com/@pdmb
     evaluations:
       - concepts: [concept-descriptive-statistics, concept-probability,
                    concept-statistical-estimation, concept-hypothesis-testing]
