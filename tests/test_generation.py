@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 
 import pytest
+from stress_check import _generation_stress
 
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
@@ -31,6 +32,13 @@ def test_generation_deterministic_except_timestamps(mini_repo):
     assert set(a) == set(b)
     for name in a:
         assert strip_timestamps(a[name], name) == strip_timestamps(b[name], name), name
+
+
+def test_generation_stress_tracks_the_declared_manifest_contract(mini_repo):
+    """The atomic-read stress check must move with every manifest bump."""
+    _digest, reads = _generation_stress(
+        mini_repo, generations=2, readers=2, reads_per_reader=3)
+    assert reads == 6
 
 
 def test_generated_reset_rebuilds_everything(mini_repo):

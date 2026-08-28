@@ -13,6 +13,7 @@ Core's own run, which is the only place the mistake is still cheap.
 
 from __future__ import annotations
 
+import hashlib
 import json
 
 import pytest
@@ -20,6 +21,7 @@ import yaml
 
 from learning_os.contracts.manifest_contract import (
     ManifestContractError,
+    bump,
     check,
     contract_path,
     declared_version,
@@ -87,6 +89,56 @@ def test_announced_version_must_match_declared_version(mini_repo):
     assert "declares" in message
 
 
+def test_schema_path_must_stay_inside_the_repository(mini_repo):
+    """A contract cannot redirect producer validation to arbitrary bytes."""
+    manifest = _manifest(mini_repo)
+    contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
+    contract["schema_path"] = "../manifest-v8.schema.json"
+    contract_path(mini_repo).write_text(
+        yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
+
+    ok, message = check(manifest, mini_repo)
+
+    assert not ok
+    assert "schema_path must be repository-relative" in message
+
+
+def test_v8_schema_rejects_an_edge_without_evidence(mini_repo):
+    manifest = _manifest(mini_repo)
+    manifest["module_concept_edges"] = [{
+        "module_id": "module-demo",
+        "concept_id": "concept-expected-value",
+        "evidence": [],
+    }]
+
+    ok, message = check(manifest, mini_repo)
+
+    assert not ok
+    assert "module_concept_edges" in message
+    assert "non-empty" in message
+
+
+def test_v8_schema_rejects_an_undeclared_edge_field(mini_repo):
+    manifest = _manifest(mini_repo)
+    manifest["module_concept_edges"] = [{
+        "module_id": "module-demo",
+        "concept_id": "concept-expected-value",
+        "evidence": [{
+            "kind": "stage-concept",
+            "unit_id": "unit-demo-probability",
+            "study_map_id": "study-map-demo-probability",
+            "stage_id": "stage-demo-start",
+        }],
+        "confidence": 1,
+    }]
+
+    ok, message = check(manifest, mini_repo)
+
+    assert not ok
+    assert "module_concept_edges" in message
+    assert "confidence" in message
+
+
 def test_retired_key_cannot_return(mini_repo):
     """`exam_spine` was a second shape for `academic_deadlines` (ADR-006)."""
     manifest = _manifest(mini_repo)
@@ -113,6 +165,38 @@ def test_bump_escape_hatch_lets_the_shape_be_inspected(mini_repo):
     contract_path(mini_repo).write_text(yaml.safe_dump(contract), encoding="utf-8")
     shape = shape_of(_manifest(mini_repo, enforce_contract=False))
     assert "topics" in shape["top_level_keys"]
+
+
+def test_bump_selects_and_hashes_the_new_versions_schema(mini_repo):
+    """Regression: a bump must never retain the previous schema pointer."""
+    path = contract_path(mini_repo)
+    contract = yaml.safe_load(path.read_text(encoding="utf-8"))
+    v7_schema = mini_repo / "system/contracts/manifest-v7.schema.json"
+    contract.update({
+        "contract_version": 7,
+        "schema_path": "system/contracts/manifest-v7.schema.json",
+        "schema_sha256": f"sha256:{hashlib.sha256(v7_schema.read_bytes()).hexdigest()}",
+    })
+    path.write_text(yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
+    manifest = _manifest(mini_repo, enforce_contract=False)
+
+    updated = bump(manifest, mini_repo, "test v8 bump")
+    v8_schema = mini_repo / "system/contracts/manifest-v8.schema.json"
+
+    assert updated["contract_version"] == 8
+    assert updated["schema_path"] == "system/contracts/manifest-v8.schema.json"
+    assert updated["schema_sha256"] == (
+        f"sha256:{hashlib.sha256(v8_schema.read_bytes()).hexdigest()}"
+    )
+
+
+def test_bump_refuses_to_activate_a_version_without_its_schema(mini_repo):
+    manifest = _manifest(mini_repo, enforce_contract=False)
+
+    with pytest.raises(ManifestContractError) as excinfo:
+        bump(manifest, mini_repo, "missing v9 schema")
+
+    assert "manifest-v9.schema.json does not exist" in str(excinfo.value)
 
 
 def test_missing_contract_is_a_clear_failure_not_a_silent_pass(mini_repo):

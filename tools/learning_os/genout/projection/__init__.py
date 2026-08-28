@@ -8,6 +8,7 @@ so a change to how a source is rendered never means reading the whole payload.
 
 from __future__ import annotations
 
+from .atlas import build_module_concept_edges, cross_module_concepts
 from .grouping import (
     ordered_thematic_group_ids,
     project_thematic_groups,
@@ -38,7 +39,8 @@ from .stages import project_stages
 from .tallies import build_counts, build_progress
 
 __all__ = [
-    "build_counts", "build_indexes", "build_progress", "module_lifecycle",
+    "build_counts", "build_indexes", "build_module_concept_edges",
+    "build_progress", "cross_module_concepts", "module_lifecycle",
     "ordered_thematic_group_ids", "project_collections", "project_concepts",
     "project_coordination", "project_learning_paths", "project_module_source_maps",
     "project_modules", "project_notes", "project_programs",

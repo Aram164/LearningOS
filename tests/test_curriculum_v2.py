@@ -12,6 +12,7 @@ import pytest
 import yaml
 from gateway_helpers import approved_v2_cli, file_sha256, request_artifact_id
 
+from learning_os.contracts.manifest_contract import declared_version
 from learning_os.fingerprint import source_fingerprint
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo, parse_frontmatter
@@ -335,7 +336,11 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     repo = load_repo(mini_repo)
     assert not [issue for issue in validate(repo) if issue.severity == "E"]
     manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
-    assert manifest["_generated"]["contract_version"] == 7
+    # Read from the producer-owned declaration, never hardcoded: a literal
+    # here has to be edited on every bump, which makes it a chore rather than
+    # a check. What is worth asserting is that the manifest announces the
+    # version the contract declares — the mismatch consumers fail closed on.
+    assert manifest["_generated"]["contract_version"] == declared_version(mini_repo)
     assert manifest["programs"][0]["id"] == "program-bachelors"
     assert manifest["modules"][0]["id"] == "module-demo"
     assert manifest["units"][0]["source_selections"][0]["locator"] == "§1 Erwartungswert"
