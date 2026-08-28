@@ -238,13 +238,27 @@ def bump(manifest: dict, root: Path, note: str) -> dict:
                      if line.startswith("#"))
     current = load_contract(root) if path.is_file() else {"contract_version": 1}
     version = int(current.get("contract_version", 1)) + 1
+    schema_relative = f"system/contracts/manifest-v{version}.schema.json"
+    if not (root / schema_relative).is_file():
+        raise ManifestContractError(
+            f"cannot bump to v{version}: {schema_relative} does not exist. "
+            "Write the new version's JSON Schema first — the contract declares "
+            "a schema path and its hash, and a bump that inherits the previous "
+            "version's schema validates the new shape against the old one."
+        )
     shape = shape_of(manifest)
     updated = {
         "contract_version": version,
         **shape,
-        "schema_path": str(current.get("schema_path") or
-                           f"system/contracts/manifest-v{version}.schema.json"),
-        "schema_sha256": str(current.get("schema_sha256") or ""),
+        # The new version's schema, hashed now. Until 2026-08-28 both lines
+        # read `current.get(...) or <new>`, and `current` always has them — so
+        # the `or` never fired and every bump silently kept the PREVIOUS
+        # version's schema path and hash. A v8 contract would have declared
+        # manifest-v7.schema.json, the producer would have validated v8 output
+        # against the v7 shape, and the mismatch would have surfaced as a
+        # confusing UI lock failure rather than here.
+        "schema_path": schema_relative,
+        "schema_sha256": _schema_sha256(root / schema_relative),
         "forbidden_top_level_keys": list(current.get("forbidden_top_level_keys") or []),
         "history": list(current.get("history") or []) + [{
             "version": version,

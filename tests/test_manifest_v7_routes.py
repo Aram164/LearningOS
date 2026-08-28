@@ -144,7 +144,12 @@ def test_v7_rejects_unknown_or_malformed_nested_public_records(
 def test_v7_exact_schema_hash_drift_fails_closed(mini_repo):
     add_curriculum(mini_repo)
     manifest = build_manifest(load_repo(mini_repo), "T1")
-    schema = mini_repo / "system/contracts/manifest-v7.schema.json"
+    # The declared schema, not a hardcoded version: this test is about the
+    # hash gate, and pinning it to v7 made it pass vacuously the moment the
+    # contract moved to v8 — it mutated a file nothing was checking.
+    contract = yaml.safe_load(
+        (mini_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8"))
+    schema = mini_repo / contract["schema_path"]
     schema.write_text(schema.read_text(encoding="utf-8") + "\n", encoding="utf-8")
 
     ok, message = check(manifest, mini_repo)

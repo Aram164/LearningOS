@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 7
+contract_version: 8
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -51,6 +51,7 @@ top_level_keys:
 - counts
 - garden_entries
 - indexes
+- module_concept_edges
 - module_source_maps
 - modules
 - programs
@@ -82,7 +83,9 @@ generated_keys:
 - warning
 index_keys:
 - component_to_units
+- concept_to_modules
 - concept_to_units
+- module_to_concepts
 - module_to_units
 - project_aliases
 - project_to_relationships
@@ -95,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v7.schema.json
-schema_sha256: sha256:77819b5608c12a1e9cc7f326b14d858990df01824753b6ecdadf2e6c78b392db
+schema_path: system/contracts/manifest-v8.schema.json
+schema_sha256: sha256:f08b0e5b4f131cff0a95bfc87d95863ae691a698c7bbf1d5e96d4da0fee03b10
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -146,3 +149,11 @@ history:
     concept, and source records under program-job; only presentation distinguishes
     the area.
   mirrored_in_ui: contracts/manifest-v7.lock.json
+- version: 8
+  adopted: '2026-08-28'
+  note: 'Publish module_concept_edges: the Module x Concept crossing as {module_id,
+    concept_id, evidence} rows, evidence limited to explicit stage concept tags and
+    reviewed knowledge-map node concept_ids. Adds module_to_concepts and concept_to_modules
+    indexes, and corrects unit_to_concepts/concept_to_units, which had shipped empty
+    since v2 because they read only the node source.'
+  mirrored_in_ui: contracts/manifest-v8.lock.json

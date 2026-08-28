@@ -10,6 +10,7 @@ from pathlib import Path
 import yaml
 from gateway_helpers import approved_v2_call, file_sha256
 
+from learning_os.contracts.manifest_contract import declared_version
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
 from learning_os.rules import validate
@@ -104,7 +105,7 @@ def test_path_loads_validates_and_projects_stage_notes(mini_repo):
     path_rec = next(r for r in manifest["records"] if r["id"] == "path-demo-probability")
     assert path_rec["stages"][0]["notes_text"] == "My uncertain derivation.\n"
     assert path_rec["stages"][1]["resources"] == []
-    assert manifest["_generated"]["contract_version"] == 7
+    assert manifest["_generated"]["contract_version"] == declared_version(mini_repo)
     assert manifest["_generated"]["snapshot_id"].startswith("sha256:")
     assert "concept_to_notes" in manifest["backlinks"]
 

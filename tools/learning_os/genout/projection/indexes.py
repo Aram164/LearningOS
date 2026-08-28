@@ -15,7 +15,8 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
                   units_v2: list[dict], study_maps_v2: list[dict],
                   source_maps_v2: list[dict], projects_v2: list[dict],
                   project_relationships_v2: list[dict],
-                  unit_material_syntheses_v2: list[dict]) -> dict:
+                  unit_material_syntheses_v2: list[dict],
+                  module_concept_edges: list[dict]) -> dict:
     module_to_units = {
         module["id"]: [uid for uid in module.get("unit_order", []) if uid]
         for module in modules_v2
@@ -44,18 +45,27 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
         ]
         for project in projects_v2
     }
+    # All four concept tables are derived from one place: the published
+    # `module_concept_edges`. Until 2026-08-28 `unit_to_concepts` and
+    # `concept_to_units` were computed here from knowledge-map nodes alone, and
+    # both had shipped as `{}` for their whole life — no node has ever carried
+    # `concept_ids`, while 376 of 416 stages carry concept tags covering 124
+    # concepts. Nothing caught it, because an index built independently from
+    # the tree has nothing to disagree with. Deriving them from the edges means
+    # a cell in the Atlas and a row in these tables cannot diverge again.
+    module_to_concepts: dict[str, list[str]] = {}
+    concept_to_modules: dict[str, list[str]] = {}
+    for edge in module_concept_edges:
+        module_to_concepts.setdefault(edge["module_id"], []).append(edge["concept_id"])
+        concept_to_modules.setdefault(edge["concept_id"], []).append(edge["module_id"])
+        for evidence in edge.get("evidence") or ():
+            unit_id = evidence.get("unit_id")
+            if not unit_id:
+                continue
+            unit_to_concepts.setdefault(unit_id, []).append(edge["concept_id"])
+            concept_to_units.setdefault(edge["concept_id"], []).append(unit_id)
+
     for unit in units_v2:
-        concept_ids = sorted({
-            concept_id
-            for node in (unit.get("knowledge_map") or {}).get("nodes", []) or []
-            if isinstance(node, dict)
-            for concept_id in node.get("concept_ids", []) or []
-            if isinstance(concept_id, str) and concept_id
-        })
-        if concept_ids:
-            unit_to_concepts[unit["id"]] = concept_ids
-            for concept_id in concept_ids:
-                concept_to_units.setdefault(concept_id, []).append(unit["id"])
         if unit.get("component_id"):
             component_to_units.setdefault(unit["component_id"], []).append(unit["id"])
         for scoped in unit.get("scope_sources", []) or []:
@@ -109,10 +119,22 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
             synthesis["unit_id"]: synthesis["id"]
             for synthesis in unit_material_syntheses_v2
         },
-        "unit_to_concepts": dict(sorted(unit_to_concepts.items())),
+        "unit_to_concepts": {
+            unit_id: sorted(set(concept_ids))
+            for unit_id, concept_ids in sorted(unit_to_concepts.items())
+        },
         "concept_to_units": {
             concept_id: sorted(set(unit_ids))
             for concept_id, unit_ids in sorted(concept_to_units.items())
+        },
+        # The Module × Concept crossing, as lookups.
+        "module_to_concepts": {
+            module_id: sorted(set(concept_ids))
+            for module_id, concept_ids in sorted(module_to_concepts.items())
+        },
+        "concept_to_modules": {
+            concept_id: sorted(set(module_ids))
+            for concept_id, module_ids in sorted(concept_to_modules.items())
         },
         "component_to_units": dict(sorted(component_to_units.items())),
         "source_to_modules": dict(sorted(source_to_modules.items())),

@@ -23,6 +23,7 @@ from .modules_view import _academic_deadlines
 from .projection import (
     build_counts,
     build_indexes,
+    build_module_concept_edges,
     build_progress,
     project_collections,
     project_concepts,
@@ -151,12 +152,17 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
          "unit_id": study_map["unit_id"], "module_id": study_map["module_id"]}
         for study_map in study_maps_v2 for stage in study_map.get("stages", [])
     ]
+    module_concept_edges = build_module_concept_edges(
+        modules=modules_v2, units=units_v2, stages=stages_v2,
+        concepts=repo.concepts,
+    )
     indexes = build_indexes(
         repo, records,
         modules_v2=modules_v2, units_v2=units_v2, study_maps_v2=study_maps_v2,
         source_maps_v2=source_maps_v2, projects_v2=projects_v2,
         project_relationships_v2=project_relationships_v2,
         unit_material_syntheses_v2=unit_material_syntheses_v2,
+        module_concept_edges=module_concept_edges,
     )
     progress = build_progress(modules_v2, units_v2, study_maps_v2)
     semesters_v2 = [
@@ -214,6 +220,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         "units": units_v2,
         "study_maps": study_maps_v2,
         "stages": stages_v2,
+        "module_concept_edges": module_concept_edges,
         "module_source_maps": source_maps_v2,
         "unit_material_syntheses": unit_material_syntheses_v2,
         "resume_pointer": dict(repo.resume_pointer or {}),

@@ -1,0 +1,1199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/contracts/manifest-v8.schema.json",
+  "title": "LearningOS atomic manifest v8",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "_generated", "academic_deadlines", "ai_actions", "artifact_revisions",
+    "backlinks", "counts", "garden_entries", "indexes",
+    "module_concept_edges", "module_source_maps", "modules",
+    "programs", "progress",
+    "project_aliases", "project_relationships", "projects",
+    "records", "relations", "resume_pointer",
+    "review_items", "semesters", "stages", "study_maps",
+    "thematic_groups", "topic_packs", "topics", "units",
+    "unit_material_syntheses"
+  ],
+  "properties": {
+    "_generated": {"$ref": "#/$defs/generated"},
+    "academic_deadlines": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/academicDeadline"}
+    },
+    "ai_actions": {"$ref": "#/$defs/aiActions"},
+    "artifact_revisions": {"$ref": "#/$defs/integerMap"},
+    "backlinks": {"$ref": "#/$defs/backlinks"},
+    "counts": {"$ref": "#/$defs/counts"},
+    "garden_entries": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/gardenEntry"}
+    },
+    "indexes": {"$ref": "#/$defs/indexes"},
+    "module_concept_edges": {
+      "description": "The Module x Concept crossing. One row per (module, concept) pair for which at least one EXPLICIT authored tag exists - a stage's `concepts` tag or a knowledge-map node's reviewed `concept_ids`. Never inferred from titles, prose, notes, sources, or similarity; absence means not mapped, never that no relationship exists. Ordered by (module_id, concept_id).",
+      "type": "array",
+      "items": {"$ref": "#/$defs/moduleConceptEdge"}
+    },
+    "module_source_maps": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/moduleSourceMap"}
+    },
+    "modules": {"type": "array", "items": {"$ref": "#/$defs/moduleRecord"}},
+    "programs": {"type": "array", "items": {"$ref": "#/$defs/programRecord"}},
+    "progress": {"$ref": "#/$defs/progress"},
+    "project_aliases": {"$ref": "#/$defs/stringMap"},
+    "project_relationships": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/projectRelationship"}
+    },
+    "projects": {"type": "array", "items": {"$ref": "#/$defs/projectRecord"}},
+    "records": {"type": "array", "items": {"$ref": "#/$defs/projectedRecord"}},
+    "relations": {"type": "array", "items": {"$ref": "#/$defs/relation"}},
+    "resume_pointer": {"$ref": "#/$defs/resumePointer"},
+    "review_items": {"type": "array", "items": {"$ref": "#/$defs/reviewItem"}},
+    "semesters": {"type": "array", "items": {"$ref": "#/$defs/semester"}},
+    "stages": {"type": "array", "items": {"$ref": "#/$defs/flatStage"}},
+    "study_maps": {"type": "array", "items": {"$ref": "#/$defs/studyMap"}},
+    "thematic_groups": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/thematicGroup"}
+    },
+    "topic_packs": {"type": "array", "items": {"$ref": "#/$defs/collectionRecord"}},
+    "topics": {"type": "array", "items": {"$ref": "#/$defs/topic"}},
+    "units": {"type": "array", "items": {"$ref": "#/$defs/projectedUnit"}},
+    "unit_material_syntheses": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unitMaterialSynthesisProjection"}
+    }
+  },
+  "$defs": {
+    "jsonValue": {
+      "oneOf": [
+        {"type": "null"}, {"type": "boolean"}, {"type": "number"},
+        {"type": "string"},
+        {"type": "array", "items": {"$ref": "#/$defs/jsonValue"}},
+        {"$ref": "#/$defs/jsonObject"}
+      ]
+    },
+    "jsonObject": {
+      "type": "object",
+      "propertyNames": {"type": "string"},
+      "additionalProperties": {"$ref": "#/$defs/jsonValue"}
+    },
+    "routeId": {
+      "type": "string",
+      "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "projectedRecord": {
+      "oneOf": [
+        {"$ref": "#/$defs/noteRecord"},
+        {"$ref": "#/$defs/conceptRecord"},
+        {"$ref": "#/$defs/sourceRecord"},
+        {"$ref": "#/$defs/projectRecord"},
+        {"$ref": "#/$defs/projectRelationship"},
+        {"$ref": "#/$defs/compatibilityAlias"},
+        {"$ref": "#/$defs/moduleRecord"},
+        {"$ref": "#/$defs/collectionRecord"},
+        {"$ref": "#/$defs/workspaceRecord"},
+        {"$ref": "#/$defs/learningPathRecord"},
+        {"$ref": "#/$defs/programRecord"},
+        {"$ref": "#/$defs/projectedUnit"},
+        {"$ref": "#/$defs/studyMap"},
+        {"$ref": "#/$defs/moduleSourceMap"},
+        {"$ref": "#/$defs/unitMaterialSynthesisProjection"},
+        {"$ref": "#/$defs/coordinationRecord"}
+      ]
+    },
+    "unitMaterialSynthesisProjection": {
+      "allOf": [
+        {
+          "$ref": "https://learningos.local/schema/unit-material-synthesis.schema.json#/$defs/canonicalRecord"
+        },
+        {
+          "type": "object",
+          "required": ["freshness", "completeness"],
+          "properties": {
+            "freshness": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["status", "reasons"],
+              "properties": {
+                "status": {"enum": ["current", "stale"]},
+                "reasons": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "unit_revision", "source_map_revision",
+                      "source_map_checksum", "route_set_checksum",
+                      "material_checksums", "policy",
+                      "current-basis-unavailable"
+                    ]
+                  }
+                }
+              }
+            },
+            "completeness": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "complete", "current_route_count", "assessed_route_count",
+                "deep_reviewed_count", "screened_count",
+                "unevaluated_count", "unavailable_count",
+                "missing_route_ids", "orphaned_route_ids",
+                "duplicate_route_ids"
+              ],
+              "properties": {
+                "complete": {"type": "boolean"},
+                "current_route_count": {"type": "integer", "minimum": 0},
+                "assessed_route_count": {"type": "integer", "minimum": 0},
+                "deep_reviewed_count": {"type": "integer", "minimum": 0},
+                "screened_count": {"type": "integer", "minimum": 0},
+                "unevaluated_count": {"type": "integer", "minimum": 0},
+                "unavailable_count": {"type": "integer", "minimum": 0},
+                "missing_route_ids": {
+                  "type": "array", "uniqueItems": true,
+                  "items": {"$ref": "#/$defs/routeId"}
+                },
+                "orphaned_route_ids": {
+                  "type": "array", "uniqueItems": true,
+                  "items": {"$ref": "#/$defs/routeId"}
+                },
+                "duplicate_route_ids": {
+                  "type": "array", "uniqueItems": true,
+                  "items": {"$ref": "#/$defs/routeId"}
+                }
+              }
+            }
+          }
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "moduleRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "title", "revision", "path", "kind", "area_id",
+        "thematic_group_ids", "status", "administrative_status",
+        "operational_state", "is_actionable", "institution", "code",
+        "credits", "semester", "components", "examination", "attempts",
+        "grade", "unit_order", "source_map"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "module"},
+        "title": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["academic", "skill", "project", "foundation"]},
+        "area_id": {"type": ["string", "null"], "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "thematic_group_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^thematic-group-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "status": {
+          "enum": [
+            "planned", "enrolled", "active", "paused", "awaiting-grade",
+            "completed", "dropped", "archived"
+          ]
+        },
+        "administrative_status": {
+          "type": ["string", "null"],
+          "enum": ["planned", "enrolled", "awaiting-grade", "completed", "dropped", "archived", null]
+        },
+        "operational_state": {"enum": ["none", "complete", "active", "paused"]},
+        "is_actionable": {"type": "boolean"},
+        "institution": {"type": ["string", "null"]},
+        "code": {"type": ["string", "null"]},
+        "credits": {"type": ["number", "null"], "minimum": 0},
+        "semester": {
+          "type": ["string", "null"],
+          "pattern": "^(sose|wise)-[0-9]{4}$"
+        },
+        "components": {"$ref": "https://learningos.local/schema/module.schema.json#/properties/components"},
+        "examination": {
+          "oneOf": [
+            {"type": "null"},
+            {"$ref": "https://learningos.local/schema/module.schema.json#/properties/examination"}
+          ]
+        },
+        "attempts": {"$ref": "https://learningos.local/schema/module.schema.json#/properties/attempts"},
+        "grade": {"type": ["number", "null"], "minimum": 1, "maximum": 5},
+        "unit_order": {"$ref": "https://learningos.local/schema/module.schema.json#/properties/unit_order"},
+        "source_map": {
+          "oneOf": [
+            {"const": "source-map.yaml"},
+            {"type": "null"}
+          ]
+        }
+      }
+    },
+    "programRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "title", "kind", "status", "default",
+        "semester_bound", "revision", "path"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "program"},
+        "title": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["academic", "skills", "projects"]},
+        "status": {"enum": ["active", "metadata-only", "archived"]},
+        "default": {"type": "boolean"},
+        "semester_bound": {"type": "boolean"},
+        "description": {"type": "string"},
+        "boundary_action": {"type": "string"},
+        "semesters": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/programSemester"}
+        },
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "minLength": 1}
+      }
+    },
+    "programSemester": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status", "order"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^semester-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "status": {"enum": ["current", "previous", "future", "archived"]},
+        "order": {"type": "integer", "minimum": 0}
+      }
+    },
+    "projectRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "id", "type", "title", "project_type", "status",
+        "root_uri", "objective", "milestone_ids", "linked_module_ids",
+        "unit_ids", "workspace_ids", "thematic_group_ids", "boundaries",
+        "revision", "path", "relationship_ids"
+      ],
+      "properties": {
+        "schema_version": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/schema_version"},
+        "id": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/id"},
+        "type": {"const": "project"},
+        "title": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/title"},
+        "project_type": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/project_type"},
+        "status": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/status"},
+        "root_uri": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/root_uri"},
+        "objective": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/objective"},
+        "milestone_ids": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/milestone_ids"},
+        "linked_module_ids": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/linked_module_ids"},
+        "unit_ids": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/unit_ids"},
+        "workspace_ids": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/workspace_ids"},
+        "thematic_group_ids": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/thematic_group_ids"},
+        "boundaries": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/boundaries"},
+        "structure": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/structure"},
+        "files": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/files"},
+        "decisions": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/decisions"},
+        "migrated_from": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/migrated_from"},
+        "migrated_at": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/migrated_at"},
+        "migration": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/migration"},
+        "source_sha256": {"$ref": "https://learningos.local/schema/project.schema.json#/properties/source_sha256"},
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "minLength": 1},
+        "relationship_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^relationship-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
+    },
+    "projectRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "from_project_id", "to_id", "to_type",
+        "relation_type", "reason", "contribution", "path"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^relationship-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "project-relationship"},
+        "from_project_id": {"type": "string", "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "to_id": {"type": "string", "minLength": 1},
+        "to_type": {"enum": ["module", "source", "topic-pack", "note", "file"]},
+        "relation_type": {"enum": ["uses", "informs", "depends-on", "produces", "related"]},
+        "reason": {"type": "string", "minLength": 1},
+        "contribution": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1}
+      }
+    },
+    "compatibilityAlias": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "target_id", "target_type", "path"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"const": "compatibility-alias"},
+        "target_id": {"type": "string", "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "target_type": {"const": "project"},
+        "path": {"const": "projects/aliases.yaml"}
+      }
+    },
+    "noteRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "title", "path", "domain", "summary", "role",
+        "state", "authorship", "concepts", "sources", "contexts",
+        "attachments", "evidence", "supersedes", "reviewed",
+        "transcription", "semantic_review"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "note"},
+        "title": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "domain": {"type": "string"},
+        "summary": {"type": "string"},
+        "role": {"enum": ["synthesis", "reference", "derivation", "exercise-bank", "mock-exam", "implementation", "question", "crosswalk"]},
+        "state": {"type": ["string", "null"], "enum": ["rough", "evolving", "mature", "deprecated", null]},
+        "authorship": {"type": ["string", "null"], "enum": ["user", "mixed", "external", "operator-drafted", null]},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "sources": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "contexts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "attachments": {"type": "array", "items": {"type": "string"}},
+        "evidence": {"$ref": "https://learningos.local/schema/note.schema.json#/properties/evidence"},
+        "supersedes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "reviewed": {"type": ["string", "null"], "format": "date"},
+        "transcription": {"type": ["string", "null"], "enum": ["none", "manual", "ai-assisted", null]},
+        "semantic_review": {"type": ["string", "null"], "enum": ["unreviewed", "user-reviewed", null]}
+      }
+    },
+    "conceptRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "title", "path", "aliases", "deprecated"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "concept"},
+        "title": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "aliases": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "deprecated": {"type": "boolean"}
+      }
+    },
+    "sourceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "title", "revision", "path", "source_type",
+        "thematic_group_ids", "topics", "url", "material", "material_path",
+        "material_exists", "authors", "organization", "year", "identifiers",
+        "roles", "evaluations"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "source"},
+        "title": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "minLength": 1},
+        "source_type": {"enum": ["book", "paper", "lecture", "course", "video", "website", "documentation", "software", "conversation", "other"]},
+        "thematic_group_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^thematic-group-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "topics": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^topic-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "url": {"type": ["string", "null"], "format": "uri"},
+        "material": {"type": ["string", "null"], "pattern": "^material://.+"},
+        "material_path": {"type": ["string", "null"]},
+        "material_exists": {"type": "boolean"},
+        "authors": {"type": "array", "items": {"type": "string"}},
+        "organization": {"type": ["string", "null"]},
+        "year": {"type": ["integer", "null"], "minimum": 1800, "maximum": 2100},
+        "identifiers": {"type": "object", "additionalProperties": {"type": "string"}},
+        "roles": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "evaluations": {"type": "array", "items": {"$ref": "#/$defs/sourceEvaluation"}}
+      }
+    },
+    "sourceEvaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roles", "level", "audience", "prerequisites", "strengths",
+        "weaknesses", "reviewed", "concepts", "useful_sections"
+      ],
+      "properties": {
+        "roles": {"type": "array", "items": {"type": "string"}},
+        "level": {"type": ["string", "null"], "enum": ["introductory", "intermediate", "advanced", "reference", null]},
+        "audience": {"type": "array", "items": {"type": "string"}},
+        "prerequisites": {"type": "array", "items": {"type": "string"}},
+        "strengths": {"type": "array", "items": {"type": "string"}},
+        "weaknesses": {"type": "array", "items": {"type": "string"}},
+        "reviewed": {"type": ["string", "null"], "format": "date"},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "useful_sections": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["section", "note"],
+            "properties": {
+              "section": {"type": "string"},
+              "note": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "collectionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "revision", "collection_kind", "title", "path",
+        "thematic_group_ids", "purpose", "sources", "summary", "domain", "entries"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"enum": ["collection", "topic-pack"]},
+        "revision": {"type": "integer", "minimum": 0},
+        "collection_kind": {"enum": ["catalogue", "topic-pack"]},
+        "title": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "pattern": "^sources/collections/.+\\.yaml$"},
+        "thematic_group_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^thematic-group-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "purpose": {"type": ["string", "null"]},
+        "sources": {"type": "array", "items": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "summary": {"type": "string"},
+        "domain": {"type": "string", "minLength": 1},
+        "entries": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["source", "group", "why"],
+            "properties": {
+              "source": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+              "group": {"type": ["string", "null"]},
+              "why": {"type": ["string", "null"]}
+            }
+          }
+        }
+      }
+    },
+    "workspaceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "title", "revision", "path", "status", "standing",
+        "archived", "deadline", "objective", "next_action", "concepts",
+        "notes", "sources", "program_ids", "module_ids", "unit_ids", "project_id"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "workspace"},
+        "title": {"type": "string", "minLength": 1},
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "blocked", "complete"]},
+        "standing": {"type": "boolean"},
+        "archived": {"type": "boolean"},
+        "deadline": {"type": ["string", "null"], "format": "date"},
+        "objective": {"type": "string"},
+        "next_action": {"type": "string"},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "notes": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "sources": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "program_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^program-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "module_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "unit_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "project_id": {"type": ["string", "null"], "pattern": "^project-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    },
+    "learningPathRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "revision", "title", "path", "workspace_id", "area",
+        "module_id", "status", "current_stage", "created", "updated",
+        "objective", "source_plan", "stages", "shelving", "archived"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^path-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "learning-path"},
+        "revision": {"type": "integer", "minimum": 0},
+        "title": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "workspace_id": {"type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "area": {"enum": ["university", "personal"]},
+        "module_id": {"type": ["string", "null"], "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "status": {"enum": ["active", "paused", "ready-to-shelve", "complete"]},
+        "current_stage": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "created": {"type": "string", "format": "date"},
+        "updated": {"type": ["string", "null"], "format": "date"},
+        "objective": {"type": "string"},
+        "source_plan": {"type": ["string", "null"]},
+        "stages": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/projectedPathStage"}},
+        "shelving": {"$ref": "https://learningos.local/schema/learning-path.schema.json#/properties/shelving"},
+        "archived": {"type": "boolean"}
+      }
+    },
+    "projectedPathStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "status", "objective", "done_when", "resources",
+        "notes_text", "notes_updated"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "number": {"type": "integer", "minimum": 1},
+        "title": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pending", "active", "complete", "skipped"]},
+        "objective": {"type": "string", "minLength": 1},
+        "done_when": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "estimate_minutes": {"type": "integer", "minimum": 1},
+        "exam_critical": {"type": "boolean"},
+        "concepts": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}},
+        "resources": {"type": "array", "items": {"$ref": "#/$defs/resource"}},
+        "notes_path": {"type": "string"},
+        "attachments": {"type": "array", "items": {"$ref": "#/$defs/stageAttachment"}},
+        "completed": {"type": "string", "format": "date"},
+        "notes_text": {"type": "string"},
+        "notes_updated": {"type": ["string", "null"]}
+      }
+    },
+    "coordinationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "path", "sections"],
+      "properties": {
+        "id": {"const": "coordination"},
+        "type": {"const": "coordination"},
+        "path": {"const": "work/COORDINATION.md"},
+        "sections": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["Commitments", "Priorities", "Dependencies", "Deferrals"],
+          "properties": {
+            "Commitments": {"type": "string"},
+            "Priorities": {"type": "string"},
+            "Dependencies": {"type": "string"},
+            "Deferrals": {"type": "string"}
+          }
+        }
+      }
+    },
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": {"type": "string"}
+    },
+    "integerMap": {
+      "type": "object",
+      "additionalProperties": {"type": "integer", "minimum": 0}
+    },
+    "stringArrayMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {"type": "string"},
+        "uniqueItems": true
+      }
+    },
+    "generated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_version", "generated_at", "generator", "schema_sha256",
+        "snapshot_id", "source_dirty", "source_fingerprint",
+        "source_revision", "warning"
+      ],
+      "properties": {
+        "contract_version": {"const": 8},
+        "generated_at": {"type": "string"},
+        "generator": {"type": "string", "minLength": 1},
+        "schema_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "snapshot_id": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "source_dirty": {"type": "boolean"},
+        "source_fingerprint": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "source_revision": {"type": ["string", "null"]},
+        "warning": {"type": "string"}
+      }
+    },
+    "academicDeadline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label", "start_date", "end_date"],
+      "properties": {
+        "kind": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1},
+        "module_id": {"type": "string"},
+        "modules": {"type": "array", "items": {"$ref": "#/$defs/deadlineModule"}},
+        "notes": {"type": ["string", "null"]},
+        "registration_state": {"type": "string"},
+        "start_date": {"type": "string", "format": "date"},
+        "end_date": {"type": "string", "format": "date"},
+        "termin": {"type": "integer", "minimum": 1},
+        "time": {"type": ["string", "null"]},
+        "title": {"type": "string"}
+      }
+    },
+    "deadlineModule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_id", "title", "action", "termins"],
+      "properties": {
+        "module_id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "action": {"type": ["string", "null"]},
+        "termins": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1, "maximum": 3}
+        }
+      }
+    },
+    "aiActions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["available", "contract_version", "provider_adapters", "requests"],
+      "properties": {
+        "available": {"type": "array", "items": {"$ref": "#/$defs/aiAction"}},
+        "contract_version": {"const": 1},
+        "provider_adapters": {
+          "type": "array", "items": {"$ref": "#/$defs/aiProviderAdapter"}
+        },
+        "requests": {"type": "array", "items": {"$ref": "#/$defs/aiRequest"}}
+      }
+    },
+    "aiAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "description", "target_kinds", "interaction_mode",
+        "status", "supported_providers"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "description": {"type": "string"},
+        "target_kinds": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "interaction_mode": {"type": "string", "minLength": 1},
+        "status": {"enum": ["planned", "implemented"]},
+        "supported_providers": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "aiProviderAdapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "adapter", "available", "supported_modes",
+        "supports_direct_delivery"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "adapter": {"type": "string", "minLength": 1},
+        "available": {"type": "boolean"},
+        "supported_modes": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "supports_direct_delivery": {"type": "boolean"}
+      }
+    },
+    "aiRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "action_id", "target", "provider", "status", "created_at",
+        "delivery_id", "receipt_id", "bundle_path"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "action_id": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"},
+        "target": {
+          "type": "object", "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": {"type": "string", "minLength": 1},
+            "id": {"type": "string", "minLength": 1}
+          }
+        },
+        "provider": {"type": "string", "minLength": 1},
+        "status": {"enum": ["prepared", "delivery-ready", "completed"]},
+        "created_at": {"type": "string", "format": "date-time"},
+        "delivery_id": {"type": ["string", "null"]},
+        "receipt_id": {"type": ["string", "null"]},
+        "bundle_path": {
+          "type": "string",
+          "pattern": "^operations/ai-actions/requests/[^/]+$"
+        }
+      }
+    },
+    "backlinks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "concept_relations": {"$ref": "#/$defs/jsonObject"},
+        "concept_to_notes": {"$ref": "#/$defs/stringArrayMap"},
+        "module_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "module_to_workspaces": {"$ref": "#/$defs/stringArrayMap"},
+        "note_incoming": {"$ref": "#/$defs/stringArrayMap"},
+        "source_to_notes": {"$ref": "#/$defs/stringArrayMap"},
+        "source_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "unit_to_workspaces": {"$ref": "#/$defs/stringArrayMap"},
+        "workspace_to_notes": {"$ref": "#/$defs/stringArrayMap"}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ai_action_requests", "collections", "concepts", "garden_entries",
+        "inbox_items", "learning_paths", "learning_paths_active", "modules",
+        "notes", "notes_reviewed", "notes_with_evidence", "programs",
+        "projects", "relations", "source_feedback_records", "sources",
+        "sources_with_topics", "stages", "stages_complete", "study_maps",
+        "thematic_groups", "topic_packs", "topics", "units",
+        "units_needing_map", "workspaces_active", "workspaces_archived"
+      ],
+      "properties": {
+        "ai_action_requests": {"type": "integer", "minimum": 0},
+        "collections": {"type": "integer", "minimum": 0},
+        "concepts": {"type": "integer", "minimum": 0},
+        "garden_entries": {"type": "integer", "minimum": 0},
+        "inbox_items": {"type": "integer", "minimum": 0},
+        "learning_paths": {"type": "integer", "minimum": 0},
+        "learning_paths_active": {"type": "integer", "minimum": 0},
+        "modules": {"type": "integer", "minimum": 0},
+        "notes": {"type": "integer", "minimum": 0},
+        "notes_reviewed": {"type": "integer", "minimum": 0},
+        "notes_with_evidence": {"type": "integer", "minimum": 0},
+        "programs": {"type": "integer", "minimum": 0},
+        "projects": {"type": "integer", "minimum": 0},
+        "relations": {"type": "integer", "minimum": 0},
+        "source_feedback_records": {"type": "integer", "minimum": 0},
+        "sources": {"type": "integer", "minimum": 0},
+        "sources_with_topics": {"type": "integer", "minimum": 0},
+        "stages": {"type": "integer", "minimum": 0},
+        "stages_complete": {"type": "integer", "minimum": 0},
+        "study_maps": {"type": "integer", "minimum": 0},
+        "thematic_groups": {"type": "integer", "minimum": 0},
+        "topic_packs": {"type": "integer", "minimum": 0},
+        "topics": {"type": "integer", "minimum": 0},
+        "units": {"type": "integer", "minimum": 0},
+        "units_needing_map": {"type": "integer", "minimum": 0},
+        "workspaces_active": {"type": "integer", "minimum": 0},
+        "workspaces_archived": {"type": "integer", "minimum": 0}
+      }
+    },
+    "gardenEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "last_ai_request_id", "path", "revision",
+        "state", "tags", "title", "transcription_path", "type"
+      ],
+      "properties": {
+        "id": {"type": "string"},
+        "last_ai_request_id": {"type": ["string", "null"]},
+        "path": {"type": "string"}, "revision": {"type": "string"},
+        "state": {"type": "string"},
+        "tags": {"type": "array", "items": {"type": "string"}},
+        "title": {"type": "string"},
+        "transcription_path": {"type": ["string", "null"]},
+        "type": {"const": "garden-note"}
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "component_to_units", "concept_to_modules", "concept_to_units",
+        "module_to_concepts", "module_to_units",
+        "project_aliases", "project_to_relationships", "project_to_units",
+        "project_to_workspaces", "source_to_modules", "source_to_units",
+        "unit_to_concepts", "unit_to_material_synthesis", "unit_to_study_map",
+        "workspace_to_modules", "workspace_to_units"
+      ],
+      "properties": {
+        "component_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "concept_to_modules": {"$ref": "#/$defs/stringArrayMap"},
+        "concept_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "module_to_concepts": {"$ref": "#/$defs/stringArrayMap"},
+        "module_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "project_aliases": {"$ref": "#/$defs/stringMap"},
+        "project_to_relationships": {"$ref": "#/$defs/stringArrayMap"},
+        "project_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "project_to_workspaces": {"$ref": "#/$defs/stringArrayMap"},
+        "source_to_modules": {"$ref": "#/$defs/stringArrayMap"},
+        "source_to_units": {"$ref": "#/$defs/stringArrayMap"},
+        "unit_to_concepts": {"$ref": "#/$defs/stringArrayMap"},
+        "unit_to_material_synthesis": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "pattern": "^material-synthesis-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        },
+        "unit_to_study_map": {"$ref": "#/$defs/stringMap"},
+        "workspace_to_modules": {"$ref": "#/$defs/stringArrayMap"},
+        "workspace_to_units": {"$ref": "#/$defs/stringArrayMap"}
+      }
+    },
+    "projectedRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "unit_id", "source_id", "title", "format", "angle",
+        "covers", "depth", "scope"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "unit_id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "format": {"type": "string", "minLength": 1},
+        "angle": {"type": "string", "minLength": 1},
+        "angle_detail": {"type": "string", "minLength": 1},
+        "covers": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
+        "depth": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1},
+        "locator": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "vault_path": {"type": "string"},
+        "material_uri": {"type": "string"},
+        "material_path": {"type": "string"},
+        "material_exists": {"type": "boolean"}
+      }
+    },
+    "moduleConceptEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["module_id", "concept_id", "evidence"],
+      "properties": {
+        "module_id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "concept_id": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "evidence": {
+          "description": "Why this cell is filled. At least one item: an edge with no evidence is an inferred edge, and this projection does not publish those.",
+          "type": "array",
+          "minItems": 1,
+          "items": {"oneOf": [
+            {"$ref": "#/$defs/stageConceptEvidence"},
+            {"$ref": "#/$defs/knowledgeNodeEvidence"}
+          ]}
+        }
+      }
+    },
+    "stageConceptEvidence": {
+      "description": "A stage's explicit `concepts` tag. Retains unit, study-map and stage identity, so a filled cell drills into the exact stage.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "unit_id", "study_map_id", "stage_id"],
+      "properties": {
+        "kind": {"const": "stage-concept"},
+        "unit_id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "study_map_id": {"type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "stage_id": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    },
+    "knowledgeNodeEvidence": {
+      "description": "A knowledge-map node's reviewed `concept_ids`. Retains unit and node identity.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "unit_id", "node_id"],
+      "properties": {
+        "kind": {"const": "knowledge-node"},
+        "unit_id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "node_id": {"type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+      }
+    },
+    "moduleSourceMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "type", "module_id", "sources", "revision", "path"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^source-map-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "module-source-map"},
+        "module_id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string"},
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_id", "role", "why", "priority", "unit_routes"],
+            "properties": {
+              "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+              "role": {"type": "string", "minLength": 1},
+              "why": {"type": "string", "minLength": 1},
+              "when": {"type": "string"},
+              "priority": {"type": "integer", "minimum": 0},
+              "unit_routes": {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+                    {"$ref": "#/$defs/projectedRoute"}
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "knowledgeNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "summary"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "builds_on": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "concept_ids": {
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
+    },
+    "projectedUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "module_id", "kind", "title", "order", "scope",
+        "status", "artifacts", "workspace_ids", "source_selections",
+        "scope_sources", "revision", "path", "project_ids",
+        "needs_study_map", "notes_text", "note_sections", "notes_updated"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "type": {"const": "unit"},
+        "module_id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "component_id": {"type": "string"},
+        "kind": {"type": "string"}, "title": {"type": "string"},
+        "order": {"type": "integer", "minimum": 0}, "scope": {"type": "string"},
+        "status": {"type": "string"}, "revision": {"type": "integer", "minimum": 0},
+        "path": {"type": "string"}, "needs_study_map": {"type": "boolean"},
+        "notes_text": {"type": "string"},
+        "notes_updated": {"type": ["string", "null"]},
+        "project_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "knowledge_map": {
+          "type": "object", "additionalProperties": false,
+          "required": ["summary", "nodes"],
+          "properties": {
+            "summary": {"type": "string"},
+            "nodes": {"type": "array", "items": {"$ref": "#/$defs/knowledgeNode"}}
+          }
+        },
+        "scope_sources": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["source_id", "authority"],
+            "properties": {
+              "source_id": {"type": "string"}, "authority": {"type": "string"},
+              "locator": {"type": "string"}
+            }
+          }
+        },
+        "source_selections": {
+          "type": "array",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["source_id", "locator", "purpose"],
+            "properties": {
+              "route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+              "source_id": {"type": "string"}, "locator": {"type": "string"},
+              "purpose": {"type": "string"},
+              "stage_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+            }
+          }
+        },
+        "current_study_map": {"type": "string"}, "working_note": {"type": "string"},
+        "artifacts": {"$ref": "https://learningos.local/schema/unit.schema.json#/properties/artifacts"},
+        "parent_unit_id": {"type": "string"},
+        "child_unit_ids": {"type": "array", "items": {"type": "string"}},
+        "related_module_ids": {"type": "array", "items": {"type": "string"}},
+        "workspace_ids": {"type": "array", "items": {"type": "string"}},
+        "note_sections": {"type": "array", "items": {"$ref": "#/$defs/unitNoteSection"}}
+      }
+    },
+    "unitNoteSection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["recorded_at", "title", "stage_ids", "attachments", "text", "summary"],
+      "properties": {
+        "recorded_at": {"type": ["string", "null"]},
+        "title": {"type": "string", "minLength": 1},
+        "stage_ids": {"type": "array", "items": {"type": "string"}},
+        "attachments": {"type": "array", "items": {"$ref": "#/$defs/stageAttachment"}},
+        "text": {"type": "string"},
+        "summary": {"type": "string"}
+      }
+    },
+    "stageAttachment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "label"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "label": {"type": "string", "minLength": 1}
+      }
+    },
+    "sourceFeedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "feedback", "recorded"],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "resource_id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "feedback": {"enum": ["helpful", "too-advanced", "wrong-perspective", "useful-for-derivation", "useful-for-review", "skipped"]},
+        "note": {"type": "string"},
+        "recorded": {"type": "string", "format": "date"}
+      }
+    },
+    "resource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "label"],
+      "properties": {
+        "id": {"type": "string"},
+        "route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "kind": {"type": "string"}, "label": {"type": "string"},
+        "source_id": {"type": "string"}, "locator": {"type": "string"},
+        "angle": {"type": "string"}, "angle_detail": {"type": "string"},
+        "url": {"type": "string", "format": "uri"},
+        "vault_path": {"type": "string"}, "scope_triage": {"type": "string"},
+        "material_uri": {"type": "string"}, "material_path": {"type": "string"},
+        "material_exists": {"type": "boolean"}
+      }
+    },
+    "projectedStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "status", "objective", "done_when", "resources",
+        "working_note", "attachments", "source_feedback", "scope_triage",
+        "notes_text", "notes_updated"
+      ],
+      "properties": {
+        "id": {"type": "string"}, "number": {"type": "integer", "minimum": 1},
+        "title": {"type": "string"}, "status": {"type": "string"},
+        "objective": {"type": "string"},
+        "done_when": {"type": "array", "items": {"type": "string"}},
+        "estimate_minutes": {"type": "integer", "minimum": 1},
+        "exam_critical": {"type": "boolean"},
+        "concepts": {"type": "array", "items": {"type": "string"}},
+        "scope_triage": {"type": "string"},
+        "resources": {"type": "array", "items": {"$ref": "#/$defs/resource"}},
+        "working_note": {"type": "string"},
+        "attachments": {"type": "array", "items": {"$ref": "#/$defs/stageAttachment"}},
+        "source_feedback": {"type": "array", "items": {"$ref": "#/$defs/sourceFeedback"}},
+        "detour_id": {"type": "string"}, "completed": {"type": "string"},
+        "study_map_id": {"type": "string"}, "unit_id": {"type": "string"},
+        "module_id": {"type": "string"}, "notes_text": {"type": "string"},
+        "notes_updated": {"type": ["string", "null"]}
+      }
+    },
+    "flatStage": {
+      "allOf": [
+        {"$ref": "#/$defs/projectedStage"},
+        {"required": ["study_map_id", "unit_id", "module_id"]}
+      ]
+    },
+    "studyMap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "type", "unit_id", "module_id", "status", "current_stage",
+        "source_plan", "stages", "shelving", "revision", "path"
+      ],
+      "properties": {
+        "id": {"type": "string"}, "type": {"const": "study-map"},
+        "plan_template_version": {"type": "integer", "minimum": 1},
+        "unit_id": {"type": "string"}, "module_id": {"type": "string"},
+        "status": {"type": "string"}, "current_stage": {"type": "string"},
+        "source_plan": {"$ref": "https://learningos.local/schema/study-map.schema.json#/properties/source_plan"},
+        "detours": {"$ref": "https://learningos.local/schema/study-map.schema.json#/properties/detours"},
+        "shelving": {"$ref": "https://learningos.local/schema/study-map.schema.json#/properties/shelving"},
+        "stages": {"type": "array", "items": {"$ref": "#/$defs/projectedStage"}},
+        "revision": {"type": "integer", "minimum": 0}, "path": {"type": "string"}
+      }
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object", "additionalProperties": false,
+        "required": [
+          "stages_complete", "stages_total", "units_complete",
+          "units_needing_map", "units_total"
+        ],
+        "properties": {
+          "stages_complete": {"type": "integer", "minimum": 0},
+          "stages_total": {"type": "integer", "minimum": 0},
+          "units_complete": {"type": "integer", "minimum": 0},
+          "units_needing_map": {"type": "integer", "minimum": 0},
+          "units_total": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "relation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from", "type", "to", "context", "source"],
+      "properties": {
+        "from": {"type": ["string", "null"]}, "type": {"type": ["string", "null"]},
+        "to": {"type": ["string", "null"]}, "context": {"type": ["string", "null"]},
+        "source": {"type": ["string", "null"]}
+      }
+    },
+    "resumePointer": {
+      "oneOf": [
+        {"type": "object", "maxProperties": 0},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["type", "module_id", "unit_id", "study_map_id", "stage_id", "updated"],
+          "properties": {
+            "type": {"const": "resume-pointer"}, "module_id": {"type": "string"},
+            "unit_id": {"type": "string"}, "study_map_id": {"type": "string"},
+            "stage_id": {"type": "string"}, "updated": {"type": "string"}
+          }
+        }
+      ]
+    },
+    "reviewItem": {
+      "type": "object", "additionalProperties": false,
+      "required": ["category", "context", "id", "reason", "target", "title"],
+      "properties": {
+        "category": {"type": "string"}, "context": {"type": "string"},
+        "id": {"type": "string"}, "reason": {"type": "string"},
+        "target": {"$ref": "#/$defs/jsonObject"}, "title": {"type": "string"}
+      }
+    },
+    "semester": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "order", "program_id", "status", "title"],
+      "properties": {
+        "id": {"type": "string"}, "order": {"type": "integer"},
+        "program_id": {"type": "string"}, "status": {"type": "string"},
+        "title": {"type": "string"}
+      }
+    },
+    "thematicGroup": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "description", "order"],
+      "properties": {
+        "id": {"type": "string"}, "title": {"type": "string"},
+        "description": {"type": "string"}, "order": {"type": "integer"}
+      }
+    },
+    "topic": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "domain"],
+      "properties": {
+        "id": {"type": "string"}, "title": {"type": "string"},
+        "domain": {"type": "string"}
+      }
+    }
+  }
+}

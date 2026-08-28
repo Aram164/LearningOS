@@ -316,6 +316,15 @@ documents:
       - system/CLAUDE.md
       - system/ARCHITECTURE.md
 
+  - path: system/adr/ADR-015-module-concept-atlas-2026-08-28.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The Module × Concept crossing is published as evidence-carrying edges;
+      no concept is ever inferred. Extends ADR-005 and ADR-006.
+
   - path: system/adr/ADR-014-workspace-root-consolidation-2026-08-27.md
     class: decision
     status: current

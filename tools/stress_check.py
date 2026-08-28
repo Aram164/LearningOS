@@ -21,13 +21,14 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
 
+from learning_os.contracts.manifest_contract import declared_version
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
 
 
-def _assert_manifest(data: dict) -> None:
+def _assert_manifest(data: dict, expected_contract_version: int) -> None:
     generated = data.get("_generated", {})
-    assert generated.get("contract_version") == 5
+    assert generated.get("contract_version") == expected_contract_version
     assert generated.get("snapshot_id") == (
         "sha256:" + generated.get("source_fingerprint", "")
     )
@@ -90,6 +91,7 @@ def _audit_production_targets(root: Path, manifest: dict) -> tuple[int, int]:
 
 def _generation_stress(root: Path, generations: int, readers: int,
                        reads_per_reader: int) -> tuple[str, int]:
+    expected_contract_version = declared_version(root)
     first_outputs = None
     first_hash = ""
     for _ in range(generations):
@@ -113,7 +115,7 @@ def _generation_stress(root: Path, generations: int, readers: int,
             data = json.loads(
                 (root / "generated/manifest.json").read_text(encoding="utf-8")
             )
-            _assert_manifest(data)
+            _assert_manifest(data, expected_contract_version)
         return reads_per_reader
 
     def publish_manifest() -> None:
