@@ -106,11 +106,68 @@ class FilesystemAIActionRepository:
         temp = Path(tempfile.mkdtemp(prefix=f"{destination.name}-", dir=self.quarantine))
         staged = temp / "bundle"
         try:
-            shutil.copytree(source, staged)
+            # Preserve links as links so the post-copy admission pass can see
+            # and reject a source that changed during the copy window.
+            shutil.copytree(source, staged, symlinks=True)
+            staged_bytes = 0
+            for entries, path in enumerate(staged.rglob("*"), start=1):
+                if path.is_symlink():
+                    raise DeliveryValidationError(
+                        "delivery bundles may not contain symbolic links"
+                    )
+                if entries > MAX_DELIVERY_ENTRIES:
+                    raise DeliveryValidationError(
+                        f"delivery bundle exceeds {MAX_DELIVERY_ENTRIES} entries"
+                    )
+                if path.is_file():
+                    staged_bytes += path.stat().st_size
+                    if staged_bytes > MAX_DELIVERY_BYTES:
+                        raise DeliveryValidationError(
+                            f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes"
+                        )
+            delivery = _read_yaml(staged / "delivery.yaml")
+            if not isinstance(delivery, dict):
+                raise DeliveryValidationError("delivery.yaml must contain a mapping")
+            destination = self.delivery_dir(str(delivery.get("id", "")))
+            if destination.exists():
+                raise DeliveryValidationError(
+                    f"delivery already exists: {delivery.get('id')}"
+                )
         except Exception:
             shutil.rmtree(temp, ignore_errors=True)
             raise
         return cast(DeliveryRecord, delivery), staged
+
+    def commit_delivery_import(
+        self,
+        staged: Path,
+        delivery_id: str,
+        request: AIActionRequest,
+    ) -> Path:
+        """Publish a delivery and its request-state transition as one unit."""
+        request_path = self.request_path(str(request["id"]))
+        try:
+            previous_request = request_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            shutil.rmtree(staged.parent, ignore_errors=True)
+            raise DeliveryValidationError(
+                f"cannot preserve AI request before delivery import: {exc}"
+            ) from exc
+        destination: Path | None = None
+        try:
+            destination = self.publish_delivery(staged, delivery_id)
+            self.update_request(request)
+            return destination
+        except Exception as exc:
+            if destination is not None:
+                shutil.rmtree(destination, ignore_errors=True)
+            try:
+                _atomic_text(request_path, previous_request)
+            except Exception as rollback_exc:
+                raise DeliveryValidationError(
+                    "delivery import failed and request rollback also failed"
+                ) from rollback_exc
+            raise exc
 
     def publish_delivery(self, staged: Path, delivery_id: str) -> Path:
         destination = self.delivery_dir(delivery_id)

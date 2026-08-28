@@ -1,4 +1,4 @@
-"""Read-only access to the single versioned plan-creation template.
+"""Read-only access to the single versioned study-map creation template.
 
 Two output shapes, one generator. YAML is what an operator pastes into a new
 plan file (system/PLAN-CREATION-SOP.md); `--json` is the ``plan.template``
@@ -28,7 +28,6 @@ PLAN_TEMPLATE_CONTRACT = "plan-template-v1"
 
 _PROFILE_SCHEMAS = {
     "curriculum": "study-map.schema.json",
-    "job": "job-plan.schema.json",
 }
 
 

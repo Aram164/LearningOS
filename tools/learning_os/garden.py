@@ -113,9 +113,6 @@ def project_garden_entries(repo: Repo) -> list[dict]:
                 "state": state.get("state", "seed"),
                 "revision": _revision(note.path),
                 "tags": list(note.tags),
-                "job_derived": bool(
-                    state.get("job_derived", False)
-                ),
                 "transcription_path": state.get(
                     "transcription_path"
                 ),

@@ -170,6 +170,8 @@ class Repo:
     legacy_modules: dict[str, dict] = field(default_factory=dict)
     module_source_maps: dict[str, dict] = field(default_factory=dict)
     module_source_map_origins: dict[str, Path] = field(default_factory=dict)
+    unit_material_syntheses: dict[str, dict] = field(default_factory=dict)
+    unit_material_synthesis_origins: dict[str, Path] = field(default_factory=dict)
     units: dict[str, Unit] = field(default_factory=dict)
     study_maps: dict[str, StudyMap] = field(default_factory=dict)
     resume_pointer: dict | None = None
@@ -197,7 +199,7 @@ class Repo:
         # layout is the human topic tree (amendment of Jul 17 2026).
         materials = self.learningos_root / "materials"
         flat = materials / ".flat"
-        return flat if flat.is_dir() else materials
+        return flat if not flat.is_symlink() and flat.is_dir() else materials
 
     @property
     def projects_root(self) -> Path:
@@ -222,8 +224,10 @@ class Repo:
         return list(self.study_maps.values())
 
 
-def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path, family_name: str):
+def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path,
+              family_name: str) -> bool:
     if rec_id in family:
         repo.duplicate_ids.append((family_name, rec_id, origin))
-        return
+        return False
     family[rec_id] = record
+    return True

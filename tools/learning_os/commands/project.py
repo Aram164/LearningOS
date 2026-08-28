@@ -69,7 +69,11 @@ def _project_record(args) -> dict:
         return record
     if not getattr(args, "file", None):
         raise WriteRefused("project record required: pass --file or --project")
-    return _read_structured_file(args.file)
+    return _read_structured_file(
+        args.file,
+        expected_sha256=getattr(args, "file_sha256", None),
+        label="project file",
+    )
 
 
 def cmd_project_list(args) -> int:

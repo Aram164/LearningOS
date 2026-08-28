@@ -5,15 +5,16 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import sys
-from pathlib import Path
 
 import yaml
 
 from .support import (
+    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
     _path_or_error,
+    _read_content_bound_file,
     _root,
     _write_transaction,
 )
@@ -126,9 +127,14 @@ def cmd_path_progress(args) -> int:
 
 def cmd_path_attach(args) -> int:
     root = _root(args)
-    source = Path(args.file).expanduser().resolve()
-    if not source.is_file():
-        print(f"los: no such file: {source}", file=sys.stderr)
+    try:
+        source, source_bytes = _read_content_bound_file(
+            args.file,
+            getattr(args, "file_sha256", None),
+            label="path attachment",
+        )
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
         return 2
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
@@ -156,7 +162,7 @@ def cmd_path_attach(args) -> int:
         code, errors, confirmation = _write_transaction(
             root, {
                 learning_path.path: yaml.safe_dump(data, sort_keys=False, allow_unicode=True),
-                target: source.read_bytes(),
+                target: source_bytes,
             },
             capability="path.attachment.add",
             expected_revisions=_expected_revisions_from_args(args),

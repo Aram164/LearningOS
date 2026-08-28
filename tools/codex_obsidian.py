@@ -22,7 +22,6 @@ ROOT = Path(__file__).resolve().parent.parent
 # v1 compatibility constants: these strings no longer grant write access.
 OPERATIONAL = "[LearningOS approved operational write]"
 SHELVING = "[LearningOS approved shelving apply]"
-JOB_TASK = "[LearningOS approved Job task]"
 
 CAPABILITY_RE = re.compile(
     r"\[LearningOS capability:(?P<action>[a-z-]+)\s+"

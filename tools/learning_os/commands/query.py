@@ -122,13 +122,10 @@ def _capabilities(root: Path) -> dict:
             "successful_writes_have_receipts": True,
             "artifact_revision_conflicts_fail_closed": True,
             "shelving_requires_explicit_approval": True,
-            "job_quarantine": True,
             "ordinary_interfaces_read_projection_only": True,
-            "job_dashboard_requires_explicit_access": True,
-            "job_dashboard_is_ephemeral": True,
             "module_plan_preflight_required": True,
             "ai_actions_are_provider_independent": True,
-            "ai_actions_never_read_job": True,
+            "bounded_ai_actions_use_exact_context": True,
         },
         "root": str(root),
     }
@@ -159,7 +156,6 @@ def cmd_bootstrap(args) -> int:
         "active_study_maps": [m for m in manifest.get("study_maps", [])
                               if m.get("status") in {"active", "paused", "ready"}],
         "resume_pointer": manifest.get("resume_pointer", {}),
-        "quarantine_boundaries": manifest.get("quarantine_boundaries", []),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
     print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))

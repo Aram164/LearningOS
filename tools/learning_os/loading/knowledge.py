@@ -11,13 +11,14 @@ from pathlib import Path
 
 from .model import GardenNote, Note, Repo, _register
 from .vocabulary import GARDEN_TAG_RE, _strip_code
-from .yamlio import LoaderError, _load_registry, _record_id, parse_frontmatter
+from .yamlio import LoaderError, _load_registry, _read_text, _record_id, parse_frontmatter
 
 
 def load_concepts(repo: Repo, root: Path) -> None:
     """Concepts (consolidated or partitioned)."""
     records, origins, failures = _load_registry(
-        root / "knowledge" / "concepts.yaml", root / "knowledge" / "concepts", "concepts"
+        root / "knowledge" / "concepts.yaml", root / "knowledge" / "concepts", "concepts",
+        root=root,
     )
     repo.parse_failures.extend(failures)
     for rec, origin in zip(records, origins, strict=True):
@@ -36,6 +37,7 @@ def load_relations(repo: Repo, root: Path) -> None:
         root / "knowledge" / "concept-relations.yaml",
         root / "knowledge" / "concept-relations",
         "relations",
+        root=root,
     )
     repo.parse_failures.extend(failures)
     repo.relations = records
@@ -47,7 +49,7 @@ def load_notes(repo: Repo, root: Path) -> None:
         return
     for f in sorted(notes_dir.rglob("*.md")):
         try:
-            meta, body = parse_frontmatter(f.read_text(encoding="utf-8"), f)
+            meta, body = parse_frontmatter(_read_text(f, root), f)
         except LoaderError as exc:
             repo.parse_failures.append((f, str(exc)))
             continue
@@ -78,6 +80,10 @@ def load_garden(repo: Repo, root: Path) -> None:
                 or any(part in {"transcriptions", "syntheses"}
                        or part.startswith((".", "_")) for part in rel_parts[:-1])):
             continue
-        text = f.read_text(encoding="utf-8", errors="replace")
+        try:
+            text = _read_text(f, root, errors="replace")
+        except LoaderError as exc:
+            repo.parse_failures.append((f, str(exc)))
+            continue
         tags = sorted(set(GARDEN_TAG_RE.findall(_strip_code(text))))
         repo.garden_notes.append(GardenNote(path=f, body=text, tags=tags))

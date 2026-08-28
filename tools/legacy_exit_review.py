@@ -5,9 +5,8 @@ This tool answers a deliberately narrow question: which files in ``legacy/``
 already have a migration record or a byte-for-byte copy in LearningOS, and
 which files still deserve a human look before the user removes that tree?
 
-It never writes, moves, or deletes files. It also never enters ``Job/``. The
-default legacy root is the sibling at ``<semestercontext>/legacy``; pass an
-explicit path after moving LearningOS elsewhere.
+It never writes, moves, or deletes files. The default legacy root is the frozen
+tree at ``LearningOS/legacy``.
 
 Examples::
 
@@ -28,7 +27,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LEARNING_OS_ROOT = ROOT.parent
-DEFAULT_LEGACY_ROOT = ROOT.parents[1] / "legacy"
+DEFAULT_LEGACY_ROOT = LEARNING_OS_ROOT / "legacy"
 
 IGNORED_NAMES = {".DS_Store"}
 IGNORED_PREFIXES = (".fuse_hidden",)
@@ -56,13 +55,6 @@ SUPERSEDED_RULES: tuple[tuple[str, str], ...] = (
     ("Plans/archive/Chat5_DBT_Plan.md", "the archived plan's own superseded status; source PDFs preserved in LearningOS/materials/_unsorted/Legacy-DBT-review"),
     ("Plans/archive/SoSe2026_Praxisplan.md", "the archived plan's own superseded status recorded in legacy/Plans/README.md"),
 )
-
-JOB_MARKERS = (
-    "/job/",
-    "bifold-deem-job",
-    "stratum-optimizer",
-)
-
 
 @dataclass(frozen=True)
 class ReviewItem:
@@ -130,11 +122,6 @@ def _superseded_by(path: str) -> str | None:
     return None
 
 
-def _is_job_boundary(path: str) -> bool:
-    lowered = f"/{path.lower()}"
-    return any(marker in lowered for marker in JOB_MARKERS)
-
-
 def _copy_index(legacy_files: list[Path]) -> dict[tuple[int, str], list[str]]:
     """Index only candidate-size files, avoiding a full materials re-hash."""
     wanted_sizes = {path.stat().st_size for path in legacy_files}
@@ -191,9 +178,6 @@ def review(legacy_root: Path) -> list[ReviewItem]:
             elif replacement := _superseded_by(rel):
                 disposition = "superseded-system"
                 evidence = f"replaced by {replacement}"
-            elif _is_job_boundary(rel):
-                disposition = "job-boundary-review"
-                evidence = "requires a separate explicit Job review; Job was not scanned"
             else:
                 disposition = "manual-review"
                 evidence = "no migration row, replacement rule, or byte-identical LearningOS copy"
@@ -217,7 +201,7 @@ def _markdown(items: list[ReviewItem], legacy_root: Path, *, details: bool) -> s
     total_bytes = sum(item.size for item in items)
     needs_attention = [
         item for item in items
-        if item.disposition in {"manual-review", "job-boundary-review"}
+        if item.disposition == "manual-review"
     ]
     lines = [
         "# Legacy exit review",
@@ -257,8 +241,8 @@ def _markdown(items: list[ReviewItem], legacy_root: Path, *, details: bool) -> s
 
     lines.extend([
         "",
-        "This report is evidence, not a deletion command. The tool never enters `Job/` "
-        "and never writes, moves, or removes anything.",
+        "This report is evidence, not a deletion command. The tool never writes, "
+        "moves, or removes anything.",
     ])
     return "\n".join(lines).rstrip() + "\n"
 

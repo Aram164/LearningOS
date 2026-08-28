@@ -3,11 +3,20 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
-from learning_os.ai_actions import AIActionService
+from learning_os.ai_actions import AIActionError, AIActionService, StaleDeliveryError
+from learning_os.contracts.gateway import current_gateway_request
 
-from .support import _operator_lock, _publish, _record_touched, _root
+from .support import (
+    WriteRefused,
+    _expected_revisions_from_args,
+    _operator_lock,
+    _publish,
+    _record_touched,
+    _root,
+)
 
 
 # ------------------------------------------------------------- AI actions
@@ -25,7 +34,6 @@ def cmd_ai_action_prepare(args) -> int:
             action_id=args.action_id, target_kind=args.target_kind,
             target_id=args.target_id, provider=args.provider,
             expected_snapshot=args.expected_snapshot, request_id=args.request_id,
-            job_export_confirmed=args.confirm_job_export,
         )
         _publish(root)
     print(json.dumps({
@@ -53,11 +61,43 @@ def cmd_ai_action_validate_delivery(args) -> int:
 
 def cmd_ai_action_apply_delivery(args) -> int:
     root = _root(args)
-    with _operator_lock(root):
-        receipt = AIActionService(root).apply_delivery(args.delivery_id)
-        touched = [root / rel for rel in receipt.pop("touched_paths", [])]
-        _record_touched(root, touched)
-    print(json.dumps({"ok": True, "receipt": receipt}, indent=2, ensure_ascii=False))
+    authority = current_gateway_request()
+    if authority is None:
+        raise WriteRefused(
+            "approved delivery application must use GatewayEnvelopeV2"
+        )
+    if authority.capability != "ai-action.delivery.apply" \
+            or authority.approval_kind != "approved-delivery":
+        raise WriteRefused(
+            "ai-action.delivery.apply requires approved-delivery approval"
+        )
+    try:
+        with _operator_lock(root):
+            receipt = AIActionService(root).apply_delivery(
+                args.delivery_id,
+                delivery_sha256=args.delivery_sha256,
+                artifact_sha256=args.artifact_sha256,
+                expected_snapshot=args.expected_snapshot,
+                expected_revisions=_expected_revisions_from_args(args),
+            )
+            touched = [root / rel for rel in receipt.pop("touched_paths", [])]
+            if touched:
+                _record_touched(root, touched)
+    except StaleDeliveryError as exc:
+        print(str(exc), file=sys.stderr)
+        return 3
+    except AIActionError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+    print(json.dumps({
+        "ok": True,
+        "transaction_id": receipt["transaction_id"],
+        "receipt_path": receipt["receipt_path"],
+        "snapshot_after": receipt["snapshot_after"],
+        "artifact_revisions": receipt["revision_updates"],
+        "replayed": receipt.get("replayed", False),
+        "receipt": receipt,
+    }, indent=2, ensure_ascii=False))
     return 0
 
 

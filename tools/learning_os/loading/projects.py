@@ -19,7 +19,7 @@ def load_projects(repo: Repo, root: Path) -> None:
         return
     for f in sorted(projects_dir.glob("project-*.yaml")):
         try:
-            data = _load_yaml(f)
+            data = _load_yaml(f, root)
         except LoaderError as exc:
             repo.parse_failures.append((f, str(exc)))
             continue
@@ -38,7 +38,7 @@ def load_project_aliases(repo: Repo, root: Path) -> None:
     if not aliases_file.is_file():
         return
     try:
-        aliases_data = _load_yaml(aliases_file)
+        aliases_data = _load_yaml(aliases_file, root)
     except LoaderError as exc:
         repo.parse_failures.append((aliases_file, str(exc)))
         return
@@ -61,7 +61,7 @@ def load_project_relations(repo: Repo, root: Path) -> None:
     if not relations_file.is_file():
         return
     try:
-        relations_data = _load_yaml(relations_file)
+        relations_data = _load_yaml(relations_file, root)
     except LoaderError as exc:
         repo.parse_failures.append((relations_file, str(exc)))
         return

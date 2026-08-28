@@ -18,10 +18,12 @@ The root list, walk, and projection memoisation now live here once.
 from __future__ import annotations
 
 import hashlib
+import os
 import weakref
 from pathlib import Path
 
 from .loader import Repo
+from .pathing import PathBoundaryError, read_bytes_inside
 
 CANONICAL_ROOTS = (
     "knowledge",
@@ -49,8 +51,9 @@ def canonical_fingerprint(root: Path) -> str:
         base = root / rel_root
         if not base.exists():
             continue
-        files = [base] if base.is_file() else sorted(
-            path for path in base.rglob("*") if path.is_file()
+        files = [base] if base.is_file() or base.is_symlink() else sorted(
+            path for path in base.rglob("*")
+            if path.is_file() or path.is_symlink()
         )
         for path in files:
             rel = path.relative_to(root)
@@ -58,7 +61,17 @@ def canonical_fingerprint(root: Path) -> str:
                 continue
             digest.update(rel.as_posix().encode("utf-8"))
             digest.update(b"\0")
-            digest.update(path.read_bytes())
+            try:
+                digest.update(read_bytes_inside(root, path))
+            except (OSError, PathBoundaryError):
+                # An inadmissible link is still canonical filesystem state, so
+                # make it move the guard without reading the external target.
+                digest.update(b"<inadmissible-symlink>\0")
+                if path.is_symlink():
+                    try:
+                        digest.update(os.readlink(path).encode("utf-8"))
+                    except OSError:
+                        digest.update(b"<unreadable>")
             digest.update(b"\0")
     return digest.hexdigest()
 

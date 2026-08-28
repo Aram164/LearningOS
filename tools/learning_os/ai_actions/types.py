@@ -42,9 +42,7 @@ class RequestPreconditions(TypedDict):
 
 class ConfidentialityPolicy(TypedDict):
     classification: str
-    job_derived: bool
-    export_confirmed: bool
-    employer_repository_access: bool
+    external_repository_access: bool
 
 
 class AIActionRequest(TypedDict):
@@ -91,12 +89,17 @@ class DeliveryValidationResult(TypedDict):
 
 
 class ApplyDeliveryResult(TypedDict, total=False):
+    schema_version: int
+    id: str
     transaction_id: str
     receipt_path: str
     touched_paths: list[str]
+    revision_updates: dict[str, int]
+    replayed: bool
+    snapshot_after: str
     capability: str
     status: str
-    artifact_revisions: dict[str, int]
+    artifact_revisions: dict[str, Any]
 
 
 class RequestStatus(TypedDict):
@@ -119,7 +122,6 @@ class GardenTarget(TypedDict):
     state: str
     tags: list[str]
     revision: str
-    job_derived: NotRequired[bool]
 
 
 @dataclass(frozen=True)

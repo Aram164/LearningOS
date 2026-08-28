@@ -30,6 +30,7 @@ import argparse
 import sys
 
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
+from learning_os.backup_manifest import BackupManifestError  # noqa: E402
 
 # Command registry: one module per domain, so a behaviour is found by name.
 from learning_os.commands.ai import (  # noqa: E402
@@ -44,15 +45,6 @@ from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
-from learning_os.commands.job import cmd_job_dashboard  # noqa: E402
-from learning_os.commands.job_write import (  # noqa: E402
-    cmd_job_note_save,
-    cmd_job_note_stamp,
-    cmd_job_plan_save,
-    cmd_job_session_log,
-    cmd_job_task_save,
-    cmd_job_track_progress,
-)
 from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
 from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
@@ -95,7 +87,26 @@ from learning_os.commands.unit import (  # noqa: E402
     cmd_unit_note,
     cmd_unit_source_selection,
 )
-from learning_os.contracts.payloads import json_object  # noqa: E402
+from learning_os.commands.vnext import (  # noqa: E402
+    cmd_backup_manifest,
+    cmd_backup_verify,
+    cmd_health_report,
+    cmd_job_learning_migrate,
+    cmd_legacy_archive_inspect,
+    cmd_legacy_archive_lock_publish,
+    cmd_legacy_archive_status,
+    cmd_masters_planning_catalog_update,
+    cmd_masters_planning_comparison_publish,
+    cmd_masters_planning_dashboard,
+    cmd_route_identity_migrate,
+    cmd_unit_material_synthesis_publish,
+)
+from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
+from learning_os.health import HealthReportError  # noqa: E402
+from learning_os.legacy_archive import LegacyArchiveError  # noqa: E402
+from learning_os.masters_planning import MastersPlanningError  # noqa: E402
+from learning_os.material_synthesis import MaterialSynthesisError  # noqa: E402
+from learning_os.transactions import TransactionFailure  # noqa: E402
 
 
 # --------------------------------------------------------- parser / main
@@ -146,7 +157,7 @@ def build_parser() -> argparse.ArgumentParser:
         "plan-template",
         help="print the one canonical authored-plan template for a domain profile",
     )
-    p.add_argument("profile", choices=("curriculum", "job"))
+    p.add_argument("profile", choices=("curriculum",))
     p.add_argument("--title", required=True)
     p.add_argument("--unit-id", default=None)
     p.add_argument("--module-id", default=None)
@@ -156,85 +167,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="answer the plan-template-v1 query envelope instead of YAML (used by the interface)",
     )
     p.set_defaults(func=cmd_plan_template)
-
-    p = sub.add_parser(
-        "job-dashboard",
-        help="read the bounded quarantined Job dashboard after an explicit access gesture",
-    )
-    p.add_argument(
-        "--confirm-job-access",
-        action="store_true",
-        help="confirm this invocation is an explicit Job session",
-    )
-    p.set_defaults(func=cmd_job_dashboard)
-
-    # Bounded Job writes (ADR-010). Each is an explicit gesture; the transaction
-    # is rooted at Job/, so containment is the engine's guard, not a new check.
-    p = sub.add_parser(
-        "job-session-log",
-        help="append one session entry to the Job workspace scratch log",
-    )
-    p.add_argument("--confirm-job-access", action="store_true",
-                   help="confirm this invocation is an explicit Job session")
-    p.add_argument("--text", default=None,
-                   help="entry text; omit to read from stdin")
-    p.add_argument("--track", default=None, help="learning track this session served")
-    p.add_argument("--session", type=int, default=None, help="track session number")
-    p.add_argument("--minutes", type=int, default=None, help="time spent")
-    p.set_defaults(func=cmd_job_session_log)
-
-    p = sub.add_parser(
-        "job-note-stamp",
-        help="re-stamp a living Job note's verified_against commit",
-    )
-    p.add_argument("--confirm-job-access", action="store_true",
-                   help="confirm this invocation is an explicit Job session")
-    p.add_argument("--note", required=True, help="note id, e.g. note-stratum-op-joinop")
-    p.add_argument("--commit", required=True, help="commit the note was verified against")
-    p.add_argument("--date", default=None, help="verification date (default: today)")
-    p.add_argument("--status", default="current",
-                   help="current | drifting | stale (default: current)")
-    p.set_defaults(func=cmd_job_note_stamp)
-
-    p = sub.add_parser(
-        "job-note-save",
-        help="create or explicitly revise one learner-authored Job note",
-    )
-    p.add_argument("--confirm-job-access", action="store_true")
-    p.add_argument("--approve", action="store_true")
-    p.add_argument("--note", required=True, help="stable note id")
-    p.add_argument("--title", required=True)
-    p.add_argument("--body", required=True)
-    p.add_argument("--folder", default="learning")
-    p.set_defaults(func=cmd_job_note_save)
-
-    p = sub.add_parser(
-        "job-plan-save",
-        help="create or update one structured Job learning plan",
-    )
-    p.add_argument("--confirm-job-access", action="store_true")
-    p.add_argument("--approve", action="store_true")
-    p.add_argument("--plan", type=json_object, required=True)
-    p.set_defaults(func=cmd_job_plan_save)
-
-    p = sub.add_parser(
-        "job-task-save",
-        help="create or update one Job task",
-    )
-    p.add_argument("--confirm-job-access", action="store_true")
-    p.add_argument("--task", type=json_object, required=True)
-    p.set_defaults(func=cmd_job_task_save)
-
-    p = sub.add_parser(
-        "job-track-progress",
-        help="record one completed Job learning-track session",
-    )
-    p.add_argument("--confirm-job-access", action="store_true",
-                   help="confirm this invocation is an explicit Job session")
-    p.add_argument("--track", required=True, help="track id, e.g. job-track-polars")
-    p.add_argument("--session", type=int, required=True, help="session number completed")
-    p.add_argument("--state", default="done", help="done | open (default: done)")
-    p.set_defaults(func=cmd_job_track_progress)
 
     p = sub.add_parser("module-list", help="list modules with optional program/status filters")
     p.add_argument("--program-id", default=None)
@@ -259,6 +191,10 @@ def build_parser() -> argparse.ArgumentParser:
     source = p.add_mutually_exclusive_group(required=True)
     source.add_argument("--file")
     source.add_argument("--project", type=json_object, help="the project record as inline JSON")
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact project file bytes approved for this request",
+    )
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_project_create)
@@ -268,6 +204,10 @@ def build_parser() -> argparse.ArgumentParser:
     source = p.add_mutually_exclusive_group(required=True)
     source.add_argument("--file")
     source.add_argument("--project", type=json_object, help="the project record as inline JSON")
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact project file bytes approved for this request",
+    )
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_project_update)
@@ -294,7 +234,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--provider", default="manual-bundle")
     p.add_argument("--expected-snapshot", default=None)
     p.add_argument("--request-id", default=None)
-    p.add_argument("--confirm-job-export", action="store_true")
     p.set_defaults(func=cmd_ai_action_prepare)
 
     p = sub.add_parser("ai-action-import-delivery",
@@ -310,16 +249,164 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("ai-action-apply-delivery",
                        help="atomically apply one approved, validated delivery")
     p.add_argument("delivery_id")
+    p.add_argument(
+        "--delivery-sha256",
+        required=True,
+        help="SHA-256 of the exact imported delivery.yaml bytes",
+    )
+    p.add_argument(
+        "--artifact-sha256",
+        required=True,
+        type=json_object,
+        help="JSON object mapping every artifact_ref to its exact SHA-256",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_ai_action_apply_delivery)
 
     p = sub.add_parser("ai-action-status", help="show one prepared request status")
     p.add_argument("request_id")
     p.set_defaults(func=cmd_ai_action_status)
 
+    p = sub.add_parser(
+        "unit-material-synthesis-publish",
+        help="check or publish one reviewed unit material dossier",
+    )
+    p.add_argument("unit_id")
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_unit_material_synthesis_publish)
+
+    p = sub.add_parser(
+        "legacy-archive-inspect",
+        help="inspect only explicitly allowlisted safe Legacy files",
+    )
+    p.add_argument("--archive-root", required=True)
+    p.add_argument("--allowlist", required=True)
+    p.set_defaults(func=cmd_legacy_archive_inspect)
+
+    p = sub.add_parser(
+        "legacy-archive-status",
+        help="read the last approved Legacy archive lock without rescanning",
+    )
+    p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
+    p.set_defaults(func=cmd_legacy_archive_status)
+
+    p = sub.add_parser(
+        "legacy-archive-lock-publish",
+        help="publish one reviewed safe Legacy disposition lock",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_legacy_archive_lock_publish)
+
+    p = sub.add_parser(
+        "masters-planning-dashboard",
+        help="open the sanitized prospective planning catalog deliberately",
+    )
+    p.add_argument("--confirm-masters-planning", action="store_true")
+    p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
+    p.set_defaults(func=cmd_masters_planning_dashboard)
+
+    p = sub.add_parser(
+        "masters-planning-catalog-update",
+        help="publish a reviewed academic-only prospective catalog",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_masters_planning_catalog_update)
+
+    p = sub.add_parser(
+        "masters-planning-comparison-publish",
+        help="publish one reviewed prospective source comparison",
+    )
+    p.add_argument("candidate_module_id")
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_masters_planning_comparison_publish)
+
+    p = sub.add_parser(
+        "route-identity-migrate",
+        help="atomically apply one exact approved v13 route-identity diff",
+    )
+    p.add_argument(
+        "--plan-sha256",
+        required=True,
+        type=sha256_value,
+        help="sha256 of the exact dry-run unified diff",
+    )
+    p.add_argument(
+        "--review",
+        type=json_object,
+        default=None,
+        help="inline schema-version-1 route review bound to the approved plan",
+    )
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_route_identity_migrate)
+
+    p = sub.add_parser(
+        "job-learning-migrate",
+        help="atomically migrate the exact approved legacy Job learning set",
+    )
+    p.add_argument(
+        "--plan-sha256",
+        required=True,
+        type=sha256_value,
+        help="sha256 of the exact deterministic migration plan",
+    )
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_job_learning_migrate)
+
+    p = sub.add_parser("health-report", help="build one explicit vNext health report")
+    p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
+    p.set_defaults(func=cmd_health_report)
+
+    p = sub.add_parser("backup-manifest", help="hash the explicit LearningOS backup allowlist")
+    p.add_argument("--ui-root", default=None)
+    p.add_argument("--materials-root", default=None)
+    p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
+    p.set_defaults(func=cmd_backup_manifest)
+
+    p = sub.add_parser("backup-verify", help="verify a restore against a backup manifest")
+    p.add_argument("--manifest", required=True)
+    p.add_argument("--restored-core", required=True)
+    p.add_argument("--restored-ui", required=True)
+    p.add_argument("--restored-materials", required=True)
+    p.add_argument(
+        "--checksums-only", action="store_true",
+        help="skip projection, validation, and restored UI bundle smoke checks",
+    )
+    p.set_defaults(func=cmd_backup_verify)
+
     p = sub.add_parser("capture",
                        help="drop text or a file into work/inbox/ (no routing)")
     p.add_argument("--text", default=None, help="capture this text (else stdin)")
     p.add_argument("--file", default=None, help="copy this file into the inbox")
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact file bytes approved for this capture",
+    )
     p.add_argument("--title", default=None, help="optional title for text captures")
     p.add_argument("--json", action="store_true",
                    help="confirm structurally instead of in prose (used by the app)")
@@ -353,6 +440,10 @@ def build_parser() -> argparse.ArgumentParser:
                        help="create/import the single current study map for a unit")
     p.add_argument("unit_id")
     p.add_argument("--file", required=True)
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact study-map file bytes approved for import",
+    )
     p.add_argument("--replace", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
@@ -361,7 +452,33 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("module-plan-import",
                        help="transactionally import a standardized module plan and its units")
     p.add_argument("module_id")
-    p.add_argument("--file", required=True)
+    module_plan_source = p.add_mutually_exclusive_group(required=True)
+    module_plan_source.add_argument(
+        "--file",
+        help="reviewed YAML plan for an existing canonical module",
+    )
+    module_plan_source.add_argument(
+        "--promotion",
+        type=json_object,
+        help=(
+            "inline MasterPlanning promotion package; live application is "
+            "GatewayEnvelopeV2-only"
+        ),
+    )
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact module-plan file bytes approved for import",
+    )
+    p.add_argument(
+        "--package-sha256",
+        default=None,
+        help="exact promotion package hash returned by --check",
+    )
+    p.add_argument(
+        "--approve",
+        action="store_true",
+        help="direct approval flag; GatewayEnvelopeV2 owns this value for live promotion",
+    )
     p.add_argument("--check", action="store_true",
                    help="run contract, routing, and shadow-repository validation without writing")
     p.add_argument("--expected-snapshot", default=None)
@@ -372,6 +489,10 @@ def build_parser() -> argparse.ArgumentParser:
                        help="replace one existing note after explicit full-file review")
     p.add_argument("note_id")
     p.add_argument("--file", required=True)
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact replacement-note bytes approved for revision",
+    )
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
@@ -396,6 +517,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="completed stage context; repeat for multiple stages")
     p.add_argument("--attachment", action="append", default=[],
                    help="copy one file into the unit note attachments; repeatable")
+    p.add_argument(
+        "--attachment-sha256", action="append", default=[], type=sha256_value,
+        help="SHA-256 for the corresponding --attachment; repeat in the same order",
+    )
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_unit_note)
@@ -434,6 +559,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("unit_id")
     p.add_argument("stage_id")
     p.add_argument("--file", required=True)
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact attachment bytes approved for this request",
+    )
     p.add_argument("--label", default=None)
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
@@ -479,6 +608,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("unit_id")
     p.add_argument("--items-file", default=None,
                    help="optional JSON proposal items produced with explicit unit context")
+    p.add_argument(
+        "--items-file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact shelving-items file bytes approved for review",
+    )
     p.add_argument("--summary", default=None)
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
@@ -520,6 +653,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("path_id")
     p.add_argument("stage_id")
     p.add_argument("--file", required=True)
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact attachment bytes approved for this request",
+    )
     p.add_argument("--label", default=None)
     p.add_argument("--expected-snapshot", default=None,
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
@@ -542,6 +679,13 @@ def main() -> int:
     except WriteRefused as exc:
         # Nothing was changed: _atomic_text cleans up its temp file and
         # _write_transaction rolls the set back before re-raising.
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    except TransactionFailure as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    except (MaterialSynthesisError, LegacyArchiveError, MastersPlanningError,
+            BackupManifestError, HealthReportError) as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
 

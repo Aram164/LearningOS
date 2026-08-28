@@ -10,7 +10,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from .model import Coordination, LearningPath, Repo, Workspace, _register
-from .yamlio import LoaderError, _load_yaml, _record_id, parse_frontmatter
+from .yamlio import LoaderError, _load_yaml, _read_text, _record_id, parse_frontmatter
 
 
 def _load_learning_paths(repo: Repo, context_file: Path, workspace_id: str,
@@ -23,7 +23,7 @@ def _load_learning_paths(repo: Repo, context_file: Path, workspace_id: str,
         return
     for pf in sorted(paths_dir.glob("path-*.yaml")):
         try:
-            data = _load_yaml(pf)
+            data = _load_yaml(pf, repo.root)
         except LoaderError as exc:
             repo.parse_failures.append((pf, str(exc)))
             continue
@@ -53,7 +53,7 @@ def load_workspaces(repo: Repo, root: Path) -> None:
         found = base.rglob("CONTEXT.md") if archived else base.glob("*/CONTEXT.md")
         for f in sorted(found):
             try:
-                meta, body = parse_frontmatter(f.read_text(encoding="utf-8"), f)
+                meta, body = parse_frontmatter(_read_text(f, root), f)
             except LoaderError as exc:
                 repo.parse_failures.append((f, str(exc)))
                 continue
@@ -63,8 +63,8 @@ def load_workspaces(repo: Repo, root: Path) -> None:
                 continue
             wid = str(meta.get("id", f.parent.name))
             ws = Workspace(id=wid, path=f, meta=meta, body=body, archived=archived)
-            _register(repo, repo.workspaces, wid, ws, f, "workspace")
-            _load_learning_paths(repo, f, wid, archived)
+            if _register(repo, repo.workspaces, wid, ws, f, "workspace"):
+                _load_learning_paths(repo, f, wid, archived)
 
 
 def load_coordination(repo: Repo, root: Path) -> None:
@@ -72,7 +72,7 @@ def load_coordination(repo: Repo, root: Path) -> None:
     if not coord_file.exists():
         return
     try:
-        meta, body = parse_frontmatter(coord_file.read_text(encoding="utf-8"), coord_file)
+        meta, body = parse_frontmatter(_read_text(coord_file, root), coord_file)
         repo.coordination = Coordination(path=coord_file, meta=meta, body=body)
     except LoaderError as exc:
         repo.parse_failures.append((coord_file, str(exc)))

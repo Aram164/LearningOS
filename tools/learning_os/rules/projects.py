@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 
+from ..transactions import TransactionFailure, load_revisions
 from .common import REQUIRED_WORKSPACE_SECTIONS
 
 
@@ -11,6 +12,17 @@ class ChecksProjects:
     """Mixed into Validator; see rules/core.py."""
     def check_projects(self):
         r = self.repo
+
+        def project_file_resolves(value) -> bool:
+            if not isinstance(value, str) or not value.strip():
+                return False
+            candidate = (r.root / value).resolve()
+            try:
+                candidate.relative_to(r.root.resolve())
+            except ValueError:
+                return False
+            return candidate.exists()
+
         relation_ids: set[str] = set()
         for project_id, project in r.projects.items():
             data = project.data
@@ -63,7 +75,7 @@ class ChecksProjects:
             "topic-pack": lambda value: value in r.collections
                 and r.collections[value].get("collection_kind") == "topic-pack",
             "note": lambda value: value in r.notes,
-            "file": lambda value: (r.root / str(value)).exists(),
+            "file": project_file_resolves,
         }
         for relation in r.project_relations:
             relation_id = relation.get("id")
@@ -110,6 +122,14 @@ class ChecksProjects:
         directory = self.repo.root / "operations" / "transactions"
         if not directory.is_dir():
             return
+        try:
+            load_revisions(self.repo.root)
+        except TransactionFailure as exc:
+            self.err(
+                "TRANSACTION-REVISIONS",
+                str(exc),
+                "operations/transactions/revisions.yaml",
+            )
         seen: set[str] = set()
         for path in sorted(directory.glob("transaction-*.yaml")):
             try:

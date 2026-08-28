@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Literal
 
 from ..loader import EVIDENCE_SCHEMES
+from ..routes import exact_selection_matches, iter_route_references
 from .common import CANONICAL_TREES, MD_LINK_RE, WORKSPACE_TOKEN_RE, _in_garden, _in_quarantine
 
 
@@ -44,6 +45,112 @@ class ChecksReferences:
     """Mixed into Validator; see rules/core.py."""
     def check_references(self):
         r = self.repo
+        route_refs = list(iter_route_references(r))
+        routes_by_id: dict[str, list] = {}
+        for route_ref in route_refs:
+            routes_by_id.setdefault(route_ref.route_id, []).append(route_ref)
+            if not route_ref.authored_id:
+                where = self._rel(r.module_source_map_origins[route_ref.module_id])
+                self.warn(
+                    "ROUTE-ID-MISSING",
+                    f"source '{route_ref.source_id}' route to "
+                    f"'{route_ref.unit_id}' has no persisted route id; "
+                    f"v13 projects '{route_ref.route_id}' until migration",
+                    where,
+                )
+        for route_id, matches in sorted(routes_by_id.items()):
+            if len(matches) < 2:
+                continue
+            owners = sorted(
+                f"{match.module_id}/{match.unit_id}/{match.source_id}"
+                for match in matches
+            )
+            self.err(
+                "ROUTE-ID-DUPLICATE",
+                f"route id '{route_id}' is owned by more than one rich route: "
+                + ", ".join(owners),
+                "curriculum/modules",
+            )
+        for synthesis_id, synthesis in r.unit_material_syntheses.items():
+            where = self._rel(r.unit_material_synthesis_origins[synthesis_id])
+            synthesis_unit = synthesis.get("unit_id")
+            if synthesis_unit not in r.units:
+                self.err(
+                    "REF-UNIT",
+                    f"material synthesis '{synthesis_id}' references unknown "
+                    f"unit '{synthesis_unit}'",
+                    where,
+                )
+            for assessment in synthesis.get("route_assessments", []) or []:
+                if not isinstance(assessment, dict):
+                    continue
+                route_id = assessment.get("route_id")
+                matches = routes_by_id.get(str(route_id), [])
+                if len(matches) != 1:
+                    self.err(
+                        "REF-ROUTE",
+                        f"material synthesis '{synthesis_id}' route "
+                        f"'{route_id}' resolves {len(matches)} rich routes",
+                        where,
+                    )
+                    continue
+                route_ref = matches[0]
+                if route_ref.unit_id != synthesis_unit:
+                    self.err(
+                        "SYNTHESIS-ROUTE-OWNER",
+                        f"material synthesis '{synthesis_id}' uses route "
+                        f"'{route_id}' owned by '{route_ref.unit_id}'",
+                        where,
+                    )
+                if route_ref.source_id != assessment.get("source_id"):
+                    self.err(
+                        "SYNTHESIS-SOURCE-GUARD",
+                        f"material synthesis route '{route_id}' source guard "
+                        "does not match the current route",
+                        where,
+                    )
+                if route_ref.locator != assessment.get("locator"):
+                    self.err(
+                        "SYNTHESIS-LOCATOR-GUARD",
+                        f"material synthesis route '{route_id}' locator guard "
+                        "does not match the current route",
+                        where,
+                    )
+                for concept_id in assessment.get("concept_ids", []) or []:
+                    if concept_id not in r.concepts:
+                        self.err(
+                            "REF-CONCEPT",
+                            f"material synthesis '{synthesis_id}' references "
+                            f"unknown concept '{concept_id}'",
+                            where,
+                        )
+            for group in synthesis.get("concept_groups", []) or []:
+                if not isinstance(group, dict):
+                    continue
+                concept_id = group.get("concept_id")
+                if concept_id not in r.concepts:
+                    self.err(
+                        "REF-CONCEPT",
+                        f"material synthesis '{synthesis_id}' references "
+                        f"unknown concept '{concept_id}'",
+                        where,
+                    )
+                for related_unit_id in group.get("related_unit_ids", []) or []:
+                    if related_unit_id not in r.units:
+                        self.err(
+                            "REF-UNIT",
+                            f"material synthesis '{synthesis_id}' references "
+                            f"unknown related unit '{related_unit_id}'",
+                            where,
+                        )
+                for note_id in group.get("bridge_note_ids", []) or []:
+                    if note_id not in r.notes:
+                        self.err(
+                            "REF-NOTE",
+                            f"material synthesis '{synthesis_id}' references "
+                            f"unknown bridge note '{note_id}'",
+                            where,
+                        )
         for note in r.notes.values():
             where = self._rel(note.path)
             for cid in note.meta.get("concepts", []) or []:
@@ -148,14 +255,79 @@ class ChecksReferences:
                 sid = scoped.get("source_id") if isinstance(scoped, dict) else None
                 if sid and sid not in r.sources:
                     self.err("REF-SOURCE", f"unit '{uid}' references unknown scope source '{sid}'", where)
+            for node in (data.get("knowledge_map") or {}).get("nodes", []) or []:
+                if not isinstance(node, dict):
+                    continue
+                for concept_id in node.get("concept_ids", []) or []:
+                    if concept_id not in r.concepts:
+                        self.err(
+                            "REF-CONCEPT",
+                            f"unit '{uid}' knowledge node '{node.get('id')}' "
+                            f"references unknown global concept '{concept_id}'",
+                            where,
+                        )
             map_stage_ids = set()
             current_map = r.study_maps.get(data.get("current_study_map"))
             if current_map:
                 map_stage_ids = {stage.get("id") for stage in current_map.data.get("stages", []) or []}
             for selection in data.get("source_selections", []) or []:
+                if not isinstance(selection, dict):
+                    continue
                 sid = selection.get("source_id") if isinstance(selection, dict) else None
                 if sid and sid not in r.sources:
                     self.err("REF-SOURCE", f"unit '{uid}' selects unknown source '{sid}'", where)
+                route_id = selection.get("route_id")
+                if route_id:
+                    id_matches = routes_by_id.get(str(route_id), [])
+                    if not id_matches:
+                        self.err(
+                            "REF-ROUTE",
+                            f"unit '{uid}' selects unknown route '{route_id}'",
+                            where,
+                        )
+                    elif len(id_matches) == 1:
+                        route_ref = id_matches[0]
+                        if route_ref.unit_id != uid:
+                            self.err(
+                                "SELECTION-ROUTE-OWNER",
+                                f"unit '{uid}' selects route '{route_id}' owned by "
+                                f"'{route_ref.unit_id}'",
+                                where,
+                            )
+                        if route_ref.source_id != selection.get("source_id"):
+                            self.err(
+                                "SELECTION-SOURCE-GUARD",
+                                f"selection route '{route_id}' belongs to source "
+                                f"'{route_ref.source_id}', not "
+                                f"'{selection.get('source_id')}'",
+                                where,
+                            )
+                        if route_ref.locator != selection.get("locator"):
+                            self.err(
+                                "SELECTION-LOCATOR-GUARD",
+                                f"selection route '{route_id}' locator no longer "
+                                "matches its stored guard",
+                                where,
+                            )
+                else:
+                    legacy_matches = exact_selection_matches(
+                        route_refs,
+                        unit_id=uid,
+                        selection=selection,
+                    )
+                    # A legacy string edge has no route locator to match and
+                    # remains valid evidence. Warn only when migration has one
+                    # exact rich-route answer; unresolved/ambiguous cases stay
+                    # in the explicit v13 migration report rather than making
+                    # every preflight noisy forever.
+                    if len(legacy_matches) == 1:
+                        self.warn(
+                            "SELECTION-ROUTE-ID-MISSING",
+                            f"unit '{uid}' has a readable pre-v13 source "
+                            f"selection without route_id; exact route "
+                            f"'{legacy_matches[0].route_id}' is available",
+                            where,
+                        )
                 for stage_id in selection.get("stage_ids", []) or []:
                     if stage_id not in map_stage_ids:
                         self.err("REF-STAGE", f"unit '{uid}' source selection routes to unknown stage '{stage_id}'", where)
@@ -223,6 +395,34 @@ class ChecksReferences:
                     sid = resource.get("source_id") if isinstance(resource, dict) else None
                     if sid and sid not in r.sources:
                         self.err("REF-SOURCE", f"study map '{smid}' references unknown source '{sid}'", where)
+                    route_id = resource.get("route_id") if isinstance(resource, dict) else None
+                    if route_id:
+                        id_matches = routes_by_id.get(str(route_id), [])
+                        if not id_matches:
+                            self.err(
+                                "REF-ROUTE",
+                                f"study map '{smid}' references unknown route "
+                                f"'{route_id}'",
+                                where,
+                            )
+                        elif len(id_matches) == 1:
+                            route_ref = id_matches[0]
+                            if route_ref.unit_id != study_map.unit_id:
+                                self.err(
+                                    "RESOURCE-ROUTE-OWNER",
+                                    f"study map '{smid}' resource route "
+                                    f"'{route_id}' belongs to "
+                                    f"'{route_ref.unit_id}'",
+                                    where,
+                                )
+                            if sid and sid != route_ref.source_id:
+                                self.err(
+                                    "RESOURCE-SOURCE-GUARD",
+                                    f"study map '{smid}' resource route "
+                                    f"'{route_id}' belongs to source "
+                                    f"'{route_ref.source_id}', not '{sid}'",
+                                    where,
+                                )
                 for feedback in stage.get("source_feedback", []) or []:
                     sid = feedback.get("source_id") if isinstance(feedback, dict) else None
                     if sid and sid not in r.sources:
@@ -386,5 +586,14 @@ class ChecksReferences:
             self._check_uri(target, where)
             return
         resolved = (source_file.parent / classified.target).resolve()
+        try:
+            resolved.relative_to(self.repo.root.resolve())
+        except ValueError:
+            self.err(
+                "LINK-ESCAPE",
+                f"internal link escapes the repository: '{target}'",
+                where,
+            )
+            return
         if not resolved.exists():
             self.err("LINK-BROKEN", f"internal link does not resolve: '{target}'", where)

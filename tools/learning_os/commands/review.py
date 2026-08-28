@@ -9,13 +9,17 @@ import sys
 from pathlib import Path
 
 from .support import (
+    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
+    _load_session_paths,
     _operator_lock,
     _publish,
+    _read_content_bound_file,
     _root,
     _session_ledger,
+    _session_path_state,
     _unit_map_or_error,
     _write_transaction,
 )
@@ -33,7 +37,16 @@ def cmd_shelving_prepare(args) -> int:
         data = copy.deepcopy(study_map.data)
         items = []
         if args.items_file:
-            raw = json.loads(Path(args.items_file).read_text(encoding="utf-8"))
+            try:
+                _source, item_bytes = _read_content_bound_file(
+                    args.items_file,
+                    getattr(args, "items_file_sha256", None),
+                    label="shelving items file",
+                )
+                raw = json.loads(item_bytes.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError, WriteRefused) as exc:
+                print(f"los: cannot read shelving items: {exc}", file=sys.stderr)
+                return 2
             items = raw.get("items", raw) if isinstance(raw, dict) else raw
             if not isinstance(items, list):
                 print("los: shelving items file must contain a JSON list", file=sys.stderr)
@@ -139,8 +152,18 @@ def cmd_shelving_apply(args) -> int:
 def cmd_session_end(args) -> int:
     root = _root(args)
     ledger = _session_ledger(root)
-    touched = json.loads(ledger.read_text(encoding="utf-8")) if ledger.is_file() else []
-    touched = [path for path in touched if Path(path).suffix.lower() != ".canvas"]
+    try:
+        recorded = _load_session_paths(root)
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    touched = sorted(
+        path for path in recorded if Path(path).suffix.lower() != ".canvas"
+    )
+    ownership_conflicts = [
+        path for path in touched
+        if _session_path_state(root, path) != recorded[path]
+    ]
     # `validate.py` resolves its repository from its own location unless told
     # otherwise, so a bare `cwd=root` would validate the repository the tools
     # live in — not the one this session touched. Pass the root explicitly.
@@ -153,8 +176,8 @@ def cmd_session_end(args) -> int:
         return validation.returncode or 1
     # Errors gate; warnings are advisory and reported. Gating on zero warnings
     # made session-end impossible in a repository carrying the by-design
-    # "material may be offline" set — and validate.py's own contract is that
-    # link rot never blocks.
+    # "material may be offline" set. External link rot is gated only by the
+    # explicit online validator and never runs during session-end.
     validation_line = next((line for line in validation.stdout.splitlines()
                             if "warning(s)" in line), "").strip()
     with _operator_lock(root):
@@ -166,12 +189,29 @@ def cmd_session_end(args) -> int:
     unrelated = [line for line in all_changed if line[3:] not in touched]
     payload = {"ok": True, "touched": touched, "owned_changes": owned,
                "unrelated_changes": unrelated, "committed": False, "pushed": False,
-               "validation": validation_line}
+               "validation": validation_line,
+               "ownership_conflicts": ownership_conflicts}
     if not args.commit_message:
+        # A review-only close ends this ownership window. Keeping the ledger
+        # would make a later session inherit paths it never touched.
+        ledger.unlink(missing_ok=True)
+        payload["session_closed"] = True
         print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0
     if not touched:
         print("los: no files were touched through this learning session", file=sys.stderr)
+        return 2
+    ownership_conflicts = [
+        path for path in touched
+        if _session_path_state(root, path) != recorded[path]
+    ]
+    payload["ownership_conflicts"] = ownership_conflicts
+    if ownership_conflicts:
+        print(
+            "los: refusing to stage files changed after their recorded LearningOS "
+            "transaction: " + ", ".join(ownership_conflicts),
+            file=sys.stderr,
+        )
         return 2
     subprocess.run(["git", "add", "--", *touched], cwd=root, check=True, timeout=30)
     commit = subprocess.run(["git", "commit", "-m", args.commit_message], cwd=root,

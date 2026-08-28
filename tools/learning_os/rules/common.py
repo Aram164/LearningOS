@@ -68,21 +68,12 @@ KNOWLEDGE_TEXT_SUFFIXES = {".md", ".yaml", ".yml"}
 GARDEN_SUBTREE = ("knowledge", "garden")
 
 # ---- Hygiene sweep (ADR-004, 2026-08-03) -----------------------------------
-# Mess must be self-announcing: the four failure classes that previously cost
-# audit sessions (stale git locks, stale views, unfiled files, shadow copies)
-# are detected here as WARNINGS — they nag, never block.
-#
-# Shadow roots live OUTSIDE the repository, resolved from the container that
-# holds LearningOS/ (repo root's grandparent). Listing the Job root is a
-# narrow, Aram-approved carve-out to the CLAUDE.md §13 quarantine: the sweep
-# reads file NAMES and mtimes only, never content. Roots are optional — the
-# repository stays location-independent.
-SHADOW_ROOTS = (
-    ("legacy", Path("legacy") / "Plans"),
-    ("job-inputs", Path("Job") / "workspace-job-deem" / "inputs"),
-)
+# Mess must be self-announcing inside the canonical repository. External
+# archives and external code repositories are intentionally absent. Legacy is
+# inspected only by the explicit, allowlist-driven
+# ``legacy.archive.inspect`` operation; sibling worktrees such as Stratum are
+# outside LearningOS validation entirely.
 STALE_LOCK_AGE_S = 600       # index.lock older than this = crashed git process
-SHADOW_MTIME_SLACK_S = 120   # clock slack before a shadow counts as "newer"
 
 
 def _in_garden(root: Path, path: Path) -> bool:

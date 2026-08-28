@@ -1,4 +1,4 @@
-"""Non-fatal repository hygiene: stale locks, stale views, unfiled and shadow copies."""
+"""Non-fatal hygiene for files inside the canonical repository."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from pathlib import Path
 
 from ..fingerprint import source_fingerprint
 from ..githistory import last_commit_timestamp
-from .common import SHADOW_MTIME_SLACK_S, SHADOW_ROOTS, STALE_LOCK_AGE_S
+from .common import STALE_LOCK_AGE_S
 
 
 class ChecksHygiene:
@@ -20,7 +20,6 @@ class ChecksHygiene:
         self._hygiene_stale_locks()
         self._hygiene_stale_views()
         self._hygiene_unfiled()
-        self._hygiene_shadow_copies()
 
     def _hygiene_stale_locks(self):
         # The repository's own .git plus the container repo above it (if any).
@@ -90,36 +89,6 @@ class ChecksHygiene:
                         if p.name != "CONTEXT.md":
                             flag(p, "file beside CONTEXT.md — belongs in scratch/, "
                                     "inputs/ or outputs/")
-
-    @staticmethod
-    def _shadow_key(name: str) -> str:
-        stem = name.rsplit(".", 1)[0].lower().replace("_", "-").replace(" ", "-")
-        return stem.removeprefix("note-")
-
-    def _hygiene_shadow_copies(self):
-        container = self.repo.root.parent.parent
-        canon: dict[str, tuple[str, Path]] = {}
-        for note in self.repo.notes.values():
-            canon[self._shadow_key(note.path.name)] = (
-                note.meta.get("id", note.path.stem), note.path)
-        for label, rel in SHADOW_ROOTS:
-            shadow_root = container / rel
-            if not shadow_root.is_dir():
-                continue
-            for p in shadow_root.rglob("*.md"):  # names + mtimes only, never content
-                hit = canon.get(self._shadow_key(p.name))
-                if hit is None:
-                    continue
-                note_id, note_path = hit
-                canon_ts = note_path.stat().st_mtime
-                commit_ts = self._git_last_commit_ts(note_path)
-                if commit_ts:
-                    canon_ts = max(canon_ts, commit_ts)
-                if p.stat().st_mtime > canon_ts + SHADOW_MTIME_SLACK_S:
-                    self.warn("HYGIENE-SHADOW",
-                              f"shadow copy in {label}/ edited after canonical note "
-                              f"'{note_id}' — the canon is the live copy; merge the "
-                              f"delta there and re-freeze the shadow: {p}")
 
     # ------------------------------------------------------------------ git
     def _git(self, args: list[str]) -> str:

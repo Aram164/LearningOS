@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import json
 import sys
-from pathlib import Path
 
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 
 from .support import (
+    WriteRefused,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
+    _read_content_bound_file,
     _render_frontmatter,
     _root,
     _write_transaction,
@@ -29,9 +30,15 @@ def cmd_note_revise(args) -> int:
               file=sys.stderr)
         return 2
     root = _root(args)
-    source = Path(args.file).expanduser().resolve()
-    if not source.is_file():
-        print(f"los: no such revised note file: {source}", file=sys.stderr)
+    try:
+        source, content_bytes = _read_content_bound_file(
+            args.file,
+            getattr(args, "file_sha256", None),
+            label="revised note file",
+        )
+        content = content_bytes.decode("utf-8")
+    except (UnicodeDecodeError, WriteRefused) as exc:
+        print(f"los: cannot read revised note: {exc}", file=sys.stderr)
         return 2
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
@@ -41,7 +48,6 @@ def cmd_note_revise(args) -> int:
         if note is None:
             print(f"los: note not found: {args.note_id}", file=sys.stderr)
             return 2
-        content = source.read_text(encoding="utf-8")
         try:
             meta, _ = parse_frontmatter(content, source)
         except LoaderError as exc:

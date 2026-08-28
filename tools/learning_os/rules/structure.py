@@ -48,6 +48,12 @@ class ChecksStructure:
                                self._rel(r.module_source_map_origins[mid]))
         for study_map in r.study_maps.values():
             self._schema_check("study-map", study_map.data, self._rel(study_map.path))
+        for synthesis_id, synthesis in r.unit_material_syntheses.items():
+            self._schema_check(
+                "unit-material-synthesis",
+                synthesis,
+                self._rel(r.unit_material_synthesis_origins[synthesis_id]),
+            )
         if r.resume_pointer is not None and r.resume_pointer_path is not None:
             self._schema_check("resume", r.resume_pointer, self._rel(r.resume_pointer_path))
         for note in r.notes.values():
