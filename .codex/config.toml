@@ -1,0 +1,4 @@
+# Codex-Defaults fuer LearningOS/repository.
+# Wird nur geladen, wenn das Projekt in ~/.codex/config.toml als trusted steht.
+model = "gpt-5.6-sol"
+model_reasoning_effort = "ultra"
