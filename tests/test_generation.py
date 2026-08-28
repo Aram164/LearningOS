@@ -6,6 +6,7 @@ import json
 import re
 import shutil
 import subprocess
+from pathlib import Path
 
 import pytest
 
@@ -161,8 +162,26 @@ def test_domain_atlas_at_a_glance_covers_all_domains(mini_repo):
         assert f"- **{dom}**" in atlas, dom
         assert f"## {dom}" in atlas, dom
     assert "- **mathematics** — 1 note" in atlas
-    assert "quarantined" in atlas  # Job/ named as excluded, contents never listed
+    assert "External code repositories" in atlas
+    assert "Stratum/" in atlas
+    assert "Master's Planning" not in atlas
+    assert "Legacy tree" not in atlas
     assert "## Not in this map" in atlas
+
+
+def test_normal_atlas_generation_never_stats_legacy(mini_repo, monkeypatch):
+    repo = load_repo(mini_repo)
+    original_is_dir = Path.is_dir
+
+    def guarded_is_dir(path: Path):
+        if "legacy" in {part.casefold() for part in path.parts}:
+            raise AssertionError(f"normal atlas touched sealed Legacy boundary: {path}")
+        return original_is_dir(path)
+
+    monkeypatch.setattr(Path, "is_dir", guarded_is_dir)
+    atlas = generate_all(repo, generated_at="T1")["domain-atlas.md"]
+
+    assert "Legacy tree" not in atlas
 
 
 def test_domain_atlas_shelves_harvest_descriptions_and_never_drop(mini_repo):

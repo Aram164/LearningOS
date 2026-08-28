@@ -10,10 +10,12 @@ from pathlib import Path
 
 import pytest
 import yaml
+from gateway_helpers import approved_v2_cli, file_sha256, request_artifact_id
 
 from learning_os.fingerprint import source_fingerprint
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo, parse_frontmatter
+from learning_os.routes import deterministic_route_id
 from learning_os.rules import validate
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,6 +26,16 @@ MIGRATE = ROOT / "tools" / "migrations" / "curriculum_v2.py"
 def run_los(root: Path, *args: str):
     return subprocess.run([sys.executable, str(LOS), "--root", str(root), *args],
                           capture_output=True, text=True, timeout=120)
+
+
+def gateway_result(proc) -> dict:
+    """Return the capability handler result from a GatewayResultV2 response."""
+    return json.loads(proc.stdout)["result"]
+
+
+def gateway_error(proc) -> str:
+    """Return the stable human-readable detail from a typed gateway refusal."""
+    return str(json.loads(proc.stdout).get("error", {}).get("message", ""))
 
 
 def write_yaml(path: Path, data: dict) -> None:
@@ -216,7 +228,7 @@ def test_learner_can_choose_and_remove_one_rich_material_option(mini_repo):
     unit["source_selections"] = []
     write_yaml(unit_path, unit)
 
-    chosen = run_los(
+    chosen = approved_v2_cli(
         mini_repo,
         "unit-source-selection",
         "unit-demo-l01",
@@ -225,22 +237,33 @@ def test_learner_can_choose_and_remove_one_rich_material_option(mini_repo):
         "select",
         "--purpose",
         "Use the worked derivation.",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-source-selection-choose",
     )
     assert chosen.returncode == 0, chosen.stderr
     selection = load_repo(mini_repo).units["unit-demo-l01"].data["source_selections"]
     assert selection == [{
+        "route_id": deterministic_route_id(
+            "module-demo",
+            "source-demo-book",
+            load_repo(mini_repo).module_source_maps["module-demo"]["sources"][0][
+                "unit_routes"
+            ][0],
+        ),
         "source_id": "source-demo-book",
         "locator": "lecture-01.pdf",
         "purpose": "Use the worked derivation.",
     }]
 
-    removed = run_los(
+    removed = approved_v2_cli(
         mini_repo,
         "unit-source-selection",
         "unit-demo-l01",
         "source-demo-book",
         "lecture-01.pdf",
         "remove",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-source-selection-remove",
     )
     assert removed.returncode == 0, removed.stderr
     assert load_repo(mini_repo).units["unit-demo-l01"].data["source_selections"] == []
@@ -312,7 +335,7 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     repo = load_repo(mini_repo)
     assert not [issue for issue in validate(repo) if issue.severity == "E"]
     manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
-    assert manifest["_generated"]["contract_version"] == 5
+    assert manifest["_generated"]["contract_version"] == 7
     assert manifest["programs"][0]["id"] == "program-bachelors"
     assert manifest["modules"][0]["id"] == "module-demo"
     assert manifest["units"][0]["source_selections"][0]["locator"] == "§1 Erwartungswert"
@@ -361,23 +384,39 @@ def test_non_academic_module_needs_no_institution_or_semester(mini_repo):
 def test_stage_feedback_detour_and_progress_are_unit_scoped(mini_repo):
     add_curriculum(mini_repo)
     before = load_repo(mini_repo).sources["source-demo-book"]["evaluations"]
-    feedback = run_los(mini_repo, "source-feedback", "unit-demo-l01", "stage-demo",
-                       "source-demo-book", "too-advanced", "--note", "Return after the lecture.")
+    feedback = approved_v2_cli(
+        mini_repo, "source-feedback", "unit-demo-l01", "stage-demo",
+        "source-demo-book", "too-advanced", "--note", "Return after the lecture.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-feedback",
+    )
     assert feedback.returncode == 0, feedback.stderr
     repo = load_repo(mini_repo)
     stage = repo.study_maps["study-map-demo-l01"].data["stages"][0]
     assert stage["source_feedback"][0]["feedback"] == "too-advanced"
     assert repo.sources["source-demo-book"]["evaluations"] == before
 
-    detour = run_los(mini_repo, "detour-create", "unit-demo-l01", "stage-demo",
-                     "--title", "Review finite sums", "--classification", "required-now")
+    detour = approved_v2_cli(
+        mini_repo, "detour-create", "unit-demo-l01", "stage-demo",
+        "--title", "Review finite sums", "--classification", "required-now",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-detour-create",
+    )
     assert detour.returncode == 0, detour.stderr
-    did = json.loads(detour.stdout)["detour"]["id"]
+    did = gateway_result(detour)["detour"]["id"]
     assert load_repo(mini_repo).study_maps["study-map-demo-l01"].data["status"] == "paused"
-    resolved = run_los(mini_repo, "detour-resolve", "unit-demo-l01", did,
-                       "--resolution", "Reviewed the needed identity.")
+    resolved = approved_v2_cli(
+        mini_repo, "detour-resolve", "unit-demo-l01", did,
+        "--resolution", "Reviewed the needed identity.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-detour-resolve",
+    )
     assert resolved.returncode == 0, resolved.stderr
-    completed = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete")
+    completed = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-complete",
+    )
     assert completed.returncode == 0, completed.stderr
     repo = load_repo(mini_repo)
     assert repo.study_maps["study-map-demo-l01"].data["status"] == "ready-to-shelve"
@@ -389,15 +428,37 @@ def test_stage_note_snapshot_guard_and_german_search(mini_repo):
     write_outputs(load_repo(mini_repo), generate_all(load_repo(mini_repo), "T1"))
     manifest = json.loads((mini_repo / "generated/manifest.json").read_text(encoding="utf-8"))
     snapshot = manifest["_generated"]["snapshot_id"]
-    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--replace",
-                    "--text", "Meine Herleitung.", "--expected-snapshot", snapshot)
+    saved = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--replace",
+        "--text", "Meine Herleitung.", artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-stage-note-save", expected_snapshot=snapshot,
+    )
     assert saved.returncode == 0, saved.stderr
-    stale = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--replace",
-                    "--text", "Would overwrite.", "--expected-snapshot", snapshot)
+    stale = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--replace",
+        "--text", "Would overwrite.", artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-stage-note-stale", expected_snapshot=snapshot,
+    )
     assert stale.returncode == 3
     search = run_los(mini_repo, "search", "Erwartungswert")
     assert search.returncode == 0
     assert "concept-expected-value" in search.stdout
+
+
+def test_stage_attachment_copies_the_exact_approved_bytes(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    source = tmp_path / "stage-handwriting.png"
+    source.write_bytes(b"approved-stage-image")
+    saved = approved_v2_cli(
+        mini_repo, "stage-attach", "unit-demo-l01", "stage-demo",
+        "--file", str(source),
+        "--file-sha256", file_sha256(source),
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-attachment-content-bound",
+    )
+    assert saved.returncode == 0, saved.stderr
+    copied = mini_repo / gateway_result(saved)["attachment"]
+    assert copied.read_bytes() == b"approved-stage-image"
 
 
 def test_unit_map_import_creates_one_current_map(mini_repo, tmp_path):
@@ -428,7 +489,12 @@ def test_unit_map_import_creates_one_current_map(mini_repo, tmp_path):
                     "scope_triage": "required-now", "resources": [],
                     "working_note": note_rel, "attachments": [], "source_feedback": []}],
     })
-    proc = run_los(mini_repo, "unit-map-import", "unit-demo-l02", "--file", str(incoming))
+    proc = approved_v2_cli(
+        mini_repo, "unit-map-import", "unit-demo-l02", "--file", str(incoming),
+        "--file-sha256", file_sha256(incoming),
+        artifact_ids=["unit-demo-l02", "study-map-demo-l02"],
+        idempotency_key="curriculum-unit-map-import",
+    )
     assert proc.returncode == 0, proc.stderr
     repo = load_repo(mini_repo)
     assert repo.units["unit-demo-l02"].data["current_study_map"] == "study-map-demo-l02"
@@ -520,12 +586,34 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     assert json.loads(checked.stdout)["canonical_files_written"] == 0
     assert "unit-demo-l02" not in load_repo(mini_repo).units
 
+    outside_audit = mini_repo / "outside-snapshot-coverage-audit.md"
+    outside_audit.write_text(
+        "## Local inventory\n\n## Linked inventory\n\n## Completeness sign-off\n",
+        encoding="utf-8",
+    )
+    outside_package_data = copy.deepcopy(package_data)
+    outside_package_data["plan_contract"]["coverage_audit"] = outside_audit.name
+    outside_package = tmp_path / "outside-audit-module-plan.yaml"
+    write_yaml(outside_package, outside_package_data)
+    outside_refused = run_los(
+        mini_repo, "module-plan-import", "module-demo", "--file",
+        str(outside_package), "--check",
+    )
+    assert outside_refused.returncode == 2
+    assert "snapshot-bound work/active" in outside_refused.stderr
+    outside_audit.unlink()
+
     unguarded = run_los(mini_repo, "module-plan-import", "module-demo", "--file",
                         str(package))
     assert unguarded.returncode == 2
     snapshot = f"sha256:{source_fingerprint(load_repo(mini_repo))}"
-    proc = run_los(mini_repo, "module-plan-import", "module-demo", "--file", str(package),
-                   "--expected-snapshot", snapshot)
+    proc = approved_v2_cli(
+        mini_repo, "module-plan-import", "module-demo", "--file", str(package),
+        "--file-sha256", file_sha256(package),
+        artifact_ids=["module-demo", "unit-demo-l02"],
+        idempotency_key="curriculum-module-plan-import",
+        expected_snapshot=snapshot,
+    )
     assert proc.returncode == 0, proc.stderr
     repo = load_repo(mini_repo)
     assert repo.modules["module-demo"]["title"] == "Standardized Demo Module"
@@ -612,8 +700,12 @@ Revised after explicit review.
 """, encoding="utf-8")
     denied = run_los(mini_repo, "note-revise", "note-demo", "--file", str(revised))
     assert denied.returncode == 2
-    applied = run_los(mini_repo, "note-revise", "note-demo", "--file", str(revised),
-                      "--approve")
+    applied = approved_v2_cli(
+        mini_repo, "note-revise", "note-demo", "--file", str(revised), "--approve",
+        "--file-sha256", file_sha256(revised),
+        artifact_ids=["note-demo"],
+        idempotency_key="curriculum-note-revise",
+    )
     assert applied.returncode == 0, applied.stderr
     note = load_repo(mini_repo).notes["note-demo"]
     assert note.meta["title"] == "Demo note revised"
@@ -632,14 +724,22 @@ def test_shelving_applies_only_selected_items_after_explicit_approval(mini_repo,
          "destination": "knowledge/garden/skipped-idea.md", "rationale": "Optional.",
          "content": "# Skipped idea"},
     ]}), encoding="utf-8")
-    prepared = run_los(mini_repo, "shelving-prepare", "unit-demo-l01",
-                       "--items-file", str(items))
+    prepared = approved_v2_cli(
+        mini_repo, "shelving-prepare", "unit-demo-l01", "--items-file", str(items),
+        "--items-file-sha256", file_sha256(items),
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-shelving-prepare",
+    )
     assert prepared.returncode == 0, prepared.stderr
     denied = run_los(mini_repo, "shelving-apply", "unit-demo-l01",
                      "--selected", "proposal-keep")
     assert denied.returncode == 2
-    applied = run_los(mini_repo, "shelving-apply", "unit-demo-l01", "--approve",
-                      "--selected", "proposal-keep")
+    applied = approved_v2_cli(
+        mini_repo, "shelving-apply", "unit-demo-l01", "--approve",
+        "--selected", "proposal-keep",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01", "proposal-keep"],
+        idempotency_key="curriculum-shelving-apply",
+    )
     assert applied.returncode == 0, applied.stderr
     assert (mini_repo / "knowledge/garden/kept-idea.md").is_file()
     assert not (mini_repo / "knowledge/garden/skipped-idea.md").exists()
@@ -660,10 +760,13 @@ def test_quarantine_boundary_never_projects_quarantined_content(mini_repo):
     secret = mini_repo / "curriculum/quarantine/masters-planning/prospective.md"
     secret.parent.mkdir(parents=True, exist_ok=True)
     secret.write_text("QUARANTINED-PROSPECTIVE-SECRET", encoding="utf-8")
-    manifest = generate_all(load_repo(mini_repo), "T1")["manifest.json"]
-    assert "program-masters-planning" in manifest
-    assert "QUARANTINED-PROSPECTIVE-SECRET" not in manifest
-    assert "workspace-degree-planning" not in manifest
+    manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
+    encoded = json.dumps(manifest)
+    assert "program-masters-planning" not in encoded
+    assert "quarantine_boundaries" not in manifest
+    assert manifest["counts"]["programs"] == len(manifest["programs"])
+    assert "QUARANTINED-PROSPECTIVE-SECRET" not in encoded
+    assert "workspace-degree-planning" not in encoded
 
 
 def test_session_end_reports_canvas_as_unrelated_and_never_session_owned(mini_repo):
@@ -673,8 +776,12 @@ def test_session_end_reports_canvas_as_unrelated_and_never_session_owned(mini_re
     subprocess.run(["git", "config", "user.name", "Tests"], cwd=mini_repo, check=True)
     subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
     subprocess.run(["git", "commit", "-qm", "fixture"], cwd=mini_repo, check=True)
-    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
-                    "--replace", "--text", "Session-owned note.")
+    saved = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+        "--replace", "--text", "Session-owned note.",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-session-owned-note",
+    )
     assert saved.returncode == 0, saved.stderr
     (mini_repo / "Untitled 37.canvas").write_text("{}", encoding="utf-8")
     ended = run_los(mini_repo, "session-end")
@@ -698,8 +805,12 @@ NOTE_REL = "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo
 
 def test_empty_note_text_is_refused_instead_of_truncating(mini_repo):
     add_curriculum(mini_repo)
-    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
-                    "--replace", "--text", "Real content worth keeping.")
+    saved = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+        "--replace", "--text", "Real content worth keeping.",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-nonempty-note",
+    )
     assert saved.returncode == 0, saved.stderr
     note = mini_repo / NOTE_REL
     before = note.read_text(encoding="utf-8")
@@ -717,19 +828,30 @@ def test_empty_snapshot_token_is_refused_not_read_as_unguarded(mini_repo):
                     "--text", "probe", "--expected-snapshot", "")
     assert probe.returncode == 3
     assert "expected-snapshot" in probe.stderr
-    # omitting the flag entirely still writes unguarded, as documented
+    # Omitting the flag cannot bypass the V2 envelope authority.
     unguarded = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
                         "--text", "probe")
-    assert unguarded.returncode == 0, unguarded.stderr
+    assert unguarded.returncode == 2
+    assert "GatewayEnvelopeV2" in unguarded.stderr
 
 
 def test_two_captures_with_one_title_in_one_second_keep_both(mini_repo):
     add_curriculum(mini_repo)
-    first = run_los(mini_repo, "capture", "--json", "--title", "race", "--text", "FIRST")
-    second = run_los(mini_repo, "capture", "--json", "--title", "race", "--text", "SECOND")
+    first_key = "curriculum-capture-first"
+    second_key = "curriculum-capture-second"
+    first = approved_v2_cli(
+        mini_repo, "capture", "--json", "--title", "race", "--text", "FIRST",
+        artifact_ids=[request_artifact_id("capture.create", first_key)],
+        idempotency_key=first_key,
+    )
+    second = approved_v2_cli(
+        mini_repo, "capture", "--json", "--title", "race", "--text", "SECOND",
+        artifact_ids=[request_artifact_id("capture.create", second_key)],
+        idempotency_key=second_key,
+    )
     assert first.returncode == 0, first.stderr
     assert second.returncode == 0, second.stderr
-    one, two = json.loads(first.stdout), json.loads(second.stdout)
+    one, two = gateway_result(first), gateway_result(second)
     assert one["ok"] and two["ok"]
     assert one["captured"] != two["captured"]
     bodies = [(mini_repo / payload["captured"]).read_text(encoding="utf-8")
@@ -743,10 +865,14 @@ def test_unwritable_note_target_refuses_cleanly_without_debris(mini_repo):
     note = mini_repo / NOTE_REL
     note.unlink()
     note.mkdir()  # the target is now a directory: an ordinary filesystem mishap
-    proc = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--text", "probe")
+    proc = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo", "--text", "probe",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-unwritable-note",
+    )
     assert proc.returncode == 2
-    assert "cannot write" in proc.stderr
-    assert "Traceback" not in proc.stderr
+    assert "target is not a regular file" in gateway_error(proc)
+    assert "Traceback" not in proc.stdout + proc.stderr
     assert not list(note.parent.glob(".*.tmp")), "a temp file was left behind"
 
 
@@ -762,13 +888,21 @@ def test_a_failed_write_rolls_the_whole_transaction_back(mini_repo):
     before_map = study_map.read_text(encoding="utf-8")
     before_unit = unit.read_text(encoding="utf-8")
     (unit_dir / ".unit.yaml.tmp").mkdir()  # block the atomic temp name
-    proc = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete")
+    proc = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-rollback-failure",
+    )
     assert proc.returncode == 2
-    assert "Traceback" not in proc.stderr
+    assert "Traceback" not in proc.stdout + proc.stderr
     assert study_map.read_text(encoding="utf-8") == before_map
     assert unit.read_text(encoding="utf-8") == before_unit
     (unit_dir / ".unit.yaml.tmp").rmdir()
-    retry = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete")
+    retry = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-rollback-retry",
+    )
     assert retry.returncode == 0, retry.stderr
 
 
@@ -823,8 +957,12 @@ def test_session_end_reports_warnings_without_blocking(mini_repo):
     data = yaml.safe_load(registry.read_text(encoding="utf-8"))
     data["sources"][0]["material"] = "material://source-demo-book-offline"
     write_yaml(registry, data)
-    saved = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
-                    "--replace", "--text", "Session-owned note.")
+    saved = approved_v2_cli(
+        mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
+        "--replace", "--text", "Session-owned note.",
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-warning-session-note",
+    )
     assert saved.returncode == 0, saved.stderr
     check = run_los(mini_repo, "validate")
     assert check.returncode == 0, check.stderr
@@ -844,16 +982,19 @@ def test_unit_note_is_session_scoped_and_projected(mini_repo, tmp_path):
     attachment = tmp_path / "handwritten.png"
     attachment.write_bytes(b"fixture-image")
 
-    saved = run_los(
+    saved = approved_v2_cli(
         mini_repo, "unit-note", "unit-demo-l01",
         "--title", "Expected value session",
         "--text", "I connected linearity to the indicator-variable argument.",
         "--stage-id", "stage-demo",
         "--attachment", str(attachment),
-        "--expected-snapshot", snapshot,
+        "--attachment-sha256", file_sha256(attachment),
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-unit-note",
+        expected_snapshot=snapshot,
     )
     assert saved.returncode == 0, saved.stderr
-    payload = json.loads(saved.stdout)
+    payload = gateway_result(saved)
     assert payload["stage_ids"] == ["stage-demo"]
     assert len(payload["attachments"]) == 1
 
@@ -877,6 +1018,28 @@ def test_unit_note_is_session_scoped_and_projected(mini_repo, tmp_path):
     assert "indicator-variable" in unit_row["note_sections"][0]["summary"]
     # The legacy selected stage is not required by the command envelope.
     assert "stage_id" not in payload
+
+
+def test_unit_note_requires_one_approved_hash_per_attachment(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    first = tmp_path / "first.png"
+    second = tmp_path / "second.png"
+    first.write_bytes(b"first")
+    second.write_bytes(b"second")
+    refused = approved_v2_cli(
+        mini_repo, "unit-note", "unit-demo-l01",
+        "--text", "Keep this draft outside the repository.",
+        "--attachment", str(first),
+        "--attachment", str(second),
+        "--attachment-sha256", file_sha256(first),
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="curriculum-unit-note-incomplete-attachment-hashes",
+    )
+    assert refused.returncode == 2
+    assert "once per --attachment" in gateway_error(refused)
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    assert not (unit_dir / "notes.md").exists()
+    assert not (unit_dir / "attachments").exists()
 
 
 def test_unit_note_rejects_foreign_stage_and_preserves_state(mini_repo):
@@ -1065,7 +1228,10 @@ def _material_projection_fixture(
     assert map_data["stages"], "synthetic curriculum has no stage"
     stage = map_data["stages"][0]
     stage_id = stage["id"]
-    stage["resources"] = resources
+    stage["resources"] = [
+        {"kind": "read", **resource}
+        for resource in resources
+    ]
     write_yaml(study_map.path, map_data)
 
     for relative in existing_files:
@@ -1210,6 +1376,13 @@ def test_material_resource_projection_derives_file_locators(
         "Primer_Linear_Algebra.pdf",
         "lecture-slides/02_Regression.pdf",
         "older-lecture-slides/08_Neural_Networks.pdf",
+        "lecture-slides/VL 11-transformers.pdf (81 pages)",
+    ]
+    exact_locators = [
+        "Primer_Linear_Algebra.pdf",
+        "lecture-slides/02_Regression.pdf",
+        "older-lecture-slides/08_Neural_Networks.pdf",
+        "lecture-slides/VL 11-transformers.pdf",
     ]
     resources = [
         {
@@ -1228,13 +1401,14 @@ def test_material_resource_projection_derives_file_locators(
         resources=resources,
         existing_files=[
             f"source-demo-book/{locator}"
-            for locator in locators
+            for locator in exact_locators
         ],
     )
 
-    for index, locator in enumerate(locators):
+    for index, (locator, exact_locator) in enumerate(
+            zip(locators, exact_locators, strict=True)):
         material_uri = (
-            f"material://source-demo-book/{locator}"
+            f"material://source-demo-book/{exact_locator}"
         )
         projected = _assert_projected_resource(
             repo,
@@ -1259,12 +1433,25 @@ def test_material_resource_projection_ignores_descriptive_and_unsafe_locators(
         {
             "source_id": "source-demo-book",
             "label": "Traversal attempt",
-            "locator": "../../Job/secret.pdf",
+            "locator": "../../outside/secret.pdf",
         },
         {
             "source_id": "source-demo-book",
             "label": "Absolute path attempt",
             "locator": "/tmp/secret.pdf",
+        },
+        {
+            "source_id": "source-demo-book",
+            "label": "Lecture range",
+            "locator": (
+                "lecture-slides/VL 01.pdf through "
+                "lecture-slides/VL 11.pdf"
+            ),
+        },
+        {
+            "source_id": "source-demo-book",
+            "label": "Combined files",
+            "locator": "exercise/UE 08.pdf + exercise/UE 09.pdf",
         },
     ]
 
@@ -1355,6 +1542,131 @@ def test_material_resource_projection_uses_source_material_authority(
     assert projected["material_uri"].startswith(
         "material://source-shared-slides/"
     )
+
+
+def test_stage_resource_inherits_its_unique_exact_unit_route_target(mini_repo):
+    """Descriptive stage prose must still open the lecture-specific target.
+
+    Generated study maps append the route angle to ``locator``.  Re-parsing
+    that prose as a path is unsafe and made AML L11 fall back to the source's
+    lecture-slides directory.  The stable source-id + route-title pair already
+    identifies the exact route, so the projection should reuse its target.
+    """
+    from learning_os.genout import build_manifest
+    from learning_os.loader import load_repo
+
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+
+    registry = mini_repo / "sources" / "sources.yaml"
+    registry_data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    source = next(
+        row for row in registry_data["sources"]
+        if row["id"] == "source-demo-book"
+    )
+    source["material"] = "material://source-demo-book/lecture-slides"
+    write_yaml(registry, registry_data)
+
+    source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    route = source_map["sources"][0]["unit_routes"][0]
+    route.update({
+        "title": "Current L11 Transformers lecture deck",
+        "locator": "lecture-slides/VL 11-transformers.pdf",
+    })
+    write_yaml(source_map_path, source_map)
+
+    repo = load_repo(mini_repo)
+    study_map = next(iter(repo.study_maps.values()))
+    map_data = study_map.data
+    map_data["stages"][0]["resources"] = [{
+        "kind": "read",
+        "label": "Current L11 Transformers lecture deck",
+        "source_id": "source-demo-book",
+        "locator": (
+            "lecture-slides/VL 11-transformers.pdf (81 pages) — "
+            "the exact 2026 scope authority"
+        ),
+        "scope_triage": "required-now",
+    }]
+    write_yaml(study_map.path, map_data)
+
+    target = (
+        repo.materials_root
+        / "source-demo-book/lecture-slides/VL 11-transformers.pdf"
+    )
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("synthetic lecture\n", encoding="utf-8")
+
+    manifest = build_manifest(
+        load_repo(mini_repo),
+        "2026-08-23T12:00:00+00:00",
+    )
+    projected = next(
+        row for row in manifest["stages"]
+        if row["id"] == map_data["stages"][0]["id"]
+    )["resources"][0]
+
+    assert projected["material_uri"] == (
+        "material://source-demo-book/lecture-slides/VL 11-transformers.pdf"
+    )
+    assert projected["material_path"].endswith(
+        "source-demo-book/lecture-slides/VL 11-transformers.pdf"
+    )
+    assert projected["material_exists"] is True
+
+
+def test_stage_resource_does_not_inherit_an_ambiguous_or_missing_route(
+        mini_repo):
+    """A collection or range is not silently presented as one openable file."""
+    from learning_os.genout import build_manifest
+    from learning_os.loader import load_repo
+
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+
+    registry = mini_repo / "sources" / "sources.yaml"
+    registry_data = yaml.safe_load(registry.read_text(encoding="utf-8"))
+    source = next(
+        row for row in registry_data["sources"]
+        if row["id"] == "source-demo-book"
+    )
+    source["material"] = "material://source-demo-book/lecture-slides"
+    write_yaml(registry, registry_data)
+
+    source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    route = source_map["sources"][0]["unit_routes"][0]
+    route.update({
+        "title": "Current lecture range",
+        "locator": "lecture-slides/VL 01.pdf through VL 11.pdf",
+    })
+    write_yaml(source_map_path, source_map)
+
+    repo = load_repo(mini_repo)
+    study_map = next(iter(repo.study_maps.values()))
+    map_data = study_map.data
+    map_data["stages"][0]["resources"] = [{
+        "kind": "read",
+        "label": "Current lecture range",
+        "source_id": "source-demo-book",
+        "locator": "open the exact slide, not the whole deck",
+        "scope_triage": "required-now",
+    }]
+    write_yaml(study_map.path, map_data)
+
+    manifest = build_manifest(
+        load_repo(mini_repo),
+        "2026-08-23T12:00:00+00:00",
+    )
+    projected = next(
+        row for row in manifest["stages"]
+        if row["id"] == map_data["stages"][0]["id"]
+    )["resources"][0]
+
+    assert projected.get("material_uri") is None
+    assert projected.get("material_path") is None
+    assert projected.get("material_exists") in {None, False}
 
 
 def test_material_resource_projection_refuses_compound_and_unsafe_uris(
@@ -1643,21 +1955,32 @@ def test_source_feedback_can_name_a_resource(mini_repo):
     add_curriculum(mini_repo)
     unit, stage, src = "unit-demo-l01", "stage-demo", "source-demo-book"
 
-    ok = run_los(mini_repo, "source-feedback", unit, stage, src, "helpful",
-                 "--resource-id", "resource-demo-book-ch01")
+    ok = approved_v2_cli(
+        mini_repo, "source-feedback", unit, stage, src, "helpful",
+        "--resource-id", "resource-demo-book-ch01",
+        artifact_ids=[unit, "study-map-demo-l01"],
+        idempotency_key="curriculum-resource-feedback-first",
+    )
     assert ok.returncode == 0, ok.stderr
-    assert json.loads(ok.stdout)["feedback"]["resource_id"] \
+    assert gateway_result(ok)["feedback"]["resource_id"] \
         == "resource-demo-book-ch01"
 
     # a second, CONTRADICTORY judgment about a different resource in the SAME
     # source — the case that was inexpressible before v3
-    other = run_los(mini_repo, "source-feedback", unit, stage, src,
-                    "too-advanced", "--resource-id", "resource-demo-book-appendix")
+    other = approved_v2_cli(
+        mini_repo, "source-feedback", unit, stage, src,
+        "too-advanced", "--resource-id", "resource-demo-book-appendix",
+        artifact_ids=[unit, "study-map-demo-l01"],
+        idempotency_key="curriculum-resource-feedback-second",
+    )
     assert other.returncode == 0, other.stderr
 
     # and a plain source-level judgment still works, unchanged
-    plain = run_los(mini_repo, "source-feedback", unit, stage, src,
-                    "useful-for-review")
+    plain = approved_v2_cli(
+        mini_repo, "source-feedback", unit, stage, src, "useful-for-review",
+        artifact_ids=[unit, "study-map-demo-l01"],
+        idempotency_key="curriculum-resource-feedback-plain",
+    )
     assert plain.returncode == 0, plain.stderr
 
     target = (mini_repo / "curriculum/modules/module-demo/units"

@@ -1,5 +1,4 @@
 from tools.legacy_exit_review import (
-    _is_job_boundary,
     _mapping_for,
     _normalise_old_path,
     _path_is_within,
@@ -23,12 +22,6 @@ def test_longest_migration_mapping_wins():
 
 def test_legacy_prefix_is_normalised_for_post_cutover_rows():
     assert _normalise_old_path("legacy/Plans/area") == "Plans/area"
-
-
-def test_job_items_are_held_at_the_boundary():
-    assert _is_job_boundary("Plans/archive/BIFOLD-DEEM-Job-Plan.md")
-    assert _is_job_boundary("Plans/Libraries/skrub/Stratum-Optimizer.md")
-    assert not _is_job_boundary("Plans/Math/analysis/AN_Source-Crosswalk.md")
 
 
 def test_known_v2_mechanics_have_explicit_replacements():

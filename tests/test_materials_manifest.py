@@ -140,6 +140,24 @@ def test_missing_manifest_is_a_warning_not_an_error(mini_repo):
     assert codes(issues, "E") == []
 
 
+@pytest.mark.parametrize(
+    "content",
+    [
+        "{",
+        "- not\n- a\n- mapping\n",
+        "schema_version: 1\nfiles: []\n",
+        "schema_version: 1\nfiles:\n  a.pdf: 5\n",
+    ],
+)
+def test_malformed_materials_manifest_is_reported_without_crashing(
+    mini_repo, content
+):
+    manifest = mini_repo / "records/materials-manifest.yaml"
+    manifest.write_text(content, encoding="utf-8")
+    issues = validate(load_repo(mini_repo))
+    assert "MATERIALS-MANIFEST" in codes(issues, "E")
+
+
 def test_referenced_file_gone_from_disk_is_an_error(mini_repo):
     materials = mini_repo.parent / "materials"
     (materials / "a.pdf").write_text("alpha", encoding="utf-8")

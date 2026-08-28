@@ -29,14 +29,11 @@ def _plan_template(repo_root: Path, *args: str) -> subprocess.CompletedProcess[s
     )
 
 
-def test_plan_profiles_reference_the_same_stage_contract(repo_root):
+def test_curriculum_plan_references_the_shared_stage_contract(repo_root):
     schemas = repo_root / "system" / "schema"
     study = json.loads((schemas / "study-map.schema.json").read_text(encoding="utf-8"))
-    job = json.loads((schemas / "job-plan.schema.json").read_text(encoding="utf-8"))
     study_ref = study["allOf"][0]["then"]["properties"]["stages"]["items"]["$ref"]
-    job_ref = job["properties"]["stages"]["items"]["$ref"]
     assert study_ref.startswith(f"{SHARED_PLAN_SCHEMA}#/")
-    assert job_ref.startswith(f"{SHARED_PLAN_SCHEMA}#/")
 
 
 def test_official_plan_templates_are_schema_valid(repo_root):
@@ -46,13 +43,15 @@ def test_official_plan_templates_are_schema_valid(repo_root):
         module_id="module-example",
         unit_id="unit-example-l01",
     )
-    job = build_plan_template("job", title="Example job track")
     validate_contract(repo_root, "study-map.schema.json", curriculum)
-    validate_contract(repo_root, "job-plan.schema.json", job)
-    for plan in (curriculum, job):
-        assert plan["plan_template_version"] == 1
-        assert [stage["number"] for stage in plan["stages"]] == [1]
-        assert "estimate_minutes" not in plan["stages"][0]
+    assert curriculum["plan_template_version"] == 1
+    assert [stage["number"] for stage in curriculum["stages"]] == [1]
+    assert "estimate_minutes" not in curriculum["stages"][0]
+
+
+def test_retired_job_profile_is_refused():
+    with pytest.raises(ValueError, match="unknown plan profile: job"):
+        build_plan_template("job", title="Example job track")
 
 
 def test_curriculum_import_refuses_the_unreplaced_source_plan_placeholder():
@@ -109,25 +108,24 @@ def test_the_plan_template_is_a_declared_query_with_a_producer_schema(repo_root:
     assert parser.get_default("func").__name__ == f"cmd_{definition.handler}"
 
 
-@pytest.mark.parametrize(
-    ("profile", "extra", "record_type"),
-    [
-        ("job", (), "job-learning-plan"),
-        (
-            "curriculum",
-            ("--unit-id", "unit-example-l01", "--module-id", "module-example"),
-            "study-map",
-        ),
-    ],
-)
-def test_the_query_answers_the_shape_it_declares(repo_root, profile, extra, record_type):
-    result = _plan_template(repo_root, profile, "--title", "Example plan", "--json", *extra)
+def test_the_query_answers_the_shape_it_declares(repo_root):
+    result = _plan_template(
+        repo_root,
+        "curriculum",
+        "--title",
+        "Example plan",
+        "--json",
+        "--unit-id",
+        "unit-example-l01",
+        "--module-id",
+        "module-example",
+    )
     assert result.returncode == 0, result.stderr
     response = json.loads(result.stdout)
     validate_contract(repo_root, "plan-template.schema.json", response)
     assert response["contract"] == "plan-template-v1"
-    assert response["profile"] == profile
-    assert response["plan"]["type"] == record_type
+    assert response["profile"] == "curriculum"
+    assert response["plan"]["type"] == "study-map"
     # The envelope must not be able to claim a template version the record
     # itself does not carry — that divergence is the whole failure mode.
     assert response["plan_template_version"] == response["plan"]["plan_template_version"] == 1
@@ -135,8 +133,17 @@ def test_the_query_answers_the_shape_it_declares(repo_root, profile, extra, reco
 
 
 def test_json_and_yaml_answer_the_same_record(repo_root: Path):
-    text = _plan_template(repo_root, "job", "--title", "Example plan")
-    envelope = _plan_template(repo_root, "job", "--title", "Example plan", "--json")
+    arguments = (
+        "curriculum",
+        "--title",
+        "Example plan",
+        "--unit-id",
+        "unit-example-l01",
+        "--module-id",
+        "module-example",
+    )
+    text = _plan_template(repo_root, *arguments)
+    envelope = _plan_template(repo_root, *arguments, "--json")
     assert text.returncode == envelope.returncode == 0
     assert yaml.safe_load(text.stdout) == json.loads(envelope.stdout)["plan"]
 

@@ -151,8 +151,37 @@ def test_real_repository_navigation_projection_is_complete(repo_root):
         "Software & Languages",
         "Method & Administration",
     ]
-    assert all(module["thematic_group_ids"] for module in manifest["modules"])
+    job_modules = [
+        module for module in manifest["modules"]
+        if module.get("area_id") == "program-job"
+    ]
+    ordinary_grouped_modules = [
+        module for module in manifest["modules"]
+        if module.get("area_id") != "program-job"
+    ]
+    assert all(module["thematic_group_ids"] for module in ordinary_grouped_modules)
+    if job_modules:
+        # ADR-013 migrates Job learning into the ordinary program/module/unit
+        # hierarchy but deliberately does not invent thematic cross-links.
+        # `program-job` is its explicit navigation owner until such links are
+        # confirmed by the learner.
+        assert len(job_modules) == 5
+        assert all(module["thematic_group_ids"] == [] for module in job_modules)
     sources = [row for row in manifest["records"] if row.get("type") == "source"]
-    assert sources and all(source["thematic_group_ids"] for source in sources)
+    assert sources
+    ungrouped_sources = {
+        source["id"] for source in sources if not source["thematic_group_ids"]
+    }
+    if job_modules:
+        # These three exact records are provenance/material identities from the
+        # approved collapse.  Giving them thematic peers here would be the same
+        # unreviewed inference the migration is required to avoid.
+        assert ungrouped_sources == {
+            "source-polars-definitive-guide",
+            "source-scalable-dataframe-systems-paper",
+            "source-stratum-paper",
+        }
+    else:
+        assert ungrouped_sources == set()
     assert manifest["topic_packs"]
     assert all(pack["purpose"] and pack["entries"] for pack in manifest["topic_packs"])
