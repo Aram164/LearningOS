@@ -181,9 +181,7 @@ concepts:
     label: skrub DataOps
     aliases: [skrub, DataOp, lazy computation graph]
     domain_hints: [data-systems]
-    description: >-
-      Boundary marker — its notes are quarantined in Job/ (CLAUDE.md §13,
-      Job/WORKFLOW.md §6); the canon holds the identity, not the content.
+    description: Canonical concept identity for skrub DataOps.
   - id: concept-data-provenance
     label: Data provenance
     aliases: [Provenienz, lineage, provenance tracking]
@@ -490,3 +488,25 @@ concepts:
     aliases: [conditional independence, bedingte Unabhängigkeit, independence, Unabhängigkeit, Markov blanket]
     description: Independence that holds or fails only once a third variable is known — a different claim from joint factorization.
     domain_hints: [statistics, machine-learning]
+  - id: concept-aggregation
+    label: Aggregation
+  - id: concept-aggregation-family
+    label: Aggregation family
+  - id: concept-dataframe-ops
+    label: Dataframe operations
+  - id: concept-dataframe-semantics
+    label: Dataframe semantics
+  - id: concept-dispatch
+    label: Dispatch
+  - id: concept-join-family
+    label: Join family
+  - id: concept-logical-ir
+    label: Logical IR
+  - id: concept-map-family
+    label: Map family
+  - id: concept-op-rewriting
+    label: Operation rewriting
+  - id: concept-projection-family
+    label: Projection family
+  - id: concept-selection-family
+    label: Selection family

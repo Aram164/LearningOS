@@ -15,13 +15,13 @@ stages:
   number: 1
   title: The combinatorics decision grid
   status: pending
-  objective: First decide whether order matters, whether replacement/repetition is allowed, and whether all n
-    objects or only k are used; the formula follows from those choices.
+  objective: First decide whether order matters, whether replacement/repetition is allowed, and whether
+    all n objects or only k are used; the formula follows from those choices.
   done_when:
-  - 'Reproduce without notes: First decide whether order matters, whether replacement/repetition is allowed, and
-    whether all n objects or only k are used; the formula follows from those choices.'
-  - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 5, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: First decide whether order matters, whether replacement/repetition is allowed,
+    and whether all n objects or only k are used; the formula follows from those choices.'
+  - Work Blatt 2, Aufgabe 1 — counting inside finite probability, then the remaining 5, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -31,148 +31,163 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
   - kind: practise
-    label: Blatt 2 and UE3 — combinatorics decisions
+    label: Blatt 2, Aufgabe 1 — counting inside finite probability
     source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-02.pdf, the counting tasks; exercise-slides/UE3.pdf, the counting walkthrough
+    locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
+    angle: Hides the counting case inside cards, repeated dice and dependent portfolio events, which tests
+      identification rather than formula recall.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
-    angle: Counting as the chair asks it, which is consistently inside a probability question rather than alone.
-    angle_detail: Confirms the pattern the external banks also show, and shows which grid cells actually appear.
-      Use it to prioritise the Schaum's Ch 2 drill rather than working that chapter uniformly.
+  - kind: practise
+    label: UE4, slides 4-8 — worked finite-counting solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 4-8
+    angle: Makes the numerator/denominator counting decisions explicit for the current sheet's disguised
+      cases.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 4 — combinatorics and finite probability
     source_id: source-fahrmeir-statistik
     locator: Ch 4 §4.3 Zufallsstichproben und Kombinatorik, pdf pp. 214-220; Aufgaben pdf pp. 239-241
-    scope_triage: helpful-now
     angle: Six pages that put counting where SaD puts it — inside sampling — instead of treating combinatorics
       as its own subject.
-    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is its value:
-      Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen mit/ohne Zurücklegen
-      and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s decision grid is organised.
-      If the grid is what will not stick, read this rather than a full combinatorics chapter, because it never
-      leaves the sampling frame. For volume of drill and the harder identity questions go to Blitzstein Ch 1 or
-      Schaum''s Ch 2 instead.'
+    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is
+      its value: Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen
+      mit/ohne Zurücklegen and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s
+      decision grid is organised. If the grid is what will not stick, read this rather than a full combinatorics
+      chapter, because it never leaves the sampling frame. For volume of drill and the harder identity
+      questions go to Blitzstein Ch 1 or Schaum''s Ch 2 instead.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+    scope_triage: helpful-now
   - kind: practise
     label: Arbeitsbuch Chapter 4 — combinatorics applications
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95 (the Ziehen mit/ohne Zurücklegen items)
+    angle: Counting embedded in probability questions rather than as pure counting exercises — which is
+      how L05 is examined.
+    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability
+      whose computation happens to require a count. These items are all of that second kind, so they train
+      the step students actually lose marks on: deciding whether order and replacement matter before reaching
+      for a formula. Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Counting embedded in probability questions rather than as pure counting exercises — which is how L05
-      is examined.
-    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability whose
-      computation happens to require a count. These items are all of that second kind, so they train the step
-      students actually lose marks on: deciding whether order and replacement matter before reaching for a formula.
-      Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
+  - kind: practise
+    label: Dekking — counting and finite-probability exercises
+    source_id: source-dekking-mips
+    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of
+      sample spaces, pdf pp. 29-30; exercises pdf pp. 62-66
+    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces
+      instead of combinatorial formulas.
+    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds
+      the binomial coefficient where it is needed, out of the product sample space in §2.4, rather than
+      teaching counting as a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing
+      a serious book do without most of it reframes the grid as a shortcut rather than as the content.
+      For actual counting practice go to Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — counting and finite probability
+    source_id: source-mit-1805
+    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides;
+      Problem Set 1 with solutions'
+    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how
+      much of L05 is genuinely hard.
+    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem
+      set is correspondingly compact. Reading it tells you which parts of L05's grid a strong applied
+      course considers routine and which it considers worth practising — helpful when deciding how much
+      time this lecture deserves. Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
+    scope_triage: helpful-now
   - kind: reference
     label: Tijms — counting through probability models
     source_id: source-tijms-understanding-probability
-    locator: Ch 7 Foundations of probability theory, pdf pp. 235-254 (finite sample spaces and the Laplace model)
+    locator: Ch 7 Foundations of probability theory, pdf pp. 235-254 (finite sample spaces and the Laplace
+      model)
+    angle: Counting kept subordinate to the sample-space model, with birthday- and lottery-style problems
+      as the worked cases.
+    angle_detail: Tijms treats combinatorial questions as questions about the size of a well-chosen sample
+      space, and his worked cases — coincidences, lotteries, matching problems — are the ones whose answers
+      are counterintuitive enough to be memorable. Useful as a second pass after the mechanics are in
+      place from L05's grid, less useful as a first exposure because he does not tabulate the cases.
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
-    angle: Counting kept subordinate to the sample-space model, with birthday- and lottery-style problems as the
-      worked cases.
-    angle_detail: Tijms treats combinatorial questions as questions about the size of a well-chosen sample space,
-      and his worked cases — coincidences, lotteries, matching problems — are the ones whose answers are counterintuitive
-      enough to be memorable. Useful as a second pass after the mechanics are in place from L05's grid, less useful
-      as a first exposure because he does not tabulate the cases.
   - kind: practise
     label: Schaum — combinatorics drills
     source_id: source-schaums-probability
     locator: Ch 2 Techniques of Counting, pdf pp. 18-39
+    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
+      for L05 on the shelf.
+    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
+      pattern recognition across many superficially different word problems. This chapter supplies that
+      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
+      with/without replacement) before computing — the chapter is organised by technique, which otherwise
+      gives the answer away.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density for
-      L05 on the shelf.
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is pattern
-      recognition across many superficially different word problems. This chapter supplies that volume and nothing
-      else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered, with/without
-      replacement) before computing — the chapter is organised by technique, which otherwise gives the answer
-      away.
-  - kind: practise
-    label: Dekking — counting and finite-probability exercises
-    source_id: source-dekking-mips
-    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of sample spaces,
-      pdf pp. 29-30; exercises pdf pp. 62-66
-    scope_triage: helpful-now
-    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces instead
-      of combinatorial formulas.
-    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds the binomial
-      coefficient where it is needed, out of the product sample space in §2.4, rather than teaching counting as
-      a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing a serious book do without
-      most of it reframes the grid as a shortcut rather than as the content. For actual counting practice go to
-      Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
-  - kind: read
-    label: MIT 18.05 — counting and finite probability
-    source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides; Problem
-      Set 1 with solutions'
-    scope_triage: helpful-now
-    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how much of
-      L05 is genuinely hard.
-    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem set is
-      correspondingly compact. Reading it tells you which parts of L05's grid a strong applied course considers
-      routine and which it considers worth practising — helpful when deciding how much time this lecture deserves.
-      Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
   - kind: reference
     label: Harvard Stat 110 — strategic counting
     source_id: source-stat110
-    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive definition);
-      Strategic Practice 1 with solutions
+    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive
+      definition); Strategic Practice 1 with solutions
+    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest
+      to pick up.
+    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive
+      than reading a finished one — the moment where he chooses what set to count twice is the whole method.
+      Two lectures cover all of L05's counting content at a level above the lecture's own, with the identities
+      node handled properly.
     scope_triage: reference-only
-    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest to
-      pick up.
-    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive than
-      reading a finished one — the moment where he chooses what set to count twice is the whole method. Two lectures
-      cover all of L05's counting content at a level above the lecture's own, with the identities node handled
-      properly.
   - kind: practise
-    label: FAU solved exam — finite counting inside probability
-    source_id: source-fau-klausur-ws1415
-    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the counting and Binomial questions with
-      their solutions'
-    scope_triage: helpful-now
-    angle: Counting appearing inside a larger probability question, which is the only way L05 is examined.
-    angle_detail: 'Confirms what the textbook exercises suggest: the exam does not ask for counts in isolation.
-      The count is a step in a probability calculation, and marks are lost at the identification step, not the
-      arithmetic.'
-  - kind: practise
-    label: External German solved exams — counting block
+    label: Leuphana-Merz pp. 5-10 — combinatorial probability items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the combinatorics questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 counting
+      items
+    angle: Uses counting as the hidden first step of a probability problem rather than naming the formula.
+    angle_detail: 'This is identification practice: decide the finite sample space and the relevant count
+      before computing a probability. It does not replace the lecture''s complete order/replacement decision
+      grid, so use it only after that grid can be reproduced.'
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Counting items from real papers, which are consistently harder than textbook exercises.
-    angle_detail: External exam counting questions tend to disguise the grid cell more thoroughly than textbook
-      problems do, which is good practice for the identification step. Check each against SaD's scope before working
-      it — some papers examine counting techniques this course does not teach.
   - kind: watch
     label: jbstatistics — permutations and combinations
     source_id: source-jbstatistics
     locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
+    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
+      both as given.
+    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
+      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
+      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
+      the Schaum's drill.
     scope_triage: helpful-now
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting both
-      as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea rather than
-      two formulas, and seeing the division performed — dividing out the orderings you decided not to distinguish
-      — is what makes it stick. Short series, appropriate as a first exposure before the Schaum's drill.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md
   attachments: []
   source_feedback: []
@@ -180,13 +195,12 @@ stages:
   number: 2
   title: Permutations and indistinguishable objects
   status: pending
-  objective: Ordering all objects gives n!; repeated or indistinguishable groups divide away permutations that
-    do not create a new arrangement.
+  objective: Ordering all objects gives n!; repeated or indistinguishable groups divide away permutations
+    that do not create a new arrangement.
   done_when:
-  - 'Reproduce without notes: Ordering all objects gives n!; repeated or indistinguishable groups divide away
-    permutations that do not create a new arrangement.'
-  - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 1, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Ordering all objects gives n!; repeated or indistinguishable groups divide
+    away permutations that do not create a new arrangement.'
+  - Work Schaum — combinatorics drills, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -196,70 +210,80 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
-  - kind: practise
-    label: Blatt 2 and UE3 — combinatorics decisions
-    source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-02.pdf, the counting tasks; exercise-slides/UE3.pdf, the counting walkthrough
-    scope_triage: required-now
-    angle: Counting as the chair asks it, which is consistently inside a probability question rather than alone.
-    angle_detail: Confirms the pattern the external banks also show, and shows which grid cells actually appear.
-      Use it to prioritise the Schaum's Ch 2 drill rather than working that chapter uniformly.
+  - kind: read
+    label: Grinstead & Snell Ch 3 — combinatorics
+    source_id: source-grinstead-snell
+    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
+      exercises
+    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
+      makes the counting concrete.
+    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
+      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
+      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
+      acquire a referent. Free and open-access, with a large exercise set.'
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
   - kind: reference
     label: Ross — combinatorial analysis
     source_id: source-ross-first-course
     locator: Ch 1 Combinatorial Analysis, pdf pp. 14-45 (§1.2 the basic principle of counting; §1.3 permutations;
       §1.4 combinations; §1.5 multinomial coefficients; §1.6 the number of integer solutions of equations)
+    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies
+      but does not develop.
+    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups —
+      the case that appears when a question asks for arrangements of a word with repeated letters, which
+      L05's 'permutations with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars
+      argument stated as counting integer solutions, which is the honest form of the 'combinations with
+      repetition' cell in the grid. Together these two sections cover the two grid cells that most often
+      go wrong, in about fifteen pages.
+    vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
-    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies but
-      does not develop.
-    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups — the case
-      that appears when a question asks for arrangements of a word with repeated letters, which L05's 'permutations
-      with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars argument stated as counting
-      integer solutions, which is the honest form of the 'combinations with repetition' cell in the grid. Together
-      these two sections cover the two grid cells that most often go wrong, in about fifteen pages.
   - kind: practise
     label: Schaum — combinatorics drills
     source_id: source-schaums-probability
     locator: Ch 2 Techniques of Counting, pdf pp. 18-39
+    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
+      for L05 on the shelf.
+    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
+      pattern recognition across many superficially different word problems. This chapter supplies that
+      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
+      with/without replacement) before computing — the chapter is organised by technique, which otherwise
+      gives the answer away.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density for
-      L05 on the shelf.
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is pattern
-      recognition across many superficially different word problems. This chapter supplies that volume and nothing
-      else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered, with/without
-      replacement) before computing — the chapter is organised by technique, which otherwise gives the answer
-      away.
   - kind: watch
     label: jbstatistics — permutations and combinations
     source_id: source-jbstatistics
     locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
+    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
+      both as given.
+    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
+      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
+      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
+      the Schaum's drill.
     scope_triage: helpful-now
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting both
-      as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea rather than
-      two formulas, and seeing the division performed — dividing out the orderings you decided not to distinguish
-      — is what makes it stick. Short series, appropriate as a first exposure before the Schaum's drill.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md
   attachments: []
   source_feedback: []
@@ -267,13 +291,13 @@ stages:
   number: 3
   title: Ordered selections (variations)
   status: pending
-  objective: Choosing k positions with order yields falling-factorial counts without replacement and n^k sequences
-    with replacement.
+  objective: Choosing k positions with order yields falling-factorial counts without replacement and n^k
+    sequences with replacement.
   done_when:
-  - 'Reproduce without notes: Choosing k positions with order yields falling-factorial counts without replacement
-    and n^k sequences with replacement.'
-  - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 1, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: Choosing k positions with order yields falling-factorial counts without
+    replacement and n^k sequences with replacement.'
+  - Work Blatt 2, Aufgabe 1 — counting inside finite probability, then the remaining 2, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -283,70 +307,102 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
   - kind: practise
-    label: Blatt 2 and UE3 — combinatorics decisions
+    label: Blatt 2, Aufgabe 1 — counting inside finite probability
     source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-02.pdf, the counting tasks; exercise-slides/UE3.pdf, the counting walkthrough
+    locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
+    angle: Hides the counting case inside cards, repeated dice and dependent portfolio events, which tests
+      identification rather than formula recall.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
-    angle: Counting as the chair asks it, which is consistently inside a probability question rather than alone.
-    angle_detail: Confirms the pattern the external banks also show, and shows which grid cells actually appear.
-      Use it to prioritise the Schaum's Ch 2 drill rather than working that chapter uniformly.
+  - kind: practise
+    label: UE4, slides 4-8 — worked finite-counting solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 4-8
+    angle: Makes the numerator/denominator counting decisions explicit for the current sheet's disguised
+      cases.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Grinstead & Snell Ch 3 — combinatorics
+    source_id: source-grinstead-snell
+    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
+      exercises
+    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
+      makes the counting concrete.
+    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
+      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
+      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
+      acquire a referent. Free and open-access, with a large exercise set.'
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
   - kind: reference
     label: Ross — combinatorial analysis
     source_id: source-ross-first-course
     locator: Ch 1 Combinatorial Analysis, pdf pp. 14-45 (§1.2 the basic principle of counting; §1.3 permutations;
       §1.4 combinations; §1.5 multinomial coefficients; §1.6 the number of integer solutions of equations)
+    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies
+      but does not develop.
+    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups —
+      the case that appears when a question asks for arrangements of a word with repeated letters, which
+      L05's 'permutations with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars
+      argument stated as counting integer solutions, which is the honest form of the 'combinations with
+      repetition' cell in the grid. Together these two sections cover the two grid cells that most often
+      go wrong, in about fifteen pages.
+    vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
-    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies but
-      does not develop.
-    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups — the case
-      that appears when a question asks for arrangements of a word with repeated letters, which L05's 'permutations
-      with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars argument stated as counting
-      integer solutions, which is the honest form of the 'combinations with repetition' cell in the grid. Together
-      these two sections cover the two grid cells that most often go wrong, in about fifteen pages.
   - kind: practise
     label: Schaum — combinatorics drills
     source_id: source-schaums-probability
     locator: Ch 2 Techniques of Counting, pdf pp. 18-39
+    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
+      for L05 on the shelf.
+    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
+      pattern recognition across many superficially different word problems. This chapter supplies that
+      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
+      with/without replacement) before computing — the chapter is organised by technique, which otherwise
+      gives the answer away.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density for
-      L05 on the shelf.
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is pattern
-      recognition across many superficially different word problems. This chapter supplies that volume and nothing
-      else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered, with/without
-      replacement) before computing — the chapter is organised by technique, which otherwise gives the answer
-      away.
   - kind: watch
     label: jbstatistics — permutations and combinations
     source_id: source-jbstatistics
     locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
+    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
+      both as given.
+    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
+      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
+      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
+      the Schaum's drill.
     scope_triage: helpful-now
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting both
-      as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea rather than
-      two formulas, and seeing the division performed — dividing out the orderings you decided not to distinguish
-      — is what makes it stick. Short series, appropriate as a first exposure before the Schaum's drill.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md
   attachments: []
   source_feedback: []
@@ -354,13 +410,13 @@ stages:
   number: 4
   title: Unordered selections and binomial coefficients
   status: pending
-  objective: Choosing k objects without order gives n choose k, whose symmetry and recursive identities recur
-    throughout probability and algorithms.
+  objective: Choosing k objects without order gives n choose k, whose symmetry and recursive identities
+    recur throughout probability and algorithms.
   done_when:
   - 'Reproduce without notes: Choosing k objects without order gives n choose k, whose symmetry and recursive
     identities recur throughout probability and algorithms.'
-  - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 4, and record every miss with the step
-    it failed at.
+  - Work Blatt 2, Aufgabe 1 — counting inside finite probability, then the remaining 5, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -370,152 +426,191 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
   - kind: practise
-    label: Blatt 2 and UE3 — combinatorics decisions
+    label: Blatt 2, Aufgabe 1 — counting inside finite probability
     source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-02.pdf, the counting tasks; exercise-slides/UE3.pdf, the counting walkthrough
+    locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
+    angle: Hides the counting case inside cards, repeated dice and dependent portfolio events, which tests
+      identification rather than formula recall.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
-    angle: Counting as the chair asks it, which is consistently inside a probability question rather than alone.
-    angle_detail: Confirms the pattern the external banks also show, and shows which grid cells actually appear.
-      Use it to prioritise the Schaum's Ch 2 drill rather than working that chapter uniformly.
+  - kind: practise
+    label: UE4, slides 4-8 — worked finite-counting solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 4-8
+    angle: Makes the numerator/denominator counting decisions explicit for the current sheet's disguised
+      cases.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 4 — combinatorics and finite probability
     source_id: source-fahrmeir-statistik
     locator: Ch 4 §4.3 Zufallsstichproben und Kombinatorik, pdf pp. 214-220; Aufgaben pdf pp. 239-241
-    scope_triage: helpful-now
     angle: Six pages that put counting where SaD puts it — inside sampling — instead of treating combinatorics
       as its own subject.
-    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is its value:
-      Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen mit/ohne Zurücklegen
-      and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s decision grid is organised.
-      If the grid is what will not stick, read this rather than a full combinatorics chapter, because it never
-      leaves the sampling frame. For volume of drill and the harder identity questions go to Blitzstein Ch 1 or
-      Schaum''s Ch 2 instead.'
+    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is
+      its value: Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen
+      mit/ohne Zurücklegen and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s
+      decision grid is organised. If the grid is what will not stick, read this rather than a full combinatorics
+      chapter, because it never leaves the sampling frame. For volume of drill and the harder identity
+      questions go to Blitzstein Ch 1 or Schaum''s Ch 2 instead.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+    scope_triage: helpful-now
   - kind: practise
     label: Arbeitsbuch Chapter 4 — combinatorics applications
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95 (the Ziehen mit/ohne Zurücklegen items)
+    angle: Counting embedded in probability questions rather than as pure counting exercises — which is
+      how L05 is examined.
+    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability
+      whose computation happens to require a count. These items are all of that second kind, so they train
+      the step students actually lose marks on: deciding whether order and replacement matter before reaching
+      for a formula. Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Counting embedded in probability questions rather than as pure counting exercises — which is how L05
-      is examined.
-    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability whose
-      computation happens to require a count. These items are all of that second kind, so they train the step
-      students actually lose marks on: deciding whether order and replacement matter before reaching for a formula.
-      Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+  - kind: read
+    label: Grinstead & Snell Ch 3 — combinatorics
+    source_id: source-grinstead-snell
+    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
+      exercises
+    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
+      makes the counting concrete.
+    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
+      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
+      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
+      acquire a referent. Free and open-access, with a large exercise set.'
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
+  - kind: practise
+    label: Dekking — counting and finite-probability exercises
+    source_id: source-dekking-mips
+    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of
+      sample spaces, pdf pp. 29-30; exercises pdf pp. 62-66
+    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces
+      instead of combinatorial formulas.
+    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds
+      the binomial coefficient where it is needed, out of the product sample space in §2.4, rather than
+      teaching counting as a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing
+      a serious book do without most of it reframes the grid as a shortcut rather than as the content.
+      For actual counting practice go to Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — counting and finite probability
+    source_id: source-mit-1805
+    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides;
+      Problem Set 1 with solutions'
+    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how
+      much of L05 is genuinely hard.
+    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem
+      set is correspondingly compact. Reading it tells you which parts of L05's grid a strong applied
+      course considers routine and which it considers worth practising — helpful when deciding how much
+      time this lecture deserves. Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
+    scope_triage: helpful-now
   - kind: reference
     label: Pitman — counting foundations
     source_id: source-pitman-probability
-    locator: Ch 1 §1.1 Equally Likely Outcomes, pdf pp. 14-32; Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102
-    scope_triage: reference-only
+    locator: Ch 1 §1.1 Equally Likely Outcomes, pdf pp. 14-32; Ch 2 §2.1 The Binomial Distribution, pdf
+      pp. 90-102
     angle: Counting introduced only as the way to compute equally-likely probabilities, never as an independent
       topic.
     angle_detail: §1.1 sets up the Laplace model first — probability as a ratio of counts — so every counting
       technique that follows arrives as an answer to 'how do I get that numerator'. That is the same motivation
-      L05 uses when it moves from the decision grid to Laplace probability, and it is a better frame than treating
-      combinatorics as prerequisite algebra. Thin on stars-and-bars and repetition cases; Blitzstein §1.4 covers
-      those properly.
+      L05 uses when it moves from the decision grid to Laplace probability, and it is a better frame than
+      treating combinatorics as prerequisite algebra. Thin on stars-and-bars and repetition cases; Blitzstein
+      §1.4 covers those properly.
+    vault_path: material://source-pitman-probability/pitman.pdf
+    scope_triage: reference-only
   - kind: reference
     label: Ross — combinatorial analysis
     source_id: source-ross-first-course
     locator: Ch 1 Combinatorial Analysis, pdf pp. 14-45 (§1.2 the basic principle of counting; §1.3 permutations;
       §1.4 combinations; §1.5 multinomial coefficients; §1.6 the number of integer solutions of equations)
+    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies
+      but does not develop.
+    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups —
+      the case that appears when a question asks for arrangements of a word with repeated letters, which
+      L05's 'permutations with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars
+      argument stated as counting integer solutions, which is the honest form of the 'combinations with
+      repetition' cell in the grid. Together these two sections cover the two grid cells that most often
+      go wrong, in about fifteen pages.
+    vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
-    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies but
-      does not develop.
-    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups — the case
-      that appears when a question asks for arrangements of a word with repeated letters, which L05's 'permutations
-      with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars argument stated as counting
-      integer solutions, which is the honest form of the 'combinations with repetition' cell in the grid. Together
-      these two sections cover the two grid cells that most often go wrong, in about fifteen pages.
   - kind: practise
     label: Schaum — combinatorics drills
     source_id: source-schaums-probability
     locator: Ch 2 Techniques of Counting, pdf pp. 18-39
+    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
+      for L05 on the shelf.
+    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
+      pattern recognition across many superficially different word problems. This chapter supplies that
+      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
+      with/without replacement) before computing — the chapter is organised by technique, which otherwise
+      gives the answer away.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density for
-      L05 on the shelf.
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is pattern
-      recognition across many superficially different word problems. This chapter supplies that volume and nothing
-      else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered, with/without
-      replacement) before computing — the chapter is organised by technique, which otherwise gives the answer
-      away.
-  - kind: practise
-    label: Dekking — counting and finite-probability exercises
-    source_id: source-dekking-mips
-    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of sample spaces,
-      pdf pp. 29-30; exercises pdf pp. 62-66
-    scope_triage: helpful-now
-    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces instead
-      of combinatorial formulas.
-    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds the binomial
-      coefficient where it is needed, out of the product sample space in §2.4, rather than teaching counting as
-      a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing a serious book do without
-      most of it reframes the grid as a shortcut rather than as the content. For actual counting practice go to
-      Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
-  - kind: read
-    label: MIT 18.05 — counting and finite probability
-    source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides; Problem
-      Set 1 with solutions'
-    scope_triage: helpful-now
-    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how much of
-      L05 is genuinely hard.
-    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem set is
-      correspondingly compact. Reading it tells you which parts of L05's grid a strong applied course considers
-      routine and which it considers worth practising — helpful when deciding how much time this lecture deserves.
-      Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
   - kind: reference
     label: Harvard Stat 110 — strategic counting
     source_id: source-stat110
-    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive definition);
-      Strategic Practice 1 with solutions
+    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive
+      definition); Strategic Practice 1 with solutions
+    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest
+      to pick up.
+    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive
+      than reading a finished one — the moment where he chooses what set to count twice is the whole method.
+      Two lectures cover all of L05's counting content at a level above the lecture's own, with the identities
+      node handled properly.
     scope_triage: reference-only
-    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest to
-      pick up.
-    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive than
-      reading a finished one — the moment where he chooses what set to count twice is the whole method. Two lectures
-      cover all of L05's counting content at a level above the lecture's own, with the identities node handled
-      properly.
   - kind: practise
-    label: External German solved exams — counting block
+    label: Leuphana-Merz pp. 5-10 — combinatorial probability items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the combinatorics questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 counting
+      items
+    angle: Uses counting as the hidden first step of a probability problem rather than naming the formula.
+    angle_detail: 'This is identification practice: decide the finite sample space and the relevant count
+      before computing a probability. It does not replace the lecture''s complete order/replacement decision
+      grid, so use it only after that grid can be reproduced.'
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Counting items from real papers, which are consistently harder than textbook exercises.
-    angle_detail: External exam counting questions tend to disguise the grid cell more thoroughly than textbook
-      problems do, which is good practice for the identification step. Check each against SaD's scope before working
-      it — some papers examine counting techniques this course does not teach.
   - kind: watch
     label: jbstatistics — permutations and combinations
     source_id: source-jbstatistics
     locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
+    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
+      both as given.
+    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
+      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
+      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
+      the Schaum's drill.
     scope_triage: helpful-now
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting both
-      as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea rather than
-      two formulas, and seeing the division performed — dividing out the orderings you decided not to distinguish
-      — is what makes it stick. Short series, appropriate as a first exposure before the Schaum's drill.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md
   attachments: []
   source_feedback: []
@@ -523,8 +618,8 @@ stages:
   number: 5
   title: Combinations with repetition and stars and bars
   status: pending
-  objective: Multisets and allocations become separator problems; the model must distinguish selecting types repeatedly
-    from ordering individual draws.
+  objective: Multisets and allocations become separator problems; the model must distinguish selecting
+    types repeatedly from ordering individual draws.
   done_when:
   - 'Reproduce without notes: Multisets and allocations become separator problems; the model must distinguish
     selecting types repeatedly from ordering individual draws.'
@@ -537,27 +632,29 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md
   attachments: []
   source_feedback: []
@@ -565,13 +662,14 @@ stages:
   number: 6
   title: Laplace probability, complements, and hypergeometric counting
   status: pending
-  objective: In equally likely finite spaces, probability is favorable counts over total counts; complements simplify
-    at-least-one events, and without-replacement samples produce hypergeometric terms.
+  objective: In equally likely finite spaces, probability is favorable counts over total counts; complements
+    simplify at-least-one events, and without-replacement samples produce hypergeometric terms.
   done_when:
-  - 'Reproduce without notes: In equally likely finite spaces, probability is favorable counts over total counts;
-    complements simplify at-least-one events, and without-replacement samples produce hypergeometric terms.'
-  - Work Blatt 2 and UE3 — combinatorics decisions, then the remaining 5, and record every miss with the step
-    it failed at.
+  - 'Reproduce without notes: In equally likely finite spaces, probability is favorable counts over total
+    counts; complements simplify at-least-one events, and without-replacement samples produce hypergeometric
+    terms.'
+  - Work Blatt 2, Aufgabe 1 — counting inside finite probability, then the remaining 5, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -582,197 +680,230 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
   - kind: practise
-    label: Blatt 2 and UE3 — combinatorics decisions
+    label: Blatt 2, Aufgabe 1 — counting inside finite probability
     source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-02.pdf, the counting tasks; exercise-slides/UE3.pdf, the counting walkthrough
+    locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
+    angle: Hides the counting case inside cards, repeated dice and dependent portfolio events, which tests
+      identification rather than formula recall.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
-    angle: Counting as the chair asks it, which is consistently inside a probability question rather than alone.
-    angle_detail: Confirms the pattern the external banks also show, and shows which grid cells actually appear.
-      Use it to prioritise the Schaum's Ch 2 drill rather than working that chapter uniformly.
+  - kind: practise
+    label: UE4, slides 4-8 — worked finite-counting solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 4-8
+    angle: Makes the numerator/denominator counting decisions explicit for the current sheet's disguised
+      cases.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 probability deck — counting context
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/05_random_variables.pdf
+    locator: 05_random_variables.pdf
+    angle: Prior-year treatment of the same material at a different pace; note that the 2025 numbering
+      does not match 2026.
+    angle_detail: The 2025 sequence numbers this deck as random variables where 2026 has combinatorics,
+      so the file names cannot be used to align lectures. Compare by topic, never by number. Useful as
+      a second explanation, dangerous as a scope guide.
+    vault_path: material://source-sad-2025-recordings/05_random_variables.pdf
     scope_triage: reference-only
-    angle: Prior-year treatment of the same material at a different pace; note that the 2025 numbering does not
-      match 2026.
-    angle_detail: The 2025 sequence numbers this deck as random variables where 2026 has combinatorics, so the
-      file names cannot be used to align lectures. Compare by topic, never by number. Useful as a second explanation,
-      dangerous as a scope guide.
   - kind: read
     label: Fahrmeir Chapter 4 — combinatorics and finite probability
     source_id: source-fahrmeir-statistik
     locator: Ch 4 §4.3 Zufallsstichproben und Kombinatorik, pdf pp. 214-220; Aufgaben pdf pp. 239-241
-    scope_triage: helpful-now
     angle: Six pages that put counting where SaD puts it — inside sampling — instead of treating combinatorics
       as its own subject.
-    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is its value:
-      Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen mit/ohne Zurücklegen
-      and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s decision grid is organised.
-      If the grid is what will not stick, read this rather than a full combinatorics chapter, because it never
-      leaves the sampling frame. For volume of drill and the harder identity questions go to Blitzstein Ch 1 or
-      Schaum''s Ch 2 instead.'
+    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is
+      its value: Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen
+      mit/ohne Zurücklegen and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s
+      decision grid is organised. If the grid is what will not stick, read this rather than a full combinatorics
+      chapter, because it never leaves the sampling frame. For volume of drill and the harder identity
+      questions go to Blitzstein Ch 1 or Schaum''s Ch 2 instead.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+    scope_triage: helpful-now
   - kind: practise
     label: Arbeitsbuch Chapter 4 — combinatorics applications
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95 (the Ziehen mit/ohne Zurücklegen items)
+    angle: Counting embedded in probability questions rather than as pure counting exercises — which is
+      how L05 is examined.
+    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability
+      whose computation happens to require a count. These items are all of that second kind, so they train
+      the step students actually lose marks on: deciding whether order and replacement matter before reaching
+      for a formula. Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Counting embedded in probability questions rather than as pure counting exercises — which is how L05
-      is examined.
-    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability whose
-      computation happens to require a count. These items are all of that second kind, so they train the step
-      students actually lose marks on: deciding whether order and replacement matter before reaching for a formula.
-      Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+  - kind: read
+    label: Grinstead & Snell Ch 3 — combinatorics
+    source_id: source-grinstead-snell
+    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
+      exercises
+    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
+      makes the counting concrete.
+    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
+      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
+      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
+      acquire a referent. Free and open-access, with a large exercise set.'
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     source_id: source-blitzstein-hwang
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25; §1.5 story
-      proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
+      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
+    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
+      no algebra at all.'
+    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
+      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
+      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
+      That directly serves L05's identities node, which the deck states without justification. §1.4 also
+      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
+      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with no algebra
-      at all.'
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof establishes
-      an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick — by naming a set and
-      counting it twice, and once seen the identities stop being things to memorise. That directly serves L05's
-      identities node, which the deck states without justification. §1.4 also makes the sampling table (ordered/unordered
-      × with/without replacement) explicit, which is the same four-way grid the lecture draws. The strongest exercise
-      set on the shelf for this material.
+  - kind: read
+    label: OpenIntro — finite counting inside probability
+    source_id: source-openintro-statistics
+    locator: Ch 3 §3.3 sampling from a small population, pdf pp. 112-114; Ch 4 §4.3 binomial distribution,
+      pdf pp. 149-157
+    angle: 'Almost no combinatorics on purpose: it shows which L05 results survive when counting is replaced
+      by simulation and tables.'
+    angle_detail: 'OpenIntro reaches the binomial coefficient in a single paragraph inside §4.3 and never
+      builds a counting apparatus. Routed here as an honest boundary marker rather than as study material:
+      it tells you which of L05''s machinery an applied statistics course considers optional. If the aim
+      is to pass L05''s counting questions, this is the wrong source — use Blitzstein Ch 1 or Schaum''s
+      Ch 2. Kept on the menu so the absence is visible rather than an accidental gap.'
+    vault_path: material://source-openintro-statistics/openintro.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — counting and finite-probability exercises
+    source_id: source-dekking-mips
+    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of
+      sample spaces, pdf pp. 29-30; exercises pdf pp. 62-66
+    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces
+      instead of combinatorial formulas.
+    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds
+      the binomial coefficient where it is needed, out of the product sample space in §2.4, rather than
+      teaching counting as a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing
+      a serious book do without most of it reframes the grid as a shortcut rather than as the content.
+      For actual counting practice go to Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — counting and finite probability
+    source_id: source-mit-1805
+    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides;
+      Problem Set 1 with solutions'
+    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how
+      much of L05 is genuinely hard.
+    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem
+      set is correspondingly compact. Reading it tells you which parts of L05's grid a strong applied
+      course considers routine and which it considers worth practising — helpful when deciding how much
+      time this lecture deserves. Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
+    scope_triage: helpful-now
   - kind: reference
     label: Pitman — counting foundations
     source_id: source-pitman-probability
-    locator: Ch 1 §1.1 Equally Likely Outcomes, pdf pp. 14-32; Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102
-    scope_triage: reference-only
+    locator: Ch 1 §1.1 Equally Likely Outcomes, pdf pp. 14-32; Ch 2 §2.1 The Binomial Distribution, pdf
+      pp. 90-102
     angle: Counting introduced only as the way to compute equally-likely probabilities, never as an independent
       topic.
     angle_detail: §1.1 sets up the Laplace model first — probability as a ratio of counts — so every counting
       technique that follows arrives as an answer to 'how do I get that numerator'. That is the same motivation
-      L05 uses when it moves from the decision grid to Laplace probability, and it is a better frame than treating
-      combinatorics as prerequisite algebra. Thin on stars-and-bars and repetition cases; Blitzstein §1.4 covers
-      those properly.
+      L05 uses when it moves from the decision grid to Laplace probability, and it is a better frame than
+      treating combinatorics as prerequisite algebra. Thin on stars-and-bars and repetition cases; Blitzstein
+      §1.4 covers those properly.
+    vault_path: material://source-pitman-probability/pitman.pdf
+    scope_triage: reference-only
   - kind: reference
     label: Tijms — counting through probability models
     source_id: source-tijms-understanding-probability
-    locator: Ch 7 Foundations of probability theory, pdf pp. 235-254 (finite sample spaces and the Laplace model)
+    locator: Ch 7 Foundations of probability theory, pdf pp. 235-254 (finite sample spaces and the Laplace
+      model)
+    angle: Counting kept subordinate to the sample-space model, with birthday- and lottery-style problems
+      as the worked cases.
+    angle_detail: Tijms treats combinatorial questions as questions about the size of a well-chosen sample
+      space, and his worked cases — coincidences, lotteries, matching problems — are the ones whose answers
+      are counterintuitive enough to be memorable. Useful as a second pass after the mechanics are in
+      place from L05's grid, less useful as a first exposure because he does not tabulate the cases.
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
-    angle: Counting kept subordinate to the sample-space model, with birthday- and lottery-style problems as the
-      worked cases.
-    angle_detail: Tijms treats combinatorial questions as questions about the size of a well-chosen sample space,
-      and his worked cases — coincidences, lotteries, matching problems — are the ones whose answers are counterintuitive
-      enough to be memorable. Useful as a second pass after the mechanics are in place from L05's grid, less useful
-      as a first exposure because he does not tabulate the cases.
   - kind: reference
     label: Ross — combinatorial analysis
     source_id: source-ross-first-course
     locator: Ch 1 Combinatorial Analysis, pdf pp. 14-45 (§1.2 the basic principle of counting; §1.3 permutations;
       §1.4 combinations; §1.5 multinomial coefficients; §1.6 the number of integer solutions of equations)
+    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies
+      but does not develop.
+    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups —
+      the case that appears when a question asks for arrangements of a word with repeated letters, which
+      L05's 'permutations with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars
+      argument stated as counting integer solutions, which is the honest form of the 'combinations with
+      repetition' cell in the grid. Together these two sections cover the two grid cells that most often
+      go wrong, in about fifteen pages.
+    vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
-    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies but
-      does not develop.
-    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups — the case
-      that appears when a question asks for arrangements of a word with repeated letters, which L05's 'permutations
-      with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars argument stated as counting
-      integer solutions, which is the honest form of the 'combinations with repetition' cell in the grid. Together
-      these two sections cover the two grid cells that most often go wrong, in about fifteen pages.
   - kind: practise
     label: Schaum — combinatorics drills
     source_id: source-schaums-probability
     locator: Ch 2 Techniques of Counting, pdf pp. 18-39
+    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
+      for L05 on the shelf.
+    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
+      pattern recognition across many superficially different word problems. This chapter supplies that
+      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
+      with/without replacement) before computing — the chapter is organised by technique, which otherwise
+      gives the answer away.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density for
-      L05 on the shelf.
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is pattern
-      recognition across many superficially different word problems. This chapter supplies that volume and nothing
-      else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered, with/without
-      replacement) before computing — the chapter is organised by technique, which otherwise gives the answer
-      away.
-  - kind: read
-    label: OpenIntro — finite counting inside probability
-    source_id: source-openintro-statistics
-    locator: Ch 3 §3.3 sampling from a small population, pdf pp. 112-114; Ch 4 §4.3 binomial distribution, pdf
-      pp. 149-157
-    scope_triage: helpful-now
-    angle: 'Almost no combinatorics on purpose: it shows which L05 results survive when counting is replaced by
-      simulation and tables.'
-    angle_detail: 'OpenIntro reaches the binomial coefficient in a single paragraph inside §4.3 and never builds
-      a counting apparatus. Routed here as an honest boundary marker rather than as study material: it tells you
-      which of L05''s machinery an applied statistics course considers optional. If the aim is to pass L05''s
-      counting questions, this is the wrong source — use Blitzstein Ch 1 or Schaum''s Ch 2. Kept on the menu so
-      the absence is visible rather than an accidental gap.'
-  - kind: practise
-    label: Dekking — counting and finite-probability exercises
-    source_id: source-dekking-mips
-    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of sample spaces,
-      pdf pp. 29-30; exercises pdf pp. 62-66
-    scope_triage: helpful-now
-    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces instead
-      of combinatorial formulas.
-    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds the binomial
-      coefficient where it is needed, out of the product sample space in §2.4, rather than teaching counting as
-      a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing a serious book do without
-      most of it reframes the grid as a shortcut rather than as the content. For actual counting practice go to
-      Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
-  - kind: read
-    label: MIT 18.05 — counting and finite probability
-    source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides; Problem
-      Set 1 with solutions'
-    scope_triage: helpful-now
-    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how much of
-      L05 is genuinely hard.
-    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem set is
-      correspondingly compact. Reading it tells you which parts of L05's grid a strong applied course considers
-      routine and which it considers worth practising — helpful when deciding how much time this lecture deserves.
-      Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
   - kind: reference
     label: Harvard Stat 110 — strategic counting
     source_id: source-stat110
-    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive definition);
-      Strategic Practice 1 with solutions
+    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive
+      definition); Strategic Practice 1 with solutions
+    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest
+      to pick up.
+    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive
+      than reading a finished one — the moment where he chooses what set to count twice is the whole method.
+      Two lectures cover all of L05's counting content at a level above the lecture's own, with the identities
+      node handled properly.
     scope_triage: reference-only
-    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest to
-      pick up.
-    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive than
-      reading a finished one — the moment where he chooses what set to count twice is the whole method. Two lectures
-      cover all of L05's counting content at a level above the lecture's own, with the identities node handled
-      properly.
   - kind: practise
-    label: FAU solved exam — finite counting inside probability
-    source_id: source-fau-klausur-ws1415
-    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf: the counting and Binomial questions with
-      their solutions'
-    scope_triage: helpful-now
-    angle: Counting appearing inside a larger probability question, which is the only way L05 is examined.
-    angle_detail: 'Confirms what the textbook exercises suggest: the exam does not ask for counts in isolation.
-      The count is a step in a probability calculation, and marks are lost at the identification step, not the
-      arithmetic.'
-  - kind: practise
-    label: External German solved exams — counting block
+    label: Leuphana-Merz pp. 5-10 — combinatorial probability items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the combinatorics questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 counting
+      items
+    angle: Uses counting as the hidden first step of a probability problem rather than naming the formula.
+    angle_detail: 'This is identification practice: decide the finite sample space and the relevant count
+      before computing a probability. It does not replace the lecture''s complete order/replacement decision
+      grid, so use it only after that grid can be reproduced.'
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Counting items from real papers, which are consistently harder than textbook exercises.
-    angle_detail: External exam counting questions tend to disguise the grid cell more thoroughly than textbook
-      problems do, which is good practice for the identification step. Check each against SaD's scope before working
-      it — some papers examine counting techniques this course does not teach.
   - kind: watch
     label: StatQuest — Hypergeometric distribution
     source_id: source-statquest
     locator: '''The Hypergeometric Distribution, Clearly Explained'' (≈12 min)'
+    angle: The one video here that treats the counting problem behind sampling without replacement rather
+      than the formula.
+    angle_detail: Hypergeometric counting is where L05's grid meets L07's distributions, and it is the
+      cell students most often get wrong because the numerator and denominator involve different populations.
+      The video draws the urn, marks the two groups, and builds the ratio of combinations from the picture.
+      Short, and worth watching before attempting the L05 counting exercises that involve defective items
+      or committee selection.
     scope_triage: helpful-now
-    angle: The one video here that treats the counting problem behind sampling without replacement rather than
-      the formula.
-    angle_detail: Hypergeometric counting is where L05's grid meets L07's distributions, and it is the cell students
-      most often get wrong because the numerator and denominator involve different populations. The video draws
-      the urn, marks the two groups, and builds the ratio of combinations from the picture. Short, and worth watching
-      before attempting the L05 counting exercises that involve defective items or committee selection.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md
   attachments: []
   source_feedback: []
@@ -780,11 +911,11 @@ stages:
   number: 7
   title: Binomial identities and Stirling approximation
   status: pending
-  objective: Algebraic identities reorganize repeated counting arguments, while Stirling estimates factorial growth
-    when exact evaluation is impractical.
+  objective: Algebraic identities reorganize repeated counting arguments, while Stirling estimates factorial
+    growth when exact evaluation is impractical.
   done_when:
-  - 'Reproduce without notes: Algebraic identities reorganize repeated counting arguments, while Stirling estimates
-    factorial growth when exact evaluation is impractical.'
+  - 'Reproduce without notes: Algebraic identities reorganize repeated counting arguments, while Stirling
+    estimates factorial growth when exact evaluation is impractical.'
   exam_critical: true
   concepts:
   - concept-combinatorics
@@ -794,13 +925,26 @@ stages:
     label: Current L05 combinatorics deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
+    angle: The decision grid — order × replacement × selection size — which is the organising device the
+      exam expects you to apply.
+    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
+      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
+      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
+      §1.5''s story proofs are where they become memorable rather than memorised.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
     scope_triage: required-now
-    angle: The decision grid — order × replacement × selection size — which is the organising device the exam
-      expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which are
-      standard. Read it as a classification procedure: identify the cell, then apply the formula that cell names.
-      The identities and Stirling slides at the end are stated without justification; Blitzstein §1.5''s story
-      proofs are where they become memorable rather than memorised.'
+  - kind: read
+    label: Grinstead & Snell Ch 3 — combinatorics
+    source_id: source-grinstead-snell
+    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
+      exercises
+    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
+      makes the counting concrete.
+    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
+      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
+      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
+      acquire a referent. Free and open-access, with a large exercise set.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []
   source_feedback: []

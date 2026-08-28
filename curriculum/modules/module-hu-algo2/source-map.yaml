@@ -7,7 +7,8 @@ sources:
     authored viva drills stay beside them.
   priority: 0
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-1416d2d68345093ac3d3125c
+    unit_id: unit-algo2-exam-prep
     title: HU AlgoDat II — complete local course bundle
     format: course-material
     angle: Primary authority for terminology, theorem statements, and what the oral can ask. Topic stages
@@ -36,7 +37,8 @@ sources:
   why: Course-assigned German text for Karatsuba and hashing.
   priority: 1
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-854918de47c2f87b0a09f74c
+    unit_id: unit-algo2-exam-prep
     title: DMS — Chapters 1 and 4
     format: book
     angle: Matches the course's German vocabulary and gives the assigned derivation for Karatsuba plus
@@ -53,7 +55,8 @@ sources:
   why: Course-assigned reference for amortization, B-trees, Fibonacci heaps, paths, flow, and geometry.
   priority: 1
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-ec998eafd215c3c4c994acd9
+    unit_id: unit-algo2-exam-prep
     title: CLRS — mapped Algo 2 chapters
     format: book
     angle: The precise proof-and-algorithm reference behind six HU topics; read only the chapter named
@@ -74,7 +77,8 @@ sources:
   why: Course-assigned German text for splay trees, bipartite matching, and FFT.
   priority: 1
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-520f63344f33115bd302d37b
+    unit_id: unit-algo2-exam-prep
     title: Ottmann/Widmayer — mapped sections
     format: book
     angle: Provides the assigned second account in German; use §5.4 for splay, §9.8 for matching, and
@@ -92,7 +96,8 @@ sources:
   why: Course-assigned source for Gale–Shapley and its optimality results.
   priority: 1
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-68ef8ceadd9c6341d3e09d73
+    unit_id: unit-algo2-exam-prep
     title: Kleinberg/Tardos — Stable Matching
     format: book
     angle: A compact proof-oriented telling of Gale–Shapley, stability, and proposer optimality.
@@ -107,7 +112,8 @@ sources:
   why: The course-assigned short primary paper for cuckoo hashing.
   priority: 1
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-264bede98b0b09aff52c7e08
+    unit_id: unit-algo2-exam-prep
     title: Pagh — Cuckoo Hashing for Undergraduates
     format: paper
     angle: Separates worst-case lookup, expected insertion, and amortized expected dynamic guarantees
@@ -123,7 +129,8 @@ sources:
   why: One exact Karatsuba lecture for the first recurrence before returning to the assigned German text.
   priority: 3
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-f0a79e6010f2705b849a2082
+    unit_id: unit-algo2-exam-prep
     title: MIT 6.006 — Karatsuba multiplication
     format: video
     angle: A worked audiovisual derivation of the three-product identity and recurrence.
@@ -139,7 +146,8 @@ sources:
     linear course.
   priority: 3
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-729b6f9ca1a1bec8e0002c55
+    unit_id: unit-algo2-exam-prep
     title: MIT 6.046J — selected Algo 2 lectures
     format: course
     angle: Use only L2 convex hull, L3 FFT, L5 amortization, L11 APSP, L13 flow, or L14 matching when
@@ -160,7 +168,8 @@ sources:
   why: A concrete open textbook chapter for the B-tree cost model and operations.
   priority: 3
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-3783a32fbb72356b7691a63b
+    unit_id: unit-algo2-exam-prep
     title: Open Data Structures — B-Trees
     format: book
     angle: Makes the external-memory model and split/merge mechanics concrete before the CLRS proof details.
@@ -175,7 +184,8 @@ sources:
   why: A German worked second explanation for Fibonacci-heap operations.
   priority: 3
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-da9b398309578e7b14d8727c
+    unit_id: unit-algo2-exam-prep
     title: TU Wien AD2 — Fibonacci-Heaps
     format: documentation
     angle: Worked figures connect the potential argument to actual consolidate, cut, and cascading-cut
@@ -192,7 +202,8 @@ sources:
   why: A cleaner access-lemma derivation from Sleator's course.
   priority: 3
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-0ff8fe9ef42dce597ca63d15
+    unit_id: unit-algo2-exam-prep
     title: CMU 15-451 — Splay Trees
     format: documentation
     angle: A proof-focused route through rank potential and the access lemma when the assigned text is
@@ -208,7 +219,8 @@ sources:
   why: The original paper is preserved for proof depth, not assigned on the first pass.
   priority: 12
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-94ed90d4a4d44532aa2fb982
+    unit_id: unit-algo2-exam-prep
     title: Sleator–Tarjan — Self-Adjusting Binary Search Trees
     format: paper
     angle: The original access-lemma source; open only after the HU and CMU explanations if a proof detail
@@ -225,7 +237,8 @@ sources:
     scope.
   priority: 4
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-f47703f27f7a11b7baafc503
+    unit_id: unit-algo2-exam-prep
     title: Goethe Frankfurt ALGO2 — mapped German practice
     format: course
     angle: Use the amortization/splay and network-flow sheets plus short videos for German transfer vocabulary;
@@ -246,7 +259,8 @@ sources:
     pass.
   priority: 4
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-2adb2591b4b2180f0a6af387
+    unit_id: unit-algo2-exam-prep
     title: VisuAlgo — Algo 2 visual traces
     format: website
     angle: Run one small SSSP, max-flow, matching, or convex-hull instance and narrate each state change;
@@ -265,7 +279,8 @@ sources:
   why: The official Kleinberg–Tardos deck is the most compact visual stable-matching review.
   priority: 4
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-0335d880d3de6ca5749ca988
+    unit_id: unit-algo2-exam-prep
     title: Princeton — Stable Matching
     format: documentation
     angle: Visual proposal rounds and concise invariant slides reinforce the assigned book's proof.
@@ -280,7 +295,8 @@ sources:
   why: A single strong visual preview of point-value representation and divide-and-conquer FFT.
   priority: 4
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-d8c5e1be199c432960ef60b0
+    unit_id: unit-algo2-exam-prep
     title: Reducible — The Fast Fourier Transform
     format: video
     angle: Builds the picture for roots-of-unity evaluation before the HU deck and Ottmann/Widmayer derivation.
@@ -295,7 +311,8 @@ sources:
   why: Solved written exams become explain-aloud scripts after the twelve topic drills.
   priority: 5
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-5a66f8c3c6febacfb84310a2
+    unit_id: unit-algo2-exam-prep
     title: Frankfurt ALGO2 solved exams 2021–2024
     format: solutions
     angle: Choose one unseen problem, explain the solution aloud, then compare against the model answer;
@@ -316,7 +333,8 @@ sources:
   why: Free proof-oriented book chapters are a reserve second telling for graph topics.
   priority: 20
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-cfbd6aac6f17876299b5eb26
+    unit_id: unit-algo2-exam-prep
     title: Jeff Erickson — Algorithms
     format: book
     angle: Open one mapped chapter only when the assigned source leaves a proof gap; never read it as
@@ -337,7 +355,8 @@ sources:
   why: Visual graph explanations are a fallback for a diagnosed intuition gap.
   priority: 21
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-4b9a0889297a0b870a0f9343
+    unit_id: unit-algo2-exam-prep
     title: William Fiset — Graph Theory playlist
     format: video
     angle: Select only Bellman–Ford, Ford–Fulkerson, or bipartite matching; the full playlist is out of
@@ -356,7 +375,8 @@ sources:
     now.
   priority: 22
   unit_routes:
-  - unit_id: unit-algo2-exam-prep
+  - id: route-953107fdfdb26bc0d0c5aa5c
+    unit_id: unit-algo2-exam-prep
     title: KIT Algorithmen 2 — selected recordings
     format: course
     angle: Use one topic-matched German recording for flow, matching, or geometry only after a diagnosed

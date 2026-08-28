@@ -80,6 +80,7 @@ source_selections:
 - source_id: source-d2l
   locator: Chapter 11 sections 11.1, 11.3, 11.5, 11.6 and 11.7 with their Exercises subsections. Verified
     2026-08-22.
+  route_id: route-9b89cb595b8b44604cd30acf
   purpose: Chapter 11 carries a worked exercise set behind every L11 node and stands in for the lecturer-worked
     Transformer sheet that the course never issued.
   stage_ids:
@@ -89,6 +90,7 @@ source_selections:
 - source_id: source-geron-handson
   locator: geron-copy2.pdf (3rd ed., 1126 pp.) — Ch 3 metrics pdf pp. 164–176, Ch 11 optimizers pdf pp.
     485–494, Ch 14 CNNs pdf pp. 620–694, Ch 16 attention pdf pp. 772–795
+  route_id: route-53277505603f22eedc9d81b7
   purpose: 'The executable counterpart, from the complete 3rd-edition file: Ch 3 metrics, Ch 11 optimizers,
     Ch 14 CNN motivation and exercises, Ch 16 attention and its exercises 5–6.'
   stage_ids:
@@ -97,6 +99,7 @@ source_selections:
   - stage-aml-neural-transformer-loop
 - source_id: source-jurafsky-slp3
   locator: Chapter 8 — Transformers (January 6, 2026 draft)
+  route_id: route-913d0ca70d700148f5f1d69c
   purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use
     only if the current deck, bank and mock leave an attention or block gap.
   stage_ids:
@@ -106,6 +109,7 @@ source_selections:
 - source_id: source-murphy-pml1
   locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
     solution manual §10.1 and §13.1
+  route_id: route-f426a3cf4e1b48b8f1c408d3
   purpose: 'Section-addressed derivation bank for a diagnosed miss: Ch 8 for convexity, Newton and the
     adaptive optimizers, §15.4–15.5 for attention and the Transformer block.'
   stage_ids:
