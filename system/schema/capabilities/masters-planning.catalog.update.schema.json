@@ -1,27 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/stage.note.write.schema.json",
-  "title": "payload for capability stage.note.write",
+  "$id": "capabilities/masters-planning.catalog.update.schema.json",
+  "title": "payload for capability masters-planning.catalog.update",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "stage_id",
-    "text",
-    "unit_id"
-  ],
+  "required": [],
   "properties": {
-    "replace": {
+    "approve": {
       "type": "boolean"
     },
-    "stage_id": {
+    "file": {
       "type": "string"
     },
-    "text": {
-      "type": "string"
-    },
-    "unit_id": {
-      "type": "string"
+    "record": {
+      "type": "object"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
 }

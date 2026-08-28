@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/master-planning-promotion.schema.json",
+  "title": "One reviewed Future Master's Planning promotion package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "recorded_at",
+    "candidate_module_id",
+    "canonical_module_id",
+    "catalog_revision",
+    "verification",
+    "adopted_sources",
+    "module_plan"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {
+      "type": "string",
+      "pattern": "^master-promotion-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {"const": "master-planning-promotion"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "candidate_module_id": {
+      "type": "string",
+      "pattern": "^candidate-module-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "canonical_module_id": {
+      "type": "string",
+      "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "catalog_revision": {"type": "integer", "minimum": 0},
+    "verification": {"$ref": "#/$defs/verification"},
+    "adopted_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/sourceMapping"}
+    },
+    "module_plan": {"$ref": "#/$defs/modulePlan"}
+  },
+  "$defs": {
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy", "status", "as_of", "evidence"],
+      "properties": {
+        "policy": {"const": "official-academic-30d-v1"},
+        "status": {"const": "verified-current"},
+        "as_of": {"type": "string", "format": "date"},
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["authority", "url", "claim", "verified_on"],
+            "properties": {
+              "authority": {"const": "official-academic"},
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https://"
+              },
+              "claim": {"type": "string", "minLength": 1},
+              "verified_on": {"type": "string", "format": "date"}
+            }
+          }
+        }
+      }
+    },
+    "sourceMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_source_id", "canonical_source_id"],
+      "properties": {
+        "candidate_source_id": {
+          "type": "string",
+          "pattern": "^candidate-source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "canonical_source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "canonical_source": {
+          "$ref": "sources.schema.json#/properties/sources/items"
+        },
+        "registry_target": {
+          "type": "string",
+          "pattern": "^sources/(?:sources\\.yaml|registry/[a-z0-9]+(?:-[a-z0-9]+)*\\.yaml)$"
+        }
+      },
+      "dependentRequired": {
+        "canonical_source": ["registry_target"],
+        "registry_target": ["canonical_source"]
+      }
+    },
+    "planContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "plan_template_version",
+        "coverage_audit",
+        "checks",
+        "intentional_reorders"
+      ],
+      "properties": {
+        "version": {"const": 2},
+        "plan_template_version": {"const": 1},
+        "coverage_audit": {"type": "string", "minLength": 1},
+        "checks": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "local_inventory_complete",
+            "linked_inventory_complete",
+            "materials_opened_and_content_checked",
+            "current_and_prior_scope_reconciled",
+            "duplicates_and_numbering_checked",
+            "exclusions_and_unresolved_gaps_recorded"
+          ],
+          "properties": {
+            "local_inventory_complete": {"const": true},
+            "linked_inventory_complete": {"const": true},
+            "materials_opened_and_content_checked": {"const": true},
+            "current_and_prior_scope_reconciled": {"const": true},
+            "duplicates_and_numbering_checked": {"const": true},
+            "exclusions_and_unresolved_gaps_recorded": {"const": true}
+          }
+        },
+        "intentional_reorders": {"type": "array", "maxItems": 0}
+      }
+    },
+    "modulePlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_id",
+        "plan_contract",
+        "module_patch",
+        "source_map",
+        "units",
+        "source_patches",
+        "workspace_updates"
+      ],
+      "properties": {
+        "module_id": {
+          "type": "string",
+          "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "plan_contract": {"$ref": "#/$defs/planContract"},
+        "module_patch": {"$ref": "module.schema.json"},
+        "source_map": {"$ref": "module-source-map.schema.json"},
+        "units": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["unit"],
+            "properties": {
+              "unit": {"$ref": "unit.schema.json"},
+              "study_map": {"$ref": "study-map.schema.json"}
+            }
+          }
+        },
+        "source_patches": {"type": "array", "maxItems": 0},
+        "workspace_updates": {"type": "array", "maxItems": 0}
+      }
+    }
+  }
+}

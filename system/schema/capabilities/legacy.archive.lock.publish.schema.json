@@ -1,26 +1,32 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/job.track.progress.schema.json",
-  "title": "payload for capability job.track.progress",
+  "$id": "capabilities/legacy.archive.lock.publish.schema.json",
+  "title": "payload for capability legacy.archive.lock.publish",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "session",
-    "track"
-  ],
+  "required": [],
   "properties": {
-    "confirm_job_access": {
+    "approve": {
       "type": "boolean"
     },
-    "session": {
-      "type": "integer"
-    },
-    "state": {
+    "file": {
       "type": "string"
     },
-    "track": {
-      "type": "string"
+    "record": {
+      "type": "object"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
 }

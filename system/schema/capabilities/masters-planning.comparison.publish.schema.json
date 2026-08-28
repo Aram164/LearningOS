@@ -1,33 +1,37 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/job.note.save.schema.json",
-  "title": "payload for capability job.note.save",
+  "$id": "capabilities/masters-planning.comparison.publish.schema.json",
+  "title": "payload for capability masters-planning.comparison.publish",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "body",
-    "note",
-    "title"
+    "candidate_module_id"
   ],
   "properties": {
     "approve": {
       "type": "boolean"
     },
-    "body": {
+    "candidate_module_id": {
       "type": "string"
     },
-    "confirm_job_access": {
-      "type": "boolean"
-    },
-    "folder": {
+    "file": {
       "type": "string"
     },
-    "note": {
-      "type": "string"
-    },
-    "title": {
-      "type": "string"
+    "record": {
+      "type": "object"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
 }

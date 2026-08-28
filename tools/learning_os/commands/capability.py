@@ -11,8 +11,45 @@ from pathlib import Path
 from jsonschema import Draft202012Validator
 
 from learning_os.contracts.capability_catalog import command_definitions
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    gateway_request_context,
+    intent_sha256,
+)
+from learning_os.fingerprint import canonical_fingerprint
+from learning_os.transactions import (
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionResult,
+    replay_for_request,
+)
 
 from .support import WriteRefused, _read_structured_file, _root
+
+_CONTENT_BOUND_V2 = frozenset({
+    "legacy.archive.lock.publish",
+    "masters-planning.catalog.update",
+    "masters-planning.comparison.publish",
+    "unit.material-synthesis.publish",
+})
+
+# Older human-facing commands intentionally keep path forms for shell use and
+# no-write preflights. A V2 approval must additionally name the digest of every
+# external file. Each named handler uses the shared single-read helper and
+# parses or writes the same byte string that helper verified; reopening the
+# pathname after hashing is forbidden.
+_FILE_INPUTS_V2: dict[str, tuple[tuple[str, str, bool], ...]] = {
+    "capture.create": (("file", "file_sha256", False),),
+    "module.plan.import": (("file", "file_sha256", False),),
+    "note.revise": (("file", "file_sha256", False),),
+    "path.attachment.add": (("file", "file_sha256", False),),
+    "project.create": (("file", "file_sha256", False),),
+    "project.update": (("file", "file_sha256", False),),
+    "review.prepare": (("items_file", "items_file_sha256", False),),
+    "stage.attachment.add": (("file", "file_sha256", False),),
+    "unit.map.import": (("file", "file_sha256", False),),
+    "unit.note.append": (("attachment", "attachment_sha256", True),),
+}
 
 
 def _payload_schema_path(root: Path, name: str) -> Path:
@@ -48,6 +85,17 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
     import los  # local: los imports this module, so the cycle must stay lazy
     from learning_os.contracts.payloads import payload_to_namespace, subparsers
 
+    if envelope.get("schema_version") == 2 and "approve" in payload:
+        raise WriteRefused(
+            "GatewayEnvelopeV2 approval belongs only in the envelope, not its payload"
+        )
+    if envelope.get("schema_version") == 2 \
+            and definition.name in _CONTENT_BOUND_V2 \
+            and "file" in payload:
+        raise WriteRefused(
+            f"GatewayEnvelopeV2 {definition.name} requires an inline record so "
+            "approval is bound to the exact content"
+        )
     _validate_payload(root, definition.name, payload)
     commands = subparsers(los.build_parser())
     command_parser = commands.get(definition.cli_command or "")
@@ -63,6 +111,12 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
         expected_snapshot=envelope.get("expected_snapshot"),
         expected_revisions=envelope.get("expected_revisions", {}),
     )
+    # A validated V2 envelope has already bound an approved user gesture to
+    # the exact intent hash.  Requiring an unrelated payload boolean would
+    # create two approval authorities that can disagree.  V1 keeps its legacy
+    # payload flag; direct CLI commands still use ``--approve`` themselves.
+    if envelope.get("schema_version") == 2 and hasattr(namespace, "approve"):
+        namespace.approve = True
     # Handlers that can report either prose or JSON must report JSON here.
     if hasattr(namespace, "json"):
         namespace.json = True
@@ -94,9 +148,14 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
 def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
     schema = json.loads((root / "system/schema/capability-envelope.schema.json").read_text(encoding="utf-8"))
     try:
-        directional_schema = schema["$defs"][kind]
+        schema["$defs"][kind]
     except KeyError as exc:  # pragma: no cover - a repository contract defect
         raise WriteRefused(f"capability envelope schema has no {kind} definition") from exc
+    directional_schema = {
+        "$schema": schema.get("$schema", "https://json-schema.org/draft/2020-12/schema"),
+        "$defs": schema["$defs"],
+        "$ref": f"#/$defs/{kind}",
+    }
     errors = sorted(
         Draft202012Validator(directional_schema).iter_errors(envelope),
         key=lambda error: list(error.path),
@@ -105,19 +164,167 @@ def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> N
         raise WriteRefused("invalid capability envelope: " + "; ".join(error.message for error in errors[:4]))
 
 
+def _gateway_error(code: str, message: str, *, retryable: bool = False,
+                   details: dict | None = None) -> dict:
+    return {
+        "code": code,
+        "message": message,
+        "retryable": retryable,
+        "details": dict(details or {}),
+    }
+
+
+def _classify_failure(code: int, message: str) -> dict:
+    lowered = message.lower()
+    if "belongs only in the envelope" in lowered \
+            or "requires an inline record" in lowered \
+            or "changed before use" in lowered \
+            or "unbound stdin" in lowered \
+            or "requires a sha-256 bound" in lowered:
+        return _gateway_error("INVALID_REQUEST", message)
+    if "snapshot" in lowered or "projection conflict" in lowered:
+        return _gateway_error("STALE_SNAPSHOT", message, retryable=True)
+    if code == 3 or "revision conflict" in lowered:
+        return _gateway_error("REVISION_CONFLICT", message, retryable=True)
+    if any(token in lowered for token in (
+        "write scope", "may not write", "unknown write authority", "symlink",
+        "escapes repository", "out of scope",
+    )):
+        return _gateway_error("OUT_OF_SCOPE", message)
+    if "idempotency" in lowered:
+        return _gateway_error("IDEMPOTENCY_CONFLICT", message)
+    if "ambiguous" in lowered:
+        return _gateway_error("AMBIGUOUS_MIGRATION", message)
+    if "canonical validation" in lowered or "validation failed" in lowered:
+        return _gateway_error("VALIDATION_FAILED", message)
+    if "projection" in lowered or "publication" in lowered:
+        return _gateway_error("PROJECTION_FAILED", message, retryable=True)
+    if any(token in lowered for token in ("approval", "approve", "confirm")):
+        return _gateway_error("UNCONFIRMED", message)
+    return _gateway_error("INVALID_REQUEST", message)
+
+
+def _context_from_v2(envelope: dict) -> GatewayRequestContext:
+    subject_hash = intent_sha256(envelope)
+    approval = envelope["approval"]
+    if approval["subject_sha256"] != subject_hash:
+        raise WriteRefused(
+            "approval subject does not match the current capability intent"
+        )
+    return GatewayRequestContext(
+        request_id=envelope["request_id"],
+        idempotency_key=envelope["idempotency_key"],
+        capability=envelope["capability"],
+        channel=envelope["channel"],
+        intent_sha256=subject_hash,
+        approval_kind=approval["kind"],
+        approval_subject_sha256=approval["subject_sha256"],
+    )
+
+
+def _v2_response(
+    envelope: dict,
+    *,
+    ok: bool,
+    replayed: bool = False,
+    transaction_id: str | None = None,
+    receipt_path: str | None = None,
+    snapshot_after: str | None = None,
+    result: dict | None = None,
+    error: dict | None = None,
+) -> dict:
+    return {
+        "schema_version": 2,
+        "request_id": str(envelope.get("request_id") or "invalid-request"),
+        "idempotency_key": str(envelope.get("idempotency_key") or "invalid-request"),
+        "capability": str(envelope.get("capability") or "invalid-capability"),
+        "ok": ok,
+        "replayed": replayed,
+        "transaction_id": transaction_id,
+        "receipt_path": receipt_path,
+        "snapshot_after": snapshot_after,
+        "result": dict(result or {}),
+        "error": error,
+    }
+
+
+def _replay_response(root: Path, envelope: dict,
+                     replay: TransactionResult) -> dict:
+    receipt_path = replay.receipt_path.relative_to(root).as_posix()
+    confirmation = {
+        "transaction_id": replay.transaction_id,
+        "receipt_path": receipt_path,
+        "artifact_revisions": dict(replay.revisions),
+        "snapshot_after": replay.snapshot_after,
+        "replayed": True,
+    }
+    return _v2_response(
+        envelope,
+        ok=True,
+        replayed=True,
+        transaction_id=replay.transaction_id,
+        receipt_path=receipt_path,
+        snapshot_after=replay.snapshot_after,
+        result=confirmation,
+    )
+
+
 def cmd_capability(args) -> int:
     root = _root(args)
     definitions = command_definitions(root)
-    # ``command_definitions`` already exposes only the public ``commands:``
-    # section.  It is the allowlist; keeping a second dictionary here made
-    # every new capability require two coordinated declarations.
-    if args.name not in definitions:
+    # Preserve the legacy no-I/O refusal for an unknown name when there is no
+    # envelope to classify. If a real V2 envelope exists, read it so the same
+    # unknown name receives the required typed GatewayResultV2 error.
+    if args.name not in definitions and args.payload_file != "-" \
+            and not Path(args.payload_file).expanduser().is_file():
         print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
         return 2
     envelope = _read_structured_file(args.payload_file)
-    _validate_capability_envelope(root, envelope, kind="request")
+    is_v2 = envelope.get("schema_version") == 2
+    try:
+        _validate_capability_envelope(root, envelope, kind="request")
+    except WriteRefused as exc:
+        if not is_v2:
+            raise
+        response = _v2_response(
+            envelope,
+            ok=False,
+            error=_gateway_error("INVALID_REQUEST", str(exc)),
+        )
+        _validate_capability_envelope(root, response, kind="result")
+        print(json.dumps(response, indent=2, ensure_ascii=False))
+        return 2
     if envelope.get("capability") != args.name:
+        if is_v2:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "INVALID_REQUEST",
+                    "envelope capability does not match requested capability",
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
         print("los: envelope capability does not match requested capability", file=sys.stderr)
+        return 2
+    # ``command_definitions`` is the public allowlist.  V2 always gets a typed
+    # response, including when the requested name has no declaration.
+    if args.name not in definitions:
+        if is_v2:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "UNKNOWN_CAPABILITY",
+                    f"unknown or non-public capability: {args.name}",
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
         return 2
     payload = envelope.get("payload", {})
     request_id = envelope["request_id"]
@@ -129,6 +336,99 @@ def cmd_capability(args) -> int:
     # was rejected while an agent sending the undeclared shape was accepted.
     # A gateway is only worth having if its machine-readable contract is the
     # trustworthy part.
+    if is_v2:
+        try:
+            context = _context_from_v2(envelope)
+        except WriteRefused as exc:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error("UNCONFIRMED", str(exc)),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        try:
+            replay = replay_for_request(root, context)
+        except TransactionIdempotencyConflict as exc:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error("IDEMPOTENCY_CONFLICT", str(exc)),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        except TransactionFailure as exc:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error("INTERNAL_FAILURE", str(exc), retryable=True),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        if replay is not None:
+            response = _replay_response(root, envelope, replay)
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 0
+        actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
+        if envelope["expected_snapshot"] != actual_snapshot:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "STALE_SNAPSHOT",
+                    "canonical state changed since this request was approved",
+                    retryable=True,
+                    details={
+                        "expected": envelope["expected_snapshot"],
+                        "actual": actual_snapshot,
+                    },
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 3
+        try:
+            with gateway_request_context(context):
+                code, result = _dispatch(
+                    root, definitions[args.name], envelope, payload
+                )
+        except WriteRefused as exc:
+            code, result = 2, {"error": str(exc)}
+        except TransactionFailure as exc:
+            code, result = 2, {"error": str(exc)}
+        except ValueError as exc:
+            code, result = 2, {"error": str(exc)}
+        except Exception as exc:  # fail closed behind a typed V2 boundary
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "INTERNAL_FAILURE", str(exc) or type(exc).__name__, retryable=True,
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        confirmation = result if code == 0 else {}
+        complaint = str(result.get("error") or f"{args.name} failed")
+        response = _v2_response(
+            envelope,
+            ok=code == 0,
+            replayed=bool(confirmation.get("replayed", False)),
+            transaction_id=confirmation.get("transaction_id"),
+            receipt_path=confirmation.get("receipt_path"),
+            snapshot_after=confirmation.get("snapshot_after"),
+            result=result if code == 0 else {},
+            error=None if code == 0 else _classify_failure(code, complaint),
+        )
+        _validate_capability_envelope(root, response, kind="result")
+        print(json.dumps(response, indent=2, ensure_ascii=False))
+        return code
+
     try:
         code, result = _dispatch(root, definitions[args.name], envelope, payload)
     except WriteRefused as exc:

@@ -5,10 +5,10 @@ confirmation carries ``transaction_id``, ``receipt_path`` and
 ``artifact_revisions``. ``cmd_capability`` reads those three fields out of the
 handler's *own* JSON result, so a handler that binds the confirmation and never
 spreads it answers ``transaction_id: null, receipt_path: null`` on a successful
-write that did produce a receipt on disk. Fourteen of the twenty non-Job write
+write that did produce a receipt on disk. Fourteen write
 commands did exactly that until 2026-08-18. Nothing failed: the envelope schema
-declares both fields nullable, and only ``project.create`` and the Job commands
-asserted a non-null receipt. The audit trail existed and was unreachable from
+declares both fields nullable, and only a few commands asserted a non-null
+receipt. The audit trail existed and was unreachable from
 the response that created it.
 
 The structural assertion below is deliberately not an end-to-end sweep. Driving
@@ -24,19 +24,17 @@ from __future__ import annotations
 
 import ast
 import json
-import subprocess
-import sys
 from pathlib import Path
 
 import pytest
+from gateway_helpers import approved_v2_call
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 COMMANDS = REPO_ROOT / "tools" / "learning_os" / "commands"
 
 # Helpers that commit a transaction and hand its receipt facts back to the
-# caller. `_write_transaction` returns `(code, errors, confirmation)`; the Job
-# surface's `_commit` returns the confirmation block on its own.
-_PRODUCERS = {"_write_transaction": 2, "_commit": None}
+# caller. `_write_transaction` returns `(code, errors, confirmation)`.
+_PRODUCERS = {"_write_transaction": 2}
 
 
 def _callee(node: ast.AST) -> str | None:
@@ -104,7 +102,7 @@ def test_the_command_surface_actually_commits_transactions():
     modules = {module for module, _, _, _ in COMMIT_SITES}
     assert len(COMMIT_SITES) >= 20, COMMIT_SITES
     assert {"stage.py", "unit.py", "note.py", "detour.py", "review.py",
-            "source.py", "module.py", "job_write.py"} <= modules
+            "source.py", "module.py"} <= modules
 
 
 @pytest.mark.parametrize(
@@ -131,24 +129,19 @@ def test_every_committed_write_reports_its_receipt(
 
 
 def test_a_write_capability_returns_its_receipt_through_the_envelope(
-    mini_repo: Path, repo_root: Path, tmp_path: Path
+    mini_repo: Path,
 ):
     """The end-to-end half: one of the fourteen, through the real gateway."""
-    envelope = {
-        "request_id": "request-note-evidence",
-        "capability": "note.evidence.add",
-        "payload": {
+    result = approved_v2_call(
+        mini_repo,
+        capability="note.evidence.add",
+        payload={
             "note_id": "note-demo",
             "evidence_type": "derivation",
             "ref": "workspace://workspace-demo",
         },
-    }
-    request = tmp_path / "request.json"
-    request.write_text(json.dumps(envelope), encoding="utf-8")
-    result = subprocess.run(
-        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo),
-         "capability", "note.evidence.add", "--payload-file", str(request)],
-        cwd=repo_root, text=True, capture_output=True,
+        artifact_ids=["note-demo"],
+        idempotency_key="note-evidence-receipt-001",
     )
     assert result.returncode == 0, result.stderr
     response = json.loads(result.stdout)

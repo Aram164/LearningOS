@@ -33,6 +33,12 @@
               "id": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
               "title": { "type": "string", "minLength": 1 },
               "summary": { "type": "string", "minLength": 1 },
+              "concept_ids": {
+                "description": "Reviewed links from this local lecture node to globally canonical concepts; absence means not mapped, never that no relationship exists.",
+                "type": "array",
+                "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" },
+                "uniqueItems": true
+              },
               "builds_on": {
                 "type": "array",
                 "items": { "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$" },
@@ -63,6 +69,11 @@
         "required": ["source_id", "locator", "purpose"],
         "additionalProperties": false,
         "properties": {
+          "route_id": {
+            "description": "Stable rich-route identity. New v13 selections write it; source_id and locator remain required drift guards. Pre-v13 selections without it stay readable until migration.",
+            "type": "string",
+            "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
           "source_id": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" },
           "locator": { "type": "string", "minLength": 1 },
           "purpose": { "type": "string", "minLength": 1 },

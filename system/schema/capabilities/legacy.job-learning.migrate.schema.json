@@ -1,19 +1,20 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/job.task.save.schema.json",
-  "title": "payload for capability job.task.save",
+  "$id": "capabilities/legacy.job-learning.migrate.schema.json",
+  "title": "payload for capability legacy.job-learning.migrate",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "task"
+    "plan_sha256"
   ],
   "properties": {
-    "confirm_job_access": {
+    "approve": {
       "type": "boolean"
     },
-    "task": {
-      "type": "object"
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
     }
   }
 }

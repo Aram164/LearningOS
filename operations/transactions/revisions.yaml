@@ -1,13 +1,162 @@
 schema_version: 1
 type: artifact-revision-ledger
 revisions:
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_doc.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_tables.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/check_all.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/gen_tables.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/probe.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics2.py: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/verify.py: 1
   capture:work/inbox/20260807-053214-stage-3-smoke.md: 1
+  concept-aggregation: 1
+  concept-aggregation-family: 1
+  concept-dataframe-ops: 1
+  concept-dataframe-semantics: 1
+  concept-dispatch: 1
+  concept-join-family: 1
+  concept-logical-ir: 1
+  concept-map-family: 1
+  concept-op-rewriting: 1
+  concept-projection-family: 1
+  concept-selection-family: 1
+  concept-skrub: 1
+  job-quarantine-collapse-v1: 1
+  materials-manifest: 1
   module-hu-algo2: 1
   module-hu-aml: 4
-  module-hu-m2-statistik-analysis: 4
+  module-hu-m2-statistik-analysis: 5
+  module-job-engineering-tools: 1
+  module-job-git: 1
+  module-job-polars: 1
+  module-job-python-engineering: 1
+  module-job-rust-engineering: 1
   module-project-bachelor-thesis: 1
+  note-pandas-groupby-signatures: 1
+  note-pandas-polars-aggregation-contentions: 3
+  note-skrub-dataop-dag: 1
+  note-skrub-evaluation-engine: 1
+  note-stratum-extract-dataframe-op: 1
+  note-stratum-op-aggregateop: 1
+  note-stratum-op-applyudfop: 1
+  note-stratum-op-assignmapop: 1
+  note-stratum-op-assignop: 1
+  note-stratum-op-columnprojectionop: 1
+  note-stratum-op-columnselectorop: 1
+  note-stratum-op-datetimeconversionop: 1
+  note-stratum-op-dropop: 1
+  note-stratum-op-getattrprojectionop: 1
+  note-stratum-op-joinop: 1
+  note-stratum-op-metadataop: 1
+  note-stratum-op-missingmaskop: 1
+  note-stratum-op-selectionop: 1
+  note-stratum-op-stringmethodop: 1
+  program-job: 1
+  program-job-boundary: 1
   program-thesis-projects: 1
   project-bachelor-thesis: 1
+  source-map-job-engineering-tools: 1
+  source-map-job-git: 1
+  source-map-job-polars: 1
+  source-map-job-python-engineering: 1
+  source-map-job-rust-engineering: 1
+  source-polars-definitive-guide: 1
+  source-scalable-dataframe-systems-paper: 1
+  source-stratum-paper: 1
+  stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
+  stage-git-02-the-state-triangle-working-tree-index-and-head: 1
+  stage-git-03-intentional-staging-and-atomic-commits: 1
+  stage-git-04-branches-head-revision-syntax-and-detached-work: 1
+  stage-git-05-merge-bases-three-way-merges-and-conflicts: 1
+  stage-git-06-rebase-and-deliberate-history-editing: 1
+  stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog: 1
+  stage-git-08-stash-and-honest-work-in-progress-management: 1
+  stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams: 1
+  stage-git-10-pull-push-divergence-and-force-with-lease: 1
+  stage-git-11-pull-requests-forks-and-reviewable-contribution-flow: 1
+  stage-git-12-selective-history-cherry-pick-tags-and-releases: 1
+  stage-git-13-history-archaeology-log-show-blame-search-and-bisect: 1
+  stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook: 1
+  stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay: 1
+  stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov: 1
+  stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga: 1
+  stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta: 1
+  stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design: 1
+  stage-missing-semester-04-processes-jobs-signals-and-resource-ownership: 1
+  stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions: 1
+  stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang: 1
+  stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag: 1
+  stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics: 1
+  stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima: 1
+  stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query: 1
+  stage-missing-semester-11-version-control-integration-applying-the-git-track-to: 1
+  stage-missing-semester-12-dependencies-environments-artifacts-and-versioning: 1
+  stage-missing-semester-13-containers-configuration-services-and-publishing: 1
+  stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci: 1
+  stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and: 1
+  stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver: 1
+  stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col: 1
+  stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and: 1
+  stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too: 1
+  stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c: 1
+  stage-polars-01-two-data-models-and-the-eight-divergence-axes: 1
+  stage-polars-02-the-parity-harness-differential-testing-from-day: 1
+  stage-polars-03-construction-i-o-schema-and-chunks: 1
+  stage-polars-04-selection-and-projection-index-logic-versus-expr: 1
+  stage-polars-05-expressions-and-column-creation: 1
+  stage-polars-06-nulls-nans-and-the-missing-value-model: 1
+  stage-polars-07-type-promotion-coercion-and-strictness: 1
+  stage-polars-08-ordering-sorting-and-determinism: 1
+  stage-polars-09-strings-datetimes-and-namespace-translation: 1
+  stage-polars-10-groupby-aggregation-counting-and-de-duplication: 1
+  stage-polars-11-windows-and-per-group-transformations: 1
+  stage-polars-12-joins-i-relational-semantics-and-key-cardinality: 1
+  stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit: 1
+  stage-polars-14-concatenation-and-reshaping: 1
+  stage-polars-15-lazy-plans-and-optimizer-literacy: 1
+  stage-polars-16-udfs-fallbacks-and-native-expression-rewrites: 1
+  stage-polars-17-arrow-interop-chunks-and-conversion-costs: 1
+  stage-polars-18-capstone-specify-implement-and-prove-a-mirrored: 1
+  stage-python-01-names-identity-mutation-and-graph-invariants: 1
+  stage-python-02-functions-as-first-class-objects-and-higher-order-apis: 1
+  stage-python-03-scope-closures-frames-and-captured-state: 1
+  stage-python-04-decorators-import-time-execution-and-registration: 1
+  stage-python-05-classes-as-objects-attribute-lookup-mro-and-super: 1
+  stage-python-06-modules-imports-circular-dependencies-and-plugin-disco: 1
+  stage-python-07-the-data-model-dunders-slots-equality-and-hashing: 1
+  stage-python-08-iterators-generators-structural-recursion-and-mutation: 1
+  stage-python-09-interfaces-typing-protocols-and-dispatch-design: 1
+  stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together: 1
+  stage-python-11-graph-algorithms-and-safe-dag-surgery: 1
+  stage-python-12-testing-and-debugging-optimizer-shaped-python: 1
+  stage-python-13-complexity-profiling-and-memory-evidence: 1
+  stage-python-14-packaging-environments-maturin-and-the-python-to-rust: 1
+  stage-python-15-requirements-decomposition-and-design-records: 1
+  stage-python-16-api-design-boundaries-and-refactoring: 1
+  stage-python-17-concurrency-async-and-resource-lifetimes: 1
+  stage-python-18-errors-observability-and-operational-debugging: 1
+  stage-python-19-code-review-maintenance-and-contribution-rehearsal: 1
+  stage-python-20-final-independent-engineering-capstone: 1
+  stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop: 1
+  stage-rust-02-bindings-types-expressions-and-control-flow: 1
+  stage-rust-03-ownership-moves-clone-and-drop: 1
+  stage-rust-04-borrowing-slices-and-reborrowing: 1
+  stage-rust-05-structs-enums-pattern-matching-and-domain-models: 1
+  stage-rust-06-collections-result-and-iterator-fundamentals: 1
+  stage-rust-07-traits-generics-and-interface-design: 1
+  stage-rust-08-lifetimes-and-borrowed-api-contracts: 1
+  stage-rust-09-modules-crates-workspaces-and-public-boundaries: 1
+  stage-rust-10-closures-iterators-and-zero-cost-pipelines: 1
+  stage-rust-11-smart-pointers-shared-ownership-and-interior-mut: 1
+  stage-rust-12-testing-documentation-clippy-and-api-quality: 1
+  stage-rust-13-concurrency-send-sync-channels-and-rayon: 1
+  stage-rust-14-async-rust-cancellation-and-blocking-boundaries: 1
+  stage-rust-15-production-errors-serialization-and-ecosystem-ch: 1
+  stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design: 1
+  stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi: 1
+  stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end: 1
+  stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
   study-map-aml-l01: 2
   study-map-aml-l02: 2
   study-map-aml-l03: 2
@@ -19,6 +168,11 @@ revisions:
   study-map-aml-l09: 2
   study-map-aml-l10: 3
   study-map-aml-l11: 2
+  study-map-job-engineering-tools-fluency: 1
+  study-map-job-git-fluency: 1
+  study-map-job-polars-pandas-fluency: 1
+  study-map-job-python-engineering-fluency: 1
+  study-map-job-rust-engineering-fluency: 1
   study-map-m2-sad-clustering: 2
   study-map-m2-sad-exam-prep: 1
   study-map-m2-sad-l01: 2
@@ -49,23 +203,28 @@ revisions:
   unit-aml-l09: 2
   unit-aml-l10: 3
   unit-aml-l11: 4
+  unit-job-engineering-tools-fluency: 1
+  unit-job-git-fluency: 1
+  unit-job-polars-pandas-fluency: 1
+  unit-job-python-engineering-fluency: 1
+  unit-job-rust-engineering-fluency: 1
   unit-m2-analysis-exam-prep: 3
   unit-m2-combined-exam-rehearsal: 3
   unit-m2-sad-clustering: 2
   unit-m2-sad-exam-prep: 4
-  unit-m2-sad-l01: 2
-  unit-m2-sad-l02: 2
-  unit-m2-sad-l03: 2
-  unit-m2-sad-l04: 2
-  unit-m2-sad-l05: 2
-  unit-m2-sad-l06: 2
-  unit-m2-sad-l07: 3
-  unit-m2-sad-l08: 2
-  unit-m2-sad-l09: 2
-  unit-m2-sad-l10: 2
-  unit-m2-sad-l11: 2
-  unit-m2-sad-l12: 2
-  unit-m2-sad-l13: 2
-  unit-m2-sad-l14: 2
-  unit-m2-sad-l15: 2
+  unit-m2-sad-l01: 3
+  unit-m2-sad-l02: 3
+  unit-m2-sad-l03: 3
+  unit-m2-sad-l04: 3
+  unit-m2-sad-l05: 3
+  unit-m2-sad-l06: 3
+  unit-m2-sad-l07: 4
+  unit-m2-sad-l08: 3
+  unit-m2-sad-l09: 3
+  unit-m2-sad-l10: 3
+  unit-m2-sad-l11: 3
+  unit-m2-sad-l12: 3
+  unit-m2-sad-l13: 3
+  unit-m2-sad-l14: 3
+  unit-m2-sad-l15: 3
   workspace-thesis-mle-medical: 1

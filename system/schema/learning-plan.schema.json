@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/learning-plan-v1",
   "title": "LearningOS canonical plan template v1",
-  "description": "The shared authored-plan vocabulary. Curriculum and Job records extend the same numbered stage and resource contract at their domain boundary.",
+  "description": "The shared authored-plan vocabulary for every LearningOS module.",
   "$defs": {
     "nonEmptyText": {
       "type": "string",
@@ -16,6 +16,11 @@
         "id": {
           "type": "string",
           "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "route_id": {
+          "description": "Optional stable pointer to one rich material route on the owning unit. Independent resources remain valid without it.",
+          "type": "string",
+          "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
         "kind": {
           "enum": ["watch", "read", "practise", "reference"]
@@ -191,64 +196,6 @@
             "completed": {
               "type": "string",
               "format": "date"
-            }
-          }
-        }
-      ],
-      "unevaluatedProperties": false
-    },
-    "mentalModel": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["label", "text"],
-      "properties": {
-        "label": {
-          "$ref": "#/$defs/nonEmptyText"
-        },
-        "text": {
-          "$ref": "#/$defs/nonEmptyText"
-        }
-      }
-    },
-    "jobContext": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["mental_models", "read_only_anchor"],
-      "properties": {
-        "mental_models": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/mentalModel"
-          }
-        },
-        "read_only_anchor": {
-          "type": "string"
-        },
-        "component": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "pattern": "^(?![/:\\-])(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*[\\\\*?\\[])[^\\s]+$"
-          },
-          "uniqueItems": true
-        },
-        "verified_against": {
-          "type": "string",
-          "pattern": "^$|^[0-9a-fA-F]{7,64}(?: \\(\\d{4}-\\d{2}-\\d{2}\\))?$"
-        }
-      }
-    },
-    "jobStage": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/stageCore"
-        },
-        {
-          "type": "object",
-          "required": ["job_context"],
-          "properties": {
-            "job_context": {
-              "$ref": "#/$defs/jobContext"
             }
           }
         }

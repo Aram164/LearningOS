@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/master-planning-promotion-provenance.schema.json",
+  "title": "Applied Future Master's Planning promotion provenance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "type",
+    "status",
+    "recorded_at",
+    "candidate_module_id",
+    "canonical_module_id",
+    "catalog_revision_before",
+    "catalog_revision_after",
+    "package_sha256",
+    "verification",
+    "source_mappings",
+    "unit_ids",
+    "affected_paths",
+    "preservation"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {
+      "type": "string",
+      "pattern": "^master-promotion-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {"const": "master-planning-promotion-provenance"},
+    "status": {"const": "promoted"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "candidate_module_id": {
+      "type": "string",
+      "pattern": "^candidate-module-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "canonical_module_id": {
+      "type": "string",
+      "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "catalog_revision_before": {"type": "integer", "minimum": 0},
+    "catalog_revision_after": {"type": "integer", "minimum": 1},
+    "package_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "verification": {
+      "$ref": "master-planning-promotion.schema.json#/$defs/verification"
+    },
+    "source_mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_source_id",
+          "canonical_source_id",
+          "created",
+          "source_record_sha256"
+        ],
+        "properties": {
+          "candidate_source_id": {
+            "type": "string",
+            "pattern": "^candidate-source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "canonical_source_id": {
+            "type": "string",
+            "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "created": {"type": "boolean"},
+          "source_record_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "registry_target": {
+            "type": "string",
+            "pattern": "^sources/(?:sources\\.yaml|registry/[a-z0-9]+(?:-[a-z0-9]+)*\\.yaml)$"
+          }
+        },
+        "allOf": [{
+          "if": {"properties": {"created": {"const": true}}},
+          "then": {"required": ["registry_target"]},
+          "else": {"not": {"required": ["registry_target"]}}
+        }]
+      }
+    },
+    "unit_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+    "affected_paths": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?:curriculum|operations|sources)/"
+      }
+    },
+    "preservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["originals_immutable", "comparison_ids"],
+      "properties": {
+        "originals_immutable": {"const": true},
+        "comparison_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^candidate-comparison-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          }
+        }
+      }
+    }
+  }
+}

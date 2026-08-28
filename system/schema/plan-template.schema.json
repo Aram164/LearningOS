@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/plan-template-v1",
   "title": "LearningOS plan-template query response v1",
-  "description": "The answer to `los plan-template <profile> --json`. It carries a freshly generated starting record for one plan profile — never a copy of an existing plan. The record itself is validated against its own domain schema (study-map or job-plan) before this envelope is printed, so a consumer that trusts this envelope is trusting the same gate the write path uses.",
+  "description": "The answer to `los plan-template curriculum --json`. It carries a freshly generated study-map starting record, never a copy of an existing plan. The record is validated against the study-map schema before this envelope is printed.",
   "type": "object",
   "additionalProperties": false,
   "required": ["ok", "contract", "profile", "plan_template_version", "schema", "plan"],
@@ -10,8 +10,8 @@
     "ok": {"const": true},
     "contract": {"const": "plan-template-v1"},
     "profile": {
-      "description": "Which bounded authoring surface the record belongs to.",
-      "enum": ["curriculum", "job"]
+      "description": "The ordinary learning-module authoring profile.",
+      "const": "curriculum"
     },
     "plan_template_version": {
       "description": "The creation-template version every newly authored plan must carry (system/OPERATOR.md rule 15).",
@@ -20,7 +20,7 @@
     },
     "schema": {
       "description": "The domain schema the record was validated against, so the consumer can name the authority rather than infer it.",
-      "enum": ["study-map.schema.json", "job-plan.schema.json"]
+      "const": "study-map.schema.json"
     },
     "plan": {
       "description": "The generated starting record. Its full shape is owned by the domain schema named above, not restated here — restating it would create the second definition this standardization exists to remove.",
@@ -28,7 +28,7 @@
       "required": ["id", "type", "plan_template_version", "stages"],
       "properties": {
         "id": {"type": "string", "pattern": "\\S"},
-        "type": {"enum": ["study-map", "job-learning-plan"]},
+        "type": {"const": "study-map"},
         "plan_template_version": {"type": "integer", "minimum": 1},
         "stages": {
           "type": "array",

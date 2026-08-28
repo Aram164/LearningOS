@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/legacy-archive-status.schema.json",
+  "title": "Last approved Legacy archive status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "available", "lock"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "legacy-archive-status"},
+    "available": {"type": "boolean"},
+    "lock": {"oneOf": [{"type": "null"}, {"$ref": "https://learningos.local/schema/legacy-archive-lock.schema.json"}]}
+  }
+}

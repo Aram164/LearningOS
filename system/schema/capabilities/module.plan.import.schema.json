@@ -6,18 +6,50 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "file",
     "module_id"
   ],
   "properties": {
+    "approve": {
+      "type": "boolean"
+    },
     "check": {
       "type": "boolean"
     },
     "file": {
       "type": "string"
     },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
     "module_id": {
       "type": "string"
+    },
+    "package_sha256": {
+      "type": "string"
+    },
+    "promotion": {
+      "type": "object"
     }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "promotion"
+      ]
+    }
+  ],
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
   }
 }

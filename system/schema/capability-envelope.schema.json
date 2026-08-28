@@ -8,6 +8,18 @@
   ],
   "$defs": {
     "request": {
+      "oneOf": [
+        {"$ref": "#/$defs/requestV1"},
+        {"$ref": "#/$defs/requestV2"}
+      ]
+    },
+    "result": {
+      "oneOf": [
+        {"$ref": "#/$defs/resultV1"},
+        {"$ref": "#/$defs/resultV2"}
+      ]
+    },
+    "requestV1": {
       "type": "object",
       "additionalProperties": false,
       "required": ["request_id", "capability", "payload"],
@@ -22,7 +34,47 @@
         }
       }
     },
-    "result": {
+    "requestV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "request_id", "idempotency_key", "capability", "channel",
+        "expected_snapshot", "expected_revisions", "approval", "payload"
+      ],
+      "properties": {
+        "schema_version": {"const": 2},
+        "request_id": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "idempotency_key": {
+          "type": "string", "minLength": 1, "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"
+        },
+        "capability": {"type": "string", "minLength": 1},
+        "channel": {"enum": ["ui", "codex", "operator", "system-task"]},
+        "expected_snapshot": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "expected_revisions": {
+          "type": "object",
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        },
+        "approval": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "subject_sha256"],
+          "properties": {
+            "kind": {
+              "enum": ["direct-user-gesture", "approved-delivery", "operator-approval"]
+            },
+            "subject_sha256": {
+              "type": "string", "pattern": "^sha256:[a-f0-9]{64}$"
+            }
+          }
+        },
+        "payload": {"type": "object"}
+      }
+    },
+    "resultV1": {
       "type": "object",
       "additionalProperties": false,
       "required": ["request_id", "capability", "ok"],
@@ -34,6 +86,51 @@
         "receipt_path": {"type": ["string", "null"]},
         "result": {"type": "object"},
         "error": {"type": ["string", "null"]}
+      }
+    },
+    "resultV2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "request_id", "idempotency_key", "capability", "ok",
+        "replayed", "transaction_id", "receipt_path", "snapshot_after", "result", "error"
+      ],
+      "properties": {
+        "schema_version": {"const": 2},
+        "request_id": {"type": "string", "minLength": 1},
+        "idempotency_key": {"type": "string", "minLength": 1},
+        "capability": {"type": "string", "minLength": 1},
+        "ok": {"type": "boolean"},
+        "replayed": {"type": "boolean"},
+        "transaction_id": {"type": ["string", "null"]},
+        "receipt_path": {"type": ["string", "null"]},
+        "snapshot_after": {
+          "type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "result": {"type": "object"},
+        "error": {
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["code", "message", "retryable", "details"],
+              "properties": {
+                "code": {
+                  "enum": [
+                    "INVALID_REQUEST", "UNKNOWN_CAPABILITY", "STALE_SNAPSHOT",
+                    "REVISION_CONFLICT", "OUT_OF_SCOPE", "VALIDATION_FAILED",
+                    "AMBIGUOUS_MIGRATION", "PROJECTION_FAILED", "IDEMPOTENCY_CONFLICT",
+                    "UNCONFIRMED", "INTERNAL_FAILURE"
+                  ]
+                },
+                "message": {"type": "string", "minLength": 1},
+                "retryable": {"type": "boolean"},
+                "details": {"type": "object"}
+              }
+            }
+          ]
+        }
       }
     }
   }

@@ -31,6 +31,11 @@
                   "required": ["unit_id", "title", "format", "angle", "covers", "depth", "scope"],
                   "additionalProperties": false,
                   "properties": {
+                    "id": {
+                      "description": "Stable route identity. Required on every route written in data-contract v13; absent only on readable pre-v13 evidence until the recorded migration persists it.",
+                      "type": "string",
+                      "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                    },
                     "unit_id": { "type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$" },
                     "title": { "type": "string", "minLength": 1 },
                     "format": {

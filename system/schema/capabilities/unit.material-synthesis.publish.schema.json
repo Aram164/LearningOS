@@ -1,29 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/job.note.stamp.schema.json",
-  "title": "payload for capability job.note.stamp",
+  "$id": "capabilities/unit.material-synthesis.publish.schema.json",
+  "title": "payload for capability unit.material-synthesis.publish",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "commit",
-    "note"
+    "unit_id"
   ],
   "properties": {
-    "commit": {
-      "type": "string"
-    },
-    "confirm_job_access": {
+    "approve": {
       "type": "boolean"
     },
-    "date": {
+    "check": {
+      "type": "boolean"
+    },
+    "file": {
       "type": "string"
     },
-    "note": {
-      "type": "string"
+    "record": {
+      "type": "object"
     },
-    "status": {
+    "unit_id": {
       "type": "string"
     }
-  }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
 }

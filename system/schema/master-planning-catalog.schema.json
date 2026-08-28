@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/master-planning-catalog.schema.json",
+  "title": "Sanitized prospective Master's Planning catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "type", "revision", "updated_at", "candidate_modules", "candidate_sources", "comparison_ids"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"const": "master-planning-catalog"},
+    "type": {"const": "master-planning-catalog"},
+    "revision": {"type": "integer", "minimum": 0},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "candidate_modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "planning_state", "privacy_class", "provenance", "fact_state", "source_ids", "unresolved_references"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^candidate-module-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "title": {"type": "string", "minLength": 1},
+          "planning_state": {"enum": ["longlist", "shortlist", "selected", "rejected", "promoted"]},
+          "privacy_class": {"const": "academic-only"},
+          "provenance": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "fact_state": {"$ref": "#/$defs/factState"},
+          "source_ids": {"type": "array", "items": {"type": "string", "pattern": "^candidate-source-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true},
+          "unresolved_references": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+          "promoted_module_id": {"type": "string", "pattern": "^module-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
+    },
+    "candidate_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "planning_state", "privacy_class", "provenance", "fact_state"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^candidate-source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "title": {"type": "string", "minLength": 1},
+          "planning_state": {"enum": ["longlist", "shortlist", "selected", "rejected", "promoted"]},
+          "privacy_class": {"const": "academic-only"},
+          "provenance": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "fact_state": {"$ref": "#/$defs/factState"},
+          "canonical_source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        }
+      }
+    },
+    "comparison_ids": {"type": "array", "items": {"type": "string", "pattern": "^candidate-comparison-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true}
+  },
+  "$defs": {
+    "factState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "as_of", "evidence"],
+      "properties": {
+        "status": {"enum": ["unverified", "verified-current", "stale", "conflicting"]},
+        "as_of": {"type": ["string", "null"], "format": "date"},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

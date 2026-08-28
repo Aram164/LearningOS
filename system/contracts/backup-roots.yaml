@@ -1,0 +1,55 @@
+schema_version: 1
+contract: learningos-backup-roots
+roots:
+  core:
+    trees:
+      - knowledge
+      - sources
+      - records
+      - projects
+      - work
+      - curriculum/modules
+      - curriculum/programs
+      - operations/transactions
+      - operations/ai-actions
+      - operations/legacy
+      - system/contracts
+      - system/schema
+      - curriculum/quarantine/masters-planning/comparisons
+      - curriculum/quarantine/masters-planning/promotions
+    files:
+      - curriculum/resume.yaml
+      - curriculum/quarantine/index.yaml
+      - curriculum/quarantine/masters-planning/catalog.yaml
+  ui:
+    trees:
+      - src
+      - tests
+      - contracts
+      - scripts
+      - vault-config
+      - bases
+    files:
+      - package.json
+      - package-lock.json
+      - tsconfig.json
+      - tsconfig.contract.json
+      - build.mjs
+      - build-styles.mjs
+      - install.py
+      - ecosystem-plugins.json
+      - plugin/manifest.json
+      - plugin/main.js
+      - plugin/styles.css
+  materials:
+    trees:
+      - .
+    files: []
+excluded_names:
+  - .DS_Store
+  - .git
+  - .flat
+  - node_modules
+  - generated
+  - dist
+  - coverage
