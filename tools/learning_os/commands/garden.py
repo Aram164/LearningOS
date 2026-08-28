@@ -10,7 +10,10 @@ import json
 import re
 import sys
 
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    current_gateway_request,
+    request_artifact_id,
+)
 
 from .support import (
     _expected_ok,
@@ -86,7 +89,9 @@ def cmd_garden_seed_create(args) -> int:
         content = _seed_content(text, title)
         gateway_request = current_gateway_request()
         artifact_id = (
-            f"garden-request:{gateway_request.idempotency_key}"
+            request_artifact_id(
+                "garden.seed.create", gateway_request.idempotency_key
+            )
             if gateway_request is not None
             else f"garden:{relative}"
         )
