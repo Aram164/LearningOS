@@ -161,9 +161,9 @@ detail here; the list must not become a second owner of a live contract.
   workspace joins, progress, reverse indexes, boundaries, and resume snapshot.
 - [ ] Bachelor's is active/default; every current Bachelor module is visible.
   Skills and Thesis/Projects use universal modules without invented academic
-  fields. Master's and Job expose boundary records only in the normal
-  manifest. The explicit Job destination may load `job-dashboard-v2` into that
-  read-only view only; it never enters search, AI context, or generated views.
+  fields. Future Master's Planning exposes only its boundary record. Job
+  learning appears normally under `program-job`, uses the same module and unit
+  surfaces, and differs only by a presentation badge or section.
 - [ ] M2 owns stable SaD and Analysis components, one combined exam/grade, and
   separately selectable unit state. Every SaD lecture can be opened directly;
   selecting a material in one lecture does not create or alter a hidden stage
@@ -184,8 +184,10 @@ detail here; the list must not become a second owner of a live contract.
 - [ ] Shelving prepares a review packet and applies only explicitly selected,
   valid proposal IDs after validation.
 - [ ] German aliases retrieve the correct records. Default search excludes
-  generated, archive, system, registries, migration, Master's quarantine and
-  Job; Omnisearch PDF/image extraction uses English and German OCR locally.
+  generated, archive, system, registries, migration, and Future Master's
+  quarantine; Job modules remain searchable like other learning. External code
+  repositories are not LearningOS search inputs. Omnisearch PDF/image
+  extraction uses English and German OCR locally.
 - [ ] Deleting generated outputs and regenerating recreates the declared manifest contract with
   the same canonical fingerprint for the same authored state.
 - [ ] Migration dry-run is idempotent, original paths/records are backed up and

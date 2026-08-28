@@ -71,9 +71,10 @@ Structure is validated by `system/schema/*.schema.json` (canonical structural co
   relationships are not inferred from titles or prose.
 - **E** The resume pointer, if present, resolves to one map/unit/stage but has
   no filtering semantics.
-- **E** Only `curriculum/quarantine/index.yaml` is normally loaded. Master's
-  content and all Job content are absent from records, counts, indexes and
-  generated manifest text.
+- **E** Only `curriculum/quarantine/index.yaml` is normally loaded from the
+  Future Master's Planning boundary; its prospective content is absent from
+  records, counts, indexes and generated manifest text. Job learning has no
+  carve-out: `program-job` modules validate and project like every other module.
 - **E** Shelving apply accepts explicit existing proposal IDs and approved
   destinations only. General AI has no write capability.
 - **E** Session closure stages only its temporary action ledger and always
@@ -150,10 +151,11 @@ never accumulates into an audit session; they nag, never block.
   `knowledge/notes/`, `work/` root beyond COORDINATION, `records/`/`sources/`,
   a workspace root beside CONTEXT.md). `work/inbox/`, workspace subfolders and
   the Garden are exempt by design.
-- **W** `HYGIENE-SHADOW` — a same-named `.md` under a shadow root
-  (`legacy/Plans/`, `Job/workspace-job-deem/inputs/`) modified *after* the
-  canonical note: live drift into a frozen copy. Filename + mtime comparison
-  only — content is never read (narrow §13 carve-out, ADR-004).
+
+Legacy and sibling code repositories are not hygiene roots. Legacy verification
+is available only through the deliberate, exact-allowlist
+`legacy.archive.inspect` workflow. External worktrees such as Stratum sit
+outside LearningOS's canonical roots and are never traversed by validation.
 
 ## Generated outputs
 
@@ -167,6 +169,7 @@ never accumulates into an audit session; they nag, never block.
 Validation checks first-class Project records, project aliases, project
 relationships, capability contracts, and append-only transaction receipts.
 A project relationship must resolve to a supported projected target. A
-transaction receipt must conform to schema version 1 and have a unique ID.
+transaction receipt must conform to readable Receipt v1 or authoritative
+Receipt v2 and have a unique ID.
 The revision ledger is operational metadata and is not interpreted as a
 receipt.

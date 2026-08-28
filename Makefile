@@ -12,12 +12,10 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views materials inventory verify-materials contract test test-fast lint all setup hooks garden status system-check
+.PHONY: help check views materials inventory verify-materials contract test test-fast lint all setup hooks garden status system-check stress
 
 help:
-	@echo "make check  - validate the repository (schemas + semantic rules), then check"
-	@echo "                the Job plans against the world they point at (anchors, vault"
-	@echo "                paths, concept ids, anchor drift). Silent when Job is absent."
+	@echo "make check  - validate the repository (schemas + semantic rules)"
 	@echo "make views  - rebuild everything under generated/ (the dashboards)"
 	@echo "make status - one-screen repository state (tools/los.py; --json for machines)"
 	@echo "make materials - rebuild the materials catalogue (materials/README.md + FILES.txt;"
@@ -33,13 +31,13 @@ help:
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
+	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
 	@echo "make all    - check + views + materials + test"
 	@echo "make hooks  - install the canonical Core hooks and the paired pre-push gate"
 	@echo "make setup  - create .venv, install deps, install Git hooks (run once per clone/move)"
 
 check:
 	$(PY) tools/validate.py
-	$(PY) tools/check_job_plans.py --quiet
 
 status:
 	$(PY) tools/los.py status
@@ -82,6 +80,13 @@ system-check:
 	$(PY) -m pytest -q
 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
 	npm --prefix ../obsidian-ui run check
+
+# Deliberate deep audit. Routine work stays on `make check`; release work uses
+# `make system-check`; this one command standardizes the rarer, costlier stress
+# sweep without making normal edits depend on network availability.
+stress: system-check
+	$(PY) tools/stress_check.py
+	$(PY) tools/validate.py --online --no-report
 
 all: check views materials test
 

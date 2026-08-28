@@ -1,4 +1,4 @@
-# Claude Operating Contract (Consolidated v3.2)
+# Claude Operating Contract (Consolidated v3.3)
 
 > Vendor-neutral entry point: `system/OPERATOR.md`. This file is the Claude
 > adapter and deeper policy reference; it may add mechanics but never weaken
@@ -15,7 +15,7 @@
 > 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
-> 8. **`Job/` is quarantined** (§13) — no reading, scanning, indexing or citing without Aram's explicit command; permission lasts one task.
+> 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
 > 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints 0 errors, 0 warnings (a pre-commit hook enforces this on commits).
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
@@ -194,7 +194,14 @@ Every generated file states that it is generated. Claude never manually patches 
 
 ## 11. External materials and projects
 
-External materials live under `LearningOS/materials/`; code repositories under `LearningOS/projects/` or documented external locations. Claude accesses them only when a canonical source or note refers to them, or when the user explicitly requests broader search. Never copy dependency trees, virtual environments, cloned repositories, videos, or books into the authored knowledge tree.
+External materials live under `LearningOS/materials/`; code repositories live
+under `LearningOS/projects/` or documented external locations. In particular,
+`semestercontext/Stratum/` is a sibling work repository rather than LearningOS
+content. Claude may inspect relevant code when the current task asks for it,
+including to inform an ordinary learning plan, but LearningOS does not index,
+validate, migrate, or manage that repository. Never copy dependency trees,
+virtual environments, cloned repositories, videos, or books into the authored
+knowledge tree.
 
 ---
 
@@ -204,39 +211,26 @@ During migration Claude must: create a complete inventory; preserve original pat
 
 ---
 
-## 13. Job quarantine (Aram's standing instruction, 2026-07-17)
+## 13. Job learning and external code (amended 2026-08-26)
 
-The folder **`Job/`** (sibling of `LearningOS/` — at the semestercontext root,
-or wherever it lives after a folder move; it carries its own README marker)
-is **outside the default search space**. It holds the BIFOLD/DEEM job:
-the stratum repository, the job workspace, skrub notes, papers, onboarding
-plans.
+Job learning is ordinary learning. Polars, Rust, ML pipelines, and other
+employment-motivated topics use the same `program → module → unit → study map →
+stage` model, notes, concepts, sources, search, AI actions, and validation as
+university learning. They are grouped under `program-job`; a Job badge or
+section is presentation only and grants no special authority.
 
-- Do **not** read, scan, index, cite or route anything into or out of `Job/`
-  during normal operation — not for retrieval, not for generation, not for
-  validation sweeps.
-- Access it **only** when Aram explicitly commands it in the conversation
-  ("scan the job folder", "look at stratum", "work on the job workspace").
-  The permission lasts for that task only.
-- Job knowledge deliberately does not appear in the registries or generated
-  views while quarantined. If job-relevant durable knowledge should enter the
-  canon, Aram says so explicitly.
-- **First-party Job view exception (Aram-approved, 2026-08-12):** deliberately
-  opening the Job destination is an explicit Job access gesture. The UI may
-  call `los job-dashboard --confirm-job-access`, which reads only
-  `Job/dashboard.yaml` and its allowlisted note, workspace, plan, and paper
-  paths. The response is read-only, ephemeral, and held in that view only. It
-  is never written to `generated/manifest.json`, indexed by global search,
-  included in recommendations or AI context, or made available to ordinary
-  file-opening paths. Closing/restarting the app ends the grant. This exception
-  does not authorize agents or other workflows to scan Job without the normal
-  explicit conversational command.
-- The boundary workflow — reference, capture, and promotion across
-  Job↔LearningOS — is formalized in `Job/WORKFLOW.md` (adopted 2026-08-03,
-  ADR-003); it operates within this quarantine, never against it.
-- **Narrow carve-out (ADR-004, Aram-approved):** the validator's hygiene
-  sweep may list file *names and mtimes* (never content) under
-  `Job/workspace-job-deem/inputs/` to detect cross-boundary shadow copies.
+`semestercontext/Stratum/` is different: it is an external sibling code
+repository Aram works on, not a LearningOS record tree. LearningOS never scans,
+indexes, validates, migrates, or writes it as part of normal operation. When a
+specific task needs code context, Claude may inspect the relevant paths and use
+what Aram confirms to inform ordinary learning artifacts. Connections are
+recorded only after review; neither a bulk graph nor speculative relations are
+created in advance.
+
+The former `Job/` dashboard, access ceremony, private schemas, write path, and
+shadow-scan exclusions are retired by ADR-013. Its already-migrated source tree
+is preserved, inactive, at `LearningOS/legacy/Job/`; it is not part of normal
+search, validation, or authoring.
 
 ---
 

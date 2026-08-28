@@ -1,11 +1,15 @@
 # ADR-010 — The bounded first-party Job surface (read model + write path)
 
-**Date:** 2026-08-14 · **Status:** accepted (Aram)
+**Date:** 2026-08-14 · **Status:** superseded by ADR-013 (2026-08-26)
 **Supersedes nothing. Extends:** ADR-003 (Job↔LearningOS boundary workflow),
 ADR-004 (hygiene-sweep carve-out), ADR-006 (interface layer boundary).
 **Records retroactively:** the first-party Job view exception Aram approved on
 2026-08-12, which until now existed only as prose in `CLAUDE.md` §13 and
 `ARCHITECTURE.md` §24 with no decision record behind it.
+
+> Historical record only. ADR-013 retires the Job quarantine, dashboard,
+> access ceremony, schemas, and Job-rooted write path. Do not use this ADR as
+> current operating authority.
 
 ## Context
 
