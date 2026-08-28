@@ -12,10 +12,12 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check views materials inventory verify-materials contract test test-fast lint all setup hooks garden status system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast lint all setup hooks garden status system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
+	@echo "make warnings - the warning delta against the recorded baseline;"
+	@echo "                fails on a NEW signature, never on a deferred one"
 	@echo "make views  - rebuild everything under generated/ (the dashboards)"
 	@echo "make status - one-screen repository state (tools/los.py; --json for machines)"
 	@echo "make materials - rebuild the materials catalogue (materials/README.md + FILES.txt;"
@@ -38,6 +40,9 @@ help:
 
 check:
 	$(PY) tools/validate.py
+
+warnings:
+	$(PY) tools/warning_baseline.py --check
 
 status:
 	$(PY) tools/los.py status
@@ -77,6 +82,7 @@ lint:
 system-check:
 	$(MAKE) lint
 	$(PY) tools/validate.py --no-report
+	$(PY) tools/warning_baseline.py --check
 	$(PY) -m pytest -q
 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
 	npm --prefix ../obsidian-ui run check

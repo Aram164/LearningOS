@@ -28,13 +28,17 @@ never edit it.
    under `knowledge/notes/`; capture anything into `work/inbox/` (or
    `python tools/los.py capture --text "…"`).
 3. **After editing:** run `make check`. The pre-commit hook blocks commits while
-   the validator reports errors.
+   the validator reports **errors**; warnings print and never block. To see
+   whether you introduced one, run `make warnings` — it compares the warning
+   signatures against `operations/validation-warning-baseline.yaml` and fails
+   only on a new or grown one.
 
 The rest of this file is the full manual; the four commands are under
 [Commands](#commands).
 
+- **What binds:** `system/contracts/normative-corpus.yaml` — every `system/*.md` and `system/adr/*.md` file classified exactly once (class, status, authority, owner, supersession). Read it before treating anything under `system/` as law; `make check` fails if a document is added without being classified or if a retired one still claims to bind.
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
-- **How the operator behaves:** `system/CLAUDE.md` — the single canonical contract; root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to it
+- **How the operator behaves:** `system/OPERATOR.md` is the declared entry point for every operator (the corpus index names it, and the validator checks that); `system/CLAUDE.md` is the Claude adapter and deeper policy reference. Root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to `system/CLAUDE.md`
 - **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
 - **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed the same day (`migration/final-report.md`). This repository is the operational root.
 - **Legacy:** the frozen pre-v3 tree is shelved at `../legacy/`; the former Job source retained after ADR-013 is at `../legacy/Job/`.
@@ -103,7 +107,8 @@ anything — a text editor and Git are enough to operate this repository forever
 
 ```bash
 make setup      # once per clone/move: create .venv, install deps, install Git hooks
-make check      # validate (schemas + VALIDATION.md rules)
+make check      # validate (schemas + VALIDATION.md rules) — errors block, warnings do not
+make warnings   # the warning delta against the recorded baseline; fails only on a NEW one
 make views      # rebuild everything under the gitignored output tree
 make status     # one-screen repository state
 make inventory  # rebuild the materials manifest (see "Materials durability")

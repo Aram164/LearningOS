@@ -16,7 +16,7 @@
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
-> 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints 0 errors, 0 warnings (a pre-commit hook enforces this on commits).
+> 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
 > 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
@@ -33,6 +33,13 @@ At the beginning of repository work, read:
 
 0. run `python tools/los.py bootstrap`; use its versioned projection for
    application state and targeted `los inspect/search/related` calls thereafter
+
+0b. `system/contracts/normative-corpus.yaml` — the index of what binds. Every
+   document below appears in it with a class, a status and an authority. A
+   document not listed there is not a rule; a document listed as
+   `authority: historical` is a record of what was true, not a rule. Consult it
+   before treating anything under `system/` as binding, and before concluding
+   that an ADR you are reading is still in force.
 
 1. `system/PHILOSOPHY.md` — the user's intent; its principle "reduce organizational burden rather than create it" is the tiebreaker for every ambiguity not settled by this contract
 2. `system/WHY-REDESIGN.md`

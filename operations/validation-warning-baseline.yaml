@@ -1,0 +1,45 @@
+# The validation warning baseline — what is deferred, and nothing more.
+#
+# Validation success means ZERO ERRORS. Warnings stay visible and never block.
+# What this file adds is the third clause: no NEW warning signature, and no
+# existing signature that grows.
+#
+# A signature is (code, path) with its multiplicity, not a total. A total is
+# gamed by trading one warning for another; a signature is not.
+#
+# Environmental warnings are excluded on purpose — they describe the machine
+# (unmounted drive, stale view, crashed git lock), not the content, and differ
+# between one checkout and the next.
+#
+# These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
+# them here defers them; it does not close the point.
+#
+#   python tools/warning_baseline.py --check                 # gate
+#   python tools/warning_baseline.py --show                  # the delta
+#   python tools/warning_baseline.py --update --note "…"     # adopt current
+baseline_version: 1
+recorded: '2026-08-28'
+note: 'Baseline recorded during C0 (2026-08-28). The measured content debt of CRITIQUE-POINTS
+  #1: vague locators and missing angle detail across the study maps, deliberately
+  deferred.'
+total: 535
+distinct_signatures: 6
+signatures:
+- code: LOCATOR-VAGUE
+  path: curriculum/modules/module-hu-algo2/source-map.yaml
+  count: 17
+- code: LOCATOR-VAGUE
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  count: 136
+- code: LOCATOR-VAGUE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  count: 71
+- code: ROUTE-ANGLE-DETAIL-MISSING
+  path: curriculum/modules/module-hu-algo2/source-map.yaml
+  count: 20
+- code: ROUTE-ANGLE-DETAIL-MISSING
+  path: curriculum/modules/module-hu-aml/source-map.yaml
+  count: 223
+- code: ROUTE-ANGLE-DETAIL-MISSING
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  count: 68
