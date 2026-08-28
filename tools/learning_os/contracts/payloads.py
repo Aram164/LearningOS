@@ -16,11 +16,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 
 # Owned by the envelope, never by the payload.
 ENVELOPE_OWNED = frozenset({"expected_snapshot", "expected_revision"})
 # Argparse bookkeeping that is not part of any capability's surface.
 NOT_A_PAYLOAD_FIELD = frozenset({"help", "func", "command", "root", "json"})
+
+# These CLI commands accept stdin for human convenience. A capability envelope
+# cannot approve bytes that arrive on a different process channel, so V2
+# payload schemas require the content inline (or, for capture, the separately
+# hash-bound file alternative).
+_GATEWAY_INLINE_REQUIRED = {
+    "path.note.write": ("text",),
+    "stage.note.write": ("text",),
+    "unit.note.append": ("text",),
+}
 
 
 def json_object(value: str) -> dict:
@@ -47,18 +58,33 @@ def json_object(value: str) -> dict:
     return parsed
 
 
+def sha256_value(value: str) -> str:
+    """Argparse converter for one canonical ``sha256:<hex>`` digest."""
+    if not re.fullmatch(r"sha256:[a-f0-9]{64}", value):
+        raise argparse.ArgumentTypeError(
+            "expected SHA-256 as sha256:<64 lowercase hexadecimal digits>"
+        )
+    return value
+
+
+def _scalar_json_type(action: argparse.Action) -> dict:
+    if action.type is json_object:
+        return {"type": "object"}
+    if action.type is sha256_value:
+        return {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+    if action.type is int:
+        return {"type": "integer"}
+    return {"type": "string"}
+
+
 def _json_type(action: argparse.Action) -> dict:
     if isinstance(action, argparse._StoreTrueAction | argparse._StoreFalseAction):
         return {"type": "boolean"}
     if isinstance(action, argparse._AppendAction):
-        return {"type": "array", "items": {"type": "string"}}
+        return {"type": "array", "items": _scalar_json_type(action)}
     if action.nargs in ("*", "+"):
-        return {"type": "array", "items": {"type": "string"}}
-    if action.type is json_object:
-        return {"type": "object"}
-    if action.type is int:
-        return {"type": "integer"}
-    return {"type": "string"}
+        return {"type": "array", "items": _scalar_json_type(action)}
+    return _scalar_json_type(action)
 
 
 def _exclusive_choices(command_parser: argparse.ArgumentParser) -> list[dict]:
@@ -106,6 +132,7 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         properties[action.dest] = _json_type(action)
         if action.required or not action.option_strings:
             required.append(action.dest)
+    required.extend(_GATEWAY_INLINE_REQUIRED.get(name, ()))
     schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": f"capabilities/{name}.schema.json",
@@ -121,10 +148,31 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         "properties": dict(sorted(properties.items())),
     }
     choices = _exclusive_choices(command_parser)
+    if name == "capture.create":
+        choices.append({
+            "oneOf": [
+                {"required": ["file"], "not": {"required": ["text"]}},
+                {"required": ["text"], "not": {"required": ["file"]}},
+            ]
+        })
     if len(choices) == 1:
         schema["oneOf"] = choices[0]["oneOf"]
     elif choices:
         schema["allOf"] = choices
+    # A path identifies where bytes may be read; the companion digest binds
+    # which bytes were approved.  Keep both directions closed so a gateway
+    # payload can never supply one without the other. Direct CLI parsers leave
+    # the digest optional so human-only no-write preflights remain convenient.
+    dependent: dict[str, list[str]] = {}
+    for digest_field in sorted(properties):
+        if not digest_field.endswith("_sha256"):
+            continue
+        input_field = digest_field.removesuffix("_sha256")
+        if input_field in properties:
+            dependent[input_field] = [digest_field]
+            dependent[digest_field] = [input_field]
+    if dependent:
+        schema["dependentRequired"] = dependent
     return schema
 
 

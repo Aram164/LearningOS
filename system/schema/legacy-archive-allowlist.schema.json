@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/legacy-archive-allowlist.schema.json",
+  "title": "Explicit safe Legacy archive inspection allowlist",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "safe_entries", "excluded_count"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "legacy-archive-allowlist"},
+    "safe_entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relative_path", "category", "disposition", "canonical_targets"],
+        "properties": {
+          "relative_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "category": {"type": "string", "minLength": 1},
+          "disposition": {"enum": ["canonicalized", "byte-preserved", "superseded-system", "historical-only", "unresolved"]},
+          "canonical_targets": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "excluded_count": {"type": "integer", "minimum": 0}
+  }
+}

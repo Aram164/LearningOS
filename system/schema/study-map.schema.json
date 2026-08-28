@@ -93,6 +93,7 @@
       "additionalProperties": false,
       "properties": {
         "id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
         "kind": {"enum": ["watch", "read", "practise", "reference"]},
         "label": {"type": "string", "minLength": 1},
         "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},

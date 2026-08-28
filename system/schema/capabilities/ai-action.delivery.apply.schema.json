@@ -1,26 +1,23 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/stage.note.write.schema.json",
-  "title": "payload for capability stage.note.write",
+  "$id": "capabilities/ai-action.delivery.apply.schema.json",
+  "title": "payload for capability ai-action.delivery.apply",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "stage_id",
-    "text",
-    "unit_id"
+    "artifact_sha256",
+    "delivery_id",
+    "delivery_sha256"
   ],
   "properties": {
-    "replace": {
-      "type": "boolean"
+    "artifact_sha256": {
+      "type": "object"
     },
-    "stage_id": {
+    "delivery_id": {
       "type": "string"
     },
-    "text": {
-      "type": "string"
-    },
-    "unit_id": {
+    "delivery_sha256": {
       "type": "string"
     }
   }

@@ -16,8 +16,20 @@
     "file": {
       "type": "string"
     },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
     "note_id": {
       "type": "string"
     }
+  },
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
   }
 }

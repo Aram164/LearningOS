@@ -1,18 +1,8 @@
 contract: learningos-capabilities
 schema_version: 1
-contract_version: 1
-cli_protocol: 3
+contract_version: 2
+cli_protocol: 6
 queries:
-  job.dashboard:
-    handler: job_dashboard
-    result: job-dashboard-v2
-    schema: system/schema/job-dashboard.schema.json
-    invariants:
-    - explicit access confirmation is required
-    - read-only and in-memory only
-    - Stratum worktree and Git metadata are immutable; only exact hash-and-path drift queries are permitted
-    - absent from manifest, search, AI, and generated views
-    - publishes a Job-specific optimistic-concurrency snapshot
   plan.template:
     handler: plan_template
     result: plan-template-v1
@@ -21,68 +11,52 @@ queries:
     - read-only; generates a record and touches no repository file
     - always the current plan-template version, never a copy of an existing plan
     - the generated record is validated against its own domain schema before it is answered
-    - curriculum requires unit_id and module_id; job requires neither
+    - curriculum requires unit_id and module_id
   project.list:
     handler: project_list
     result: project-list
   project.inspect:
     handler: inspect
     result: record
+  health.report:
+    handler: health_report
+    result: health-report-v1
+    schema: system/schema/health-report.schema.json
+    invariants:
+    - read-only and on demand; no watcher or daemon
+    - reports owner and remedy for every check
+  backup.manifest:
+    handler: backup_manifest
+    result: backup-manifest-v1
+    schema: system/schema/backup-manifest.schema.json
+    invariants:
+    - hashes only producer-declared allowlisted roots
+    - never follows symlinks or includes sibling directories implicitly
+    - read-only and does not configure Time Machine
+  legacy.archive.inspect:
+    handler: legacy_archive_inspect
+    result: legacy-archive-lock-v1
+    schema: system/schema/legacy-archive-lock.schema.json
+    invariants:
+    - reads only exact reviewed safe paths; there is no recursive discovery
+    - boundary-sensitive items are represented only by an aggregate count
+    - read-only and deliberately invoked
+  legacy.archive.status:
+    handler: legacy_archive_status
+    result: legacy-archive-status-v1
+    schema: system/schema/legacy-archive-status.schema.json
+    invariants:
+    - reads the last approved lock without rescanning Legacy
+    - absent from normal manifest and search
+  masters-planning.dashboard:
+    handler: masters_planning_dashboard
+    result: masters-planning-dashboard-v1
+    schema: system/schema/masters-planning-dashboard.schema.json
+    invariants:
+    - requires an explicit planning access gesture
+    - reads only the sanitized catalog and approved comparisons
+    - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
 commands:
-  job.session.log:
-    handler: job_session_log
-    cli_command: job-session-log
-    writes:
-    - Job/workspace-job-deem/scratch/**
-    invariants:
-    - explicit access confirmation is required
-    - the transaction is rooted at Job/ and cannot reach the canon
-    - never offered to AI actions
-  job.note.stamp:
-    handler: job_note_stamp
-    cli_command: job-note-stamp
-    writes:
-    - Job/notes/**
-    invariants:
-    - explicit access confirmation is required
-    - only the living-note header is rewritten, never the body
-    - never offered to AI actions
-  job.note.save:
-    handler: job_note_save
-    cli_command: job-note-save
-    writes:
-    - Job/notes/**
-    invariants:
-    - explicit access confirmation and learner approval are required
-    - stable note ids and existing frontmatter are preserved on revision
-    - never offered to AI actions
-  job.plan.save:
-    handler: job_plan_save
-    cli_command: job-plan-save
-    writes:
-    - Job/plans/**
-    invariants:
-    - explicit access confirmation and learner approval are required
-    - structured plans shadow but never rewrite legacy Markdown plans
-    - never offered to AI actions
-  job.task.save:
-    handler: job_task_save
-    cli_command: job-task-save
-    writes:
-    - Job/operations/tasks.yaml
-    invariants:
-    - explicit access confirmation is required
-    - tasks remain quarantined from the canonical work graph
-    - never offered to AI actions
-  job.track.progress:
-    handler: job_track_progress
-    cli_command: job-track-progress
-    writes:
-    - Job/operations/progress.yaml
-    invariants:
-    - explicit access confirmation is required
-    - progress is machine-owned; the authored dashboard is never rewritten
-    - never offered to AI actions
   capture.create:
     handler: capture
     cli_command: capture
@@ -91,6 +65,18 @@ commands:
     invariants:
     - no automatic routing
     - original input is preserved
+    - external file input is bound to its exact bytes by SHA-256 before use
+    - GatewayEnvelopeV2 content is inline or hash-bound and never comes from stdin
+  ai-action.delivery.apply:
+    handler: ai_action_apply_delivery
+    cli_command: ai-action-apply-delivery
+    writes:
+    - operations/ai-actions/requests/**
+    invariants:
+    - GatewayEnvelopeV2 with approved-delivery authority is required
+    - approval binds the imported delivery record and every referenced artifact by SHA-256
+    - canonical destinations retain their narrow domain-capability write authorities
+    - request completion and canonical writes commit atomically with one ReceiptV2
   garden.seed.create:
     handler: garden_seed_create
     cli_command: garden-seed-create
@@ -106,9 +92,49 @@ commands:
     writes:
     - curriculum/modules/**
     - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
     invariants:
     - bounded to one module
     - preflight required
+    - external plan files are bound to their exact bytes by SHA-256 before use
+  route.identity.migrate:
+    handler: route_identity_migrate
+    cli_command: route-identity-migrate
+    writes:
+    - curriculum/modules/**/source-map.yaml
+    - curriculum/modules/**/units/**/unit.yaml
+    invariants:
+    - the dry-run plan is deterministic and problem-free
+    - any ambiguity review is inline, complete, drift-guarded, and bound to the unresolved baseline plan and canonical snapshot
+    - review decisions may bind, revise, split, or retire only exact existing same-unit/source routes; authoring and preserved ambiguity remain blocked
+    - the approval binds the exact diff hash, snapshot, and affected artifact revisions
+    - every changed file commits atomically with one receipt
+  legacy.job-learning.migrate:
+    handler: job_learning_migrate
+    cli_command: job-learning-migrate
+    writes:
+    - curriculum/programs/program-job.yaml
+    - curriculum/programs/program-job-boundary.yaml
+    - curriculum/modules/module-job-git/**
+    - curriculum/modules/module-job-engineering-tools/**
+    - curriculum/modules/module-job-polars/**
+    - curriculum/modules/module-job-python-engineering/**
+    - curriculum/modules/module-job-rust-engineering/**
+    - knowledge/concepts.yaml
+    - knowledge/notes/data-systems/**
+    - knowledge/attachments/note-pandas-polars-aggregation-contentions/**
+    - sources/registry/software.yaml
+    - records/materials-manifest.yaml
+    - operations/migrations/job-quarantine-collapse-v1.yaml
+    invariants:
+    - one deterministic problem-free plan migrates the five exact legacy learning plans
+    - source and destination bytes, the plan hash, the canonical snapshot, and every affected artifact revision are approval-bound
+    - Stratum remains an external sibling codebase and appears only as optional prose learning anchors
+    - no concept relations, source evaluations, completion, or mastery are inferred
+    - the old boundary deletion and all ordinary program, module, map, note, probe, source, concept, and provenance writes commit atomically with one receipt
   note.revise:
     handler: note_revise
     cli_command: note-revise
@@ -117,6 +143,7 @@ commands:
     invariants:
     - id and role remain stable
     - explicit approval
+    - external replacement files are bound to their exact bytes by SHA-256 before use
   note.evidence.add:
     handler: note_evidence
     cli_command: note-evidence
@@ -133,6 +160,7 @@ commands:
     - curriculum/modules/**/units/**
     invariants:
     - bounded to one unit
+    - external map files are bound to their exact bytes by SHA-256 before use
   unit.note.append:
     handler: unit_note
     cli_command: unit-note
@@ -141,6 +169,8 @@ commands:
     invariants:
     - session-level append
     - failed save preserves caller draft
+    - every external attachment is bound to its exact bytes by SHA-256 before use
+    - GatewayEnvelopeV2 carries note text inline and never reads it from stdin
   unit.source-selection.set:
     handler: unit_source_selection
     cli_command: unit-source-selection
@@ -150,6 +180,41 @@ commands:
     - selection must match a rich route on the same unit
     - complete material menu is unchanged
     - a selection used by a study path cannot be removed implicitly
+  unit.material-synthesis.publish:
+    handler: unit_material_synthesis_publish
+    cli_command: unit-material-synthesis-publish
+    writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    invariants:
+    - every current rich route is assessed exactly once
+    - current and prerequisite routes are deep-reviewed
+    - whole-dossier approval and revision guards are required
+  legacy.archive.lock.publish:
+    handler: legacy_archive_lock_publish
+    cli_command: legacy-archive-lock-publish
+    writes:
+    - operations/legacy/archive-lock.yaml
+    invariants:
+    - reviewed allowlist-only evidence
+    - excluded boundary entries contain no paths or hashes
+  masters-planning.catalog.update:
+    handler: masters_planning_catalog_update
+    cli_command: masters-planning-catalog-update
+    writes:
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    invariants:
+    - academic-only sanitized input
+    - prospective ids never masquerade as canonical ids
+    - revision guarded and explicitly approved
+  masters-planning.comparison.publish:
+    handler: masters_planning_comparison_publish
+    cli_command: masters-planning-comparison-publish
+    writes:
+    - curriculum/quarantine/masters-planning/comparisons/**
+    invariants:
+    - bounded to one selected candidate module
+    - all selected sources are assessed exactly once
+    - no scores, schedules, or time recommendations
   stage.note.write:
     handler: stage_note
     cli_command: stage-note
@@ -157,6 +222,7 @@ commands:
     - curriculum/modules/**/units/**/stages/**
     invariants:
     - compatibility capability only
+    - GatewayEnvelopeV2 carries note text inline and never reads it from stdin
   stage.progress.update:
     handler: stage_progress
     cli_command: stage-progress
@@ -172,6 +238,7 @@ commands:
     invariants:
     - source file is copied
     - never moved
+    - the external attachment is bound to its exact bytes by SHA-256 before use
   source.feedback.record:
     handler: source_feedback
     cli_command: source-feedback
@@ -201,6 +268,7 @@ commands:
     - curriculum/modules/**/units/**
     invariants:
     - preparation never applies proposed canonical changes
+    - external proposal items are bound to their exact bytes by SHA-256 before use
   review.apply:
     handler: shelving_apply
     cli_command: shelving-apply
@@ -218,6 +286,7 @@ commands:
     - work/active/**
     invariants:
     - workspace-owned scratch only
+    - GatewayEnvelopeV2 carries note text inline and never reads it from stdin
   path.progress.update:
     handler: path_progress
     cli_command: path-progress
@@ -233,23 +302,26 @@ commands:
     invariants:
     - source file is copied
     - never moved
+    - the external attachment is bound to its exact bytes by SHA-256 before use
   project.create:
     handler: project_create
     cli_command: project-create
     writes:
-    - projects/registry/project-*.yaml
+    - projects/registry/*
     invariants:
     - new id only
     - project schema v1
     - no module mutation
+    - external project files are bound to their exact bytes by SHA-256 before use
   project.update:
     handler: project_update
     cli_command: project-update
     writes:
-    - projects/registry/project-*.yaml
+    - projects/registry/*
     invariants:
     - id and type remain stable
     - revision guarded
+    - external project files are bound to their exact bytes by SHA-256 before use
 internal_commands:
   project.migrate:
     handler: projects_migration_apply
@@ -270,11 +342,9 @@ internal_commands:
     - restores migration backup atomically
 forbidden:
 - direct interface filesystem writes
-- writes under Job/ outside the job.* capabilities (ADR-010)
-- writes under Job/stratum/**, including Job/stratum/.git/**, from every query and capability
 - partial application of a validated transaction
 - deletion of transaction receipts
-- repository.read-job
+- repository.read-external
 - repository.write-arbitrary
 - artifact.delete
 domain_capabilities:
@@ -293,3 +363,9 @@ domain_capabilities:
   relationship.create:
     writes:
     - operations/ai-actions/relationships.yaml
+  unit.material-synthesis.publish:
+    writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+    invariants:
+    - complete-current-route-coverage
+    - approved-whole-unit-delivery

@@ -21,8 +21,7 @@ allowed_capabilities:
 forbidden_capabilities:
   - artifact.delete
   - artifact.overwrite-original
-  - repository.read-job
+  - repository.read-external
   - repository.write-arbitrary
 confidentiality_policy:
-  job_derived_requires_confirmation: true
-  employer_repository_access: forbidden
+  external_repository_access: forbidden

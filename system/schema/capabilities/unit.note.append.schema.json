@@ -6,6 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
+    "text",
     "unit_id"
   ],
   "properties": {
@@ -13,6 +14,13 @@
       "type": "array",
       "items": {
         "type": "string"
+      }
+    },
+    "attachment_sha256": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^sha256:[a-f0-9]{64}$"
       }
     },
     "stage_id": {
@@ -30,5 +38,13 @@
     "unit_id": {
       "type": "string"
     }
+  },
+  "dependentRequired": {
+    "attachment": [
+      "attachment_sha256"
+    ],
+    "attachment_sha256": [
+      "attachment"
+    ]
   }
 }

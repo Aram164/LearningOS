@@ -8,6 +8,8 @@ from pathlib import Path
 
 import yaml
 
+from .write_scopes import WriteScopeError, normalize_scope_pattern
+
 
 class CapabilityCatalogError(Exception):
     pass
@@ -52,27 +54,13 @@ def _string_list(value, *, label: str, required: bool = False) -> tuple[str, ...
     return tuple(item.strip() for item in value)
 
 
-_ALLOWED_JOB_WRITE_SCOPES = frozenset({
-    "Job/workspace-job-deem/scratch/**",
-    "Job/notes/**",
-    "Job/plans/**",
-    "Job/operations/tasks.yaml",
-    "Job/operations/progress.yaml",
-})
-
-
-def _refuse_stratum_write_scopes(writes: tuple[str, ...], *, label: str) -> None:
-    """A declaration can use an audited Job scope, never broaden it."""
+def _validate_write_scopes(writes: tuple[str, ...], *, label: str) -> None:
+    """Every declared scope must use the shared repository-relative grammar."""
     for value in writes:
-        normalized = value.replace("\\", "/").rstrip("/")
-        if normalized == "Job/stratum" or normalized.startswith("Job/stratum/"):
-            raise CapabilityCatalogError(
-                f"{label} declares forbidden immutable Stratum write scope: {value}"
-            )
-        if normalized.startswith("Job/") and value not in _ALLOWED_JOB_WRITE_SCOPES:
-            raise CapabilityCatalogError(
-                f"{label} declares unaudited Job write scope: {value}"
-            )
+        try:
+            normalize_scope_pattern(value)
+        except WriteScopeError as exc:
+            raise CapabilityCatalogError(f"{label} has an invalid write scope: {exc}") from exc
 
 
 def load_capability_catalog(root: Path) -> dict:
@@ -83,8 +71,8 @@ def load_capability_catalog(root: Path) -> dict:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     except yaml.YAMLError as exc:
         raise CapabilityCatalogError(f"invalid capability catalogue: {exc}") from exc
-    if not isinstance(data, dict) or data.get("contract_version") != 1:
-        raise CapabilityCatalogError("capability catalogue contract_version must be 1")
+    if not isinstance(data, dict) or data.get("contract_version") != 2:
+        raise CapabilityCatalogError("capability catalogue contract_version must be 2")
     if data.get("contract") != "learningos-capabilities" or data.get("schema_version") != 1:
         raise CapabilityCatalogError(
             "capability catalogue must declare contract learningos-capabilities schema_version 1"
@@ -125,7 +113,7 @@ def load_capability_catalog(root: Path) -> dict:
                 writes = _string_list(
                     row.get("writes"), label=f"capability {name} writes", required=True
                 )
-                _refuse_stratum_write_scopes(writes, label=f"capability {name}")
+                _validate_write_scopes(writes, label=f"capability {name}")
                 cli_command = row.get("cli_command")
                 if section == "commands" and (
                     not isinstance(cli_command, str) or not cli_command.strip()
@@ -142,9 +130,10 @@ def load_capability_catalog(root: Path) -> dict:
     for name, row in rows.items():
         if not isinstance(name, str) or not name.strip() or not isinstance(row, dict):
             raise CapabilityCatalogError("invalid domain capability declaration")
-        _string_list(
+        writes = _string_list(
             row.get("writes"), label=f"domain capability {name} writes", required=True
         )
+        _validate_write_scopes(writes, label=f"domain capability {name}")
         _string_list(
             row.get("invariants"), label=f"domain capability {name} invariants"
         )

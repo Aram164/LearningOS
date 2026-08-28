@@ -1,0 +1,23 @@
+schema_version: 1
+id: unit.compare-materials
+title: Compare unit materials
+description: Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.
+target_kinds:
+  - unit
+interaction_mode: discussion
+approval_required: true
+context_selection: exact
+status: implemented
+supported_providers:
+  - manual-bundle
+allowed_capabilities:
+  - unit.material-synthesis.publish
+forbidden_capabilities:
+  - artifact.delete
+  - repository.read-external
+  - repository.write-arbitrary
+  - source.create
+  - concept.create
+confidentiality_policy:
+  external_repository_access: forbidden
+  source_upload: forbidden

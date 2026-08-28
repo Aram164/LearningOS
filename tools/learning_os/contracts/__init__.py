@@ -6,7 +6,6 @@ from .learning_plan import (
     PlanTemplateError,
     build_plan_template,
     current_template_problems,
-    normalise_job_stage,
     require_current_template,
 )
 
@@ -16,7 +15,6 @@ __all__ = [
     "PlanTemplateError",
     "build_plan_template",
     "current_template_problems",
-    "normalise_job_stage",
     "require_current_template",
     "validate_contract",
 ]

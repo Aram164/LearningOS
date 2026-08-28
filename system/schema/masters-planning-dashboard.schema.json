@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/masters-planning-dashboard.schema.json",
+  "title": "Deliberately opened Future Master's Planning dashboard",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "opened_at", "banner", "catalog", "comparisons", "isolation"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "masters-planning-dashboard"},
+    "opened_at": {"type": "string", "format": "date-time"},
+    "banner": {"const": "Prospective—not current LearningOS"},
+    "catalog": {"oneOf": [{"type": "null"}, {"$ref": "https://learningos.local/schema/master-planning-catalog.schema.json"}]},
+    "comparisons": {"type": "array", "items": {"$ref": "https://learningos.local/schema/candidate-source-comparison.schema.json"}},
+    "isolation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["normal_manifest", "search", "workload", "recommendations", "deadlines", "ordinary_ai_context"],
+      "properties": {
+        "normal_manifest": {"const": false}, "search": {"const": false},
+        "workload": {"const": false}, "recommendations": {"const": false},
+        "deadlines": {"const": false}, "ordinary_ai_context": {"const": false}
+      }
+    }
+  }
+}

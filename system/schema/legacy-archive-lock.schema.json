@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/legacy-archive-lock.schema.json",
+  "title": "Reviewed Legacy archive disposition lock",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "type", "created_at", "entries", "excluded", "verification"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"const": "legacy-archive-lock"},
+    "type": {"const": "legacy-archive-lock"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["relative_path", "size", "sha256", "category", "disposition", "canonical_targets"],
+        "properties": {
+          "relative_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+          "size": {"type": "integer", "minimum": 0},
+          "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+          "category": {"type": "string", "minLength": 1},
+          "disposition": {"enum": ["canonicalized", "byte-preserved", "superseded-system", "historical-only", "unresolved"]},
+          "canonical_targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["path", "exists", "checksum_matches"],
+              "properties": {
+                "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
+                "exists": {"type": "boolean"},
+                "checksum_matches": {"type": ["boolean", "null"]},
+                "sha256": {"type": ["string", "null"], "pattern": "^sha256:[a-f0-9]{64}$"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "excluded": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "status"],
+      "properties": {
+        "count": {"type": "integer", "minimum": 0},
+        "status": {"const": "sealed-not-inspected"}
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["verified_at", "status"],
+      "properties": {
+        "verified_at": {"type": "string", "format": "date-time"},
+        "status": {"enum": ["verified", "attention-required"]},
+        "issues": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

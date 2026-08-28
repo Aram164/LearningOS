@@ -12,11 +12,23 @@
     "items_file": {
       "type": "string"
     },
+    "items_file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
     "summary": {
       "type": "string"
     },
     "unit_id": {
       "type": "string"
     }
+  },
+  "dependentRequired": {
+    "items_file": [
+      "items_file_sha256"
+    ],
+    "items_file_sha256": [
+      "items_file"
+    ]
   }
 }

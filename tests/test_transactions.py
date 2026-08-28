@@ -10,6 +10,14 @@ import yaml
 import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
 import learning_os.transactions as transaction_module
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    gateway_request_context,
+)
+from learning_os.contracts.json_schema import (
+    ContractValidationError,
+    validate_contract,
+)
 from learning_os.fingerprint import source_fingerprint
 from learning_os.loader import load_repo
 from learning_os.rules.common import Issue
@@ -22,6 +30,19 @@ from learning_os.transactions import (
 )
 
 TOOLS = Path(__file__).resolve().parent.parent / "tools"
+
+
+def _gateway_context(capability: str, suffix: str) -> GatewayRequestContext:
+    intent = "sha256:" + "a" * 64
+    return GatewayRequestContext(
+        request_id=f"request-{suffix}",
+        idempotency_key=f"idempotency-{suffix}",
+        capability=capability,
+        channel="operator",
+        intent_sha256=intent,
+        approval_kind="operator-approval",
+        approval_subject_sha256=intent,
+    )
 
 
 # --------------------------------------------------------------------------
@@ -98,11 +119,17 @@ def test_a_transaction_refuses_an_already_invalid_repository(
     )
     monkeypatch.setattr(command_support, "_publish", lambda _root: None)
 
-    code, errors, confirmation = command_support._write_transaction(
-        mini_repo,
-        {target: "must roll back\n"},
-        capability="capture.create",
-    )
+    artifact = "capture-test:strict-validation"
+    with gateway_request_context(
+        _gateway_context("capture.create", "strict-validation")
+    ):
+        code, errors, confirmation = command_support._write_transaction(
+            mini_repo,
+            {target: "must roll back\n"},
+            capability="capture.create",
+            expected_revisions={artifact: 0},
+            artifact_ids=[artifact],
+        )
 
     assert code == 2
     assert "PREEXISTING" in errors[0]
@@ -122,11 +149,15 @@ def test_validation_and_publication_share_one_loaded_repository(
         return original(root)
 
     monkeypatch.setattr(command_support, "load_repo", counted)
-    code, errors, confirmation = command_support._write_transaction(
-        mini_repo,
-        {target: "one load\n"},
-        capability="capture.create",
-    )
+    artifact = "capture-test:one-load"
+    with gateway_request_context(_gateway_context("capture.create", "one-load")):
+        code, errors, confirmation = command_support._write_transaction(
+            mini_repo,
+            {target: "one load\n"},
+            capability="capture.create",
+            expected_revisions={artifact: 0},
+            artifact_ids=[artifact],
+        )
 
     assert (code, errors) == (0, [])
     assert confirmation["transaction_id"]
@@ -152,8 +183,8 @@ def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     recorded = json.loads(
         command_support._session_ledger(mini_repo).read_text(encoding="utf-8")
     )
-    assert "Untitled 37.canvas" not in recorded
-    assert "work/inbox/kept.md" in recorded
+    assert "Untitled 37.canvas" not in recorded["paths"]
+    assert recorded["paths"]["work/inbox/kept.md"] == {"state": "absent"}
 
 
 def test_failed_transaction_restores_canonical_state(tmp_path: Path):
@@ -219,6 +250,137 @@ def test_each_commit_has_exactly_one_append_only_receipt(tmp_path: Path):
     assert receipt["status"] == "committed"
     assert receipt["capability"] == "project.create"
     assert receipt["artifact_revisions"]["project-demo"] == {"before": 0, "after": 1}
+
+
+def _receipt_contract_fixture(*, schema_version: int, metadata: dict) -> dict:
+    receipt = {
+        "schema_version": schema_version,
+        "id": "transaction-20260825-120000-001",
+        "type": "transaction-receipt",
+        "status": "committed",
+        "capability": "capture.create",
+        "committed_at": "2026-08-25T12:00:00+00:00",
+        "snapshot_before": "sha256:" + "1" * 64,
+        "snapshot_after": "sha256:" + "2" * 64,
+        "expected_revisions": {},
+        "artifact_revisions": {},
+        "writes": [],
+        "metadata": metadata,
+    }
+    if schema_version == 2:
+        receipt.update({
+            "authority": {
+                "capability_contract_version": 2,
+                "enforced": True,
+                "grants": [],
+            },
+            "request": {
+                "channel": "operator",
+                "request_id": "request-demo",
+                "idempotency_key": "idempotency-demo",
+                "intent_sha256": "sha256:" + "3" * 64,
+                "approval": {
+                    "kind": "operator-approval",
+                    "subject_sha256": "sha256:" + "3" * 64,
+                },
+            },
+        })
+    return receipt
+
+
+@pytest.mark.parametrize("metadata", [
+    {"credential": "synthetic-secret"},
+    {
+        "request_id": "ai-request-demo",
+        "delivery_id": "delivery-demo",
+        "action_id": "garden-shelve",
+        "approved_delivery": {
+            "delivery_sha256": "sha256:" + "4" * 64,
+            "artifact_sha256": {},
+        },
+        "created_ids": ["/Users/example/private-record"],
+        "updated_ids": [],
+        "deleted_ids": [],
+        "superseded_ids": [],
+        "validation": {
+            "schemas": "passed",
+            "references": "passed",
+            "boundaries": "passed",
+            "projection": "passed",
+        },
+    },
+    {
+        "request_id": "ai-request-demo",
+        "delivery_id": "delivery-demo",
+        "action_id": "garden.shelve",
+        "approved_delivery": {
+            "delivery_sha256": "sha256:" + "4" * 64,
+            "artifact_sha256": {"../private.txt": "sha256:" + "5" * 64},
+        },
+        "created_ids": [],
+        "updated_ids": [],
+        "deleted_ids": [],
+        "superseded_ids": [],
+        "validation": {
+            "schemas": "passed",
+            "references": "passed",
+            "boundaries": "passed",
+            "projection": "passed",
+        },
+    },
+])
+def test_receipt_v2_rejects_sensitive_or_absolute_path_metadata(
+    mini_repo: Path,
+    metadata: dict,
+):
+    with pytest.raises(ContractValidationError):
+        validate_contract(
+            mini_repo,
+            "transaction-receipt.schema.json",
+            _receipt_contract_fixture(schema_version=2, metadata=metadata),
+        )
+
+
+def test_receipt_v1_metadata_remains_readable_for_history(mini_repo: Path):
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=1,
+            metadata={"historical_extension": {"legacy_shape": True}},
+        ),
+    )
+
+
+def test_receipt_v2_allows_only_the_known_safe_ai_metadata_shape(mini_repo: Path):
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2,
+            metadata={
+                "request_id": "ai-request-demo",
+                "delivery_id": "delivery-demo",
+                "action_id": "garden.shelve",
+                "approved_delivery": {
+                    "delivery_sha256": "sha256:" + "4" * 64,
+                    "artifact_sha256": {
+                        "artifacts/transcription.md": "sha256:" + "5" * 64,
+                    },
+                },
+                "created_ids": ["transcription-garden-demo"],
+                "updated_ids": ["garden-demo"],
+                "deleted_ids": [],
+                "superseded_ids": [],
+                "validation": {
+                    "schemas": "passed",
+                    "references": "passed",
+                    "boundaries": "passed",
+                    "projection": "passed",
+                },
+            },
+        ),
+    )
 
 
 def test_failed_transaction_removes_new_binary_files(tmp_path: Path):

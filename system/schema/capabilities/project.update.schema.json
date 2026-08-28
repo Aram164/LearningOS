@@ -12,6 +12,10 @@
     "file": {
       "type": "string"
     },
+    "file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
     "project": {
       "type": "object"
     },
@@ -30,5 +34,13 @@
         "project"
       ]
     }
-  ]
+  ],
+  "dependentRequired": {
+    "file": [
+      "file_sha256"
+    ],
+    "file_sha256": [
+      "file"
+    ]
+  }
 }

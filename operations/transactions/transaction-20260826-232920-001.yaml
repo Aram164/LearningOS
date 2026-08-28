@@ -1,0 +1,1279 @@
+schema_version: 2
+id: transaction-20260826-232920-001
+type: transaction-receipt
+status: committed
+capability: legacy.job-learning.migrate
+committed_at: '2026-08-26T23:29:20+02:00'
+snapshot_before: sha256:9a9907f6bc67ef28f6e304e2814a4409676f11c6ec7b56b6312396ac4030eee5
+snapshot_after: sha256:20c1e54e442eb60027e9d09db7791f2bd357406e241306f42ebb8d9ddb19716e
+expected_revisions:
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_doc.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_tables.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/check_all.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/gen_tables.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/probe.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics2.py: 0
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/verify.py: 0
+  concept-aggregation: 0
+  concept-aggregation-family: 0
+  concept-dataframe-ops: 0
+  concept-dataframe-semantics: 0
+  concept-dispatch: 0
+  concept-join-family: 0
+  concept-logical-ir: 0
+  concept-map-family: 0
+  concept-op-rewriting: 0
+  concept-projection-family: 0
+  concept-selection-family: 0
+  concept-skrub: 0
+  job-quarantine-collapse-v1: 0
+  materials-manifest: 0
+  module-job-engineering-tools: 0
+  module-job-git: 0
+  module-job-polars: 0
+  module-job-python-engineering: 0
+  module-job-rust-engineering: 0
+  note-pandas-groupby-signatures: 0
+  note-pandas-polars-aggregation-contentions: 0
+  note-skrub-dataop-dag: 0
+  note-skrub-evaluation-engine: 0
+  note-stratum-extract-dataframe-op: 0
+  note-stratum-op-aggregateop: 0
+  note-stratum-op-applyudfop: 0
+  note-stratum-op-assignmapop: 0
+  note-stratum-op-assignop: 0
+  note-stratum-op-columnprojectionop: 0
+  note-stratum-op-columnselectorop: 0
+  note-stratum-op-datetimeconversionop: 0
+  note-stratum-op-dropop: 0
+  note-stratum-op-getattrprojectionop: 0
+  note-stratum-op-joinop: 0
+  note-stratum-op-metadataop: 0
+  note-stratum-op-missingmaskop: 0
+  note-stratum-op-selectionop: 0
+  note-stratum-op-stringmethodop: 0
+  program-job: 0
+  program-job-boundary: 0
+  source-map-job-engineering-tools: 0
+  source-map-job-git: 0
+  source-map-job-polars: 0
+  source-map-job-python-engineering: 0
+  source-map-job-rust-engineering: 0
+  source-polars-definitive-guide: 0
+  source-scalable-dataframe-systems-paper: 0
+  source-stratum-paper: 0
+  stage-git-01-snapshots-objects-the-commit-dag-and-refs: 0
+  stage-git-02-the-state-triangle-working-tree-index-and-head: 0
+  stage-git-03-intentional-staging-and-atomic-commits: 0
+  stage-git-04-branches-head-revision-syntax-and-detached-work: 0
+  stage-git-05-merge-bases-three-way-merges-and-conflicts: 0
+  stage-git-06-rebase-and-deliberate-history-editing: 0
+  stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog: 0
+  stage-git-08-stash-and-honest-work-in-progress-management: 0
+  stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams: 0
+  stage-git-10-pull-push-divergence-and-force-with-lease: 0
+  stage-git-11-pull-requests-forks-and-reviewable-contribution-flow: 0
+  stage-git-12-selective-history-cherry-pick-tags-and-releases: 0
+  stage-git-13-history-archaeology-log-show-blame-search-and-bisect: 0
+  stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook: 0
+  stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay: 0
+  stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov: 0
+  stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga: 0
+  stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta: 0
+  stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design: 0
+  stage-missing-semester-04-processes-jobs-signals-and-resource-ownership: 0
+  stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions: 0
+  stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang: 0
+  stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag: 0
+  stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics: 0
+  stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima: 0
+  stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query: 0
+  stage-missing-semester-11-version-control-integration-applying-the-git-track-to: 0
+  stage-missing-semester-12-dependencies-environments-artifacts-and-versioning: 0
+  stage-missing-semester-13-containers-configuration-services-and-publishing: 0
+  stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci: 0
+  stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and: 0
+  stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver: 0
+  stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col: 0
+  stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and: 0
+  stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too: 0
+  stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c: 0
+  stage-polars-01-two-data-models-and-the-eight-divergence-axes: 0
+  stage-polars-02-the-parity-harness-differential-testing-from-day: 0
+  stage-polars-03-construction-i-o-schema-and-chunks: 0
+  stage-polars-04-selection-and-projection-index-logic-versus-expr: 0
+  stage-polars-05-expressions-and-column-creation: 0
+  stage-polars-06-nulls-nans-and-the-missing-value-model: 0
+  stage-polars-07-type-promotion-coercion-and-strictness: 0
+  stage-polars-08-ordering-sorting-and-determinism: 0
+  stage-polars-09-strings-datetimes-and-namespace-translation: 0
+  stage-polars-10-groupby-aggregation-counting-and-de-duplication: 0
+  stage-polars-11-windows-and-per-group-transformations: 0
+  stage-polars-12-joins-i-relational-semantics-and-key-cardinality: 0
+  stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit: 0
+  stage-polars-14-concatenation-and-reshaping: 0
+  stage-polars-15-lazy-plans-and-optimizer-literacy: 0
+  stage-polars-16-udfs-fallbacks-and-native-expression-rewrites: 0
+  stage-polars-17-arrow-interop-chunks-and-conversion-costs: 0
+  stage-polars-18-capstone-specify-implement-and-prove-a-mirrored: 0
+  stage-python-01-names-identity-mutation-and-graph-invariants: 0
+  stage-python-02-functions-as-first-class-objects-and-higher-order-apis: 0
+  stage-python-03-scope-closures-frames-and-captured-state: 0
+  stage-python-04-decorators-import-time-execution-and-registration: 0
+  stage-python-05-classes-as-objects-attribute-lookup-mro-and-super: 0
+  stage-python-06-modules-imports-circular-dependencies-and-plugin-disco: 0
+  stage-python-07-the-data-model-dunders-slots-equality-and-hashing: 0
+  stage-python-08-iterators-generators-structural-recursion-and-mutation: 0
+  stage-python-09-interfaces-typing-protocols-and-dispatch-design: 0
+  stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together: 0
+  stage-python-11-graph-algorithms-and-safe-dag-surgery: 0
+  stage-python-12-testing-and-debugging-optimizer-shaped-python: 0
+  stage-python-13-complexity-profiling-and-memory-evidence: 0
+  stage-python-14-packaging-environments-maturin-and-the-python-to-rust: 0
+  stage-python-15-requirements-decomposition-and-design-records: 0
+  stage-python-16-api-design-boundaries-and-refactoring: 0
+  stage-python-17-concurrency-async-and-resource-lifetimes: 0
+  stage-python-18-errors-observability-and-operational-debugging: 0
+  stage-python-19-code-review-maintenance-and-contribution-rehearsal: 0
+  stage-python-20-final-independent-engineering-capstone: 0
+  stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop: 0
+  stage-rust-02-bindings-types-expressions-and-control-flow: 0
+  stage-rust-03-ownership-moves-clone-and-drop: 0
+  stage-rust-04-borrowing-slices-and-reborrowing: 0
+  stage-rust-05-structs-enums-pattern-matching-and-domain-models: 0
+  stage-rust-06-collections-result-and-iterator-fundamentals: 0
+  stage-rust-07-traits-generics-and-interface-design: 0
+  stage-rust-08-lifetimes-and-borrowed-api-contracts: 0
+  stage-rust-09-modules-crates-workspaces-and-public-boundaries: 0
+  stage-rust-10-closures-iterators-and-zero-cost-pipelines: 0
+  stage-rust-11-smart-pointers-shared-ownership-and-interior-mut: 0
+  stage-rust-12-testing-documentation-clippy-and-api-quality: 0
+  stage-rust-13-concurrency-send-sync-channels-and-rayon: 0
+  stage-rust-14-async-rust-cancellation-and-blocking-boundaries: 0
+  stage-rust-15-production-errors-serialization-and-ecosystem-ch: 0
+  stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design: 0
+  stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi: 0
+  stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end: 0
+  stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 0
+  study-map-job-engineering-tools-fluency: 0
+  study-map-job-git-fluency: 0
+  study-map-job-polars-pandas-fluency: 0
+  study-map-job-python-engineering-fluency: 0
+  study-map-job-rust-engineering-fluency: 0
+  unit-job-engineering-tools-fluency: 0
+  unit-job-git-fluency: 0
+  unit-job-polars-pandas-fluency: 0
+  unit-job-python-engineering-fluency: 0
+  unit-job-rust-engineering-fluency: 0
+artifact_revisions:
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_doc.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_tables.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/check_all.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/gen_tables.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/probe.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics2.py:
+    before: 0
+    after: 1
+  attachment:knowledge/attachments/note-pandas-polars-aggregation-contentions/verify.py:
+    before: 0
+    after: 1
+  concept-aggregation:
+    before: 0
+    after: 1
+  concept-aggregation-family:
+    before: 0
+    after: 1
+  concept-dataframe-ops:
+    before: 0
+    after: 1
+  concept-dataframe-semantics:
+    before: 0
+    after: 1
+  concept-dispatch:
+    before: 0
+    after: 1
+  concept-join-family:
+    before: 0
+    after: 1
+  concept-logical-ir:
+    before: 0
+    after: 1
+  concept-map-family:
+    before: 0
+    after: 1
+  concept-op-rewriting:
+    before: 0
+    after: 1
+  concept-projection-family:
+    before: 0
+    after: 1
+  concept-selection-family:
+    before: 0
+    after: 1
+  concept-skrub:
+    before: 0
+    after: 1
+  job-quarantine-collapse-v1:
+    before: 0
+    after: 1
+  materials-manifest:
+    before: 0
+    after: 1
+  module-job-engineering-tools:
+    before: 0
+    after: 1
+  module-job-git:
+    before: 0
+    after: 1
+  module-job-polars:
+    before: 0
+    after: 1
+  module-job-python-engineering:
+    before: 0
+    after: 1
+  module-job-rust-engineering:
+    before: 0
+    after: 1
+  note-pandas-groupby-signatures:
+    before: 0
+    after: 1
+  note-pandas-polars-aggregation-contentions:
+    before: 0
+    after: 1
+  note-skrub-dataop-dag:
+    before: 0
+    after: 1
+  note-skrub-evaluation-engine:
+    before: 0
+    after: 1
+  note-stratum-extract-dataframe-op:
+    before: 0
+    after: 1
+  note-stratum-op-aggregateop:
+    before: 0
+    after: 1
+  note-stratum-op-applyudfop:
+    before: 0
+    after: 1
+  note-stratum-op-assignmapop:
+    before: 0
+    after: 1
+  note-stratum-op-assignop:
+    before: 0
+    after: 1
+  note-stratum-op-columnprojectionop:
+    before: 0
+    after: 1
+  note-stratum-op-columnselectorop:
+    before: 0
+    after: 1
+  note-stratum-op-datetimeconversionop:
+    before: 0
+    after: 1
+  note-stratum-op-dropop:
+    before: 0
+    after: 1
+  note-stratum-op-getattrprojectionop:
+    before: 0
+    after: 1
+  note-stratum-op-joinop:
+    before: 0
+    after: 1
+  note-stratum-op-metadataop:
+    before: 0
+    after: 1
+  note-stratum-op-missingmaskop:
+    before: 0
+    after: 1
+  note-stratum-op-selectionop:
+    before: 0
+    after: 1
+  note-stratum-op-stringmethodop:
+    before: 0
+    after: 1
+  program-job:
+    before: 0
+    after: 1
+  program-job-boundary:
+    before: 0
+    after: 1
+  source-map-job-engineering-tools:
+    before: 0
+    after: 1
+  source-map-job-git:
+    before: 0
+    after: 1
+  source-map-job-polars:
+    before: 0
+    after: 1
+  source-map-job-python-engineering:
+    before: 0
+    after: 1
+  source-map-job-rust-engineering:
+    before: 0
+    after: 1
+  source-polars-definitive-guide:
+    before: 0
+    after: 1
+  source-scalable-dataframe-systems-paper:
+    before: 0
+    after: 1
+  source-stratum-paper:
+    before: 0
+    after: 1
+  stage-git-01-snapshots-objects-the-commit-dag-and-refs:
+    before: 0
+    after: 1
+  stage-git-02-the-state-triangle-working-tree-index-and-head:
+    before: 0
+    after: 1
+  stage-git-03-intentional-staging-and-atomic-commits:
+    before: 0
+    after: 1
+  stage-git-04-branches-head-revision-syntax-and-detached-work:
+    before: 0
+    after: 1
+  stage-git-05-merge-bases-three-way-merges-and-conflicts:
+    before: 0
+    after: 1
+  stage-git-06-rebase-and-deliberate-history-editing:
+    before: 0
+    after: 1
+  stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog:
+    before: 0
+    after: 1
+  stage-git-08-stash-and-honest-work-in-progress-management:
+    before: 0
+    after: 1
+  stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams:
+    before: 0
+    after: 1
+  stage-git-10-pull-push-divergence-and-force-with-lease:
+    before: 0
+    after: 1
+  stage-git-11-pull-requests-forks-and-reviewable-contribution-flow:
+    before: 0
+    after: 1
+  stage-git-12-selective-history-cherry-pick-tags-and-releases:
+    before: 0
+    after: 1
+  stage-git-13-history-archaeology-log-show-blame-search-and-bisect:
+    before: 0
+    after: 1
+  stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook:
+    before: 0
+    after: 1
+  stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay:
+    before: 0
+    after: 1
+  stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov:
+    before: 0
+    after: 1
+  stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga:
+    before: 0
+    after: 1
+  stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta:
+    before: 0
+    after: 1
+  stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design:
+    before: 0
+    after: 1
+  stage-missing-semester-04-processes-jobs-signals-and-resource-ownership:
+    before: 0
+    after: 1
+  stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions:
+    before: 0
+    after: 1
+  stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang:
+    before: 0
+    after: 1
+  stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag:
+    before: 0
+    after: 1
+  stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics:
+    before: 0
+    after: 1
+  stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima:
+    before: 0
+    after: 1
+  stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query:
+    before: 0
+    after: 1
+  stage-missing-semester-11-version-control-integration-applying-the-git-track-to:
+    before: 0
+    after: 1
+  stage-missing-semester-12-dependencies-environments-artifacts-and-versioning:
+    before: 0
+    after: 1
+  stage-missing-semester-13-containers-configuration-services-and-publishing:
+    before: 0
+    after: 1
+  stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci:
+    before: 0
+    after: 1
+  stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and:
+    before: 0
+    after: 1
+  stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver:
+    before: 0
+    after: 1
+  stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col:
+    before: 0
+    after: 1
+  stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and:
+    before: 0
+    after: 1
+  stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too:
+    before: 0
+    after: 1
+  stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c:
+    before: 0
+    after: 1
+  stage-polars-01-two-data-models-and-the-eight-divergence-axes:
+    before: 0
+    after: 1
+  stage-polars-02-the-parity-harness-differential-testing-from-day:
+    before: 0
+    after: 1
+  stage-polars-03-construction-i-o-schema-and-chunks:
+    before: 0
+    after: 1
+  stage-polars-04-selection-and-projection-index-logic-versus-expr:
+    before: 0
+    after: 1
+  stage-polars-05-expressions-and-column-creation:
+    before: 0
+    after: 1
+  stage-polars-06-nulls-nans-and-the-missing-value-model:
+    before: 0
+    after: 1
+  stage-polars-07-type-promotion-coercion-and-strictness:
+    before: 0
+    after: 1
+  stage-polars-08-ordering-sorting-and-determinism:
+    before: 0
+    after: 1
+  stage-polars-09-strings-datetimes-and-namespace-translation:
+    before: 0
+    after: 1
+  stage-polars-10-groupby-aggregation-counting-and-de-duplication:
+    before: 0
+    after: 1
+  stage-polars-11-windows-and-per-group-transformations:
+    before: 0
+    after: 1
+  stage-polars-12-joins-i-relational-semantics-and-key-cardinality:
+    before: 0
+    after: 1
+  stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit:
+    before: 0
+    after: 1
+  stage-polars-14-concatenation-and-reshaping:
+    before: 0
+    after: 1
+  stage-polars-15-lazy-plans-and-optimizer-literacy:
+    before: 0
+    after: 1
+  stage-polars-16-udfs-fallbacks-and-native-expression-rewrites:
+    before: 0
+    after: 1
+  stage-polars-17-arrow-interop-chunks-and-conversion-costs:
+    before: 0
+    after: 1
+  stage-polars-18-capstone-specify-implement-and-prove-a-mirrored:
+    before: 0
+    after: 1
+  stage-python-01-names-identity-mutation-and-graph-invariants:
+    before: 0
+    after: 1
+  stage-python-02-functions-as-first-class-objects-and-higher-order-apis:
+    before: 0
+    after: 1
+  stage-python-03-scope-closures-frames-and-captured-state:
+    before: 0
+    after: 1
+  stage-python-04-decorators-import-time-execution-and-registration:
+    before: 0
+    after: 1
+  stage-python-05-classes-as-objects-attribute-lookup-mro-and-super:
+    before: 0
+    after: 1
+  stage-python-06-modules-imports-circular-dependencies-and-plugin-disco:
+    before: 0
+    after: 1
+  stage-python-07-the-data-model-dunders-slots-equality-and-hashing:
+    before: 0
+    after: 1
+  stage-python-08-iterators-generators-structural-recursion-and-mutation:
+    before: 0
+    after: 1
+  stage-python-09-interfaces-typing-protocols-and-dispatch-design:
+    before: 0
+    after: 1
+  stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together:
+    before: 0
+    after: 1
+  stage-python-11-graph-algorithms-and-safe-dag-surgery:
+    before: 0
+    after: 1
+  stage-python-12-testing-and-debugging-optimizer-shaped-python:
+    before: 0
+    after: 1
+  stage-python-13-complexity-profiling-and-memory-evidence:
+    before: 0
+    after: 1
+  stage-python-14-packaging-environments-maturin-and-the-python-to-rust:
+    before: 0
+    after: 1
+  stage-python-15-requirements-decomposition-and-design-records:
+    before: 0
+    after: 1
+  stage-python-16-api-design-boundaries-and-refactoring:
+    before: 0
+    after: 1
+  stage-python-17-concurrency-async-and-resource-lifetimes:
+    before: 0
+    after: 1
+  stage-python-18-errors-observability-and-operational-debugging:
+    before: 0
+    after: 1
+  stage-python-19-code-review-maintenance-and-contribution-rehearsal:
+    before: 0
+    after: 1
+  stage-python-20-final-independent-engineering-capstone:
+    before: 0
+    after: 1
+  stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop:
+    before: 0
+    after: 1
+  stage-rust-02-bindings-types-expressions-and-control-flow:
+    before: 0
+    after: 1
+  stage-rust-03-ownership-moves-clone-and-drop:
+    before: 0
+    after: 1
+  stage-rust-04-borrowing-slices-and-reborrowing:
+    before: 0
+    after: 1
+  stage-rust-05-structs-enums-pattern-matching-and-domain-models:
+    before: 0
+    after: 1
+  stage-rust-06-collections-result-and-iterator-fundamentals:
+    before: 0
+    after: 1
+  stage-rust-07-traits-generics-and-interface-design:
+    before: 0
+    after: 1
+  stage-rust-08-lifetimes-and-borrowed-api-contracts:
+    before: 0
+    after: 1
+  stage-rust-09-modules-crates-workspaces-and-public-boundaries:
+    before: 0
+    after: 1
+  stage-rust-10-closures-iterators-and-zero-cost-pipelines:
+    before: 0
+    after: 1
+  stage-rust-11-smart-pointers-shared-ownership-and-interior-mut:
+    before: 0
+    after: 1
+  stage-rust-12-testing-documentation-clippy-and-api-quality:
+    before: 0
+    after: 1
+  stage-rust-13-concurrency-send-sync-channels-and-rayon:
+    before: 0
+    after: 1
+  stage-rust-14-async-rust-cancellation-and-blocking-boundaries:
+    before: 0
+    after: 1
+  stage-rust-15-production-errors-serialization-and-ecosystem-ch:
+    before: 0
+    after: 1
+  stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design:
+    before: 0
+    after: 1
+  stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi:
+    before: 0
+    after: 1
+  stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end:
+    before: 0
+    after: 1
+  stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ:
+    before: 0
+    after: 1
+  study-map-job-engineering-tools-fluency:
+    before: 0
+    after: 1
+  study-map-job-git-fluency:
+    before: 0
+    after: 1
+  study-map-job-polars-pandas-fluency:
+    before: 0
+    after: 1
+  study-map-job-python-engineering-fluency:
+    before: 0
+    after: 1
+  study-map-job-rust-engineering-fluency:
+    before: 0
+    after: 1
+  unit-job-engineering-tools-fluency:
+    before: 0
+    after: 1
+  unit-job-git-fluency:
+    before: 0
+    after: 1
+  unit-job-polars-pandas-fluency:
+    before: 0
+    after: 1
+  unit-job-python-engineering-fluency:
+    before: 0
+    after: 1
+  unit-job-rust-engineering-fluency:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/modules/module-job-engineering-tools/module.yaml
+  sha256_before: null
+  sha256_after: aa767f9450948bf118a2e2e9f747f9648798972dce74510c4ee9233de569b78d
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/source-map.yaml
+  sha256_before: null
+  sha256_after: 28871d26864806995c39867a37a52f3aa9f2d877ca1ce7676c9949f739766127
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/notes.md
+  sha256_before: null
+  sha256_after: b91a828cbbe43863b8e9b005dafb1c24b2c6ff5ae1026a97abf541d9c23a26b5
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga/notes.md
+  sha256_before: null
+  sha256_after: 2d9a1cd2bb2e60cdd84a1c5bec266583a9bb2984e6c81b826c24294ae28c886a
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta/notes.md
+  sha256_before: null
+  sha256_after: d15bf2a856c9c9ec589d4407b0e391e19a38151c39903bb886c0ce9bce08d6a1
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design/notes.md
+  sha256_before: null
+  sha256_after: 84cc6a95e52f6d51c7f24cb721d79a35047d2e1d5ec5a878ac62e8a329db09ad
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-04-processes-jobs-signals-and-resource-ownership/notes.md
+  sha256_before: null
+  sha256_after: 63c0e183e820e81a0c05669304a59f70bcecaaaaf4159d7c8cf8d80e1a3a3c90
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions/notes.md
+  sha256_before: null
+  sha256_after: f8ab1928e0657bf35703b9c21f98a0d4440c0b9a80a9f9593413e97de52a1cd8
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang/notes.md
+  sha256_before: null
+  sha256_after: 1821730ba4b29ddc3bf099cbf304993e53bfe7ea6eb90b91b3b0286d1e4ac62e
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag/notes.md
+  sha256_before: null
+  sha256_after: e5b8e6a632bd16d8bca778239346fb569844a381ef2ee571a8814fe7bc018176
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics/notes.md
+  sha256_before: null
+  sha256_after: aef77803ade4aeeb4a1fa8f367c723c7b568d251f08b348a7613da7c1d265aff
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima/notes.md
+  sha256_before: null
+  sha256_after: 13b0fa595121677094cc906a7b94e38925d0d24fe1d5bae089b97fa7f54f154b
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query/notes.md
+  sha256_before: null
+  sha256_after: 56bca7480ca29bb4447a7d91e59bbd0525f9ec93cfb91a3dd477f4394551ad36
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-11-version-control-integration-applying-the-git-track-to/notes.md
+  sha256_before: null
+  sha256_after: f7b596a59de369ba4882389313e7c087f129015ea6bd3e3ab41481fd523c0505
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-12-dependencies-environments-artifacts-and-versioning/notes.md
+  sha256_before: null
+  sha256_after: 092e8e741d75eb97d30e53b4cc900bde015c5c4f84d3248f9bd223850b070663
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-13-containers-configuration-services-and-publishing/notes.md
+  sha256_before: null
+  sha256_after: c886b24f9af86f8394fa491bd62c236ad33a2dcb3febf1b62946686cd4148a8c
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci/notes.md
+  sha256_before: null
+  sha256_after: 5de4438163394d66f0adf1d17d66c622fc25ddeb457233f111c92d384f11026d
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and/notes.md
+  sha256_before: null
+  sha256_after: 55bd33042845ebe03a8489ba9a050b6aefbc3cf9d57d9f935453ba727d53d639
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver/notes.md
+  sha256_before: null
+  sha256_after: 008c7ac2597330e34ed90ba08c6f626b82a4164c1f42aa57e237a5f0a347b9ff
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col/notes.md
+  sha256_before: null
+  sha256_after: b9d059d8d8b033fd188c4bc62798f5bc16a3f6473812f7bc5c32284945f2b7a6
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and/notes.md
+  sha256_before: null
+  sha256_after: 4ebf503e933152a7332d222167056f74bb86ff693065c7823d7e270aa90723f8
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too/notes.md
+  sha256_before: null
+  sha256_after: ea47e7725ad2872b420c122a5ff79562008671eb7794c5ad1914eadae669916a
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c/notes.md
+  sha256_before: null
+  sha256_after: a493c43fbc26c19a1a31bb01c7b4f233b7a76067ea82e7781b468c73dffa4599
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
+  sha256_before: null
+  sha256_after: ab053a5628c298397369f222de8dcb5a2bb5f68c57a4295de20874cc103c06dc
+  created: true
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/unit.yaml
+  sha256_before: null
+  sha256_after: d3fcc30f4b67a3e61eb43262db145c28e09b2ec523abea22b39c79298f4ed470
+  created: true
+- path: curriculum/modules/module-job-git/module.yaml
+  sha256_before: null
+  sha256_after: 58caa92d43ca429f0f8997d5605e0400dae876e9d287d671548c2d732a12cfa5
+  created: true
+- path: curriculum/modules/module-job-git/source-map.yaml
+  sha256_before: null
+  sha256_after: 180091eacf9a87568847cb6faf6e5ceffa7f325d3c2f6841f2916f45c9de3aef
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/notes.md
+  sha256_before: null
+  sha256_after: e7bd022755d22917ff089843f159e01b6870b27e04673899b7e973595c9d724b
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-01-snapshots-objects-the-commit-dag-and-refs/notes.md
+  sha256_before: null
+  sha256_after: c824885e11fd704beb9d9158ba9a1785871dfe93994c2559eb21d37dfcfe2a42
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-02-the-state-triangle-working-tree-index-and-head/notes.md
+  sha256_before: null
+  sha256_after: e39708bf2ab5f4a398c34ec7a704fec27084d79ae0ed50e6518f4afc96d170e5
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-03-intentional-staging-and-atomic-commits/notes.md
+  sha256_before: null
+  sha256_after: 07101809b4c25da8d23d141aaf00b9b4ce439bf437227f0fd6f24fcf89d980e1
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-04-branches-head-revision-syntax-and-detached-work/notes.md
+  sha256_before: null
+  sha256_after: fc9f4f40664869000aa622f4c38a3181a956367549986b13917c04f837db937b
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-05-merge-bases-three-way-merges-and-conflicts/notes.md
+  sha256_before: null
+  sha256_after: 0873b3693d048d59acb07a72830c304d7d2e056ff067f0668ffe9f67a761c014
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-06-rebase-and-deliberate-history-editing/notes.md
+  sha256_before: null
+  sha256_after: 7f9bfcbb365eb03f96920ed1400a7376fe257a8b2819ac86f6e4e2e7993b6c29
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-07-undo-and-recovery-restore-reset-revert-and-reflog/notes.md
+  sha256_before: null
+  sha256_after: c2d9c9061177572721f8d0e6f527dba02a60b5a21954fe852575febb325f7f60
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-08-stash-and-honest-work-in-progress-management/notes.md
+  sha256_before: null
+  sha256_after: a499205360356c6379c0fb1ae4812180ea303c67a41d3a71620632c9efebf435
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-09-remotes-remote-tracking-refs-fetch-and-upstreams/notes.md
+  sha256_before: null
+  sha256_after: d4ccd9203a49a14dfa3b7d67e988b8372cdba1851a46df4d755add31774e89f5
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-10-pull-push-divergence-and-force-with-lease/notes.md
+  sha256_before: null
+  sha256_after: 8b7af0876b26011940f5a34c13aca449598fc499b60c7287366c2ad5629a32ef
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-11-pull-requests-forks-and-reviewable-contribution-flow/notes.md
+  sha256_before: null
+  sha256_after: 9c54dd6a1040821eea45806e4b28f71349facd958ff820653e503e27d0dc1ff0
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-12-selective-history-cherry-pick-tags-and-releases/notes.md
+  sha256_before: null
+  sha256_after: af79faaf35efc96bfa309ccf8e8cdf315fe11a218044752c747149bfc4cbd82f
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-13-history-archaeology-log-show-blame-search-and-bisect/notes.md
+  sha256_before: null
+  sha256_after: 6f1d63aa25a0b2ede3dbe59439643a1ace9b13a6c901232ad99d406f707008b7
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-14-repository-hygiene-ignore-rules-attributes-config-hook/notes.md
+  sha256_before: null
+  sha256_after: 820d68e4d4a5f4f8cf5eba66b6612ebb18593f01668710a0908bfbbd21a42809
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-15-worktrees-parallel-tickets-and-advanced-repository-lay/notes.md
+  sha256_before: null
+  sha256_after: 210416fe2ec5e61f80fcffece742a6fc90d475b9a08b717aa0771e2e504e50ae
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/stages/stage-git-16-capstone-two-clones-one-feature-one-failure-full-recov/notes.md
+  sha256_before: null
+  sha256_after: 221f6afbc40b1fd5403db4bd6dff7a5e880b8d9f6992db64988cbb8e360d8ed2
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/study-map.yaml
+  sha256_before: null
+  sha256_after: 913d08baee467403cd734cd7a22a11fd034a7e53e7b9bc7317cf3e70c521d5a7
+  created: true
+- path: curriculum/modules/module-job-git/units/unit-job-git-fluency/unit.yaml
+  sha256_before: null
+  sha256_after: c04591921ca33bd6b6c10801ef0869444e77c4b12803401b3f2c494ac12123c0
+  created: true
+- path: curriculum/modules/module-job-polars/module.yaml
+  sha256_before: null
+  sha256_after: e85ec8d3edda9849ba8db067c414614f28c089879e33693ef3413d6582081bd7
+  created: true
+- path: curriculum/modules/module-job-polars/source-map.yaml
+  sha256_before: null
+  sha256_after: bdc31c1828e676537b45b99cb54fd4b51b35450daf63a4bfcb2dc745cdc35861
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/notes.md
+  sha256_before: null
+  sha256_after: 740dc2ba581ea5c52a638a780b34866eddca6927b77cd13f0130a82ac6d6a68d
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/notes.md
+  sha256_before: null
+  sha256_after: 0ed225966f8bdc45d0bd013f910da3f8959f32b90929c3b148019f253472a0b0
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/notes.md
+  sha256_before: null
+  sha256_after: 593bc382388b6bf40fcace00b5768f3609b47187c58efd15906b825eeffdbfa1
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-03-construction-i-o-schema-and-chunks/notes.md
+  sha256_before: null
+  sha256_after: f067d33c7c1ad5a04d626f165d6354a1a835125317818042f55c33a0e3ad5d93
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-04-selection-and-projection-index-logic-versus-expr/notes.md
+  sha256_before: null
+  sha256_after: 5ef9d79a88ac87f3e2f0fdfd69626be663e37160368b9373bf09ee87e967753f
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-05-expressions-and-column-creation/notes.md
+  sha256_before: null
+  sha256_after: cc768151a2724dc254122d7409b148095f90a458229f7c40e89743fc88ed585e
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-06-nulls-nans-and-the-missing-value-model/notes.md
+  sha256_before: null
+  sha256_after: 789b3cd59ad3eb33a882f728eafcfe5a30a8fc182d4a459d0e4e60fd3285836b
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-07-type-promotion-coercion-and-strictness/notes.md
+  sha256_before: null
+  sha256_after: abbb53815fc4ced113eff43e447c2f986a6cb855c052f760a098f95b7933b5e9
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-08-ordering-sorting-and-determinism/notes.md
+  sha256_before: null
+  sha256_after: 9c79e8806dddd4a6c8a9cc613ec411e3d4d531d05e07268885c9d4a10dac92af
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-09-strings-datetimes-and-namespace-translation/notes.md
+  sha256_before: null
+  sha256_after: dc356eee866e501369fba74c21d8b37997b303afcdc23cf8c9b1f8d51bf936ab
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-10-groupby-aggregation-counting-and-de-duplication/notes.md
+  sha256_before: null
+  sha256_after: fb4d6bf1d2ff0793b38ecf58b5df396520c13e89d531ec081ead95edf7dd8be7
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-11-windows-and-per-group-transformations/notes.md
+  sha256_before: null
+  sha256_after: c2f3a992cd7498f6bd499401243c16bd50a2b0481911e6a8ef4259958bbc7862
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/notes.md
+  sha256_before: null
+  sha256_after: 61305848a20fec7896f2b264d39b150735ec4c176651643619e613879be1f028
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/notes.md
+  sha256_before: null
+  sha256_after: 9bbdf30c621be60147ea2671ea48431f367ea14863fbf757623a3f70c7523dcc
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-14-concatenation-and-reshaping/notes.md
+  sha256_before: null
+  sha256_after: 55a5e1b9d037199e7a69eb4cdd7db66ba9d4c64db491cbbf1d52c93220e16f26
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/notes.md
+  sha256_before: null
+  sha256_after: ba124777495197cb6aace1177edf7583c0b94c601163d6f3ea8c251ceb7d003d
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/notes.md
+  sha256_before: null
+  sha256_after: a9711af994d76297cd702f7c8315a48493c10ff935c143010fae3261f629b756
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/notes.md
+  sha256_before: null
+  sha256_after: acb3648899cad1dfbf46cd1325ee4e1004dcf3bca0bd3cd047d2bdcee76d7f3b
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-18-capstone-specify-implement-and-prove-a-mirrored/notes.md
+  sha256_before: null
+  sha256_after: 7e298a9044d589c1e71b70ba7a013baa124444966494171d496b55432c668d92
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  sha256_before: null
+  sha256_after: a8f6b8bb7e25b4a04c2317324fbda2910207df06a0051890ce113778a53b331f
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/unit.yaml
+  sha256_before: null
+  sha256_after: 6f9983b692b5caba428d4baa9c6cf5160a5ae1605bfb5483f5914957c6c504f7
+  created: true
+- path: curriculum/modules/module-job-python-engineering/module.yaml
+  sha256_before: null
+  sha256_after: fbba63159e6aa3d1b7044738a4b0031bf26d0409cba0f706d9d885a068abde81
+  created: true
+- path: curriculum/modules/module-job-python-engineering/source-map.yaml
+  sha256_before: null
+  sha256_after: a440ded98041a6080489029e207e2a1db3ca5bba34cfa04f9f8bec922c29d520
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/notes.md
+  sha256_before: null
+  sha256_after: 313c35465353125d272a33102c285b7cc0f375358d4e9600f4c3652d196eb7c3
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-01-names-identity-mutation-and-graph-invariants/notes.md
+  sha256_before: null
+  sha256_after: 6290542fb9b5cf0e11c7e72c9018e1514fef8b8e9ec24a54feef444f0eadf169
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-02-functions-as-first-class-objects-and-higher-order-apis/notes.md
+  sha256_before: null
+  sha256_after: 4fc65aaade7b1564da5b0b312c121f2cf9424b39393e8893643fcded8107b4e2
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-03-scope-closures-frames-and-captured-state/notes.md
+  sha256_before: null
+  sha256_after: addefd7fca7265c07924cb612cafa7bff227f35a8227006f58f4a7406483d2e2
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-04-decorators-import-time-execution-and-registration/notes.md
+  sha256_before: null
+  sha256_after: 415774d7ff67ef60fa60d96620ce269133e280946de38db36050f52f09258282
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-05-classes-as-objects-attribute-lookup-mro-and-super/notes.md
+  sha256_before: null
+  sha256_after: fd6a08473758d34a442c81db28b4cf0b795cb46914405dd78f9655ff088480f7
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-06-modules-imports-circular-dependencies-and-plugin-disco/notes.md
+  sha256_before: null
+  sha256_after: 574d43ab4d9f2c9460faaac274f3b6e322c640291bf5d0e3b28d1ed23e90d891
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-07-the-data-model-dunders-slots-equality-and-hashing/notes.md
+  sha256_before: null
+  sha256_after: 40729e0ec7883aaab0692d724291d4a24b01ab1394ded3c79e5375a59a2818b8
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-08-iterators-generators-structural-recursion-and-mutation/notes.md
+  sha256_before: null
+  sha256_after: 81ad86830f3e486d9712a6e03d182c2a38851d71e19d4b4c7665eb06dc5296c8
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-09-interfaces-typing-protocols-and-dispatch-design/notes.md
+  sha256_before: null
+  sha256_after: ea773e7d4b0924a3baf4d7248fd1b2d49dcd21ae619cd9490716bb1dc00ab53b
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together/notes.md
+  sha256_before: null
+  sha256_after: c880afc3ad294469f70b2632ac1a4f91d919115c1e0c03f48814c63fd8ee0bab
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-11-graph-algorithms-and-safe-dag-surgery/notes.md
+  sha256_before: null
+  sha256_after: 556faac032d33e0f36df9da8b0e7481bb5dc5a63bf972eee34b28c365934c3ea
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-12-testing-and-debugging-optimizer-shaped-python/notes.md
+  sha256_before: null
+  sha256_after: 2f5e4189ee6b6733b9534f0dddb79897445e5e4a6087e5d280d62eb5fa5153a9
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-13-complexity-profiling-and-memory-evidence/notes.md
+  sha256_before: null
+  sha256_after: b0362df5cc69d7d709c389088270849bd6528979c0576cd736b1ace988bd611a
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md
+  sha256_before: null
+  sha256_after: 67ffb301db45af1e74545ad58f805e4dcf4f14b5e4fc2bd4096e25a4cfd466cd
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md
+  sha256_before: null
+  sha256_after: c52e3bba0ece0007611031e825f2db4e707eb1a255912db0e2dd8aff36e6f772
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md
+  sha256_before: null
+  sha256_after: 1ff36ff1e452bbdd7eb4fb7dc239cdcb1b213d9d30fd445fd96c16258a9efc0b
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md
+  sha256_before: null
+  sha256_after: 6129921565fbb4abe8ec5d7210d53b12ba5be2fb03e4cd758e8ada3c37a0fef7
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md
+  sha256_before: null
+  sha256_after: c0cc8b0eb9c86693913407be23de666848b81e8e3e37ed763f000cd487ae421b
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-19-code-review-maintenance-and-contribution-rehearsal/notes.md
+  sha256_before: null
+  sha256_after: 9b1d1afc2fd62fc845e4ac62eee0233e98e8d122329dc0fed4d10e96400dce2f
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-20-final-independent-engineering-capstone/notes.md
+  sha256_before: null
+  sha256_after: 00c8726f727a19e4e085986b0bbed526cffcae9306777e4496f44cf37239da0d
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
+  sha256_before: null
+  sha256_after: 59c948c435750aaa95271ad1bb1172e24f0bfd4b7da1b321ade16e9f27e356f4
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/unit.yaml
+  sha256_before: null
+  sha256_after: 60bdc0792ba79cc95fa705065e34eebdc172e84e76c459bc46f1d356f6d7763b
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/module.yaml
+  sha256_before: null
+  sha256_after: 4804d8d4d3ec14fd7e4b5f12dd81ab3e1c7b986ac11521f512c47b4fc5a14c87
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/source-map.yaml
+  sha256_before: null
+  sha256_after: 9371a3a7f79a648e86e55f68c592949a0f8765b5c46381688487d17df4007dbb
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/notes.md
+  sha256_before: null
+  sha256_after: 0172ef6dfa0dc09fa659537aa5e0c20777dcfae846974c2329a7955e71b43a34
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-01-tooling-cargo-and-the-compiler-feedback-loop/notes.md
+  sha256_before: null
+  sha256_after: 1948ac845c4a357c12c0749025490e3f0d38a98e4dce4e12b6b9f2040c36062f
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-02-bindings-types-expressions-and-control-flow/notes.md
+  sha256_before: null
+  sha256_after: e9b90b1914b8e54bb5a7c4459610d0097a9def06fc7ca70b99e581994a8ac2c5
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-03-ownership-moves-clone-and-drop/notes.md
+  sha256_before: null
+  sha256_after: 139587b96296ce9f03613bdf44a076307ccdf6b0ee165b010ac3d04304c50164
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-04-borrowing-slices-and-reborrowing/notes.md
+  sha256_before: null
+  sha256_after: 911d7b4808f265b156c293bb233c721626ce7c9cb325df80b79dea80b097758e
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-05-structs-enums-pattern-matching-and-domain-models/notes.md
+  sha256_before: null
+  sha256_after: 2c1e8817c7d0fc19db79cc542b96dfc8818ff62a6d80c666db43e8cbbda69aa9
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-06-collections-result-and-iterator-fundamentals/notes.md
+  sha256_before: null
+  sha256_after: f66ff8acaf616bea45b0bf5705bc57f2936af0869431431c03d6f6e02a987673
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-07-traits-generics-and-interface-design/notes.md
+  sha256_before: null
+  sha256_after: 22da2b05439cb9781c9f37ca58ddc605f87222eedd36fb7c70663510c0df75c4
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-08-lifetimes-and-borrowed-api-contracts/notes.md
+  sha256_before: null
+  sha256_after: a8664bef543ff91e075ca1dcbfda454eeb4692e736941f89552987e075cdd86b
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-09-modules-crates-workspaces-and-public-boundaries/notes.md
+  sha256_before: null
+  sha256_after: ac947587a290dbdbe3706cd4688c58abe64b28ac2b3c7356784e9e53f767c78b
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-10-closures-iterators-and-zero-cost-pipelines/notes.md
+  sha256_before: null
+  sha256_after: 7c45b3d41313f0d1f6fef73bc56a7982f6837409ddce24824ccab408b9520e07
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-11-smart-pointers-shared-ownership-and-interior-mut/notes.md
+  sha256_before: null
+  sha256_after: 369c1e7d4b70603e95a28492cfb1f15a9a2780359a83ae4f39be94f1af5ed213
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-12-testing-documentation-clippy-and-api-quality/notes.md
+  sha256_before: null
+  sha256_after: 088bcbd73b2eb9462d17ffdf6349fbffa5259318aa6c36a712341402d2cdc5f6
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-13-concurrency-send-sync-channels-and-rayon/notes.md
+  sha256_before: null
+  sha256_after: de1aa591d6dd8c5c72a8dbd9ddd6eac248b699afaa19576124a861a4977b9219
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-14-async-rust-cancellation-and-blocking-boundaries/notes.md
+  sha256_before: null
+  sha256_after: a23a8bf1dcdae80521bce74f9c60c99365707255c539994585c94d7aedff08b4
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-15-production-errors-serialization-and-ecosystem-ch/notes.md
+  sha256_before: null
+  sha256_after: 6be86806813b4beab78cad7368f6f97269d7cd6433449cdabf2648ab8bb1978f
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-16-pyo3-maturin-the-gil-and-python-boundary-design/notes.md
+  sha256_before: null
+  sha256_after: 6ec3eeaa800f76f5d9c1905e23db4c772d5464b28fcd30976ea6b46b6513bf13
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi/notes.md
+  sha256_before: null
+  sha256_after: 3e8fcc6d93e14d122004a2fcb52106b60a51c4cd7e11abd6053bf5a9f97fe04f
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end/notes.md
+  sha256_before: null
+  sha256_after: dded75fe7cce20b8adff40886ab4b6a00918ba0d31e2ae03ffa154f8a7692fe5
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/stages/stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ/notes.md
+  sha256_before: null
+  sha256_after: ce86532b1bfd24886cdf4862a8835c718d782d0b42053a02340c9ec3899977b0
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/study-map.yaml
+  sha256_before: null
+  sha256_after: e4121de0869d8941b35071c4a90bff121a968c5e4f6ecc17b46080c5415a183d
+  created: true
+- path: curriculum/modules/module-job-rust-engineering/units/unit-job-rust-engineering-fluency/unit.yaml
+  sha256_before: null
+  sha256_after: 1bf64d6a31f05bade0dd0c0eb8f78df4d7c73d35c558df2a8a3b7f92dcc54d8f
+  created: true
+- path: curriculum/programs/program-job-boundary.yaml
+  sha256_before: 2edca7f0783b8b206408eb4df5c2fbfe5c906b9007936668c94defc7de84b3f1
+  sha256_after: null
+  created: false
+- path: curriculum/programs/program-job.yaml
+  sha256_before: null
+  sha256_after: 67483f2f70b6d346c6ba57fb609305cd4d289130beb095d490f12c7478c3e801
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_doc.py
+  sha256_before: null
+  sha256_after: 0465a93a38a53194925dc88b56527b7c211cd7f7c664872177bbccb37a1f53e0
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/audit_tables.py
+  sha256_before: null
+  sha256_after: 9206d1e36f3368556dfacabbe6ed866ffaab08b8dc0a52053fd9e6a82230324e
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/check_all.py
+  sha256_before: null
+  sha256_after: 3d04ea8e0ce545404799bdedbf7a381a7e688016942f3213f2d4df40acc3882b
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/gen_tables.py
+  sha256_before: null
+  sha256_after: 2f6a2b079d47e06d7e69609ff5876ddef97de48a089b56d4e81cba8d8fa0acaf
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/probe.py
+  sha256_before: null
+  sha256_after: 3fc6feafde825f2eea88000c4bcc6d22418166465c64a484a429143473cb8d3c
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics.py
+  sha256_before: null
+  sha256_after: 32e7a543a65198efa89eab933ec82c9802e66f6e16894131b5aa38e544256e3d
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/semantics2.py
+  sha256_before: null
+  sha256_after: e2529939e01cca0cb7110f344f5809213f4fdba91cb56f4f00c00cd416c664eb
+  created: true
+- path: knowledge/attachments/note-pandas-polars-aggregation-contentions/verify.py
+  sha256_before: null
+  sha256_after: 3d040ac4c0c7932b2d7219ef7deb3e99529f0c7861324fbb8e9b79dca2d7b858
+  created: true
+- path: knowledge/concepts.yaml
+  sha256_before: c54e16a2d1a5fe6d9030aec820932165573efd68698cc0a85718f3380f7b502e
+  sha256_after: 2ec2eb7377149cf9cd70cbc87d1fa94c3b13be3ca6d5875b7c32777907fb77c1
+  created: false
+- path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-groupby-signatures.md
+  sha256_before: null
+  sha256_after: 7df3e1e592e9d7c00c217622dc61c9485e38f092993c9ba13d51f8d9b8a03c8c
+  created: true
+- path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+  sha256_before: null
+  sha256_after: 689e007345b794f1a6cdf04c592d438d7a5a3ad7ba24fcdbcd3a83dcd16d59af
+  created: true
+- path: knowledge/notes/data-systems/skrub/note-skrub-dataop-dag.md
+  sha256_before: null
+  sha256_after: 7e0a78dd725f02b302f6da09c3562edaa3201790d1b3d79c2bc6e8d1a352b95a
+  created: true
+- path: knowledge/notes/data-systems/skrub/note-skrub-evaluation-engine.md
+  sha256_before: null
+  sha256_after: 0e4212b5a21bb61808cfa100269da36fc36a1be1bb32ca3a55d1cdd3a825524d
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-aggregateop.md
+  sha256_before: null
+  sha256_after: 3bba090c684d6f3699d019869f41f470ecffbf3823ddfefc36fea45aaa3d09e1
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-applyudfop.md
+  sha256_before: null
+  sha256_after: eb5adf7081e6537116a239d32437cd78914cb2f50e053cb15c85cbff9b33966e
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignmapop.md
+  sha256_before: null
+  sha256_after: a9bff0b0c7431a338684cb1619f4b9933944faa001b2d153fe50e9fa5099a82b
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignop.md
+  sha256_before: null
+  sha256_after: ac4b99f0b6de12f4f3b45a58e21780b61141c075d0e922c401c9dd3115e42a93
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-columnprojectionop.md
+  sha256_before: null
+  sha256_after: c0b6dd468e9a708d2bb1c9f85fe4d26a40b570e9a3a8dcbcda9691089124827d
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-columnselectorop.md
+  sha256_before: null
+  sha256_after: 93ba57c91d92be7dde7b861d5358217d71e9c10c721ac102246bee85de40649e
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-datetimeconversionop.md
+  sha256_before: null
+  sha256_after: af4f516f52c2c1cd209b10b49db5f14323e582593aca314fa06e69c0105f7b54
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-dropop.md
+  sha256_before: null
+  sha256_after: 6145a1d82277293aed2224ac76da5e1866fb748f6cc703cf154f6dd21ca55bca
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-getattrprojectionop.md
+  sha256_before: null
+  sha256_after: 59a9a8bac3e4b19894283dc1ee20ac94b2e2351df255bfa314f729e3b4458cdf
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-joinop.md
+  sha256_before: null
+  sha256_after: 83ecedffa4d10744e13cc46b2e1ac2223d360b569ec4a9fced8f8f48dc1ade16
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-metadataop.md
+  sha256_before: null
+  sha256_after: 52627be72ca202579fa08d25e7fb1c01b1e6c807e460268a5d442ab6bffd0f60
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-missingmaskop.md
+  sha256_before: null
+  sha256_after: 64888cc973975e4e9737918ad4cbb84030b08788853fcacd56fd49f2fb1c9eca
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-selectionop.md
+  sha256_before: null
+  sha256_after: a83c9331fc3164e5f22890d8bdbf9f4a294580fd330692261a4f947d4b1be1ab
+  created: true
+- path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-stringmethodop.md
+  sha256_before: null
+  sha256_after: 2a35085a97f642dc3f9a2e70081e9d7275b4bfc7180eb6d195419eb5c0ec01a5
+  created: true
+- path: knowledge/notes/data-systems/stratum/note-stratum-extract-dataframe-op.md
+  sha256_before: null
+  sha256_after: dd7ee4c995797d604a1d2edd3f36aa77ca0a29a3ee89783106e8eb9c57ce0d6b
+  created: true
+- path: operations/migrations/job-quarantine-collapse-v1.yaml
+  sha256_before: null
+  sha256_after: f4b6a8b8dbcef9e4ddebd335ae0e60139c0aa24d9ef40f715e972612ba717a5e
+  created: true
+- path: records/materials-manifest.yaml
+  sha256_before: c04abf7c7db79556f9f9af5b481cae9fa0635ee19ecd9ce3d808fa82cf6a9748
+  sha256_after: 44632a9dec73662c7387b79b0cc9e145386065aaaee78184602247540ebf9804
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: ea6599d4fb50a7430203993af4fb4db6333c4ce6a4b3d825629b217fc0b88f61
+  sha256_after: 66949866ceb04e13bb4f2c4a889f25289c0ab7b47c50236ea5121a83199ca2e9
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: legacy.job-learning.migrate
+    declared_writes:
+    - curriculum/programs/program-job.yaml
+    - curriculum/programs/program-job-boundary.yaml
+    - curriculum/modules/module-job-git/**
+    - curriculum/modules/module-job-engineering-tools/**
+    - curriculum/modules/module-job-polars/**
+    - curriculum/modules/module-job-python-engineering/**
+    - curriculum/modules/module-job-rust-engineering/**
+    - knowledge/concepts.yaml
+    - knowledge/notes/data-systems/**
+    - knowledge/attachments/note-pandas-polars-aggregation-contentions/**
+    - sources/registry/software.yaml
+    - records/materials-manifest.yaml
+    - operations/migrations/job-quarantine-collapse-v1.yaml
+request:
+  channel: operator
+  request_id: request-job-learning-collapse-2026-08-26-live-001
+  idempotency_key: job-learning-collapse-2026-08-26-live-001
+  intent_sha256: sha256:ac211e3764ed6d9e6b2f73cc76d6e10ae03ffc952122e7fd6a23a8efe58d6b79
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ac211e3764ed6d9e6b2f73cc76d6e10ae03ffc952122e7fd6a23a8efe58d6b79

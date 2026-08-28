@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/unit-material-synthesis.schema.json",
+  "title": "Approved unit material synthesis",
+  "$ref": "#/$defs/canonicalRecord",
+  "unevaluatedProperties": false,
+  "$defs": {
+    "canonicalRecord": {
+  "type": "object",
+  "required": [
+    "schema_version", "id", "type", "unit_id", "status", "basis",
+    "route_assessments", "comparisons", "concept_groups"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "id": {"type": "string", "pattern": "^material-synthesis-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "type": {"const": "unit-material-synthesis"},
+    "unit_id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "status": {"const": "approved"},
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit_revision", "source_map_revision", "source_map_checksum", "route_set_checksum",
+        "material_checksums", "policy", "ai_provenance"
+      ],
+      "properties": {
+        "unit_revision": {"type": "integer", "minimum": 0},
+        "source_map_revision": {"type": "integer", "minimum": 0},
+        "source_map_checksum": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/sha256"},
+        "route_set_checksum": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/sha256"},
+        "material_checksums": {
+          "type": "object",
+          "propertyNames": {"pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "additionalProperties": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/sha256"}
+        },
+        "policy": {"const": "tiered-v1"},
+        "ai_provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["request_id", "delivery_id", "provider"],
+          "properties": {
+            "request_id": {"type": "string", "minLength": 1},
+            "delivery_id": {"type": "string", "minLength": 1},
+            "provider": {"enum": ["manual-bundle", "local"]}
+          }
+        }
+      }
+    },
+    "route_assessments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["route_id", "source_id", "locator", "review_status", "concept_ids"],
+        "properties": {
+          "route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "locator": {"type": "string", "minLength": 1},
+          "review_status": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/routeReviewStatus"},
+          "concept_ids": {
+            "allOf": [
+              {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/conceptIds"},
+              {"minItems": 1}
+            ]
+          },
+          "contribution": {"type": "string", "minLength": 1},
+          "assumptions": {"type": "string", "minLength": 1},
+          "notation": {"type": "string", "minLength": 1},
+          "exercise_value": {"type": "string", "minLength": 1},
+          "best_for": {"type": "string", "minLength": 1},
+          "limitations": {"type": "string", "minLength": 1},
+          "reason": {"type": "string", "minLength": 1},
+          "evidence": {
+            "type": "array",
+            "items": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/evidence"}
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"review_status": {"const": "deep-reviewed"}}, "required": ["review_status"]},
+            "then": {
+              "required": [
+                "contribution", "assumptions", "notation", "exercise_value",
+                "best_for", "limitations", "evidence"
+              ],
+              "properties": {"evidence": {"minItems": 1}}
+            },
+            "else": {
+              "required": ["reason"],
+              "not": {
+                "anyOf": [
+                  {"required": ["contribution"]}, {"required": ["assumptions"]},
+                  {"required": ["notation"]}, {"required": ["exercise_value"]},
+                  {"required": ["best_for"]}, {"required": ["limitations"]}
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["left_route_id", "right_route_id", "relation", "narrative", "concept_ids", "evidence"],
+        "properties": {
+          "left_route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "right_route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "relation": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/comparisonRelation"},
+          "narrative": {"type": "string", "minLength": 1},
+          "concept_ids": {
+            "allOf": [
+              {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/conceptIds"},
+              {"minItems": 1}
+            ]
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["left", "right"],
+            "properties": {
+              "left": {"type": "array", "minItems": 1, "items": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/evidence"}},
+              "right": {"type": "array", "minItems": 1, "items": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/evidence"}}
+            }
+          }
+        }
+      }
+    },
+    "concept_groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["concept_id", "local_node_ids", "related_unit_ids", "bridge_note_ids", "narrative"],
+        "properties": {
+          "concept_id": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "local_node_ids": {"type": "array", "items": {"type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true},
+          "related_unit_ids": {"type": "array", "items": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true},
+          "bridge_note_ids": {"type": "array", "items": {"type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true},
+          "narrative": {"type": "string", "minLength": 1}
+        }
+      }
+    }
+  }
+    }
+  }
+}

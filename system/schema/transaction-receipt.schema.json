@@ -1,52 +1,224 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "LearningOS transaction receipt",
-  "type": "object",
-  "additionalProperties": false,
-  "required": [
-    "schema_version", "id", "type", "status", "capability", "committed_at",
-    "snapshot_before", "snapshot_after", "expected_revisions",
-    "artifact_revisions", "writes", "metadata"
+  "oneOf": [
+    {"$ref": "#/$defs/v1"},
+    {"$ref": "#/$defs/v2"}
   ],
-  "properties": {
-    "schema_version": {"const": 1},
-    "id": {"type": "string", "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"},
-    "type": {"const": "transaction-receipt"},
-    "status": {"const": "committed"},
-    "capability": {"type": "string", "minLength": 1},
-    "committed_at": {"type": "string", "format": "date-time"},
-    "snapshot_before": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
-    "snapshot_after": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
-    "expected_revisions": {
+  "$defs": {
+    "write": {
       "type": "object",
-      "additionalProperties": {"type": "integer", "minimum": 0}
-    },
-    "artifact_revisions": {
-      "type": "object",
-      "additionalProperties": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["before", "after"],
-        "properties": {
-          "before": {"type": "integer", "minimum": 0},
-          "after": {"type": "integer", "minimum": 1}
-        }
+      "additionalProperties": false,
+      "required": ["path", "sha256_before", "sha256_after", "created"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256_before": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "sha256_after": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "created": {"type": "boolean"}
       }
     },
-    "writes": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["path", "sha256_before", "sha256_after", "created"],
-        "properties": {
-          "path": {"type": "string", "minLength": 1},
-          "sha256_before": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
-          "sha256_after": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
-          "created": {"type": "boolean"}
-        }
+    "revisionPair": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after"],
+      "properties": {
+        "before": {"type": "integer", "minimum": 0},
+        "after": {"type": "integer", "minimum": 1}
       }
     },
-    "metadata": {"type": "object"}
+    "safeArtifactId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$"
+    },
+    "safeRelativeArtifactPath": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*$"
+    },
+    "v2Metadata": {
+      "oneOf": [
+        {
+          "type": "object",
+          "maxProperties": 0
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "request_id", "delivery_id", "action_id", "approved_delivery", "created_ids",
+            "updated_ids", "deleted_ids", "superseded_ids", "validation"
+          ],
+          "properties": {
+            "request_id": {"$ref": "#/$defs/safeArtifactId"},
+            "delivery_id": {"$ref": "#/$defs/safeArtifactId"},
+            "action_id": {"$ref": "#/$defs/safeArtifactId"},
+            "approved_delivery": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["delivery_sha256", "artifact_sha256"],
+              "properties": {
+                "delivery_sha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                },
+                "artifact_sha256": {
+                  "type": "object",
+                  "propertyNames": {"$ref": "#/$defs/safeRelativeArtifactPath"},
+                  "additionalProperties": {
+                    "type": "string",
+                    "pattern": "^sha256:[a-f0-9]{64}$"
+                  }
+                }
+              }
+            },
+            "created_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/safeArtifactId"}
+            },
+            "updated_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/safeArtifactId"}
+            },
+            "deleted_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/safeArtifactId"}
+            },
+            "superseded_ids": {
+              "type": "array", "uniqueItems": true,
+              "items": {"$ref": "#/$defs/safeArtifactId"}
+            },
+            "validation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["schemas", "references", "boundaries", "projection"],
+              "properties": {
+                "schemas": {"const": "passed"},
+                "references": {"const": "passed"},
+                "boundaries": {"const": "passed"},
+                "projection": {"const": "passed"}
+              }
+            }
+          }
+        }
+      ]
+    },
+    "commonProperties": {
+      "id": {"type": "string", "pattern": "^transaction-[0-9]{8}-[0-9]{6}-[0-9]{3}$"},
+      "type": {"const": "transaction-receipt"},
+      "status": {"const": "committed"},
+      "capability": {"type": "string", "minLength": 1},
+      "committed_at": {"type": "string", "format": "date-time"},
+      "snapshot_before": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+      "snapshot_after": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+      "expected_revisions": {
+        "type": "object",
+        "additionalProperties": {"type": "integer", "minimum": 0}
+      },
+      "artifact_revisions": {
+        "type": "object",
+        "additionalProperties": {"$ref": "#/$defs/revisionPair"}
+      },
+      "writes": {
+        "type": "array",
+        "items": {"$ref": "#/$defs/write"}
+      },
+      "metadata": {"type": "object"}
+    },
+    "v1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "id", "type", "status", "capability", "committed_at",
+        "snapshot_before", "snapshot_after", "expected_revisions",
+        "artifact_revisions", "writes", "metadata"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "id": {"$ref": "#/$defs/commonProperties/id"},
+        "type": {"$ref": "#/$defs/commonProperties/type"},
+        "status": {"$ref": "#/$defs/commonProperties/status"},
+        "capability": {"$ref": "#/$defs/commonProperties/capability"},
+        "committed_at": {"$ref": "#/$defs/commonProperties/committed_at"},
+        "snapshot_before": {"$ref": "#/$defs/commonProperties/snapshot_before"},
+        "snapshot_after": {"$ref": "#/$defs/commonProperties/snapshot_after"},
+        "expected_revisions": {"$ref": "#/$defs/commonProperties/expected_revisions"},
+        "artifact_revisions": {"$ref": "#/$defs/commonProperties/artifact_revisions"},
+        "writes": {"$ref": "#/$defs/commonProperties/writes"},
+        "metadata": {"$ref": "#/$defs/commonProperties/metadata"}
+      }
+    },
+    "v2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version", "id", "type", "status", "capability", "committed_at",
+        "snapshot_before", "snapshot_after", "expected_revisions",
+        "artifact_revisions", "writes", "metadata", "authority", "request"
+      ],
+      "properties": {
+        "schema_version": {"const": 2},
+        "id": {"$ref": "#/$defs/commonProperties/id"},
+        "type": {"$ref": "#/$defs/commonProperties/type"},
+        "status": {"$ref": "#/$defs/commonProperties/status"},
+        "capability": {"$ref": "#/$defs/commonProperties/capability"},
+        "committed_at": {"$ref": "#/$defs/commonProperties/committed_at"},
+        "snapshot_before": {"$ref": "#/$defs/commonProperties/snapshot_before"},
+        "snapshot_after": {"$ref": "#/$defs/commonProperties/snapshot_after"},
+        "expected_revisions": {"$ref": "#/$defs/commonProperties/expected_revisions"},
+        "artifact_revisions": {"$ref": "#/$defs/commonProperties/artifact_revisions"},
+        "writes": {"$ref": "#/$defs/commonProperties/writes"},
+        "metadata": {"$ref": "#/$defs/v2Metadata"},
+        "authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capability_contract_version", "enforced", "grants"],
+          "properties": {
+            "capability_contract_version": {"const": 2},
+            "enforced": {"const": true},
+            "grants": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["capability", "declared_writes"],
+                "properties": {
+                  "capability": {"type": "string", "minLength": 1},
+                  "declared_writes": {
+                    "type": "array",
+                    "items": {"type": "string", "minLength": 1}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "request": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "channel", "request_id", "idempotency_key", "intent_sha256", "approval"
+          ],
+          "properties": {
+            "channel": {"enum": ["ui", "codex", "operator", "system-task"]},
+            "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+            "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 128},
+            "intent_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+            "approval": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "subject_sha256"],
+              "properties": {
+                "kind": {
+                  "enum": ["direct-user-gesture", "approved-delivery", "operator-approval"]
+                },
+                "subject_sha256": {
+                  "type": "string",
+                  "pattern": "^sha256:[a-f0-9]{64}$"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

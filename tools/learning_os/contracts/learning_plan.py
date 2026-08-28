@@ -1,4 +1,4 @@
-"""One authored-plan template shared by curriculum and Job boundaries."""
+"""The single authored study-map template used by every learning module."""
 
 from __future__ import annotations
 
@@ -6,21 +6,11 @@ import re
 from collections.abc import Mapping
 
 PLAN_TEMPLATE_VERSION = 1
-PLAN_PROFILES = frozenset({"curriculum", "job"})
+PLAN_PROFILES = frozenset({"curriculum"})
 
 
 class PlanTemplateError(ValueError):
     """An authoring path attempted to use a legacy or drifting plan shape."""
-
-
-def _trim(value: object) -> object:
-    return value.strip() if isinstance(value, str) else value
-
-
-def _trimmed_list(value: object) -> object:
-    if not isinstance(value, list):
-        return value
-    return [_trim(item) for item in value]
 
 
 def _slug_id(value: object, prefix: str) -> str:
@@ -28,112 +18,6 @@ def _slug_id(value: object, prefix: str) -> str:
     slug = re.sub(r"[^a-z0-9]+", "-", raw).strip("-")
     slug = slug[:60].rstrip("-")
     return f"{prefix}-{slug}" if slug and not slug.startswith(f"{prefix}-") else slug
-
-
-def normalise_resource(value: object) -> object:
-    """Canonicalise the one resource vocabulary used by every plan profile."""
-    if not isinstance(value, Mapping):
-        return value
-    result: dict = {}
-    fields = (
-        "kind", "label", "id", "source_id", "locator", "url", "vault_path",
-        "scope_triage",
-    )
-    for field in fields:
-        if field not in value:
-            continue
-        normalised = _trim(value[field])
-        if normalised not in (None, ""):
-            result[field] = normalised
-    return result
-
-
-def _normalise_job_context(value: object) -> object:
-    if value is None:
-        return {
-            "mental_models": [],
-            "read_only_anchor": "",
-            "component": [],
-            "verified_against": "",
-        }
-    if not isinstance(value, Mapping):
-        return value
-    raw_models = value.get("mental_models", [])
-    models = (
-        [
-            {"label": _trim(raw.get("label")), "text": _trim(raw.get("text"))}
-            if isinstance(raw, Mapping) else raw
-            for raw in raw_models
-        ]
-        if isinstance(raw_models, list) else raw_models
-    )
-    return {
-        "mental_models": models,
-        "read_only_anchor": _trim(value.get("read_only_anchor", "")),
-        "component": _trimmed_list(value.get("component", [])),
-        "verified_against": _trim(value.get("verified_against", "")),
-    }
-
-
-def normalise_job_stage(value: object, plan_id: str, index: int) -> object:
-    """Expand a Job stage draft into the canonical plan-template stage."""
-    if not isinstance(value, Mapping):
-        return value
-    number = value.get("number", index)
-    title = _trim(value.get("title", ""))
-    stage_id = _trim(value.get("id", ""))
-    if not stage_id and isinstance(title, str) and title:
-        stage_id = _slug_id(f"{plan_id}-{number}-{title}", "stage")
-
-    raw_resources = value.get("resources", [])
-    resources = (
-        [normalise_resource(resource) for resource in raw_resources]
-        if isinstance(raw_resources, list) else raw_resources
-    )
-    resource_link = _trim(value.get("resource_link", ""))
-    if isinstance(resource_link, str) and resource_link and resources == []:
-        label = f"Learning material for {title or f'stage {number}'}"
-        resources = [{
-            "kind": "read",
-            "label": label,
-            **({"url": resource_link} if resource_link.startswith(("http://", "https://"))
-               else {"vault_path": resource_link}),
-            "scope_triage": "required-now",
-        }]
-
-    objective = _trim(value.get("objective", ""))
-    if not objective and isinstance(title, str) and title:
-        objective = f"Build working fluency in {title}."
-    done_when = _trimmed_list(value.get("done_when", []))
-    if done_when == [] and isinstance(title, str) and title:
-        done_when = [f"Explain and apply {title} without notes."]
-
-    result = {
-        "id": stage_id,
-        "number": number,
-        "title": title,
-        "status": _trim(value.get("status") or "pending"),
-        "objective": objective,
-        "done_when": done_when,
-        # Absence is honest. A default estimate looks like learner-specific
-        # information even though nobody chose it, and the old 90-minute
-        # constant propagated into every plan created from the template.
-        "estimate_minutes": value.get("estimate_minutes"),
-        "exam_critical": value.get("exam_critical") is True,
-        "concepts": _trimmed_list(value.get("concepts", [])),
-        "scope_triage": _trim(value.get("scope_triage") or "required-now"),
-        "resources": resources,
-        "attachments": value.get("attachments", []),
-        "source_feedback": value.get("source_feedback", []),
-        "job_context": _normalise_job_context(
-            value.get("job_context", {
-                "read_only_anchor": value.get("read_only_anchor", ""),
-            })
-        ),
-    }
-    if result["estimate_minutes"] is None:
-        result.pop("estimate_minutes")
-    return result
 
 
 def current_template_problems(value: object, profile: str) -> list[str]:
@@ -158,13 +42,12 @@ def current_template_problems(value: object, profile: str) -> list[str]:
         problems.append(
             f"stage numbers must be sequential in authored order: expected {expected}, got {numbers}"
         )
-    if profile == "curriculum":
-        source_plan = value.get("source_plan")
-        source_path = source_plan.get("path") if isinstance(source_plan, Mapping) else None
-        if source_path == "replace-with-reviewed-plan.yaml":
-            problems.append(
-                "source_plan.path is still the template placeholder; name the reviewed plan"
-            )
+    source_plan = value.get("source_plan")
+    source_path = source_plan.get("path") if isinstance(source_plan, Mapping) else None
+    if source_path == "replace-with-reviewed-plan.yaml":
+        problems.append(
+            "source_plan.path is still the template placeholder; name the reviewed plan"
+        )
     return problems
 
 
@@ -181,7 +64,7 @@ def build_plan_template(
     unit_id: str | None = None,
     module_id: str | None = None,
 ) -> dict:
-    """Build the official schema-valid starting record for either plan boundary.
+    """Build the official schema-valid starting record for a learning module.
 
     Curriculum keeps an explicit source-plan placeholder so the missing review
     evidence is visible while authoring. The import gate refuses that sentinel;
@@ -193,21 +76,6 @@ def build_plan_template(
     if not clean_title:
         raise PlanTemplateError("title must not be empty")
     stage_id = _slug_id(clean_title, "stage")
-    if profile == "job":
-        plan_id = _slug_id(clean_title, "job-plan")
-        return {
-            "type": "job-learning-plan",
-            "schema_version": 2,
-            "plan_template_version": PLAN_TEMPLATE_VERSION,
-            "id": plan_id,
-            "title": clean_title,
-            "status": "ready",
-            "horizon": "now",
-            "cadence": "One stage per week",
-            "outcome": f"Apply {clean_title} independently in a real task.",
-            "stages": [normalise_job_stage({"title": clean_title}, plan_id, 1)],
-        }
-
     if not unit_id or not module_id:
         raise PlanTemplateError("curriculum profile requires unit_id and module_id")
     unit_slug = str(unit_id).removeprefix("unit-")

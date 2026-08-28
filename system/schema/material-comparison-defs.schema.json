@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-comparison-defs.schema.json",
+  "title": "Shared qualitative material-comparison vocabulary",
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "routeReviewStatus": {
+      "enum": ["deep-reviewed", "screened", "unevaluated", "unavailable"]
+    },
+    "comparisonRelation": {
+      "enum": ["duplicates", "overlaps", "complements", "extends", "contrasts", "alternate-notation"]
+    },
+    "conceptIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locator", "checksum"],
+      "properties": {
+        "locator": {"type": "string", "minLength": 1},
+        "checksum": {"$ref": "#/$defs/sha256"},
+        "note": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

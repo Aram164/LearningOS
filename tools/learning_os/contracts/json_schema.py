@@ -28,6 +28,14 @@ def schema_registry(schema_dir: Path) -> Registry:
         schema_id = schema.get("$id")
         if isinstance(schema_id, str) and schema_id:
             registry = registry.with_resource(schema_id, resource)
+        # Older producer schemas use relative ``learning-os/...`` identifiers,
+        # while newer cross-contract schemas use the stable local HTTPS
+        # namespace.  Register a filename alias as well so an absolute public
+        # contract (for example Manifest v6) can reuse those exact nested
+        # definitions without URL-joining a relative id under its own path.
+        alias = f"https://learningos.local/schema/{candidate.name}"
+        if alias != schema_id:
+            registry = registry.with_resource(alias, resource)
     return registry
 
 

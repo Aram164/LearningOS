@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/health-report.schema.json",
+  "title": "LearningOS health report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "generated_at", "status", "checks"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "health-report"},
+    "generated_at": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["healthy", "attention-required"]},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "summary", "owner", "remedy"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "status": {"enum": ["ok", "warning", "error", "unknown"]},
+          "summary": {"type": "string", "minLength": 1},
+          "owner": {"type": "string", "minLength": 1},
+          "remedy": {"type": "string", "minLength": 1},
+          "details": {"type": "object"}
+        }
+      }
+    }
+  }
+}

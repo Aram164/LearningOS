@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 5
+contract_version: 7
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -58,7 +58,6 @@ top_level_keys:
 - project_aliases
 - project_relationships
 - projects
-- quarantine_boundaries
 - records
 - relations
 - resume_pointer
@@ -69,11 +68,13 @@ top_level_keys:
 - thematic_groups
 - topic_packs
 - topics
+- unit_material_syntheses
 - units
 generated_keys:
 - contract_version
 - generated_at
 - generator
+- schema_sha256
 - snapshot_id
 - source_dirty
 - source_fingerprint
@@ -81,6 +82,7 @@ generated_keys:
 - warning
 index_keys:
 - component_to_units
+- concept_to_units
 - module_to_units
 - project_aliases
 - project_to_relationships
@@ -88,9 +90,13 @@ index_keys:
 - project_to_workspaces
 - source_to_modules
 - source_to_units
+- unit_to_concepts
+- unit_to_material_synthesis
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
+schema_path: system/contracts/manifest-v7.schema.json
+schema_sha256: sha256:77819b5608c12a1e9cc7f326b14d858990df01824753b6ecdadf2e6c78b392db
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -118,8 +124,25 @@ history:
   mirrored_in_ui: contracts/manifest-v4.lock.json
 - version: 5
   adopted: '2026-08-12'
-  note: projected units may publish a knowledge_map and projected module source
-    routes may publish lecture-specific material metadata plus resolved source and
-    local material paths. This additive nested-shape change powers the material-choice
-    UI and deliberately bumps the exact consumer contract.
+  note: projected units may publish a knowledge_map and projected module source routes
+    may publish lecture-specific material metadata plus resolved source and local
+    material paths. This additive nested-shape change powers the material-choice UI
+    and deliberately bumps the exact consumer contract.
   mirrored_in_ui: contracts/manifest-v5.lock.json
+- version: 6
+  adopted: '2026-08-25'
+  note: Full Draft 2020-12 producer validation with an exact schema hash, stable material-route
+    identity, route-based selections, approved unit material syntheses, concept/synthesis
+    indexes, and closed public record shapes. Legacy string routes remain readable
+    while the recorded v13 migration persists rich-route ids; boundary-only planning/archive
+    metadata is absent from the ordinary manifest and remains available only through
+    deliberate surfaces. Approved material dossiers retain their raw evidence when
+    stale and carry derived freshness reasons plus current-route completeness counts.
+  mirrored_in_ui: contracts/manifest-v6.lock.json
+- version: 7
+  adopted: '2026-08-26'
+  note: Remove the Job-derived quarantine flag from Garden projection records. Job
+    learning is now represented by ordinary program, module, unit, study-map, note,
+    concept, and source records under program-job; only presentation distinguishes
+    the area.
+  mirrored_in_ui: contracts/manifest-v7.lock.json
