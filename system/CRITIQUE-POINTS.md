@@ -260,3 +260,68 @@ so the second writer is not expected to run again on live data. The risk is that
 it *can* — the planner is still reachable and reported `ready` after the
 2026-08-28 attachment repair — and a single accidental apply would produce a
 3,400-line diff that looks like material loss and is not.
+
+---
+
+## 3. The normative corpus has no bindingness index, so every agent reads a different subset and returns a different picture of the rules
+
+**Raised:** 2026-08-28 (Aram) · **Status:** open · **Do not act.**
+
+> "das System ist nicht aus einer strikten Programmierergruppe entstanden, das
+> war sehr willkürlich. alles muss standardisiert sein, alles muss klar
+> definiert sein an einem sinnvollen Ort, sodass das System robust bleibt wo es
+> wichtig ist und agil wo es nötig ist. ich will nicht so unterschiedliche
+> Markdown-Files und unterschiedliche Befehle für die Agenten."
+
+Quoted verbatim in the language it was raised in. The reported symptom is
+concrete: talking to different agents about the system produces sudden
+*shifts* — a rule that held in one session is read differently in the next.
+
+The diagnosis is **not** that the rules contradict each other, and not that
+documents are duplicated. It is volume plus three mechanisms below. No agent
+reads the whole corpus, so each session reads a different subset, and a
+different subset yields a different picture.
+
+### Evidence (measured 2026-08-28)
+
+- **Volume.** `system/*.md` = **3,763 lines** across 15 documents;
+  `system/adr/*.md` = **4,051 lines** across 14 ADRs and 6 reviews. Roughly
+  **7,800 lines of normative prose**, before the 12 generated views, the two
+  `AGENTS.md` files, and `obsidian-ui/CLAUDE.md` (94 lines).
+- **Overlap at two granularities.** 7 of the 12 hard invariants in
+  `CLAUDE.md` restate hard boundaries already stated in `system/OPERATOR.md`:
+  invariants 1, 2, 3, 7, 8, 9 and 12 correspond to boundaries 1, 5, 2, 10, 3,
+  13 and 11 respectively. Same rule, two documents, two levels of detail.
+- **Supersession is carried per-document, not enforced.**
+  `ADR-012` opens with *"Amended by ADR-013 (2026-08-26)"* — correct, and it
+  works only because someone wrote it there. An agent reading a superseded ADR
+  that lacks such a note reads a retired rule as current. Whether every
+  superseded ADR carries one is **unmeasured**; that audit is the first thing
+  the review owes.
+- **No index of what binds.** Nothing distinguishes law from rationale.
+  `OPERATOR.md` (171 lines) is binding; `PHILOSOPHY.md` (436) and
+  `WHY-REDESIGN.md` (138) are reasoning; `PILOT-CRITERIA.md` (35) is a frozen
+  historical gate that has already been passed 5/5. An agent can only guess.
+- **Not a duplication problem.** `CLAUDE.md` appears at three paths but two are
+  symlinks (git mode `120000`) to `system/CLAUDE.md`. One real file. This was
+  checked and is clean.
+
+### Blast radius
+
+Documentation architecture only — no schema, no canonical record, no gateway
+capability changes. Touched: the 15 documents under `system/`, the ADR
+directory's supersession convention, the `CLAUDE.md` ↔ `OPERATOR.md` overlap,
+and the entry points (`AGENTS.md` at the tree root and in the repository,
+`obsidian-ui/CLAUDE.md`).
+
+### Operator note
+
+One disagreement, recorded rather than argued in place. The 12-invariant block
+in `CLAUDE.md` is **not** sediment: it carries its own justification —
+*"If context is tight and you read nothing else in this repository, obey
+these."* That is a deliberate degraded-mode fallback, and deduplicating it
+against `OPERATOR.md` on a "nothing stated twice" principle would remove a
+designed safety net. The reviewable question is not whether it duplicates, but
+whether the fallback ever fires: if bootstrap reliably reaches `OPERATOR.md`,
+the block is paying context in every session for a path never taken. That is
+measurable and should be measured before anything is cut.
