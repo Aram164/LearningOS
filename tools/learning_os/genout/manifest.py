@@ -8,7 +8,11 @@ worth being able to read it on one screen.
 
 from __future__ import annotations
 
-from ..contracts.manifest_contract import declared_version, enforce
+from ..contracts.manifest_contract import (
+    declared_schema_sha256,
+    declared_version,
+    enforce,
+)
 from ..fingerprint import source_fingerprint
 from ..garden import project_garden_entries
 from ..loader import Repo
@@ -35,6 +39,7 @@ from .projection import (
     project_study_maps,
     project_thematic_groups,
     project_topics,
+    project_unit_material_syntheses,
     project_units,
     project_workspaces,
     unit_to_project_ids,
@@ -63,7 +68,24 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     `exam_spine` key (2026-08-03), and `stages` is the flat by-id index for
     stage lookup while `study_maps[].stages` stays the ordering authority —
     an index plus an ordered list, never two copies of the same access path."""
-    artifact_revisions = load_revisions(repo.root)
+    all_artifact_revisions = load_revisions(repo.root)
+    # The shared revision ledger also protects deliberately opened quarantine
+    # transactions. Those tokens are gateway concurrency state, not normal
+    # LearningOS projection data: exposing their candidate/catalog IDs here
+    # would leak Future Master's Planning into the ordinary manifest even when
+    # every authored quarantine file is correctly ignored by the loader.
+    master_planning_revision_prefixes = (
+        "candidate-module-",
+        "candidate-source-",
+        "candidate-comparison-",
+        "master-planning-",
+        "master-promotion-",
+    )
+    artifact_revisions = {
+        artifact_id: revision
+        for artifact_id, revision in all_artifact_revisions.items()
+        if not artifact_id.startswith(master_planning_revision_prefixes)
+    }
 
     def projected_revision(record_id: str, data: dict | None = None) -> int:
         embedded = (data or {}).get("revision", 0)
@@ -72,6 +94,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     thematic_groups = project_thematic_groups(repo)
     topics_v2 = project_topics(repo)
     unit_to_projects = unit_to_project_ids(repo)
+    unit_material_syntheses_v2 = project_unit_material_syntheses(repo)
 
     # Record order is part of the published file. Each projector owns one
     # domain's shape; this list owns the sequence they appear in.
@@ -90,6 +113,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         *project_units(repo, projected_revision, unit_to_projects),
         *project_study_maps(repo, projected_revision),
         *project_module_source_maps(repo, projected_revision),
+        *unit_material_syntheses_v2,
         *project_coordination(repo),
     ]
     relations = [
@@ -106,6 +130,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         # Read from system/contracts/manifest-contract.yaml, never hardcoded:
         # the version announced and the shape declared must have one source.
         "contract_version": declared_version(repo.root),
+        "schema_sha256": declared_schema_sha256(repo.root),
         "snapshot_id": f"sha256:{fingerprint}",
         "source_fingerprint": fingerprint,
         "source_revision": revision,
@@ -131,6 +156,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         modules_v2=modules_v2, units_v2=units_v2, study_maps_v2=study_maps_v2,
         source_maps_v2=source_maps_v2, projects_v2=projects_v2,
         project_relationships_v2=project_relationships_v2,
+        unit_material_syntheses_v2=unit_material_syntheses_v2,
     )
     progress = build_progress(modules_v2, units_v2, study_maps_v2)
     semesters_v2 = [
@@ -189,23 +215,19 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         "study_maps": study_maps_v2,
         "stages": stages_v2,
         "module_source_maps": source_maps_v2,
+        "unit_material_syntheses": unit_material_syntheses_v2,
         "resume_pointer": dict(repo.resume_pointer or {}),
         "garden_entries": garden_entries,
         "review_items": review_items,
         "ai_actions": ai_projection["ai_actions"],
-        "quarantine_boundaries": [
-            {k: program.get(k) for k in
-             ("id", "title", "kind", "status", "description", "boundary_action")}
-            for program in programs_v2
-            if program.get("status") in {"quarantined", "boundary-only"}
-        ],
         "indexes": indexes,
         "progress": progress,
         "counts": build_counts(
             repo,
             thematic_groups=thematic_groups, topics_v2=topics_v2,
             topic_packs_v2=topic_packs_v2, projects_v2=projects_v2,
-            modules_v2=modules_v2, units_v2=units_v2, stages_v2=stages_v2,
+            programs_v2=programs_v2, modules_v2=modules_v2,
+            units_v2=units_v2, stages_v2=stages_v2,
             inbox_items=inbox_items, garden_entries=garden_entries,
             ai_requests=ai_projection["ai_actions"]["requests"], adoption=ad,
         ),

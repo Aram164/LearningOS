@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 
 from .. import __version__
+from ..fingerprint import CANONICAL_ROOTS
 from ..githistory import last_commit_date
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
@@ -116,7 +117,7 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
                              capture_output=True, text=True, timeout=30)
         status = subprocess.run(
             ["git", "status", "--porcelain", "--untracked-files=all", "--",
-             "knowledge", "sources", "records", "work", "curriculum", "system/schema"],
+             *CANONICAL_ROOTS],
             cwd=root, capture_output=True, text=True, timeout=30)
         return (rev.stdout.strip() or None, bool(status.stdout.strip()))
     except Exception:  # noqa: BLE001

@@ -7,6 +7,7 @@ import os
 from pathlib import Path, PurePosixPath
 
 from ..loader import Repo
+from ..transactions import TransactionFailure
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at
@@ -71,30 +72,93 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
     exactly reflects the canonical data (e.g. views of deleted collections
     do not linger)."""
     gen = repo.root / "generated"
-    (gen / "reports").mkdir(parents=True, exist_ok=True)
+    if gen.is_symlink():
+        raise TransactionFailure("generated output root may not be a symbolic link")
+    gen.mkdir(parents=True, exist_ok=True)
+    try:
+        gen.resolve().relative_to(repo.root.resolve())
+    except ValueError as exc:
+        raise TransactionFailure("generated output root escapes the repository") from exc
+    _preflight_generated_tree(gen)
+    _checked_output_path(gen, PurePosixPath("reports/.keep"), create_parent=True)
     for rel, content in outputs.items():
-        target = gen / rel
-        target.parent.mkdir(parents=True, exist_ok=True)
+        relative = PurePosixPath(rel)
+        target = _checked_output_path(gen, relative, create_parent=True)
         # Never expose a half-written projection to Obsidian. os.replace is an
         # atomic publication step on the same filesystem; manifest.json is
         # published last because it is the versioned interface contract.
         if rel == "manifest.json":
             continue
         tmp = target.with_name(f".{target.name}.tmp")
+        _refuse_link(tmp, gen)
         tmp.write_text(content, encoding="utf-8")
         os.replace(tmp, target)
     if "manifest.json" in outputs:
-        target = gen / "manifest.json"
+        target = _checked_output_path(
+            gen, PurePosixPath("manifest.json"), create_parent=True
+        )
         tmp = target.with_name(".manifest.json.tmp")
+        _refuse_link(tmp, gen)
         tmp.write_text(outputs["manifest.json"], encoding="utf-8")
         os.replace(tmp, target)
     _remove_stale(gen, outputs)
+
+
+def _refuse_link(path: Path, gen: Path) -> None:
+    if path.is_symlink():
+        raise TransactionFailure(
+            f"generated output path is a symbolic link: {path.relative_to(gen)}"
+        )
+
+
+def _preflight_generated_tree(gen: Path) -> None:
+    """Refuse every existing link before publishing even one new output."""
+    for path in sorted(gen.rglob("*")):
+        if path.is_symlink():
+            raise TransactionFailure(
+                "generated output path is a symbolic link: "
+                f"{path.relative_to(gen)}"
+            )
+
+
+def _checked_output_path(
+    gen: Path,
+    relative: PurePosixPath,
+    *,
+    create_parent: bool,
+) -> Path:
+    if relative.is_absolute() or any(
+        part in {"", ".", ".."} for part in relative.parts
+    ):
+        raise TransactionFailure(f"unsafe generated output path: {relative}")
+    current = gen
+    for part in relative.parts[:-1]:
+        current = current / part
+        _refuse_link(current, gen)
+        if current.exists() and not current.is_dir():
+            raise TransactionFailure(
+                f"generated output parent is not a directory: {current.relative_to(gen)}"
+            )
+        if create_parent:
+            current.mkdir(exist_ok=True)
+    target = current / relative.name
+    _refuse_link(target, gen)
+    try:
+        target.parent.resolve().relative_to(gen.resolve())
+    except ValueError as exc:
+        raise TransactionFailure(f"generated output escapes root: {relative}") from exc
+    return target
 
 
 def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
     expected = {PurePosixPath(rel) for rel in outputs}
     stale_dirs: list[Path] = []
     for f in sorted(gen.rglob("*")):
+        if f.is_symlink():
+            rel = PurePosixPath(f.relative_to(gen).as_posix())
+            raise TransactionFailure(
+                f"generated output path is a symbolic link: {rel}"
+            )
         if f.is_dir():
             stale_dirs.append(f)
             continue

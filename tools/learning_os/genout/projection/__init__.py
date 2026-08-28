@@ -21,6 +21,7 @@ from .records_curriculum import (
     project_modules,
     project_programs,
     project_study_maps,
+    project_unit_material_syntheses,
     project_units,
     unit_note_sections,
 )
@@ -43,6 +44,7 @@ __all__ = [
     "project_modules", "project_notes", "project_programs",
     "project_project_aliases", "project_project_relationships", "project_projects",
     "project_sources", "project_stages", "project_study_maps",
+    "project_unit_material_syntheses",
     "project_thematic_groups", "project_topics", "project_units",
     "source_thematic_groups", "unit_note_sections",
     "unit_to_project_ids", "project_workspaces",

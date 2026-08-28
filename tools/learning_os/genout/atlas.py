@@ -60,11 +60,11 @@ def _atlas_note_link(note, repo: Repo) -> str:
 def _count_material_files(base: Path) -> int:
     """Files under a materials subtree (view signal only; hidden/support-skip
     names excluded). Returns 0 when the subtree does not exist."""
-    if not base.is_dir():
+    if base.is_symlink() or not base.is_dir():
         return 0
     n = 0
     for f in base.rglob("*"):
-        if not f.is_file() or f.name in _ATLAS_SKIP_NAMES:
+        if f.is_symlink() or not f.is_file() or f.name in _ATLAS_SKIP_NAMES:
             continue
         rel = f.relative_to(base)
         if any(part.startswith(".") for part in rel.parts):
@@ -133,9 +133,8 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
         lines.append(f"- **{dom}** — " + " · ".join(bits))
     lines.append(
         "- **Outside this map (deliberate):** Foundations archive (unregistered; "
-        "names in `materials/FILES.txt`) · Master's Planning quarantine "
-        "(boundary only) · frozen `legacy/` · quarantined `Job/` "
-        "(CLAUDE.md §13) — details in the last section.")
+        "names in `materials/FILES.txt`) · external code repositories such as "
+        "`Stratum/` (not LearningOS data) — details in the last section.")
     lines.append("")
     lines.append(
         "*Per-domain shelves and wiring hubs below · per-concept joins → "
@@ -212,15 +211,8 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
         lines.append("- **Materials tree** — not reachable from this checkout; "
                      "archive counts unavailable.")
     lines.append(
-        "- **Master's Planning** — Git-tracked operational quarantine; only its "
-        "boundary record is normally loadable. Content, counts and menus are "
-        "excluded until deliberate future promotion (WORKFLOWS §27).")
-    if (repo.root.parent.parent / "legacy").is_dir():
-        lines.append(
-            "- **Legacy tree** — the frozen pre-v3 history beside `LearningOS/` "
-            "(tag `pre-v3-baseline`); historical context only, never canonical, "
-            "never retrieved by default (ARCHITECTURE §2.4).")
-    lines.append(
-        "- **`Job/`** — quarantined (CLAUDE.md §13); outside every map by design.")
+        "- **External code repositories** — sibling worktrees such as `Stratum/` "
+        "are never indexed or validated as LearningOS data; an agent may inspect "
+        "them only when the current task explicitly needs code context.")
     lines.append("")
     return "\n".join(lines)
