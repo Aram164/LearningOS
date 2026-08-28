@@ -18,8 +18,9 @@ stages:
   objective: Data acquisition, cleaning, integration, exploration, feature construction, modeling, validation,
     communication, and action are coupled steps; modeling is only one part of the work.
   done_when:
-  - 'Reproduce without notes: Data acquisition, cleaning, integration, exploration, feature construction, modeling,
-    validation, communication, and action are coupled steps; modeling is only one part of the work.'
+  - 'Reproduce without notes: Data acquisition, cleaning, integration, exploration, feature construction,
+    modeling, validation, communication, and action are coupled steps; modeling is only one part of the
+    work.'
   exam_critical: true
   concepts:
   - concept-ml-lifecycle
@@ -29,54 +30,60 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights to Decisions,
-      pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
+      to Decisions, pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    angle: Frames the whole pipeline as a business problem being converted into an analytics problem —
+      the step before L11's pipeline starts.
+    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target
+      feature, choosing the analytics base table, and confronting the fact that the available data may
+      not support the question. L11 begins one step later, with the data already framed. That earlier
+      step is where most real projects fail and it is the part of the pipeline the lecture treats as given.
+      Ch 8 then covers evaluation designs — hold-out, cross-validation, the choice of metric per task
+      — at more length than the deck.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Frames the whole pipeline as a business problem being converted into an analytics problem — the step
-      before L11's pipeline starts.
-    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target feature,
-      choosing the analytics base table, and confronting the fact that the available data may not support the
-      question. L11 begins one step later, with the data already framed. That earlier step is where most real
-      projects fail and it is the part of the pipeline the lecture treats as given. Ch 8 then covers evaluation
-      designs — hold-out, cross-validation, the choice of metric per task — at more length than the deck.'
   - kind: read
     label: Kroese — data-science workflow and evaluation
     source_id: source-kroese-dsml
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
       Summarizing and Visualizing Data, pdf pp. 19-36
-    scope_triage: helpful-now
     angle: States the whole supervised problem as risk minimisation first, so loss functions and generalization
       are one framework rather than two topics.
     angle_detail: Kroese defines the learner's goal as minimising expected loss over an unknown distribution,
-      then derives training error, test error and the need for a held-out set as consequences of not knowing that
-      distribution. L11 introduces objectives and resampling as separate pipeline stages; this route shows they
-      answer the same question. More mathematical than the other L11 options — expect measure-free but real probability
-      notation.
+      then derives training error, test error and the need for a held-out set as consequences of not knowing
+      that distribution. L11 introduces objectives and resampling as separate pipeline stages; this route
+      shows they answer the same question. More mathematical than the other L11 options — expect measure-free
+      but real probability notation.
+    vault_path: material://source-kroese-dsml/kroese.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 2 - the pipeline executed end to end
     source_id: source-geron-handson
-    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines p.
-      99; better evaluation using cross-validation p. 102)
+    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102)
+    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking
+      at the data, scaling features, composing transformation pipelines, and scoring with cross-validation
+      - the leakage-avoidance ordering the deck asserts but never demonstrates.'
+    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route
+      on this stage where the stages are performed rather than described. The specific pages matter: creating
+      a test set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows
+      why preprocessing must be fitted on training data only, and cross-validation (p. 102) shows the
+      resampling node in code. Doing this chapter once makes the deck''s pipeline diagram concrete in
+      a way no amount of re-reading will.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking at the
-      data, scaling features, composing transformation pipelines, and scoring with cross-validation - the leakage-avoidance
-      ordering the deck asserts but never demonstrates.'
-    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route on
-      this stage where the stages are performed rather than described. The specific pages matter: creating a test
-      set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows why preprocessing
-      must be fitted on training data only, and cross-validation (p. 102) shows the resampling node in code. Doing
-      this chapter once makes the deck''s pipeline diagram concrete in a way no amount of re-reading will.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md
   attachments: []
   source_feedback: []
@@ -84,13 +91,14 @@ stages:
   number: 2
   title: Supervised and unsupervised tasks
   status: pending
-  objective: Classification predicts categories, regression predicts quantities, and unsupervised methods seek
-    structure without labels; the learning setup must match the target and available supervision.
+  objective: Classification predicts categories, regression predicts quantities, and unsupervised methods
+    seek structure without labels; the learning setup must match the target and available supervision.
   done_when:
-  - 'Reproduce without notes: Classification predicts categories, regression predicts quantities, and unsupervised
-    methods seek structure without labels; the learning setup must match the target and available supervision.'
-  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Classification predicts categories, regression predicts quantities, and
+    unsupervised methods seek structure without labels; the learning setup must match the target and available
+    supervision.'
+  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-supervised-learning
@@ -100,67 +108,89 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights to Decisions,
-      pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
+      to Decisions, pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    angle: Frames the whole pipeline as a business problem being converted into an analytics problem —
+      the step before L11's pipeline starts.
+    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target
+      feature, choosing the analytics base table, and confronting the fact that the available data may
+      not support the question. L11 begins one step later, with the data already framed. That earlier
+      step is where most real projects fail and it is the part of the pipeline the lecture treats as given.
+      Ch 8 then covers evaluation designs — hold-out, cross-validation, the choice of metric per task
+      — at more length than the deck.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Frames the whole pipeline as a business problem being converted into an analytics problem — the step
-      before L11's pipeline starts.
-    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target feature,
-      choosing the analytics base table, and confronting the fact that the available data may not support the
-      question. L11 begins one step later, with the data already framed. That earlier step is where most real
-      projects fail and it is the part of the pipeline the lecture treats as given. Ch 8 then covers evaluation
-      designs — hold-out, cross-validation, the choice of metric per task — at more length than the deck.'
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     source_id: source-islp
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
       model accuracy, with the bias-variance decomposition, p. 37; §2.3 lab p. 48)
+    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two
+      curves crossing.
+    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias,
+      variance and irreducible error — and the derivation is short enough to follow at first reading.
+      That is the content behind L11's U-shaped test-error curve, and having the algebra makes the trade-off
+      a consequence rather than an empirical observation. The chapter also draws the distinction between
+      prediction and inference as two different reasons to fit a model, which reframes what the pipeline
+      is for.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two curves
-      crossing.
-    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias, variance
-      and irreducible error — and the derivation is short enough to follow at first reading. That is the content
-      behind L11's U-shaped test-error curve, and having the algebra makes the trade-off a consequence rather
-      than an empirical observation. The chapter also draws the distinction between prediction and inference as
-      two different reasons to fit a model, which reframes what the pipeline is for.
+  - kind: read
+    label: Google ML Crash Course — framing, generalization and validation modules
+    source_id: source-google-ml-crash-course
+    locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
+      modules, each ≈15 min with in-page exercises
+    angle: Each concept arrives with an immediate in-page check question, so the vocabulary is tested
+      as it is introduced.
+    angle_detail: L11 is a vocabulary lecture, and vocabulary decays unless it is used. The crash course's
+      format — a short explanation followed at once by a question you must answer to continue — is well
+      suited to that, and the whole relevant sequence takes about ninety minutes. The validation-set module
+      in particular explains why a third split is needed once you start tuning, which the deck states
+      without motivating. Shallow by design; it is orientation, not depth.
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 1 - the ML vocabulary with failure cases attached
     source_id: source-geron-handson
-    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting p. 56; testing
-      and validating pp. 57-59; exercises p. 60)
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60)
+    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single
+      bullets; Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling
+      failures, so each term Leser asserts arrives with a worked counterexample.
+    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than
+      deferred. Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard
+      remedies, and testing/validating (pp. 57-59) explains why the split exists before L11's resampling
+      node formalises it. Written for practitioners, so every term is introduced with the situation that
+      made it necessary. The chapter exercises on pp. 60-61 are a fast check of whether the vocabulary
+      has actually landed.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single bullets;
-      Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling failures, so each
-      term Leser asserts arrives with a worked counterexample.
-    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than deferred.
-      Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard remedies, and testing/validating
-      (pp. 57-59) explains why the split exists before L11's resampling node formalises it. Written for practitioners,
-      so every term is introduced with the situation that made it necessary. The chapter exercises on pp. 60-61
-      are a fast check of whether the vocabulary has actually landed.
   - kind: practise
     label: Geron Ch 1 exercises - the L11 vocabulary tested back
     source_id: source-geron-handson
     locator: Chapter 1 exercises, pp. 60-61
+    angle: 'Nineteen short questions on labelled data, supervised versus unsupervised tasks, overfitting,
+      the validation set and why tuning on the test set breaks - the retrieval check for the framing half
+      of L11, which otherwise has no practice asset at all. Note: this copy is an early-release ebook
+      and its solutions cross-reference on p. 61 is unresolved, so answers must be checked against the
+      chapter body.'
+    angle_detail: Two pages of exercises testing exactly the L11 vocabulary, phrased as questions rather
+      than definitions. Because L11 has almost no computation, self-testing is otherwise hard to arrange,
+      and these are the closest available proxy for the short conceptual questions the exam will use.
+      Answers are in the book's appendix.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Nineteen short questions on labelled data, supervised versus unsupervised tasks, overfitting, the
-      validation set and why tuning on the test set breaks - the retrieval check for the framing half of L11,
-      which otherwise has no practice asset at all. Note: this copy is an early-release ebook and its solutions
-      cross-reference on p. 61 is unresolved, so answers must be checked against the chapter body.'
-    angle_detail: Two pages of exercises testing exactly the L11 vocabulary, phrased as questions rather than
-      definitions. Because L11 has almost no computation, self-testing is otherwise hard to arrange, and these
-      are the closest available proxy for the short conceptual questions the exam will use. Answers are in the
-      book's appendix.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md
   attachments: []
   source_feedback: []
@@ -182,67 +212,75 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights to Decisions,
-      pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
+      to Decisions, pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    angle: Frames the whole pipeline as a business problem being converted into an analytics problem —
+      the step before L11's pipeline starts.
+    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target
+      feature, choosing the analytics base table, and confronting the fact that the available data may
+      not support the question. L11 begins one step later, with the data already framed. That earlier
+      step is where most real projects fail and it is the part of the pipeline the lecture treats as given.
+      Ch 8 then covers evaluation designs — hold-out, cross-validation, the choice of metric per task
+      — at more length than the deck.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Frames the whole pipeline as a business problem being converted into an analytics problem — the step
-      before L11's pipeline starts.
-    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target feature,
-      choosing the analytics base table, and confronting the fact that the available data may not support the
-      question. L11 begins one step later, with the data already framed. That earlier step is where most real
-      projects fail and it is the part of the pipeline the lecture treats as given. Ch 8 then covers evaluation
-      designs — hold-out, cross-validation, the choice of metric per task — at more length than the deck.'
+  - kind: read
+    label: Geron Ch 1 - the ML vocabulary with failure cases attached
+    source_id: source-geron-handson
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60)
+    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single
+      bullets; Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling
+      failures, so each term Leser asserts arrives with a worked counterexample.
+    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than
+      deferred. Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard
+      remedies, and testing/validating (pp. 57-59) explains why the split exists before L11's resampling
+      node formalises it. Written for practitioners, so every term is introduced with the situation that
+      made it necessary. The chapter exercises on pp. 60-61 are a fast check of whether the vocabulary
+      has actually landed.
+    vault_path: material://source-geron-handson/geron.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Geron Ch 2 - the pipeline executed end to end
+    source_id: source-geron-handson
+    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102)
+    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking
+      at the data, scaling features, composing transformation pipelines, and scoring with cross-validation
+      - the leakage-avoidance ordering the deck asserts but never demonstrates.'
+    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route
+      on this stage where the stages are performed rather than described. The specific pages matter: creating
+      a test set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows
+      why preprocessing must be fitted on training data only, and cross-validation (p. 102) shows the
+      resampling node in code. Doing this chapter once makes the deck''s pipeline diagram concrete in
+      a way no amount of re-reading will.'
+    vault_path: material://source-geron-handson/geron.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Domingos — A Few Useful Things to Know About Machine Learning
     source_id: source-domingos-useful-things
     locator: Complete article, 9 pages (CACM 55(10), 2012)
-    scope_triage: helpful-now
     angle: Nine pages of practitioner judgment — that generalization is the goal, that data beats cleverness,
       that overfitting has many faces.
     angle_detail: 'This is the single best-value item on the L11 stage: it takes half an hour and it supplies
-      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning is
-      induction and therefore needs assumptions, more data usually beats a better algorithm, feature engineering
-      is where the work is — are exactly what L11''s pipeline slides assert without argument. Also the best available
-      preparation for a conceptual exam question, because it is written as argument rather than as definition.'
-  - kind: read
-    label: Geron Ch 1 - the ML vocabulary with failure cases attached
-    source_id: source-geron-handson
-    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting p. 56; testing
-      and validating pp. 57-59; exercises p. 60)
+      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning
+      is induction and therefore needs assumptions, more data usually beats a better algorithm, feature
+      engineering is where the work is — are exactly what L11''s pipeline slides assert without argument.
+      Also the best available preparation for a conceptual exam question, because it is written as argument
+      rather than as definition.'
     scope_triage: helpful-now
-    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single bullets;
-      Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling failures, so each
-      term Leser asserts arrives with a worked counterexample.
-    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than deferred.
-      Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard remedies, and testing/validating
-      (pp. 57-59) explains why the split exists before L11's resampling node formalises it. Written for practitioners,
-      so every term is introduced with the situation that made it necessary. The chapter exercises on pp. 60-61
-      are a fast check of whether the vocabulary has actually landed.
-  - kind: read
-    label: Geron Ch 2 - the pipeline executed end to end
-    source_id: source-geron-handson
-    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines p.
-      99; better evaluation using cross-validation p. 102)
-    scope_triage: helpful-now
-    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking at the
-      data, scaling features, composing transformation pipelines, and scoring with cross-validation - the leakage-avoidance
-      ordering the deck asserts but never demonstrates.'
-    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route on
-      this stage where the stages are performed rather than described. The specific pages matter: creating a test
-      set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows why preprocessing
-      must be fitted on training data only, and cross-validation (p. 102) shows the resampling node in code. Doing
-      this chapter once makes the deck''s pipeline diagram concrete in a way no amount of re-reading will.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md
   attachments: []
   source_feedback: []
@@ -265,81 +303,168 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     source_id: source-islp
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
       model accuracy, with the bias-variance decomposition, p. 37; §2.3 lab p. 48)
+    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two
+      curves crossing.
+    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias,
+      variance and irreducible error — and the derivation is short enough to follow at first reading.
+      That is the content behind L11's U-shaped test-error curve, and having the algebra makes the trade-off
+      a consequence rather than an empirical observation. The chapter also draws the distinction between
+      prediction and inference as two different reasons to fit a model, which reframes what the pipeline
+      is for.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two curves
-      crossing.
-    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias, variance
-      and irreducible error — and the derivation is short enough to follow at first reading. That is the content
-      behind L11's U-shaped test-error curve, and having the algebra makes the trade-off a consequence rather
-      than an empirical observation. The chapter also draws the distinction between prediction and inference as
-      two different reasons to fit a model, which reframes what the pipeline is for.
+  - kind: read
+    label: Berkeley CS189 — past exam questions on evaluation and generalization
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the bias-variance, cross-validation
+      and evaluation-metric questions
+    angle: Written exam questions on conceptual ML material, which is otherwise almost impossible to practise.
+    angle_detail: 'L11 will be examined in writing, and the shelf is full of coding exercises and textbook
+      problems but nearly empty of written conceptual questions with model answers. These papers fill
+      that gap: short-answer and multiple-choice items about when cross-validation is appropriate, what
+      a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
+      course covers much that SaD does not.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Caltech LFD — the bias-variance decomposition and generalization lectures
+    source_id: source-caltech-lfd
+    locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
+      sets and solutions
+    angle: Asks whether learning is possible at all before asking how to do it, which is the question
+      L11's inductive-bias node gestures at.
+    angle_detail: The course's organising question is whether fitting the training data tells you anything
+      about unseen data, and its answer is that it does only under conditions that can be stated precisely.
+      L11 asserts that inductive bias is necessary; this is where that assertion gets an argument. Lecture
+      8 derives the bias-variance decomposition on the board with the averaging-over-datasets picture,
+      which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
+      level.
+    scope_triage: helpful-now
+  - kind: reference
+    label: scikit-learn user guide §3.1 — cross-validation
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §3.1 ''Cross-validation: evaluating estimator performance'' and §3.4 ''Metrics
+      and scoring'', with the linked examples'
+    angle: Enumerates the resampling schemes as named, runnable splitters — KFold, StratifiedKFold, GroupKFold
+      — with the situation each exists for.
+    angle_detail: 'L11 names cross-validation as one idea. The user guide shows it is a family, and each
+      member exists because of a specific failure: stratified splits for class imbalance, group splits
+      when observations are not independent, time-series splits when order matters. Knowing that the plain
+      version has failure modes is the conceptual content; the diagrams in §3.1 make the differences immediate.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Google ML Crash Course — framing, generalization and validation modules
+    source_id: source-google-ml-crash-course
+    locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
+      modules, each ≈15 min with in-page exercises
+    angle: Each concept arrives with an immediate in-page check question, so the vocabulary is tested
+      as it is introduced.
+    angle_detail: L11 is a vocabulary lecture, and vocabulary decays unless it is used. The crash course's
+      format — a short explanation followed at once by a question you must answer to continue — is well
+      suited to that, and the whole relevant sequence takes about ninety minutes. The validation-set module
+      in particular explains why a third split is needed once you start tuning, which the deck states
+      without motivating. Shallow by design; it is orientation, not depth.
+    scope_triage: helpful-now
+  - kind: read
+    label: Ng — bias, variance and the evaluation workflow lectures
+    source_id: source-ng-coursera
+    locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
+      learning curves, diagnosing bias vs variance)'
+    angle: Turns bias and variance into a diagnostic procedure — read the learning curves, then decide
+      what to change.
+    angle_detail: 'L11 defines underfitting, overfitting and the bias-variance trade-off. Ng''s week 6
+      makes them actionable: if training and validation error are both high you have bias and more data
+      will not help; if they diverge you have variance and more data will. That if-then structure is the
+      most retainable form of this material and is exactly what a conceptual exam question about the trade-off
+      is testing.'
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP community solutions — Ch 2 and Ch 5 exercises
+    source_id: source-islp-community-solutions
+    locator: The Ch 2 (statistical learning) and Ch 5 (resampling methods) solution notebooks in the botlnec
+      / a-martyn / applied-on-ISLP repositories
+    angle: Makes the ISLP exercises checkable, which is the difference between reading the chapter and
+      knowing it.
+    angle_detail: 'ISLP publishes no official solutions, so its exercises are unusable for self-testing
+      on their own. These community repositories work them in full, usually with the code and the reasoning.
+      Treat them as an answer key rather than as authority: they are unreviewed, and on a disagreement
+      the book wins. The Ch 5 notebooks are the most useful here — cross-validation and bootstrap worked
+      end to end.'
+    scope_triage: helpful-now
   - kind: read
     label: Kroese — data-science workflow and evaluation
     source_id: source-kroese-dsml
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
       Summarizing and Visualizing Data, pdf pp. 19-36
-    scope_triage: helpful-now
     angle: States the whole supervised problem as risk minimisation first, so loss functions and generalization
       are one framework rather than two topics.
     angle_detail: Kroese defines the learner's goal as minimising expected loss over an unknown distribution,
-      then derives training error, test error and the need for a held-out set as consequences of not knowing that
-      distribution. L11 introduces objectives and resampling as separate pipeline stages; this route shows they
-      answer the same question. More mathematical than the other L11 options — expect measure-free but real probability
-      notation.
+      then derives training error, test error and the need for a held-out set as consequences of not knowing
+      that distribution. L11 introduces objectives and resampling as separate pipeline stages; this route
+      shows they answer the same question. More mathematical than the other L11 options — expect measure-free
+      but real probability notation.
+    vault_path: material://source-kroese-dsml/kroese.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 2 - the pipeline executed end to end
     source_id: source-geron-handson
-    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines p.
-      99; better evaluation using cross-validation p. 102)
+    locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
+      p. 99; better evaluation using cross-validation p. 102)
+    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking
+      at the data, scaling features, composing transformation pipelines, and scoring with cross-validation
+      - the leakage-avoidance ordering the deck asserts but never demonstrates.'
+    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route
+      on this stage where the stages are performed rather than described. The specific pages matter: creating
+      a test set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows
+      why preprocessing must be fitted on training data only, and cross-validation (p. 102) shows the
+      resampling node in code. Doing this chapter once makes the deck''s pipeline diagram concrete in
+      a way no amount of re-reading will.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Turns the L11 pipeline slide into an executed sequence: building the test set before looking at the
-      data, scaling features, composing transformation pipelines, and scoring with cross-validation - the leakage-avoidance
-      ordering the deck asserts but never demonstrates.'
-    angle_detail: 'The whole L11 pipeline executed once, end to end, on real housing data — the only route on
-      this stage where the stages are performed rather than described. The specific pages matter: creating a test
-      set (p. 80) shows the leakage trap L11 warns about, transformation pipelines (p. 99) shows why preprocessing
-      must be fitted on training data only, and cross-validation (p. 102) shows the resampling node in code. Doing
-      this chapter once makes the deck''s pipeline diagram concrete in a way no amount of re-reading will.'
   - kind: read
     label: Zacharski Ch 5 - evaluating a classifier by hand
     source_id: source-zacharski-data-mining
-    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p. 203)
+    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
+      203)
+    angle: Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked
+      data set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without
+      ever running it.
+    angle_detail: 'Evaluation carried out with a pen: 10-fold cross-validation (p. 187) explained as a
+      procedure you could run manually, the confusion matrix (p. 193) built by hand, and Kappa (p. 203)
+      — a metric L11 does not cover but which answers the ''is this better than guessing the majority
+      class'' question that class imbalance raises. Zacharski writes at the lowest technical level of
+      any book on this stage, which makes it the fastest route when the concept rather than the mathematics
+      is the obstacle.'
+    vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
-    angle: Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked data
-      set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without ever running
-      it.
-    angle_detail: 'Evaluation carried out with a pen: 10-fold cross-validation (p. 187) explained as a procedure
-      you could run manually, the confusion matrix (p. 193) built by hand, and Kappa (p. 203) — a metric L11 does
-      not cover but which answers the ''is this better than guessing the majority class'' question that class
-      imbalance raises. Zacharski writes at the lowest technical level of any book on this stage, which makes
-      it the fastest route when the concept rather than the mathematics is the obstacle.'
   - kind: reference
     label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
     source_id: source-esl
-    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap methods,
-      p. 268
+    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
+      methods, p. 268
+    angle: L11 presents cross-validation and bootstrapping as confidence-raising procedures; this chapter
+      separates the bias-variance decomposition from the estimator of test error, which is the distinction
+      the deck's 'which k?' slide leaves open. Open only when a recorded error needs it.
+    angle_detail: The reference statement of what resampling actually estimates. §§7.2-7.3 (pp. 238-247)
+      distinguish test error from expected test error and derive the optimism of the training error, which
+      is the precise version of L11's claim that training error is not a fair estimate. §7.10 (p. 260)
+      then explains what cross-validation estimates and why the number of folds is a bias-variance trade-off
+      in its own right. Graduate level; read the specific sections rather than the chapter.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: L11 presents cross-validation and bootstrapping as confidence-raising procedures; this chapter separates
-      the bias-variance decomposition from the estimator of test error, which is the distinction the deck's 'which
-      k?' slide leaves open. Open only when a recorded error needs it.
-    angle_detail: The reference statement of what resampling actually estimates. §§7.2-7.3 (pp. 238-247) distinguish
-      test error from expected test error and derive the optimism of the training error, which is the precise
-      version of L11's claim that training error is not a fair estimate. §7.10 (p. 260) then explains what cross-validation
-      estimates and why the number of folds is a bias-variance trade-off in its own right. Graduate level; read
-      the specific sections rather than the chapter.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md
   attachments: []
   source_feedback: []
@@ -350,8 +475,8 @@ stages:
   objective: A learner searches a hypothesis space using an objective; architecture, regularization, features,
     and optimization encode assumptions about which solutions should generalize.
   done_when:
-  - 'Reproduce without notes: A learner searches a hypothesis space using an objective; architecture, regularization,
-    features, and optimization encode assumptions about which solutions should generalize.'
+  - 'Reproduce without notes: A learner searches a hypothesis space using an objective; architecture,
+    regularization, features, and optimization encode assumptions about which solutions should generalize.'
   exam_critical: true
   concepts:
   - concept-regularization
@@ -362,64 +487,85 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights to Decisions,
-      pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
+      to Decisions, pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    angle: Frames the whole pipeline as a business problem being converted into an analytics problem —
+      the step before L11's pipeline starts.
+    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target
+      feature, choosing the analytics base table, and confronting the fact that the available data may
+      not support the question. L11 begins one step later, with the data already framed. That earlier
+      step is where most real projects fail and it is the part of the pipeline the lecture treats as given.
+      Ch 8 then covers evaluation designs — hold-out, cross-validation, the choice of metric per task
+      — at more length than the deck.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Frames the whole pipeline as a business problem being converted into an analytics problem — the step
-      before L11's pipeline starts.
-    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target feature,
-      choosing the analytics base table, and confronting the fact that the available data may not support the
-      question. L11 begins one step later, with the data already framed. That earlier step is where most real
-      projects fail and it is the part of the pipeline the lecture treats as given. Ch 8 then covers evaluation
-      designs — hold-out, cross-validation, the choice of metric per task — at more length than the deck.'
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     source_id: source-islp
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
       model accuracy, with the bias-variance decomposition, p. 37; §2.3 lab p. 48)
+    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two
+      curves crossing.
+    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias,
+      variance and irreducible error — and the derivation is short enough to follow at first reading.
+      That is the content behind L11's U-shaped test-error curve, and having the algebra makes the trade-off
+      a consequence rather than an empirical observation. The chapter also draws the distinction between
+      prediction and inference as two different reasons to fit a model, which reframes what the pipeline
+      is for.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two curves
-      crossing.
-    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias, variance
-      and irreducible error — and the derivation is short enough to follow at first reading. That is the content
-      behind L11's U-shaped test-error curve, and having the algebra makes the trade-off a consequence rather
-      than an empirical observation. The chapter also draws the distinction between prediction and inference as
-      two different reasons to fit a model, which reframes what the pipeline is for.
   - kind: read
-    label: Domingos — A Few Useful Things to Know About Machine Learning
-    source_id: source-domingos-useful-things
-    locator: Complete article, 9 pages (CACM 55(10), 2012)
+    label: Caltech LFD — the bias-variance decomposition and generalization lectures
+    source_id: source-caltech-lfd
+    locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
+      sets and solutions
+    angle: Asks whether learning is possible at all before asking how to do it, which is the question
+      L11's inductive-bias node gestures at.
+    angle_detail: The course's organising question is whether fitting the training data tells you anything
+      about unseen data, and its answer is that it does only under conditions that can be stated precisely.
+      L11 asserts that inductive bias is necessary; this is where that assertion gets an argument. Lecture
+      8 derives the bias-variance decomposition on the board with the averaging-over-datasets picture,
+      which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
+      level.
     scope_triage: helpful-now
-    angle: Nine pages of practitioner judgment — that generalization is the goal, that data beats cleverness,
-      that overfitting has many faces.
-    angle_detail: 'This is the single best-value item on the L11 stage: it takes half an hour and it supplies
-      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning is
-      induction and therefore needs assumptions, more data usually beats a better algorithm, feature engineering
-      is where the work is — are exactly what L11''s pipeline slides assert without argument. Also the best available
-      preparation for a conceptual exam question, because it is written as argument rather than as definition.'
   - kind: read
     label: Geron Ch 4 - the loss functions L11 names in one line
     source_id: source-geron-handson
     locator: Chapter 4, pp. 139-180 (cross-entropy cost function, equation 4-22, p. 177)
+    angle: L11 slides 30-31 name MSE and cross-entropy as the popular losses and move on; this chapter
+      derives both and the softmax output they attach to, with the cost function written out at equation
+      4-22. It supplies the loss half of the node only - inductive bias stays with the Domingos article.
+    angle_detail: L11 names loss functions in a single line. Ch 4 gives them their own treatment, and
+      equation 4-22 on p. 177 is the cross-entropy cost written out — the loss that L15's softmax output
+      layer will minimise. Reading it here means that when it reappears in L15 it is a known object rather
+      than a new formula, which is worth the detour given how compressed L15 is.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L11 slides 30-31 name MSE and cross-entropy as the popular losses and move on; this chapter derives
-      both and the softmax output they attach to, with the cost function written out at equation 4-22. It supplies
-      the loss half of the node only - inductive bias stays with the Domingos article.
-    angle_detail: L11 names loss functions in a single line. Ch 4 gives them their own treatment, and equation
-      4-22 on p. 177 is the cross-entropy cost written out — the loss that L15's softmax output layer will minimise.
-      Reading it here means that when it reappears in L15 it is a known object rather than a new formula, which
-      is worth the detour given how compressed L15 is.
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    locator: Complete article, 9 pages (CACM 55(10), 2012)
+    angle: Nine pages of practitioner judgment — that generalization is the goal, that data beats cleverness,
+      that overfitting has many faces.
+    angle_detail: 'This is the single best-value item on the L11 stage: it takes half an hour and it supplies
+      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning
+      is induction and therefore needs assumptions, more data usually beats a better algorithm, feature
+      engineering is where the work is — are exactly what L11''s pipeline slides assert without argument.
+      Also the best available preparation for a conceptual exam question, because it is written as argument
+      rather than as definition.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md
   attachments: []
   source_feedback: []
@@ -427,12 +573,13 @@ stages:
   number: 6
   title: Evaluation metrics and class imbalance
   status: pending
-  objective: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses answer different
-    questions; metric choice follows costs, prevalence, and deployment context.
+  objective: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses
+    answer different questions; metric choice follows costs, prevalence, and deployment context.
   done_when:
   - 'Reproduce without notes: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression
     losses answer different questions; metric choice follows costs, prevalence, and deployment context.'
-  - Work Blatt 5 and UE7 — multiclass metrics, and record every miss with the step it failed at.
+  - Work Blatt 5, Aufgabe 3 — multiclass evaluation metrics, then the remaining 2, and record every miss
+    with the step it failed at.
   exam_critical: true
   concepts:
   - concept-classification-metrics
@@ -442,75 +589,158 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: practise
-    label: Blatt 5 and UE7 — multiclass metrics
+    label: Blatt 5, Aufgabe 3 — multiclass evaluation metrics
     source_id: source-sad-uebungen
-    locator: exercise-slides/blatt-05.pdf Aufgabe 3; exercise-slides/UE7.pdf slides 22-30
+    locator: exercise-slides/blatt-05.pdf, p. 4, Aufgabe 3(a)-(d)
+    angle: Requires per-class confusion matrices plus micro/macro aggregation, the most calculation-heavy
+      part of L11.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
-    angle: Shows how the pipeline vocabulary is examined — usually as short conceptual questions, not computations.
-    angle_detail: L11 has almost no arithmetic, which makes the form of its exam questions genuinely uncertain
-      from the deck alone. These exercises settle it and are therefore worth reading even if you do not work them.
+  - kind: practise
+    label: UE6, slides 70-82 — classifier evaluation walkthrough
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf, slides 70-82
+    angle: Builds accuracy, precision, recall and F1 from the confusion matrix rather than presenting
+      isolated formulas.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE7, slides 22-30 — official multiclass-metrics solution
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE7.pdf, slides 22-30
+    angle: Shows how the current course reports per-class and aggregate metrics when class priorities
+      differ.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights to Decisions,
-      pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
+      to Decisions, pdf pp. 57-91; Ch 8 Evaluation, pdf pp. 425-490
+    angle: Frames the whole pipeline as a business problem being converted into an analytics problem —
+      the step before L11's pipeline starts.
+    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target
+      feature, choosing the analytics base table, and confronting the fact that the available data may
+      not support the question. L11 begins one step later, with the data already framed. That earlier
+      step is where most real projects fail and it is the part of the pipeline the lecture treats as given.
+      Ch 8 then covers evaluation designs — hold-out, cross-validation, the choice of metric per task
+      — at more length than the deck.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Frames the whole pipeline as a business problem being converted into an analytics problem — the step
-      before L11's pipeline starts.
-    angle_detail: 'Ch 2 is about deciding what to predict at all: converting a stated goal into a target feature,
-      choosing the analytics base table, and confronting the fact that the available data may not support the
-      question. L11 begins one step later, with the data already framed. That earlier step is where most real
-      projects fail and it is the part of the pipeline the lecture treats as given. Ch 8 then covers evaluation
-      designs — hold-out, cross-validation, the choice of metric per task — at more length than the deck.'
+  - kind: read
+    label: Berkeley CS189 — past exam questions on evaluation and generalization
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the bias-variance, cross-validation
+      and evaluation-metric questions
+    angle: Written exam questions on conceptual ML material, which is otherwise almost impossible to practise.
+    angle_detail: 'L11 will be examined in writing, and the shelf is full of coding exercises and textbook
+      problems but nearly empty of written conceptual questions with model answers. These papers fill
+      that gap: short-answer and multiple-choice items about when cross-validation is appropriate, what
+      a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
+      course covers much that SaD does not.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: scikit-learn user guide §3.1 — cross-validation
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §3.1 ''Cross-validation: evaluating estimator performance'' and §3.4 ''Metrics
+      and scoring'', with the linked examples'
+    angle: Enumerates the resampling schemes as named, runnable splitters — KFold, StratifiedKFold, GroupKFold
+      — with the situation each exists for.
+    angle_detail: 'L11 names cross-validation as one idea. The user guide shows it is a family, and each
+      member exists because of a specific failure: stratified splits for class imbalance, group splits
+      when observations are not independent, time-series splits when order matters. Knowing that the plain
+      version has failure modes is the conceptual content; the diagrams in §3.1 make the differences immediate.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Google ML Crash Course — framing, generalization and validation modules
+    source_id: source-google-ml-crash-course
+    locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
+      modules, each ≈15 min with in-page exercises
+    angle: Each concept arrives with an immediate in-page check question, so the vocabulary is tested
+      as it is introduced.
+    angle_detail: L11 is a vocabulary lecture, and vocabulary decays unless it is used. The crash course's
+      format — a short explanation followed at once by a question you must answer to continue — is well
+      suited to that, and the whole relevant sequence takes about ninety minutes. The validation-set module
+      in particular explains why a third split is needed once you start tuning, which the deck states
+      without motivating. Shallow by design; it is orientation, not depth.
+    scope_triage: helpful-now
+  - kind: read
+    label: Ng — bias, variance and the evaluation workflow lectures
+    source_id: source-ng-coursera
+    locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
+      learning curves, diagnosing bias vs variance)'
+    angle: Turns bias and variance into a diagnostic procedure — read the learning curves, then decide
+      what to change.
+    angle_detail: 'L11 defines underfitting, overfitting and the bias-variance trade-off. Ng''s week 6
+      makes them actionable: if training and validation error are both high you have bias and more data
+      will not help; if they diverge you have variance and more data will. That if-then structure is the
+      most retainable form of this material and is exactly what a conceptual exam question about the trade-off
+      is testing.'
+    scope_triage: helpful-now
   - kind: read
     label: Kroese — data-science workflow and evaluation
     source_id: source-kroese-dsml
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
       Summarizing and Visualizing Data, pdf pp. 19-36
-    scope_triage: helpful-now
     angle: States the whole supervised problem as risk minimisation first, so loss functions and generalization
       are one framework rather than two topics.
     angle_detail: Kroese defines the learner's goal as minimising expected loss over an unknown distribution,
-      then derives training error, test error and the need for a held-out set as consequences of not knowing that
-      distribution. L11 introduces objectives and resampling as separate pipeline stages; this route shows they
-      answer the same question. More mathematical than the other L11 options — expect measure-free but real probability
-      notation.
+      then derives training error, test error and the need for a held-out set as consequences of not knowing
+      that distribution. L11 introduces objectives and resampling as separate pipeline stages; this route
+      shows they answer the same question. More mathematical than the other L11 options — expect measure-free
+      but real probability notation.
+    vault_path: material://source-kroese-dsml/kroese.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 3 - the evaluation metrics of L11 as drills
     source_id: source-geron-handson
-    locator: Chapter 3, pp. 113-137 (ROC p. 117; confusion matrix p. 118; precision/recall trade-off p. 121; AUC
-      p. 126; multiclass p. 128; multilabel p. 134)
+    locator: Chapter 3, pp. 113-137 (ROC p. 117; confusion matrix p. 118; precision/recall trade-off p.
+      121; AUC p. 126; multiclass p. 128; multilabel p. 134)
+    angle: The deck's ROC/AUC pair (slides 38-39) had no practice source in the module at all; this chapter
+      builds the confusion matrix, the precision/recall trade-off, the ROC curve and AUC, then extends
+      to multiclass and multilabel, each with exercises.
+    angle_detail: 'The evaluation chapter as a drill: confusion matrix (p. 118), precision/recall trade-off
+      (p. 121), ROC and AUC (pp. 117, 126), and then the multiclass and multilabel extensions (pp. 128,
+      134) that L11 names but does not work through. The precision-recall trade-off curve is the part
+      worth the most attention — it makes the threshold an explicit decision rather than a hidden default,
+      which is the conceptual content behind class-imbalance questions.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: The deck's ROC/AUC pair (slides 38-39) had no practice source in the module at all; this chapter builds
-      the confusion matrix, the precision/recall trade-off, the ROC curve and AUC, then extends to multiclass
-      and multilabel, each with exercises.
-    angle_detail: 'The evaluation chapter as a drill: confusion matrix (p. 118), precision/recall trade-off (p.
-      121), ROC and AUC (pp. 117, 126), and then the multiclass and multilabel extensions (pp. 128, 134) that
-      L11 names but does not work through. The precision-recall trade-off curve is the part worth the most attention
-      — it makes the threshold an explicit decision rather than a hidden default, which is the conceptual content
-      behind class-imbalance questions.'
   - kind: read
     label: Zacharski Ch 5 - evaluating a classifier by hand
     source_id: source-zacharski-data-mining
-    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p. 203)
+    locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
+      203)
+    angle: Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked
+      data set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without
+      ever running it.
+    angle_detail: 'Evaluation carried out with a pen: 10-fold cross-validation (p. 187) explained as a
+      procedure you could run manually, the confusion matrix (p. 193) built by hand, and Kappa (p. 203)
+      — a metric L11 does not cover but which answers the ''is this better than guessing the majority
+      class'' question that class imbalance raises. Zacharski writes at the lowest technical level of
+      any book on this stage, which makes it the fastest route when the concept rather than the mathematics
+      is the obstacle.'
+    vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
-    angle: Walks 10-fold cross-validation, the confusion matrix and the Kappa statistic on a small worked data
-      set, which is the arithmetic L11 asserts on its cross-validation and evaluation slides without ever running
-      it.
-    angle_detail: 'Evaluation carried out with a pen: 10-fold cross-validation (p. 187) explained as a procedure
-      you could run manually, the confusion matrix (p. 193) built by hand, and Kappa (p. 203) — a metric L11 does
-      not cover but which answers the ''is this better than guessing the majority class'' question that class
-      imbalance raises. Zacharski writes at the lowest technical level of any book on this stage, which makes
-      it the fastest route when the concept rather than the mathematics is the obstacle.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
   attachments: []
   source_feedback: []
@@ -521,10 +751,10 @@ stages:
   objective: Model complexity trades approximation bias against sensitivity to samples; data volume, regularization,
     validation, and compute shape the attainable generalization performance.
   done_when:
-  - 'Reproduce without notes: Model complexity trades approximation bias against sensitivity to samples; data
-    volume, regularization, validation, and compute shape the attainable generalization performance.'
-  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Model complexity trades approximation bias against sensitivity to samples;
+    data volume, regularization, validation, and compute shape the attainable generalization performance.'
+  - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-bias-variance-tradeoff
@@ -535,93 +765,181 @@ stages:
     label: Current L11 data-science introduction deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf, 49 slides
+    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
+      L12 to L15 all assume.
+    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
+      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
+      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
+      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
+      L01''s confusion matrix rather than re-deriving it.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that L12 to
-      L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything after
-      is learning algorithms, and it supplies the shared frame. Its concepts are individually simple and collectively
-      easy to hold vaguely, which is why the exercise-level routes on this stage (Géron Ch 2-3, ESL §7.10) matter
-      more here than usual. Note that the deck''s evaluation metrics extend L01''s confusion matrix rather than
-      re-deriving it.'
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     source_id: source-islp
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
       model accuracy, with the bias-variance decomposition, p. 37; §2.3 lab p. 48)
+    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two
+      curves crossing.
+    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias,
+      variance and irreducible error — and the derivation is short enough to follow at first reading.
+      That is the content behind L11's U-shaped test-error curve, and having the algebra makes the trade-off
+      a consequence rather than an empirical observation. The chapter also draws the distinction between
+      prediction and inference as two different reasons to fit a model, which reframes what the pipeline
+      is for.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Derives the bias-variance decomposition algebraically, which L11 states as a picture of two curves
-      crossing.
-    angle_detail: §2.2 shows the expected test error splitting into three named terms — squared bias, variance
-      and irreducible error — and the derivation is short enough to follow at first reading. That is the content
-      behind L11's U-shaped test-error curve, and having the algebra makes the trade-off a consequence rather
-      than an empirical observation. The chapter also draws the distinction between prediction and inference as
-      two different reasons to fit a model, which reframes what the pipeline is for.
+  - kind: read
+    label: Fortmann-Roe — understanding the bias-variance tradeoff
+    source_id: source-fortmann-roe-bias-variance
+    locator: The complete article 'Understanding the Bias-Variance Tradeoff' (scott.fortmann-roe.com),
+      including the bullseye diagram and the derivation appendix
+    angle: The bullseye diagram — four targets showing high/low bias against high/low variance — which
+      is the fastest way to fix the distinction.
+    angle_detail: 'Bias and variance are easy to confuse because both are described as ''error''. The
+      four-panel target picture separates them physically: bias is where the cluster of shots sits relative
+      to the centre, variance is how spread the cluster is. Fifteen minutes, and it makes the L11 curves
+      interpretable. The appendix gives the algebraic decomposition for readers who want it after the
+      picture.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Berkeley CS189 — past exam questions on evaluation and generalization
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the bias-variance, cross-validation
+      and evaluation-metric questions
+    angle: Written exam questions on conceptual ML material, which is otherwise almost impossible to practise.
+    angle_detail: 'L11 will be examined in writing, and the shelf is full of coding exercises and textbook
+      problems but nearly empty of written conceptual questions with model answers. These papers fill
+      that gap: short-answer and multiple-choice items about when cross-validation is appropriate, what
+      a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
+      course covers much that SaD does not.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Caltech LFD — the bias-variance decomposition and generalization lectures
+    source_id: source-caltech-lfd
+    locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
+      sets and solutions
+    angle: Asks whether learning is possible at all before asking how to do it, which is the question
+      L11's inductive-bias node gestures at.
+    angle_detail: The course's organising question is whether fitting the training data tells you anything
+      about unseen data, and its answer is that it does only under conditions that can be stated precisely.
+      L11 asserts that inductive bias is necessary; this is where that assertion gets an argument. Lecture
+      8 derives the bias-variance decomposition on the board with the averaging-over-datasets picture,
+      which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
+      level.
+    scope_triage: helpful-now
+  - kind: read
+    label: Google ML Crash Course — framing, generalization and validation modules
+    source_id: source-google-ml-crash-course
+    locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
+      modules, each ≈15 min with in-page exercises
+    angle: Each concept arrives with an immediate in-page check question, so the vocabulary is tested
+      as it is introduced.
+    angle_detail: L11 is a vocabulary lecture, and vocabulary decays unless it is used. The crash course's
+      format — a short explanation followed at once by a question you must answer to continue — is well
+      suited to that, and the whole relevant sequence takes about ninety minutes. The validation-set module
+      in particular explains why a third split is needed once you start tuning, which the deck states
+      without motivating. Shallow by design; it is orientation, not depth.
+    scope_triage: helpful-now
+  - kind: read
+    label: Ng — bias, variance and the evaluation workflow lectures
+    source_id: source-ng-coursera
+    locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
+      learning curves, diagnosing bias vs variance)'
+    angle: Turns bias and variance into a diagnostic procedure — read the learning curves, then decide
+      what to change.
+    angle_detail: 'L11 defines underfitting, overfitting and the bias-variance trade-off. Ng''s week 6
+      makes them actionable: if training and validation error are both high you have bias and more data
+      will not help; if they diverge you have variance and more data will. That if-then structure is the
+      most retainable form of this material and is exactly what a conceptual exam question about the trade-off
+      is testing.'
+    scope_triage: helpful-now
+  - kind: read
+    label: ISLP community solutions — Ch 2 and Ch 5 exercises
+    source_id: source-islp-community-solutions
+    locator: The Ch 2 (statistical learning) and Ch 5 (resampling methods) solution notebooks in the botlnec
+      / a-martyn / applied-on-ISLP repositories
+    angle: Makes the ISLP exercises checkable, which is the difference between reading the chapter and
+      knowing it.
+    angle_detail: 'ISLP publishes no official solutions, so its exercises are unusable for self-testing
+      on their own. These community repositories work them in full, usually with the code and the reasoning.
+      Treat them as an answer key rather than as authority: they are unreviewed, and on a disagreement
+      the book wins. The Ch 5 notebooks are the most useful here — cross-validation and bootstrap worked
+      end to end.'
+    scope_triage: helpful-now
   - kind: read
     label: Kroese — data-science workflow and evaluation
     source_id: source-kroese-dsml
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
       Summarizing and Visualizing Data, pdf pp. 19-36
-    scope_triage: helpful-now
     angle: States the whole supervised problem as risk minimisation first, so loss functions and generalization
       are one framework rather than two topics.
     angle_detail: Kroese defines the learner's goal as minimising expected loss over an unknown distribution,
-      then derives training error, test error and the need for a held-out set as consequences of not knowing that
-      distribution. L11 introduces objectives and resampling as separate pipeline stages; this route shows they
-      answer the same question. More mathematical than the other L11 options — expect measure-free but real probability
-      notation.
-  - kind: read
-    label: Domingos — A Few Useful Things to Know About Machine Learning
-    source_id: source-domingos-useful-things
-    locator: Complete article, 9 pages (CACM 55(10), 2012)
+      then derives training error, test error and the need for a held-out set as consequences of not knowing
+      that distribution. L11 introduces objectives and resampling as separate pipeline stages; this route
+      shows they answer the same question. More mathematical than the other L11 options — expect measure-free
+      but real probability notation.
+    vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
-    angle: Nine pages of practitioner judgment — that generalization is the goal, that data beats cleverness,
-      that overfitting has many faces.
-    angle_detail: 'This is the single best-value item on the L11 stage: it takes half an hour and it supplies
-      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning is
-      induction and therefore needs assumptions, more data usually beats a better algorithm, feature engineering
-      is where the work is — are exactly what L11''s pipeline slides assert without argument. Also the best available
-      preparation for a conceptual exam question, because it is written as argument rather than as definition.'
   - kind: read
     label: Geron Ch 1 - the ML vocabulary with failure cases attached
     source_id: source-geron-handson
-    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting p. 56; testing
-      and validating pp. 57-59; exercises p. 60)
+    locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
+      p. 56; testing and validating pp. 57-59; exercises p. 60)
+    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single
+      bullets; Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling
+      failures, so each term Leser asserts arrives with a worked counterexample.
+    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than
+      deferred. Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard
+      remedies, and testing/validating (pp. 57-59) explains why the split exists before L11's resampling
+      node formalises it. Written for practitioners, so every term is introduced with the situation that
+      made it necessary. The chapter exercises on pp. 60-61 are a fast check of whether the vocabulary
+      has actually landed.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L11 states supervised/unsupervised, over- and underfitting and the train/test split in single bullets;
-      Geron spends thirty pages on that same vocabulary with concrete data-quality and sampling failures, so each
-      term Leser asserts arrives with a worked counterexample.
-    angle_detail: The vocabulary chapter, with the failure cases attached to the definitions rather than deferred.
-      Overfitting (p. 54) and underfitting (p. 56) arrive with the diagnosis and the standard remedies, and testing/validating
-      (pp. 57-59) explains why the split exists before L11's resampling node formalises it. Written for practitioners,
-      so every term is introduced with the situation that made it necessary. The chapter exercises on pp. 60-61
-      are a fast check of whether the vocabulary has actually landed.
   - kind: practise
     label: Geron Ch 1 exercises - the L11 vocabulary tested back
     source_id: source-geron-handson
     locator: Chapter 1 exercises, pp. 60-61
+    angle: 'Nineteen short questions on labelled data, supervised versus unsupervised tasks, overfitting,
+      the validation set and why tuning on the test set breaks - the retrieval check for the framing half
+      of L11, which otherwise has no practice asset at all. Note: this copy is an early-release ebook
+      and its solutions cross-reference on p. 61 is unresolved, so answers must be checked against the
+      chapter body.'
+    angle_detail: Two pages of exercises testing exactly the L11 vocabulary, phrased as questions rather
+      than definitions. Because L11 has almost no computation, self-testing is otherwise hard to arrange,
+      and these are the closest available proxy for the short conceptual questions the exam will use.
+      Answers are in the book's appendix.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Nineteen short questions on labelled data, supervised versus unsupervised tasks, overfitting, the
-      validation set and why tuning on the test set breaks - the retrieval check for the framing half of L11,
-      which otherwise has no practice asset at all. Note: this copy is an early-release ebook and its solutions
-      cross-reference on p. 61 is unresolved, so answers must be checked against the chapter body.'
-    angle_detail: Two pages of exercises testing exactly the L11 vocabulary, phrased as questions rather than
-      definitions. Because L11 has almost no computation, self-testing is otherwise hard to arrange, and these
-      are the closest available proxy for the short conceptual questions the exam will use. Answers are in the
-      book's appendix.
+  - kind: read
+    label: Domingos — A Few Useful Things to Know About Machine Learning
+    source_id: source-domingos-useful-things
+    locator: Complete article, 9 pages (CACM 55(10), 2012)
+    angle: Nine pages of practitioner judgment — that generalization is the goal, that data beats cleverness,
+      that overfitting has many faces.
+    angle_detail: 'This is the single best-value item on the L11 stage: it takes half an hour and it supplies
+      the ''why does this matter'' layer for almost every node in the lecture. Its central points — learning
+      is induction and therefore needs assumptions, more data usually beats a better algorithm, feature
+      engineering is where the work is — are exactly what L11''s pipeline slides assert without argument.
+      Also the best available preparation for a conceptual exam question, because it is written as argument
+      rather than as definition.'
+    scope_triage: helpful-now
   - kind: reference
     label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
     source_id: source-esl
-    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap methods,
-      p. 268
+    locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
+      methods, p. 268
+    angle: L11 presents cross-validation and bootstrapping as confidence-raising procedures; this chapter
+      separates the bias-variance decomposition from the estimator of test error, which is the distinction
+      the deck's 'which k?' slide leaves open. Open only when a recorded error needs it.
+    angle_detail: The reference statement of what resampling actually estimates. §§7.2-7.3 (pp. 238-247)
+      distinguish test error from expected test error and derive the optimism of the training error, which
+      is the precise version of L11's claim that training error is not a fair estimate. §7.10 (p. 260)
+      then explains what cross-validation estimates and why the number of folds is a bias-variance trade-off
+      in its own right. Graduate level; read the specific sections rather than the chapter.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: L11 presents cross-validation and bootstrapping as confidence-raising procedures; this chapter separates
-      the bias-variance decomposition from the estimator of test error, which is the distinction the deck's 'which
-      k?' slide leaves open. Open only when a recorded error needs it.
-    angle_detail: The reference statement of what resampling actually estimates. §§7.2-7.3 (pp. 238-247) distinguish
-      test error from expected test error and derive the optimism of the training error, which is the precise
-      version of L11's claim that training error is not a fair estimate. §7.10 (p. 260) then explains what cross-validation
-      estimates and why the number of folds is a bias-variance trade-off in its own right. Graduate level; read
-      the specific sections rather than the chapter.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
   attachments: []
   source_feedback: []

@@ -1,0 +1,784 @@
+id: study-map-m2-sad-l08
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l08
+status: not-started
+current_stage: stage-sad-l08-normal
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+  - id: stage-sad-l08-normal
+    number: 1
+    title: The Normal family and its parameters
+    status: pending
+    objective: Mean locates the bell curve and variance controls spread; symmetry, density, and the 68-95-99.7 rule support qualitative checks before calculation.
+    done_when:
+      - 'Reproduce without notes: Mean locates the bell curve and variance controls spread; symmetry, density, and the 68-95-99.7 rule support qualitative checks before calculation.'
+      - Work Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation, then the remaining 3, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-normal-distribution
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
+        source_id: source-sad-uebungen
+        locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
+        angle: Pairs table-based Normal calculations with a simulation that reveals when the CLT approximation works.
+        angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution. It is scope evidence because it shows the chair''s own wording, data size and expected amount of working; it is not a replacement for the lecture derivation. The file''s printed sheet number is absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE5.pdf, slides 20-38
+        angle: Gives a visual, calculation-first bridge from z-scores to sample-mean normality.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE6.pdf, slides 5-20
+        angle: Supplies the current official numerical solutions and the code shape for the CLT experiment.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 Normal-distribution deck
+        source_id: source-sad-2025-recordings
+        locator: 08_normal_distribution_no_notes.pdf
+        angle: Prior-year Normal/CLT deck, without the annotation layer.
+        angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples and the different ordering. Lower priority than the annotated 2025 files.
+        vault_path: material://source-sad-2025-recordings/08_normal_distribution_no_notes.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
+        source_id: source-fahrmeir-statistik
+        locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7 §7.1 Grenzwertsätze, pdf pp. 330-336; §7.2 Approximation von Verteilungen, pdf pp. 337-338; Tabelle A Standardnormalverteilung, pdf p. 631
+        angle: The only route here that also hands you the z-table you will actually use, in the layout the Klausur uses.
+        angle_detail: '§6.3 defines the Normal family and standardisation in German notation; §7.1 separates the Gesetz der großen Zahlen from the Zentraler Grenzwertsatz, which is the single most confused pair in this lecture; §7.2 states the approximation rules with the Stetigkeitskorrektur that English texts often omit. Then p. 631 is the Standardnormalverteilung table itself — practising lookups against the table you will be given matters more than it sounds, because reading Φ backwards for a quantile is a distinct skill from reading it forwards. Contains no likelihood or MLE: for the L08 likelihood half use Dekking Ch 21.'
+        vault_path: material://source-fahrmeir-statistik/statistik.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
+        source_id: source-grinstead-snell
+        locator: Ch 8 Law of Large Numbers §§8.1-8.2 and Ch 9 Central Limit Theorem §§9.1-9.3, with the chapter exercises
+        angle: Gives the LLN and the CLT a chapter each, so the two limit theorems can never be read as one.
+        angle_detail: Conflating the law of large numbers with the central limit theorem is the standard L08 error, and a chapter boundary is the strongest structural defence against it. Ch 8 proves the weak law from Chebyshev; Ch 9 states the CLT for the Bernoulli case first, where it can be checked numerically, then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification, which most texts state as a rule.
+        scope_triage: helpful-now
+      - kind: read
+        label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
+        source_id: source-blitzstein-hwang
+        locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch 10 §10.1 inequalities, pdf pp. 475-483; §10.2 law of large numbers, pdf pp. 484-487; §10.3 central limit theorem, pdf pp. 488-493; exercises §10.7 pdf pp. 503-513
+        angle: Puts the LLN and the CLT in one chapter with the inequalities that bound them, so the two limit theorems are compared rather than met separately.
+        angle_detail: 'The single most common L08 misconception is that the CLT is a stronger version of the LLN. Ch 10 makes them adjacent sections making visibly different claims — the LLN about where the sample mean goes, the CLT about the shape of its fluctuation around that point — and the proximity does the teaching. §10.1 supplies Markov, Chebyshev and Jensen with proofs, which is where L06''s concentration node also points. §5.4 derives the standardisation identity rather than asserting it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
+        vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: OpenIntro Chapter 4 — Normal and sampling distributions
+        source_id: source-openintro-statistics
+        locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule); Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180 (the sampling distribution of the mean and the CLT statement)
+        angle: Builds the CLT out of a simulation the reader can picture — repeated samples, one histogram of their means — before any statement of the theorem.
+        angle_detail: §5.1 shows the sampling distribution being constructed by repetition, so 'the distribution of the sample mean' becomes a concrete object rather than a phrase. That picture is what makes the standard error formula in L09 obviously about a distribution of means rather than of data. §4.1 drills z-score conversion in both directions with a table, which is the mechanical L08 skill. No likelihood content and no proof of the CLT — deliberately, since the course does not need one.
+        vault_path: material://source-openintro-statistics/openintro.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 18.05 — Normal and CLT notes/exams
+        source_id: source-mit-1805
+        locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large Numbers'' reading and the ''Maximum Likelihood Estimates'' reading; the published exam questions and solutions on the Exams page'
+        angle: The only route here whose likelihood reading is written specifically to separate likelihood from probability, in one page.
+        angle_detail: L08's likelihood node turns on one distinction — the same expression read as a function of the data versus as a function of the parameter — and 18.05's MLE reading opens with exactly that before any optimisation. Combined with the CLT/LLN reading, this covers both halves of L08 with the same notation. The Exams page then supplies solved questions of both kinds under timed conditions, which is the closest thing on the shelf to an English-language SaD mock.
+        scope_triage: helpful-now
+      - kind: reference
+        label: Pitman — Normal and limit-theorem selections
+        source_id: source-pitman-probability
+        locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation (optional), pdf pp. 119-126; Ch 4 Continuous Distributions, pdf pp. 269-330'
+        angle: Splits the Normal approximation into a 'method' section and an optional 'derivation' section, so the mechanics and the proof are cleanly separable.
+        angle_detail: '§2.2 gives the recipe with the continuity correction and worked lookups — exactly what the exam needs — and §2.3 then derives it, marked optional by the author. That division lets you take only the first half now and come back for the second if the CLT''s origin nags. Pitman also introduces the Normal before continuous random variables in general, which is unusual and works well here: the shape is motivated by the approximation problem instead of appearing as one density among many.'
+        vault_path: material://source-pitman-probability/pitman.pdf
+        scope_triage: reference-only
+      - kind: reference
+        label: Ross — Normal distribution and limit theorems
+        source_id: source-ross-first-course
+        locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the distribution of a function of a random variable); Ch 8 Limit Theorems, pdf pp. 617-660 (§8.2 Chebyshev's inequality and the weak law; §8.3 the central limit theorem)
+        angle: Proves the CLT, and states Chebyshev, the weak law and the CLT as a single graded sequence of limit theorems.
+        angle_detail: 'Ch 8 is the only route here that gives a proof of the central limit theorem, and more usefully it arranges the results as an escalation: Chebyshev bounds the deviation crudely, the weak law turns that bound into convergence in probability, and the CLT then describes the exact limiting shape. That ordering is the answer to ''why do we need the CLT when we already have Chebyshev'', which the lecture does not address. Above SaD''s required level — read it if the LLN/CLT distinction is still unstable after Dekking Ch 13-14.'
+        vault_path: material://source-ross-first-course/ross.pdf
+        scope_triage: reference-only
+      - kind: reference
+        label: Harvard Stat 110 Units 5–6 — Normal and CLT
+        source_id: source-stat110
+        locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large numbers, central limit theorem)
+        angle: Derives the Normal's normalising constant and standardisation rather than asserting them.
+        angle_detail: The Gaussian integral trick and the change of variables that turns any Normal into a standard Normal are both done on the board. Neither is examinable in SaD, but the second one is the reason the z-table works for every Normal, and knowing that removes the temptation to memorise separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing the book uses in Ch 10.
+        scope_triage: reference-only
+      - kind: practise
+        label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
+        source_id: source-sad-klausuren-extern
+        locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT items
+        angle: Connects standardized Normal calculations to sums and sample statistics in a compact solved block.
+        angle_detail: The benefit is transfer between distribution recognition and calculation. It is not the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated derivation sources.
+        vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+        scope_triage: helpful-now
+      - kind: watch
+        label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
+        source_id: source-kurzes-tutorium-statistik
+        locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
+        angle: Reads the German z-table layout, which is arranged differently from the tables in the English texts.
+        angle_detail: The Standardnormalverteilung table you will be given is the German layout, and practising lookups against an American table is a small but real mismatch. These videos use the German one and read it in both directions. Fahrmeir p. 631 is the same table in print.
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-standardization
+    number: 2
+    title: Standardization, CDFs, and quantiles
+    status: pending
+    objective: Z=(X-mu)/sigma maps any Normal variable to N(0,1), enabling probability and inverse-probability calculations through Phi and its quantiles.
+    done_when:
+      - 'Reproduce without notes: Z=(X-mu)/sigma maps any Normal variable to N(0,1), enabling probability and inverse-probability calculations through Phi and its quantiles.'
+      - Work Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation, then the remaining 6, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-feature-scaling
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
+        source_id: source-sad-uebungen
+        locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
+        angle: Pairs table-based Normal calculations with a simulation that reveals when the CLT approximation works.
+        angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution. It is scope evidence because it shows the chair''s own wording, data size and expected amount of working; it is not a replacement for the lecture derivation. The file''s printed sheet number is absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE5.pdf, slides 20-38
+        angle: Gives a visual, calculation-first bridge from z-scores to sample-mean normality.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE6.pdf, slides 5-20
+        angle: Supplies the current official numerical solutions and the code shape for the CLT experiment.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 Normal-distribution deck
+        source_id: source-sad-2025-recordings
+        locator: 08_normal_distribution_no_notes.pdf
+        angle: Prior-year Normal/CLT deck, without the annotation layer.
+        angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples and the different ordering. Lower priority than the annotated 2025 files.
+        vault_path: material://source-sad-2025-recordings/08_normal_distribution_no_notes.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
+        source_id: source-fahrmeir-statistik
+        locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7 §7.1 Grenzwertsätze, pdf pp. 330-336; §7.2 Approximation von Verteilungen, pdf pp. 337-338; Tabelle A Standardnormalverteilung, pdf p. 631
+        angle: The only route here that also hands you the z-table you will actually use, in the layout the Klausur uses.
+        angle_detail: '§6.3 defines the Normal family and standardisation in German notation; §7.1 separates the Gesetz der großen Zahlen from the Zentraler Grenzwertsatz, which is the single most confused pair in this lecture; §7.2 states the approximation rules with the Stetigkeitskorrektur that English texts often omit. Then p. 631 is the Standardnormalverteilung table itself — practising lookups against the table you will be given matters more than it sounds, because reading Φ backwards for a quantile is a distinct skill from reading it forwards. Contains no likelihood or MLE: for the L08 likelihood half use Dekking Ch 21.'
+        vault_path: material://source-fahrmeir-statistik/statistik.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
+        source_id: source-fahrmeir-arbeitsbuch
+        locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+        angle: Normal-table lookups and CLT approximations worked to the digit, including the continuity correction.
+        angle_detail: 'Two mechanical skills decide the L08 questions: reading Φ in both directions, and knowing when a Binomial may be replaced by a Normal and what the ±0.5 correction does to the answer. Both are drilled here with full arithmetic, so a wrong answer can be traced to the exact step. Ch 7''s approximation items are the ones to prioritise if time is short.'
+        vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: OpenIntro Chapter 4 — Normal and sampling distributions
+        source_id: source-openintro-statistics
+        locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule); Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180 (the sampling distribution of the mean and the CLT statement)
+        angle: Builds the CLT out of a simulation the reader can picture — repeated samples, one histogram of their means — before any statement of the theorem.
+        angle_detail: §5.1 shows the sampling distribution being constructed by repetition, so 'the distribution of the sample mean' becomes a concrete object rather than a phrase. That picture is what makes the standard error formula in L09 obviously about a distribution of means rather than of data. §4.1 drills z-score conversion in both directions with a table, which is the mechanical L08 skill. No likelihood content and no proof of the CLT — deliberately, since the course does not need one.
+        vault_path: material://source-openintro-statistics/openintro.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Dekking — Normal and CLT exercises
+        source_id: source-dekking-mips
+        locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp. 189-202 (Chebyshev p. 191; LLN p. 193; consequences p. 196; exercises p. 199); Ch 14 the central limit theorem, pdf pp. 203-213 (standardizing averages p. 203; applications p. 207; exercises p. 211); Ch 21 maximum likelihood, pdf pp. 317-331 (likelihood and loglikelihood p. 320; properties p. 325; exercises p. 327)
+        angle: The one route that covers both halves of L08 — the limit theorems and maximum likelihood — in the same book and notation.
+        angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation explicitly and explains why maximising the log is legitimate, which is the step where students lose the thread when they meet the Gaussian-error derivation.'
+        vault_path: material://source-dekking-mips/dekking.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 18.05 — Normal and CLT notes/exams
+        source_id: source-mit-1805
+        locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large Numbers'' reading and the ''Maximum Likelihood Estimates'' reading; the published exam questions and solutions on the Exams page'
+        angle: The only route here whose likelihood reading is written specifically to separate likelihood from probability, in one page.
+        angle_detail: L08's likelihood node turns on one distinction — the same expression read as a function of the data versus as a function of the parameter — and 18.05's MLE reading opens with exactly that before any optimisation. Combined with the CLT/LLN reading, this covers both halves of L08 with the same notation. The Exams page then supplies solved questions of both kinds under timed conditions, which is the closest thing on the shelf to an English-language SaD mock.
+        scope_triage: helpful-now
+      - kind: reference
+        label: Pitman — Normal and limit-theorem selections
+        source_id: source-pitman-probability
+        locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation (optional), pdf pp. 119-126; Ch 4 Continuous Distributions, pdf pp. 269-330'
+        angle: Splits the Normal approximation into a 'method' section and an optional 'derivation' section, so the mechanics and the proof are cleanly separable.
+        angle_detail: '§2.2 gives the recipe with the continuity correction and worked lookups — exactly what the exam needs — and §2.3 then derives it, marked optional by the author. That division lets you take only the first half now and come back for the second if the CLT''s origin nags. Pitman also introduces the Normal before continuous random variables in general, which is unusual and works well here: the shape is motivated by the approximation problem instead of appearing as one density among many.'
+        vault_path: material://source-pitman-probability/pitman.pdf
+        scope_triage: reference-only
+      - kind: practise
+        label: Schaum — Normal and CLT drills
+        source_id: source-schaums-probability
+        locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation problems)
+        angle: Normal-table drill with the approximation conditions and the continuity correction applied problem by problem.
+        angle_detail: The mechanical half of L08 — convert to z, read the table, apply the ±0.5 correction, check that np and n(1−p) are large enough — is trained here at volume and nowhere else on the shelf as cheaply. No CLT theory and no likelihood; this route is calculation practice only, and should be paired with Dekking Ch 13-14 for the reasoning.
+        vault_path: material://source-schaums-probability/schaums-probability.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
+        source_id: source-sad-klausuren-extern
+        locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT items
+        angle: Connects standardized Normal calculations to sums and sample statistics in a compact solved block.
+        angle_detail: The benefit is transfer between distribution recognition and calculation. It is not the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated derivation sources.
+        vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+        scope_triage: helpful-now
+      - kind: watch
+        label: jbstatistics — Normal, z-scores, and CLT
+        source_id: source-jbstatistics
+        locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction to the Central Limit Theorem'''
+        angle: Drills the standard-normal table in both directions, including finding a value from a given probability.
+        angle_detail: Reading the table backwards — given a tail probability, find z — is a distinct skill and the one L09's confidence intervals will immediately depend on. The videos work several of each direction, which is more repetition than any text here provides in that specific operation.
+        scope_triage: helpful-now
+      - kind: watch
+        label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
+        source_id: source-kurzes-tutorium-statistik
+        locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
+        angle: Reads the German z-table layout, which is arranged differently from the tables in the English texts.
+        angle_detail: The Standardnormalverteilung table you will be given is the German layout, and practising lookups against an American table is a small but real mismatch. These videos use the German one and read it in both directions. Fahrmeir p. 631 is the same table in print.
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-standardization/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-transform-sum
+    number: 3
+    title: Linear transforms and sums of independent Normals
+    status: pending
+    objective: Affine transformations change mean and variance predictably, and independent Normal sums remain Normal with variances adding.
+    done_when:
+      - 'Reproduce without notes: Affine transformations change mean and variance predictably, and independent Normal sums remain Normal with variances adding.'
+      - Work Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation, then the remaining 4, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-normal-distribution
+      - concept-variance
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
+        source_id: source-sad-uebungen
+        locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
+        angle: Pairs table-based Normal calculations with a simulation that reveals when the CLT approximation works.
+        angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution. It is scope evidence because it shows the chair''s own wording, data size and expected amount of working; it is not a replacement for the lecture derivation. The file''s printed sheet number is absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE5.pdf, slides 20-38
+        angle: Gives a visual, calculation-first bridge from z-scores to sample-mean normality.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
+        source_id: source-fahrmeir-statistik
+        locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7 §7.1 Grenzwertsätze, pdf pp. 330-336; §7.2 Approximation von Verteilungen, pdf pp. 337-338; Tabelle A Standardnormalverteilung, pdf p. 631
+        angle: The only route here that also hands you the z-table you will actually use, in the layout the Klausur uses.
+        angle_detail: '§6.3 defines the Normal family and standardisation in German notation; §7.1 separates the Gesetz der großen Zahlen from the Zentraler Grenzwertsatz, which is the single most confused pair in this lecture; §7.2 states the approximation rules with the Stetigkeitskorrektur that English texts often omit. Then p. 631 is the Standardnormalverteilung table itself — practising lookups against the table you will be given matters more than it sounds, because reading Φ backwards for a quantile is a distinct skill from reading it forwards. Contains no likelihood or MLE: for the L08 likelihood half use Dekking Ch 21.'
+        vault_path: material://source-fahrmeir-statistik/statistik.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
+        source_id: source-blitzstein-hwang
+        locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch 10 §10.1 inequalities, pdf pp. 475-483; §10.2 law of large numbers, pdf pp. 484-487; §10.3 central limit theorem, pdf pp. 488-493; exercises §10.7 pdf pp. 503-513
+        angle: Puts the LLN and the CLT in one chapter with the inequalities that bound them, so the two limit theorems are compared rather than met separately.
+        angle_detail: 'The single most common L08 misconception is that the CLT is a stronger version of the LLN. Ch 10 makes them adjacent sections making visibly different claims — the LLN about where the sample mean goes, the CLT about the shape of its fluctuation around that point — and the proximity does the teaching. §10.1 supplies Markov, Chebyshev and Jensen with proofs, which is where L06''s concentration node also points. §5.4 derives the standardisation identity rather than asserting it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
+        vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Dekking — Normal and CLT exercises
+        source_id: source-dekking-mips
+        locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp. 189-202 (Chebyshev p. 191; LLN p. 193; consequences p. 196; exercises p. 199); Ch 14 the central limit theorem, pdf pp. 203-213 (standardizing averages p. 203; applications p. 207; exercises p. 211); Ch 21 maximum likelihood, pdf pp. 317-331 (likelihood and loglikelihood p. 320; properties p. 325; exercises p. 327)
+        angle: The one route that covers both halves of L08 — the limit theorems and maximum likelihood — in the same book and notation.
+        angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation explicitly and explains why maximising the log is legitimate, which is the step where students lose the thread when they meet the Gaussian-error derivation.'
+        vault_path: material://source-dekking-mips/dekking.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Ross — Normal distribution and limit theorems
+        source_id: source-ross-first-course
+        locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the distribution of a function of a random variable); Ch 8 Limit Theorems, pdf pp. 617-660 (§8.2 Chebyshev's inequality and the weak law; §8.3 the central limit theorem)
+        angle: Proves the CLT, and states Chebyshev, the weak law and the CLT as a single graded sequence of limit theorems.
+        angle_detail: 'Ch 8 is the only route here that gives a proof of the central limit theorem, and more usefully it arranges the results as an escalation: Chebyshev bounds the deviation crudely, the weak law turns that bound into convergence in probability, and the CLT then describes the exact limiting shape. That ordering is the answer to ''why do we need the CLT when we already have Chebyshev'', which the lecture does not address. Above SaD''s required level — read it if the LLN/CLT distinction is still unstable after Dekking Ch 13-14.'
+        vault_path: material://source-ross-first-course/ross.pdf
+        scope_triage: reference-only
+      - kind: practise
+        label: Schaum — Normal and CLT drills
+        source_id: source-schaums-probability
+        locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation problems)
+        angle: Normal-table drill with the approximation conditions and the continuity correction applied problem by problem.
+        angle_detail: The mechanical half of L08 — convert to z, read the table, apply the ±0.5 correction, check that np and n(1−p) are large enough — is trained here at volume and nowhere else on the shelf as cheaply. No CLT theory and no likelihood; this route is calculation practice only, and should be paired with Dekking Ch 13-14 for the reasoning.
+        vault_path: material://source-schaums-probability/schaums-probability.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Harvard Stat 110 Units 5–6 — Normal and CLT
+        source_id: source-stat110
+        locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large numbers, central limit theorem)
+        angle: Derives the Normal's normalising constant and standardisation rather than asserting them.
+        angle_detail: The Gaussian integral trick and the change of variables that turns any Normal into a standard Normal are both done on the board. Neither is examinable in SaD, but the second one is the reason the z-table works for every Normal, and knowing that removes the temptation to memorise separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing the book uses in Ch 10.
+        scope_triage: reference-only
+      - kind: practise
+        label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
+        source_id: source-sad-klausuren-extern
+        locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT items
+        angle: Connects standardized Normal calculations to sums and sample statistics in a compact solved block.
+        angle_detail: The benefit is transfer between distribution recognition and calculation. It is not the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated derivation sources.
+        vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-transform-sum/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-clt
+    number: 4
+    title: Law of large numbers versus central limit theorem
+    status: pending
+    objective: The LLN concerns convergence of an average to its expectation; the CLT concerns the approximately Normal shape and scale of its sampling fluctuations.
+    done_when:
+      - 'Reproduce without notes: The LLN concerns convergence of an average to its expectation; the CLT concerns the approximately Normal shape and scale of its sampling fluctuations.'
+      - Work Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation, then the remaining 6, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-central-limit-theorem
+      - concept-law-of-large-numbers
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
+        source_id: source-sad-uebungen
+        locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
+        angle: Pairs table-based Normal calculations with a simulation that reveals when the CLT approximation works.
+        angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution. It is scope evidence because it shows the chair''s own wording, data size and expected amount of working; it is not a replacement for the lecture derivation. The file''s printed sheet number is absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE5.pdf, slides 20-38
+        angle: Gives a visual, calculation-first bridge from z-scores to sample-mean normality.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE6.pdf, slides 5-20
+        angle: Supplies the current official numerical solutions and the code shape for the CLT experiment.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 Normal-distribution deck
+        source_id: source-sad-2025-recordings
+        locator: 08_normal_distribution_no_notes.pdf
+        angle: Prior-year Normal/CLT deck, without the annotation layer.
+        angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples and the different ordering. Lower priority than the annotated 2025 files.
+        vault_path: material://source-sad-2025-recordings/08_normal_distribution_no_notes.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
+        source_id: source-fahrmeir-statistik
+        locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7 §7.1 Grenzwertsätze, pdf pp. 330-336; §7.2 Approximation von Verteilungen, pdf pp. 337-338; Tabelle A Standardnormalverteilung, pdf p. 631
+        angle: The only route here that also hands you the z-table you will actually use, in the layout the Klausur uses.
+        angle_detail: '§6.3 defines the Normal family and standardisation in German notation; §7.1 separates the Gesetz der großen Zahlen from the Zentraler Grenzwertsatz, which is the single most confused pair in this lecture; §7.2 states the approximation rules with the Stetigkeitskorrektur that English texts often omit. Then p. 631 is the Standardnormalverteilung table itself — practising lookups against the table you will be given matters more than it sounds, because reading Φ backwards for a quantile is a distinct skill from reading it forwards. Contains no likelihood or MLE: for the L08 likelihood half use Dekking Ch 21.'
+        vault_path: material://source-fahrmeir-statistik/statistik.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
+        source_id: source-fahrmeir-arbeitsbuch
+        locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+        angle: Normal-table lookups and CLT approximations worked to the digit, including the continuity correction.
+        angle_detail: 'Two mechanical skills decide the L08 questions: reading Φ in both directions, and knowing when a Binomial may be replaced by a Normal and what the ±0.5 correction does to the answer. Both are drilled here with full arithmetic, so a wrong answer can be traced to the exact step. Ch 7''s approximation items are the ones to prioritise if time is short.'
+        vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
+        source_id: source-grinstead-snell
+        locator: Ch 8 Law of Large Numbers §§8.1-8.2 and Ch 9 Central Limit Theorem §§9.1-9.3, with the chapter exercises
+        angle: Gives the LLN and the CLT a chapter each, so the two limit theorems can never be read as one.
+        angle_detail: Conflating the law of large numbers with the central limit theorem is the standard L08 error, and a chapter boundary is the strongest structural defence against it. Ch 8 proves the weak law from Chebyshev; Ch 9 states the CLT for the Bernoulli case first, where it can be checked numerically, then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification, which most texts state as a rule.
+        scope_triage: helpful-now
+      - kind: read
+        label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
+        source_id: source-blitzstein-hwang
+        locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch 10 §10.1 inequalities, pdf pp. 475-483; §10.2 law of large numbers, pdf pp. 484-487; §10.3 central limit theorem, pdf pp. 488-493; exercises §10.7 pdf pp. 503-513
+        angle: Puts the LLN and the CLT in one chapter with the inequalities that bound them, so the two limit theorems are compared rather than met separately.
+        angle_detail: 'The single most common L08 misconception is that the CLT is a stronger version of the LLN. Ch 10 makes them adjacent sections making visibly different claims — the LLN about where the sample mean goes, the CLT about the shape of its fluctuation around that point — and the proximity does the teaching. §10.1 supplies Markov, Chebyshev and Jensen with proofs, which is where L06''s concentration node also points. §5.4 derives the standardisation identity rather than asserting it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
+        vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 6.041SC — limit theorems lectures
+        source_id: source-mit-6041sc
+        locator: The limit-theorems lectures (weak law of large numbers; central limit theorem) with their recitations
+        angle: States precisely what each limit theorem does and does not claim, with counterexamples to the usual misreadings.
+        angle_detail: Tsitsiklis spends time on what the CLT does not say — that it is a statement about the distribution of the standardised sum, not about the sum itself, and that it says nothing about the tails at any finite n. Those clarifications prevent the two most common wrong applications. Comes with recitations that apply the theorems to concrete approximation problems.
+        scope_triage: helpful-now
+      - kind: read
+        label: OpenIntro Chapter 4 — Normal and sampling distributions
+        source_id: source-openintro-statistics
+        locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule); Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180 (the sampling distribution of the mean and the CLT statement)
+        angle: Builds the CLT out of a simulation the reader can picture — repeated samples, one histogram of their means — before any statement of the theorem.
+        angle_detail: §5.1 shows the sampling distribution being constructed by repetition, so 'the distribution of the sample mean' becomes a concrete object rather than a phrase. That picture is what makes the standard error formula in L09 obviously about a distribution of means rather than of data. §4.1 drills z-score conversion in both directions with a table, which is the mechanical L08 skill. No likelihood content and no proof of the CLT — deliberately, since the course does not need one.
+        vault_path: material://source-openintro-statistics/openintro.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Dekking — Normal and CLT exercises
+        source_id: source-dekking-mips
+        locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp. 189-202 (Chebyshev p. 191; LLN p. 193; consequences p. 196; exercises p. 199); Ch 14 the central limit theorem, pdf pp. 203-213 (standardizing averages p. 203; applications p. 207; exercises p. 211); Ch 21 maximum likelihood, pdf pp. 317-331 (likelihood and loglikelihood p. 320; properties p. 325; exercises p. 327)
+        angle: The one route that covers both halves of L08 — the limit theorems and maximum likelihood — in the same book and notation.
+        angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation explicitly and explains why maximising the log is legitimate, which is the step where students lose the thread when they meet the Gaussian-error derivation.'
+        vault_path: material://source-dekking-mips/dekking.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 18.05 — Normal and CLT notes/exams
+        source_id: source-mit-1805
+        locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large Numbers'' reading and the ''Maximum Likelihood Estimates'' reading; the published exam questions and solutions on the Exams page'
+        angle: The only route here whose likelihood reading is written specifically to separate likelihood from probability, in one page.
+        angle_detail: L08's likelihood node turns on one distinction — the same expression read as a function of the data versus as a function of the parameter — and 18.05's MLE reading opens with exactly that before any optimisation. Combined with the CLT/LLN reading, this covers both halves of L08 with the same notation. The Exams page then supplies solved questions of both kinds under timed conditions, which is the closest thing on the shelf to an English-language SaD mock.
+        scope_triage: helpful-now
+      - kind: reference
+        label: Pitman — Normal and limit-theorem selections
+        source_id: source-pitman-probability
+        locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation (optional), pdf pp. 119-126; Ch 4 Continuous Distributions, pdf pp. 269-330'
+        angle: Splits the Normal approximation into a 'method' section and an optional 'derivation' section, so the mechanics and the proof are cleanly separable.
+        angle_detail: '§2.2 gives the recipe with the continuity correction and worked lookups — exactly what the exam needs — and §2.3 then derives it, marked optional by the author. That division lets you take only the first half now and come back for the second if the CLT''s origin nags. Pitman also introduces the Normal before continuous random variables in general, which is unusual and works well here: the shape is motivated by the approximation problem instead of appearing as one density among many.'
+        vault_path: material://source-pitman-probability/pitman.pdf
+        scope_triage: reference-only
+      - kind: reference
+        label: Tijms — LLN and CLT intuition
+        source_id: source-tijms-understanding-probability
+        locator: Ch 5 Probability and statistics, pdf pp. 153-217 (§5.8 the central limit theorem and random walks); Ch 10 §10.2 Important probability densities, pdf pp. 296-324
+        angle: Demonstrates the CLT by simulation across several different starting distributions, so the universality claim is seen rather than asserted.
+        angle_detail: The striking part of the CLT is that the starting distribution does not matter, and that is exactly the part a formula cannot convey. Tijms runs the same averaging experiment on visibly different distributions and shows the same Normal shape emerging each time. §5.9 on Benford's law and §5.10 are outside SaD scope but are short and make the point that a limit theorem is a claim about the world. No likelihood content.
+        vault_path: material://source-tijms-understanding-probability/tijms.pdf
+        scope_triage: reference-only
+      - kind: reference
+        label: Ross — Normal distribution and limit theorems
+        source_id: source-ross-first-course
+        locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the distribution of a function of a random variable); Ch 8 Limit Theorems, pdf pp. 617-660 (§8.2 Chebyshev's inequality and the weak law; §8.3 the central limit theorem)
+        angle: Proves the CLT, and states Chebyshev, the weak law and the CLT as a single graded sequence of limit theorems.
+        angle_detail: 'Ch 8 is the only route here that gives a proof of the central limit theorem, and more usefully it arranges the results as an escalation: Chebyshev bounds the deviation crudely, the weak law turns that bound into convergence in probability, and the CLT then describes the exact limiting shape. That ordering is the answer to ''why do we need the CLT when we already have Chebyshev'', which the lecture does not address. Above SaD''s required level — read it if the LLN/CLT distinction is still unstable after Dekking Ch 13-14.'
+        vault_path: material://source-ross-first-course/ross.pdf
+        scope_triage: reference-only
+      - kind: practise
+        label: Schaum — Normal and CLT drills
+        source_id: source-schaums-probability
+        locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation problems)
+        angle: Normal-table drill with the approximation conditions and the continuity correction applied problem by problem.
+        angle_detail: The mechanical half of L08 — convert to z, read the table, apply the ±0.5 correction, check that np and n(1−p) are large enough — is trained here at volume and nowhere else on the shelf as cheaply. No CLT theory and no likelihood; this route is calculation practice only, and should be paired with Dekking Ch 13-14 for the reasoning.
+        vault_path: material://source-schaums-probability/schaums-probability.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Harvard Stat 110 Units 5–6 — Normal and CLT
+        source_id: source-stat110
+        locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large numbers, central limit theorem)
+        angle: Derives the Normal's normalising constant and standardisation rather than asserting them.
+        angle_detail: The Gaussian integral trick and the change of variables that turns any Normal into a standard Normal are both done on the board. Neither is examinable in SaD, but the second one is the reason the z-table works for every Normal, and knowing that removes the temptation to memorise separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing the book uses in Ch 10.
+        scope_triage: reference-only
+      - kind: practise
+        label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
+        source_id: source-sad-klausuren-extern
+        locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT items
+        angle: Connects standardized Normal calculations to sums and sample statistics in a compact solved block.
+        angle_detail: The benefit is transfer between distribution recognition and calculation. It is not the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated derivation sources.
+        vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Regensburg-Löh pp. 6-8 — LLN/CLT proof reference
+        source_id: source-sad-klausuren-extern
+        locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 6-8, convergence tasks
+        angle: Provides a rigorous statement-and-proof view of convergence laws that the course uses computationally.
+        angle_detail: This route is deliberately reference-only. It can clarify assumptions and modes of convergence, but its proof burden is outside the SaD exam and would be harmful as ordinary preparation.
+        vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+        scope_triage: reference-only
+      - kind: watch
+        label: StatQuest — CLT, likelihood, and maximum likelihood
+        source_id: source-statquest
+        locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum Likelihood, Clearly Explained'' (≈12 min each)'
+        angle: '''Probability is not Likelihood'' isolates L08''s hardest distinction into a single dedicated video.'
+        angle_detail: 'The likelihood-versus-probability confusion is the reason L08''s second half is hard, and it is a distinction about which quantity is held fixed, not about any formula. This video does nothing else for eight minutes: same curve, same expression, read twice. Watch it before reading Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling animation OpenIntro describes in text.'
+        scope_triage: helpful-now
+      - kind: watch
+        label: jbstatistics — Normal, z-scores, and CLT
+        source_id: source-jbstatistics
+        locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction to the Central Limit Theorem'''
+        angle: Drills the standard-normal table in both directions, including finding a value from a given probability.
+        angle_detail: Reading the table backwards — given a tail probability, find z — is a distinct skill and the one L09's confidence intervals will immediately depend on. The videos work several of each direction, which is more repetition than any text here provides in that specific operation.
+        scope_triage: helpful-now
+      - kind: watch
+        label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
+        source_id: source-kurzes-tutorium-statistik
+        locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
+        angle: Reads the German z-table layout, which is arranged differently from the tables in the English texts.
+        angle_detail: The Standardnormalverteilung table you will be given is the German layout, and practising lookups against an American table is a small but real mismatch. These videos use the German one and read it in both directions. Fahrmeir p. 631 is the same table in print.
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-approximation
+    number: 5
+    title: Normal approximation and continuity correction
+    status: pending
+    objective: Sums and counts may be approximated by a Normal law when conditions are adequate; discrete boundaries require a continuity correction and approximation error remains explicit.
+    done_when:
+      - 'Reproduce without notes: Sums and counts may be approximated by a Normal law when conditions are adequate; discrete boundaries require a continuity correction and approximation error remains explicit.'
+      - Work Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation, then the remaining 6, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-central-limit-theorem
+      - concept-normal-distribution
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
+        source_id: source-sad-uebungen
+        locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
+        angle: Pairs table-based Normal calculations with a simulation that reveals when the CLT approximation works.
+        angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution. It is scope evidence because it shows the chair''s own wording, data size and expected amount of working; it is not a replacement for the lecture derivation. The file''s printed sheet number is absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE5.pdf, slides 20-38
+        angle: Gives a visual, calculation-first bridge from z-scores to sample-mean normality.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE6.pdf, slides 5-20
+        angle: Supplies the current official numerical solutions and the code shape for the CLT experiment.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+        scope_triage: required-now
+      - kind: read
+        label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
+        source_id: source-fahrmeir-statistik
+        locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7 §7.1 Grenzwertsätze, pdf pp. 330-336; §7.2 Approximation von Verteilungen, pdf pp. 337-338; Tabelle A Standardnormalverteilung, pdf p. 631
+        angle: The only route here that also hands you the z-table you will actually use, in the layout the Klausur uses.
+        angle_detail: '§6.3 defines the Normal family and standardisation in German notation; §7.1 separates the Gesetz der großen Zahlen from the Zentraler Grenzwertsatz, which is the single most confused pair in this lecture; §7.2 states the approximation rules with the Stetigkeitskorrektur that English texts often omit. Then p. 631 is the Standardnormalverteilung table itself — practising lookups against the table you will be given matters more than it sounds, because reading Φ backwards for a quantile is a distinct skill from reading it forwards. Contains no likelihood or MLE: for the L08 likelihood half use Dekking Ch 21.'
+        vault_path: material://source-fahrmeir-statistik/statistik.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
+        source_id: source-fahrmeir-arbeitsbuch
+        locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+        angle: Normal-table lookups and CLT approximations worked to the digit, including the continuity correction.
+        angle_detail: 'Two mechanical skills decide the L08 questions: reading Φ in both directions, and knowing when a Binomial may be replaced by a Normal and what the ±0.5 correction does to the answer. Both are drilled here with full arithmetic, so a wrong answer can be traced to the exact step. Ch 7''s approximation items are the ones to prioritise if time is short.'
+        vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
+        source_id: source-grinstead-snell
+        locator: Ch 8 Law of Large Numbers §§8.1-8.2 and Ch 9 Central Limit Theorem §§9.1-9.3, with the chapter exercises
+        angle: Gives the LLN and the CLT a chapter each, so the two limit theorems can never be read as one.
+        angle_detail: Conflating the law of large numbers with the central limit theorem is the standard L08 error, and a chapter boundary is the strongest structural defence against it. Ch 8 proves the weak law from Chebyshev; Ch 9 states the CLT for the Bernoulli case first, where it can be checked numerically, then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification, which most texts state as a rule.
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 6.041SC — limit theorems lectures
+        source_id: source-mit-6041sc
+        locator: The limit-theorems lectures (weak law of large numbers; central limit theorem) with their recitations
+        angle: States precisely what each limit theorem does and does not claim, with counterexamples to the usual misreadings.
+        angle_detail: Tsitsiklis spends time on what the CLT does not say — that it is a statement about the distribution of the standardised sum, not about the sum itself, and that it says nothing about the tails at any finite n. Those clarifications prevent the two most common wrong applications. Comes with recitations that apply the theorems to concrete approximation problems.
+        scope_triage: helpful-now
+      - kind: read
+        label: OpenIntro Chapter 4 — Normal and sampling distributions
+        source_id: source-openintro-statistics
+        locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule); Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180 (the sampling distribution of the mean and the CLT statement)
+        angle: Builds the CLT out of a simulation the reader can picture — repeated samples, one histogram of their means — before any statement of the theorem.
+        angle_detail: §5.1 shows the sampling distribution being constructed by repetition, so 'the distribution of the sample mean' becomes a concrete object rather than a phrase. That picture is what makes the standard error formula in L09 obviously about a distribution of means rather than of data. §4.1 drills z-score conversion in both directions with a table, which is the mechanical L08 skill. No likelihood content and no proof of the CLT — deliberately, since the course does not need one.
+        vault_path: material://source-openintro-statistics/openintro.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Dekking — Normal and CLT exercises
+        source_id: source-dekking-mips
+        locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp. 189-202 (Chebyshev p. 191; LLN p. 193; consequences p. 196; exercises p. 199); Ch 14 the central limit theorem, pdf pp. 203-213 (standardizing averages p. 203; applications p. 207; exercises p. 211); Ch 21 maximum likelihood, pdf pp. 317-331 (likelihood and loglikelihood p. 320; properties p. 325; exercises p. 327)
+        angle: The one route that covers both halves of L08 — the limit theorems and maximum likelihood — in the same book and notation.
+        angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation explicitly and explains why maximising the log is legitimate, which is the step where students lose the thread when they meet the Gaussian-error derivation.'
+        vault_path: material://source-dekking-mips/dekking.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 18.05 — Normal and CLT notes/exams
+        source_id: source-mit-1805
+        locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large Numbers'' reading and the ''Maximum Likelihood Estimates'' reading; the published exam questions and solutions on the Exams page'
+        angle: The only route here whose likelihood reading is written specifically to separate likelihood from probability, in one page.
+        angle_detail: L08's likelihood node turns on one distinction — the same expression read as a function of the data versus as a function of the parameter — and 18.05's MLE reading opens with exactly that before any optimisation. Combined with the CLT/LLN reading, this covers both halves of L08 with the same notation. The Exams page then supplies solved questions of both kinds under timed conditions, which is the closest thing on the shelf to an English-language SaD mock.
+        scope_triage: helpful-now
+      - kind: reference
+        label: Tijms — LLN and CLT intuition
+        source_id: source-tijms-understanding-probability
+        locator: Ch 5 Probability and statistics, pdf pp. 153-217 (§5.8 the central limit theorem and random walks); Ch 10 §10.2 Important probability densities, pdf pp. 296-324
+        angle: Demonstrates the CLT by simulation across several different starting distributions, so the universality claim is seen rather than asserted.
+        angle_detail: The striking part of the CLT is that the starting distribution does not matter, and that is exactly the part a formula cannot convey. Tijms runs the same averaging experiment on visibly different distributions and shows the same Normal shape emerging each time. §5.9 on Benford's law and §5.10 are outside SaD scope but are short and make the point that a limit theorem is a claim about the world. No likelihood content.
+        vault_path: material://source-tijms-understanding-probability/tijms.pdf
+        scope_triage: reference-only
+      - kind: practise
+        label: Schaum — Normal and CLT drills
+        source_id: source-schaums-probability
+        locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation problems)
+        angle: Normal-table drill with the approximation conditions and the continuity correction applied problem by problem.
+        angle_detail: The mechanical half of L08 — convert to z, read the table, apply the ±0.5 correction, check that np and n(1−p) are large enough — is trained here at volume and nowhere else on the shelf as cheaply. No CLT theory and no likelihood; this route is calculation practice only, and should be paired with Dekking Ch 13-14 for the reasoning.
+        vault_path: material://source-schaums-probability/schaums-probability.pdf
+        scope_triage: helpful-now
+      - kind: practise
+        label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
+        source_id: source-sad-klausuren-extern
+        locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT items
+        angle: Connects standardized Normal calculations to sums and sample statistics in a compact solved block.
+        angle_detail: The benefit is transfer between distribution recognition and calculation. It is not the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated derivation sources.
+        vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: Regensburg-Löh pp. 6-8 — LLN/CLT proof reference
+        source_id: source-sad-klausuren-extern
+        locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 6-8, convergence tasks
+        angle: Provides a rigorous statement-and-proof view of convergence laws that the course uses computationally.
+        angle_detail: This route is deliberately reference-only. It can clarify assumptions and modes of convergence, but its proof burden is outside the SaD exam and would be harmful as ordinary preparation.
+        vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+        scope_triage: reference-only
+      - kind: watch
+        label: jbstatistics — Normal, z-scores, and CLT
+        source_id: source-jbstatistics
+        locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction to the Central Limit Theorem'''
+        angle: Drills the standard-normal table in both directions, including finding a value from a given probability.
+        angle_detail: Reading the table backwards — given a tail probability, find z — is a distinct skill and the one L09's confidence intervals will immediately depend on. The videos work several of each direction, which is more repetition than any text here provides in that specific operation.
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-approximation/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-likelihood
+    number: 6
+    title: Probability versus likelihood
+    status: pending
+    objective: A probability distribution varies data with parameters fixed; a likelihood treats observed data as fixed and compares parameter values by how well they explain it.
+    done_when:
+      - 'Reproduce without notes: A probability distribution varies data with parameters fixed; a likelihood treats observed data as fixed and compares parameter values by how well they explain it.'
+    exam_critical: true
+    concepts:
+      - concept-maximum-likelihood
+      - concept-probability
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: MIT 18.650 Lectures 4–5 — maximum likelihood
+        source_id: source-mit-18650
+        locator: Lectures 4-5 (maximum likelihood estimation, the method of moments); graduate-level treatment, use for a diagnosed gap only
+        angle: 'The formal estimation-theory framing of likelihood: identifiability, the Fisher information, asymptotic normality of the MLE.'
+        angle_detail: 'This is a mathematical-statistics course and sits well above SaD. It is routed here for one situation only: the L08 slides derive the MLE for a specific model and you want to know what the general theory guarantees — that the estimator is consistent and asymptotically Normal, and under what conditions. Reading it will not help with the exam, and it will cost hours. Reference-only by design.'
+        scope_triage: reference-only
+      - kind: watch
+        label: StatQuest — CLT, likelihood, and maximum likelihood
+        source_id: source-statquest
+        locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum Likelihood, Clearly Explained'' (≈12 min each)'
+        angle: '''Probability is not Likelihood'' isolates L08''s hardest distinction into a single dedicated video.'
+        angle_detail: 'The likelihood-versus-probability confusion is the reason L08''s second half is hard, and it is a distinction about which quantity is held fixed, not about any formula. This video does nothing else for eight minutes: same curve, same expression, read twice. Watch it before reading Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling animation OpenIntro describes in text.'
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l08-mle
+    number: 7
+    title: Maximum likelihood and the MSE bridge
+    status: pending
+    objective: Maximizing a product of densities becomes maximizing a log-likelihood; Gaussian error assumptions turn this into minimizing squared residuals.
+    done_when:
+      - 'Reproduce without notes: Maximizing a product of densities becomes maximizing a log-likelihood; Gaussian error assumptions turn this into minimizing squared residuals.'
+    exam_critical: true
+    concepts:
+      - concept-maximum-likelihood
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L08 Normal, CLT, and likelihood deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/08_normal_distribution.pdf, 38 slides
+        angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation that turns maximum likelihood into least squares.'
+        angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover both halves in the same notation.
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/08_normal_distribution.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: MIT 18.650 Lectures 4–5 — maximum likelihood
+        source_id: source-mit-18650
+        locator: Lectures 4-5 (maximum likelihood estimation, the method of moments); graduate-level treatment, use for a diagnosed gap only
+        angle: 'The formal estimation-theory framing of likelihood: identifiability, the Fisher information, asymptotic normality of the MLE.'
+        angle_detail: 'This is a mathematical-statistics course and sits well above SaD. It is routed here for one situation only: the L08 slides derive the MLE for a specific model and you want to know what the general theory guarantees — that the estimator is consistent and asymptotically Normal, and under what conditions. Reading it will not help with the exam, and it will cost hours. Reference-only by design.'
+        scope_triage: reference-only
+      - kind: watch
+        label: StatQuest — CLT, likelihood, and maximum likelihood
+        source_id: source-statquest
+        locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum Likelihood, Clearly Explained'' (≈12 min each)'
+        angle: '''Probability is not Likelihood'' isolates L08''s hardest distinction into a single dedicated video.'
+        angle_detail: 'The likelihood-versus-probability confusion is the reason L08''s second half is hard, and it is a distinction about which quantity is held fixed, not about any formula. This video does nothing else for eight minutes: same curve, same expression, read twice. Watch it before reading Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling animation OpenIntro describes in text.'
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
+    attachments: []
+    source_feedback: []

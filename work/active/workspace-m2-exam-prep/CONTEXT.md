@@ -72,6 +72,34 @@ sources:
 - source-mit-18100a
 - source-analysis-grundlagen-handouts
 - source-ableitinger-musterloesungen
+- source-grinstead-snell
+- source-bendersky-normal-equation
+- source-fortmann-roe-bias-variance
+- source-jurafsky-slp3
+- source-karpathy-micrograd
+- source-nielsen-nndl
+- source-setosa-ols
+- source-berkeley-cs189
+- source-caltech-lfd
+- source-cs4780
+- source-d2l
+- source-mit-6041sc
+- source-mml
+- source-sklearn-user-guide
+- source-cs229-problem-sets
+- source-google-ml-crash-course
+- source-mit-6036
+- source-ng-coursera
+- source-prince-udl
+- source-zedstatistics
+- source-bishop-prml
+- source-goodfellow-dl
+- source-islp-community-solutions
+- source-geron-handson
+- source-zacharski-data-mining
+- source-3b1b-bayes-theorem
+- source-marsland-ml-algorithmic
+- source-esl
 program_ids:
 - program-bachelors
 module_ids:

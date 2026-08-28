@@ -15,13 +15,13 @@ stages:
   number: 1
   title: Decision trees, rules, and preference bias
   status: pending
-  objective: Internal nodes test features, branches partition the instance space, and leaves predict; simpler
-    rules encode a generalization preference rather than merely memorizing IDs.
+  objective: Internal nodes test features, branches partition the instance space, and leaves predict;
+    simpler rules encode a generalization preference rather than merely memorizing IDs.
   done_when:
-  - 'Reproduce without notes: Internal nodes test features, branches partition the instance space, and leaves
-    predict; simpler rules encode a generalization preference rather than merely memorizing IDs.'
-  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: Internal nodes test features, branches partition the instance space, and
+    leaves predict; simpler rules encode a generalization preference rather than merely memorizing IDs.'
+  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-decision-trees
@@ -31,130 +31,155 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
-  - kind: watch
-    label: StatQuest — decision trees and random forests
-    source_id: source-statquest
-    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random Forests
-      Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
-    scope_triage: helpful-now
-    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a forest
-      changes.
-    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on screen,
-      which is the L12 exam calculation. The random-forest video then isolates the two changes from a single tree
-      — bootstrap the rows, restrict the columns at each split — and shows out-of-bag evaluation falling out for
-      free. Separating those two changes is what stops 'random forest' from being a black box. The AdaBoost video
-      handles the reweighting visually.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and information-gain
-      worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
+      information-gain worked example)
+    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
+      splits.
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all splits.
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes the entropy
-      of the target, then the remainder for each candidate feature, then the gain, then recurses — with the arithmetic
-      printed at every node. That is exactly the calculation an exam will ask for on a small table, and doing
-      it once with a fully worked reference is worth more than reading the formula ten times. The chapter also
-      covers the gain-ratio correction for many-valued features, which the deck mentions in passing.
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     source_id: source-islp
-    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2 bagging,
-      random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
+      bagging, random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction
+      by sequential fitting — instead of listing methods.
+    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques.
+      ISLP organises the same material around the mechanism: bagging and forests reduce variance by averaging
+      decorrelated trees, boosting reduces bias by fitting each tree to the residual of the last. Once
+      that split is clear, the differences between the methods stop being arbitrary details. §8.2 also
+      explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction by sequential
-      fitting — instead of listing methods.
-    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques. ISLP
-      organises the same material around the mechanism: bagging and forests reduce variance by averaging decorrelated
-      trees, boosting reduces bias by fitting each tree to the residual of the last. Once that split is clear,
-      the differences between the methods stop being arbitrary details. §8.2 also explains why random forests
-      decorrelate by restricting the feature subset, which the deck asserts.'
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
+      Forests Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
+    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a
+      forest changes.
+    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on
+      screen, which is the L12 exam calculation. The random-forest video then isolates the two changes
+      from a single tree — bootstrap the rows, restrict the columns at each split — and shows out-of-bag
+      evaluation falling out for free. Separating those two changes is what stops 'random forest' from
+      being a black box. The AdaBoost video handles the reweighting visually.
+    scope_triage: helpful-now
   - kind: read
     label: Kroese Chapter 8 — tree methods
     source_id: source-kroese-dsml
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
+    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini
+      are two choices of one object.
+    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged
+      into the same greedy algorithm is more economical than learning them separately, and it makes clear
+      that the algorithm does not depend on which is chosen. The ensemble half is compact and mathematical
+      — it gives the variance-reduction argument for bagging in algebra rather than in words.
+    vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
-    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini are two
-      choices of one object.
-    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged into the
-      same greedy algorithm is more economical than learning them separately, and it makes clear that the algorithm
-      does not depend on which is chosen. The ensemble half is compact and mathematical — it gives the variance-reduction
-      argument for bagging in algebra rather than in words.
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     source_id: source-cs229-2022-videos
     locator: The 2022 lecture covering decision trees and ensemble methods (identify by title on the playlist;
       roughly the mid-course tree lecture)
+    angle: A research-level lecturer explaining why trees are still used, which is context the deck does
+      not attempt.
+    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the
+      course, what they are good at (heterogeneous tabular features, interpretability) and what they are
+      bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
+      question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
-    angle: A research-level lecturer explaining why trees are still used, which is context the deck does not attempt.
-    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the course,
-      what they are good at (heterogeneous tabular features, interpretability) and what they are bad at. That
-      judgment is hard to get from a textbook and is the kind of thing a conceptual exam question rewards. The
-      technical content is above SaD''s level in places; watch for the framing.'
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution files
+    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
+      files
+    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
+      them.
+    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
+      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
+      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
+      test, not as the baseline.
     scope_triage: helpful-now
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds on a tiny
-      dataset, which is the only way to find out whether the rule is actually understood. Solutions are published,
-      so the work is checkable. Harder than the SaD exam will be; use them as a confidence test, not as the baseline.
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     source_id: source-mit-6034-quizzes
-    locator: The published 6.034 quizzes and finals — the ID3 / decision-tree tracing questions, with the official
-      solutions
+    locator: The published 6.034 quizzes and finals — the ID3 / decision-tree tracing questions, with
+      the official solutions
+    angle: 'Exam-format tracing questions with solutions: build the tree from a small table under time
+      pressure.'
+    angle_detail: MIT 6.034's quizzes are unusually procedural — they ask you to execute the algorithm
+      and show the intermediate state, which is precisely the L12 exam form. Because the solutions are
+      official and complete, a wrong answer can be diagnosed to the exact split. The archive spans many
+      years, so there is enough material to practise repeatedly.
     scope_triage: helpful-now
-    angle: 'Exam-format tracing questions with solutions: build the tree from a small table under time pressure.'
-    angle_detail: MIT 6.034's quizzes are unusually procedural — they ask you to execute the algorithm and show
-      the intermediate state, which is precisely the L12 exam form. Because the solutions are official and complete,
-      a wrong answer can be diagnosed to the exact split. The archive spans many years, so there is enough material
-      to practise repeatedly.
-  - kind: read
-    label: Brandon Rohrer — friendly decision-tree explanation
-    source_id: source-rohrer-e2eml
-    locator: The 'How decision trees work' article and its companion video on e2eml.school
-    scope_triage: helpful-now
-    angle: A no-notation explanation for unblocking, when the formal treatment has stalled.
-    angle_detail: 'Rohrer writes for readers who want the mechanism without the mathematics, using pictures and
-      plain sentences. Routed here as a repair path rather than a study path: if the entropy computation has become
-      an obstacle to seeing what a tree does, twenty minutes here restores the picture and the formal treatment
-      becomes readable again. Not sufficient for the exam on its own.'
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     source_id: source-geron-handson
     locator: Chapter 6, pp. 203-216
+    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the
+      regularisation hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3
+      trace has a machine-checked counterpart.'
+    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth
+      and leaf size — the practical form of L12's pruning node, which the deck states as a principle.
+      Because the trees are drawn at each stage, the effect of each constraint on the decision boundary
+      is visible rather than described. Also demonstrates the instability of trees to small data changes,
+      which is the motivation for the ensembles in the next chapter.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the regularisation
-      hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3 trace has a machine-checked
-      counterpart.'
-    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth and leaf
-      size — the practical form of L12's pruning node, which the deck states as a principle. Because the trees
-      are drawn at each stage, the effect of each constraint on the decision boundary is visible rather than described.
-      Also demonstrates the instability of trees to small data changes, which is the motivation for the ensembles
-      in the next chapter.
+  - kind: read
+    label: Brandon Rohrer — friendly decision-tree explanation
+    source_id: source-rohrer-e2eml
+    locator: The 'How decision trees work' article and its companion video on e2eml.school
+    angle: A no-notation explanation for unblocking, when the formal treatment has stalled.
+    angle_detail: 'Rohrer writes for readers who want the mechanism without the mathematics, using pictures
+      and plain sentences. Routed here as a repair path rather than a study path: if the entropy computation
+      has become an obstacle to seeing what a tree does, twenty minutes here restores the picture and
+      the formal treatment becomes readable again. Not sufficient for the exam on its own.'
+    scope_triage: helpful-now
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     source_id: source-esl
-    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307; Chapter
-      10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive
+      model under exponential loss, what random forests do to variance, and the model-averaging view that
+      stacking belongs to.'
+    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated
+      properly; Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is
+      where the algorithm actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including
+      why decorrelation reduces variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question
+      — this is not a first-pass reading and each section assumes the ones before it.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive model
-      under exponential loss, what random forests do to variance, and the model-averaging view that stacking belongs
-      to.'
-    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated properly;
-      Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is where the algorithm
-      actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including why decorrelation reduces
-      variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question — this is not a first-pass
-      reading and each section assumes the ones before it.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md
   attachments: []
   source_feedback: []
@@ -162,13 +187,13 @@ stages:
   number: 2
   title: Entropy, information gain, and ID3
   status: pending
-  objective: Entropy measures class impurity, information gain measures the reduction after a split, and ID3 greedily
-    chooses the feature that produces the largest gain.
+  objective: Entropy measures class impurity, information gain measures the reduction after a split, and
+    ID3 greedily chooses the feature that produces the largest gain.
   done_when:
-  - 'Reproduce without notes: Entropy measures class impurity, information gain measures the reduction after a
-    split, and ID3 greedily chooses the feature that produces the largest gain.'
-  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: Entropy measures class impurity, information gain measures the reduction
+    after a split, and ID3 greedily chooses the feature that produces the largest gain.'
+  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-information-gain
@@ -178,83 +203,119 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and information-gain
-      worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
+      information-gain worked example)
+    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
+      splits.
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all splits.
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes the entropy
-      of the target, then the remainder for each candidate feature, then the gain, then recurses — with the arithmetic
-      printed at every node. That is exactly the calculation an exam will ask for on a small table, and doing
-      it once with a fully worked reference is worth more than reading the formula ten times. The chapter also
-      covers the gain-ratio correction for many-valued features, which the deck mentions in passing.
+  - kind: read
+    label: Berkeley CS189 — past exam questions on trees and ensembles
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the decision-tree, bagging and boosting
+      questions
+    angle: Exam-form questions that ask why an ensemble helps, not only how to run one.
+    angle_detail: 'The ''compute the information gain'' question is well covered by MIT 6.034''s quizzes.
+      What these papers add is the other kind: why does bagging reduce variance but not bias, why does
+      a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
+      summary slides set up, and having model answers calibrates how much to write.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 — decision-tree and boosting derivations
     source_id: source-cs229-notes
-    locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note PDFs on
-      the course site)
-    scope_triage: reference-only
+    locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note
+      PDFs on the course site)
     angle: Derives boosting as a greedy stagewise fit to a loss function, which is where AdaBoost's exponential
       weights come from.
-    angle_detail: L12 presents AdaBoost's reweighting rule as a procedure. These notes show it falling out of
-      minimising exponential loss one weak learner at a time, which explains both the specific weight formula
-      and why boosting can overfit. Above exam level and worth reading only if the reweighting rule looked arbitrary.
+    angle_detail: L12 presents AdaBoost's reweighting rule as a procedure. These notes show it falling
+      out of minimising exponential loss one weak learner at a time, which explains both the specific
+      weight formula and why boosting can overfit. Above exam level and worth reading only if the reweighting
+      rule looked arbitrary.
+    vault_path: material://source-cs229-notes/cs229-notes.pdf
+    scope_triage: reference-only
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution files
+    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
+      files
+    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
+      them.
+    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
+      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
+      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
+      test, not as the baseline.
     scope_triage: helpful-now
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds on a tiny
-      dataset, which is the only way to find out whether the rule is actually understood. Solutions are published,
-      so the work is checkable. Harder than the SaD exam will be; use them as a confidence test, not as the baseline.
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     source_id: source-mit-6034-quizzes
-    locator: The published 6.034 quizzes and finals — the ID3 / decision-tree tracing questions, with the official
-      solutions
+    locator: The published 6.034 quizzes and finals — the ID3 / decision-tree tracing questions, with
+      the official solutions
+    angle: 'Exam-format tracing questions with solutions: build the tree from a small table under time
+      pressure.'
+    angle_detail: MIT 6.034's quizzes are unusually procedural — they ask you to execute the algorithm
+      and show the intermediate state, which is precisely the L12 exam form. Because the solutions are
+      official and complete, a wrong answer can be diagnosed to the exact split. The archive spans many
+      years, so there is enough material to practise repeatedly.
     scope_triage: helpful-now
-    angle: 'Exam-format tracing questions with solutions: build the tree from a small table under time pressure.'
-    angle_detail: MIT 6.034's quizzes are unusually procedural — they ask you to execute the algorithm and show
-      the intermediate state, which is precisely the L12 exam form. Because the solutions are official and complete,
-      a wrong answer can be diagnosed to the exact split. The archive spans many years, so there is enough material
-      to practise repeatedly.
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     source_id: source-geron-handson
     locator: Chapter 6, pp. 203-216
+    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the
+      regularisation hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3
+      trace has a machine-checked counterpart.'
+    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth
+      and leaf size — the practical form of L12's pruning node, which the deck states as a principle.
+      Because the trees are drawn at each stage, the effect of each constraint on the decision boundary
+      is visible rather than described. Also demonstrates the instability of trees to small data changes,
+      which is the motivation for the ensembles in the next chapter.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the regularisation
-      hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3 trace has a machine-checked
-      counterpart.'
-    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth and leaf
-      size — the practical form of L12's pruning node, which the deck states as a principle. Because the trees
-      are drawn at each stage, the effect of each constraint on the decision boundary is visible rather than described.
-      Also demonstrates the instability of trees to small data changes, which is the motivation for the ensembles
-      in the next chapter.
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p. 278; classification
-      and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost p. 289; bagging p. 294;
-      random forests p. 296)
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296)
+    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging
+      and random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode
+      compresses.
+    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271)
+      is a function you could execute and the entropy/information-gain/Gini comparison (p. 272) is three
+      lines you could swap. For L12's algorithmic nodes that is the most direct possible representation.
+      Ch 13 then does the same for boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p.
+      296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
+      at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
-    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging and
-      random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode compresses.
-    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271) is a function
-      you could execute and the entropy/information-gain/Gini comparison (p. 272) is three lines you could swap.
-      For L12's algorithmic nodes that is the most direct possible representation. Ch 13 then does the same for
-      boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p. 296), so the ensembles are also code
-      rather than description. Pruning at p. 278 and the CART variant at p. 281 complete the deck's tree scope.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md
   attachments: []
   source_feedback: []
@@ -262,11 +323,11 @@ stages:
   number: 3
   title: Regression trees and variance reduction
   status: pending
-  objective: Numeric targets replace class impurity with within-node squared-error or variance reduction while
-    retaining the same recursive partition structure.
+  objective: Numeric targets replace class impurity with within-node squared-error or variance reduction
+    while retaining the same recursive partition structure.
   done_when:
-  - 'Reproduce without notes: Numeric targets replace class impurity with within-node squared-error or variance
-    reduction while retaining the same recursive partition structure.'
+  - 'Reproduce without notes: Numeric targets replace class impurity with within-node squared-error or
+    variance reduction while retaining the same recursive partition structure.'
   exam_critical: true
   concepts:
   - concept-variance
@@ -276,64 +337,70 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     source_id: source-islp
-    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2 bagging,
-      random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
+      bagging, random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction
+      by sequential fitting — instead of listing methods.
+    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques.
+      ISLP organises the same material around the mechanism: bagging and forests reduce variance by averaging
+      decorrelated trees, boosting reduces bias by fitting each tree to the residual of the last. Once
+      that split is clear, the differences between the methods stop being arbitrary details. §8.2 also
+      explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction by sequential
-      fitting — instead of listing methods.
-    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques. ISLP
-      organises the same material around the mechanism: bagging and forests reduce variance by averaging decorrelated
-      trees, boosting reduces bias by fitting each tree to the residual of the last. Once that split is clear,
-      the differences between the methods stop being arbitrary details. §8.2 also explains why random forests
-      decorrelate by restricting the feature subset, which the deck asserts.'
   - kind: read
     label: Kroese Chapter 8 — tree methods
     source_id: source-kroese-dsml
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
+    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini
+      are two choices of one object.
+    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged
+      into the same greedy algorithm is more economical than learning them separately, and it makes clear
+      that the algorithm does not depend on which is chosen. The ensemble half is compact and mathematical
+      — it gives the variance-reduction argument for bagging in algebra rather than in words.
+    vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
-    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini are two
-      choices of one object.
-    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged into the
-      same greedy algorithm is more economical than learning them separately, and it makes clear that the algorithm
-      does not depend on which is chosen. The ensemble half is compact and mathematical — it gives the variance-reduction
-      argument for bagging in algebra rather than in words.
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     source_id: source-geron-handson
     locator: Chapter 6, pp. 203-216
+    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the
+      regularisation hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3
+      trace has a machine-checked counterpart.'
+    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth
+      and leaf size — the practical form of L12's pruning node, which the deck states as a principle.
+      Because the trees are drawn at each stage, the effect of each constraint on the decision boundary
+      is visible rather than described. Also demonstrates the instability of trees to small data changes,
+      which is the motivation for the ensembles in the next chapter.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the regularisation
-      hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3 trace has a machine-checked
-      counterpart.'
-    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth and leaf
-      size — the practical form of L12's pruning node, which the deck states as a principle. Because the trees
-      are drawn at each stage, the effect of each constraint on the decision boundary is visible rather than described.
-      Also demonstrates the instability of trees to small data changes, which is the motivation for the ensembles
-      in the next chapter.
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p. 278; classification
-      and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost p. 289; bagging p. 294;
-      random forests p. 296)
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296)
+    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging
+      and random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode
+      compresses.
+    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271)
+      is a function you could execute and the entropy/information-gain/Gini comparison (p. 272) is three
+      lines you could swap. For L12's algorithmic nodes that is the most direct possible representation.
+      Ch 13 then does the same for boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p.
+      296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
+      at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
-    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging and
-      random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode compresses.
-    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271) is a function
-      you could execute and the entropy/information-gain/Gini comparison (p. 272) is three lines you could swap.
-      For L12's algorithmic nodes that is the most direct possible representation. Ch 13 then does the same for
-      boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p. 296), so the ensembles are also code
-      rather than description. Pruning at p. 278 and the CART variant at p. 281 complete the deck's tree scope.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
   attachments: []
   source_feedback: []
@@ -341,8 +408,8 @@ stages:
   number: 4
   title: Tree growth, stopping, and pruning
   status: pending
-  objective: Depth, minimum samples, purity thresholds, and post-pruning control complexity; an unpruned tree
-    can fit noise and generalize poorly.
+  objective: Depth, minimum samples, purity thresholds, and post-pruning control complexity; an unpruned
+    tree can fit noise and generalize poorly.
   done_when:
   - 'Reproduce without notes: Depth, minimum samples, purity thresholds, and post-pruning control complexity;
     an unpruned tree can fit noise and generalize poorly.'
@@ -355,88 +422,119 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
-  - kind: watch
-    label: StatQuest — decision trees and random forests
-    source_id: source-statquest
-    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random Forests
-      Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
-    scope_triage: helpful-now
-    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a forest
-      changes.
-    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on screen,
-      which is the L12 exam calculation. The random-forest video then isolates the two changes from a single tree
-      — bootstrap the rows, restrict the columns at each split — and shows out-of-bag evaluation falling out for
-      free. Separating those two changes is what stops 'random forest' from being a black box. The AdaBoost video
-      handles the reweighting visually.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and information-gain
-      worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
+      information-gain worked example)
+    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
+      splits.
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all splits.
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes the entropy
-      of the target, then the remainder for each candidate feature, then the gain, then recurses — with the arithmetic
-      printed at every node. That is exactly the calculation an exam will ask for on a small table, and doing
-      it once with a fully worked reference is worth more than reading the formula ten times. The chapter also
-      covers the gain-ratio correction for many-valued features, which the deck mentions in passing.
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     source_id: source-islp
-    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2 bagging,
-      random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
+      bagging, random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction
+      by sequential fitting — instead of listing methods.
+    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques.
+      ISLP organises the same material around the mechanism: bagging and forests reduce variance by averaging
+      decorrelated trees, boosting reduces bias by fitting each tree to the residual of the last. Once
+      that split is clear, the differences between the methods stop being arbitrary details. §8.2 also
+      explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction by sequential
-      fitting — instead of listing methods.
-    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques. ISLP
-      organises the same material around the mechanism: bagging and forests reduce variance by averaging decorrelated
-      trees, boosting reduces bias by fitting each tree to the residual of the last. Once that split is clear,
-      the differences between the methods stop being arbitrary details. §8.2 also explains why random forests
-      decorrelate by restricting the feature subset, which the deck asserts.'
   - kind: read
-    label: Brandon Rohrer — friendly decision-tree explanation
-    source_id: source-rohrer-e2eml
-    locator: The 'How decision trees work' article and its companion video on e2eml.school
+    label: Berkeley CS189 — past exam questions on trees and ensembles
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the decision-tree, bagging and boosting
+      questions
+    angle: Exam-form questions that ask why an ensemble helps, not only how to run one.
+    angle_detail: 'The ''compute the information gain'' question is well covered by MIT 6.034''s quizzes.
+      What these papers add is the other kind: why does bagging reduce variance but not bias, why does
+      a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
+      summary slides set up, and having model answers calibrates how much to write.'
     scope_triage: helpful-now
-    angle: A no-notation explanation for unblocking, when the formal treatment has stalled.
-    angle_detail: 'Rohrer writes for readers who want the mechanism without the mathematics, using pictures and
-      plain sentences. Routed here as a repair path rather than a study path: if the entropy computation has become
-      an obstacle to seeing what a tree does, twenty minutes here restores the picture and the formal treatment
-      becomes readable again. Not sufficient for the exam on its own.'
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
+      Forests Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
+    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a
+      forest changes.
+    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on
+      screen, which is the L12 exam calculation. The random-forest video then isolates the two changes
+      from a single tree — bootstrap the rows, restrict the columns at each split — and shows out-of-bag
+      evaluation falling out for free. Separating those two changes is what stops 'random forest' from
+      being a black box. The AdaBoost video handles the reweighting visually.
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     source_id: source-geron-handson
     locator: Chapter 6, pp. 203-216
+    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the
+      regularisation hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3
+      trace has a machine-checked counterpart.'
+    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth
+      and leaf size — the practical form of L12's pruning node, which the deck states as a principle.
+      Because the trees are drawn at each stage, the effect of each constraint on the decision boundary
+      is visible rather than described. Also demonstrates the instability of trees to small data changes,
+      which is the motivation for the ensembles in the next chapter.
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: 'Executes the L12 induction story: impurity-driven splits, the regression criterion, and the regularisation
-      hyperparameters that stand in for the deck''s pre-pruning discussion, so the ID3 trace has a machine-checked
-      counterpart.'
-    angle_detail: Fourteen pages that grow a tree, visualise it, and then prune it by constraining depth and leaf
-      size — the practical form of L12's pruning node, which the deck states as a principle. Because the trees
-      are drawn at each stage, the effect of each constraint on the decision boundary is visible rather than described.
-      Also demonstrates the instability of trees to small data changes, which is the motivation for the ensembles
-      in the next chapter.
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p. 278; classification
-      and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost p. 289; bagging p. 294;
-      random forests p. 296)
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296)
+    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging
+      and random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode
+      compresses.
+    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271)
+      is a function you could execute and the entropy/information-gain/Gini comparison (p. 272) is three
+      lines you could swap. For L12's algorithmic nodes that is the most direct possible representation.
+      Ch 13 then does the same for boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p.
+      296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
+      at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
-    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging and
-      random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode compresses.
-    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271) is a function
-      you could execute and the entropy/information-gain/Gini comparison (p. 272) is three lines you could swap.
-      For L12's algorithmic nodes that is the most direct possible representation. Ch 13 then does the same for
-      boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p. 296), so the ensembles are also code
-      rather than description. Pruning at p. 278 and the CART variant at p. 281 complete the deck's tree scope.
+  - kind: read
+    label: Brandon Rohrer — friendly decision-tree explanation
+    source_id: source-rohrer-e2eml
+    locator: The 'How decision trees work' article and its companion video on e2eml.school
+    angle: A no-notation explanation for unblocking, when the formal treatment has stalled.
+    angle_detail: 'Rohrer writes for readers who want the mechanism without the mathematics, using pictures
+      and plain sentences. Routed here as a repair path rather than a study path: if the entropy computation
+      has become an obstacle to seeing what a tree does, twenty minutes here restores the picture and
+      the formal treatment becomes readable again. Not sufficient for the exam on its own.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
   attachments: []
   source_feedback: []
@@ -444,11 +542,11 @@ stages:
   number: 5
   title: Bagging and random forests
   status: pending
-  objective: Bootstrap aggregation averages unstable learners, while random forests add feature subsampling to
-    decorrelate trees and reduce ensemble variance.
+  objective: Bootstrap aggregation averages unstable learners, while random forests add feature subsampling
+    to decorrelate trees and reduce ensemble variance.
   done_when:
-  - 'Reproduce without notes: Bootstrap aggregation averages unstable learners, while random forests add feature
-    subsampling to decorrelate trees and reduce ensemble variance.'
+  - 'Reproduce without notes: Bootstrap aggregation averages unstable learners, while random forests add
+    feature subsampling to decorrelate trees and reduce ensemble variance.'
   exam_critical: true
   concepts:
   - concept-random-forest
@@ -458,115 +556,149 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
-  - kind: watch
-    label: StatQuest — decision trees and random forests
-    source_id: source-statquest
-    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random Forests
-      Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
-    scope_triage: helpful-now
-    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a forest
-      changes.
-    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on screen,
-      which is the L12 exam calculation. The random-forest video then isolates the two changes from a single tree
-      — bootstrap the rows, restrict the columns at each split — and shows out-of-bag evaluation falling out for
-      free. Separating those two changes is what stops 'random forest' from being a black box. The AdaBoost video
-      handles the reweighting visually.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and information-gain
-      worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
+      information-gain worked example)
+    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
+      splits.
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all splits.
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes the entropy
-      of the target, then the remainder for each candidate feature, then the gain, then recurses — with the arithmetic
-      printed at every node. That is exactly the calculation an exam will ask for on a small table, and doing
-      it once with a fully worked reference is worth more than reading the formula ten times. The chapter also
-      covers the gain-ratio correction for many-valued features, which the deck mentions in passing.
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     source_id: source-islp
-    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2 bagging,
-      random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
+      bagging, random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction
+      by sequential fitting — instead of listing methods.
+    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques.
+      ISLP organises the same material around the mechanism: bagging and forests reduce variance by averaging
+      decorrelated trees, boosting reduces bias by fitting each tree to the residual of the last. Once
+      that split is clear, the differences between the methods stop being arbitrary details. §8.2 also
+      explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction by sequential
-      fitting — instead of listing methods.
-    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques. ISLP
-      organises the same material around the mechanism: bagging and forests reduce variance by averaging decorrelated
-      trees, boosting reduces bias by fitting each tree to the residual of the last. Once that split is clear,
-      the differences between the methods stop being arbitrary details. §8.2 also explains why random forests
-      decorrelate by restricting the feature subset, which the deck asserts.'
+  - kind: read
+    label: Berkeley CS189 — past exam questions on trees and ensembles
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the decision-tree, bagging and boosting
+      questions
+    angle: Exam-form questions that ask why an ensemble helps, not only how to run one.
+    angle_detail: 'The ''compute the information gain'' question is well covered by MIT 6.034''s quizzes.
+      What these papers add is the other kind: why does bagging reduce variance but not bias, why does
+      a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
+      summary slides set up, and having model answers calibrates how much to write.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — decision trees and random forests
+    source_id: source-statquest
+    locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
+      Forests Part 1 — Building, Using and Evaluating''; ''AdaBoost, Clearly Explained'' (≈15-20 min each)'
+    angle: Builds a tree split by split with the impurity numbers on screen, then shows exactly what a
+      forest changes.
+    angle_detail: The tree video computes the impurity of each candidate split and picks the winner, on
+      screen, which is the L12 exam calculation. The random-forest video then isolates the two changes
+      from a single tree — bootstrap the rows, restrict the columns at each split — and shows out-of-bag
+      evaluation falling out for free. Separating those two changes is what stops 'random forest' from
+      being a black box. The AdaBoost video handles the reweighting visually.
+    scope_triage: helpful-now
   - kind: read
     label: Kroese Chapter 8 — tree methods
     source_id: source-kroese-dsml
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
+    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini
+      are two choices of one object.
+    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged
+      into the same greedy algorithm is more economical than learning them separately, and it makes clear
+      that the algorithm does not depend on which is chosen. The ensemble half is compact and mathematical
+      — it gives the variance-reduction argument for bagging in algebra rather than in words.
+    vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
-    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini are two
-      choices of one object.
-    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged into the
-      same greedy algorithm is more economical than learning them separately, and it makes clear that the algorithm
-      does not depend on which is chosen. The ensemble half is compact and mathematical — it gives the variance-reduction
-      argument for bagging in algebra rather than in words.
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     source_id: source-cs229-2022-videos
     locator: The 2022 lecture covering decision trees and ensemble methods (identify by title on the playlist;
       roughly the mid-course tree lecture)
+    angle: A research-level lecturer explaining why trees are still used, which is context the deck does
+      not attempt.
+    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the
+      course, what they are good at (heterogeneous tabular features, interpretability) and what they are
+      bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
+      question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
-    angle: A research-level lecturer explaining why trees are still used, which is context the deck does not attempt.
-    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the course,
-      what they are good at (heterogeneous tabular features, interpretability) and what they are bad at. That
-      judgment is hard to get from a textbook and is the kind of thing a conceptual exam question rewards. The
-      technical content is above SaD''s level in places; watch for the framing.'
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     source_id: source-geron-handson
-    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting p. 228;
-      stacking blender p. 236)
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236)
+    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter
+      builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender
+      in one place, which is exactly the comparison the deck asks for.
+    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging
+      (p. 221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with
+      a blender (p. 236). L12 presents all four on its closing slides, where they blur together; here
+      each is built and evaluated separately on the same problem, so the differences are measured. Out-of-bag
+      evaluation in particular is a neat idea the deck mentions in passing.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter builds
-      bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender in one place,
-      which is exactly the comparison the deck asks for.
-    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging (p.
-      221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with a blender
-      (p. 236). L12 presents all four on its closing slides, where they blur together; here each is built and
-      evaluated separately on the same problem, so the differences are measured. Out-of-bag evaluation in particular
-      is a neat idea the deck mentions in passing.'
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p. 278; classification
-      and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost p. 289; bagging p. 294;
-      random forests p. 296)
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296)
+    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging
+      and random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode
+      compresses.
+    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271)
+      is a function you could execute and the entropy/information-gain/Gini comparison (p. 272) is three
+      lines you could swap. For L12's algorithmic nodes that is the most direct possible representation.
+      Ch 13 then does the same for boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p.
+      296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
+      at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
-    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging and
-      random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode compresses.
-    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271) is a function
-      you could execute and the entropy/information-gain/Gini comparison (p. 272) is three lines you could swap.
-      For L12's algorithmic nodes that is the most direct possible representation. Ch 13 then does the same for
-      boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p. 296), so the ensembles are also code
-      rather than description. Pruning at p. 278 and the CART variant at p. 281 complete the deck's tree scope.
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     source_id: source-esl
-    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307; Chapter
-      10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive
+      model under exponential loss, what random forests do to variance, and the model-averaging view that
+      stacking belongs to.'
+    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated
+      properly; Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is
+      where the algorithm actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including
+      why decorrelation reduces variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question
+      — this is not a first-pass reading and each section assumes the ones before it.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive model
-      under exponential loss, what random forests do to variance, and the model-averaging view that stacking belongs
-      to.'
-    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated properly;
-      Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is where the algorithm
-      actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including why decorrelation reduces
-      variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question — this is not a first-pass
-      reading and each section assumes the ones before it.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md
   attachments: []
   source_feedback: []
@@ -574,11 +706,11 @@ stages:
   number: 6
   title: Boosting
   status: pending
-  objective: Sequential weak learners focus on residuals or misclassified examples, trading a coordinated bias
-    reduction against sensitivity to noise and tuning.
+  objective: Sequential weak learners focus on residuals or misclassified examples, trading a coordinated
+    bias reduction against sensitivity to noise and tuning.
   done_when:
-  - 'Reproduce without notes: Sequential weak learners focus on residuals or misclassified examples, trading a
-    coordinated bias reduction against sensitivity to noise and tuning.'
+  - 'Reproduce without notes: Sequential weak learners focus on residuals or misclassified examples, trading
+    a coordinated bias reduction against sensitivity to noise and tuning.'
   - Work Cornell CS4780 HW8 — trees and AdaBoost, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
@@ -589,122 +721,161 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and information-gain
-      worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
+      information-gain worked example)
+    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
+      splits.
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all splits.
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes the entropy
-      of the target, then the remainder for each candidate feature, then the gain, then recurses — with the arithmetic
-      printed at every node. That is exactly the calculation an exam will ask for on a small table, and doing
-      it once with a fully worked reference is worth more than reading the formula ten times. The chapter also
-      covers the gain-ratio correction for many-valued features, which the deck mentions in passing.
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     source_id: source-islp
-    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2 bagging,
-      random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
+      bagging, random forests, boosting and BART p. 351; Ch 8 lab p. 361)
+    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction
+      by sequential fitting — instead of listing methods.
+    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques.
+      ISLP organises the same material around the mechanism: bagging and forests reduce variance by averaging
+      decorrelated trees, boosting reduces bias by fitting each tree to the residual of the last. Once
+      that split is clear, the differences between the methods stop being arbitrary details. §8.2 also
+      explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: Separates the two reasons ensembles help — variance reduction by averaging, bias reduction by sequential
-      fitting — instead of listing methods.
-    angle_detail: 'L12 presents bagging, random forests, boosting and stacking as a family of techniques. ISLP
-      organises the same material around the mechanism: bagging and forests reduce variance by averaging decorrelated
-      trees, boosting reduces bias by fitting each tree to the residual of the last. Once that split is clear,
-      the differences between the methods stop being arbitrary details. §8.2 also explains why random forests
-      decorrelate by restricting the feature subset, which the deck asserts.'
+  - kind: read
+    label: Berkeley CS189 — past exam questions on trees and ensembles
+    source_id: source-berkeley-cs189
+    locator: The published midterm and final papers with solutions — the decision-tree, bagging and boosting
+      questions
+    angle: Exam-form questions that ask why an ensemble helps, not only how to run one.
+    angle_detail: 'The ''compute the information gain'' question is well covered by MIT 6.034''s quizzes.
+      What these papers add is the other kind: why does bagging reduce variance but not bias, why does
+      a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
+      summary slides set up, and having model answers calibrates how much to write.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
   - kind: read
     label: Kroese Chapter 8 — tree methods
     source_id: source-kroese-dsml
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
+    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini
+      are two choices of one object.
+    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged
+      into the same greedy algorithm is more economical than learning them separately, and it makes clear
+      that the algorithm does not depend on which is chosen. The ensemble half is compact and mathematical
+      — it gives the variance-reduction argument for bagging in algebra rather than in words.
+    vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
-    angle: Gives the splitting criteria as impurity functions in a single framework, so entropy and Gini are two
-      choices of one object.
-    angle_detail: Presenting information gain and the Gini index as different impurity measures plugged into the
-      same greedy algorithm is more economical than learning them separately, and it makes clear that the algorithm
-      does not depend on which is chosen. The ensemble half is compact and mathematical — it gives the variance-reduction
-      argument for bagging in algebra rather than in words.
   - kind: reference
     label: CS229 — decision-tree and boosting derivations
     source_id: source-cs229-notes
-    locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note PDFs on
-      the course site)
-    scope_triage: reference-only
+    locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note
+      PDFs on the course site)
     angle: Derives boosting as a greedy stagewise fit to a loss function, which is where AdaBoost's exponential
       weights come from.
-    angle_detail: L12 presents AdaBoost's reweighting rule as a procedure. These notes show it falling out of
-      minimising exponential loss one weak learner at a time, which explains both the specific weight formula
-      and why boosting can overfit. Above exam level and worth reading only if the reweighting rule looked arbitrary.
+    angle_detail: L12 presents AdaBoost's reweighting rule as a procedure. These notes show it falling
+      out of minimising exponential loss one weak learner at a time, which explains both the specific
+      weight formula and why boosting can overfit. Above exam level and worth reading only if the reweighting
+      rule looked arbitrary.
+    vault_path: material://source-cs229-notes/cs229-notes.pdf
+    scope_triage: reference-only
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     source_id: source-cs229-2022-videos
     locator: The 2022 lecture covering decision trees and ensemble methods (identify by title on the playlist;
       roughly the mid-course tree lecture)
+    angle: A research-level lecturer explaining why trees are still used, which is context the deck does
+      not attempt.
+    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the
+      course, what they are good at (heterogeneous tabular features, interpretability) and what they are
+      bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
+      question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
-    angle: A research-level lecturer explaining why trees are still used, which is context the deck does not attempt.
-    angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the course,
-      what they are good at (heterogeneous tabular features, interpretability) and what they are bad at. That
-      judgment is hard to get from a textbook and is the kind of thing a conceptual exam question rewards. The
-      technical content is above SaD''s level in places; watch for the framing.'
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution files
+    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
+      files
+    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
+      them.
+    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
+      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
+      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
+      test, not as the baseline.
     scope_triage: helpful-now
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds on a tiny
-      dataset, which is the only way to find out whether the rule is actually understood. Solutions are published,
-      so the work is checkable. Harder than the SaD exam will be; use them as a confidence test, not as the baseline.
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     source_id: source-geron-handson
-    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting p. 228;
-      stacking blender p. 236)
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236)
+    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter
+      builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender
+      in one place, which is exactly the comparison the deck asks for.
+    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging
+      (p. 221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with
+      a blender (p. 236). L12 presents all four on its closing slides, where they blur together; here
+      each is built and evaluated separately on the same problem, so the differences are measured. Out-of-bag
+      evaluation in particular is a neat idea the deck mentions in passing.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter builds
-      bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender in one place,
-      which is exactly the comparison the deck asks for.
-    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging (p.
-      221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with a blender
-      (p. 236). L12 presents all four on its closing slides, where they blur together; here each is built and
-      evaluated separately on the same problem, so the differences are measured. Out-of-bag evaluation in particular
-      is a neat idea the deck mentions in passing.'
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     source_id: source-marsland-ml-algorithmic
-    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p. 278; classification
-      and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost p. 289; bagging p. 294;
-      random forests p. 296)
+    locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
+      278; classification and regression trees p. 281) and Chapter 13, pp. 288-301 (boosting and AdaBoost
+      p. 289; bagging p. 294; random forests p. 296)
+    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging
+      and random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode
+      compresses.
+    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271)
+      is a function you could execute and the entropy/information-gain/Gini comparison (p. 272) is three
+      lines you could swap. For L12's algorithmic nodes that is the most direct possible representation.
+      Ch 13 then does the same for boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p.
+      296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
+      at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
-    angle: Presents ID3 as code with entropy, information gain and Gini side by side, then boosting, bagging and
-      random forests as procedures, which is the algorithmic reading of L12 that the slide pseudocode compresses.
-    angle_detail: Marsland's discipline is that every method appears as runnable code, so ID3 (p. 271) is a function
-      you could execute and the entropy/information-gain/Gini comparison (p. 272) is three lines you could swap.
-      For L12's algorithmic nodes that is the most direct possible representation. Ch 13 then does the same for
-      boosting/AdaBoost (p. 289), bagging (p. 294) and random forests (p. 296), so the ensembles are also code
-      rather than description. Pruning at p. 278 and the CART variant at p. 281 complete the deck's tree scope.
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     source_id: source-esl
-    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307; Chapter
-      10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive
+      model under exponential loss, what random forests do to variance, and the model-averaging view that
+      stacking belongs to.'
+    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated
+      properly; Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is
+      where the algorithm actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including
+      why decorrelation reduces variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question
+      — this is not a first-pass reading and each section assumes the ones before it.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive model
-      under exponential loss, what random forests do to variance, and the model-averaging view that stacking belongs
-      to.'
-    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated properly;
-      Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is where the algorithm
-      actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including why decorrelation reduces
-      variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question — this is not a first-pass
-      reading and each section assumes the ones before it.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md
   attachments: []
   source_feedback: []
@@ -712,11 +883,12 @@ stages:
   number: 7
   title: Stacking and ensemble tradeoffs
   status: pending
-  objective: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction, diversity,
-    interpretability, compute, and calibration decide whether an ensemble is worthwhile.
+  objective: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction,
+    diversity, interpretability, compute, and calibration decide whether an ensemble is worthwhile.
   done_when:
-  - 'Reproduce without notes: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction,
-    diversity, interpretability, compute, and calibration decide whether an ensemble is worthwhile.'
+  - 'Reproduce without notes: A meta-learner combines diverse base predictions; leakage-safe out-of-fold
+    construction, diversity, interpretability, compute, and calibration decide whether an ensemble is
+    worthwhile.'
   exam_critical: true
   concepts:
   - concept-ensemble-methods
@@ -726,41 +898,56 @@ stages:
     label: Current L12 tree-based learning deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf, 36 slides
-    scope_triage: required-now
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's information-gain
-      computation is the examinable calculation; the ensemble section is mostly conceptual comparison. Because
-      bagging, random forests, boosting and stacking all arrive on the last slides, they are easy to blur; Géron
-      Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
+      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
+      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
+      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/12_tree_based.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
+    source_id: source-sklearn-user-guide
+    locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
+      criteria) and §1.11 ''Ensembles: Gradient boosting, random forests, bagging, voting, stacking'''
+    angle: States the impurity criteria as formulas beside the parameter that selects them, tying L12's
+      theory directly to a knob.
+    angle_detail: §1.10.7 writes out the Gini and entropy criteria and the regression variance criterion,
+      and the surrounding text explains what each pruning parameter (max_depth, min_samples_leaf, ccp_alpha)
+      does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
+      does the same for all four ensemble families L12 names — including stacking, which most books skip.
+    scope_triage: helpful-now
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     source_id: source-geron-handson
-    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting p. 228;
-      stacking blender p. 236)
+    locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
+      p. 228; stacking blender p. 236)
+    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter
+      builds bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender
+      in one place, which is exactly the comparison the deck asks for.
+    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging
+      (p. 221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with
+      a blender (p. 236). L12 presents all four on its closing slides, where they blur together; here
+      each is built and evaluated separately on the same problem, so the differences are measured. Out-of-bag
+      evaluation in particular is a neat idea the deck mentions in passing.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L12 slide 34 names stacking in one line and no other registered source covers it; this chapter builds
-      bagging, out-of-bag scoring, random forests, AdaBoost, gradient boosting and a stacking blender in one place,
-      which is exactly the comparison the deck asks for.
-    angle_detail: 'The ensemble chapter with each family given its own section and its own reason: bagging (p.
-      221) and out-of-bag evaluation (p. 223), AdaBoost and gradient boosting (p. 228), stacking with a blender
-      (p. 236). L12 presents all four on its closing slides, where they blur together; here each is built and
-      evaluated separately on the same problem, so the differences are measured. Out-of-bag evaluation in particular
-      is a neat idea the deck mentions in passing.'
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     source_id: source-esl
-    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307; Chapter
-      10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
+      Chapter 10 boosting and additive trees, pp. 356-407; Chapter 15 random forests, pp. 606-623
+    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive
+      model under exponential loss, what random forests do to variance, and the model-averaging view that
+      stacking belongs to.'
+    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated
+      properly; Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is
+      where the algorithm actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including
+      why decorrelation reduces variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question
+      — this is not a first-pass reading and each section assumes the ones before it.
+    vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
-    angle: 'Supplies the derivations the deck summarises in four bullets: why AdaBoost fits an additive model
-      under exponential loss, what random forests do to variance, and the model-averaging view that stacking belongs
-      to.'
-    angle_detail: The research-level accounts behind L12's summary slides. §9.2 (p. 324) is CART stated properly;
-      Ch 10 (pp. 356-407) develops boosting as forward stagewise additive modelling, which is where the algorithm
-      actually comes from; Ch 15 (pp. 606-623) is the random-forest analysis including why decorrelation reduces
-      variance. §8.8 (p. 307) covers stacking. Use it to settle a specific question — this is not a first-pass
-      reading and each section assumes the ones before it.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md
   attachments: []
   source_feedback: []

@@ -1,0 +1,480 @@
+id: study-map-m2-sad-l13
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l13
+status: not-started
+current_stage: stage-sad-l13-neighbors
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+  - id: stage-sad-l13-neighbors
+    number: 1
+    title: 1-NN and k-NN as lazy learners
+    status: pending
+    objective: Neighbor methods store the training data and defer computation until prediction; k controls the local smoothness and bias-variance tradeoff.
+    done_when:
+      - 'Reproduce without notes: Neighbor methods store the training data and defer computation until prediction; k controls the local smoothness and bias-variance tradeoff.'
+      - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-bias-variance-tradeoff
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Kelleher Chapter 5 — similarity-based learning
+        source_id: source-kelleher-fmlpda
+        locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm; the feature-space and normalisation sections)
+        angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which explains k's role geometrically.
+        angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the deck is effectively alone.'
+        vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
+        source_id: source-cs4780
+        locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture notes on the course site
+        angle: Quantifies the curse of dimensionality — how far away the nearest neighbour actually is as dimensions grow — instead of describing it.
+        angle_detail: Weinberger computes the expected distance to the nearest of n points in a d-dimensional unit cube and shows it approaching the cube's diameter as d grows, which means 'nearest' stops meaning 'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason the deck then spends time on approximate search. The lecture notes are written out and free.
+        scope_triage: helpful-now
+      - kind: reference
+        label: scikit-learn user guide §1.6 — nearest neighbours and search structures
+        source_id: source-sklearn-user-guide
+        locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6 'Choice of nearest neighbors algorithm'
+        angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees — which L13 teaches and almost no ML book covers.
+        angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality at which brute force wins again. That is the practical form of the curse of dimensionality and directly supports the deck''s argument for approximate search.'
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 6.036 — nearest-neighbour and feature-representation units
+        source_id: source-mit-6036
+        locator: The feature-representation and nearest-neighbour units on the Open Learning Library, with their auto-graded exercises
+        angle: Auto-graded exercises give immediate right/wrong feedback, which is rare for this material.
+        angle_detail: Most L13 practice on this shelf is either unchecked or comes with a written solution you read after giving up. The Open Learning Library grades your answer instantly, which changes how many attempts you make. Particularly useful for the feature-scaling questions, where the effect on a distance is easy to reason about wrongly and easy to check numerically.
+        scope_triage: helpful-now
+      - kind: reference
+        label: AML L02 — k-NN deepening
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
+        angle: The same k-NN material from the parallel AML module, at greater depth and with the curse of dimensionality treated properly.
+        angle_detail: Two modules in the same semester cover k-NN, and AML's version goes further — distance concentration in high dimensions, the effect on neighbourhood meaningfulness, and the consequences for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
+        scope_triage: reference-only
+      - kind: practise
+        label: Cornell CS4780 HW1 — k-NN
+        source_id: source-cs4780-homeworks
+        locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
+        angle: Asks about k-NN's behaviour in the limit and in high dimensions, not just about computing neighbours.
+        angle_detail: Cornell opens its ML course with k-NN and uses it to introduce the curse of dimensionality quantitatively — how far the nearest neighbour actually is when dimensions grow. That is a conceptual result L13 mentions and never quantifies, and these problems make it concrete. Solutions available for all three variants.
+        scope_triage: helpful-now
+      - kind: practise
+        label: MIT 6.034 quizzes — nearest-neighbor tracing
+        source_id: source-mit-6034-quizzes
+        locator: The published 6.034 quizzes and finals — the nearest-neighbour and decision-boundary questions, with solutions
+        angle: Asks you to draw the decision boundary a k-NN classifier induces, which tests the geometry rather than the formula.
+        angle_detail: Sketching the boundary for k=1 and k=3 on a small labelled scatter is a compact test of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes have many such questions with drawn solutions, which is not available anywhere else on the shelf.
+        scope_triage: helpful-now
+      - kind: read
+        label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
+        source_id: source-zacharski-data-mining
+        locator: Chapter 5, pp. 184-225
+        angle: Runs k-NN with different k and different aggregation on a data set where class imbalance actually bites, which is the case L13 slide 14 raises and no current exercise sheet exercises.
+        angle_detail: 'The evaluation chapter revisited for the k-NN case: how to choose k by cross-validation and what class imbalance does to a neighbour vote. L13''s aggregation node covers weighting and voting; this shows the failure mode those mechanisms exist to fix, with numbers.'
+        vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
+        scope_triage: helpful-now
+      - kind: reference
+        label: ESL Ch 13 - nearest neighbours and the cost of searching them
+        source_id: source-esl
+        locator: Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations, p. 499 (editing and condensing)
+        angle: 'Section 13.5 is the closest registered treatment of the L13 indexing problem: it states the computational cost of exact nearest-neighbour search and the editing/condensing responses, though it does not cover kd-trees, M-trees or LSH.'
+        angle_detail: §13.3 (p. 482) is the theoretical treatment of nearest neighbours, including the asymptotic error-rate result that bounds 1-NN's error by twice the Bayes rate — a striking fact L13 does not mention. §13.5 (p. 499) covers editing and condensing the training set to make search cheaper, which is the classical counterpart to the deck's indexing material and the closest any book here comes to it. Reference-only, but the L13 indexing half is otherwise unsupported.
+        vault_path: material://source-esl/esl.pdf
+        scope_triage: reference-only
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-neighbors/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-aggregation
+    number: 2
+    title: Classification, regression, voting, and weighting
+    status: pending
+    objective: Nominal labels use majority or weighted voting, numeric targets use local averages, and ties, imbalance, and distance weighting alter the decision.
+    done_when:
+      - 'Reproduce without notes: Nominal labels use majority or weighted voting, numeric targets use local averages, and ties, imbalance, and distance weighting alter the decision.'
+      - Work Cornell CS4780 HW1 — k-NN, then the remaining 1, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-k-nearest-neighbors
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Kelleher Chapter 5 — similarity-based learning
+        source_id: source-kelleher-fmlpda
+        locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm; the feature-space and normalisation sections)
+        angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which explains k's role geometrically.
+        angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the deck is effectively alone.'
+        vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
+        source_id: source-cs4780
+        locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture notes on the course site
+        angle: Quantifies the curse of dimensionality — how far away the nearest neighbour actually is as dimensions grow — instead of describing it.
+        angle_detail: Weinberger computes the expected distance to the nearest of n points in a d-dimensional unit cube and shows it approaching the cube's diameter as d grows, which means 'nearest' stops meaning 'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason the deck then spends time on approximate search. The lecture notes are written out and free.
+        scope_triage: helpful-now
+      - kind: reference
+        label: scikit-learn user guide §1.6 — nearest neighbours and search structures
+        source_id: source-sklearn-user-guide
+        locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6 'Choice of nearest neighbors algorithm'
+        angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees — which L13 teaches and almost no ML book covers.
+        angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality at which brute force wins again. That is the practical form of the curse of dimensionality and directly supports the deck''s argument for approximate search.'
+        scope_triage: helpful-now
+      - kind: reference
+        label: AML L02 — k-NN deepening
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
+        angle: The same k-NN material from the parallel AML module, at greater depth and with the curse of dimensionality treated properly.
+        angle_detail: Two modules in the same semester cover k-NN, and AML's version goes further — distance concentration in high dimensions, the effect on neighbourhood meaningfulness, and the consequences for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
+        scope_triage: reference-only
+      - kind: practise
+        label: Cornell CS4780 HW1 — k-NN
+        source_id: source-cs4780-homeworks
+        locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
+        angle: Asks about k-NN's behaviour in the limit and in high dimensions, not just about computing neighbours.
+        angle_detail: Cornell opens its ML course with k-NN and uses it to introduce the curse of dimensionality quantitatively — how far the nearest neighbour actually is when dimensions grow. That is a conceptual result L13 mentions and never quantifies, and these problems make it concrete. Solutions available for all three variants.
+        scope_triage: helpful-now
+      - kind: practise
+        label: MIT 6.034 quizzes — nearest-neighbor tracing
+        source_id: source-mit-6034-quizzes
+        locator: The published 6.034 quizzes and finals — the nearest-neighbour and decision-boundary questions, with solutions
+        angle: Asks you to draw the decision boundary a k-NN classifier induces, which tests the geometry rather than the formula.
+        angle_detail: Sketching the boundary for k=1 and k=3 on a small labelled scatter is a compact test of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes have many such questions with drawn solutions, which is not available anywhere else on the shelf.
+        scope_triage: helpful-now
+      - kind: read
+        label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
+        source_id: source-zacharski-data-mining
+        locator: Chapter 5, pp. 184-225
+        angle: Runs k-NN with different k and different aggregation on a data set where class imbalance actually bites, which is the case L13 slide 14 raises and no current exercise sheet exercises.
+        angle_detail: 'The evaluation chapter revisited for the k-NN case: how to choose k by cross-validation and what class imbalance does to a neighbour vote. L13''s aggregation node covers weighting and voting; this shows the failure mode those mechanisms exist to fix, with numbers.'
+        vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-aggregation/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-metrics
+    number: 3
+    title: Similarities, distances, and metric axioms
+    status: pending
+    objective: Non-negativity, identity, symmetry, and triangle inequality define a metric; not every useful similarity is a metric, which affects algorithms and indexes.
+    done_when:
+      - 'Reproduce without notes: Non-negativity, identity, symmetry, and triangle inequality define a metric; not every useful similarity is a metric, which affects algorithms and indexes.'
+      - Work UE7, slides 32-75 — similarity, distance and clustering bridge, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-distance-metrics
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE7, slides 32-75 — similarity, distance and clustering bridge
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE7.pdf, slides 32-75
+        angle: Uses distance calculations inside k-means, making metric choice operational even though it is not a k-NN sheet.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition. It does not practise kd-trees, M-trees or LSH, so those remain an explicit L13 gap.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Kelleher Chapter 5 — similarity-based learning
+        source_id: source-kelleher-fmlpda
+        locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm; the feature-space and normalisation sections)
+        angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which explains k's role geometrically.
+        angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the deck is effectively alone.'
+        vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
+        source_id: source-cs4780
+        locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture notes on the course site
+        angle: Quantifies the curse of dimensionality — how far away the nearest neighbour actually is as dimensions grow — instead of describing it.
+        angle_detail: Weinberger computes the expected distance to the nearest of n points in a d-dimensional unit cube and shows it approaching the cube's diameter as d grows, which means 'nearest' stops meaning 'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason the deck then spends time on approximate search. The lecture notes are written out and free.
+        scope_triage: helpful-now
+      - kind: reference
+        label: scikit-learn user guide §1.6 — nearest neighbours and search structures
+        source_id: source-sklearn-user-guide
+        locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6 'Choice of nearest neighbors algorithm'
+        angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees — which L13 teaches and almost no ML book covers.
+        angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality at which brute force wins again. That is the practical form of the curse of dimensionality and directly supports the deck''s argument for approximate search.'
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 6.036 — nearest-neighbour and feature-representation units
+        source_id: source-mit-6036
+        locator: The feature-representation and nearest-neighbour units on the Open Learning Library, with their auto-graded exercises
+        angle: Auto-graded exercises give immediate right/wrong feedback, which is rare for this material.
+        angle_detail: Most L13 practice on this shelf is either unchecked or comes with a written solution you read after giving up. The Open Learning Library grades your answer instantly, which changes how many attempts you make. Particularly useful for the feature-scaling questions, where the effect on a distance is easy to reason about wrongly and easy to check numerically.
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-metrics/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-minkowski
+    number: 4
+    title: Minkowski distances and feature scaling
+    status: pending
+    objective: Manhattan and Euclidean distance are Lp cases; units and high-dimensional irrelevant features can dominate neighborhoods unless representation and normalization are chosen deliberately.
+    done_when:
+      - 'Reproduce without notes: Manhattan and Euclidean distance are Lp cases; units and high-dimensional irrelevant features can dominate neighborhoods unless representation and normalization are chosen deliberately.'
+      - Work UE7, slides 32-75 — similarity, distance and clustering bridge, then the remaining 2, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-feature-scaling
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE7, slides 32-75 — similarity, distance and clustering bridge
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE7.pdf, slides 32-75
+        angle: Uses distance calculations inside k-means, making metric choice operational even though it is not a k-NN sheet.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition. It does not practise kd-trees, M-trees or LSH, so those remain an explicit L13 gap.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Kelleher Chapter 5 — similarity-based learning
+        source_id: source-kelleher-fmlpda
+        locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm; the feature-space and normalisation sections)
+        angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which explains k's role geometrically.
+        angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the deck is effectively alone.'
+        vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
+        source_id: source-cs4780
+        locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture notes on the course site
+        angle: Quantifies the curse of dimensionality — how far away the nearest neighbour actually is as dimensions grow — instead of describing it.
+        angle_detail: Weinberger computes the expected distance to the nearest of n points in a d-dimensional unit cube and shows it approaching the cube's diameter as d grows, which means 'nearest' stops meaning 'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason the deck then spends time on approximate search. The lecture notes are written out and free.
+        scope_triage: helpful-now
+      - kind: read
+        label: MIT 6.036 — nearest-neighbour and feature-representation units
+        source_id: source-mit-6036
+        locator: The feature-representation and nearest-neighbour units on the Open Learning Library, with their auto-graded exercises
+        angle: Auto-graded exercises give immediate right/wrong feedback, which is rare for this material.
+        angle_detail: Most L13 practice on this shelf is either unchecked or comes with a written solution you read after giving up. The Open Learning Library grades your answer instantly, which changes how many attempts you make. Particularly useful for the feature-scaling questions, where the effect on a distance is easy to reason about wrongly and easy to check numerically.
+        scope_triage: helpful-now
+      - kind: reference
+        label: AML L02 — k-NN deepening
+        source_id: source-aml-ss26-lectures
+        locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
+        angle: The same k-NN material from the parallel AML module, at greater depth and with the curse of dimensionality treated properly.
+        angle_detail: Two modules in the same semester cover k-NN, and AML's version goes further — distance concentration in high dimensions, the effect on neighbourhood meaningfulness, and the consequences for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
+        scope_triage: reference-only
+      - kind: practise
+        label: Cornell CS4780 HW1 — k-NN
+        source_id: source-cs4780-homeworks
+        locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
+        angle: Asks about k-NN's behaviour in the limit and in high dimensions, not just about computing neighbours.
+        angle_detail: Cornell opens its ML course with k-NN and uses it to introduce the curse of dimensionality quantitatively — how far the nearest neighbour actually is when dimensions grow. That is a conceptual result L13 mentions and never quantifies, and these problems make it concrete. Solutions available for all three variants.
+        scope_triage: helpful-now
+      - kind: practise
+        label: MIT 6.034 quizzes — nearest-neighbor tracing
+        source_id: source-mit-6034-quizzes
+        locator: The published 6.034 quizzes and finals — the nearest-neighbour and decision-boundary questions, with solutions
+        angle: Asks you to draw the decision boundary a k-NN classifier induces, which tests the geometry rather than the formula.
+        angle_detail: Sketching the boundary for k=1 and k=3 on a small labelled scatter is a compact test of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes have many such questions with drawn solutions, which is not available anywhere else on the shelf.
+        scope_triage: helpful-now
+      - kind: read
+        label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
+        source_id: source-zacharski-data-mining
+        locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest neighbours p. 62)
+        angle: L13 introduces Manhattan, Euclidean and cosine as definitions; this chapter implements each in Python over one recommender data set, so the difference between the measures and the effect of unscaled features becomes something you run rather than something you are told. It does not treat the metric axioms of slide 32.
+        angle_detail: 'Every distance measure L13 names, computed by hand on the same small dataset: Manhattan (p. 23), Euclidean (p. 24), Pearson (p. 42), cosine (p. 51), then k-NN itself (p. 62). Using one running example across all of them is what makes the comparison meaningful — you see the same pair of items being close under one measure and far under another, which is the entire point of L13''s metrics node and is invisible when each measure is defined separately.'
+        vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-minkowski/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-special-measures
+    number: 5
+    title: Cosine, Jaccard, and Mahalanobis measures
+    status: pending
+    objective: Directional, set-valued, and covariance-aware data require different measures; each encodes a distinct invariance and assumption about what “similar” should mean.
+    done_when:
+      - 'Reproduce without notes: Directional, set-valued, and covariance-aware data require different measures; each encodes a distinct invariance and assumption about what “similar” should mean.'
+      - Work UE7, slides 32-75 — similarity, distance and clustering bridge, and record every miss with the step it failed at.
+    exam_critical: true
+    concepts:
+      - concept-distance-metrics
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: practise
+        label: UE7, slides 32-75 — similarity, distance and clustering bridge
+        source_id: source-sad-uebungen
+        locator: exercise-slides/UE7.pdf, slides 32-75
+        angle: Uses distance calculations inside k-means, making metric choice operational even though it is not a k-NN sheet.
+        angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt: its value is the course''s calculation order and notation, while reading it first would turn an exam-relevant retrieval task into passive recognition. It does not practise kd-trees, M-trees or LSH, so those remain an explicit L13 gap.'
+        vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: read
+        label: Kelleher Chapter 5 — similarity-based learning
+        source_id: source-kelleher-fmlpda
+        locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm; the feature-space and normalisation sections)
+        angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which explains k's role geometrically.
+        angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the deck is effectively alone.'
+        vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+        scope_triage: helpful-now
+      - kind: read
+        label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
+        source_id: source-zacharski-data-mining
+        locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest neighbours p. 62)
+        angle: L13 introduces Manhattan, Euclidean and cosine as definitions; this chapter implements each in Python over one recommender data set, so the difference between the measures and the effect of unscaled features becomes something you run rather than something you are told. It does not treat the metric axioms of slide 32.
+        angle_detail: 'Every distance measure L13 names, computed by hand on the same small dataset: Manhattan (p. 23), Euclidean (p. 24), Pearson (p. 42), cosine (p. 51), then k-NN itself (p. 62). Using one running example across all of them is what makes the comparison meaningful — you see the same pair of items being close under one measure and far under another, which is the entire point of L13''s metrics node and is invisible when each measure is defined separately.'
+        vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
+        scope_triage: helpful-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-special-measures/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-exact-indexing
+    number: 6
+    title: Exact similarity-search indexes
+    status: pending
+    objective: kd-trees, k-means-style partitions, and metric trees prune search using geometric or metric structure, but effectiveness degrades with dimension and data geometry.
+    done_when:
+      - 'Reproduce without notes: kd-trees, k-means-style partitions, and metric trees prune search using geometric or metric structure, but effectiveness degrades with dimension and data geometry.'
+    exam_critical: true
+    concepts:
+      - concept-k-nearest-neighbors
+      - concept-similarity-search
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+      - kind: reference
+        label: 2025 instance- and similarity-based pair
+        source_id: source-sad-2025-recordings
+        locator: 13_similarity_based_part3.pdf
+        angle: A prior-year similarity-based deck, part 3 — evidence that 2025 spread this topic over more sessions.
+        angle_detail: Since almost no book covers L13's indexing material, prior-year decks are a real supplement here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts cover the distance-measure material that 2026 compresses.
+        vault_path: material://source-sad-2025-recordings/13_similarity_based_part3.pdf
+        scope_triage: reference-only
+      - kind: reference
+        label: scikit-learn user guide §1.6 — nearest neighbours and search structures
+        source_id: source-sklearn-user-guide
+        locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6 'Choice of nearest neighbors algorithm'
+        angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees — which L13 teaches and almost no ML book covers.
+        angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality at which brute force wins again. That is the practical form of the curse of dimensionality and directly supports the deck''s argument for approximate search.'
+        scope_triage: helpful-now
+      - kind: reference
+        label: ESL Ch 13 - nearest neighbours and the cost of searching them
+        source_id: source-esl
+        locator: Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations, p. 499 (editing and condensing)
+        angle: 'Section 13.5 is the closest registered treatment of the L13 indexing problem: it states the computational cost of exact nearest-neighbour search and the editing/condensing responses, though it does not cover kd-trees, M-trees or LSH.'
+        angle_detail: §13.3 (p. 482) is the theoretical treatment of nearest neighbours, including the asymptotic error-rate result that bounds 1-NN's error by twice the Bayes rate — a striking fact L13 does not mention. §13.5 (p. 499) covers editing and condensing the training set to make search cheaper, which is the classical counterpart to the deck's indexing material and the closest any book here comes to it. Reference-only, but the L13 indexing half is otherwise unsupported.
+        vault_path: material://source-esl/esl.pdf
+        scope_triage: reference-only
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l13-lsh
+    number: 7
+    title: Approximate search and locality-sensitive hashing
+    status: pending
+    objective: LSH trades guaranteed exact neighbors for sublinear candidate retrieval by making collision probability track similarity.
+    done_when:
+      - 'Reproduce without notes: LSH trades guaranteed exact neighbors for sublinear candidate retrieval by making collision probability track similarity.'
+    exam_critical: true
+    concepts:
+      - concept-data-access-optimization
+    scope_triage: required-now
+    resources:
+      - kind: read
+        label: Current L13 similarity-based learning deck
+        source_id: source-sad-ss26-lectures
+        locator: lecture-slides/13_similarity_based.pdf, 32 slides
+        angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate similarity indexes.
+        angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing half — exact search structures and locality-sensitive hashing — is not: it is a database-systems topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers LSH at all. For that part the deck is effectively the only source, which makes it unusually important to read closely rather than supplement.'
+        vault_path: material://source-sad-ss26-lectures/lecture-slides/13_similarity_based.pdf
+        scope_triage: required-now
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md
+    attachments: []
+    source_feedback: []

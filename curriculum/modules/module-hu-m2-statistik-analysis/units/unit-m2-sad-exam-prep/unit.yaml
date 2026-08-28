@@ -138,6 +138,7 @@ source_selections:
   - stage-m2-sad-s13-neural-networks
 - source_id: source-fahrmeir-statistik
   locator: Chapters 2-7 and 9-11, topic matched
+  route_id: route-5ef907d26eefddbfc3abd22c
   purpose: German notation-aligned derivation for descriptive statistics, probability, estimation, and
     testing.
   stage_ids:

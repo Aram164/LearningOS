@@ -274,10 +274,10 @@ stages:
     label: 'Article: Real Python — Instance, Class, and Static Methods Demystified.'
     url: https://realpython.com/instance-class-and-static-methods-demystified/
   - kind: reference
-    label: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed-layout tuple of named slots;
+    label: 'Going deeper: `__slots__` — replaces `__dict__` with a fixed layout of named slots;
       eliminates per-instance dict overhead; important for classes created in hot loops (like Op nodes
-      in Stratum''s large DAGs). Real Python — `__slots__`. Also see Step 27.'
-    url: https://realpython.com/python-slots/
+      in Stratum''s large DAGs). Python data model — `__slots__`. Also see Step 27.'
+    url: https://docs.python.org/3/reference/datamodel.html#object.__slots__
   - kind: reference
     label: '`__init_subclass__` — a hook called on the base class every time a subclass is defined; used
       in frameworks to auto-register subclasses. Docs. Stratum''s `Op` hierarchy could use this; understanding
@@ -483,7 +483,7 @@ stages:
     label: 'Classic: David Beazley — Generator Tricks for Systems Programmers ⭐ — generator pipelines
       over logs; career-grade for data engineering.'
     source_id: source-beazley-generator-tricks
-    url: https://www.dabeaz.com/generators/
+    url: https://github.com/dabeaz/generators
   - kind: read
     label: 'Article: Real Python — Introduction to Generators.'
     url: https://realpython.com/introduction-to-python-generators/
@@ -830,7 +830,7 @@ stages:
     label: 'Deep: Philip Guo — CPython internals lectures — cherry-pick L1 (overview), L3 (frames/scope),
       L8 (classes). Old (Py 2.7) but architecture stands.'
     source_id: source-guo-cpython-internals
-    url: https://pgbovine.net/cpython-internals.htm
+    url: https://www.youtube.com/playlist?list=PLzV58Zm8FuBL6OAv1Yu6AwXZrnsFbbR0S
   - kind: read
     label: 'Modern alternative: CPython internals book (Real Python, paid) or the free devguide.python.org
       — the official contributor guide explains the C source layout.'
@@ -923,10 +923,10 @@ stages:
       `type(obj).__name__`, `type(obj).__module__` tell you the class string — used in `estm_supports_polars()`
       in Stratum (`estimator.__class__.__module__.startswith("sklearn.")`).'
   - kind: reference
-    label: '`inspect` module: Real Python — inspect — `inspect.signature(f)`, `inspect.getmembers(obj)`,
+    label: '`inspect` module: Python docs — `inspect` — `inspect.signature(f)`, `inspect.getmembers(obj)`,
       `inspect.isclass`, `inspect.isfunction`, `inspect.getmro(cls)` (same as `cls.__mro__`). Used for
       framework code, plugins, and any "I need to know what this object has" scenario.'
-    url: https://realpython.com/python-inspect-module/
+    url: https://docs.python.org/3/library/inspect.html
   - kind: reference
     label: '`__class__.__name__` idiom: the pattern `self.__class__.__name__` in `Op.__str__` — works
       correctly in subclasses (returns the subclass name, not `Op`).'
@@ -977,9 +977,9 @@ stages:
       Any code in that module that uses `ClassName` after the patch sees the new class. Code that already
       did `from module import ClassName` and stored a local binding is NOT affected — order matters.'
   - kind: read
-    label: 'Article: Real Python — Monkey Patching in Python — the `unittest.mock.patch` context manager
+    label: 'Reference: Python docs — `unittest.mock.patch` — the context manager
       does exactly this; understanding it demystifies Stratum''s manual version.'
-    url: https://realpython.com/python-mock-patch/
+    url: https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch
   - kind: reference
     label: 'Idempotence pattern: Stratum uses `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock`
       to ensure patching runs exactly once even across threads. Classic sentinel + lock pattern. threading.RLock
@@ -1167,9 +1167,9 @@ stages:
       in `_optimize.py`''s `topological_traverse`. DFS-based in `_linearization.py`''s `linearize_dag`.
       Know both.'
   - kind: read
-    label: 'Core graph representation · Article: Real Python — Python Graphs — adjacency list, DFS/BFS
-      in Python.'
-    url: https://realpython.com/python-graphs/
+    label: 'Core graph representation · Article: Python.org — Implementing Graphs — adjacency lists
+      and graph traversal in Python.'
+    url: https://www.python.org/doc/essays/graphs/
   - kind: read
     label: 'Core graph representation · Book: CLRS §22 (Graph algorithms, already in your Algo2 plan)
       — the formal version; the Stratum code is direct applied CLRS.'
@@ -1221,7 +1221,7 @@ stages:
     label: 'Resources · Book: Crafting Interpreters (Nystrom, free online) — the best accessible intro
       to IR design, AST walking, and optimization passes. Not Python-specific but your C++ background
       makes Part II very readable.'
-    url: https://craftinginterpreters.com/
+    url: https://craftinginterpreters.com/index.html
   - kind: read
     label: 'Resources · Book: Engineering a Compiler (Cooper & Torczon, 3rd ed.) — the textbook for compiler
       middle-end (IR, optimization, register allocation). Graduate-level; dip in when you hit a specific
@@ -1265,11 +1265,10 @@ stages:
     locator: '## Step 27 — `__slots__`, `weakref`, memory layout'
     vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
   - kind: reference
-    label: '`__slots__`: Real Python — `__slots__` — replaces per-instance `__dict__` with a fixed C array
-      of named slots. Memory reduction: ~40-60% per instance. Trade-off: no dynamic attributes, harder
-      to pickle (need `__getstate__`/`__setstate__`). Use when you create millions of small instances
-      (e.g…'
-    url: https://realpython.com/python-slots/
+    label: '`__slots__`: Python data model — `__slots__` — replaces per-instance `__dict__` with a fixed
+      layout of named slots and can significantly reduce memory. Trade-off: no dynamic attributes unless
+      `__dict__` is included. Use when you create millions of small instances (e.g…'
+    url: https://docs.python.org/3/reference/datamodel.html#object.__slots__
   - kind: reference
     label: '`weakref`: Official docs — a reference that doesn''t prevent garbage collection. `weakref.ref(obj)`
       returns a callable that returns `obj` or `None` if collected. `weakref.WeakValueDictionary` — a

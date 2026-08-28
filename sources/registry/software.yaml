@@ -35,7 +35,7 @@ sources:
     type: course
     thematic_group_ids: [thematic-group-software]
     authors: [David Beazley]
-    url: https://www.dabeaz.com/generators/
+    url: https://github.com/dabeaz/generators
     evaluations:
       - concepts: [concept-python]
         roles: [first-learning, implementation]
@@ -164,7 +164,7 @@ sources:
     title: Philip Guo — CPython internals (10-hour lecture series)
     type: video
     authors: [Philip Guo]
-    url: https://pgbovine.net/cpython-internals.htm
+    url: https://www.youtube.com/playlist?list=PLzV58Zm8FuBL6OAv1Yu6AwXZrnsFbbR0S
     evaluations:
       - roles: [first-learning]
         level: advanced
@@ -490,3 +490,34 @@ sources:
     title: "C, C++ and Java book shelf (bachelor-era language texts)"
     type: book
     material: material://source-programming-language-books
+  - id: source-polars-definitive-guide
+    title: 'Python Polars: The Definitive Guide'
+    type: book
+    authors:
+    - Jeroen Janssens
+    - Thijs Nieuwdorp
+    material: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: source-stratum-paper
+    title: 'stratum: A System Infrastructure for Massive Agent-Centric ML Workloads [Vision]'
+    type: paper
+    authors:
+    - Arnab Phani
+    - Elias Strauss
+    - Sebastian Schelter
+    material: material://source-stratum-paper/stratum-paper.pdf
+  - id: source-scalable-dataframe-systems-paper
+    title: Towards Scalable Dataframe Systems
+    type: paper
+    authors:
+    - Devin Petersohn
+    - Stephen Macke
+    - Doris Xin
+    - William Ma
+    - Doris Lee
+    - Xiangxi Mo
+    - Joseph E. Gonzalez
+    - Joseph M. Hellerstein
+    - Anthony D. Joseph
+    - Aditya Parameswaran
+    year: 2020
+    material: material://source-scalable-dataframe-systems-paper/Towards Scalable Dataframe Systems.pdf

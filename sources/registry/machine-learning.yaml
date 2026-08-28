@@ -437,10 +437,10 @@ sources:
 
   - id: source-eecs498
     thematic_group_ids: [thematic-group-machine-learning]
-    title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson, FA2020)
+    title: UMich EECS 498-007 — Deep Learning for Computer Vision (Johnson)
     type: course
     organization: University of Michigan
-    url: https://web.eecs.umich.edu/~justincj/teaching/eecs498/FA2020/
+    url: https://www.youtube.com/playlist?list=PL5-TkQAfAZFbzxjBHtzdVCWE0Zbhomg7r
     evaluations:
       - concepts: [concept-gradient-descent, concept-adam-optimizer, concept-neural-network,
                    concept-backpropagation, concept-convolutional-networks,
@@ -1106,7 +1106,6 @@ sources:
     url: https://scikit-learn.org/stable/user_guide.html
     identifiers:
       examples-gallery: https://scikit-learn.org/stable/auto_examples/index.html
-      docs-pdf: https://scikit-learn.org/stable/_downloads/scikit-learn-docs.pdf
     evaluations:
       - roles: [review, implementation]
         useful_sections:

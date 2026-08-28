@@ -162,7 +162,7 @@ sources: [source-fluent-python]
 - **Core:** [Official tutorial ch. 9 (Classes)](https://docs.python.org/3/tutorial/classes.html) §9.1–9.4 — classes are namespaces; attribute lookup is dict lookup.
 - **Video + code:** [Corey Schafer OOP playlist](https://www.youtube.com/playlist?list=PL-osiE80TeTsqhIuOqKhwlXsIBIdSeYtc) #1–3, code at [CoreyMSchafer/code_snippets](https://github.com/CoreyMSchafer/code_snippets/tree/master/Object-Oriented).
 - **Article:** [Real Python — Instance, Class, and Static Methods Demystified](https://realpython.com/instance-class-and-static-methods-demystified/).
-- **Going deeper:** `__slots__` — replaces `__dict__` with a fixed-layout tuple of named slots; eliminates per-instance dict overhead; important for classes created in hot loops (like Op nodes in Stratum's large DAGs). [Real Python — `__slots__`](https://realpython.com/python-slots/). Also see Step 27.
+- **Going deeper:** `__slots__` — replaces `__dict__` with a fixed layout of named slots; eliminates per-instance dict overhead; important for classes created in hot loops (like Op nodes in Stratum's large DAGs). [Python data model — `__slots__`](https://docs.python.org/3/reference/datamodel.html#object.__slots__). Also see Step 27.
 - **`__init_subclass__`** — a hook called on the base class every time a subclass is defined; used in frameworks to auto-register subclasses. [Docs](https://docs.python.org/3/reference/datamodel.html#object.__init_subclass__). Stratum's `Op` hierarchy could use this; understanding it helps you read framework code.
 - **Key reframe:** `obj.method(x)` ≡ `Class.method(obj, x)`. `self` is an ordinary first argument.
 - **Drills:** Repair Plan **Session 2**.
@@ -234,7 +234,7 @@ sources: [source-fluent-python]
 
 - **Core:** FP **Ch 17** (Iterators, Generators, Classic Coroutines) — PY.06 ⬜ — read the generators section first; the coroutines section is Step 24.
 - **Article:** [Trey Hunner — The Iterator Protocol: How for Loops Work](https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/).
-- **Classic:** [David Beazley — Generator Tricks for Systems Programmers](https://www.dabeaz.com/generators/) ⭐ — generator pipelines over logs; career-grade for data engineering.
+- **Classic:** [David Beazley — Generator Tricks for Systems Programmers](https://github.com/dabeaz/generators) ⭐ — generator pipelines over logs; career-grade for data engineering.
 - **Article:** [Real Python — Introduction to Generators](https://realpython.com/introduction-to-python-generators/).
 - **`yield from`:** delegates to a sub-iterator; essential in recursive generator traversals (like Stratum's DAG walkers). `yield from inner` is shorthand for `for x in inner: yield x` but also proxies `.send()` and `.throw()`. [PEP 380](https://peps.python.org/pep-0380/).
 - **Hierarchy:** iterable (has `__iter__`) ⊃ iterator (also has `__next__`, exhausts) ⊃ generator (iterator written with `yield`).
@@ -280,7 +280,7 @@ sources: [source-fluent-python]
 - **Article:** [Real Python — Python Type Checking](https://realpython.com/python-type-checking/) — practical mypy setup.
 - **Reference:** [mypy cheat sheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html) ⭐ — fastest on-ramp; start here.
 - **Going deeper:**
-  - `TypeVar` + `Generic[T]` — parameterized containers (`class Stack(Generic[T]): ...`). [Real Python — generics](https://realpython.com/python-type-hints-multiple-dispatch/).
+  - `TypeVar` + `Generic[T]` — parameterized containers (`class Stack(Generic[T]): ...`). [Python typing docs — `Generic`](https://docs.python.org/3/library/typing.html#typing.Generic).
   - `from __future__ import annotations` (PEP 563) — makes ALL annotations lazy strings; enables forward references (`def f() -> "MyClass":` becomes just `def f() -> MyClass:`). Used at the top of every Stratum file. Becoming default in future Python versions.
   - `overload` decorator — multiple signatures for one function (typing-only; the runtime version catches the rest).
   - `Callable[[ArgType], ReturnType]` — type hint for functions.
@@ -341,7 +341,7 @@ sources: [source-fluent-python]
 *Relevant for AMLS parallelism + job perf work.*
 
 - **Orientation:** [Real Python — Speed Up Your Python Program With Concurrency](https://realpython.com/python-concurrency/) — the threading vs multiprocessing vs asyncio decision map.
-- **The GIL:** [Real Python — What Is the GIL?](https://realpython.com/python-gil/) + [Beazley — Understanding the GIL (slides)](https://www.dabeaz.com/python/UnderstandingGIL.pdf).
+- **The GIL:** [Real Python — What Is the GIL?](https://realpython.com/python-gil/) + [Python glossary — global interpreter lock](https://docs.python.org/3/glossary.html#term-global-interpreter-lock).
 - **Threading primitives:** `threading.RLock` (reentrant lock — the same thread can acquire it multiple times without deadlock), `threading.Lock`, `threading.Event`. [Official docs](https://docs.python.org/3/library/threading.html). Used in Stratum's `_patching.py` (`_LOCK = threading.RLock()`) to make the monkey-patching idempotent across threads.
 - **`concurrent.futures`:** [Real Python — concurrent.futures](https://realpython.com/python-concurrency/#using-concurrentfutures) — `ThreadPoolExecutor` for I/O-bound, `ProcessPoolExecutor` for CPU-bound; cleaner API than raw `threading`/`multiprocessing`.
 - **Video:** [Beazley — Python Concurrency From the Ground Up: LIVE!](https://www.youtube.com/watch?v=MCs5OvhV9S4) ⭐ — builds a concurrent server from scratch on stage.
@@ -359,7 +359,7 @@ sources: [source-fluent-python]
 - **Bytecode module:** `opcode` — the full list of bytecode instructions. `compile(source, "<string>", "exec")` returns a `code` object; inspect its `co_consts`, `co_varnames`, `co_code`.
 - **Core:** [Allison Kaptur — A Python Interpreter Written in Python](https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html) ⭐ (~1.5h) — Byterun: working bytecode VM in 500 lines; frames, value stack, why scope IS the frame structure.
 - **Foundations alternative:** [Composing Programs](https://www.composingprograms.com/) ch. 1.6 & 3 (Berkeley CS61A) — environments/frames diagrams done formally.
-- **Deep:** [Philip Guo — CPython internals lectures](https://pgbovine.net/cpython-internals.htm) — cherry-pick L1 (overview), L3 (frames/scope), L8 (classes). Old (Py 2.7) but architecture stands.
+- **Deep:** [Philip Guo — CPython internals lecture playlist](https://www.youtube.com/playlist?list=PLzV58Zm8FuBL6OAv1Yu6AwXZrnsFbbR0S) — cherry-pick L1 (overview), L3 (frames/scope), L8 (classes). Old (Py 2.7) but architecture stands.
 - **Modern alternative:** [CPython internals book](https://realpython.com/products/cpython-internals-book/) (Real Python, paid) or the free [devguide.python.org](https://devguide.python.org/) — the official contributor guide explains the C source layout.
 - **`eval()`/`exec()`:** [Real Python — eval and exec](https://realpython.com/python-eval-function/) — run Python code from strings; understand why this is powerful and dangerous.
 
@@ -394,7 +394,7 @@ sources: [source-fluent-python]
 - **Core:** [Real Python — Python's `isinstance` and `issubclass`](https://realpython.com/python-isinstance/) — when to use it, when duck typing is better.
 - **Core:** [Official docs — Built-in functions: `getattr`, `setattr`, `hasattr`, `delattr`](https://docs.python.org/3/library/functions.html) — the reflection quad. `getattr(obj, name, default)` is the safe form; `setattr(mod, name, value)` patches attributes on anything, including modules (Step 23).
 - **`type()` and `vars()`:** `type(obj)` returns the class; `vars(obj)` returns the `__dict__`. `type(obj).__name__`, `type(obj).__module__` tell you the class string — used in `estm_supports_polars()` in Stratum (`estimator.__class__.__module__.startswith("sklearn.")`).
-- **`inspect` module:** [Real Python — inspect](https://realpython.com/python-inspect-module/) — `inspect.signature(f)`, `inspect.getmembers(obj)`, `inspect.isclass`, `inspect.isfunction`, `inspect.getmro(cls)` (same as `cls.__mro__`). Used for framework code, plugins, and any "I need to know what this object has" scenario.
+- **`inspect` module:** [Python docs — `inspect`](https://docs.python.org/3/library/inspect.html) — `inspect.signature(f)`, `inspect.getmembers(obj)`, `inspect.isclass`, `inspect.isfunction`, `inspect.getmro(cls)` (same as `cls.__mro__`). Used for framework code, plugins, and any "I need to know what this object has" scenario.
 - **`__class__.__name__` idiom:** the pattern `self.__class__.__name__` in `Op.__str__` — works correctly in subclasses (returns the subclass name, not `Op`).
 - **Stratum anchor:** `_ops.py` is full of this. `isinstance(value, DataOp)`, `isinstance(value, (list, tuple))`, `isinstance(impl, Value)` etc. in `as_op()` and `replace_dataop()`. `hasattr(self.skrub_impl, "eval")` in `ImplOp.process` — checking for an optional method before calling it (duck typing via reflection).
 - **Drill:** write a function `describe(obj)` that prints the class name, all public attributes (excluding dunders), and which are callable vs data; use only `type()`, `dir()`, `getattr()`, `callable()`.
@@ -412,7 +412,7 @@ sources: [source-fluent-python]
 - **`sys.modules`:** a plain dict mapping module names to module objects. First `import foo` executes `foo.py` and stores the result in `sys.modules["foo"]`. Every subsequent `import foo` just returns `sys.modules["foo"]`. Monkey-patching works because ALL code that does `from foo import Bar` later gets the patched `Bar` (if patched before they import).
 - **`importlib.import_module(name)`:** programmatic equivalent of `import name`; returns the module object. If the module is already in `sys.modules`, returns the cached object without re-executing. Used in `_patching.py`'s `_import_module()`.
 - **`setattr(module, "ClassName", ReplacementClass)`:** replaces the name `ClassName` in `module.__dict__`. Any code in that module that uses `ClassName` after the patch sees the new class. Code that already did `from module import ClassName` and stored a local binding is NOT affected — order matters.
-- **Article:** [Real Python — Monkey Patching in Python](https://realpython.com/python-mock-patch/) — the `unittest.mock.patch` context manager does exactly this; understanding it demystifies Stratum's manual version.
+- **Reference:** [Python docs — `unittest.mock.patch`](https://docs.python.org/3/library/unittest.mock.html#unittest.mock.patch) — the context manager does exactly this; understanding it demystifies Stratum's manual version.
 - **Idempotence pattern:** Stratum uses `_PATCH_SENTINEL_NAME = "_STRATUM_PATCHED"` + `threading.RLock` to ensure patching runs exactly once even across threads. Classic sentinel + lock pattern. [threading.RLock docs](https://docs.python.org/3/library/threading.html#threading.RLock).
 - **`from __future__ import annotations` interaction:** patching at import time must happen before any module that uses the patched names is imported. `_patching.py` imports and patches during its own module execution, so `import stratum.patching` triggers it; the `__init__.py` that does `from .patching import ...` controls timing.
 - **Stratum anchor:** read `_patching.py` in full after this step. It is a clean, well-commented example of: `importlib.import_module`, `setattr`, `threading.RLock`, module-level patching, and idempotent initialization — all patterns you'll use.
@@ -511,7 +511,7 @@ sources: [source-fluent-python]
 
 - **Node + edge list:** `Op` in Stratum uses explicit `inputs: list[Op]` and `outputs: list[Op]` on each node — a doubly-linked representation. Enables O(1) parent and child lookup at the cost of keeping both sides in sync.
 - **Topological sort:** Kahn's algorithm (`deque` + indegree dict) in `_optimize.py`'s `topological_traverse`. DFS-based in `_linearization.py`'s `linearize_dag`. Know both.
-- **Article:** [Real Python — Python Graphs](https://realpython.com/python-graphs/) — adjacency list, DFS/BFS in Python.
+- **Article:** [Python.org — Implementing Graphs](https://www.python.org/doc/essays/graphs/) — adjacency lists and graph traversal in Python.
 - **Book:** CLRS §22 (Graph algorithms, already in your Algo2 plan) — the formal version; the Stratum code is direct applied CLRS.
 
 ### Node replacement (rewrite rules)
@@ -554,7 +554,7 @@ sources: [source-fluent-python]
 
 **Symptoms:** high memory usage from many small objects; `weakref` appearing in buffer pool code; `__slots__` in scikit-learn internals.
 
-- **`__slots__`:** [Real Python — `__slots__`](https://realpython.com/python-slots/) — replaces per-instance `__dict__` with a fixed C array of named slots. Memory reduction: ~40-60% per instance. Trade-off: no dynamic attributes, harder to pickle (need `__getstate__`/`__setstate__`). Use when you create millions of small instances (e.g., AST/IR nodes).
+- **`__slots__`:** [Python data model — `__slots__`](https://docs.python.org/3/reference/datamodel.html#object.__slots__) — replaces per-instance `__dict__` with a fixed layout of named slots and can significantly reduce memory. Trade-off: no dynamic attributes unless `__dict__` is included. Use when you create millions of small instances (e.g., AST/IR nodes).
 - **`weakref`:** [Official docs](https://docs.python.org/3/library/weakref.html) — a reference that doesn't prevent garbage collection. `weakref.ref(obj)` returns a callable that returns `obj` or `None` if collected. `weakref.WeakValueDictionary` — a dict that drops entries when values are garbage-collected; perfect for caches (like a buffer pool that shouldn't keep objects alive). Stratum's `BufferPool` uses a plain dict now (strong refs) — a `WeakValueDictionary` variant would auto-evict on GC.
 - **Memory profiling:** `tracemalloc` (stdlib) + [memray](https://github.com/bloomberg/memray) (Bloomberg's profiler, highly recommended) — identify which objects are using the most memory.
 - **`sys.getsizeof(obj)`:** returns *shallow* size of one object (doesn't recurse into attributes). Stratum's `_object_size.py` wraps this. For true deep size: `pympler` library or `objgraph`.

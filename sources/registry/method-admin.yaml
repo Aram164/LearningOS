@@ -24,7 +24,7 @@ sources:
     title: Stanford CS229 project archive (+ CS230 past projects)
     type: website
     organization: Stanford
-    url: https://cs229.stanford.edu/projects.html
+    url: https://cs229.stanford.edu/projects_backup.html
     identifiers:
       cs230: https://cs230.stanford.edu/past-projects/
     evaluations:

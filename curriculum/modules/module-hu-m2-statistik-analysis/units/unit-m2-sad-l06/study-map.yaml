@@ -15,11 +15,13 @@ stages:
   number: 1
   title: Random variables and realizations
   status: pending
-  objective: A random variable maps outcomes to numbers; the variable, a realized value, and the underlying random
-    experiment are distinct objects.
+  objective: A random variable maps outcomes to numbers; the variable, a realized value, and the underlying
+    random experiment are distinct objects.
   done_when:
-  - 'Reproduce without notes: A random variable maps outcomes to numbers; the variable, a realized value, and
-    the underlying random experiment are distinct objects.'
+  - 'Reproduce without notes: A random variable maps outcomes to numbers; the variable, a realized value,
+    and the underlying random experiment are distinct objects.'
+  - Work UE4, slides 18-34 — random variables, moments and LLN, and record every miss with the step it
+    failed at.
   exam_critical: true
   concepts:
   - concept-random-variable
@@ -29,102 +31,159 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 random-variables and expected-values pair
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/06_expected_values.pptx-1.pdf
-    scope_triage: reference-only
+    locator: 06_expected_values.pptx-1.pdf
     angle: A prior-year deck devoted specifically to expected values, in more detail than the 2026 pass.
-    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than a section,
-      which makes it a slower and more worked-through treatment of L06's central node. One of the more useful
-      prior-year files for that reason.
+    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than
+      a section, which makes it a slower and more worked-through treatment of L06's central node. One
+      of the more useful prior-year files for that reason.
+    vault_path: material://source-sad-2025-recordings/06_expected_values.pptx-1.pdf
+    scope_triage: reference-only
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     source_id: source-fahrmeir-statistik
-    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV, pdf pp.
-      247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile, Varianz, pdf
-      pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz und Korrelation, pdf
-      pp. 368-374
+    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
+      pdf pp. 247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile,
+      Varianz, pdf pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz
+      und Korrelation, pdf pp. 368-374
+    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are
+      never conflated the way a single merged treatment can.
+    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by
+      chapter, which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability
+      in Ch 5 and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the
+      covariance definition L06 needs and connects it back to the descriptive covariance of Ch 3, so the
+      same symbol is not learned twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der
+      großen Zahlen; read it here rather than in an English text if the exam wording matters.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are never conflated
-      the way a single merged treatment can.
-    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by chapter,
-      which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability in Ch 5
-      and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the covariance definition
-      L06 needs and connects it back to the descriptive covariance of Ch 3, so the same symbol is not learned
-      twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der großen Zahlen; read it here rather
-      than in an English text if the exam wording matters.'
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     source_id: source-blitzstein-hwang
-    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions of random
-      variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition of expectation
-      p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3 covariance and correlation,
-      pdf pp. 343-348
+    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
+      of random variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition
+      of expectation p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3
+      covariance and correlation, pdf pp. 343-348
+    angle: Insists on the distinction between a random variable and its distribution, and proves linearity
+      of expectation without independence.
+    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable
+      is a function on the sample space while its distribution is a separate object — the confusion behind
+      most wrong answers about transformations, and something L06 states once. Second, §4.2 proves that
+      E[X+Y] = E[X] + E[Y] holds whether or not X and Y are independent, and shows why that is surprising;
+      the lecture asserts linearity, and knowing it needs no independence is what makes it a tool. §4.5
+      (LOTUS) is the rule for E[g(X)] that the transformations node depends on. Skip the MGF sections
+      in Ch 6 — out of scope.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: Insists on the distinction between a random variable and its distribution, and proves linearity of
-      expectation without independence.
-    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable is
-      a function on the sample space while its distribution is a separate object — the confusion behind most wrong
-      answers about transformations, and something L06 states once. Second, §4.2 proves that E[X+Y] = E[X] + E[Y]
-      holds whether or not X and Y are independent, and shows why that is surprising; the lecture asserts linearity,
-      and knowing it needs no independence is what makes it a tool. §4.5 (LOTUS) is the rule for E[g(X)] that
-      the transformations node depends on. Skip the MGF sections in Ch 6 — out of scope.
-  - kind: reference
-    label: Ross — random-variable theory
-    source_id: source-ross-first-course
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function of a
-      random variable; §4.5 variance; §4.10 properties of the cumulative distribution function); Ch 7 §7.2 expectation
-      of sums, pdf pp. 478-500
-    scope_triage: reference-only
-    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every exercise
-      actually uses.
-    angle_detail: The definition of variance is an expected squared deviation; almost every calculation uses the
-      shortcut identity instead. Ross derives the identity from the definition rather than presenting it as an
-      alternative formula, which is worth seeing once so that the shortcut is a theorem you can reconstruct rather
-      than a rule you hope you remember. §4.4 is the general expectation-of-a-function rule that L06's transformations
-      node needs; §4.10 gives the CDF its own properties list.
+  - kind: read
+    label: MIT 6.041SC — random variables, expectation and variance lectures
+    source_id: source-mit-6041sc
+    locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
+      and tutorials
+    angle: Insists on the distinction between a random variable and a numerical value throughout, with
+      notation discipline the deck does not enforce.
+    angle_detail: The course is unusually strict about writing X for the variable and x for a value, and
+      about what it means to condition a random variable on an event. That discipline is what makes later
+      manipulations safe, and it is the habit most often missing when students find transformations confusing.
+      Recorded lectures make it easy to see the distinction being applied rather than merely stated.
+    scope_triage: helpful-now
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     source_id: source-openintro-statistics
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
+    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit
+      calculation rather than through a definition.
+    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then
+      naming the computation, which makes the linearity property feel like an accounting fact. That is
+      a lighter entry than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well
+      short: no LOTUS, no covariance, no Chebyshev. Use it to get started and switch to Blitzstein or
+      Dekking for the transformation and concentration nodes.'
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit calculation
-      rather than through a definition.
-    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then naming
-      the computation, which makes the linearity property feel like an accounting fact. That is a lighter entry
-      than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well short: no LOTUS, no covariance,
-      no Chebyshev. Use it to get started and switch to Blitzstein or Dekking for the transformation and concentration
-      nodes.'
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
+      of a random variable; §4.5 variance; §4.10 properties of the cumulative distribution function);
+      Ch 7 §7.2 expectation of sums, pdf pp. 478-500
+    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every
+      exercise actually uses.
+    angle_detail: The definition of variance is an expected squared deviation; almost every calculation
+      uses the shortcut identity instead. Ross derives the identity from the definition rather than presenting
+      it as an alternative formula, which is worth seeing once so that the shortcut is a theorem you can
+      reconstruct rather than a rule you hope you remember. §4.4 is the general expectation-of-a-function
+      rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
+    vault_path: material://source-ross-first-course/ross.pdf
+    scope_triage: reference-only
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     source_id: source-stat110
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
       LOTUS, variance)
+    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard
+      computations trivial.
+    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of
+      its event — plus linearity without independence lets you compute means of complicated counts by
+      decomposition. L06 never mentions it, but once seen it is the fastest route through a large class
+      of exercises, and it makes linearity feel like a tool rather than an identity. Lectures run 45-50
+      minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
+      to be strong on.
     scope_triage: reference-only
-    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard computations
-      trivial.
-    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of its event
-      — plus linearity without independence lets you compute means of complicated counts by decomposition. L06
-      never mentions it, but once seen it is the fastest route through a large class of exercises, and it makes
-      linearity feel like a tool rather than an identity. Lectures run 45-50 minutes each; this is a five-lecture
-      commitment, so choose it only if L06 is a topic you intend to be strong on.
+  - kind: reference
+    label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
+    source_id: source-sad-klausuren-extern
+    locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
+    angle: Shows the measure-theoretic formulation behind random variables and convergence, far beyond
+      the course's computational level.
+    angle_detail: 'This is not normal L06 practice: sigma-algebras and proof questions assume a rigorous
+      probability course. It is retained so the owned file is visible and can answer a formal-definition
+      question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
+    vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+    scope_triage: reference-only
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     source_id: source-kurzes-tutorium-statistik
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
-    scope_triage: helpful-now
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short and purely
-      terminological — the concepts should come from Blitzstein or Dekking, but the words should come from here
-      if the exam wording has ever cost you time.
+    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+      and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
+      come from here if the exam wording has ever cost you time.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Swanson — the measure-theoretic definition behind the random-variable language
+    source_id: source-swanson-principles-probability
+    locator: The Principles of Probability (LNM 2384), the chapters defining sigma-algebras, measurable
+      functions and the abstract expectation integral
+    angle: Says what a random variable formally is — a measurable function — which every course-level
+      source deliberately avoids.
+    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
+      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
+      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
+      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
+      it will cost days and will not help the exam. Open it to see that the answer exists, then close
+      it.
+    vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md
   attachments: []
   source_feedback: []
@@ -132,13 +191,13 @@ stages:
   number: 2
   title: PMF, density, and CDF
   status: pending
-  objective: Discrete mass and continuous density assign probability differently, while the cumulative distribution
-    function uniformly represents P(X less than or equal to x).
+  objective: Discrete mass and continuous density assign probability differently, while the cumulative
+    distribution function uniformly represents P(X less than or equal to x).
   done_when:
-  - 'Reproduce without notes: Discrete mass and continuous density assign probability differently, while the cumulative
-    distribution function uniformly represents P(X less than or equal to x).'
-  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Discrete mass and continuous density assign probability differently, while
+    the cumulative distribution function uniformly represents P(X less than or equal to x).'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    6, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-random-variable
@@ -148,155 +207,232 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
   - kind: practise
-    label: Übungsblatt 3 and UE4 — random variables and moments
+    label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     source_id: source-sad-uebungen
-    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
+    locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
+    angle: Compresses the four core random-variable operations into one exact current assignment.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
-    angle: Expectation and variance computed in the chair's layout, with the tutorial's full working.
-    angle_detail: L06's exam questions are mostly table-driven computations, and these show the expected table
-      and the expected amount of intermediate working. Pair with the jbstatistics videos, which build the same
-      column layout.
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 4-17 — official Blatt 3 solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 4-17
+    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
+      attempted.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 random-variables and expected-values pair
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/06_expected_values.pptx-1.pdf
-    scope_triage: reference-only
+    locator: 06_expected_values.pptx-1.pdf
     angle: A prior-year deck devoted specifically to expected values, in more detail than the 2026 pass.
-    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than a section,
-      which makes it a slower and more worked-through treatment of L06's central node. One of the more useful
-      prior-year files for that reason.
+    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than
+      a section, which makes it a slower and more worked-through treatment of L06's central node. One
+      of the more useful prior-year files for that reason.
+    vault_path: material://source-sad-2025-recordings/06_expected_values.pptx-1.pdf
+    scope_triage: reference-only
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     source_id: source-fahrmeir-statistik
-    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV, pdf pp.
-      247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile, Varianz, pdf
-      pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz und Korrelation, pdf
-      pp. 368-374
+    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
+      pdf pp. 247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile,
+      Varianz, pdf pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz
+      und Korrelation, pdf pp. 368-374
+    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are
+      never conflated the way a single merged treatment can.
+    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by
+      chapter, which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability
+      in Ch 5 and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the
+      covariance definition L06 needs and connects it back to the descriptive covariance of Ch 3, so the
+      same symbol is not learned twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der
+      großen Zahlen; read it here rather than in an English text if the exam wording matters.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are never conflated
-      the way a single merged treatment can.
-    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by chapter,
-      which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability in Ch 5
-      and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the covariance definition
-      L06 needs and connects it back to the descriptive covariance of Ch 3, so the same symbol is not learned
-      twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der großen Zahlen; read it here rather
-      than in an English text if the exam wording matters.'
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf
-      pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
+      pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete
+      and continuous chapters.
+    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce
+      E[X], Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity
+      and transformation rules are only usable once applying them is automatic. Ch 7''s items are the
+      Tschebyscheff and LLN calculations, which are short and worth doing because they are the easiest
+      marks in this part of the exam.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete and
-      continuous chapters.
-    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce E[X],
-      Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity and transformation
-      rules are only usable once applying them is automatic. Ch 7''s items are the Tschebyscheff and LLN calculations,
-      which are short and worth doing because they are the easiest marks in this part of the exam.'
+  - kind: read
+    label: MIT 6.041SC — random variables, expectation and variance lectures
+    source_id: source-mit-6041sc
+    locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
+      and tutorials
+    angle: Insists on the distinction between a random variable and a numerical value throughout, with
+      notation discipline the deck does not enforce.
+    angle_detail: The course is unusually strict about writing X for the variable and x for a value, and
+      about what it means to condition a random variable on an event. That discipline is what makes later
+      manipulations safe, and it is the habit most often missing when students find transformations confusing.
+      Recorded lectures make it easy to see the distinction being applied rather than merely stated.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
+      67-80; Ch 7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance
+      p. 105; exercises p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality,
+      pdf pp. 191-192
+    angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
+      node needs and states only in passing.
+    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and
+      every later expectation computation in the book cites it. L06 uses the same rule when it computes
+      moments of transformed variables but never isolates it, so it is easy to treat each computation
+      as a new trick. Ch 13's Chebyshev section is three pages and directly serves the concentration node,
+      with the LLN following immediately in §13.3 so the connection is visible.
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
+      Variance'' and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
+    angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
+    angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
+      before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
+      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have
+      remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
+      the lecture uses without defining.
+    scope_triage: helpful-now
   - kind: reference
     label: Pitman — random variables and expectation
     source_id: source-pitman-probability
-    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation and Normal
-      Approximation p. 194; §3.6 Symmetry p. 246)
+    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
+      and Normal Approximation p. 194; §3.6 Symmetry p. 246)
+    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture
+      kept alongside the formula throughout.
+    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance
+      point and the standard deviation as a width, then computes. Keeping the picture attached to the
+      symbol is why this is a good route when E[X] and Var(X) feel like formulas to memorise rather than
+      properties of a shape. §3.3 also introduces the Normal approximation right after standard deviation,
+      so the reason anyone cares about sigma is visible immediately. Long chapter — for L06 read §3.2
+      and §3.3 and stop.
+    vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
-    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture kept alongside
-      the formula throughout.
-    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance point
-      and the standard deviation as a width, then computes. Keeping the picture attached to the symbol is why
-      this is a good route when E[X] and Var(X) feel like formulas to memorise rather than properties of a shape.
-      §3.3 also introduces the Normal approximation right after standard deviation, so the reason anyone cares
-      about sigma is visible immediately. Long chapter — for L06 read §3.2 and §3.3 and stop.
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     source_id: source-tijms-understanding-probability
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous random
-      variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
-    scope_triage: reference-only
-    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately tests
-      it against a simulation.
+    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
+      random variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
+    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately
+      tests it against a simulation.
     angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
-      whose code and output are shown. For a lecture whose content is a small set of algebraic identities (linearity,
-      variance of a scaled variable, variance of a sum under independence), seeing each one confirmed numerically
-      is a strong antidote to misremembering which of them needs independence. §11.4 gives covariance with the
-      correlation coefficient bounded in [-1,1] and proved.'
+      whose code and output are shown. For a lecture whose content is a small set of algebraic identities
+      (linearity, variance of a scaled variable, variance of a sum under independence), seeing each one
+      confirmed numerically is a strong antidote to misremembering which of them needs independence. §11.4
+      gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+    scope_triage: reference-only
   - kind: reference
     label: Ross — random-variable theory
     source_id: source-ross-first-course
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function of a
-      random variable; §4.5 variance; §4.10 properties of the cumulative distribution function); Ch 7 §7.2 expectation
-      of sums, pdf pp. 478-500
+    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
+      of a random variable; §4.5 variance; §4.10 properties of the cumulative distribution function);
+      Ch 7 §7.2 expectation of sums, pdf pp. 478-500
+    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every
+      exercise actually uses.
+    angle_detail: The definition of variance is an expected squared deviation; almost every calculation
+      uses the shortcut identity instead. Ross derives the identity from the definition rather than presenting
+      it as an alternative formula, which is worth seeing once so that the shortcut is a theorem you can
+      reconstruct rather than a rule you hope you remember. §4.4 is the general expectation-of-a-function
+      rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
+    vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
-    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every exercise
-      actually uses.
-    angle_detail: The definition of variance is an expected squared deviation; almost every calculation uses the
-      shortcut identity instead. Ross derives the identity from the definition rather than presenting it as an
-      alternative formula, which is worth seeing once so that the shortcut is a theorem you can reconstruct rather
-      than a rule you hope you remember. §4.4 is the general expectation-of-a-function rule that L06's transformations
-      node needs; §4.10 gives the CDF its own properties list.
   - kind: practise
     label: Schaum — random-variable and moment drills
     source_id: source-schaums-probability
     locator: Ch 5 Random Variables, pdf pp. 76-106
+    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens
+      of times, with every arithmetic step shown.
+    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06,
+      where the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution
+      table. Also covers joint distributions and independence of random variables at the end of the chapter,
+      which supports L06's covariance node.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens of times,
-      with every arithmetic step shown.
-    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06, where
-      the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution table.
-      Also covers joint distributions and independence of random variables at the end of the chapter, which supports
-      L06's covariance node.
   - kind: practise
-    label: Dekking — random-variable exercises
-    source_id: source-dekking-mips
-    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp. 67-80; Ch
-      7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance p. 105; exercises
-      p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality, pdf pp. 191-192
-    scope_triage: helpful-now
-    angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
-      node needs and states only in passing.
-    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and every
-      later expectation computation in the book cites it. L06 uses the same rule when it computes moments of transformed
-      variables but never isolates it, so it is easy to treat each computation as a new trick. Ch 13's Chebyshev
-      section is three pages and directly serves the concentration node, with the LLN following immediately in
-      §13.3 so the connection is visible.
-  - kind: read
-    label: MIT 18.05 — random variables, expectation, and variance
-    source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and Variance''
-      and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
-    scope_triage: helpful-now
-    angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
-    angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
-      before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
-      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have remembered
-      the rule correctly, and it takes minutes. Also introduces quantiles carefully, which the lecture uses without
-      defining.
-  - kind: practise
-    label: External German solved exams — random-variable block
+    label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the random-variable and moment questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
+      items
+    angle: Adds short expectation and variance calculations in German exam notation.
+    angle_detail: Use these for speed only after PMF/CDF and moment definitions are stable. The book's
+      theoretical framing is broader than L06, so the locator intentionally limits the route to the first
+      exercise block.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance under exam time pressure, with solutions.
-    angle_detail: Straightforward alignment with L06. Use these to check speed rather than understanding.
+  - kind: reference
+    label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
+    source_id: source-sad-klausuren-extern
+    locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
+    angle: Shows the measure-theoretic formulation behind random variables and convergence, far beyond
+      the course's computational level.
+    angle_detail: 'This is not normal L06 practice: sigma-algebras and proof questions assume a rigorous
+      probability course. It is retained so the owned file is visible and can answer a formal-definition
+      question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
+    vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+    scope_triage: reference-only
   - kind: watch
     label: StatQuest — expected values and probability distributions
     source_id: source-statquest
-    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main Ideas
-      behind Probability Distributions'' (≈10-15 min each)'
+    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
+      Ideas behind Probability Distributions'' (≈10-15 min each)'
+    angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density
+      — which is where L06's PMF/PDF distinction is usually lost.
+    angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as
+      a weighted sum, then as an integral, with the bars of the histogram shrinking on screen between
+      them. That animation is the single most useful thing here, because it makes the sum-to-integral
+      move a continuous change rather than two unrelated formulas. Watch them in order.'
     scope_triage: helpful-now
-    angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density — which
-      is where L06's PMF/PDF distinction is usually lost.
-    angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as a weighted
-      sum, then as an integral, with the bars of the histogram shrinking on screen between them. That animation
-      is the single most useful thing here, because it makes the sum-to-integral move a continuous change rather
-      than two unrelated formulas. Watch them in order.'
+  - kind: reference
+    label: Swanson — the measure-theoretic definition behind the random-variable language
+    source_id: source-swanson-principles-probability
+    locator: The Principles of Probability (LNM 2384), the chapters defining sigma-algebras, measurable
+      functions and the abstract expectation integral
+    angle: Says what a random variable formally is — a measurable function — which every course-level
+      source deliberately avoids.
+    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
+      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
+      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
+      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
+      it will cost days and will not help the exam. Open it to see that the answer exists, then close
+      it.
+    vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md
   attachments: []
   source_feedback: []
@@ -304,13 +440,13 @@ stages:
   number: 3
   title: Functions and transformations of random variables
   status: pending
-  objective: A transformation g(X) changes the possible values and distribution; probabilities and moments must
-    be recomputed from the mapping rather than by treating X as a fixed number.
+  objective: A transformation g(X) changes the possible values and distribution; probabilities and moments
+    must be recomputed from the mapping rather than by treating X as a fixed number.
   done_when:
   - 'Reproduce without notes: A transformation g(X) changes the possible values and distribution; probabilities
     and moments must be recomputed from the mapping rather than by treating X as a fixed number.'
-  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 2, and record every miss with
-    the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    4, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-random-variable
@@ -320,101 +456,145 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
   - kind: practise
-    label: Übungsblatt 3 and UE4 — random variables and moments
+    label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     source_id: source-sad-uebungen
-    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
+    locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
+    angle: Compresses the four core random-variable operations into one exact current assignment.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
-    angle: Expectation and variance computed in the chair's layout, with the tutorial's full working.
-    angle_detail: L06's exam questions are mostly table-driven computations, and these show the expected table
-      and the expected amount of intermediate working. Pair with the jbstatistics videos, which build the same
-      column layout.
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 4-17 — official Blatt 3 solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 4-17
+    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
+      attempted.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Grinstead & Snell Ch 6 — expected value and variance
+    source_id: source-grinstead-snell
+    locator: Ch 6 Expected Value and Variance §6.1 expected value of discrete random variables, §6.2 variance
+      of discrete random variables, §6.3 continuous random variables
+    angle: Separates the discrete and continuous cases into their own sections while keeping one chapter,
+      so the parallel between sum and integral stays visible.
+    angle_detail: Splitting by chapter (as Fahrmeir does) makes the PMF/PDF distinction unmissable but
+      hides the analogy; merging them (as L06 does) shows the analogy but blurs the distinction. This
+      chapter's three-section structure gets both — the definitions are stated separately and then compared
+      directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     source_id: source-blitzstein-hwang
-    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions of random
-      variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition of expectation
-      p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3 covariance and correlation,
-      pdf pp. 343-348
+    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
+      of random variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition
+      of expectation p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3
+      covariance and correlation, pdf pp. 343-348
+    angle: Insists on the distinction between a random variable and its distribution, and proves linearity
+      of expectation without independence.
+    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable
+      is a function on the sample space while its distribution is a separate object — the confusion behind
+      most wrong answers about transformations, and something L06 states once. Second, §4.2 proves that
+      E[X+Y] = E[X] + E[Y] holds whether or not X and Y are independent, and shows why that is surprising;
+      the lecture asserts linearity, and knowing it needs no independence is what makes it a tool. §4.5
+      (LOTUS) is the rule for E[g(X)] that the transformations node depends on. Skip the MGF sections
+      in Ch 6 — out of scope.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: Insists on the distinction between a random variable and its distribution, and proves linearity of
-      expectation without independence.
-    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable is
-      a function on the sample space while its distribution is a separate object — the confusion behind most wrong
-      answers about transformations, and something L06 states once. Second, §4.2 proves that E[X+Y] = E[X] + E[Y]
-      holds whether or not X and Y are independent, and shows why that is surprising; the lecture asserts linearity,
-      and knowing it needs no independence is what makes it a tool. §4.5 (LOTUS) is the rule for E[g(X)] that
-      the transformations node depends on. Skip the MGF sections in Ch 6 — out of scope.
+  - kind: practise
+    label: Dekking — random-variable exercises
+    source_id: source-dekking-mips
+    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
+      67-80; Ch 7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance
+      p. 105; exercises p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality,
+      pdf pp. 191-192
+    angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
+      node needs and states only in passing.
+    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and
+      every later expectation computation in the book cites it. L06 uses the same rule when it computes
+      moments of transformed variables but never isolates it, so it is easy to treat each computation
+      as a new trick. Ch 13's Chebyshev section is three pages and directly serves the concentration node,
+      with the LLN following immediately in §13.3 so the connection is visible.
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.05 — random variables, expectation, and variance
+    source_id: source-mit-1805
+    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
+      Variance'' and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
+    angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
+    angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
+      before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
+      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have
+      remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
+      the lecture uses without defining.
+    scope_triage: helpful-now
   - kind: reference
     label: Pitman — random variables and expectation
     source_id: source-pitman-probability
-    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation and Normal
-      Approximation p. 194; §3.6 Symmetry p. 246)
+    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
+      and Normal Approximation p. 194; §3.6 Symmetry p. 246)
+    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture
+      kept alongside the formula throughout.
+    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance
+      point and the standard deviation as a width, then computes. Keeping the picture attached to the
+      symbol is why this is a good route when E[X] and Var(X) feel like formulas to memorise rather than
+      properties of a shape. §3.3 also introduces the Normal approximation right after standard deviation,
+      so the reason anyone cares about sigma is visible immediately. Long chapter — for L06 read §3.2
+      and §3.3 and stop.
+    vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
-    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture kept alongside
-      the formula throughout.
-    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance point
-      and the standard deviation as a width, then computes. Keeping the picture attached to the symbol is why
-      this is a good route when E[X] and Var(X) feel like formulas to memorise rather than properties of a shape.
-      §3.3 also introduces the Normal approximation right after standard deviation, so the reason anyone cares
-      about sigma is visible immediately. Long chapter — for L06 read §3.2 and §3.3 and stop.
   - kind: practise
     label: Schaum — random-variable and moment drills
     source_id: source-schaums-probability
     locator: Ch 5 Random Variables, pdf pp. 76-106
+    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens
+      of times, with every arithmetic step shown.
+    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06,
+      where the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution
+      table. Also covers joint distributions and independence of random variables at the end of the chapter,
+      which supports L06's covariance node.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
-    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens of times,
-      with every arithmetic step shown.
-    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06, where
-      the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution table.
-      Also covers joint distributions and independence of random variables at the end of the chapter, which supports
-      L06's covariance node.
-  - kind: practise
-    label: Dekking — random-variable exercises
-    source_id: source-dekking-mips
-    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp. 67-80; Ch
-      7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance p. 105; exercises
-      p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality, pdf pp. 191-192
-    scope_triage: helpful-now
-    angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
-      node needs and states only in passing.
-    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and every
-      later expectation computation in the book cites it. L06 uses the same rule when it computes moments of transformed
-      variables but never isolates it, so it is easy to treat each computation as a new trick. Ch 13's Chebyshev
-      section is three pages and directly serves the concentration node, with the LLN following immediately in
-      §13.3 so the connection is visible.
-  - kind: read
-    label: MIT 18.05 — random variables, expectation, and variance
-    source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and Variance''
-      and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
-    scope_triage: helpful-now
-    angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
-    angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
-      before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
-      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have remembered
-      the rule correctly, and it takes minutes. Also introduces quantiles carefully, which the lecture uses without
-      defining.
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     source_id: source-stat110
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
       LOTUS, variance)
+    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard
+      computations trivial.
+    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of
+      its event — plus linearity without independence lets you compute means of complicated counts by
+      decomposition. L06 never mentions it, but once seen it is the fastest route through a large class
+      of exercises, and it makes linearity feel like a tool rather than an identity. Lectures run 45-50
+      minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
+      to be strong on.
     scope_triage: reference-only
-    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard computations
-      trivial.
-    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of its event
-      — plus linearity without independence lets you compute means of complicated counts by decomposition. L06
-      never mentions it, but once seen it is the fastest route through a large class of exercises, and it makes
-      linearity feel like a tool rather than an identity. Lectures run 45-50 minutes each; this is a five-lecture
-      commitment, so choose it only if L06 is a topic you intend to be strong on.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-transformations/notes.md
   attachments: []
   source_feedback: []
@@ -422,13 +602,13 @@ stages:
   number: 4
   title: Expected value and linearity
   status: pending
-  objective: Expectation is a probability-weighted long-run average; linearity holds without independence and
-    extends from X to functions and sums of random variables.
+  objective: Expectation is a probability-weighted long-run average; linearity holds without independence
+    and extends from X to functions and sums of random variables.
   done_when:
-  - 'Reproduce without notes: Expectation is a probability-weighted long-run average; linearity holds without
-    independence and extends from X to functions and sums of random variables.'
-  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Expectation is a probability-weighted long-run average; linearity holds
+    without independence and extends from X to functions and sums of random variables.'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    7, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-expected-value
@@ -438,215 +618,310 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
   - kind: practise
-    label: Übungsblatt 3 and UE4 — random variables and moments
+    label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     source_id: source-sad-uebungen
-    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
+    locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
+    angle: Compresses the four core random-variable operations into one exact current assignment.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
-    angle: Expectation and variance computed in the chair's layout, with the tutorial's full working.
-    angle_detail: L06's exam questions are mostly table-driven computations, and these show the expected table
-      and the expected amount of intermediate working. Pair with the jbstatistics videos, which build the same
-      column layout.
+  - kind: practise
+    label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
+    angle: Turns expectation and the law of large numbers into a cumulative-mean simulation with a distribution
+      change.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
+      is therefore a worked application, not the first explanation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 4-17 — official Blatt 3 solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 4-17
+    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
+      attempted.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 random-variables and expected-values pair
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/06_expected_values.pptx-1.pdf
-    scope_triage: reference-only
+    locator: 06_expected_values.pptx-1.pdf
     angle: A prior-year deck devoted specifically to expected values, in more detail than the 2026 pass.
-    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than a section,
-      which makes it a slower and more worked-through treatment of L06's central node. One of the more useful
-      prior-year files for that reason.
+    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than
+      a section, which makes it a slower and more worked-through treatment of L06's central node. One
+      of the more useful prior-year files for that reason.
+    vault_path: material://source-sad-2025-recordings/06_expected_values.pptx-1.pdf
+    scope_triage: reference-only
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     source_id: source-fahrmeir-statistik
-    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV, pdf pp.
-      247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile, Varianz, pdf
-      pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz und Korrelation, pdf
-      pp. 368-374
+    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
+      pdf pp. 247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile,
+      Varianz, pdf pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz
+      und Korrelation, pdf pp. 368-374
+    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are
+      never conflated the way a single merged treatment can.
+    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by
+      chapter, which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability
+      in Ch 5 and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the
+      covariance definition L06 needs and connects it back to the descriptive covariance of Ch 3, so the
+      same symbol is not learned twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der
+      großen Zahlen; read it here rather than in an English text if the exam wording matters.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are never conflated
-      the way a single merged treatment can.
-    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by chapter,
-      which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability in Ch 5
-      and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the covariance definition
-      L06 needs and connects it back to the descriptive covariance of Ch 3, so the same symbol is not learned
-      twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der großen Zahlen; read it here rather
-      than in an English text if the exam wording matters.'
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf
-      pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
+      pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete
+      and continuous chapters.
+    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce
+      E[X], Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity
+      and transformation rules are only usable once applying them is automatic. Ch 7''s items are the
+      Tschebyscheff and LLN calculations, which are short and worth doing because they are the easiest
+      marks in this part of the exam.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete and
-      continuous chapters.
-    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce E[X],
-      Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity and transformation
-      rules are only usable once applying them is automatic. Ch 7''s items are the Tschebyscheff and LLN calculations,
-      which are short and worth doing because they are the easiest marks in this part of the exam.'
+  - kind: read
+    label: Grinstead & Snell Ch 6 — expected value and variance
+    source_id: source-grinstead-snell
+    locator: Ch 6 Expected Value and Variance §6.1 expected value of discrete random variables, §6.2 variance
+      of discrete random variables, §6.3 continuous random variables
+    angle: Separates the discrete and continuous cases into their own sections while keeping one chapter,
+      so the parallel between sum and integral stays visible.
+    angle_detail: Splitting by chapter (as Fahrmeir does) makes the PMF/PDF distinction unmissable but
+      hides the analogy; merging them (as L06 does) shows the analogy but blurs the distinction. This
+      chapter's three-section structure gets both — the definitions are stated separately and then compared
+      directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     source_id: source-blitzstein-hwang
-    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions of random
-      variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition of expectation
-      p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3 covariance and correlation,
-      pdf pp. 343-348
+    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
+      of random variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition
+      of expectation p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3
+      covariance and correlation, pdf pp. 343-348
+    angle: Insists on the distinction between a random variable and its distribution, and proves linearity
+      of expectation without independence.
+    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable
+      is a function on the sample space while its distribution is a separate object — the confusion behind
+      most wrong answers about transformations, and something L06 states once. Second, §4.2 proves that
+      E[X+Y] = E[X] + E[Y] holds whether or not X and Y are independent, and shows why that is surprising;
+      the lecture asserts linearity, and knowing it needs no independence is what makes it a tool. §4.5
+      (LOTUS) is the rule for E[g(X)] that the transformations node depends on. Skip the MGF sections
+      in Ch 6 — out of scope.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: Insists on the distinction between a random variable and its distribution, and proves linearity of
-      expectation without independence.
-    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable is
-      a function on the sample space while its distribution is a separate object — the confusion behind most wrong
-      answers about transformations, and something L06 states once. Second, §4.2 proves that E[X+Y] = E[X] + E[Y]
-      holds whether or not X and Y are independent, and shows why that is surprising; the lecture asserts linearity,
-      and knowing it needs no independence is what makes it a tool. §4.5 (LOTUS) is the rule for E[g(X)] that
-      the transformations node depends on. Skip the MGF sections in Ch 6 — out of scope.
-  - kind: reference
-    label: Pitman — random variables and expectation
-    source_id: source-pitman-probability
-    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation and Normal
-      Approximation p. 194; §3.6 Symmetry p. 246)
-    scope_triage: reference-only
-    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture kept alongside
-      the formula throughout.
-    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance point
-      and the standard deviation as a width, then computes. Keeping the picture attached to the symbol is why
-      this is a good route when E[X] and Var(X) feel like formulas to memorise rather than properties of a shape.
-      §3.3 also introduces the Normal approximation right after standard deviation, so the reason anyone cares
-      about sigma is visible immediately. Long chapter — for L06 read §3.2 and §3.3 and stop.
-  - kind: reference
-    label: Tijms — random variables by experiment and simulation
-    source_id: source-tijms-understanding-probability
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous random
-      variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
-    scope_triage: reference-only
-    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately tests
-      it against a simulation.
-    angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
-      whose code and output are shown. For a lecture whose content is a small set of algebraic identities (linearity,
-      variance of a scaled variable, variance of a sum under independence), seeing each one confirmed numerically
-      is a strong antidote to misremembering which of them needs independence. §11.4 gives covariance with the
-      correlation coefficient bounded in [-1,1] and proved.'
-  - kind: reference
-    label: Ross — random-variable theory
-    source_id: source-ross-first-course
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function of a
-      random variable; §4.5 variance; §4.10 properties of the cumulative distribution function); Ch 7 §7.2 expectation
-      of sums, pdf pp. 478-500
-    scope_triage: reference-only
-    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every exercise
-      actually uses.
-    angle_detail: The definition of variance is an expected squared deviation; almost every calculation uses the
-      shortcut identity instead. Ross derives the identity from the definition rather than presenting it as an
-      alternative formula, which is worth seeing once so that the shortcut is a theorem you can reconstruct rather
-      than a rule you hope you remember. §4.4 is the general expectation-of-a-function rule that L06's transformations
-      node needs; §4.10 gives the CDF its own properties list.
-  - kind: practise
-    label: Schaum — random-variable and moment drills
-    source_id: source-schaums-probability
-    locator: Ch 5 Random Variables, pdf pp. 76-106
+  - kind: read
+    label: MIT 6.041SC — random variables, expectation and variance lectures
+    source_id: source-mit-6041sc
+    locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
+      and tutorials
+    angle: Insists on the distinction between a random variable and a numerical value throughout, with
+      notation discipline the deck does not enforce.
+    angle_detail: The course is unusually strict about writing X for the variable and x for a value, and
+      about what it means to condition a random variable on an event. That discipline is what makes later
+      manipulations safe, and it is the habit most often missing when students find transformations confusing.
+      Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
-    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens of times,
-      with every arithmetic step shown.
-    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06, where
-      the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution table.
-      Also covers joint distributions and independence of random variables at the end of the chapter, which supports
-      L06's covariance node.
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     source_id: source-openintro-statistics
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
+    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit
+      calculation rather than through a definition.
+    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then
+      naming the computation, which makes the linearity property feel like an accounting fact. That is
+      a lighter entry than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well
+      short: no LOTUS, no covariance, no Chebyshev. Use it to get started and switch to Blitzstein or
+      Dekking for the transformation and concentration nodes.'
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit calculation
-      rather than through a definition.
-    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then naming
-      the computation, which makes the linearity property feel like an accounting fact. That is a lighter entry
-      than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well short: no LOTUS, no covariance,
-      no Chebyshev. Use it to get started and switch to Blitzstein or Dekking for the transformation and concentration
-      nodes.'
   - kind: practise
     label: Dekking — random-variable exercises
     source_id: source-dekking-mips
-    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp. 67-80; Ch
-      7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance p. 105; exercises
-      p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality, pdf pp. 191-192
-    scope_triage: helpful-now
+    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
+      67-80; Ch 7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance
+      p. 105; exercises p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality,
+      pdf pp. 191-192
     angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
       node needs and states only in passing.
-    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and every
-      later expectation computation in the book cites it. L06 uses the same rule when it computes moments of transformed
-      variables but never isolates it, so it is easy to treat each computation as a new trick. Ch 13's Chebyshev
-      section is three pages and directly serves the concentration node, with the LLN following immediately in
-      §13.3 so the connection is visible.
+    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and
+      every later expectation computation in the book cites it. L06 uses the same rule when it computes
+      moments of transformed variables but never isolates it, so it is easy to treat each computation
+      as a new trick. Ch 13's Chebyshev section is three pages and directly serves the concentration node,
+      with the LLN following immediately in §13.3 so the connection is visible.
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and Variance''
-      and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
-    scope_triage: helpful-now
+    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
+      Variance'' and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
     angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
     angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
       before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
-      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have remembered
-      the rule correctly, and it takes minutes. Also introduces quantiles carefully, which the lecture uses without
-      defining.
+      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have
+      remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
+      the lecture uses without defining.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
+      and Normal Approximation p. 194; §3.6 Symmetry p. 246)
+    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture
+      kept alongside the formula throughout.
+    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance
+      point and the standard deviation as a width, then computes. Keeping the picture attached to the
+      symbol is why this is a good route when E[X] and Var(X) feel like formulas to memorise rather than
+      properties of a shape. §3.3 also introduces the Normal approximation right after standard deviation,
+      so the reason anyone cares about sigma is visible immediately. Long chapter — for L06 read §3.2
+      and §3.3 and stop.
+    vault_path: material://source-pitman-probability/pitman.pdf
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
+      random variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
+    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately
+      tests it against a simulation.
+    angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
+      whose code and output are shown. For a lecture whose content is a small set of algebraic identities
+      (linearity, variance of a scaled variable, variance of a sum under independence), seeing each one
+      confirmed numerically is a strong antidote to misremembering which of them needs independence. §11.4
+      gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
+      of a random variable; §4.5 variance; §4.10 properties of the cumulative distribution function);
+      Ch 7 §7.2 expectation of sums, pdf pp. 478-500
+    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every
+      exercise actually uses.
+    angle_detail: The definition of variance is an expected squared deviation; almost every calculation
+      uses the shortcut identity instead. Ross derives the identity from the definition rather than presenting
+      it as an alternative formula, which is worth seeing once so that the shortcut is a theorem you can
+      reconstruct rather than a rule you hope you remember. §4.4 is the general expectation-of-a-function
+      rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
+    vault_path: material://source-ross-first-course/ross.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Ch 5 Random Variables, pdf pp. 76-106
+    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens
+      of times, with every arithmetic step shown.
+    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06,
+      where the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution
+      table. Also covers joint distributions and independence of random variables at the end of the chapter,
+      which supports L06's covariance node.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
+    scope_triage: helpful-now
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     source_id: source-stat110
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
       LOTUS, variance)
+    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard
+      computations trivial.
+    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of
+      its event — plus linearity without independence lets you compute means of complicated counts by
+      decomposition. L06 never mentions it, but once seen it is the fastest route through a large class
+      of exercises, and it makes linearity feel like a tool rather than an identity. Lectures run 45-50
+      minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
+      to be strong on.
     scope_triage: reference-only
-    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard computations
-      trivial.
-    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of its event
-      — plus linearity without independence lets you compute means of complicated counts by decomposition. L06
-      never mentions it, but once seen it is the fastest route through a large class of exercises, and it makes
-      linearity feel like a tool rather than an identity. Lectures run 45-50 minutes each; this is a five-lecture
-      commitment, so choose it only if L06 is a topic you intend to be strong on.
   - kind: practise
-    label: External German solved exams — random-variable block
+    label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the random-variable and moment questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
+      items
+    angle: Adds short expectation and variance calculations in German exam notation.
+    angle_detail: Use these for speed only after PMF/CDF and moment definitions are stable. The book's
+      theoretical framing is broader than L06, so the locator intentionally limits the route to the first
+      exercise block.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance under exam time pressure, with solutions.
-    angle_detail: Straightforward alignment with L06. Use these to check speed rather than understanding.
   - kind: watch
     label: StatQuest — expected values and probability distributions
     source_id: source-statquest
-    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main Ideas
-      behind Probability Distributions'' (≈10-15 min each)'
+    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
+      Ideas behind Probability Distributions'' (≈10-15 min each)'
+    angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density
+      — which is where L06's PMF/PDF distinction is usually lost.
+    angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as
+      a weighted sum, then as an integral, with the bars of the histogram shrinking on screen between
+      them. That animation is the single most useful thing here, because it makes the sum-to-integral
+      move a continuous change rather than two unrelated formulas. Watch them in order.'
     scope_triage: helpful-now
-    angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density — which
-      is where L06's PMF/PDF distinction is usually lost.
-    angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as a weighted
-      sum, then as an integral, with the bars of the histogram shrinking on screen between them. That animation
-      is the single most useful thing here, because it makes the sum-to-integral move a continuous change rather
-      than two unrelated formulas. Watch them in order.'
   - kind: watch
     label: jbstatistics — expected value and variance calculations
     source_id: source-jbstatistics
-    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance video (≈10
-      min each)'
+    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
+      video (≈10 min each)'
+    angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer
+      uses.
+    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is
+      exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
+      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
     scope_triage: helpful-now
-    angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer uses.
-    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is exactly
-      the table you should be drawing under exam conditions. Copying that layout is a small procedural habit that
-      reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     source_id: source-kurzes-tutorium-statistik
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
-    scope_triage: helpful-now
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short and purely
-      terminological — the concepts should come from Blitzstein or Dekking, but the words should come from here
-      if the exam wording has ever cost you time.
+    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+      and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
+      come from here if the exam wording has ever cost you time.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Swanson — the measure-theoretic definition behind the random-variable language
+    source_id: source-swanson-principles-probability
+    locator: The Principles of Probability (LNM 2384), the chapters defining sigma-algebras, measurable
+      functions and the abstract expectation integral
+    angle: Says what a random variable formally is — a measurable function — which every course-level
+      source deliberately avoids.
+    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
+      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
+      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
+      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
+      it will cost days and will not help the exam. Open it to see that the answer exists, then close
+      it.
+    vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md
   attachments: []
   source_feedback: []
@@ -654,13 +929,13 @@ stages:
   number: 5
   title: Variance, standard deviation, and covariance
   status: pending
-  objective: Variance measures squared deviation from expectation, affine scaling squares the multiplier, and
-    covariance records joint variation needed for sums and sample means.
+  objective: Variance measures squared deviation from expectation, affine scaling squares the multiplier,
+    and covariance records joint variation needed for sums and sample means.
   done_when:
-  - 'Reproduce without notes: Variance measures squared deviation from expectation, affine scaling squares the
-    multiplier, and covariance records joint variation needed for sums and sample means.'
-  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Variance measures squared deviation from expectation, affine scaling squares
+    the multiplier, and covariance records joint variation needed for sums and sample means.'
+  - Work Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance, then the remaining
+    7, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-correlation
@@ -671,203 +946,283 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
   - kind: practise
-    label: Übungsblatt 3 and UE4 — random variables and moments
+    label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     source_id: source-sad-uebungen
-    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
+    locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
+    angle: Compresses the four core random-variable operations into one exact current assignment.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
-    angle: Expectation and variance computed in the chair's layout, with the tutorial's full working.
-    angle_detail: L06's exam questions are mostly table-driven computations, and these show the expected table
-      and the expected amount of intermediate working. Pair with the jbstatistics videos, which build the same
-      column layout.
+  - kind: practise
+    label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
+    angle: Turns expectation and the law of large numbers into a cumulative-mean simulation with a distribution
+      change.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
+      is therefore a worked application, not the first explanation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 4-17 — official Blatt 3 solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 4-17
+    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
+      attempted.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 random-variables and expected-values pair
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/06_expected_values.pptx-1.pdf
-    scope_triage: reference-only
+    locator: 06_expected_values.pptx-1.pdf
     angle: A prior-year deck devoted specifically to expected values, in more detail than the 2026 pass.
-    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than a section,
-      which makes it a slower and more worked-through treatment of L06's central node. One of the more useful
-      prior-year files for that reason.
+    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than
+      a section, which makes it a slower and more worked-through treatment of L06's central node. One
+      of the more useful prior-year files for that reason.
+    vault_path: material://source-sad-2025-recordings/06_expected_values.pptx-1.pdf
+    scope_triage: reference-only
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     source_id: source-fahrmeir-statistik
-    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV, pdf pp.
-      247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile, Varianz, pdf
-      pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz und Korrelation, pdf
-      pp. 368-374
+    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
+      pdf pp. 247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile,
+      Varianz, pdf pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz
+      und Korrelation, pdf pp. 368-374
+    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are
+      never conflated the way a single merged treatment can.
+    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by
+      chapter, which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability
+      in Ch 5 and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the
+      covariance definition L06 needs and connects it back to the descriptive covariance of Ch 3, so the
+      same symbol is not learned twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der
+      großen Zahlen; read it here rather than in an English text if the exam wording matters.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are never conflated
-      the way a single merged treatment can.
-    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by chapter,
-      which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability in Ch 5
-      and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the covariance definition
-      L06 needs and connects it back to the descriptive covariance of Ch 3, so the same symbol is not learned
-      twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der großen Zahlen; read it here rather
-      than in an English text if the exam wording matters.'
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf
-      pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
+      pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete
+      and continuous chapters.
+    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce
+      E[X], Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity
+      and transformation rules are only usable once applying them is automatic. Ch 7''s items are the
+      Tschebyscheff and LLN calculations, which are short and worth doing because they are the easiest
+      marks in this part of the exam.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete and
-      continuous chapters.
-    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce E[X],
-      Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity and transformation
-      rules are only usable once applying them is automatic. Ch 7''s items are the Tschebyscheff and LLN calculations,
-      which are short and worth doing because they are the easiest marks in this part of the exam.'
+  - kind: read
+    label: Grinstead & Snell Ch 6 — expected value and variance
+    source_id: source-grinstead-snell
+    locator: Ch 6 Expected Value and Variance §6.1 expected value of discrete random variables, §6.2 variance
+      of discrete random variables, §6.3 continuous random variables
+    angle: Separates the discrete and continuous cases into their own sections while keeping one chapter,
+      so the parallel between sum and integral stays visible.
+    angle_detail: Splitting by chapter (as Fahrmeir does) makes the PMF/PDF distinction unmissable but
+      hides the analogy; merging them (as L06 does) shows the analogy but blurs the distinction. This
+      chapter's three-section structure gets both — the definitions are stated separately and then compared
+      directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
+    scope_triage: helpful-now
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     source_id: source-blitzstein-hwang
-    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions of random
-      variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition of expectation
-      p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3 covariance and correlation,
-      pdf pp. 343-348
+    locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
+      of random variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition
+      of expectation p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3
+      covariance and correlation, pdf pp. 343-348
+    angle: Insists on the distinction between a random variable and its distribution, and proves linearity
+      of expectation without independence.
+    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable
+      is a function on the sample space while its distribution is a separate object — the confusion behind
+      most wrong answers about transformations, and something L06 states once. Second, §4.2 proves that
+      E[X+Y] = E[X] + E[Y] holds whether or not X and Y are independent, and shows why that is surprising;
+      the lecture asserts linearity, and knowing it needs no independence is what makes it a tool. §4.5
+      (LOTUS) is the rule for E[g(X)] that the transformations node depends on. Skip the MGF sections
+      in Ch 6 — out of scope.
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
-    angle: Insists on the distinction between a random variable and its distribution, and proves linearity of
-      expectation without independence.
-    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable is
-      a function on the sample space while its distribution is a separate object — the confusion behind most wrong
-      answers about transformations, and something L06 states once. Second, §4.2 proves that E[X+Y] = E[X] + E[Y]
-      holds whether or not X and Y are independent, and shows why that is surprising; the lecture asserts linearity,
-      and knowing it needs no independence is what makes it a tool. §4.5 (LOTUS) is the rule for E[g(X)] that
-      the transformations node depends on. Skip the MGF sections in Ch 6 — out of scope.
-  - kind: reference
-    label: Pitman — random variables and expectation
-    source_id: source-pitman-probability
-    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation and Normal
-      Approximation p. 194; §3.6 Symmetry p. 246)
-    scope_triage: reference-only
-    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture kept alongside
-      the formula throughout.
-    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance point
-      and the standard deviation as a width, then computes. Keeping the picture attached to the symbol is why
-      this is a good route when E[X] and Var(X) feel like formulas to memorise rather than properties of a shape.
-      §3.3 also introduces the Normal approximation right after standard deviation, so the reason anyone cares
-      about sigma is visible immediately. Long chapter — for L06 read §3.2 and §3.3 and stop.
-  - kind: reference
-    label: Tijms — random variables by experiment and simulation
-    source_id: source-tijms-understanding-probability
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous random
-      variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
-    scope_triage: reference-only
-    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately tests
-      it against a simulation.
-    angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
-      whose code and output are shown. For a lecture whose content is a small set of algebraic identities (linearity,
-      variance of a scaled variable, variance of a sum under independence), seeing each one confirmed numerically
-      is a strong antidote to misremembering which of them needs independence. §11.4 gives covariance with the
-      correlation coefficient bounded in [-1,1] and proved.'
-  - kind: reference
-    label: Ross — random-variable theory
-    source_id: source-ross-first-course
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function of a
-      random variable; §4.5 variance; §4.10 properties of the cumulative distribution function); Ch 7 §7.2 expectation
-      of sums, pdf pp. 478-500
-    scope_triage: reference-only
-    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every exercise
-      actually uses.
-    angle_detail: The definition of variance is an expected squared deviation; almost every calculation uses the
-      shortcut identity instead. Ross derives the identity from the definition rather than presenting it as an
-      alternative formula, which is worth seeing once so that the shortcut is a theorem you can reconstruct rather
-      than a rule you hope you remember. §4.4 is the general expectation-of-a-function rule that L06's transformations
-      node needs; §4.10 gives the CDF its own properties list.
-  - kind: practise
-    label: Schaum — random-variable and moment drills
-    source_id: source-schaums-probability
-    locator: Ch 5 Random Variables, pdf pp. 76-106
+  - kind: read
+    label: MIT 6.041SC — random variables, expectation and variance lectures
+    source_id: source-mit-6041sc
+    locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
+      and tutorials
+    angle: Insists on the distinction between a random variable and a numerical value throughout, with
+      notation discipline the deck does not enforce.
+    angle_detail: The course is unusually strict about writing X for the variable and x for a value, and
+      about what it means to condition a random variable on an event. That discipline is what makes later
+      manipulations safe, and it is the habit most often missing when students find transformations confusing.
+      Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
-    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens of times,
-      with every arithmetic step shown.
-    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06, where
-      the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution table.
-      Also covers joint distributions and independence of random variables at the end of the chapter, which supports
-      L06's covariance node.
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     source_id: source-openintro-statistics
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
+    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit
+      calculation rather than through a definition.
+    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then
+      naming the computation, which makes the linearity property feel like an accounting fact. That is
+      a lighter entry than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well
+      short: no LOTUS, no covariance, no Chebyshev. Use it to get started and switch to Blitzstein or
+      Dekking for the transformation and concentration nodes.'
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit calculation
-      rather than through a definition.
-    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then naming
-      the computation, which makes the linearity property feel like an accounting fact. That is a lighter entry
-      than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well short: no LOTUS, no covariance,
-      no Chebyshev. Use it to get started and switch to Blitzstein or Dekking for the transformation and concentration
-      nodes.'
   - kind: practise
     label: Dekking — random-variable exercises
     source_id: source-dekking-mips
-    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp. 67-80; Ch
-      7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance p. 105; exercises
-      p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality, pdf pp. 191-192
-    scope_triage: helpful-now
+    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
+      67-80; Ch 7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance
+      p. 105; exercises p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality,
+      pdf pp. 191-192
     angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
       node needs and states only in passing.
-    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and every
-      later expectation computation in the book cites it. L06 uses the same rule when it computes moments of transformed
-      variables but never isolates it, so it is easy to treat each computation as a new trick. Ch 13's Chebyshev
-      section is three pages and directly serves the concentration node, with the LLN following immediately in
-      §13.3 so the connection is visible.
+    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and
+      every later expectation computation in the book cites it. L06 uses the same rule when it computes
+      moments of transformed variables but never isolates it, so it is easy to treat each computation
+      as a new trick. Ch 13's Chebyshev section is three pages and directly serves the concentration node,
+      with the LLN following immediately in §13.3 so the connection is visible.
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and Variance''
-      and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
-    scope_triage: helpful-now
+    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
+      Variance'' and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
     angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
     angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
       before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
-      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have remembered
-      the rule correctly, and it takes minutes. Also introduces quantiles carefully, which the lecture uses without
-      defining.
+      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have
+      remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
+      the lecture uses without defining.
+    scope_triage: helpful-now
+  - kind: reference
+    label: Pitman — random variables and expectation
+    source_id: source-pitman-probability
+    locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
+      and Normal Approximation p. 194; §3.6 Symmetry p. 246)
+    angle: Introduces expectation as the long-run average of repeated draws, with the frequency picture
+      kept alongside the formula throughout.
+    angle_detail: Pitman consistently draws the distribution as a bar chart and marks the mean as a balance
+      point and the standard deviation as a width, then computes. Keeping the picture attached to the
+      symbol is why this is a good route when E[X] and Var(X) feel like formulas to memorise rather than
+      properties of a shape. §3.3 also introduces the Normal approximation right after standard deviation,
+      so the reason anyone cares about sigma is visible immediately. Long chapter — for L06 read §3.2
+      and §3.3 and stop.
+    vault_path: material://source-pitman-probability/pitman.pdf
+    scope_triage: reference-only
+  - kind: reference
+    label: Tijms — random variables by experiment and simulation
+    source_id: source-tijms-understanding-probability
+    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
+      random variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
+    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately
+      tests it against a simulation.
+    angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
+      whose code and output are shown. For a lecture whose content is a small set of algebraic identities
+      (linearity, variance of a scaled variable, variance of a sum under independence), seeing each one
+      confirmed numerically is a strong antidote to misremembering which of them needs independence. §11.4
+      gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+    scope_triage: reference-only
+  - kind: reference
+    label: Ross — random-variable theory
+    source_id: source-ross-first-course
+    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
+      of a random variable; §4.5 variance; §4.10 properties of the cumulative distribution function);
+      Ch 7 §7.2 expectation of sums, pdf pp. 478-500
+    angle: Proves the variance identity Var(X) = E[X²] − (E[X])², which is the computational form every
+      exercise actually uses.
+    angle_detail: The definition of variance is an expected squared deviation; almost every calculation
+      uses the shortcut identity instead. Ross derives the identity from the definition rather than presenting
+      it as an alternative formula, which is worth seeing once so that the shortcut is a theorem you can
+      reconstruct rather than a rule you hope you remember. §4.4 is the general expectation-of-a-function
+      rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
+    vault_path: material://source-ross-first-course/ross.pdf
+    scope_triage: reference-only
+  - kind: practise
+    label: Schaum — random-variable and moment drills
+    source_id: source-schaums-probability
+    locator: Ch 5 Random Variables, pdf pp. 76-106
+    angle: Expectation, variance and standard deviation computed from tabulated distributions, dozens
+      of times, with every arithmetic step shown.
+    angle_detail: Thirty pages of the same operation on different tables. That is exactly right for L06,
+      where the concepts are few and the exam risk is a slip in the arithmetic or in reading the distribution
+      table. Also covers joint distributions and independence of random variables at the end of the chapter,
+      which supports L06's covariance node.
+    vault_path: material://source-schaums-probability/schaums-probability.pdf
+    scope_triage: helpful-now
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     source_id: source-stat110
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
       LOTUS, variance)
+    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard
+      computations trivial.
+    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of
+      its event — plus linearity without independence lets you compute means of complicated counts by
+      decomposition. L06 never mentions it, but once seen it is the fastest route through a large class
+      of exercises, and it makes linearity feel like a tool rather than an identity. Lectures run 45-50
+      minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
+      to be strong on.
     scope_triage: reference-only
-    angle: Builds expectation around indicator variables, a technique that makes several otherwise hard computations
-      trivial.
-    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of its event
-      — plus linearity without independence lets you compute means of complicated counts by decomposition. L06
-      never mentions it, but once seen it is the fastest route through a large class of exercises, and it makes
-      linearity feel like a tool rather than an identity. Lectures run 45-50 minutes each; this is a five-lecture
-      commitment, so choose it only if L06 is a topic you intend to be strong on.
   - kind: practise
-    label: External German solved exams — random-variable block
+    label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the random-variable and moment questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
+      items
+    angle: Adds short expectation and variance calculations in German exam notation.
+    angle_detail: Use these for speed only after PMF/CDF and moment definitions are stable. The book's
+      theoretical framing is broader than L06, so the locator intentionally limits the route to the first
+      exercise block.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance under exam time pressure, with solutions.
-    angle_detail: Straightforward alignment with L06. Use these to check speed rather than understanding.
   - kind: watch
     label: jbstatistics — expected value and variance calculations
     source_id: source-jbstatistics
-    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance video (≈10
-      min each)'
+    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
+      video (≈10 min each)'
+    angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer
+      uses.
+    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is
+      exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
+      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
     scope_triage: helpful-now
-    angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer uses.
-    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is exactly
-      the table you should be drawing under exam conditions. Copying that layout is a small procedural habit that
-      reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     source_id: source-kurzes-tutorium-statistik
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
-    scope_triage: helpful-now
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short and purely
-      terminological — the concepts should come from Blitzstein or Dekking, but the words should come from here
-      if the exam wording has ever cost you time.
+    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+      and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
+      come from here if the exam wording has ever cost you time.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-variance-covariance/notes.md
   attachments: []
   source_feedback: []
@@ -875,11 +1230,13 @@ stages:
   number: 6
   title: IID samples and the random sample mean
   status: pending
-  objective: The sample mean is itself random; under IID sampling its expectation is the population mean and its
-    variance shrinks as sigma squared divided by n.
+  objective: The sample mean is itself random; under IID sampling its expectation is the population mean
+    and its variance shrinks as sigma squared divided by n.
   done_when:
-  - 'Reproduce without notes: The sample mean is itself random; under IID sampling its expectation is the population
-    mean and its variance shrinks as sigma squared divided by n.'
+  - 'Reproduce without notes: The sample mean is itself random; under IID sampling its expectation is
+    the population mean and its variance shrinks as sigma squared divided by n.'
+  - Work Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN, then the remaining 1, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-expected-value
@@ -891,25 +1248,50 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
+  - kind: practise
+    label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
+    angle: Turns expectation and the law of large numbers into a cumulative-mean simulation with a distribution
+      change.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
+      is therefore a worked application, not the first explanation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     source_id: source-openintro-statistics
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
+    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit
+      calculation rather than through a definition.
+    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then
+      naming the computation, which makes the linearity property feel like an accounting fact. That is
+      a lighter entry than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well
+      short: no LOTUS, no covariance, no Chebyshev. Use it to get started and switch to Blitzstein or
+      Dekking for the transformation and concentration nodes.'
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Ten pages on random variables with expectation and variance introduced through an expected-profit calculation
-      rather than through a definition.
-    angle_detail: '§3.4 defines E[X] by working out the expected revenue of a lottery-like setup and then naming
-      the computation, which makes the linearity property feel like an accounting fact. That is a lighter entry
-      than Blitzstein''s Ch 4 and enough for L06''s expectation node, but it stops well short: no LOTUS, no covariance,
-      no Chebyshev. Use it to get started and switch to Blitzstein or Dekking for the transformation and concentration
-      nodes.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-sample-mean/notes.md
   attachments: []
   source_feedback: []
@@ -917,13 +1299,13 @@ stages:
   number: 7
   title: Chebyshev bounds and the law of large numbers
   status: pending
-  objective: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why sample
-    averages stabilize as data accumulate.
+  objective: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains why
+    sample averages stabilize as data accumulate.
   done_when:
-  - 'Reproduce without notes: Chebyshev gives a distribution-free tail bound, and the law of large numbers explains
-    why sample averages stabilize as data accumulate.'
-  - Work Übungsblatt 3 and UE4 — random variables and moments, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Chebyshev gives a distribution-free tail bound, and the law of large numbers
+    explains why sample averages stabilize as data accumulate.'
+  - Work Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN, then the remaining 3, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-law-of-large-numbers
@@ -933,63 +1315,104 @@ stages:
     label: Current L06 random-variables deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf, 60 slides
+    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
+      and CDF in a single pass.
+    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
+      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
+      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
+      L08 and are examinable in their own right.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
     scope_triage: required-now
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density and CDF
-      in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations, expectation,
-      variance, covariance, the sample mean, Chebyshev and the law of large numbers. The single-pass treatment
-      of PMF versus density is where most confusion starts — Fahrmeir separates them by chapter and is the standard
-      repair. Chebyshev and the LLN at the end are the bridge into L08 and are examinable in their own right.
   - kind: practise
-    label: Übungsblatt 3 and UE4 — random variables and moments
+    label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     source_id: source-sad-uebungen
-    locator: exercise-slides/Übung-3.pdf; exercise-slides/UE4.pdf
+    locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
+    angle: Turns expectation and the law of large numbers into a cumulative-mean simulation with a distribution
+      change.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
+      is therefore a worked application, not the first explanation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
-    angle: Expectation and variance computed in the chair's layout, with the tutorial's full working.
-    angle_detail: L06's exam questions are mostly table-driven computations, and these show the expected table
-      and the expected amount of intermediate working. Pair with the jbstatistics videos, which build the same
-      column layout.
+  - kind: practise
+    label: UE4, slides 18-34 — random variables, moments and LLN
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE4.pdf, slides 18-34
+    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 4-17 — official Blatt 3 solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 4-17
+    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
+      attempted.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     source_id: source-fahrmeir-statistik
-    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV, pdf pp.
-      247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile, Varianz, pdf
-      pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz und Korrelation, pdf
-      pp. 368-374
+    locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
+      pdf pp. 247-269; Ch 6 §6.1 Definition und Verteilung, pdf pp. 289-300; §6.2 Lageparameter, Quantile,
+      Varianz, pdf pp. 301-309; Ch 7 §7.1 Gesetz der großen Zahlen, pdf pp. 330-336; Ch 8 §8.5 Kovarianz
+      und Korrelation, pdf pp. 368-374
+    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are
+      never conflated the way a single merged treatment can.
+    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by
+      chapter, which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability
+      in Ch 5 and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the
+      covariance definition L06 needs and connects it back to the descriptive covariance of Ch 3, so the
+      same symbol is not learned twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der
+      großen Zahlen; read it here rather than in an English text if the exam wording matters.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Keeps discrete and continuous random variables in separate chapters, so PMF and density are never conflated
-      the way a single merged treatment can.
-    angle_detail: 'L06 introduces PMF, density and CDF together in one pass. Fahrmeir separates them by chapter,
-      which is slower but makes the one exam-relevant distinction unmissable: P(X=x) is a probability in Ch 5
-      and is identically zero in Ch 6, where only intervals have probability. §8.5 supplies the covariance definition
-      L06 needs and connects it back to the descriptive covariance of Ch 3, so the same symbol is not learned
-      twice. §7.1 is the German statement of Tschebyscheff and the Gesetz der großen Zahlen; read it here rather
-      than in an English text if the exam wording matters.'
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf
-      pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
+      pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen pdf pp. 161-164
+    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete
+      and continuous chapters.
+    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce
+      E[X], Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity
+      and transformation rules are only usable once applying them is automatic. Ch 7''s items are the
+      Tschebyscheff and LLN calculations, which are short and worth doing because they are the easiest
+      marks in this part of the exam.'
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Expectation and variance computed from a given distribution, over and over, in both the discrete and
-      continuous chapters.
-    angle_detail: 'Three chapters of solved items whose common shape is: here is a PMF or density, produce E[X],
-      Var(X), and a transformed variable''s moments. That repetition is the point — L06''s linearity and transformation
-      rules are only usable once applying them is automatic. Ch 7''s items are the Tschebyscheff and LLN calculations,
-      which are short and worth doing because they are the easiest marks in this part of the exam.'
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     source_id: source-tijms-understanding-probability
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous random
-      variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
-    scope_triage: reference-only
-    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately tests
-      it against a simulation.
+    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
+      random variables, pdf pp. 296-324; Ch 11 §11.4 Covariance and correlation coefficient, pdf pp. 325-342
+    angle: States each rule for expectation and variance as a numbered 'basic rule' and then immediately
+      tests it against a simulation.
     angle_detail: 'The chapter title is literal: the rules are enumerated and each is checked by a simulation
-      whose code and output are shown. For a lecture whose content is a small set of algebraic identities (linearity,
-      variance of a scaled variable, variance of a sum under independence), seeing each one confirmed numerically
-      is a strong antidote to misremembering which of them needs independence. §11.4 gives covariance with the
-      correlation coefficient bounded in [-1,1] and proved.'
+      whose code and output are shown. For a lecture whose content is a small set of algebraic identities
+      (linearity, variance of a scaled variable, variance of a sum under independence), seeing each one
+      confirmed numerically is a strong antidote to misremembering which of them needs independence. §11.4
+      gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+    scope_triage: reference-only
+  - kind: reference
+    label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
+    source_id: source-sad-klausuren-extern
+    locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
+    angle: Shows the measure-theoretic formulation behind random variables and convergence, far beyond
+      the course's computational level.
+    angle_detail: 'This is not normal L06 practice: sigma-algebras and proof questions assume a rigorous
+      probability course. It is retained so the owned file is visible and can answer a formal-definition
+      question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
+    vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md
   attachments: []
   source_feedback: []

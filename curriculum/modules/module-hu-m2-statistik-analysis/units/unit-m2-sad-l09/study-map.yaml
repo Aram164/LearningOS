@@ -15,11 +15,13 @@ stages:
   number: 1
   title: Statistics, estimators, and estimates
   status: pending
-  objective: An estimator is a rule applied to random samples and is therefore random; an estimate is its realized
-    numerical value for one observed sample.
+  objective: An estimator is a rule applied to random samples and is therefore random; an estimate is
+    its realized numerical value for one observed sample.
   done_when:
-  - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random; an estimate
-    is its realized numerical value for one observed sample.'
+  - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random;
+    an estimate is its realized numerical value for one observed sample.'
+  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 2, and record
+    every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -29,63 +31,99 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
+    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. The generic filename is retained because
+      the PDF itself has no recoverable sheet number.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 point and interval estimation deck
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/09_point_interval_estimation (1).pdf
+    locator: 09_point_interval_estimation (1).pdf
+    angle: Prior-year estimation deck with additional worked interval examples.
+    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
+      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
+      the interval formulas and notation against the 2026 deck first.
     vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
     scope_triage: reference-only
-    angle: Prior-year estimation deck with additional worked interval examples.
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce — the
-      textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm the interval
-      formulas and notation against the 2026 deck first.
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393;
-      §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf pp. 403-410; Aufgaben
-      pdf pp. 413-415
+    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
+      pp. 386-393; §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf
+      pp. 403-410; Aufgaben pdf pp. 413-415
+    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and
+      compared in §9.2 before any interval formula appears.'
+    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which
+      makes it easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue,
+      Konsistenz, Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives
+      an interval, so the interval arrives as a consequence of a sampling distribution rather than as
+      a boxed formula. §9.3 covers the Maximum-Likelihood and Momenten construction methods, which is
+      the bridge back to L08's MLE node. Use the German property names from here — the Klausur asks for
+      'erwartungstreu', not 'unbiased'.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and compared
-      in §9.2 before any interval formula appears.'
-    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which makes it
-      easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue, Konsistenz,
-      Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives an interval, so the
-      interval arrives as a consequence of a sampling distribution rather than as a boxed formula. §9.3 covers
-      the Maximum-Likelihood and Momenten construction methods, which is the bridge back to L08's MLE node. Use
-      the German property names from here — the Klausur asks for 'erwartungstreu', not 'unbiased'.
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence Intervals''
-      readings I-III; the corresponding problem sets with solutions'
+    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
+      Intervals'' readings I-III; the corresponding problem sets with solutions'
+    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with
+      runnable code.
+    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them
+      against the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree
+      — is what turns L09's bootstrap node from a curiosity into a method with a place. The reading also
+      separates the frequentist confidence interval from the Bayesian probability interval explicitly,
+      which prevents the most common interpretation error.
     scope_triage: helpful-now
-    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with runnable
-      code.
-    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them against
-      the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree — is what
-      turns L09's bootstrap node from a curiosity into a method with a place. The reading also separates the frequentist
-      confidence interval from the Bayesian probability interval explicitly, which prevents the most common interpretation
-      error.
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     source_id: source-mit-18650
-    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level, reference
-      only
-    scope_triage: reference-only
-    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node alludes
-      to without naming.
+    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
+      reference only
+    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node
+      alludes to without naming.
     angle_detail: 'L09 says one estimator can be more efficient than another and leaves efficiency comparative.
-      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator attaining
-      it is efficient in a precise sense. That is satisfying and entirely optional — nothing in the M2 exam requires
-      it. Come here only if the comparative statement bothered you.'
+      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator
+      attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
+      in the M2 exam requires it. Come here only if the comparative statement bothered you.'
+    scope_triage: reference-only
+  - kind: practise
+    label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
+    source_id: source-sad-klausuren-extern
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
+    angle: A full progression from sample functions and point estimates to mean, variance and proportion
+      intervals.
+    angle_detail: Page 23 begins Aufgabenblatt 4 on interval estimation and visibly distinguishes known-sigma,
+      estimated-sigma and proportion regimes. This is the strongest local external practice for selecting
+      the correct interval, but it does not cover the bootstrap.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
   attachments: []
   source_feedback: []
@@ -93,13 +131,13 @@ stages:
   number: 2
   title: Bias, consistency, efficiency, and mean squared error
   status: pending
-  objective: Good estimators trade systematic error and variability; MSE decomposes into variance plus squared
-    bias, while consistency describes large-sample convergence.
+  objective: Good estimators trade systematic error and variability; MSE decomposes into variance plus
+    squared bias, while consistency describes large-sample convergence.
   done_when:
-  - 'Reproduce without notes: Good estimators trade systematic error and variability; MSE decomposes into variance
-    plus squared bias, while consistency describes large-sample convergence.'
-  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 3, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Good estimators trade systematic error and variability; MSE decomposes into
+    variance plus squared bias, while consistency describes large-sample convergence.'
+  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 4, and record
+    every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-mean-squared-error
@@ -109,94 +147,116 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
-  - kind: practise
-    label: Blatt 4 and UE5 — estimation and confidence intervals
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
     scope_triage: required-now
-    angle: Confidence intervals computed in the chair's layout, showing which regime checks are expected in writing.
-    angle_detail: Whether the z-versus-t justification must be written out or may be assumed is a marking question,
-      and only the course's own solutions answer it. Check here before deciding how much to write in the exam.
+  - kind: practise
+    label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
+    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. The generic filename is retained because
+      the PDF itself has no recoverable sheet number.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 point and interval estimation deck
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/09_point_interval_estimation (1).pdf
+    locator: 09_point_interval_estimation (1).pdf
+    angle: Prior-year estimation deck with additional worked interval examples.
+    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
+      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
+      the interval formulas and notation against the 2026 deck first.
     vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
     scope_triage: reference-only
-    angle: Prior-year estimation deck with additional worked interval examples.
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce — the
-      textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm the interval
-      formulas and notation against the 2026 deck first.
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393;
-      §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf pp. 403-410; Aufgaben
-      pdf pp. 413-415
+    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
+      pp. 386-393; §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf
+      pp. 403-410; Aufgaben pdf pp. 413-415
+    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and
+      compared in §9.2 before any interval formula appears.'
+    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which
+      makes it easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue,
+      Konsistenz, Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives
+      an interval, so the interval arrives as a consequence of a sampling distribution rather than as
+      a boxed formula. §9.3 covers the Maximum-Likelihood and Momenten construction methods, which is
+      the bridge back to L08's MLE node. Use the German property names from here — the Klausur asks for
+      'erwartungstreu', not 'unbiased'.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and compared
-      in §9.2 before any interval formula appears.'
-    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which makes it
-      easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue, Konsistenz,
-      Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives an interval, so the
-      interval arrives as a consequence of a sampling distribution rather than as a boxed formula. §9.3 covers
-      the Maximum-Likelihood and Momenten construction methods, which is the bridge back to L08's MLE node. Use
-      the German property names from here — the Klausur asks for 'erwartungstreu', not 'unbiased'.
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
+    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions
+      — with the choice justified each time.
+    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error
+      formula for a proportion. These solutions state the regime check before every computation, so the
+      habit being trained is the check rather than the substitution. Also includes sample-size determination
+      items, which the lecture treats lightly but which are cheap marks when they appear.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions — with
-      the choice justified each time.
-    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error formula
-      for a proportion. These solutions state the regime check before every computation, so the habit being trained
-      is the check rather than the substitution. Also includes sample-size determination items, which the lecture
-      treats lightly but which are cheap marks when they appear.
   - kind: practise
     label: Dekking — estimation exercises
     source_id: source-dekking-mips
-    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf pp. 304-316
-      (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap, pdf pp. 275-290 (bootstrap
-      principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23 confidence intervals for the mean,
-      pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals p. 353); Ch 24 §24.1 the probability
-      of success, pdf pp. 364-366
+    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
+      pp. 304-316 (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap,
+      pdf pp. 275-290 (bootstrap principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23
+      confidence intervals for the mean, pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals
+      p. 353); Ch 24 §24.1 the probability of success, pdf pp. 364-366
+    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead
+      of one slide of procedure.
+    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle
+      first — replace the unknown true distribution by the empirical one, then do exactly what you would
+      have done — and only then gives the algorithm, which is what makes it transferable to a situation
+      the recipe does not cover. §23.3 then builds a bootstrap confidence interval, closing the loop to
+      the z/t intervals in §23.2 so the three interval methods sit side by side. Chapters 19 and 20 separate
+      unbiasedness from efficiency, which the lecture presents together.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead of one
-      slide of procedure.
-    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle first —
-      replace the unknown true distribution by the empirical one, then do exactly what you would have done — and
-      only then gives the algorithm, which is what makes it transferable to a situation the recipe does not cover.
-      §23.3 then builds a bootstrap confidence interval, closing the loop to the z/t intervals in §23.2 so the
-      three interval methods sit side by side. Chapters 19 and 20 separate unbiasedness from efficiency, which
-      the lecture presents together.
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     source_id: source-mit-18650
-    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level, reference
-      only
-    scope_triage: reference-only
-    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node alludes
-      to without naming.
+    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
+      reference only
+    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node
+      alludes to without naming.
     angle_detail: 'L09 says one estimator can be more efficient than another and leaves efficiency comparative.
-      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator attaining
-      it is efficient in a precise sense. That is satisfying and entirely optional — nothing in the M2 exam requires
-      it. Come here only if the comparative statement bothered you.'
+      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator
+      attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
+      in the M2 exam requires it. Come here only if the comparative statement bothered you.'
+    scope_triage: reference-only
   - kind: practise
-    label: External German solved exams — estimation block
+    label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the estimation questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
+    angle: A full progression from sample functions and point estimates to mean, variance and proportion
+      intervals.
+    angle_detail: Page 23 begins Aufgabenblatt 4 on interval estimation and visibly distinguishes known-sigma,
+      estimated-sigma and proportion regimes. This is the strongest local external practice for selecting
+      the correct interval, but it does not cover the bootstrap.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Confidence-interval items under time pressure, across all three regimes.
-    angle_detail: The regime choice under time pressure is the skill; bank items supply it in volume. Watch for
-      items assuming a known population variance in situations where this course would use t.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md
   attachments: []
   source_feedback: []
@@ -204,13 +264,13 @@ stages:
   number: 3
   title: Sampling distributions and standard errors
   status: pending
-  objective: The standard error is the standard deviation of an estimator's sampling distribution and usually
-    shrinks with sample size; it is not the spread of the raw data.
+  objective: The standard error is the standard deviation of an estimator's sampling distribution and
+    usually shrinks with sample size; it is not the spread of the raw data.
   done_when:
-  - 'Reproduce without notes: The standard error is the standard deviation of an estimator''s sampling distribution
-    and usually shrinks with sample size; it is not the spread of the raw data.'
-  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: The standard error is the standard deviation of an estimator''s sampling
+    distribution and usually shrinks with sample size; it is not the spread of the raw data.'
+  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 5, and record
+    every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-variance
@@ -220,174 +280,210 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
-  - kind: practise
-    label: Blatt 4 and UE5 — estimation and confidence intervals
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
     scope_triage: required-now
-    angle: Confidence intervals computed in the chair's layout, showing which regime checks are expected in writing.
-    angle_detail: Whether the z-versus-t justification must be written out or may be assumed is a marking question,
-      and only the course's own solutions answer it. Check here before deciding how much to write in the exam.
+  - kind: practise
+    label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
+    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. The generic filename is retained because
+      the PDF itself has no recoverable sheet number.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE6, slides 10-13 — official bootstrap confidence-interval solution
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf, slides 10-13
+    angle: Provides the official short-form answer expected for the current interval question.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 point and interval estimation deck
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/09_point_interval_estimation (1).pdf
+    locator: 09_point_interval_estimation (1).pdf
+    angle: Prior-year estimation deck with additional worked interval examples.
+    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
+      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
+      the interval formulas and notation against the 2026 deck first.
     vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
     scope_triage: reference-only
-    angle: Prior-year estimation deck with additional worked interval examples.
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce — the
-      textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm the interval
-      formulas and notation against the 2026 deck first.
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393;
-      §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf pp. 403-410; Aufgaben
-      pdf pp. 413-415
+    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
+      pp. 386-393; §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf
+      pp. 403-410; Aufgaben pdf pp. 413-415
+    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and
+      compared in §9.2 before any interval formula appears.'
+    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which
+      makes it easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue,
+      Konsistenz, Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives
+      an interval, so the interval arrives as a consequence of a sampling distribution rather than as
+      a boxed formula. §9.3 covers the Maximum-Likelihood and Momenten construction methods, which is
+      the bridge back to L08's MLE node. Use the German property names from here — the Klausur asks for
+      'erwartungstreu', not 'unbiased'.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and compared
-      in §9.2 before any interval formula appears.'
-    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which makes it
-      easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue, Konsistenz,
-      Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives an interval, so the
-      interval arrives as a consequence of a sampling distribution rather than as a boxed formula. §9.3 covers
-      the Maximum-Likelihood and Momenten construction methods, which is the bridge back to L08's MLE node. Use
-      the German property names from here — the Klausur asks for 'erwartungstreu', not 'unbiased'.
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
+    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions
+      — with the choice justified each time.
+    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error
+      formula for a proportion. These solutions state the regime check before every computation, so the
+      habit being trained is the check rather than the substitution. Also includes sample-size determination
+      items, which the lecture treats lightly but which are cheap marks when they appear.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions — with
-      the choice justified each time.
-    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error formula
-      for a proportion. These solutions state the regime check before every computation, so the habit being trained
-      is the check rather than the substitution. Also includes sample-size determination items, which the lecture
-      treats lightly but which are cheap marks when they appear.
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     source_id: source-openintro-statistics
-    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals for
-      a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
+      for a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance
+      parameter to estimate.
+    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has
+      to deal with an unknown sigma, so the interpretation of 'confident' can be discussed on its own.
+      Then §7.1 introduces the t-distribution specifically as the correction needed once sigma is estimated
+      — which is exactly the z-versus-t decision L09 asks you to make, presented as a consequence rather
+      than a rule. The repeated-interval simulation picture in §5.2 is also the standard defence against
+      the classic misinterpretation the exam likes to test.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance parameter
-      to estimate.
-    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has to deal
-      with an unknown sigma, so the interpretation of 'confident' can be discussed on its own. Then §7.1 introduces
-      the t-distribution specifically as the correction needed once sigma is estimated — which is exactly the
-      z-versus-t decision L09 asks you to make, presented as a consequence rather than a rule. The repeated-interval
-      simulation picture in §5.2 is also the standard defence against the classic misinterpretation the exam likes
-      to test.
   - kind: practise
     label: Dekking — estimation exercises
     source_id: source-dekking-mips
-    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf pp. 304-316
-      (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap, pdf pp. 275-290 (bootstrap
-      principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23 confidence intervals for the mean,
-      pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals p. 353); Ch 24 §24.1 the probability
-      of success, pdf pp. 364-366
+    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
+      pp. 304-316 (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap,
+      pdf pp. 275-290 (bootstrap principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23
+      confidence intervals for the mean, pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals
+      p. 353); Ch 24 §24.1 the probability of success, pdf pp. 364-366
+    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead
+      of one slide of procedure.
+    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle
+      first — replace the unknown true distribution by the empirical one, then do exactly what you would
+      have done — and only then gives the algorithm, which is what makes it transferable to a situation
+      the recipe does not cover. §23.3 then builds a bootstrap confidence interval, closing the loop to
+      the z/t intervals in §23.2 so the three interval methods sit side by side. Chapters 19 and 20 separate
+      unbiasedness from efficiency, which the lecture presents together.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead of one
-      slide of procedure.
-    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle first —
-      replace the unknown true distribution by the empirical one, then do exactly what you would have done — and
-      only then gives the algorithm, which is what makes it transferable to a situation the recipe does not cover.
-      §23.3 then builds a bootstrap confidence interval, closing the loop to the z/t intervals in §23.2 so the
-      three interval methods sit side by side. Chapters 19 and 20 separate unbiasedness from efficiency, which
-      the lecture presents together.
+  - kind: watch
+    label: zedstatistics — confidence intervals
+    source_id: source-zedstatistics
+    locator: The confidence-interval videos (interpretation, construction, and the t-distribution), ≈15-20
+      min each
+    angle: Opens with the standard misinterpretation stated plainly, then dismantles it — which is more
+      memorable than stating the correct version first.
+    angle_detail: 'Most treatments give the correct interpretation and warn against the wrong one in a
+      footnote. Zeltzer inverts it: he states the tempting reading (''95% chance the parameter is in here''),
+      shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
+      the misinterpretation is the examinable point, attacking it directly is the better route.'
+    scope_triage: helpful-now
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence Intervals''
-      readings I-III; the corresponding problem sets with solutions'
+    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
+      Intervals'' readings I-III; the corresponding problem sets with solutions'
+    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with
+      runnable code.
+    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them
+      against the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree
+      — is what turns L09's bootstrap node from a curiosity into a method with a place. The reading also
+      separates the frequentist confidence interval from the Bayesian probability interval explicitly,
+      which prevents the most common interpretation error.
     scope_triage: helpful-now
-    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with runnable
-      code.
-    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them against
-      the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree — is what
-      turns L09's bootstrap node from a curiosity into a method with a place. The reading also separates the frequentist
-      confidence interval from the Bayesian probability interval explicitly, which prevents the most common interpretation
-      error.
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     source_id: source-mit-18650
-    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level, reference
-      only
-    scope_triage: reference-only
-    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node alludes
-      to without naming.
+    locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
+      reference only
+    angle: Says what 'efficient' means precisely, via the Cramér-Rao bound that SaD's efficiency node
+      alludes to without naming.
     angle_detail: 'L09 says one estimator can be more efficient than another and leaves efficiency comparative.
-      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator attaining
-      it is efficient in a precise sense. That is satisfying and entirely optional — nothing in the M2 exam requires
-      it. Come here only if the comparative statement bothered you.'
+      18.650 gives the absolute version: there is a variance floor for unbiased estimators, and an estimator
+      attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
+      in the M2 exam requires it. Come here only if the comparative statement bothered you.'
+    scope_triage: reference-only
   - kind: practise
-    label: FAU solved exam — proportion confidence interval
-    source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf — the proportion confidence-interval question
-      with solution
-    scope_triage: helpful-now
-    angle: A proportion interval under exam conditions, including the standard-error form that differs from the
-      mean case.
-    angle_detail: Proportions use a different standard error and the substitution is easy to get wrong when rushing.
-      One authentic worked item is a good final check before the exam, after the Fahrmeir Arbeitsbuch drill.
-  - kind: practise
-    label: External German solved exams — estimation block
+    label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the estimation questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
+    angle: A full progression from sample functions and point estimates to mean, variance and proportion
+      intervals.
+    angle_detail: Page 23 begins Aufgabenblatt 4 on interval estimation and visibly distinguishes known-sigma,
+      estimated-sigma and proportion regimes. This is the strongest local external practice for selecting
+      the correct interval, but it does not cover the bootstrap.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Confidence-interval items under time pressure, across all three regimes.
-    angle_detail: The regime choice under time pressure is the skill; bank items supply it in volume. Watch for
-      items assuming a known population variance in situations where this course would use t.
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     source_id: source-statquest
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
       Clearly Explained'''
+    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's
+      notation blurs.
+    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things —
+      the spread of the data versus the spread of an estimate. The video separates them with two visibly
+      different histograms, and once separated the confidence-interval formula stops looking arbitrary.
+      The bootstrapping video then shows the resampling loop being run, which is the procedural half of
+      L09's bootstrap node.
     scope_triage: helpful-now
-    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's notation
-      blurs.
-    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things — the spread
-      of the data versus the spread of an estimate. The video separates them with two visibly different histograms,
-      and once separated the confidence-interval formula stops looking arbitrary. The bootstrapping video then
-      shows the resampling loop being run, which is the procedural half of L09's bootstrap node.
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     source_id: source-jbstatistics
-    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with the interval-construction
-      videos that follow them'
+    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
+      the interval-construction videos that follow them'
+    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not
+      as a property to accept.
+    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which
+      gives no reason for its shape. The videos connect the extra uncertainty of estimating sigma to the
+      heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
+      and much harder to get wrong under pressure.
     scope_triage: helpful-now
-    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not as a property
-      to accept.
-    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which gives no
-      reason for its shape. The videos connect the extra uncertainty of estimating sigma to the heavier tails
-      and thus to the wider interval, which makes the z-versus-t decision a reasoned one and much harder to get
-      wrong under pressure.
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     source_id: source-kurzes-tutorium-statistik
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
-    scope_triage: helpful-now
     angle: German terminology for interval estimation — Konfidenzniveau, Vertrauensbereich, Schätzfunktion.
-    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient, Stichprobenumfang,
-      Konfidenzniveau. Having heard the words used in a worked calculation makes the exam phrasing readable at
-      speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient,
+      Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
+      exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    scope_triage: helpful-now
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     source_id: source-brandon-foltz
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
+    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before
+      any computation.
+    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this
+      interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
+      Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
-    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before any
-      computation.
-    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this interval')
-      is the most commonly examined conceptual point in L09, and it survives most brief treatments. Foltz attacks
-      it directly and at length, with the repeated-sampling picture. Worth the time once.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
   attachments: []
   source_feedback: []
@@ -395,13 +491,13 @@ stages:
   number: 4
   title: z confidence intervals
   status: pending
-  objective: With known population variance or an adequate Normal approximation, estimate plus/minus a z quantile
-    times standard error gives a repeated-sampling coverage procedure.
+  objective: With known population variance or an adequate Normal approximation, estimate plus/minus a
+    z quantile times standard error gives a repeated-sampling coverage procedure.
   done_when:
-  - 'Reproduce without notes: With known population variance or an adequate Normal approximation, estimate plus/minus
-    a z quantile times standard error gives a repeated-sampling coverage procedure.'
-  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: With known population variance or an adequate Normal approximation, estimate
+    plus/minus a z quantile times standard error gives a repeated-sampling coverage procedure.'
+  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 5, and record
+    every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -411,162 +507,198 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
-  - kind: practise
-    label: Blatt 4 and UE5 — estimation and confidence intervals
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
     scope_triage: required-now
-    angle: Confidence intervals computed in the chair's layout, showing which regime checks are expected in writing.
-    angle_detail: Whether the z-versus-t justification must be written out or may be assumed is a marking question,
-      and only the course's own solutions answer it. Check here before deciding how much to write in the exam.
+  - kind: practise
+    label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
+    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. The generic filename is retained because
+      the PDF itself has no recoverable sheet number.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE6, slides 10-13 — official bootstrap confidence-interval solution
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf, slides 10-13
+    angle: Provides the official short-form answer expected for the current interval question.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 point and interval estimation deck
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/09_point_interval_estimation (1).pdf
+    locator: 09_point_interval_estimation (1).pdf
+    angle: Prior-year estimation deck with additional worked interval examples.
+    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
+      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
+      the interval formulas and notation against the 2026 deck first.
     vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
     scope_triage: reference-only
-    angle: Prior-year estimation deck with additional worked interval examples.
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce — the
-      textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm the interval
-      formulas and notation against the 2026 deck first.
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393;
-      §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf pp. 403-410; Aufgaben
-      pdf pp. 413-415
+    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
+      pp. 386-393; §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf
+      pp. 403-410; Aufgaben pdf pp. 413-415
+    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and
+      compared in §9.2 before any interval formula appears.'
+    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which
+      makes it easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue,
+      Konsistenz, Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives
+      an interval, so the interval arrives as a consequence of a sampling distribution rather than as
+      a boxed formula. §9.3 covers the Maximum-Likelihood and Momenten construction methods, which is
+      the bridge back to L08's MLE node. Use the German property names from here — the Klausur asks for
+      'erwartungstreu', not 'unbiased'.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and compared
-      in §9.2 before any interval formula appears.'
-    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which makes it
-      easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue, Konsistenz,
-      Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives an interval, so the
-      interval arrives as a consequence of a sampling distribution rather than as a boxed formula. §9.3 covers
-      the Maximum-Likelihood and Momenten construction methods, which is the bridge back to L08's MLE node. Use
-      the German property names from here — the Klausur asks for 'erwartungstreu', not 'unbiased'.
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
+    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions
+      — with the choice justified each time.
+    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error
+      formula for a proportion. These solutions state the regime check before every computation, so the
+      habit being trained is the check rather than the substitution. Also includes sample-size determination
+      items, which the lecture treats lightly but which are cheap marks when they appear.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions — with
-      the choice justified each time.
-    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error formula
-      for a proportion. These solutions state the regime check before every computation, so the habit being trained
-      is the check rather than the substitution. Also includes sample-size determination items, which the lecture
-      treats lightly but which are cheap marks when they appear.
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     source_id: source-openintro-statistics
-    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals for
-      a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
+      for a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance
+      parameter to estimate.
+    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has
+      to deal with an unknown sigma, so the interpretation of 'confident' can be discussed on its own.
+      Then §7.1 introduces the t-distribution specifically as the correction needed once sigma is estimated
+      — which is exactly the z-versus-t decision L09 asks you to make, presented as a consequence rather
+      than a rule. The repeated-interval simulation picture in §5.2 is also the standard defence against
+      the classic misinterpretation the exam likes to test.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance parameter
-      to estimate.
-    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has to deal
-      with an unknown sigma, so the interpretation of 'confident' can be discussed on its own. Then §7.1 introduces
-      the t-distribution specifically as the correction needed once sigma is estimated — which is exactly the
-      z-versus-t decision L09 asks you to make, presented as a consequence rather than a rule. The repeated-interval
-      simulation picture in §5.2 is also the standard defence against the classic misinterpretation the exam likes
-      to test.
   - kind: practise
     label: Dekking — estimation exercises
     source_id: source-dekking-mips
-    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf pp. 304-316
-      (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap, pdf pp. 275-290 (bootstrap
-      principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23 confidence intervals for the mean,
-      pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals p. 353); Ch 24 §24.1 the probability
-      of success, pdf pp. 364-366
+    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
+      pp. 304-316 (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap,
+      pdf pp. 275-290 (bootstrap principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23
+      confidence intervals for the mean, pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals
+      p. 353); Ch 24 §24.1 the probability of success, pdf pp. 364-366
+    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead
+      of one slide of procedure.
+    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle
+      first — replace the unknown true distribution by the empirical one, then do exactly what you would
+      have done — and only then gives the algorithm, which is what makes it transferable to a situation
+      the recipe does not cover. §23.3 then builds a bootstrap confidence interval, closing the loop to
+      the z/t intervals in §23.2 so the three interval methods sit side by side. Chapters 19 and 20 separate
+      unbiasedness from efficiency, which the lecture presents together.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead of one
-      slide of procedure.
-    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle first —
-      replace the unknown true distribution by the empirical one, then do exactly what you would have done — and
-      only then gives the algorithm, which is what makes it transferable to a situation the recipe does not cover.
-      §23.3 then builds a bootstrap confidence interval, closing the loop to the z/t intervals in §23.2 so the
-      three interval methods sit side by side. Chapters 19 and 20 separate unbiasedness from efficiency, which
-      the lecture presents together.
+  - kind: watch
+    label: zedstatistics — confidence intervals
+    source_id: source-zedstatistics
+    locator: The confidence-interval videos (interpretation, construction, and the t-distribution), ≈15-20
+      min each
+    angle: Opens with the standard misinterpretation stated plainly, then dismantles it — which is more
+      memorable than stating the correct version first.
+    angle_detail: 'Most treatments give the correct interpretation and warn against the wrong one in a
+      footnote. Zeltzer inverts it: he states the tempting reading (''95% chance the parameter is in here''),
+      shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
+      the misinterpretation is the examinable point, attacking it directly is the better route.'
+    scope_triage: helpful-now
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence Intervals''
-      readings I-III; the corresponding problem sets with solutions'
+    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
+      Intervals'' readings I-III; the corresponding problem sets with solutions'
+    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with
+      runnable code.
+    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them
+      against the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree
+      — is what turns L09's bootstrap node from a curiosity into a method with a place. The reading also
+      separates the frequentist confidence interval from the Bayesian probability interval explicitly,
+      which prevents the most common interpretation error.
     scope_triage: helpful-now
-    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with runnable
-      code.
-    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them against
-      the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree — is what
-      turns L09's bootstrap node from a curiosity into a method with a place. The reading also separates the frequentist
-      confidence interval from the Bayesian probability interval explicitly, which prevents the most common interpretation
-      error.
   - kind: practise
-    label: FAU solved exam — proportion confidence interval
-    source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf — the proportion confidence-interval question
-      with solution
-    scope_triage: helpful-now
-    angle: A proportion interval under exam conditions, including the standard-error form that differs from the
-      mean case.
-    angle_detail: Proportions use a different standard error and the substitution is easy to get wrong when rushing.
-      One authentic worked item is a good final check before the exam, after the Fahrmeir Arbeitsbuch drill.
-  - kind: practise
-    label: External German solved exams — estimation block
+    label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the estimation questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
+    angle: A full progression from sample functions and point estimates to mean, variance and proportion
+      intervals.
+    angle_detail: Page 23 begins Aufgabenblatt 4 on interval estimation and visibly distinguishes known-sigma,
+      estimated-sigma and proportion regimes. This is the strongest local external practice for selecting
+      the correct interval, but it does not cover the bootstrap.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Confidence-interval items under time pressure, across all three regimes.
-    angle_detail: The regime choice under time pressure is the skill; bank items supply it in volume. Watch for
-      items assuming a known population variance in situations where this course would use t.
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     source_id: source-statquest
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
       Clearly Explained'''
+    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's
+      notation blurs.
+    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things —
+      the spread of the data versus the spread of an estimate. The video separates them with two visibly
+      different histograms, and once separated the confidence-interval formula stops looking arbitrary.
+      The bootstrapping video then shows the resampling loop being run, which is the procedural half of
+      L09's bootstrap node.
     scope_triage: helpful-now
-    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's notation
-      blurs.
-    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things — the spread
-      of the data versus the spread of an estimate. The video separates them with two visibly different histograms,
-      and once separated the confidence-interval formula stops looking arbitrary. The bootstrapping video then
-      shows the resampling loop being run, which is the procedural half of L09's bootstrap node.
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     source_id: source-jbstatistics
-    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with the interval-construction
-      videos that follow them'
+    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
+      the interval-construction videos that follow them'
+    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not
+      as a property to accept.
+    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which
+      gives no reason for its shape. The videos connect the extra uncertainty of estimating sigma to the
+      heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
+      and much harder to get wrong under pressure.
     scope_triage: helpful-now
-    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not as a property
-      to accept.
-    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which gives no
-      reason for its shape. The videos connect the extra uncertainty of estimating sigma to the heavier tails
-      and thus to the wider interval, which makes the z-versus-t decision a reasoned one and much harder to get
-      wrong under pressure.
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     source_id: source-kurzes-tutorium-statistik
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
-    scope_triage: helpful-now
     angle: German terminology for interval estimation — Konfidenzniveau, Vertrauensbereich, Schätzfunktion.
-    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient, Stichprobenumfang,
-      Konfidenzniveau. Having heard the words used in a worked calculation makes the exam phrasing readable at
-      speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient,
+      Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
+      exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    scope_triage: helpful-now
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     source_id: source-brandon-foltz
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
+    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before
+      any computation.
+    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this
+      interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
+      Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
-    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before any
-      computation.
-    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this interval')
-      is the most commonly examined conceptual point in L09, and it survives most brief treatments. Foltz attacks
-      it directly and at length, with the repeated-sampling picture. Worth the time once.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md
   attachments: []
   source_feedback: []
@@ -574,13 +706,13 @@ stages:
   number: 5
   title: t confidence intervals
   status: pending
-  objective: Estimating variance from small samples introduces extra uncertainty captured by Student's t and its
-    degrees of freedom.
+  objective: Estimating variance from small samples introduces extra uncertainty captured by Student's
+    t and its degrees of freedom.
   done_when:
-  - 'Reproduce without notes: Estimating variance from small samples introduces extra uncertainty captured by
-    Student''s t and its degrees of freedom.'
-  - Work Blatt 4 and UE5 — estimation and confidence intervals, then the remaining 3, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Estimating variance from small samples introduces extra uncertainty captured
+    by Student''s t and its degrees of freedom.'
+  - Work UE5, slides 40-77 — estimation, standard error and bootstrap intervals, then the remaining 3,
+    and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -590,140 +722,164 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
-  - kind: practise
-    label: Blatt 4 and UE5 — estimation and confidence intervals
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf; exercise-slides/UE5.pdf
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
     scope_triage: required-now
-    angle: Confidence intervals computed in the chair's layout, showing which regime checks are expected in writing.
-    angle_detail: Whether the z-versus-t justification must be written out or may be assumed is a marking question,
-      and only the course's own solutions answer it. Check here before deciding how much to write in the exam.
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
   - kind: reference
     label: 2025 point and interval estimation deck
     source_id: source-sad-2025-recordings
-    locator: sad-2025-recordings/09_point_interval_estimation (1).pdf
+    locator: 09_point_interval_estimation (1).pdf
+    angle: Prior-year estimation deck with additional worked interval examples.
+    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
+      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
+      the interval formulas and notation against the 2026 deck first.
     vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
     scope_triage: reference-only
-    angle: Prior-year estimation deck with additional worked interval examples.
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce — the
-      textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm the interval
-      formulas and notation against the 2026 deck first.
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf pp. 386-393;
-      §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf pp. 403-410; Aufgaben
-      pdf pp. 413-415
+    locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
+      pp. 386-393; §9.3 Konstruktion von Schätzfunktionen, pdf pp. 394-402; §9.4 Intervallschätzung, pdf
+      pp. 403-410; Aufgaben pdf pp. 413-415
+    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and
+      compared in §9.2 before any interval formula appears.'
+    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which
+      makes it easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue,
+      Konsistenz, Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives
+      an interval, so the interval arrives as a consequence of a sampling distribution rather than as
+      a boxed formula. §9.3 covers the Maximum-Likelihood and Momenten construction methods, which is
+      the bridge back to L08's MLE node. Use the German property names from here — the Klausur asks for
+      'erwartungstreu', not 'unbiased'.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: 'Estimator quality before estimator recipes: bias, consistency and efficiency are defined and compared
-      in §9.2 before any interval formula appears.'
-    angle_detail: L09 introduces estimator properties and confidence intervals in the same pass, which makes it
-      easy to learn the interval formulas as rituals. Fahrmeir spends eight pages on Erwartungstreue, Konsistenz,
-      Effizienz and MSE with worked comparisons of competing estimators BEFORE §9.4 derives an interval, so the
-      interval arrives as a consequence of a sampling distribution rather than as a boxed formula. §9.3 covers
-      the Maximum-Likelihood and Momenten construction methods, which is the bridge back to L08's MLE node. Use
-      the German property names from here — the Klausur asks for 'erwartungstreu', not 'unbiased'.
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
+    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions
+      — with the choice justified each time.
+    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error
+      formula for a proportion. These solutions state the regime check before every computation, so the
+      habit being trained is the check rather than the substitution. Also includes sample-size determination
+      items, which the lecture treats lightly but which are cheap marks when they appear.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Confidence intervals computed under all three regimes — known sigma, unknown sigma, proportions — with
-      the choice justified each time.
-    angle_detail: The recurring L09 exam failure is using z where t belongs, or the wrong standard-error formula
-      for a proportion. These solutions state the regime check before every computation, so the habit being trained
-      is the check rather than the substitution. Also includes sample-size determination items, which the lecture
-      treats lightly but which are cheap marks when they appear.
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     source_id: source-openintro-statistics
-    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals for
-      a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
+      for a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance
+      parameter to estimate.
+    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has
+      to deal with an unknown sigma, so the interpretation of 'confident' can be discussed on its own.
+      Then §7.1 introduces the t-distribution specifically as the correction needed once sigma is estimated
+      — which is exactly the z-versus-t decision L09 asks you to make, presented as a consequence rather
+      than a rule. The repeated-interval simulation picture in §5.2 is also the standard defence against
+      the classic misinterpretation the exam likes to test.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Introduces confidence intervals on a proportion first, where the standard error has no nuisance parameter
-      to estimate.
-    angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has to deal
-      with an unknown sigma, so the interpretation of 'confident' can be discussed on its own. Then §7.1 introduces
-      the t-distribution specifically as the correction needed once sigma is estimated — which is exactly the
-      z-versus-t decision L09 asks you to make, presented as a consequence rather than a rule. The repeated-interval
-      simulation picture in §5.2 is also the standard defence against the classic misinterpretation the exam likes
-      to test.
   - kind: practise
     label: Dekking — estimation exercises
     source_id: source-dekking-mips
-    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf pp. 304-316
-      (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap, pdf pp. 275-290 (bootstrap
-      principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23 confidence intervals for the mean,
-      pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals p. 353); Ch 24 §24.1 the probability
-      of success, pdf pp. 364-366
+    locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
+      pp. 304-316 (variance of an estimator p. 307; MSE p. 310; exercises p. 312); Ch 18 the bootstrap,
+      pdf pp. 275-290 (bootstrap principle p. 275; empirical bootstrap p. 278; exercises p. 286); Ch 23
+      confidence intervals for the mean, pdf pp. 344-363 (normal data p. 348; bootstrap confidence intervals
+      p. 353); Ch 24 §24.1 the probability of success, pdf pp. 364-366
+    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead
+      of one slide of procedure.
+    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle
+      first — replace the unknown true distribution by the empirical one, then do exactly what you would
+      have done — and only then gives the algorithm, which is what makes it transferable to a situation
+      the recipe does not cover. §23.3 then builds a bootstrap confidence interval, closing the loop to
+      the z/t intervals in §23.2 so the three interval methods sit side by side. Chapters 19 and 20 separate
+      unbiasedness from efficiency, which the lecture presents together.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: The only source here that gives the bootstrap its own chapter with a stated principle, instead of one
-      slide of procedure.
-    angle_detail: L09 shows the bootstrap as a resampling recipe. Ch 18 states the bootstrap principle first —
-      replace the unknown true distribution by the empirical one, then do exactly what you would have done — and
-      only then gives the algorithm, which is what makes it transferable to a situation the recipe does not cover.
-      §23.3 then builds a bootstrap confidence interval, closing the loop to the z/t intervals in §23.2 so the
-      three interval methods sit side by side. Chapters 19 and 20 separate unbiasedness from efficiency, which
-      the lecture presents together.
+  - kind: watch
+    label: zedstatistics — confidence intervals
+    source_id: source-zedstatistics
+    locator: The confidence-interval videos (interpretation, construction, and the t-distribution), ≈15-20
+      min each
+    angle: Opens with the standard misinterpretation stated plainly, then dismantles it — which is more
+      memorable than stating the correct version first.
+    angle_detail: 'Most treatments give the correct interpretation and warn against the wrong one in a
+      footnote. Zeltzer inverts it: he states the tempting reading (''95% chance the parameter is in here''),
+      shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
+      the misinterpretation is the examinable point, attacking it directly is the better route.'
+    scope_triage: helpful-now
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     source_id: source-mit-1805
-    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence Intervals''
-      readings I-III; the corresponding problem sets with solutions'
+    locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
+      Intervals'' readings I-III; the corresponding problem sets with solutions'
+    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with
+      runnable code.
+    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them
+      against the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree
+      — is what turns L09's bootstrap node from a curiosity into a method with a place. The reading also
+      separates the frequentist confidence interval from the Bayesian probability interval explicitly,
+      which prevents the most common interpretation error.
     scope_triage: helpful-now
-    angle: Teaches bootstrap confidence intervals as a first-class method beside the analytic ones, with runnable
-      code.
-    angle_detail: Most courses mention the bootstrap; this one builds intervals with it and compares them against
-      the z and t intervals on the same data. Seeing the three agree — and seeing where they disagree — is what
-      turns L09's bootstrap node from a curiosity into a method with a place. The reading also separates the frequentist
-      confidence interval from the Bayesian probability interval explicitly, which prevents the most common interpretation
-      error.
   - kind: practise
-    label: External German solved exams — estimation block
+    label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the estimation questions in the solved papers'
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
+    angle: A full progression from sample functions and point estimates to mean, variance and proportion
+      intervals.
+    angle_detail: Page 23 begins Aufgabenblatt 4 on interval estimation and visibly distinguishes known-sigma,
+      estimated-sigma and proportion regimes. This is the strongest local external practice for selecting
+      the correct interval, but it does not cover the bootstrap.
+    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
-    angle: Confidence-interval items under time pressure, across all three regimes.
-    angle_detail: The regime choice under time pressure is the skill; bank items supply it in volume. Watch for
-      items assuming a known population variance in situations where this course would use t.
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     source_id: source-jbstatistics
-    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with the interval-construction
-      videos that follow them'
+    locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
+      the interval-construction videos that follow them'
+    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not
+      as a property to accept.
+    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which
+      gives no reason for its shape. The videos connect the extra uncertainty of estimating sigma to the
+      heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
+      and much harder to get wrong under pressure.
     scope_triage: helpful-now
-    angle: Explains why the t-distribution has heavier tails as a consequence of estimating sigma, not as a property
-      to accept.
-    angle_detail: The t-distribution is usually introduced as 'use this when sigma is unknown', which gives no
-      reason for its shape. The videos connect the extra uncertainty of estimating sigma to the heavier tails
-      and thus to the wider interval, which makes the z-versus-t decision a reasoned one and much harder to get
-      wrong under pressure.
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     source_id: source-kurzes-tutorium-statistik
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
-    scope_triage: helpful-now
     angle: German terminology for interval estimation — Konfidenzniveau, Vertrauensbereich, Schätzfunktion.
-    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient, Stichprobenumfang,
-      Konfidenzniveau. Having heard the words used in a worked calculation makes the exam phrasing readable at
-      speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    angle_detail: 'L09''s German vocabulary is denser than most: erwartungstreu, konsistent, effizient,
+      Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
+      exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
+    scope_triage: helpful-now
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     source_id: source-brandon-foltz
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
+    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before
+      any computation.
+    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this
+      interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
+      Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
-    angle: Spends most of a video on interpretation — what a 95% interval does and does not claim — before any
-      computation.
-    angle_detail: The standard misinterpretation ('there is a 95% probability the parameter is in this interval')
-      is the most commonly examined conceptual point in L09, and it survives most brief treatments. Foltz attacks
-      it directly and at length, with the repeated-sampling picture. Worth the time once.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
   attachments: []
   source_feedback: []
@@ -731,11 +887,13 @@ stages:
   number: 6
   title: Bootstrap estimation
   status: pending
-  objective: Resampling observations with replacement approximates an estimator's sampling distribution when a
-    convenient analytic standard error is unavailable.
+  objective: Resampling observations with replacement approximates an estimator's sampling distribution
+    when a convenient analytic standard error is unavailable.
   done_when:
-  - 'Reproduce without notes: Resampling observations with replacement approximates an estimator''s sampling distribution
-    when a convenient analytic standard error is unavailable.'
+  - 'Reproduce without notes: Resampling observations with replacement approximates an estimator''s sampling
+    distribution when a convenient analytic standard error is unavailable.'
+  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 2, and record
+    every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-bootstrap
@@ -745,38 +903,74 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
+    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation. The generic filename is retained because
+      the PDF itself has no recoverable sheet number.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE5.pdf, slides 40-77
+    angle: Shows the whole inferential chain with one repeated dataset, including what the bootstrap is
+      estimating.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE6, slides 10-13 — official bootstrap confidence-interval solution
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE6.pdf, slides 10-13
+    angle: Provides the official short-form answer expected for the current interval question.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+    scope_triage: required-now
+  - kind: read
+    label: ISLP 5.2 - the bootstrap as a resampling estimate of standard error
+    source_id: source-islp
+    locator: Section 5.2 the bootstrap, pp. 220-223; lab section 5.3, pp. 223-231; exercises section 5.4,
+      p. 232
+    angle: L09 introduces the bootstrap as a way to quantify uncertainty without a formula; this section
+      builds the resampled standard error on a concrete estimator and then repeats it in a lab, which
+      is the arithmetic the deck asserts.
+    angle_detail: §5.2 (pp. 220-223) states the bootstrap in three pages with the resampling diagram,
+      then the lab (pp. 223-231) runs it in code on a real estimator so the sampling distribution is produced
+      rather than described. L09 presents the bootstrap as a procedure; seeing the resampled estimates
+      accumulate into a histogram is what makes the standard-error claim believable. Exercises at p. 232.
+      Read Dekking Ch 18 first for the principle, then this for the execution.
+    vault_path: material://source-islp/islp.pdf
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     source_id: source-statquest
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
       Clearly Explained'''
+    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's
+      notation blurs.
+    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things —
+      the spread of the data versus the spread of an estimate. The video separates them with two visibly
+      different histograms, and once separated the confidence-interval formula stops looking arbitrary.
+      The bootstrapping video then shows the resampling loop being run, which is the procedural half of
+      L09's bootstrap node.
     scope_triage: helpful-now
-    angle: Distinguishes the standard deviation from the standard error explicitly, which the lecture's notation
-      blurs.
-    angle_detail: sigma and sigma/sqrt(n) look similar on a slide and mean entirely different things — the spread
-      of the data versus the spread of an estimate. The video separates them with two visibly different histograms,
-      and once separated the confidence-interval formula stops looking arbitrary. The bootstrapping video then
-      shows the resampling loop being run, which is the procedural half of L09's bootstrap node.
-  - kind: read
-    label: ISLP 5.2 - the bootstrap as a resampling estimate of standard error
-    source_id: source-islp
-    locator: Section 5.2 the bootstrap, pp. 220-223; lab section 5.3, pp. 223-231; exercises section 5.4, p. 232
-    scope_triage: helpful-now
-    angle: L09 introduces the bootstrap as a way to quantify uncertainty without a formula; this section builds
-      the resampled standard error on a concrete estimator and then repeats it in a lab, which is the arithmetic
-      the deck asserts.
-    angle_detail: §5.2 (pp. 220-223) states the bootstrap in three pages with the resampling diagram, then the
-      lab (pp. 223-231) runs it in code on a real estimator so the sampling distribution is produced rather than
-      described. L09 presents the bootstrap as a procedure; seeing the resampled estimates accumulate into a histogram
-      is what makes the standard-error claim believable. Exercises at p. 232. Read Dekking Ch 18 first for the
-      principle, then this for the execution.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []
@@ -784,11 +978,11 @@ stages:
   number: 7
   title: Statistical uncertainty versus data bias
   status: pending
-  objective: Narrow intervals cannot repair selection bias, measurement error, dependence, or population drift;
-    the inferential model is only as credible as its sampling assumptions.
+  objective: Narrow intervals cannot repair selection bias, measurement error, dependence, or population
+    drift; the inferential model is only as credible as its sampling assumptions.
   done_when:
-  - 'Reproduce without notes: Narrow intervals cannot repair selection bias, measurement error, dependence, or
-    population drift; the inferential model is only as credible as its sampling assumptions.'
+  - 'Reproduce without notes: Narrow intervals cannot repair selection bias, measurement error, dependence,
+    or population drift; the inferential model is only as credible as its sampling assumptions.'
   exam_critical: true
   concepts:
   - concept-sampling-bias
@@ -799,13 +993,14 @@ stages:
     label: Current L09 estimation deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    scope_triage: required-now
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be learned
-      without the sampling-distribution reasoning that justifies them — which works until a question varies the
-      setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical uncertainty versus
-      biased data are conceptual, not computational, and are the kind of point that appears as a short written
-      question.
+    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+      learned without the sampling-distribution reasoning that justifies them — which works until a question
+      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
+      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
+      appears as a short written question.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/09_estimating.pdf
+    scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md
   attachments: []
   source_feedback: []

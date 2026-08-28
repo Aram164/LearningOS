@@ -15,13 +15,13 @@ stages:
   number: 1
   title: Paired data and scatterplots
   status: pending
-  objective: Correlation is defined on corresponding measurements; scatterplots reveal direction, form, outliers,
-    and nonlinearity before any coefficient is calculated.
+  objective: Correlation is defined on corresponding measurements; scatterplots reveal direction, form,
+    outliers, and nonlinearity before any coefficient is calculated.
   done_when:
-  - 'Reproduce without notes: Correlation is defined on corresponding measurements; scatterplots reveal direction,
-    form, outliers, and nonlinearity before any coefficient is calculated.'
-  - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Correlation is defined on corresponding measurements; scatterplots reveal
+    direction, form, outliers, and nonlinearity before any coefficient is calculated.'
+  - Work Blatt 1, Aufgabe 2 — correlation and simple regression, then the remaining 2, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-correlation
@@ -31,51 +31,91 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
   - kind: practise
-    label: UE2 and Blatt 2 — correlation and regression practice
+    label: Blatt 1, Aufgabe 2 — correlation and simple regression
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, correlation and regression section; exercise-slides/blatt-02.pdf
+    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
+      exam-style L03 task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
-    angle: Shows whether regression is examined by hand computation or by interpretation — which the deck alone
-      does not reveal.
-    angle_detail: L03 covers far more than can be examined by hand in a combined three-hour paper, so the exercises
-      are the evidence of where the emphasis actually falls. Read them before deciding how much time to spend
-      on the matrix and gradient-descent material.
+  - kind: practise
+    label: UE2, slides 20-28 — covariance and Pearson correlation
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 20-28
+    angle: Works the covariance-to-correlation normalization one line at a time in course notation.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     source_id: source-fahrmeir-statistik
-    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und Kausalität,
-      pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
+      Kausalität, pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    angle: Correlation and least squares derived from the descriptive side only — no random variables,
+      no inference, which is exactly L03's standpoint.
+    angle_detail: Most books introduce regression after probability and immediately talk about errors
+      as random variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate
+      line is derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also
+      has no probability yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding
+      that the lecture states in one slide. It does NOT cover multivariate regression in matrix form or
+      gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Correlation and least squares derived from the descriptive side only — no random variables, no inference,
-      which is exactly L03's standpoint.
-    angle_detail: Most books introduce regression after probability and immediately talk about errors as random
-      variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate line is
-      derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also has no probability
-      yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding that the lecture states in
-      one slide. It does NOT cover multivariate regression in matrix form or gradient descent; for those parts
-      of L03 use ISLP §3.2 and Géron Ch 4.
+  - kind: read
+    label: Setosa — ordinary least squares, interactive
+    source_id: source-setosa-ols
+    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
+      — the residual-square and leverage widgets'
+    angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
+      in seconds rather than in prose.
+    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
+      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
+      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
+      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
+      way no derivation does.
+    scope_triage: helpful-now
   - kind: read
     label: OpenIntro — correlation and linear regression
     source_id: source-openintro-statistics
-    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals, and correlation
-      p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4 inference for linear regression
-      p. 331)
+    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
+      and correlation p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4
+      inference for linear regression p. 331)
+    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather
+      than something you report.
+    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3
+      catalogues the ways a single point can dominate a fit — leverage, influence, outliers — with pictures.
+      L03 derives the line and stops; the model-limits node at the end of the lecture is exactly this
+      material, unelaborated. Reading §8.3 is the cheapest protection against the exam question that shows
+      a scatterplot and asks whether the reported r is trustworthy. §8.4's inference is L10 material —
+      leave it until then.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather than
-      something you report.
-    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3 catalogues
-      the ways a single point can dominate a fit — leverage, influence, outliers — with pictures. L03 derives
-      the line and stops; the model-limits node at the end of the lecture is exactly this material, unelaborated.
-      Reading §8.3 is the cheapest protection against the exam question that shows a scatterplot and asks whether
-      the reported r is trustworthy. §8.4's inference is L10 material — leave it until then.
+  - kind: practise
+    label: HS Harz pp. 6-7 — Kendall association and linear regression
+    source_id: source-sad-klausuren-extern
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
+    angle: Pairs an association measure with a fitted line and R² interpretation on one dataset.
+    angle_detail: This is the strongest external L03 item because the prompt, computation and interpretation
+      are visible together and the solution is printed immediately below. Kendall's tau itself is outside
+      the current lecture; use that part only as an association contrast, then work the linear-regression
+      section in full.
+    vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md
   attachments: []
   source_feedback: []
@@ -83,13 +123,13 @@ stages:
   number: 2
   title: Covariance and Pearson correlation
   status: pending
-  objective: Covariance measures joint signed deviation, while Pearson normalization produces a scale-free coefficient
-    in [-1,1] for linear association.
+  objective: Covariance measures joint signed deviation, while Pearson normalization produces a scale-free
+    coefficient in [-1,1] for linear association.
   done_when:
-  - 'Reproduce without notes: Covariance measures joint signed deviation, while Pearson normalization produces
-    a scale-free coefficient in [-1,1] for linear association.'
-  - Work UE2 and Blatt 2 — correlation and regression practice, then the remaining 4, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Covariance measures joint signed deviation, while Pearson normalization
+    produces a scale-free coefficient in [-1,1] for linear association.'
+  - Work Blatt 1, Aufgabe 2 — correlation and simple regression, then the remaining 5, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-correlation
@@ -99,108 +139,132 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
   - kind: practise
-    label: UE2 and Blatt 2 — correlation and regression practice
+    label: Blatt 1, Aufgabe 2 — correlation and simple regression
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, correlation and regression section; exercise-slides/blatt-02.pdf
+    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
+      exam-style L03 task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
-    angle: Shows whether regression is examined by hand computation or by interpretation — which the deck alone
-      does not reveal.
-    angle_detail: L03 covers far more than can be examined by hand in a combined three-hour paper, so the exercises
-      are the evidence of where the emphasis actually falls. Read them before deciding how much time to spend
-      on the matrix and gradient-descent material.
+  - kind: practise
+    label: UE2, slides 20-28 — covariance and Pearson correlation
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 20-28
+    angle: Works the covariance-to-correlation normalization one line at a time in course notation.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 5-14 — Blatt 1 regression solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 5-14
+    angle: Provides the official solution path for the two regression questions after the independent
+      attempt.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     source_id: source-fahrmeir-statistik
-    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und Kausalität,
-      pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
+      Kausalität, pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    angle: Correlation and least squares derived from the descriptive side only — no random variables,
+      no inference, which is exactly L03's standpoint.
+    angle_detail: Most books introduce regression after probability and immediately talk about errors
+      as random variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate
+      line is derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also
+      has no probability yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding
+      that the lecture states in one slide. It does NOT cover multivariate regression in matrix form or
+      gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Correlation and least squares derived from the descriptive side only — no random variables, no inference,
-      which is exactly L03's standpoint.
-    angle_detail: Most books introduce regression after probability and immediately talk about errors as random
-      variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate line is
-      derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also has no probability
-      yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding that the lecture states in
-      one slide. It does NOT cover multivariate regression in matrix form or gradient descent; for those parts
-      of L03 use ISLP §3.2 and Géron Ch 4.
   - kind: practise
     label: Arbeitsbuch Chapter 3 — correlation and regression drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 3 Aufgaben pdf pp. 57-66, Lösungen pdf pp. 67-82
+    angle: Correlation and regression by hand, including the contingency-table measures the lecture mentions
+      but never drills.
+    angle_detail: Computing r and a least-squares line from a small table by hand is a distinct skill
+      from understanding them, and it is the one the Klausur can test under time pressure. These items
+      are sized for that. The chapter also drills the Kontingenztafel association measures from Fahrmeir
+      §3.2, which L03 does not cover but the exam's descriptive half occasionally reaches — treat those
+      as optional unless a past paper shows otherwise.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Correlation and regression by hand, including the contingency-table measures the lecture mentions but
-      never drills.
-    angle_detail: Computing r and a least-squares line from a small table by hand is a distinct skill from understanding
-      them, and it is the one the Klausur can test under time pressure. These items are sized for that. The chapter
-      also drills the Kontingenztafel association measures from Fahrmeir §3.2, which L03 does not cover but the
-      exam's descriptive half occasionally reaches — treat those as optional unless a past paper shows otherwise.
   - kind: read
     label: OpenIntro — correlation and linear regression
     source_id: source-openintro-statistics
-    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals, and correlation
-      p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4 inference for linear regression
-      p. 331)
+    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
+      and correlation p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4
+      inference for linear regression p. 331)
+    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather
+      than something you report.
+    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3
+      catalogues the ways a single point can dominate a fit — leverage, influence, outliers — with pictures.
+      L03 derives the line and stops; the model-limits node at the end of the lecture is exactly this
+      material, unelaborated. Reading §8.3 is the cheapest protection against the exam question that shows
+      a scatterplot and asks whether the reported r is trustworthy. §8.4's inference is L10 material —
+      leave it until then.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather than
-      something you report.
-    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3 catalogues
-      the ways a single point can dominate a fit — leverage, influence, outliers — with pictures. L03 derives
-      the line and stops; the model-limits node at the end of the lecture is exactly this material, unelaborated.
-      Reading §8.3 is the cheapest protection against the exam question that shows a scatterplot and asks whether
-      the reported r is trustworthy. §8.4's inference is L10 material — leave it until then.
   - kind: practise
     label: Dekking — correlation and regression exercises
     source_id: source-dekking-mips
-    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient p.
-      150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with maximum
-      likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
+    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
+      p. 150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with
+      maximum likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
+    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when
+      the errors are Normal.'
+    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising
+      the likelihood under Normal errors are the same optimisation. L03 presents least squares as a reasonable
+      choice and L08 presents MLE separately; this is the join between them, and it answers the question
+      the lecture invites but never asks — why squares and not absolute deviations. Requires L08's likelihood
+      material to read, so this is a return visit, not a first pass. Ch 10 is the probabilistic covariance
+      to set beside L03's descriptive one.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when the errors
-      are Normal.'
-    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising the likelihood
-      under Normal errors are the same optimisation. L03 presents least squares as a reasonable choice and L08
-      presents MLE separately; this is the join between them, and it answers the question the lecture invites
-      but never asks — why squares and not absolute deviations. Requires L08's likelihood material to read, so
-      this is a return visit, not a first pass. Ch 10 is the probabilistic covariance to set beside L03's descriptive
-      one.
   - kind: practise
-    label: FAU solved exam — correlation item
+    label: FAU pp. 35 and 48 — covariance/correlation formula completion
     source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf — the correlation question with solution
+    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 35 Aufgabe 2(8), solution p.
+      48
+    angle: A very short R-formula completion that checks whether covariance is normalized by both variances
+      correctly.
+    angle_detail: 'The former route incorrectly promised a solved compute-and-interpret correlation item.
+      The actual task is narrower: complete Kor=function(Kova,v1,v2). It is retained honestly as formula
+      recall; it does not practise scatterplot interpretation or a regression fit.'
+    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
-    angle: 'Correlation asked as an exam item: compute, then interpret in one sentence.'
-    angle_detail: The two-part shape — a number and a sentence — is standard and the sentence carries marks. The
-      published solution shows what an acceptable interpretation sentence looks like, which is more useful than
-      another computation drill.
-  - kind: practise
-    label: External German solved exams — correlation/regression block
-    source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the correlation and regression questions in the solved papers'
-    scope_triage: helpful-now
-    angle: External correlation and regression items, useful for spotting the interpretation questions that follow
-      the computation.
-    angle_detail: Most external papers pair a correlation computation with an interpretation sentence, which matches
-      this course's likely form. Watch for items that assume inference on the regression slope — that is L10 material
-      and out of scope for L03.
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
     source_id: source-statquest
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained'' (least squares);
-      ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
+      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
+      screen.
+    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
+      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
+      too large does, which is the intuition behind every later discussion of step size. The correlation
+      video is the one to watch if the difference between covariance and correlation is what is unclear.
     scope_triage: helpful-now
-    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on screen.
-    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule. The step-by-step
-      video actually performs the iterations on a two-parameter regression, so the abstract rule becomes a visible
-      sequence of numbers converging. It also shows what a learning rate that is too large does, which is the
-      intuition behind every later discussion of step size. The correlation video is the one to watch if the difference
-      between covariance and correlation is what is unclear.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-covariance/notes.md
   attachments: []
   source_feedback: []
@@ -208,13 +272,13 @@ stages:
   number: 3
   title: Correlation is not causation
   status: pending
-  objective: A numerical association can reflect confounding, reverse causality, selection, coincidence, or a
-    real mechanism; computation alone cannot choose among these explanations.
+  objective: A numerical association can reflect confounding, reverse causality, selection, coincidence,
+    or a real mechanism; computation alone cannot choose among these explanations.
   done_when:
-  - 'Reproduce without notes: A numerical association can reflect confounding, reverse causality, selection, coincidence,
-    or a real mechanism; computation alone cannot choose among these explanations.'
-  - Work Dekking — correlation and regression exercises, then the remaining 2, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: A numerical association can reflect confounding, reverse causality, selection,
+    coincidence, or a real mechanism; computation alone cannot choose among these explanations.'
+  - Work Blatt 1, Aufgabe 2 — correlation and simple regression, then the remaining 4, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-correlation
@@ -224,75 +288,118 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
+  - kind: practise
+    label: Blatt 1, Aufgabe 2 — correlation and simple regression
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
+      exam-style L03 task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE2, slides 20-28 — covariance and Pearson correlation
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 20-28
+    angle: Works the covariance-to-correlation normalization one line at a time in course notation.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 5-14 — Blatt 1 regression solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 5-14
+    angle: Provides the official solution path for the two regression questions after the independent
+      attempt.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     source_id: source-fahrmeir-statistik
-    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und Kausalität,
-      pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
+      Kausalität, pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    angle: Correlation and least squares derived from the descriptive side only — no random variables,
+      no inference, which is exactly L03's standpoint.
+    angle_detail: Most books introduce regression after probability and immediately talk about errors
+      as random variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate
+      line is derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also
+      has no probability yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding
+      that the lecture states in one slide. It does NOT cover multivariate regression in matrix form or
+      gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Correlation and least squares derived from the descriptive side only — no random variables, no inference,
-      which is exactly L03's standpoint.
-    angle_detail: Most books introduce regression after probability and immediately talk about errors as random
-      variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate line is
-      derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also has no probability
-      yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding that the lecture states in
-      one slide. It does NOT cover multivariate regression in matrix form or gradient descent; for those parts
-      of L03 use ISLP §3.2 and Géron Ch 4.
+  - kind: read
+    label: Setosa — ordinary least squares, interactive
+    source_id: source-setosa-ols
+    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
+      — the residual-square and leverage widgets'
+    angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
+      in seconds rather than in prose.
+    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
+      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
+      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
+      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
+      way no derivation does.
+    scope_triage: helpful-now
   - kind: read
     label: OpenIntro — correlation and linear regression
     source_id: source-openintro-statistics
-    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals, and correlation
-      p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4 inference for linear regression
-      p. 331)
+    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
+      and correlation p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4
+      inference for linear regression p. 331)
+    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather
+      than something you report.
+    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3
+      catalogues the ways a single point can dominate a fit — leverage, influence, outliers — with pictures.
+      L03 derives the line and stops; the model-limits node at the end of the lecture is exactly this
+      material, unelaborated. Reading §8.3 is the cheapest protection against the exam question that shows
+      a scatterplot and asks whether the reported r is trustworthy. §8.4's inference is L10 material —
+      leave it until then.
+    vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
-    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather than
-      something you report.
-    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3 catalogues
-      the ways a single point can dominate a fit — leverage, influence, outliers — with pictures. L03 derives
-      the line and stops; the model-limits node at the end of the lecture is exactly this material, unelaborated.
-      Reading §8.3 is the cheapest protection against the exam question that shows a scatterplot and asks whether
-      the reported r is trustworthy. §8.4's inference is L10 material — leave it until then.
   - kind: practise
     label: Dekking — correlation and regression exercises
     source_id: source-dekking-mips
-    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient p.
-      150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with maximum
-      likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
+    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
+      p. 150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with
+      maximum likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
+    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when
+      the errors are Normal.'
+    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising
+      the likelihood under Normal errors are the same optimisation. L03 presents least squares as a reasonable
+      choice and L08 presents MLE separately; this is the join between them, and it answers the question
+      the lecture invites but never asks — why squares and not absolute deviations. Requires L08's likelihood
+      material to read, so this is a return visit, not a first pass. Ch 10 is the probabilistic covariance
+      to set beside L03's descriptive one.
+    vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
-    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when the errors
-      are Normal.'
-    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising the likelihood
-      under Normal errors are the same optimisation. L03 presents least squares as a reasonable choice and L08
-      presents MLE separately; this is the join between them, and it answers the question the lecture invites
-      but never asks — why squares and not absolute deviations. Requires L08's likelihood material to read, so
-      this is a return visit, not a first pass. Ch 10 is the probabilistic covariance to set beside L03's descriptive
-      one.
   - kind: practise
-    label: FAU solved exam — correlation item
-    source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf — the correlation question with solution
-    scope_triage: helpful-now
-    angle: 'Correlation asked as an exam item: compute, then interpret in one sentence.'
-    angle_detail: The two-part shape — a number and a sentence — is standard and the sentence carries marks. The
-      published solution shows what an acceptable interpretation sentence looks like, which is more useful than
-      another computation drill.
-  - kind: practise
-    label: External German solved exams — correlation/regression block
+    label: HS Harz pp. 6-7 — Kendall association and linear regression
     source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the correlation and regression questions in the solved papers'
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
+    angle: Pairs an association measure with a fitted line and R² interpretation on one dataset.
+    angle_detail: This is the strongest external L03 item because the prompt, computation and interpretation
+      are visible together and the solution is printed immediately below. Kendall's tau itself is outside
+      the current lecture; use that part only as an association contrast, then work the linear-regression
+      section in full.
+    vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
     scope_triage: helpful-now
-    angle: External correlation and regression items, useful for spotting the interpretation questions that follow
-      the computation.
-    angle_detail: Most external papers pair a correlation computation with an interpretation sentence, which matches
-      this course's likely form. Watch for items that assume inference on the regression slope — that is L10 material
-      and out of scope for L03.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md
   attachments: []
   source_feedback: []
@@ -300,13 +407,13 @@ stages:
   number: 4
   title: Simple linear regression and least squares
   status: pending
-  objective: A line predicts one variable from another; residuals measure errors, and minimizing squared error
-    determines slope and intercept.
+  objective: A line predicts one variable from another; residuals measure errors, and minimizing squared
+    error determines slope and intercept.
   done_when:
-  - 'Reproduce without notes: A line predicts one variable from another; residuals measure errors, and minimizing
-    squared error determines slope and intercept.'
-  - Work UE2 and Blatt 2 — correlation and regression practice, then the remaining 3, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: A line predicts one variable from another; residuals measure errors, and
+    minimizing squared error determines slope and intercept.'
+  - Work Blatt 1, Aufgabe 2 — correlation and simple regression, then the remaining 5, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -316,113 +423,200 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
   - kind: practise
-    label: UE2 and Blatt 2 — correlation and regression practice
+    label: Blatt 1, Aufgabe 2 — correlation and simple regression
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, correlation and regression section; exercise-slides/blatt-02.pdf
+    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
+      exam-style L03 task.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
-    angle: Shows whether regression is examined by hand computation or by interpretation — which the deck alone
-      does not reveal.
-    angle_detail: L03 covers far more than can be examined by hand in a combined three-hour paper, so the exercises
-      are the evidence of where the emphasis actually falls. Read them before deciding how much time to spend
-      on the matrix and gradient-descent material.
+  - kind: practise
+    label: UE2, slides 30-35 — regression prediction and RMSE
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 30-35
+    angle: Connects fitted coefficients to predictions and an explicit residual error measure.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 5-14 — Blatt 1 regression solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 5-14
+    angle: Provides the official solution path for the two regression questions after the independent
+      attempt.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     source_id: source-fahrmeir-statistik
-    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und Kausalität,
-      pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
+      Kausalität, pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
+    angle: Correlation and least squares derived from the descriptive side only — no random variables,
+      no inference, which is exactly L03's standpoint.
+    angle_detail: Most books introduce regression after probability and immediately talk about errors
+      as random variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate
+      line is derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also
+      has no probability yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding
+      that the lecture states in one slide. It does NOT cover multivariate regression in matrix form or
+      gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
-    angle: Correlation and least squares derived from the descriptive side only — no random variables, no inference,
-      which is exactly L03's standpoint.
-    angle_detail: Most books introduce regression after probability and immediately talk about errors as random
-      variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate line is
-      derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also has no probability
-      yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding that the lecture states in
-      one slide. It does NOT cover multivariate regression in matrix form or gradient descent; for those parts
-      of L03 use ISLP §3.2 and Géron Ch 4.
   - kind: practise
     label: Arbeitsbuch Chapter 3 — correlation and regression drills
     source_id: source-fahrmeir-arbeitsbuch
     locator: Ch 3 Aufgaben pdf pp. 57-66, Lösungen pdf pp. 67-82
+    angle: Correlation and regression by hand, including the contingency-table measures the lecture mentions
+      but never drills.
+    angle_detail: Computing r and a least-squares line from a small table by hand is a distinct skill
+      from understanding them, and it is the one the Klausur can test under time pressure. These items
+      are sized for that. The chapter also drills the Kontingenztafel association measures from Fahrmeir
+      §3.2, which L03 does not cover but the exam's descriptive half occasionally reaches — treat those
+      as optional unless a past paper shows otherwise.
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
-    angle: Correlation and regression by hand, including the contingency-table measures the lecture mentions but
-      never drills.
-    angle_detail: Computing r and a least-squares line from a small table by hand is a distinct skill from understanding
-      them, and it is the one the Klausur can test under time pressure. These items are sized for that. The chapter
-      also drills the Kontingenztafel association measures from Fahrmeir §3.2, which L03 does not cover but the
-      exam's descriptive half occasionally reaches — treat those as optional unless a past paper shows otherwise.
-  - kind: read
-    label: OpenIntro — correlation and linear regression
-    source_id: source-openintro-statistics
-    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals, and correlation
-      p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4 inference for linear regression
-      p. 331)
-    scope_triage: helpful-now
-    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather than
-      something you report.
-    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3 catalogues
-      the ways a single point can dominate a fit — leverage, influence, outliers — with pictures. L03 derives
-      the line and stops; the model-limits node at the end of the lecture is exactly this material, unelaborated.
-      Reading §8.3 is the cheapest protection against the exam question that shows a scatterplot and asks whether
-      the reported r is trustworthy. §8.4's inference is L10 material — leave it until then.
-  - kind: practise
-    label: Dekking — correlation and regression exercises
-    source_id: source-dekking-mips
-    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient p.
-      150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with maximum
-      likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
-    scope_triage: helpful-now
-    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when the errors
-      are Normal.'
-    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising the likelihood
-      under Normal errors are the same optimisation. L03 presents least squares as a reasonable choice and L08
-      presents MLE separately; this is the join between them, and it answers the question the lecture invites
-      but never asks — why squares and not absolute deviations. Requires L08's likelihood material to read, so
-      this is a return visit, not a first pass. Ch 10 is the probabilistic covariance to set beside L03's descriptive
-      one.
-  - kind: practise
-    label: External German solved exams — correlation/regression block
-    source_id: source-sad-klausuren-extern
-    locator: 'materials/.../sad-klausuren-extern/: the correlation and regression questions in the solved papers'
-    scope_triage: helpful-now
-    angle: External correlation and regression items, useful for spotting the interpretation questions that follow
-      the computation.
-    angle_detail: Most external papers pair a correlation computation with an interpretation sentence, which matches
-      this course's likely form. Watch for items that assume inference on the regression slope — that is L10 material
-      and out of scope for L03.
-  - kind: watch
-    label: StatQuest — Pearson correlation, least squares, and gradient descent
-    source_id: source-statquest
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained'' (least squares);
-      ''Gradient Descent, Step-by-Step'' (≈20 min)'
-    scope_triage: helpful-now
-    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on screen.
-    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule. The step-by-step
-      video actually performs the iterations on a two-parameter regression, so the abstract rule becomes a visible
-      sequence of numbers converging. It also shows what a learning rate that is too large does, which is the
-      intuition behind every later discussion of step size. The correlation video is the one to watch if the difference
-      between covariance and correlation is what is unclear.
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     source_id: source-islp
-    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple linear
-      regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression Bridge note
-      §§2, 4 and 7
+    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
+      linear regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression
+      Bridge note §§2, 4 and 7
+    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals
+      for the fitted coefficients.'
+    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is
+      distinguishable from zero. That question is not examinable in L03 — it belongs to L10 — but knowing
+      it exists changes how you read a regression output, and it is the bridge between the module's two
+      halves. §3.3 covers the practical issues (collinearity, non-linearity, outliers) that L03's model-limits
+      node names without elaborating. The Regression Bridge note in this repository already maps which
+      ISLP sections correspond to which SaD slides.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals for the
-      fitted coefficients.'
-    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is distinguishable
-      from zero. That question is not examinable in L03 — it belongs to L10 — but knowing it exists changes how
-      you read a regression output, and it is the bridge between the module's two halves. §3.3 covers the practical
-      issues (collinearity, non-linearity, outliers) that L03's model-limits node names without elaborating. The
-      Regression Bridge note in this repository already maps which ISLP sections correspond to which SaD slides.
+  - kind: read
+    label: Bendersky — derivation of the normal equation
+    source_id: source-bendersky-normal-equation
+    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
+      both the calculus and the linear-algebra derivations
+    angle: Derives the same closed-form solution twice — once by calculus, once by projection — which
+      is the connection L03 leaves implicit.
+    angle_detail: 'L03 states the normal equation and moves to gradient descent. This article shows where
+      it comes from: set the gradient of the squared-error objective to zero and solve, then separately,
+      project the target vector onto the column space of the design matrix and get the identical result.
+      Seeing both is what turns the formula from something to memorise into something with two independent
+      justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
+      is shaky.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Setosa — ordinary least squares, interactive
+    source_id: source-setosa-ols
+    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
+      — the residual-square and leverage widgets'
+    angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
+      in seconds rather than in prose.
+    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
+      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
+      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
+      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
+      way no derivation does.
+    scope_triage: helpful-now
+  - kind: read
+    label: MML Ch 9 — linear regression from the mathematical side
+    source_id: source-mml
+    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
+      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
+      L08 are one derivation rather than two lectures.
+    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
+      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
+      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
+      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
+      free PDF from mml-book.github.io.
+    scope_triage: helpful-now
+  - kind: read
+    label: OpenIntro — correlation and linear regression
+    source_id: source-openintro-statistics
+    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
+      and correlation p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4
+      inference for linear regression p. 331)
+    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather
+      than something you report.
+    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3
+      catalogues the ways a single point can dominate a fit — leverage, influence, outliers — with pictures.
+      L03 derives the line and stops; the model-limits node at the end of the lecture is exactly this
+      material, unelaborated. Reading §8.3 is the cheapest protection against the exam question that shows
+      a scatterplot and asks whether the reported r is trustworthy. §8.4's inference is L10 material —
+      leave it until then.
+    vault_path: material://source-openintro-statistics/openintro.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Dekking — correlation and regression exercises
+    source_id: source-dekking-mips
+    locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
+      p. 150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with
+      maximum likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
+    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when
+      the errors are Normal.'
+    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising
+      the likelihood under Normal errors are the same optimisation. L03 presents least squares as a reasonable
+      choice and L08 presents MLE separately; this is the join between them, and it answers the question
+      the lecture invites but never asks — why squares and not absolute deviations. Requires L08's likelihood
+      material to read, so this is a return visit, not a first pass. Ch 10 is the probabilistic covariance
+      to set beside L03's descriptive one.
+    vault_path: material://source-dekking-mips/dekking.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ng — linear regression and gradient descent lectures
+    source_id: source-ng-coursera
+    locator: 'Week 1-2: the linear regression with one variable and multiple variables lectures (cost
+      function, gradient descent, learning rate, feature scaling)'
+    angle: Spends a whole lecture on the learning rate alone — too large, too small, and how to tell which
+      you have.
+    angle_detail: L03 introduces gradient descent with the update rule and a remark that the step size
+      matters. Ng devotes separate segments to diagnosing a bad learning rate from the cost curve, and
+      to why feature scaling changes how many steps are needed. Those are the two practical facts that
+      make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
+      node.
+    scope_triage: helpful-now
+  - kind: practise
+    label: HS Harz pp. 6-7 — Kendall association and linear regression
+    source_id: source-sad-klausuren-extern
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
+    angle: Pairs an association measure with a fitted line and R² interpretation on one dataset.
+    angle_detail: This is the strongest external L03 item because the prompt, computation and interpretation
+      are visible together and the solution is printed immediately below. Kendall's tau itself is outside
+      the current lecture; use that part only as an association contrast, then work the linear-regression
+      section in full.
+    vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
+    scope_triage: helpful-now
+  - kind: watch
+    label: StatQuest — Pearson correlation, least squares, and gradient descent
+    source_id: source-statquest
+    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
+      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
+      screen.
+    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
+      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
+      too large does, which is the intuition behind every later discussion of step size. The correlation
+      video is the one to watch if the difference between covariance and correlation is what is unclear.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-simple-regression/notes.md
   attachments: []
   source_feedback: []
@@ -430,11 +624,13 @@ stages:
   number: 5
   title: Multivariate linear regression and the design matrix
   status: pending
-  objective: Several predictors become columns of a matrix, one parameter vector produces predictions, and the
-    normal equation expresses the closed-form least-squares solution.
+  objective: Several predictors become columns of a matrix, one parameter vector produces predictions,
+    and the normal equation expresses the closed-form least-squares solution.
   done_when:
-  - 'Reproduce without notes: Several predictors become columns of a matrix, one parameter vector produces predictions,
-    and the normal equation expresses the closed-form least-squares solution.'
+  - 'Reproduce without notes: Several predictors become columns of a matrix, one parameter vector produces
+    predictions, and the normal equation expresses the closed-form least-squares solution.'
+  - Work Blatt 1, Aufgabe 3 — multivariate regression, then the remaining 2, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -446,55 +642,129 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
+  - kind: practise
+    label: Blatt 1, Aufgabe 3 — multivariate regression
+    source_id: source-sad-uebungen
+    locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
+    angle: Moves from the scalar line to a real feature matrix and prediction problem.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE2, slides 30-35 — regression prediction and RMSE
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 30-35
+    angle: Connects fitted coefficients to predictions and an explicit residual error measure.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 5-14 — Blatt 1 regression solutions
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 5-14
+    angle: Provides the official solution path for the two regression questions after the independent
+      attempt.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     source_id: source-islp
-    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple linear
-      regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression Bridge note
-      §§2, 4 and 7
+    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
+      linear regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression
+      Bridge note §§2, 4 and 7
+    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals
+      for the fitted coefficients.'
+    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is
+      distinguishable from zero. That question is not examinable in L03 — it belongs to L10 — but knowing
+      it exists changes how you read a regression output, and it is the bridge between the module's two
+      halves. §3.3 covers the practical issues (collinearity, non-linearity, outliers) that L03's model-limits
+      node names without elaborating. The Regression Bridge note in this repository already maps which
+      ISLP sections correspond to which SaD slides.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals for the
-      fitted coefficients.'
-    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is distinguishable
-      from zero. That question is not examinable in L03 — it belongs to L10 — but knowing it exists changes how
-      you read a regression output, and it is the bridge between the module's two halves. §3.3 covers the practical
-      issues (collinearity, non-linearity, outliers) that L03's model-limits node names without elaborating. The
-      Regression Bridge note in this repository already maps which ISLP sections correspond to which SaD slides.
-  - kind: watch
-    label: 3Blue1Brown — vectors, dot products, and matrix transformations
-    source_id: source-3b1b-linear-algebra
-    locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations, matrix
-      multiplication) and episode 9 (dot products)
+  - kind: read
+    label: Bendersky — derivation of the normal equation
+    source_id: source-bendersky-normal-equation
+    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
+      both the calculus and the linear-algebra derivations
+    angle: Derives the same closed-form solution twice — once by calculus, once by projection — which
+      is the connection L03 leaves implicit.
+    angle_detail: 'L03 states the normal equation and moves to gradient descent. This article shows where
+      it comes from: set the gradient of the squared-error objective to zero and solve, then separately,
+      project the target vector onto the column space of the design matrix and get the identical result.
+      Seeing both is what turns the formula from something to memorise into something with two independent
+      justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
+      is shaky.'
     scope_triage: helpful-now
-    angle: Makes the design matrix a transformation rather than a table, which is what L03's multivariate notation
-      assumes.
-    angle_detail: L03 moves from a single predictor to a design matrix and a normal equation in a few slides,
-      and that jump silently assumes matrix-vector multiplication is a familiar operation with a geometric meaning.
-      These episodes supply exactly that meaning — a matrix as a transformation, multiplication as composition,
-      the dot product as projection. The projection reading of the dot product in episode 9 is what later makes
-      least squares recognisable as an orthogonal projection.
+  - kind: read
+    label: MML Ch 9 — linear regression from the mathematical side
+    source_id: source-mml
+    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
+      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
+      L08 are one derivation rather than two lectures.
+    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
+      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
+      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
+      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
+      free PDF from mml-book.github.io.
+    scope_triage: helpful-now
+  - kind: reference
+    label: University of Cologne pp. 7-8 — multivariate regression interpretation
+    source_id: source-sad-klausuren-extern
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(c)-(d)
+    angle: Shows coefficient interpretation, prediction and an interaction extension in a real multivariate
+      model.
+    angle_detail: 'Parts (c)-(d) are useful L03 transfer: substitute a feature vector, compare a dummy
+      coefficient and propose an interaction term. Parts (a)-(b) use t tests and confidence intervals,
+      which require L10; they are deliberately excluded from the L03 task.'
+    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+    scope_triage: reference-only
   - kind: read
     label: Geron Ch 4 - the normal equation and gradient descent side by side
     source_id: source-geron-handson
-    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation p.
-      142; learning rate p. 146; feature scaling p. 148)
+    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
+      p. 142; learning rate p. 146; feature scaling p. 148)
+    angle: L03 presents the closed-form normal equation and gradient descent as two routes to the same
+      fit; this chapter runs both on the same data, shows what the learning rate does to convergence and
+      why unscaled features distort the descent path - the two claims the deck makes without demonstration.
+    angle_detail: 'Ch 4 is where L03''s two optimisation routes stop being abstract. The closed-form normal
+      equation and gradient descent are implemented on the same data, and the chapter then shows what
+      actually differs between them in practice: the normal equation''s cubic cost in the number of features
+      against gradient descent''s sensitivity to feature scaling and learning rate. The scaling demonstration
+      on p. 148 is the concrete version of L03''s scaling-weights node — two elongated and two circular
+      contour plots, with the descent paths drawn on them.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L03 presents the closed-form normal equation and gradient descent as two routes to the same fit; this
-      chapter runs both on the same data, shows what the learning rate does to convergence and why unscaled features
-      distort the descent path - the two claims the deck makes without demonstration.
-    angle_detail: 'Ch 4 is where L03''s two optimisation routes stop being abstract. The closed-form normal equation
-      and gradient descent are implemented on the same data, and the chapter then shows what actually differs
-      between them in practice: the normal equation''s cubic cost in the number of features against gradient descent''s
-      sensitivity to feature scaling and learning rate. The scaling demonstration on p. 148 is the concrete version
-      of L03''s scaling-weights node — two elongated and two circular contour plots, with the descent paths drawn
-      on them.'
+  - kind: watch
+    label: 3Blue1Brown — vectors, dot products, and matrix transformations
+    source_id: source-3b1b-linear-algebra
+    locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations,
+      matrix multiplication) and episode 9 (dot products)
+    angle: Makes the design matrix a transformation rather than a table, which is what L03's multivariate
+      notation assumes.
+    angle_detail: L03 moves from a single predictor to a design matrix and a normal equation in a few
+      slides, and that jump silently assumes matrix-vector multiplication is a familiar operation with
+      a geometric meaning. These episodes supply exactly that meaning — a matrix as a transformation,
+      multiplication as composition, the dot product as projection. The projection reading of the dot
+      product in episode 9 is what later makes least squares recognisable as an orthogonal projection.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-multivariate/notes.md
   attachments: []
   source_feedback: []
@@ -502,11 +772,13 @@ stages:
   number: 6
   title: Gradient descent as an alternative optimizer
   status: pending
-  objective: Iterative updates follow the negative loss gradient; learning rate, initialization, scaling, and
-    convergence determine whether the fitted parameters are reached reliably.
+  objective: Iterative updates follow the negative loss gradient; learning rate, initialization, scaling,
+    and convergence determine whether the fitted parameters are reached reliably.
   done_when:
   - 'Reproduce without notes: Iterative updates follow the negative loss gradient; learning rate, initialization,
     scaling, and convergence determine whether the fitted parameters are reached reliably.'
+  - Work Blatt 2, Aufgabe 3 — gradient descent and loss curve, then the remaining 1, and record every
+    miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-gradient-descent
@@ -516,65 +788,129 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
+  - kind: practise
+    label: Blatt 2, Aufgabe 3 — gradient descent and loss curve
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
+    angle: The only current assignment that makes the optimizer and normalization executable rather than
+      symbolic.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 40-45 — gradient descent and normalization walkthrough
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 40-45
+    angle: Explains why scaling changes the descent geometry and how the MSE curve diagnoses the update.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: watch
-    label: StatQuest — Pearson correlation, least squares, and gradient descent
-    source_id: source-statquest
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained'' (least squares);
-      ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    label: 3Blue1Brown — what a derivative is, before gradient descent uses one
+    source_id: source-3b1b-essence-of-calculus
+    locator: Essence of Calculus episodes 2 ('The paradox of the derivative') and 3 ('Derivative formulas
+      through geometry')
+    angle: Restores the derivative as a slope you can see, which gradient descent's update rule silently
+      assumes you still hold.
+    angle_detail: 'L03''s optimiser takes a step proportional to the negative derivative, and that rule
+      is only obvious if the derivative is still a slope in your mind rather than a differentiation rule
+      you once memorised. Two episodes restore the picture. Routed as a prerequisite rather than a supplement:
+      if the derivative is solid, skip it entirely.'
     scope_triage: helpful-now
-    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on screen.
-    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule. The step-by-step
-      video actually performs the iterations on a two-parameter regression, so the abstract rule becomes a visible
-      sequence of numbers converging. It also shows what a learning rate that is too large does, which is the
-      intuition behind every later discussion of step size. The correlation video is the one to watch if the difference
-      between covariance and correlation is what is unclear.
   - kind: read
     label: Kelleher Chapter 7 — error surfaces and gradient descent
     source_id: source-kelleher-fmlpda
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the error surface and gradient-descent sections)
+    angle: Draws the error surface as a landscape and walks gradient descent across it, which is the picture
+      L03's optimiser slides assume.
+    angle_detail: Kelleher's treatment of least squares is unusual in starting from the shape of the error
+      function over the parameter space — a bowl, with the fitted line at its bottom — before any update
+      rule. Once that surface is in view, gradient descent is obviously a descent and the learning rate
+      is obviously a step size, which is the intuition L03 states in words. The chapter also covers multivariable
+      weights consistently with the deck's notation.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Draws the error surface as a landscape and walks gradient descent across it, which is the picture L03's
-      optimiser slides assume.
-    angle_detail: Kelleher's treatment of least squares is unusual in starting from the shape of the error function
-      over the parameter space — a bowl, with the fitted line at its bottom — before any update rule. Once that
-      surface is in view, gradient descent is obviously a descent and the learning rate is obviously a step size,
-      which is the intuition L03 states in words. The chapter also covers multivariable weights consistently with
-      the deck's notation.
+  - kind: read
+    label: MML Ch 9 — linear regression from the mathematical side
+    source_id: source-mml
+    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
+      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
+      L08 are one derivation rather than two lectures.
+    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
+      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
+      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
+      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
+      free PDF from mml-book.github.io.
+    scope_triage: helpful-now
+  - kind: read
+    label: Ng — linear regression and gradient descent lectures
+    source_id: source-ng-coursera
+    locator: 'Week 1-2: the linear regression with one variable and multiple variables lectures (cost
+      function, gradient descent, learning rate, feature scaling)'
+    angle: Spends a whole lecture on the learning rate alone — too large, too small, and how to tell which
+      you have.
+    angle_detail: L03 introduces gradient descent with the update rule and a remark that the step size
+      matters. Ng devotes separate segments to diagnosing a bad learning rate from the cost curve, and
+      to why feature scaling changes how many steps are needed. Those are the two practical facts that
+      make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
+      node.
+    scope_triage: helpful-now
   - kind: watch
-    label: 3Blue1Brown — vectors, dot products, and matrix transformations
-    source_id: source-3b1b-linear-algebra
-    locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations, matrix
-      multiplication) and episode 9 (dot products)
+    label: StatQuest — Pearson correlation, least squares, and gradient descent
+    source_id: source-statquest
+    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
+      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
+      screen.
+    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
+      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
+      too large does, which is the intuition behind every later discussion of step size. The correlation
+      video is the one to watch if the difference between covariance and correlation is what is unclear.
     scope_triage: helpful-now
-    angle: Makes the design matrix a transformation rather than a table, which is what L03's multivariate notation
-      assumes.
-    angle_detail: L03 moves from a single predictor to a design matrix and a normal equation in a few slides,
-      and that jump silently assumes matrix-vector multiplication is a familiar operation with a geometric meaning.
-      These episodes supply exactly that meaning — a matrix as a transformation, multiplication as composition,
-      the dot product as projection. The projection reading of the dot product in episode 9 is what later makes
-      least squares recognisable as an orthogonal projection.
   - kind: read
     label: Geron Ch 4 - the normal equation and gradient descent side by side
     source_id: source-geron-handson
-    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation p.
-      142; learning rate p. 146; feature scaling p. 148)
+    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
+      p. 142; learning rate p. 146; feature scaling p. 148)
+    angle: L03 presents the closed-form normal equation and gradient descent as two routes to the same
+      fit; this chapter runs both on the same data, shows what the learning rate does to convergence and
+      why unscaled features distort the descent path - the two claims the deck makes without demonstration.
+    angle_detail: 'Ch 4 is where L03''s two optimisation routes stop being abstract. The closed-form normal
+      equation and gradient descent are implemented on the same data, and the chapter then shows what
+      actually differs between them in practice: the normal equation''s cubic cost in the number of features
+      against gradient descent''s sensitivity to feature scaling and learning rate. The scaling demonstration
+      on p. 148 is the concrete version of L03''s scaling-weights node — two elongated and two circular
+      contour plots, with the descent paths drawn on them.'
+    vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
-    angle: L03 presents the closed-form normal equation and gradient descent as two routes to the same fit; this
-      chapter runs both on the same data, shows what the learning rate does to convergence and why unscaled features
-      distort the descent path - the two claims the deck makes without demonstration.
-    angle_detail: 'Ch 4 is where L03''s two optimisation routes stop being abstract. The closed-form normal equation
-      and gradient descent are implemented on the same data, and the chapter then shows what actually differs
-      between them in practice: the normal equation''s cubic cost in the number of features against gradient descent''s
-      sensitivity to feature scaling and learning rate. The scaling demonstration on p. 148 is the concrete version
-      of L03''s scaling-weights node — two elongated and two circular contour plots, with the descent paths drawn
-      on them.'
+  - kind: watch
+    label: 3Blue1Brown — vectors, dot products, and matrix transformations
+    source_id: source-3b1b-linear-algebra
+    locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations,
+      matrix multiplication) and episode 9 (dot products)
+    angle: Makes the design matrix a transformation rather than a table, which is what L03's multivariate
+      notation assumes.
+    angle_detail: L03 moves from a single predictor to a design matrix and a normal equation in a few
+      slides, and that jump silently assumes matrix-vector multiplication is a familiar operation with
+      a geometric meaning. These episodes supply exactly that meaning — a matrix as a transformation,
+      multiplication as composition, the dot product as projection. The projection reading of the dot
+      product in episode 9 is what later makes least squares recognisable as an orthogonal projection.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-gradient-descent/notes.md
   attachments: []
   source_feedback: []
@@ -582,13 +918,13 @@ stages:
   number: 7
   title: Scaling, coefficient interpretation, and model limits
   status: pending
-  objective: Feature units change coefficient magnitudes and optimization geometry; weights require context, and
-    linear fit quality does not by itself establish generalization or causality.
+  objective: Feature units change coefficient magnitudes and optimization geometry; weights require context,
+    and linear fit quality does not by itself establish generalization or causality.
   done_when:
-  - 'Reproduce without notes: Feature units change coefficient magnitudes and optimization geometry; weights require
-    context, and linear fit quality does not by itself establish generalization or causality.'
-  - Work UE2 and Blatt 2 — correlation and regression practice, and record every miss with the step it failed
-    at.
+  - 'Reproduce without notes: Feature units change coefficient magnitudes and optimization geometry; weights
+    require context, and linear fit quality does not by itself establish generalization or causality.'
+  - Work Blatt 1, Aufgabe 3 — multivariate regression, then the remaining 3, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-feature-scaling
@@ -599,49 +935,109 @@ stages:
     label: Current L03 correlation and regression deck
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
+    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
+      sitting.
+    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
+      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
+      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
+      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
+      the routes that repair those two specifically. Everything here is examinable.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation, simple
-      least squares, the multivariate design matrix, the closed-form normal equation and an iterative optimiser.
-      The compression is real, and the two places it shows are the matrix notation (assumed) and gradient descent
-      (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are the routes that repair those
-      two specifically. Everything here is examinable.'
   - kind: practise
-    label: UE2 and Blatt 2 — correlation and regression practice
+    label: Blatt 1, Aufgabe 3 — multivariate regression
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, correlation and regression section; exercise-slides/blatt-02.pdf
+    locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
+    angle: Moves from the scalar line to a real feature matrix and prediction problem.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
-    angle: Shows whether regression is examined by hand computation or by interpretation — which the deck alone
-      does not reveal.
-    angle_detail: L03 covers far more than can be examined by hand in a combined three-hour paper, so the exercises
-      are the evidence of where the emphasis actually falls. Read them before deciding how much time to spend
-      on the matrix and gradient-descent material.
+  - kind: practise
+    label: UE2, slides 30-35 — regression prediction and RMSE
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE2.pdf, slides 30-35
+    angle: Connects fitted coefficients to predictions and an explicit residual error measure.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Blatt 2, Aufgabe 3 — gradient descent and loss curve
+    source_id: source-sad-uebungen
+    locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
+    angle: The only current assignment that makes the optimizer and normalization executable rather than
+      symbolic.
+    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
+      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
+      working; it is not a replacement for the lecture derivation.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: UE3, slides 40-45 — gradient descent and normalization walkthrough
+    source_id: source-sad-uebungen
+    locator: exercise-slides/UE3.pdf, slides 40-45
+    angle: Explains why scaling changes the descent geometry and how the MSE curve diagnoses the update.
+    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
+      its value is the course''s calculation order and notation, while reading it first would turn an
+      exam-relevant retrieval task into passive recognition.'
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+    scope_triage: required-now
   - kind: read
     label: Kelleher Chapter 7 — error surfaces and gradient descent
     source_id: source-kelleher-fmlpda
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the error surface and gradient-descent sections)
+    angle: Draws the error surface as a landscape and walks gradient descent across it, which is the picture
+      L03's optimiser slides assume.
+    angle_detail: Kelleher's treatment of least squares is unusual in starting from the shape of the error
+      function over the parameter space — a bowl, with the fitted line at its bottom — before any update
+      rule. Once that surface is in view, gradient descent is obviously a descent and the learning rate
+      is obviously a step size, which is the intuition L03 states in words. The chapter also covers multivariable
+      weights consistently with the deck's notation.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
-    angle: Draws the error surface as a landscape and walks gradient descent across it, which is the picture L03's
-      optimiser slides assume.
-    angle_detail: Kelleher's treatment of least squares is unusual in starting from the shape of the error function
-      over the parameter space — a bowl, with the fitted line at its bottom — before any update rule. Once that
-      surface is in view, gradient descent is obviously a descent and the learning rate is obviously a step size,
-      which is the intuition L03 states in words. The chapter also covers multivariable weights consistently with
-      the deck's notation.
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     source_id: source-islp
-    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple linear
-      regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression Bridge note
-      §§2, 4 and 7
+    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
+      linear regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression
+      Bridge note §§2, 4 and 7
+    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals
+      for the fitted coefficients.'
+    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is
+      distinguishable from zero. That question is not examinable in L03 — it belongs to L10 — but knowing
+      it exists changes how you read a regression output, and it is the bridge between the module's two
+      halves. §3.3 covers the practical issues (collinearity, non-linearity, outliers) that L03's model-limits
+      node names without elaborating. The Regression Bridge note in this repository already maps which
+      ISLP sections correspond to which SaD slides.
+    vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
-    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals for the
-      fitted coefficients.'
-    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is distinguishable
-      from zero. That question is not examinable in L03 — it belongs to L10 — but knowing it exists changes how
-      you read a regression output, and it is the bridge between the module's two halves. §3.3 covers the practical
-      issues (collinearity, non-linearity, outliers) that L03's model-limits node names without elaborating. The
-      Regression Bridge note in this repository already maps which ISLP sections correspond to which SaD slides.
+  - kind: read
+    label: Ng — linear regression and gradient descent lectures
+    source_id: source-ng-coursera
+    locator: 'Week 1-2: the linear regression with one variable and multiple variables lectures (cost
+      function, gradient descent, learning rate, feature scaling)'
+    angle: Spends a whole lecture on the learning rate alone — too large, too small, and how to tell which
+      you have.
+    angle_detail: L03 introduces gradient descent with the update rule and a remark that the step size
+      matters. Ng devotes separate segments to diagnosing a bad learning rate from the cost curve, and
+      to why feature scaling changes how many steps are needed. Those are the two practical facts that
+      make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
+      node.
+    scope_triage: helpful-now
+  - kind: reference
+    label: University of Cologne pp. 7-8 — multivariate regression interpretation
+    source_id: source-sad-klausuren-extern
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(c)-(d)
+    angle: Shows coefficient interpretation, prediction and an interaction extension in a real multivariate
+      model.
+    angle_detail: 'Parts (c)-(d) are useful L03 transfer: substitute a feature vector, compare a dummy
+      coefficient and propose an interaction term. Parts (a)-(b) use t tests and confidence intervals,
+      which require L10; they are deliberately excluded from the L03 task.'
+    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md
   attachments: []
   source_feedback: []
