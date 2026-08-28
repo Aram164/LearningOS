@@ -7,7 +7,10 @@ import json
 import re
 import sys
 
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    current_gateway_request,
+    request_artifact_id,
+)
 
 from .support import (
     WriteRefused,
@@ -59,7 +62,7 @@ def cmd_capture(args) -> int:
         relative = target.relative_to(root).as_posix()
         gateway_request = current_gateway_request()
         artifact_id = (
-            f"capture-request:{gateway_request.idempotency_key}"
+            request_artifact_id("capture.create", gateway_request.idempotency_key)
             if gateway_request is not None
             else f"capture:{relative}"
         )

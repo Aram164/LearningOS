@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import file_sha256
+from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
 from learning_os.commands.capability import _classify_failure
@@ -26,7 +26,7 @@ def _envelope(root: Path, *, text: str = "bounded capture",
         "capability": "capture.create",
         "channel": "ui",
         "expected_snapshot": f"sha256:{canonical_fingerprint(root)}",
-        "expected_revisions": {f"capture-request:{key}": 0},
+        "expected_revisions": {request_artifact_id("capture.create", key): 0},
         "approval": {
             "kind": "direct-user-gesture",
             "subject_sha256": "sha256:" + "0" * 64,
@@ -221,7 +221,7 @@ def test_gateway_v2_file_payload_requires_an_approved_content_digest(
         mini_repo,
         capability="capture.create",
         payload={"file": str(source)},
-        revisions={f"capture-request:{key}": 0},
+        revisions={request_artifact_id("capture.create", key): 0},
         key=key,
     )
     refused = _run(repo_root, mini_repo, tmp_path / "missing-file-sha.json", envelope)
@@ -240,7 +240,7 @@ def test_gateway_v2_never_uses_unapproved_stdin_as_write_content(
         mini_repo,
         capability="capture.create",
         payload={},
-        revisions={f"capture-request:{key}": 0},
+        revisions={request_artifact_id("capture.create", key): 0},
         key=key,
     )
     refused = _run(
@@ -266,7 +266,7 @@ def test_gateway_v2_refuses_file_mutated_after_approval_before_read(
         mini_repo,
         capability="capture.create",
         payload={"file": str(source), "file_sha256": file_sha256(source)},
-        revisions={f"capture-request:{key}": 0},
+        revisions={request_artifact_id("capture.create", key): 0},
         key=key,
     )
     source.write_text("different bytes after approval", encoding="utf-8")
@@ -291,7 +291,7 @@ def test_gateway_v2_exact_replay_does_not_reopen_external_file(
         mini_repo,
         capability="capture.create",
         payload={"file": str(source), "file_sha256": file_sha256(source)},
-        revisions={f"capture-request:{key}": 0},
+        revisions={request_artifact_id("capture.create", key): 0},
         key=key,
     )
 
@@ -493,3 +493,225 @@ def test_ordinary_direct_cli_cannot_create_a_receipt_v1(
     assert "must use GatewayEnvelopeV2" in result.stderr
     assert not list((mini_repo / "work/inbox").glob("*.md"))
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+# --------------------------------------------------------------------------
+# The request-scoped guard, end to end.
+#
+# `capture.create` and `garden.seed.create` name their own target file, so they
+# guard the request rather than a path. That makes the guard string itself the
+# contract between Core and every interface — and until 2026-08-29 the literal
+# was written out in five places, the UI derived it after hashing the approval,
+# and every capture and Garden seed the UI sent was refused. These tests derive
+# the id from the one production helper, so a test can no longer agree with a
+# copy of the bug.
+# --------------------------------------------------------------------------
+
+
+def test_request_scoped_guard_is_derived_from_one_production_helper():
+    assert request_artifact_id("capture.create", "key-001") \
+        == "capture-request:key-001"
+    assert request_artifact_id("garden.seed.create", "key-001") \
+        == "garden-request:key-001"
+    with pytest.raises(ValueError, match="request-scoped"):
+        request_artifact_id("stage.note.write", "key-001")
+    with pytest.raises(ValueError, match="idempotency key"):
+        request_artifact_id("capture.create", "   ")
+
+
+def test_gateway_v2_guarded_capture_succeeds_and_returns_its_path(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    envelope = _envelope(mini_repo, text="guarded", key="capture-guarded-001")
+    applied = _run(repo_root, mini_repo, tmp_path / "guarded.json", envelope)
+    assert applied.returncode == 0, applied.stderr or applied.stdout
+    response = json.loads(applied.stdout)
+    assert response["ok"] is True
+    assert response["replayed"] is False
+    captured = response["result"]["captured"]
+    assert captured.startswith("work/inbox/")
+    assert (mini_repo / captured).read_text(encoding="utf-8").strip() == "guarded"
+    assert response["result"]["artifact_revisions"] == {
+        request_artifact_id("capture.create", "capture-guarded-001"): 1
+    }
+
+
+def test_gateway_v2_refuses_capture_with_an_empty_revision_guard(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """An unguarded V2 write is a refusal, never a permissive default."""
+    envelope = _envelope(mini_repo, key="capture-empty-guard-001")
+    envelope["expected_revisions"] = {}
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    refused = _run(repo_root, mini_repo, tmp_path / "empty-guard.json", envelope)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["ok"] is False
+    assert "cover exactly every transaction artifact" in response["error"]["message"]
+    assert not list((mini_repo / "work/inbox").glob("*.md"))
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_gateway_v2_refuses_capture_with_a_stale_revision_guard(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    envelope = _envelope(mini_repo, key="capture-stale-guard-001")
+    envelope["expected_revisions"] = {
+        request_artifact_id("capture.create", "capture-stale-guard-001"): 7
+    }
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    refused = _run(repo_root, mini_repo, tmp_path / "stale-guard.json", envelope)
+    assert refused.returncode == 3
+    response = json.loads(refused.stdout)
+    assert response["ok"] is False
+    assert response["error"]["code"] == "REVISION_CONFLICT"
+    assert response["error"]["retryable"] is True
+    assert not list((mini_repo / "work/inbox").glob("*.md"))
+
+
+def test_gateway_v2_refuses_a_guard_naming_someone_elses_request(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """The guard has to be this request's, not merely well-formed."""
+    envelope = _envelope(mini_repo, key="capture-foreign-guard-001")
+    envelope["expected_revisions"] = {
+        request_artifact_id("capture.create", "some-other-request"): 0
+    }
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    refused = _run(repo_root, mini_repo, tmp_path / "foreign-guard.json", envelope)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["ok"] is False
+    assert "cover exactly every transaction artifact" in response["error"]["message"]
+    assert not list((mini_repo / "work/inbox").glob("*.md"))
+
+
+def test_gateway_v2_replay_returns_the_identical_capture_path(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """A retry must answer the question the first call answered.
+
+    Returning only bookkeeping forces the caller to guess where its capture
+    went, or to send the write again to find out — which is precisely what
+    idempotency exists to prevent.
+    """
+    envelope = _envelope(mini_repo, text="replayed body", key="capture-replay-path-001")
+    first = _run(repo_root, mini_repo, tmp_path / "replay-first.json", envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    first_response = json.loads(first.stdout)
+
+    receipts_before = sorted(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    )
+    captures_before = sorted((mini_repo / "work/inbox").glob("*.md"))
+    assert len(captures_before) == 1
+
+    second = _run(repo_root, mini_repo, tmp_path / "replay-second.json", envelope)
+    assert second.returncode == 0, second.stderr or second.stdout
+    second_response = json.loads(second.stdout)
+    assert second_response["replayed"] is True
+    assert second_response["result"]["replayed"] is True
+    assert second_response["result"]["captured"] == first_response["result"]["captured"]
+    assert second_response["transaction_id"] == first_response["transaction_id"]
+    assert second_response["receipt_path"] == first_response["receipt_path"]
+    assert second_response["snapshot_after"] == first_response["snapshot_after"]
+    assert second_response["result"]["artifact_revisions"] \
+        == first_response["result"]["artifact_revisions"]
+
+    assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
+    assert sorted(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    ) == receipts_before
+    assert (mini_repo / second_response["result"]["captured"]).read_text(
+        encoding="utf-8"
+    ).strip() == "replayed body"
+
+
+def test_gateway_v2_replay_of_a_tampered_receipt_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """A receipt that cannot prove what was written is not evidence.
+
+    The safe answer is a typed refusal. Rerunning the handler would duplicate a
+    write that already committed, and inventing a path would be a lie about
+    canonical state.
+    """
+    envelope = _envelope(mini_repo, text="tamper", key="capture-tampered-001")
+    first = _run(repo_root, mini_repo, tmp_path / "tamper-first.json", envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    first_response = json.loads(first.stdout)
+    receipt_path = mini_repo / first_response["receipt_path"]
+
+    captures_before = sorted((mini_repo / "work/inbox").glob("*.md"))
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    # A second write row: the receipt no longer describes one unambiguous file.
+    receipt["writes"] = [
+        *receipt["writes"],
+        {
+            "path": "work/inbox/not-this-one.md",
+            "sha256_before": None,
+            "sha256_after": "0" * 64,
+            "created": True,
+        },
+    ]
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    refused = _run(repo_root, mini_repo, tmp_path / "tamper-replay.json", envelope)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["ok"] is False
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "exactly one write" in response["error"]["message"]
+    assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
+
+
+def test_gateway_v2_replay_refuses_a_receipt_written_out_of_scope(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    envelope = _envelope(mini_repo, text="scope", key="capture-out-of-scope-001")
+    first = _run(repo_root, mini_repo, tmp_path / "scope-first.json", envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    receipt_path = mini_repo / json.loads(first.stdout)["receipt_path"]
+
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["writes"][0]["path"] = "knowledge/notes/elsewhere.md"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    refused = _run(repo_root, mini_repo, tmp_path / "scope-replay.json", envelope)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert "outside work/inbox/" in response["error"]["message"]
+
+
+def test_gateway_v2_replay_returns_the_identical_file_capture_path(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """The file-capture replay answers from the receipt, not from the source."""
+    source = tmp_path / "file-replay-path.txt"
+    source.write_bytes(b"approved file bytes")
+    key = "capture-file-replay-path-001"
+    envelope = _approved_v2(
+        mini_repo,
+        capability="capture.create",
+        payload={"file": str(source), "file_sha256": file_sha256(source)},
+        revisions={request_artifact_id("capture.create", key): 0},
+        key=key,
+    )
+    first = _run(repo_root, mini_repo, tmp_path / "file-path-first.json", envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    first_response = json.loads(first.stdout)
+
+    # Deleting the source proves the replay never reopens it: a reread would
+    # fail, and a reread of different bytes would silently answer about a file
+    # nobody approved.
+    source.unlink()
+    replay = _run(repo_root, mini_repo, tmp_path / "file-path-replay.json", envelope)
+    assert replay.returncode == 0, replay.stderr or replay.stdout
+    replay_response = json.loads(replay.stdout)
+    assert replay_response["replayed"] is True
+    assert replay_response["result"]["captured"] \
+        == first_response["result"]["captured"]
+    assert (mini_repo / replay_response["result"]["captured"]).read_bytes() \
+        == b"approved file bytes"

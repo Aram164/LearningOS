@@ -8,7 +8,12 @@ import sys
 from pathlib import Path
 
 import yaml
-from gateway_helpers import approved_v2_call, request_artifact_id
+from gateway_helpers import (
+    approved_v2_call,
+    approved_v2_envelope,
+    request_artifact_id,
+    run_v2_capability,
+)
 
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
@@ -261,4 +266,75 @@ def test_garden_seed_honours_projection_snapshot_guard(
     assert (
         not garden.exists()
         or not list(garden.glob("*.md"))
+    )
+
+
+def test_garden_seed_exact_replay_returns_the_identical_seed_path(
+    mini_repo: Path,
+):
+    """A Garden retry answers with the seed it planted, not just a receipt.
+
+    Without this the interface has no way to open the seed it just created on a
+    retry, and the only way to find out where it went is to plant a second one.
+    """
+    key = "garden-seed-replay-001"
+    # One approved envelope, sent twice. A retry is the *same* request arriving
+    # again, so rebuilding it would re-read the artifact revision the first call
+    # incremented and produce a different intent — which Core rightly refuses as
+    # an idempotency conflict rather than replaying.
+    envelope = approved_v2_envelope(
+        mini_repo,
+        capability="garden.seed.create",
+        payload={"title": "Replayed seed", "text": "Planted once. #idempotency"},
+        artifact_ids=[request_artifact_id("garden.seed.create", key)],
+        idempotency_key=key,
+    )
+
+    first = run_v2_capability(mini_repo, envelope)
+    assert first.returncode == 0, first.stderr
+    first_response = json.loads(first.stdout)
+    seed_path = first_response["result"]["seed_path"]
+    assert seed_path.startswith("knowledge/garden/")
+
+    seeds_before = sorted((mini_repo / "knowledge/garden").glob("*.md"))
+    receipts_before = sorted(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    )
+
+    second = run_v2_capability(mini_repo, envelope)
+    assert second.returncode == 0, second.stderr
+    second_response = json.loads(second.stdout)
+
+    assert second_response["replayed"] is True
+    assert second_response["result"]["seed_path"] == seed_path
+    assert second_response["transaction_id"] == first_response["transaction_id"]
+    assert second_response["receipt_path"] == first_response["receipt_path"]
+    assert second_response["snapshot_after"] == first_response["snapshot_after"]
+    assert second_response["result"]["artifact_revisions"] \
+        == first_response["result"]["artifact_revisions"]
+
+    # One gesture, one seed, one receipt.
+    assert sorted((mini_repo / "knowledge/garden").glob("*.md")) == seeds_before
+    assert sorted(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    ) == receipts_before
+
+
+def test_garden_seed_refuses_an_empty_request_guard(mini_repo: Path):
+    """Core stays fail-closed: an unguarded V2 seed is refused, not defaulted."""
+    key = "garden-seed-empty-guard-001"
+    result = approved_v2_call(
+        mini_repo,
+        capability="garden.seed.create",
+        payload={"text": "Should never be planted."},
+        artifact_ids=[],
+        idempotency_key=key,
+    )
+    assert result.returncode == 2
+    response = json.loads(result.stdout)
+    assert response["ok"] is False
+    assert "cover exactly every transaction artifact" in response["error"]["message"]
+    assert not list((mini_repo / "knowledge/garden").glob("*.md"))
+    assert not list(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
     )

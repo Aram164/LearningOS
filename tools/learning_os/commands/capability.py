@@ -8,6 +8,7 @@ import json
 import sys
 from pathlib import Path
 
+import yaml
 from jsonschema import Draft202012Validator
 
 from learning_os.contracts.capability_catalog import command_definitions
@@ -17,6 +18,7 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.transactions import (
     TransactionFailure,
     TransactionIdempotencyConflict,
@@ -248,6 +250,72 @@ def _v2_response(
     }
 
 
+# An exact retry must answer with the domain fact the first call answered
+# with, not merely with bookkeeping. The caller asked "where did my capture
+# go?", and a replay that omits `captured` forces the interface to either guess
+# or send the write a second time. The path is recovered from the already
+# committed receipt — the handler is never rerun, so a file capture never
+# reopens or rereads the external source it was approved against.
+_REPLAY_DOMAIN_RESULT: dict[str, tuple[str, str]] = {
+    "capture.create": ("captured", "work/inbox/"),
+    "garden.seed.create": ("seed_path", "knowledge/garden/"),
+}
+
+
+class _ReplayRecoveryError(Exception):
+    """The committed receipt cannot prove what the original call wrote."""
+
+
+def _replayed_domain_result(root: Path, capability: str,
+                            replay: TransactionResult) -> dict:
+    """Recover the original domain path from the verified Receipt V2.
+
+    Everything here is a refusal rather than a recovery: a receipt that does
+    not name this capability, is not committed, or does not describe exactly
+    one created file inside the capability's own directory is not evidence of
+    what happened, and inventing a path from it would be worse than answering
+    nothing.
+    """
+    try:
+        field, prefix = _REPLAY_DOMAIN_RESULT[capability]
+    except KeyError:
+        return {}
+    try:
+        receipt = yaml.safe_load(read_text_inside(root, replay.receipt_path))
+    except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
+        raise _ReplayRecoveryError(f"replayed receipt is unreadable: {exc}") from exc
+    if not isinstance(receipt, dict):
+        raise _ReplayRecoveryError("replayed receipt is not a mapping")
+    if receipt.get("schema_version") != 2:
+        raise _ReplayRecoveryError("replayed receipt is not a GatewayEnvelopeV2 receipt")
+    if receipt.get("capability") != capability:
+        raise _ReplayRecoveryError(
+            "replayed receipt records a different capability"
+        )
+    if receipt.get("status") != "committed":
+        raise _ReplayRecoveryError("replayed receipt is not committed")
+    if receipt.get("id") != replay.transaction_id:
+        raise _ReplayRecoveryError(
+            "replayed receipt does not carry its own transaction id"
+        )
+    writes = receipt.get("writes")
+    if not isinstance(writes, list) or len(writes) != 1:
+        raise _ReplayRecoveryError(
+            f"replayed receipt must record exactly one write, found "
+            f"{len(writes) if isinstance(writes, list) else 'a non-list'}"
+        )
+    row = writes[0]
+    if not isinstance(row, dict) or not row.get("created") \
+            or not isinstance(row.get("path"), str):
+        raise _ReplayRecoveryError("replayed receipt write row is malformed")
+    written = row["path"]
+    if not written.startswith(prefix) or ".." in written.split("/"):
+        raise _ReplayRecoveryError(
+            f"replayed receipt writes outside {prefix}: {written}"
+        )
+    return {field: written}
+
+
 def _replay_response(root: Path, envelope: dict,
                      replay: TransactionResult) -> dict:
     receipt_path = replay.receipt_path.relative_to(root).as_posix()
@@ -257,6 +325,7 @@ def _replay_response(root: Path, envelope: dict,
         "artifact_revisions": dict(replay.revisions),
         "snapshot_after": replay.snapshot_after,
         "replayed": True,
+        **_replayed_domain_result(root, str(envelope.get("capability")), replay),
     }
     return _v2_response(
         envelope,
@@ -369,7 +438,20 @@ def cmd_capability(args) -> int:
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 2
         if replay is not None:
-            response = _replay_response(root, envelope, replay)
+            try:
+                response = _replay_response(root, envelope, replay)
+            except _ReplayRecoveryError as exc:
+                # Fail closed. The original write already happened; rerunning
+                # the handler here would duplicate it, and answering with a
+                # guessed path would be a lie about canonical state.
+                response = _v2_response(
+                    envelope,
+                    ok=False,
+                    error=_gateway_error("INTERNAL_FAILURE", str(exc)),
+                )
+                _validate_capability_envelope(root, response, kind="result")
+                print(json.dumps(response, indent=2, ensure_ascii=False))
+                return 2
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 0

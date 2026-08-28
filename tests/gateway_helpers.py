@@ -9,7 +9,7 @@ import sys
 from pathlib import Path
 
 from learning_os.contracts.capability_catalog import command_definitions
-from learning_os.contracts.gateway import intent_sha256
+from learning_os.contracts.gateway import intent_sha256, request_artifact_id
 from learning_os.contracts.payloads import payload_fields, subparsers
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import artifact_revision
@@ -22,16 +22,18 @@ def file_sha256(path: Path) -> str:
     return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def request_artifact_id(capability: str, idempotency_key: str) -> str:
-    prefixes = {
-        "capture.create": "capture-request",
-        "garden.seed.create": "garden-request",
-    }
-    try:
-        prefix = prefixes[capability]
-    except KeyError as exc:
-        raise ValueError(f"{capability} does not use request-scoped artifacts") from exc
-    return f"{prefix}:{idempotency_key}"
+# `request_artifact_id` is re-exported from production, not reimplemented here.
+# A test copy of the guard string is a test that agrees with itself: the whole
+# defect these tests exist to catch is Core and its callers deriving the id
+# differently.
+__all__ = [
+    "approved_v2_call",
+    "approved_v2_cli",
+    "approved_v2_envelope",
+    "file_sha256",
+    "request_artifact_id",
+    "run_v2_capability",
+]
 
 
 def approved_v2_envelope(
