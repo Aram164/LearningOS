@@ -9,13 +9,13 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-08-19'
+captured: '2026-08-27'
 totals:
-  files: 1131
-  bytes: 2071501162
+  files: 1134
+  bytes: 2078905231
 files:
-  ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker.
-    Rechenverfahren der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
+  ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
+    der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
   : size: 12924459
     sha256: c2477c3c50d425df8fadbf9af92ba2b61c33fe16ed4bbabc8fe7144bc11282fb
   _unsorted/Diskrete Mathematik .pdf:
@@ -159,15 +159,15 @@ files:
   algorithms/complexity/theoinfo-hu-archive/Theo Info/Probeklausur-slides.pdf:
     size: 396537
     sha256: a27842e61db89f45c97f5c57e120cc5970a35f13e3c5a336a269793754ee3f07
-  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Sei L eine reguläre Sprache.
-    Es gibt einen endlichen Automaten, der L akzeptiert..pdf
+  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Sei L eine reguläre Sprache. Es gibt einen endlichen
+    Automaten, der L akzeptiert..pdf
   : size: 103257
     sha256: 908b132c4a91682e04d6e06386f33cb08de7c0297812dcd75b862206dc0f9c64
   algorithms/complexity/theoinfo-hu-archive/Theo Info/Theoretische Informatik Eine umfassende Einführung.pdf:
     size: 6221647
     sha256: 89215e1b5f3653cb9bc0e1cc57723c8499a09efe057c0800bf3873fb6924b79a
-  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Theoretische Informatik Grundlagen
-    mit Übungsaufgaben und Lösungen.pdf
+  ? algorithms/complexity/theoinfo-hu-archive/Theo Info/Theoretische Informatik Grundlagen mit Übungsaufgaben
+    und Lösungen.pdf
   : size: 5841756
     sha256: a4986c12626ec7ac7ef0dc5617da557fdb5f81065b737af8b3c60d00a51e5e2e
   algorithms/complexity/theoinfo-hu-archive/Theo Info/beweis der mächtigkeit der potenzmrenge.pdf:
@@ -356,6 +356,12 @@ files:
   algorithms/structures/ottmann-widmayer/ow.pdf:
     size: 6186269
     sha256: dd7bace9ff39aa4ce73ebf9c959a5756499283cadc175e1b4b9dfe9e3ae046cf
+  data-systems/architecture/scalable-dataframe-systems/Towards Scalable Dataframe Systems.pdf:
+    size: 1033120
+    sha256: d73d3f96dad8724fdab0a4a6dc0774f31b9a830ed9eb96b2f931a01fcb351ff5
+  data-systems/architecture/stratum-paper/stratum-paper.pdf:
+    size: 853556
+    sha256: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
   'data-systems/architecture/systems-architecture-shelf/DigitaleSysteme/ Computer Architecture: A Quantitative Approach.pdf':
     size: 7148140
     sha256: f2e337be53b22977f08c11f1cf071569a70b0db8d491766e382542b8075a7841
@@ -878,8 +884,8 @@ files:
   machine-learning/classical/kroese-dsml/kroese.pdf:
     size: 21072005
     sha256: 841e4441ec94f39c3f70967ba1c9198c0ec3d3323d98c786f677e5a913be66b3
-  ? machine-learning/classical/marsland-ml-algorithmic/Machine Learning_ An Algorithmic
-    Perspective (2nd ed.) [Marsland 2014-10-08].pdf
+  ? machine-learning/classical/marsland-ml-algorithmic/Machine Learning_ An Algorithmic Perspective (2nd
+    ed.) [Marsland 2014-10-08].pdf
   : size: 6967995
     sha256: 0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05
   machine-learning/classical/murphy-pml1/pml1.pdf:
@@ -2448,8 +2454,8 @@ files:
   mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/Zahlentheorie im Z.pdf:
     size: 383712
     sha256: 491600985b4263c8fb02196d24570ff5b56a49bf423174b36c35bb3ffcb35eb6
-  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/beweis das eine äquivalenzrelation
-    auch eine partition ist.pdf
+  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/beweis das eine äquivalenzrelation auch
+    eine partition ist.pdf
   : size: 103066
     sha256: 6dde5207b9a01736ebd19285e55c6ea04a7a6cf8ad94b4a8b95edb7805ed376b
   mathematics/linear-algebra/lineare-algebra-archive/LA/Mathe/beweise für sätze .pdf:
@@ -2476,8 +2482,8 @@ files:
   mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur 2.pdf:
     size: 229546
     sha256: 32201d4e7dcce8dd2df2c60c73b0292caa7f591278880d68e6e5c9299d2ccee0
-  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur zur Linearen
-    Algebra fu ̈r Informatiker und Ingenieure.pdf
+  ? mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur zur Linearen Algebra fu ̈r Informatiker
+    und Ingenieure.pdf
   : size: 165482
     sha256: c57119e735fb694a40be90c238311e98b2bb59b234e2c2e7ed7afb1413610549
   mathematics/linear-algebra/lineare-algebra-archive/LA/Probeklausur.pdf:
@@ -2798,8 +2804,8 @@ files:
   software/languages/comprehensive-rust/Comprehensive-Rust-Google.pdf:
     size: 1807839
     sha256: d5c0277179dbf350302d8c425949af915cd49f87dcb391dd3a954357a2ca6611
-  ? software/languages/programming-language-books/C++ books/Accelerated C++ Practical
-    Programming by Example ( PDFDrive ) (1).pdf
+  ? software/languages/programming-language-books/C++ books/Accelerated C++ Practical Programming by Example
+    ( PDFDrive ) (1).pdf
   : size: 1760439
     sha256: 89e005b53188b086a026519bc43de54df80abf26c9c64c31132308a3b8601044
   software/languages/programming-language-books/C++ books/C++ Primer.pdf:
@@ -2829,8 +2835,8 @@ files:
   software/languages/programming-language-books/C-Books/Fluent C.pdf:
     size: 7621336
     sha256: 932077cd0ae2775ef8544d67f49cd5be8d6cd22c10e7c767ed009bce2de54256
-  ? software/languages/programming-language-books/C-Books/Learn C programming   a
-    beginner's guide to learning C programming in easy and disciplined way.pdf
+  ? software/languages/programming-language-books/C-Books/Learn C programming   a beginner's guide to
+    learning C programming in easy and disciplined way.pdf
   : size: 7693141
     sha256: 64c53e59d6a6510adacb8fdd4e6a9cb19acfdc5f68f1d292e2591bd49a55d555
   software/languages/programming-language-books/C-Books/Structured Computer Organization.pdf:
@@ -2869,6 +2875,9 @@ files:
   software/python/fluent-python/fluent-python.pdf:
     size: 16456139
     sha256: db97c77518c68ce3db19da8f65e9f8dd8f9494fcbba59dddb0ed1796973f7e35
+  software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf:
+    size: 5517393
+    sha256: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
   software/python/pydata-handbook/PythonDataScienceHandbook/README.md:
     size: 3699
     sha256: 3b0013eeaa84fb1a77078d898e50e24f827ed9443ee8e832979a9f5361459466
@@ -3295,6 +3304,12 @@ files:
   software/tooling/git-handbook-archive/Git.txt:
     size: 75
     sha256: bc39cd81aa8e3d4c1198b03b7f79b0c1236c7e33a2acbb5396e9a431df58dbd9
+  software/tooling/git-handbook-archive/git-handbook-v5.zip:
+    size: 28983
+    sha256: 00c017abe91d512eea0cd7a161b707b64c6e993ee35d79e27b2cea7391cef8e9
+  software/tooling/git-handbook-archive/git-handbook.zip:
+    size: 72081
+    sha256: cb030ef41fb6e505dab6480bdadb885a308afdde96fad0b5dc99393baa0990de
   software/tooling/git-handbook-archive/git-handbook/README.txt:
     size: 506
     sha256: ad1abd10d5279ccc1cd7ffafdf482d5b145b5dccc99161f59bb13537335d34db
@@ -3403,12 +3418,6 @@ files:
   software/tooling/git-handbook-archive/git-handbook/intentions/wt-stash.html:
     size: 5263
     sha256: c36486e6aabf6290781c80ecfab9c561d097c56a8b985333293caad5d1ca7996
-  software/tooling/git-handbook-archive/git-handbook-v5.zip:
-    size: 28983
-    sha256: 00c017abe91d512eea0cd7a161b707b64c6e993ee35d79e27b2cea7391cef8e9
-  software/tooling/git-handbook-archive/git-handbook.zip:
-    size: 72081
-    sha256: cb030ef41fb6e505dab6480bdadb885a308afdde96fad0b5dc99393baa0990de
   software/tooling/hu-git-intro/HU-intro-to-git.pdf:
     size: 809967
     sha256: 7347cf2477a401b80e678ba6e23c498bfce15e4dd2df979cfc8d91af46a65c9c

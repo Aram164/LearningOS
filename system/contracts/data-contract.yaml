@@ -15,9 +15,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 12
-schema_fingerprint: sha256:e77acb7da2c37e062c00a404cc3f88d8fd5e2aeb5f5ef00fec1ab365dcd1a736
-record_schemas: 25
+contract_version: 14
+schema_fingerprint: sha256:cb2f787947091adeb10430d6dfe219b39389e131fefda275e3db130155cc4637
+record_schemas: 35
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -113,5 +113,30 @@ history:
   adopted: '2026-08-24'
   note: resource rows and module source-map routes gain optional angle and angle_detail
     fields; the angle stops being concatenated onto the locator (CRITIQUE-POINTS 1)
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 13
+  adopted: '2026-08-25'
+  note: Stable material-route identities and guarded selection references, optional
+    route links on stage resources, reviewed local-to-global concept mappings, and
+    the strict vNext synthesis, recovery, diagnostics, Legacy archive, Future Master's
+    Planning, gateway, and receipt records. Pre-v13 records remain readable; the migration
+    persists rich-route and exact selection ids without guessing.
+  migration: tools/migrations/route_identity_v13.py
+  fixture: tests/fixtures/formats/v12/
+  fixture_note: 'Corrected 2026-08-28. This entry pointed at tests/fixtures/formats/v13/,
+    which was never frozen — `bump()` writes that path automatically and nothing
+    checked it, so the record claimed a snapshot that does not exist. No v13 shape
+    was frozen because none was needed: the migration persists route and selection
+    ids rather than changing the stored vocabulary, and the v12 fixture still loads
+    against current schemas. v12 is therefore the applicable frozen shape, as v14
+    also records. `tests/test_format_fixtures.py` now asserts every pointer resolves.'
+- version: 14
+  adopted: '2026-08-26'
+  note: Remove obsolete Job dashboard and Job plan schemas plus the Job-only stage
+    extension from the shared learning-plan vocabulary. Job learning now uses ordinary
+    program, module, unit, study-map, and note contracts. These retired schemas did
+    not govern canonical records, so no canonical data migration is required and
+    the v12 compatibility fixture remains the applicable stored shape.
   migration: null
   fixture: tests/fixtures/formats/v12/

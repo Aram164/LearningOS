@@ -36,6 +36,35 @@ FORMATS = [
 ]
 
 
+def test_every_recorded_fixture_pointer_resolves(repo_root: Path):
+    """The contract's own `fixture:` pointers must name a directory that exists.
+
+    `FORMATS` above is built by globbing, so a history entry can name a fixture
+    that was never frozen and no test will ever notice — which is exactly what
+    happened to v13 between 2026-08-25 and 2026-08-28. The contract then claims
+    a frozen snapshot of a shape nobody can load, and the claim is invisible.
+    `bump()` writes the pointer for the version being adopted, before its
+    fixture exists, so the honest rule is: whatever the pointer says at rest
+    must resolve.
+    """
+    import yaml
+
+    contract = yaml.safe_load(
+        (repo_root / "system/contracts/data-contract.yaml").read_text(encoding="utf-8")
+    )
+    dangling = [
+        (entry["version"], entry["fixture"])
+        for entry in contract["history"]
+        if entry.get("fixture") and not (repo_root / entry["fixture"]).is_dir()
+    ]
+    assert not dangling, (
+        "data-contract.yaml names fixture directories that do not exist: "
+        + ", ".join(f"v{version} -> {path}" for version, path in dangling)
+        + ". Freeze the fixture, or point the entry at the frozen shape that "
+        "still applies — never delete the pointer."
+    )
+
+
 def _materialise(version: str, repo_root, tmp_path):
     """Assemble a repository from frozen data plus the CURRENT system definitions."""
     fixture = repo_root / "tests" / "fixtures" / "formats" / version
