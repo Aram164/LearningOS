@@ -5,8 +5,15 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
+from pathlib import Path
 
 from ...loader import Repo
+from ...pathing import PathBoundaryError, read_text_inside, resolved_inside
+from ...routes import (
+    exact_selection_matches,
+    iter_route_references,
+    route_with_identity,
+)
 from ..common import _first_para, _git_last_commit
 from ..materials import _project_material_resource
 from .grouping import ordered_thematic_group_ids
@@ -46,6 +53,13 @@ def unit_note_sections(text: str) -> list[dict]:
 
 
 def project_programs(repo: Repo, revision: Revision) -> list[dict]:
+    """Project only programs that belong to ordinary LearningOS navigation.
+
+    Quarantined and boundary-only programs are deliberate open gestures, not
+    current study records.  Their dedicated diagnostics/planning surfaces own
+    that metadata; publishing even the boundary row here would leak it into
+    normal manifests, search, counts, and ordinary AI context.
+    """
     return [
         {
             **dict(program.data),
@@ -53,6 +67,8 @@ def project_programs(repo: Repo, revision: Revision) -> list[dict]:
             "path": str(program.path.relative_to(repo.root)),
         }
         for program in sorted(repo.programs.values(), key=lambda p: p.id)
+        if program.data.get("status") not in {"quarantined", "boundary-only"}
+        and program.data.get("kind") not in {"quarantine", "boundary"}
     ]
 
 
@@ -93,8 +109,13 @@ def project_modules(repo: Repo, revision: Revision) -> list[dict]:
 # keeps its records as history and is never asked for new plans.
 _STUDIED_MODULE_STATUSES = frozenset({"active", "enrolled"})
 
-# A unit that is finished, or explicitly set aside, is not owed a plan either.
-_UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({"complete", "archived"})
+# A unit that is finished, paused/inactive, or explicitly set aside is not owed
+# a plan either.  `ready-to-shelve` is operationally inactive: asking it to
+# acquire a new study map while it is leaving active study would reverse the
+# user's lifecycle decision.
+_UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({
+    "complete", "archived", "paused", "ready-to-shelve",
+})
 
 
 def _needs_study_map(unit_data: dict, module_status: str | None,
@@ -108,8 +129,6 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
     which had always filtered on the map itself — listed all of them. One
     derivation ends that disagreement.
     """
-    if unit_data.get("status") == "needs-map":
-        return True
     if has_study_map:
         return False
     if module_status not in _STUDIED_MODULE_STATUSES:
@@ -120,6 +139,7 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
 def project_units(repo: Repo, revision: Revision,
                   unit_to_projects: dict[str, list[str]]) -> list[dict]:
     records = []
+    route_refs = list(iter_route_references(repo))
     module_status = {
         mid: (module.data if hasattr(module, "data") else module).get("status")
         for mid, module in repo.modules.items()
@@ -129,12 +149,36 @@ def project_units(repo: Repo, revision: Revision,
     }
     for unit in sorted(repo.units.values(), key=lambda u: u.id):
         data = unit.data
+        projected_selections = []
+        for selection in data.get("source_selections", []) or []:
+            if not isinstance(selection, dict) or selection.get("route_id"):
+                projected_selections.append(selection)
+                continue
+            matches = exact_selection_matches(
+                route_refs,
+                unit_id=unit.id,
+                selection=selection,
+            )
+            projected_selections.append(
+                {**selection, "route_id": matches[0].route_id}
+                if len(matches) == 1 else selection
+            )
         note_ref = data.get("working_note")
-        note_file = repo.root / str(note_ref) if note_ref else None
-        note_text = note_file.read_text(encoding="utf-8", errors="replace") \
-            if note_file and note_file.is_file() else ""
+        note_file: Path | None = repo.root / str(note_ref) if note_ref else None
+        try:
+            if note_file is not None:
+                resolved_inside(repo.root, note_file)
+                note_text = read_text_inside(
+                    repo.root, note_file, errors="replace"
+                )
+            else:
+                note_text = ""
+        except (OSError, PathBoundaryError):
+            note_file = None
+            note_text = ""
         records.append({
             **dict(data),
+            "source_selections": projected_selections,
             "revision": revision(unit.id, data),
             "path": str(unit.path.relative_to(repo.root)),
             # Projects own units explicitly in the Project record. The legacy
@@ -152,7 +196,7 @@ def project_units(repo: Repo, revision: Revision,
             "note_sections": unit_note_sections(note_text),
             "notes_updated": _git_last_commit(
                 repo.root, note_file.relative_to(repo.root).as_posix())
-                if note_file and note_file.is_file() else None,
+                if note_file else None,
         })
     return records
 
@@ -161,14 +205,66 @@ def project_study_maps(repo: Repo, revision: Revision) -> list[dict]:
     records = []
     for study_map in sorted(repo.study_maps.values(), key=lambda sm: sm.id):
         data = study_map.data
+        source_map = repo.module_source_maps.get(study_map.module_id, {})
+        resource_routes = [
+            _project_material_resource(
+                repo,
+                {
+                    **route_with_identity(
+                        study_map.module_id,
+                        str(entry.get("source_id") or ""),
+                        route,
+                    ),
+                    "source_id": entry.get("source_id"),
+                },
+            )
+            for entry in source_map.get("sources", []) or []
+            if isinstance(entry, dict)
+            for route in entry.get("unit_routes", []) or []
+            if isinstance(route, dict)
+            and route.get("unit_id") == study_map.unit_id
+        ]
         records.append({
             **{k: v for k, v in data.items() if k != "stages"},
             "revision": revision(study_map.id, data),
             "module_id": study_map.module_id,
             "path": str(study_map.path.relative_to(repo.root)),
-            "stages": project_stages(repo, data, "working_note"),
+            "stages": project_stages(
+                repo,
+                data,
+                "working_note",
+                resource_routes,
+            ),
         })
     return records
+
+
+def project_unit_material_syntheses(repo: Repo) -> list[dict]:
+    """Retain approved evidence and derive its current projection status."""
+
+    # Local import avoids a package-initialization cycle: the synthesis module
+    # uses material projection helpers from ``genout`` itself.
+    from ...material_synthesis import (
+        material_synthesis_completeness,
+        material_synthesis_freshness,
+    )
+
+    return [
+        {
+            **dict(repo.unit_material_syntheses[synthesis_id]),
+            "freshness": material_synthesis_freshness(
+                repo.root,
+                str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
+                repo.unit_material_syntheses[synthesis_id],
+            ),
+            "completeness": material_synthesis_completeness(
+                repo.root,
+                str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
+                repo.unit_material_syntheses[synthesis_id],
+            ),
+        }
+        for synthesis_id in sorted(repo.unit_material_syntheses)
+    ]
 
 
 def project_module_source_maps(repo: Repo, revision: Revision) -> list[dict]:
@@ -185,7 +281,14 @@ def project_module_source_maps(repo: Repo, revision: Revision) -> list[dict]:
             projected_entry["unit_routes"] = [
                 _project_material_resource(
                     repo,
-                    {**route, "source_id": entry.get("source_id")},
+                    {
+                        **route_with_identity(
+                            mid,
+                            str(entry.get("source_id") or ""),
+                            route,
+                        ),
+                        "source_id": entry.get("source_id"),
+                    },
                 )
                 if isinstance(route, dict)
                 else route

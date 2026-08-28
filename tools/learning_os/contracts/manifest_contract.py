@@ -22,9 +22,14 @@ Why the producer enforces rather than the consumer:
 from __future__ import annotations
 
 import datetime as _dt
+import hashlib
+import json
 from pathlib import Path
 
 import yaml
+from jsonschema import Draft202012Validator, FormatChecker
+
+from .json_schema import ContractValidationError, schema_registry
 
 CONTRACT_RELATIVE = "system/contracts/manifest-contract.yaml"
 
@@ -63,6 +68,99 @@ def declared_version(root: Path) -> int:
     this module exists to prevent.
     """
     return int(load_contract(root)["contract_version"])
+
+
+def _schema_path(root: Path, contract: dict) -> Path:
+    relative = contract.get("schema_path")
+    if not isinstance(relative, str) or not relative:
+        raise ManifestContractError(
+            f"{CONTRACT_RELATIVE} must declare schema_path for the complete "
+            "producer-owned manifest schema"
+        )
+    candidate = Path(relative)
+    if candidate.is_absolute() or ".." in candidate.parts:
+        raise ManifestContractError(
+            f"{CONTRACT_RELATIVE} schema_path must be repository-relative"
+        )
+    path = (root / candidate).resolve()
+    try:
+        path.relative_to(root.resolve())
+    except ValueError as exc:
+        raise ManifestContractError(
+            f"{CONTRACT_RELATIVE} schema_path escapes the repository"
+        ) from exc
+    return path
+
+
+def _schema_sha256(path: Path) -> str:
+    try:
+        content = path.read_bytes()
+    except OSError as exc:
+        raise ManifestContractError(f"cannot read manifest schema {path}: {exc}") from exc
+    return f"sha256:{hashlib.sha256(content).hexdigest()}"
+
+
+def declared_schema_sha256(root: Path) -> str:
+    """The exact schema hash stamped into every v6 manifest."""
+
+    contract = load_contract(root)
+    value = contract.get("schema_sha256")
+    if not isinstance(value, str):
+        raise ManifestContractError(
+            f"{CONTRACT_RELATIVE} must declare schema_sha256"
+        )
+    return value
+
+
+def _pointer(parts) -> str:
+    """Render one standards-compliant RFC 6901 JSON Pointer."""
+
+    escaped = [str(part).replace("~", "~0").replace("/", "~1") for part in parts]
+    return "" if not escaped else "/" + "/".join(escaped)
+
+
+def _schema_problems(manifest: dict, root: Path, contract: dict) -> list[str]:
+    try:
+        path = _schema_path(root, contract)
+    except ManifestContractError as exc:
+        return [f"  schema: {exc}"]
+    if not path.is_file():
+        return [f"  schema: declared schema does not exist: {path.relative_to(root)}"]
+    declared_hash = contract.get("schema_sha256")
+    actual_hash = _schema_sha256(path)
+    problems: list[str] = []
+    if declared_hash != actual_hash:
+        problems.append(
+            f"  schema hash: declared {declared_hash!r}, exact file is {actual_hash}"
+        )
+        return problems
+    stamped_hash = (manifest.get("_generated") or {}).get("schema_sha256")
+    if stamped_hash != declared_hash:
+        problems.append(
+            f"  _generated.schema_sha256 is {stamped_hash!r} but "
+            f"{CONTRACT_RELATIVE} declares {declared_hash!r}"
+        )
+    try:
+        schema = json.loads(path.read_text(encoding="utf-8"))
+        registry = schema_registry(root / "system" / "schema")
+        errors = sorted(
+            Draft202012Validator(
+                schema,
+                registry=registry,
+                format_checker=FormatChecker(),
+            ).iter_errors(manifest),
+            key=lambda error: [str(part) for part in error.absolute_path],
+        )
+    except (OSError, json.JSONDecodeError, ContractValidationError, ValueError) as exc:
+        problems.append(f"  schema: cannot validate manifest: {exc}")
+        return problems
+    for error in errors[:12]:
+        pointer = _pointer(error.absolute_path)
+        location = pointer or "<root> (RFC6901 '')"
+        problems.append(f"  schema at {location}: {error.message}")
+    if len(errors) > 12:
+        problems.append(f"  schema: {len(errors) - 12} further violation(s) omitted")
+    return problems
 
 
 def shape_of(manifest: dict) -> dict:
@@ -107,6 +205,8 @@ def check(manifest: dict, root: Path) -> tuple[bool, str]:
     if returned:
         problems.append(f"  retired keys published again: {returned}")
 
+    problems.extend(_schema_problems(manifest, root, contract))
+
     if not problems:
         return True, (f"manifest contract v{version} matches "
                       f"{len(shape['top_level_keys'])} top-level keys")
@@ -142,6 +242,9 @@ def bump(manifest: dict, root: Path, note: str) -> dict:
     updated = {
         "contract_version": version,
         **shape,
+        "schema_path": str(current.get("schema_path") or
+                           f"system/contracts/manifest-v{version}.schema.json"),
+        "schema_sha256": str(current.get("schema_sha256") or ""),
         "forbidden_top_level_keys": list(current.get("forbidden_top_level_keys") or []),
         "history": list(current.get("history") or []) + [{
             "version": version,

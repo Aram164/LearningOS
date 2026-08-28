@@ -14,7 +14,8 @@ from ...loader import Repo
 def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
                   units_v2: list[dict], study_maps_v2: list[dict],
                   source_maps_v2: list[dict], projects_v2: list[dict],
-                  project_relationships_v2: list[dict]) -> dict:
+                  project_relationships_v2: list[dict],
+                  unit_material_syntheses_v2: list[dict]) -> dict:
     module_to_units = {
         module["id"]: [uid for uid in module.get("unit_order", []) if uid]
         for module in modules_v2
@@ -23,6 +24,8 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
         unit["id"]: unit.get("current_study_map")
         for unit in units_v2 if unit.get("current_study_map")
     }
+    unit_to_concepts: dict[str, list[str]] = {}
+    concept_to_units: dict[str, list[str]] = {}
     component_to_units: dict[str, list[str]] = {}
     source_to_modules: dict[str, list[str]] = {}
     source_to_units: dict[str, list[str]] = {}
@@ -42,6 +45,17 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
         for project in projects_v2
     }
     for unit in units_v2:
+        concept_ids = sorted({
+            concept_id
+            for node in (unit.get("knowledge_map") or {}).get("nodes", []) or []
+            if isinstance(node, dict)
+            for concept_id in node.get("concept_ids", []) or []
+            if isinstance(concept_id, str) and concept_id
+        })
+        if concept_ids:
+            unit_to_concepts[unit["id"]] = concept_ids
+            for concept_id in concept_ids:
+                concept_to_units.setdefault(concept_id, []).append(unit["id"])
         if unit.get("component_id"):
             component_to_units.setdefault(unit["component_id"], []).append(unit["id"])
         for scoped in unit.get("scope_sources", []) or []:
@@ -88,6 +102,18 @@ def build_indexes(repo: Repo, records: list[dict], *, modules_v2: list[dict],
     return {
         "module_to_units": module_to_units,
         "unit_to_study_map": unit_to_study_map,
+        # Synthesis records are approval-gated and enter this index only when
+        # their producer lands.  Publishing the empty v6 table now prevents
+        # the first approved dossier from forcing another interface bump.
+        "unit_to_material_synthesis": {
+            synthesis["unit_id"]: synthesis["id"]
+            for synthesis in unit_material_syntheses_v2
+        },
+        "unit_to_concepts": dict(sorted(unit_to_concepts.items())),
+        "concept_to_units": {
+            concept_id: sorted(set(unit_ids))
+            for concept_id, unit_ids in sorted(concept_to_units.items())
+        },
         "component_to_units": dict(sorted(component_to_units.items())),
         "source_to_modules": dict(sorted(source_to_modules.items())),
         "source_to_units": dict(sorted(source_to_units.items())),

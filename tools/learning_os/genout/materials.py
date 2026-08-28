@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import PurePosixPath
 
 from ..loader import Repo
+from ..pathing import PathBoundaryError, resolve_symlinks_inside
 
 
 # --------------------------------------------------------------------- build
@@ -12,17 +14,17 @@ def _material_location(repo: Repo, ref) -> dict:
     """Resolve a ``material://`` URI to a path relative to the LearningOS root
     (the vault's parent) plus an existence flag. Interfaces get a path they can
     hand to the OS file opener; the resolution rule stays here."""
-    if not ref or not str(ref).startswith("material://"):
+    if _material_uri_authority(ref) is None:
         return {"material_path": None, "material_exists": False}
     target = repo.materials_root / str(ref)[len("material://"):]
     try:
-        rel = target.resolve().relative_to(repo.learningos_root.resolve())
-    except (ValueError, OSError):
-        try:
-            rel = target.relative_to(repo.learningos_root)
-        except ValueError:
-            return {"material_path": None, "material_exists": False}
-    return {"material_path": str(rel), "material_exists": target.exists()}
+        resolved = resolve_symlinks_inside(
+            repo.learningos_root / "materials", target, strict=False
+        )
+        rel = resolved.relative_to(repo.learningos_root.resolve())
+    except (PathBoundaryError, ValueError, OSError):
+        return {"material_path": None, "material_exists": False}
+    return {"material_path": str(rel), "material_exists": resolved.exists()}
 
 
 _MATERIAL_RESOURCE_SUFFIXES = frozenset({
@@ -32,6 +34,16 @@ _MATERIAL_RESOURCE_SUFFIXES = frozenset({
     ".ppt",
     ".pptx",
 })
+
+_PAGE_COUNT_SUFFIX = re.compile(
+    r"(?:\s+\(\d+\s+(?:pages?|pp\.?|slides?)\)|,\s*\d+\s+(?:pages?|pp\.?|slides?))\s*$",
+    re.IGNORECASE,
+)
+
+_MATERIAL_SUFFIX_TOKEN = re.compile(
+    r"\.(?:ipynb|md|pdf|pptx?)(?=$|[\s,;+()])",
+    re.IGNORECASE,
+)
 
 
 def _material_uri_authority(ref) -> str | None:
@@ -59,13 +71,14 @@ def _safe_material_locator(value) -> str | None:
     if not isinstance(value, str):
         return None
 
-    locator = value.strip()
+    locator = _PAGE_COUNT_SUFFIX.sub("", value.strip())
 
     if (
         not locator
         or "\\" in locator
         or ";" in locator
         or "\n" in locator
+        or len(_MATERIAL_SUFFIX_TOKEN.findall(locator)) != 1
     ):
         return None
 
@@ -125,9 +138,9 @@ def _materials_queue_rows(repo: Repo) -> list[str]:
     materials = repo.root.parent / "materials"
     for qname in ("_unsorted", "_duplicates-for-review"):
         qdir = materials / qname
-        if qdir.is_dir():
+        if not qdir.is_symlink() and qdir.is_dir():
             n = sum(1 for f in qdir.rglob("*")
-                    if f.is_file() and f.name != ".DS_Store")
+                    if not f.is_symlink() and f.is_file() and f.name != ".DS_Store")
             if n:
                 rows.append(f"- `materials/{qname}/` — **{n} files** "
                             "awaiting a register-or-discard decision")
