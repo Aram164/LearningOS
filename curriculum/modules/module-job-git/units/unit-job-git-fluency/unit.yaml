@@ -1,0 +1,18 @@
+id: unit-job-git-fluency
+type: unit
+module_id: module-job-git
+kind: topic
+title: Git fluency — history, collaboration, and recovery
+order: 1
+scope: Given an unfamiliar repository state, independently draw the commit and ref graph, explain the
+  working tree/index/HEAD/remote-tracking state, choose the least destructive command sequence, produce
+  small reviewable commits and a clean pull-request history, resolve divergence or conflicts, and recover
+  deliberately lost work from reflog. Fluency is evidenced by predictions, recovery drills, and a two-clone
+  capstone—not by memorizing command recipes.
+status: ready
+scope_sources: []
+source_selections: []
+working_note: curriculum/modules/module-job-git/units/unit-job-git-fluency/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-git-fluency

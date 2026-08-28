@@ -1,0 +1,9 @@
+id: module-job-engineering-tools
+type: module
+kind: skill
+area_id: program-job
+title: Engineering tools
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-job-engineering-tools-fluency

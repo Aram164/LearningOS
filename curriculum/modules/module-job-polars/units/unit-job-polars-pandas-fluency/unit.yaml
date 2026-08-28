@@ -1,0 +1,18 @@
+id: unit-job-polars-pandas-fluency
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Polars ↔ pandas fluency — one operation, two backends
+order: 1
+scope: Given any pandas operation, predict its exact behaviour — values, dtypes, row order, null handling,
+  and failure mode — write the idiomatic Polars equivalent from memory, and state precisely where the
+  two diverge, which divergences can be closed by construction, and which must be declared unsupported.
+  Fluency is evidenced by a cumulative parity harness whose cases were written before the answers were
+  looked up, plus closed-book retrieval; it is never inferred from reading.
+status: ready
+scope_sources: []
+source_selections: []
+working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-polars-pandas-fluency

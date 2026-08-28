@@ -1,0 +1,9 @@
+id: module-job-rust-engineering
+type: module
+kind: skill
+area_id: program-job
+title: Rust engineering
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-job-rust-engineering-fluency
