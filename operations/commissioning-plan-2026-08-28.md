@@ -297,3 +297,60 @@ could not be carried out.
 Gates: `tools/validate.py` 0 errors / 536 warnings (535 + the environmental
 stale-view warning); `warning_baseline.py --check` OK, no new signature;
 `ruff check tools tests` clean; **593 tests passed**, including 36 new ones.
+
+### 2026-08-29 — Steps 4–6, A / Module × Concept Atlas v8
+
+Paired implementation commits: Core **`e15cc14`** and UI **`fe31db2`**. No
+push.
+
+The interrupted work was reviewed before completion. The review corrected the
+following release blockers and factual errors:
+
+- the Atlas had no crossing-specific or narrow-pane CSS, despite the required
+  stacked responsive form;
+- selection existed only as view-local state, so navigation and Back lost the
+  selected concept;
+- the drill-down stopped at stage/unit evidence and did not keep published
+  notes, source evaluations, and concept relationships reachable;
+- current navigation, diagnostics, fixture checks, and runtime tests still
+  described or asserted manifest v7;
+- the synthetic fixture falsely attached Bayes to a regression-geometry stage;
+  it now uses an explicitly named synthetic Bayes stage instead;
+- the bump helper lacked direct failure tests for the new schema path/hash,
+  missing schema, missing evidence, and undeclared fields;
+- the stress reader still hard-coded manifest contract **v5**, so the first
+  corrected stress run rejected a valid v8 projection. It now reads the
+  producer-owned declaration, with a regression test;
+- ADR-015's empty-module count and the UI's blanket “reviewed sources” label
+  overstated the published evidence. Both now report only what the snapshot
+  proves.
+
+Release projection: **158** module/concept edges carrying **551** evidence
+rows; **124** mapped concepts, of which **32** cross module boundaries; **8 of
+13** modules represented and five visibly unmapped. The repaired indexes have
+52 `unit_to_concepts` keys and 124 `concept_to_units` keys. Every edge is
+explicit stage-concept or reviewed knowledge-node evidence; no canonical
+curriculum, knowledge, source, workspace, or learning-plan record was changed.
+
+Core and UI both declare manifest **v8** and schema
+`sha256:f08b0e5b4f131cff0a95bfc87d95863ae691a698c7bbf1d5e96d4da0fee03b10`.
+`make stress` passed after the repair, including the full **615-test** Core
+suite, the paired UI gate, five deterministic generations, 800 atomic manifest
+reads, 32 concurrent CLI reads, five repeated UI rounds, and the online
+advisory probe. Offline validation remains **0 errors / 535 warnings across the
+same six signatures**; no new signature. A final `npm run check` also passed
+and reproduced deterministic bundles:
+
+- `plugin/main.js` —
+  `sha256:18ea80f99c6ae2a117edae374b5be906b95ae705228dd6741a3e3d60c8bb8496`
+- `plugin/styles.css` —
+  `sha256:b6a186f47ba74b6b9605d9c4ff7875f86066de0bce47fe4da0b6685387ec3c4b`
+
+`python3 install.py` completed against the live vault after its 284-check UI
+preflight and CLI smoke test. `npm run install:status` then matched the built
+and installed bundle at `18ea80f99c6a`, both from UI commit `fe31db213692`.
+
+No gateway transaction or Receipt V2 belongs to this checkpoint: A changes the
+derived projection contract and its read-only consumer, and performs no
+canonical write. Both nested worktrees were clean after installation; unrelated
+outer-repository changes were left untouched.
