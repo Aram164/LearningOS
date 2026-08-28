@@ -54,12 +54,6 @@ def test_unreadable_contract_never_enables_migration_replay(tmp_path: Path):
         ["tools/migrations/registry_partition_v1.py", "--apply"],
         ["tools/migrations/projects_v1.py", "--apply", "--root", "."],
         ["tools/migrations/standardize_plan_template_v10.py", "--apply", "--root", "."],
-        [
-            "tools/migrations/standardize_job_plans_v1.py",
-            "--apply",
-            "--job-root",
-            "/path-that-must-never-be-read",
-        ],
     ],
 )
 def test_completed_migration_refuses_live_apply_without_writes(

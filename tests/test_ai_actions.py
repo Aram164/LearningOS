@@ -14,12 +14,17 @@ import yaml
 from learning_os.ai_actions import (
     ActionPolicyError,
     AIActionService,
-    ConfidentialityError,
     DeliveryValidationError,
     StaleDeliveryError,
 )
 from learning_os.contracts import validate_contract
-from learning_os.transactions import artifact_revision
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    gateway_request_context,
+    intent_sha256,
+)
+from learning_os.fingerprint import canonical_fingerprint
+from learning_os.transactions import TransactionFailure, TransactionService, artifact_revision
 
 ROOT = Path(__file__).resolve().parent.parent
 FIXED = datetime(2026, 8, 4, 1, 0, tzinfo=UTC)
@@ -116,9 +121,82 @@ def make_delivery(root: Path, tmp_path: Path, *, capability: str | None = None):
     return app, request, source
 
 
+def apply_approved_delivery(
+    app: AIActionService,
+    delivery_id: str,
+    *,
+    idempotency_key: str | None = None,
+):
+    """Exercise the same content-bound authority the public V2 gateway supplies."""
+    delivery, directory = app.repository.get_delivery(delivery_id)
+    request = app.repository.get_request(str(delivery["request_id"]))
+    target_id = str(request["target"]["id"])
+    artifact_ids = {target_id}
+    artifact_hashes: dict[str, str] = {}
+    for operation in delivery["operations"]:
+        ref = operation.get("artifact_ref")
+        if ref:
+            path = directory / str(ref)
+            artifact_hashes[str(ref)] = "sha256:" + hashlib.sha256(
+                path.read_bytes()
+            ).hexdigest()
+        if operation["capability"] == "garden.add-transcription":
+            artifact_ids.add(f"transcription-{target_id}")
+        elif operation["capability"] == "relationship.create":
+            artifact_ids.add(str(operation["payload"]["id"]))
+        elif operation["capability"] == "unit.material-synthesis.publish":
+            record = yaml.safe_load((directory / str(ref)).read_text(encoding="utf-8"))
+            artifact_ids.add(str(record["id"]))
+    delivery_hash = "sha256:" + hashlib.sha256(
+        (directory / "delivery.yaml").read_bytes()
+    ).hexdigest()
+    expected_revisions = {
+        artifact_id: artifact_revision(app.root, artifact_id)
+        for artifact_id in sorted(artifact_ids)
+    }
+    envelope = {
+        "schema_version": 2,
+        "request_id": f"apply-{delivery_id}",
+        "idempotency_key": idempotency_key or f"apply-{delivery_id}",
+        "capability": "ai-action.delivery.apply",
+        "channel": "operator",
+        "expected_snapshot": f"sha256:{canonical_fingerprint(app.root)}",
+        "expected_revisions": expected_revisions,
+        "approval": {
+            "kind": "approved-delivery",
+            "subject_sha256": "sha256:" + "0" * 64,
+        },
+        "payload": {
+            "delivery_id": delivery_id,
+            "delivery_sha256": delivery_hash,
+            "artifact_sha256": artifact_hashes,
+        },
+    }
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    context = GatewayRequestContext(
+        request_id=envelope["request_id"],
+        idempotency_key=envelope["idempotency_key"],
+        capability=envelope["capability"],
+        channel=envelope["channel"],
+        intent_sha256=envelope["approval"]["subject_sha256"],
+        approval_kind="approved-delivery",
+        approval_subject_sha256=envelope["approval"]["subject_sha256"],
+    )
+    with gateway_request_context(context):
+        return app.apply_delivery(
+            delivery_id,
+            delivery_sha256=delivery_hash,
+            artifact_sha256=artifact_hashes,
+            expected_snapshot=envelope["expected_snapshot"],
+            expected_revisions=expected_revisions,
+        )
+
+
 def test_registry_and_manifest_projection_are_additive(ai_repo: Path):
     app = service(ai_repo)
-    assert [row["id"] for row in app.list_actions()] == ["garden.shelve"]
+    assert [row["id"] for row in app.list_actions()] == [
+        "garden.shelve", "unit.compare-materials",
+    ]
     projection = app.manifest_projection()
     assert projection["ai_actions"]["contract_version"] == 1
     adapters = projection["ai_actions"]["provider_adapters"]
@@ -133,7 +211,9 @@ def test_registry_and_manifest_projection_are_additive(ai_repo: Path):
     assert projection["garden_entries"][0]["type"] == "garden-note"
 
 
-def test_prepare_writes_exact_bounded_bundle_without_job(ai_repo: Path):
+def test_prepare_writes_exact_bounded_bundle_without_external_repository_access(
+    ai_repo: Path,
+):
     app = service(ai_repo)
     tid = target_id(ai_repo)
     request = app.prepare(
@@ -145,26 +225,13 @@ def test_prepare_writes_exact_bounded_bundle_without_job(ai_repo: Path):
     assert (bundle / "context.md").is_file()
     assert (bundle / "attachments/handwritten-import-registration.md").is_file()
     assert (bundle / "allowed-capabilities.json").is_file()
-    assert not any("Job" in path.parts for path in bundle.rglob("*"))
-    assert "repository.read-job" not in (bundle / "allowed-capabilities.json").read_text()
+    allowed = (bundle / "allowed-capabilities.json").read_text(encoding="utf-8")
+    assert "repository.read-external" not in allowed
+    assert request["confidentiality"] == {
+        "classification": "private",
+        "external_repository_access": False,
+    }
     assert request["preconditions"]["snapshot_id"].startswith("sha256:")
-
-
-def test_job_derived_export_requires_explicit_confirmation(ai_repo: Path):
-    app = service(ai_repo)
-    tid = target_id(ai_repo)
-    write_yaml(app.repository.state_path(tid), {"id": tid, "job_derived": True})
-    with pytest.raises(ConfidentialityError):
-        app.prepare(
-            action_id="garden.shelve", target_kind="garden-note", target_id=tid,
-            request_id="ai-request-job",
-        )
-    request = app.prepare(
-        action_id="garden.shelve", target_kind="garden-note", target_id=tid,
-        request_id="ai-request-job-confirmed", job_export_confirmed=True,
-    )
-    assert request["confidentiality"]["export_confirmed"] is True
-    assert request["confidentiality"]["employer_repository_access"] is False
 
 
 def test_forbidden_capability_is_rejected_and_import_cleaned(ai_repo: Path, tmp_path: Path):
@@ -189,10 +256,16 @@ def test_full_round_trip_preserves_original_and_commits_receipt(ai_repo: Path, t
     app, request, source = make_delivery(ai_repo, tmp_path)
     delivery = app.import_delivery(source)
     assert app.request_status(request["id"])["status"] == "delivery-ready"
-    receipt = app.apply_delivery(delivery["id"])
+    receipt = apply_approved_delivery(app, delivery["id"])
     assert hashlib.sha256(original.read_bytes()).hexdigest() == before
     assert receipt["status"] == "committed"
-    assert receipt["capability"] == "ai-action.garden.shelve"
+    assert receipt["schema_version"] == 2
+    assert receipt["capability"] == "ai-action.delivery.apply"
+    assert receipt["request"]["approval"]["kind"] == "approved-delivery"
+    assert {row["capability"] for row in receipt["authority"]["grants"]} == {
+        "ai-action.delivery.apply", "garden.add-transcription", "garden.update",
+        "relationship.create",
+    }
     assert receipt["snapshot_before"] != receipt["snapshot_after"]
     assert receipt["metadata"]["deleted_ids"] == []
     assert receipt["receipt_path"].startswith("operations/transactions/")
@@ -218,6 +291,26 @@ def test_full_round_trip_preserves_original_and_commits_receipt(ai_repo: Path, t
     assert manifest["garden_entries"][0]["transcription_path"].startswith(
         "knowledge/garden/transcriptions/"
     )
+
+
+def test_import_rolls_back_delivery_if_request_transition_fails(
+    ai_repo: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    request_path = app.repository.request_path(request["id"])
+    before = request_path.read_bytes()
+
+    def fail_update(_request):
+        raise OSError("synthetic request update failure")
+
+    monkeypatch.setattr(app.repository, "update_request", fail_update)
+    with pytest.raises(OSError, match="synthetic request update failure"):
+        app.import_delivery(source)
+
+    assert request_path.read_bytes() == before
+    assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
 
 
 # --------------------------------------------------------------- regressions
@@ -247,7 +340,7 @@ def test_unrelated_repository_edit_does_not_invalidate_a_delivery(ai_repo: Path,
     note.write_text(note.read_text(encoding="utf-8") + "\nAn unrelated sentence.\n",
                     encoding="utf-8")
     delivery = app.import_delivery(source)
-    receipt = app.apply_delivery(delivery["id"])
+    receipt = apply_approved_delivery(app, delivery["id"])
     assert receipt["status"] == "committed"
 
 
@@ -279,7 +372,7 @@ def test_registry_drives_implementation_status(ai_repo: Path):
 def test_reshelving_will_not_silently_replace_a_transcription(ai_repo: Path, tmp_path: Path):
     """A second reading of the same seed must supersede explicitly and be receipted."""
     app, _request, source = make_delivery(ai_repo, tmp_path)
-    app.apply_delivery(app.import_delivery(source)["id"])
+    apply_approved_delivery(app, app.import_delivery(source)["id"])
     tid = target_id(ai_repo)
     transcription = ai_repo / f"knowledge/garden/transcriptions/{tid}.md"
     first = transcription.read_text(encoding="utf-8")
@@ -301,7 +394,7 @@ def test_reshelving_will_not_silently_replace_a_transcription(ai_repo: Path, tmp
     }
     write_yaml(second / "delivery.yaml", body)
     with pytest.raises(DeliveryValidationError, match="already exists"):
-        app.apply_delivery(app.import_delivery(second)["id"])
+        apply_approved_delivery(app, app.import_delivery(second)["id"])
     assert transcription.read_text(encoding="utf-8") == first
 
     third = tmp_path / "third-delivery"
@@ -309,7 +402,7 @@ def test_reshelving_will_not_silently_replace_a_transcription(ai_repo: Path, tmp
     body["id"] = "ai-delivery-test-003"
     body["operations"][0]["supersedes"] = f"transcription-{tid}"
     write_yaml(third / "delivery.yaml", body)
-    receipt = app.apply_delivery(app.import_delivery(third)["id"])
+    receipt = apply_approved_delivery(app, app.import_delivery(third)["id"])
     assert receipt["metadata"]["superseded_ids"] == [f"transcription-{tid}"]
     assert "A revised reading." in transcription.read_text(encoding="utf-8")
 
@@ -357,7 +450,7 @@ def test_a_delivery_without_relations_leaves_the_registry_byte_identical(
                         "artifact_ref": "artifacts/t.md"}],
         "preconditions": request["preconditions"],
     })
-    receipt = app.apply_delivery(app.import_delivery(source)["id"])
+    receipt = apply_approved_delivery(app, app.import_delivery(source)["id"])
     assert receipt["status"] == "committed"
     assert registry.read_bytes() == before
 
@@ -371,7 +464,7 @@ def test_capability_write_scope_is_enforced_from_the_contract(ai_repo: Path, tmp
     app, _request, source = make_delivery(ai_repo, tmp_path)
     delivery = app.import_delivery(source)
     with pytest.raises(DeliveryValidationError, match="may not write"):
-        app.apply_delivery(delivery["id"])
+        apply_approved_delivery(app, delivery["id"])
     assert not (ai_repo / f"knowledge/garden/transcriptions/{target_id(ai_repo)}.md").exists()
 
 
@@ -387,8 +480,69 @@ def test_garden_state_bookkeeping_is_not_exempt_from_its_declared_scope(
     app, _request, source = make_delivery(ai_repo, tmp_path)
     delivery = app.import_delivery(source)
     with pytest.raises(DeliveryValidationError, match="garden.update may not write"):
-        app.apply_delivery(delivery["id"])
+        apply_approved_delivery(app, delivery["id"])
     assert not any(app.repository.garden_state.glob("*.yaml"))
+
+
+def test_approved_delivery_request_status_uses_the_outer_capability_scope(
+        ai_repo: Path, tmp_path: Path):
+    contract = ai_repo / "system/contracts/capabilities.yaml"
+    value = yaml.safe_load(contract.read_text(encoding="utf-8"))
+    value["commands"]["ai-action.delivery.apply"]["writes"] = [
+        "operations/ai-actions/somewhere-else/**"
+    ]
+    write_yaml(contract, value)
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    with pytest.raises(DeliveryValidationError, match="ai-action.delivery.apply may not write"):
+        apply_approved_delivery(app, delivery["id"])
+    assert not (
+        ai_repo / f"knowledge/garden/transcriptions/{target_id(ai_repo)}.md"
+    ).exists()
+
+
+def test_approved_delivery_stages_only_hash_verified_artifact_bytes(
+        ai_repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    _record, directory = app.repository.get_delivery(delivery["id"])
+    artifact = directory / "artifacts/transcription.md"
+    approved_bytes = artifact.read_bytes()
+    captured: dict[Path, str | bytes] = {}
+
+    original_target_check = app._assert_target_unchanged
+    target_checks = 0
+
+    def mutate_after_verified_read(request):
+        nonlocal target_checks
+        target = original_target_check(request)
+        target_checks += 1
+        if target_checks == 1:
+            artifact.write_bytes(b"unapproved race content\n")
+        return target
+
+    original_scope_check = app._assert_in_scope
+
+    def restore_before_final_hash(capability, path, scopes=None):
+        artifact.write_bytes(approved_bytes)
+        return original_scope_check(capability, path, scopes)
+
+    def stop_before_write(_service, **kwargs):
+        captured.update(kwargs["writes"])
+        raise TransactionFailure("synthetic stop before write")
+
+    monkeypatch.setattr(app, "_assert_target_unchanged", mutate_after_verified_read)
+    monkeypatch.setattr(app, "_assert_in_scope", restore_before_final_hash)
+    monkeypatch.setattr(TransactionService, "commit", stop_before_write)
+
+    with pytest.raises(DeliveryValidationError, match="synthetic stop before write"):
+        apply_approved_delivery(app, delivery["id"])
+    transcription = next(
+        content for path, content in captured.items()
+        if "transcriptions" in path.parts
+    )
+    assert "The decorator factory receives the family first" in str(transcription)
+    assert "unapproved race content" not in str(transcription)
 
 
 def test_garden_update_fields_are_enforced_from_the_catalogue(
@@ -400,7 +554,7 @@ def test_garden_update_fields_are_enforced_from_the_catalogue(
     app, _request, source = make_delivery(ai_repo, tmp_path)
     delivery = app.import_delivery(source)
     with pytest.raises(DeliveryValidationError, match="forbidden fields.*state"):
-        app.apply_delivery(delivery["id"])
+        apply_approved_delivery(app, delivery["id"])
 
 def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
     from learning_os.contracts.manifest_contract import declared_version

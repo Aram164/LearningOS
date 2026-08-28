@@ -76,7 +76,6 @@ def test_capability_scope_allows_only_unit_and_approved_shelving_destinations():
     }, prefixes) == {"records/modules.yaml"}
 
 
-def test_shelving_and_job_have_distinct_markers():
+def test_legacy_write_markers_remain_distinct_and_fail_closed():
     wrapper = load_wrapper()
     assert wrapper.SHELVING != wrapper.OPERATIONAL
-    assert wrapper.JOB_TASK not in {wrapper.SHELVING, wrapper.OPERATIONAL}

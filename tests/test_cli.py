@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
+
 from learning_os.genout import adoption_counts, generate_all
 from learning_os.loader import load_repo
 
@@ -48,16 +50,32 @@ def test_status_human_output_mentions_validation(mini_repo):
 
 # ---------------------------------------------------------------- capture
 def test_capture_text_lands_in_inbox_and_routing_stays_operator(mini_repo):
-    proc = run_los(mini_repo, "capture", "--text", "a half-formed thought",
-                   "--title", "Half formed")
+    key = "capture-half-formed-001"
+    proc = approved_v2_call(
+        mini_repo,
+        capability="capture.create",
+        payload={"text": "a half-formed thought", "title": "Half formed"},
+        artifact_ids=[request_artifact_id("capture.create", key)],
+        idempotency_key=key,
+    )
     assert proc.returncode == 0, proc.stderr
+    response = json.loads(proc.stdout)
+    assert response["ok"] is True
+    assert response["receipt_path"]
     inbox = mini_repo / "work" / "inbox"
     files = [f for f in inbox.iterdir() if f.suffix == ".md"]
     assert len(files) == 1
     body = files[0].read_text(encoding="utf-8")
     assert "a half-formed thought" in body
     assert "# Half formed" in body
-    assert "operator" in proc.stdout  # routing explicitly not the CLI's job
+    assert response["result"]["captured"] == files[0].relative_to(mini_repo).as_posix()
+
+
+def test_capture_direct_cli_write_is_refused(mini_repo):
+    proc = run_los(mini_repo, "capture", "--text", "must use the gateway")
+    assert proc.returncode == 2
+    assert "GatewayEnvelopeV2" in proc.stderr
+    assert not list((mini_repo / "work" / "inbox").glob("*.md"))
 
 
 def test_capture_empty_input_fails_cleanly(mini_repo):
@@ -69,7 +87,14 @@ def test_capture_empty_input_fails_cleanly(mini_repo):
 def test_capture_file_copy(mini_repo, tmp_path):
     src = tmp_path / "photo-notes.txt"
     src.write_text("scanned scribbles", encoding="utf-8")
-    proc = run_los(mini_repo, "capture", "--file", str(src))
+    key = "capture-photo-notes-001"
+    proc = approved_v2_call(
+        mini_repo,
+        capability="capture.create",
+        payload={"file": str(src), "file_sha256": file_sha256(src)},
+        artifact_ids=[request_artifact_id("capture.create", key)],
+        idempotency_key=key,
+    )
     assert proc.returncode == 0, proc.stderr
     copied = mini_repo / "work" / "inbox" / "photo-notes.txt"
     assert copied.read_text(encoding="utf-8") == "scanned scribbles"

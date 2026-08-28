@@ -81,6 +81,29 @@ had to move. Both new fields are optional, so every plan written under `v7`
 still validates — a stage without them simply reports its anchor freshness as
 `unverified` rather than as `current`.
 
+`v9` tightened those historical external anchor strings without changing any
+canonical record, so the v8 fixture remained the compatibility evidence.
+
+`v10` standardized newly authored study maps on numbered plan-template v1
+stages and recorded `tools/migrations/standardize_plan_template_v10.py`; the
+v10 fixture freezes that canonical shape. `v11` added only query response
+contracts and therefore reuses v10.
+
+`v12` adds optional `angle` and `angle_detail` fields to resource rows and rich
+module routes. Its fixture exercises the separated fields while every earlier
+locator remains readable.
+
+`v13` records stable route identities, exact selection references, material
+synthesis, gateway, recovery, and receipt records plus the guarded
+`route_identity_v13.py` migration. The real migration remains unapplied until
+the recovery gate passes, so the earlier frozen fixtures continue to prove the
+pre-migration formats are readable.
+
+`v14` removes the obsolete external Job dashboard/plan schemas and the Job-only
+stage branch from the shared learning-plan vocabulary. None governed canonical
+LearningOS records, so no data migration or new stored shape is required; the
+v12 fixture remains the applicable compatibility snapshot.
+
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.

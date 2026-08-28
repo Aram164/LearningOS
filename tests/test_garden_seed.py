@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 import yaml
+from gateway_helpers import approved_v2_call, request_artifact_id
 
 from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
@@ -36,31 +37,17 @@ def run_los(
 
 def test_garden_seed_capability_creates_only_a_freeform_seed(
     mini_repo: Path,
-    repo_root: Path,
-    tmp_path: Path,
 ):
-    envelope = {
-        "request_id": "request-garden-seed-create",
-        "capability": "garden.seed.create",
-        "payload": {
+    key = "garden-seed-decorator-001"
+    result = approved_v2_call(
+        mini_repo,
+        capability="garden.seed.create",
+        payload={
             "title": "Decorator idea",
             "text": "The registration happens before normal execution. #python",
         },
-    }
-
-    request = tmp_path / "garden-seed-envelope.json"
-    request.write_text(
-        json.dumps(envelope),
-        encoding="utf-8",
-    )
-
-    result = run_los(
-        repo_root,
-        mini_repo,
-        "capability",
-        "garden.seed.create",
-        "--payload-file",
-        str(request),
+        artifact_ids=[request_artifact_id("garden.seed.create", key)],
+        idempotency_key=key,
     )
 
     assert result.returncode == 0, result.stderr
@@ -122,22 +109,21 @@ def test_garden_seed_capability_creates_only_a_freeform_seed(
 
 def test_garden_seed_without_title_preserves_body_and_uses_loader_title(
     mini_repo: Path,
-    repo_root: Path,
 ):
     text = "# Loose thought\n\nSomething unfinished. #optimizer"
 
-    first = run_los(
-        repo_root,
+    first_key = "garden-seed-loose-001"
+    first = approved_v2_call(
         mini_repo,
-        "garden-seed-create",
-        "--text",
-        text,
-        "--json",
+        capability="garden.seed.create",
+        payload={"text": text},
+        artifact_ids=[request_artifact_id("garden.seed.create", first_key)],
+        idempotency_key=first_key,
     )
 
     assert first.returncode == 0, first.stderr
 
-    first_result = json.loads(first.stdout)
+    first_result = json.loads(first.stdout)["result"]
     first_path = first_result["seed_path"]
 
     assert first_path == "knowledge/garden/loose-thought.md"
@@ -146,18 +132,18 @@ def test_garden_seed_without_title_preserves_body_and_uses_loader_title(
     ).read_text(encoding="utf-8") == text + "\n"
 
     # Same mechanical title/body must never overwrite the first seed.
-    second = run_los(
-        repo_root,
+    second_key = "garden-seed-loose-002"
+    second = approved_v2_call(
         mini_repo,
-        "garden-seed-create",
-        "--text",
-        text,
-        "--json",
+        capability="garden.seed.create",
+        payload={"text": text},
+        artifact_ids=[request_artifact_id("garden.seed.create", second_key)],
+        idempotency_key=second_key,
     )
 
     assert second.returncode == 0, second.stderr
 
-    second_result = json.loads(second.stdout)
+    second_result = json.loads(second.stdout)["result"]
 
     assert (
         second_result["seed_path"]
@@ -174,6 +160,24 @@ def test_garden_seed_without_title_preserves_body_and_uses_loader_title(
         "Loose thought",
         "Loose thought",
     ]
+
+
+def test_garden_seed_direct_cli_write_is_refused(
+    mini_repo: Path,
+    repo_root: Path,
+):
+    result = run_los(
+        repo_root,
+        mini_repo,
+        "garden-seed-create",
+        "--text",
+        "A valid seed that lacks gateway authority.",
+        "--json",
+    )
+    assert result.returncode == 2
+    assert "GatewayEnvelopeV2" in result.stderr
+    garden = mini_repo / "knowledge/garden"
+    assert not garden.exists() or not list(garden.glob("*.md"))
 
 
 def test_garden_seed_rejects_empty_text_without_a_transaction(
@@ -209,8 +213,6 @@ def test_garden_seed_rejects_empty_text_without_a_transaction(
 
 def test_garden_seed_honours_projection_snapshot_guard(
     mini_repo: Path,
-    repo_root: Path,
-    tmp_path: Path,
 ):
     repo = load_repo(mini_repo)
     write_outputs(
@@ -236,28 +238,14 @@ def test_garden_seed_honours_projection_snapshot_guard(
         encoding="utf-8",
     )
 
-    envelope = {
-        "request_id": "request-stale-garden-seed",
-        "capability": "garden.seed.create",
-        "expected_snapshot": snapshot,
-        "payload": {
-            "text": "This must not be written.",
-        },
-    }
-
-    request = tmp_path / "stale-garden-envelope.json"
-    request.write_text(
-        json.dumps(envelope),
-        encoding="utf-8",
-    )
-
-    result = run_los(
-        repo_root,
+    key = "garden-seed-stale-001"
+    result = approved_v2_call(
         mini_repo,
-        "capability",
-        "garden.seed.create",
-        "--payload-file",
-        str(request),
+        capability="garden.seed.create",
+        payload={"text": "This must not be written."},
+        artifact_ids=[request_artifact_id("garden.seed.create", key)],
+        idempotency_key=key,
+        expected_snapshot=snapshot,
     )
 
     assert result.returncode == 3
@@ -266,7 +254,7 @@ def test_garden_seed_honours_projection_snapshot_guard(
 
     assert response["ok"] is False
     assert response["transaction_id"] is None
-    assert "projection conflict" in response["error"]
+    assert response["error"]["code"] == "STALE_SNAPSHOT"
 
     garden = mini_repo / "knowledge/garden"
 

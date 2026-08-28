@@ -1,8 +1,13 @@
-"""Hygiene-sweep tests (ADR-004): stale locks, stale views, unfiled files,
-shadow copies. All hygiene findings are warnings — they must never produce E."""
+"""Hygiene-sweep tests for the canonical repository only.
+
+The external Legacy tree is a deliberate boundary and must never be
+enumerated by normal validation.
+"""
 
 from __future__ import annotations
 
+import builtins
+import io
 import os
 import subprocess
 import time
@@ -116,7 +121,6 @@ def test_inbox_and_garden_are_exempt(mini_repo):
     assert "HYGIENE-UNFILED" not in codes(run(mini_repo))
 
 
-# ------------------------------------------------------------- shadow copies
 def _add_note(root: Path, note_id: str = "note-demo-topic"):
     p = root / "knowledge" / "notes" / "mathematics" / f"{note_id}.md"
     p.write_text(
@@ -126,30 +130,67 @@ def _add_note(root: Path, note_id: str = "note-demo-topic"):
     return p
 
 
-def test_shadow_edited_after_canon_warns(mini_repo):
-    note = _add_note(mini_repo)
-    old = time.time() - 7200
-    os.utime(note, (old, old))
-    shadow_dir = mini_repo.parent.parent / "legacy" / "Plans"
-    shadow_dir.mkdir(parents=True)
-    (shadow_dir / "Demo_Topic.md").write_text("newer twin", encoding="utf-8")
-    assert "HYGIENE-SHADOW" in codes(run(mini_repo), "W")
+def test_normal_validation_never_touches_external_legacy(mini_repo, monkeypatch):
+    """Normal validation cannot even stat or enumerate Legacy.
 
-
-def test_older_shadow_does_not_warn(mini_repo):
-    _add_note(mini_repo)  # canon mtime = now
-    shadow_dir = mini_repo.parent.parent / "legacy" / "Plans"
-    shadow_dir.mkdir(parents=True)
-    shadow = shadow_dir / "Demo_Topic.md"
-    shadow.write_text("frozen twin", encoding="utf-8")
-    old = time.time() - 7200
-    os.utime(shadow, (old, old))
-    assert "HYGIENE-SHADOW" not in codes(run(mini_repo))
-
-
-def test_unrelated_shadow_names_do_not_warn(mini_repo):
+    The sentinel is deliberately lower-level than the hygiene implementation:
+    a future rule that tries a different ``Path`` helper still reaches either
+    ``stat`` or ``scandir`` and fails the test before observing boundary data.
+    """
     _add_note(mini_repo)
-    shadow_dir = mini_repo.parent.parent / "Job" / "workspace-job-deem" / "inputs"
-    shadow_dir.mkdir(parents=True)
-    (shadow_dir / "Totally-Different.md").write_text("x", encoding="utf-8")
-    assert "HYGIENE-SHADOW" not in codes(run(mini_repo))
+
+    real_builtin_open = builtins.open
+    real_io_open = io.open
+    real_os_open = os.open
+    real_listdir = os.listdir
+    real_lstat = os.lstat
+    real_stat = os.stat
+    real_scandir = os.scandir
+
+    def refuse_legacy(value):
+        if isinstance(value, (str, bytes, os.PathLike)):
+            parts = Path(os.fsdecode(value)).parts
+            forbidden = {"legacy"}.intersection(parts)
+            if forbidden:
+                name = sorted(forbidden)[0]
+                raise AssertionError(
+                    f"normal validation attempted to access {name}"
+                )
+
+    def guarded_stat(path, *args, **kwargs):
+        refuse_legacy(path)
+        return real_stat(path, *args, **kwargs)
+
+    def guarded_lstat(path, *args, **kwargs):
+        refuse_legacy(path)
+        return real_lstat(path, *args, **kwargs)
+
+    def guarded_scandir(path="."):
+        refuse_legacy(path)
+        return real_scandir(path)
+
+    def guarded_listdir(path="."):
+        refuse_legacy(path)
+        return real_listdir(path)
+
+    def guarded_builtin_open(file, *args, **kwargs):
+        refuse_legacy(file)
+        return real_builtin_open(file, *args, **kwargs)
+
+    def guarded_io_open(file, *args, **kwargs):
+        refuse_legacy(file)
+        return real_io_open(file, *args, **kwargs)
+
+    def guarded_os_open(path, *args, **kwargs):
+        refuse_legacy(path)
+        return real_os_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "open", guarded_builtin_open)
+    monkeypatch.setattr(io, "open", guarded_io_open)
+    monkeypatch.setattr(os, "open", guarded_os_open)
+    monkeypatch.setattr(os, "listdir", guarded_listdir)
+    monkeypatch.setattr(os, "lstat", guarded_lstat)
+    monkeypatch.setattr(os, "stat", guarded_stat)
+    monkeypatch.setattr(os, "scandir", guarded_scandir)
+
+    run(mini_repo)

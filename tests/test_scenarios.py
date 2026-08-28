@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import pytest
 import yaml
 
@@ -47,16 +49,9 @@ def test_scenario_7_on_real_repo(repo_root):
     assert has_withdrawal, "no module with a withdrawal (Ruecktritt) recorded"
     has_kombimodul = any(m.get("components") for m in repo.modules.values())
     assert has_kombimodul, "no Kombimodul (components list) recorded"
-    # exam dates appear canonically only in the owning module.yaml
-    attempt_dates = {str(a["date"]) for m in repo.modules.values()
-                     for a in m.get("attempts", []) or [] if a.get("date")}
-    for tree in ("knowledge", "work", "sources"):
-        base = repo_root / tree
-        for path in base.rglob("*"):
-            if path.is_file() and path.suffix in (".md", ".yaml"):
-                text = path.read_text(encoding="utf-8", errors="replace")
-                for d in attempt_dates:
-                    assert d not in text, f"exam date {d} duplicated in {path}"
+    # Date ownership is checked semantically below.  A raw repository-wide
+    # substring check cannot distinguish an exam date from an unrelated note's
+    # `created` metadata, and durable-note provenance is explicitly preserved.
 
 
 def _owned_admin_dates(repo_root):
@@ -90,25 +85,93 @@ def _owned_admin_dates(repo_root):
     return forms
 
 
-@pytest.mark.full_repo
-def test_admin_dates_are_not_restated_in_live_operational_prose(repo_root):
-    """Hard rule #2 applies to prose that *directs current work*.
+_ADMIN_CUE = re.compile(
+    r"\b(?:exam(?:ination)?|klausur|pr(?:ü|ue)fung|sitting|termin|attempt|"
+    r"registration|anmeldung|withdrawal|r(?:ü|ue)cktritt|deadline|due)\b",
+    re.IGNORECASE,
+)
+_STRONG_ADMIN_CUE = re.compile(
+    r"\b(?:exam(?:ination)?|klausur|pr(?:ü|ue)fung)\s*(?:date|on|at|am|:)|"
+    r"\b(?:scheduled|registered|registration|anmeldung|sitting|termin|deadline|due)\b",
+    re.IGNORECASE,
+)
+_ARTIFACT_DATE_CUE = re.compile(
+    r"\b(?:audit|verified|verification|generated|created|updated|captured|reviewed|"
+    r"overview|validation|package|version|as\s+of)\b",
+    re.IGNORECASE,
+)
 
-    Deliberately scoped. Two trees legitimately contain these dates and are NOT
-    scanned:
 
-    * `work/active/*/inputs/` — preserved pre-migration plans. CLAUDE.md §5
-      forbids rewriting migration content; a preserved original that said
-      "Klausur Mo 27.07" is evidence of what was planned, not a competing
-      owner.
-    * `knowledge/notes/` — durable notes. Hard rule #3 forbids rewriting a note
-      body, and a note recording *"slide 39 said the exam is probably 27.7.26,
-      later confirmed"* is provenance, not a restatement.
+def _is_admin_fact_context(value: str) -> bool:
+    """Distinguish an administrative assertion from artifact provenance."""
 
-    What IS scanned is everything that tells you what to do now: coordination,
-    workspace CONTEXT files, and workspace outputs. Those must defer to the
-    owning module record, because when a date moves they are what goes stale.
-    """
+    if not _ADMIN_CUE.search(value):
+        return False
+    if _STRONG_ADMIN_CUE.search(value):
+        return True
+    return _ARTIFACT_DATE_CUE.search(value) is None
+
+
+def _matching_variant(value: str, variants: set[str]) -> str | None:
+    return next(
+        (variant for variant in sorted(variants, key=len, reverse=True) if variant in value),
+        None,
+    )
+
+
+def _yaml_admin_date_mentions(value, forms, *, keys=()):
+    """Yield owned dates used in an administrative YAML field or sentence."""
+
+    if isinstance(value, dict):
+        for key, child in value.items():
+            yield from _yaml_admin_date_mentions(
+                child,
+                forms,
+                keys=(*keys, str(key)),
+            )
+        return
+    if isinstance(value, list):
+        for child in value:
+            yield from _yaml_admin_date_mentions(child, forms, keys=keys)
+        return
+    scalar = str(value)
+    context = " ".join((*keys, scalar))
+    if not _is_admin_fact_context(context):
+        return
+    for iso, variants in forms.items():
+        if variant := _matching_variant(scalar, variants):
+            yield iso, variant, "/".join(keys) or "<root>"
+
+
+def _markdown_admin_date_mentions(text: str, forms):
+    """Yield contextual date mentions while keeping audit cells independent."""
+
+    section = ""
+    for line_number, line in enumerate(text.splitlines(), start=1):
+        heading = re.match(r"^\s{0,3}#{1,6}\s+(.*)$", line)
+        if heading:
+            section = heading.group(1)
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        is_table = line.lstrip().startswith("|") and len(cells) > 1
+        for iso, variants in forms.items():
+            variant = _matching_variant(line, variants)
+            if variant is None:
+                continue
+            contexts = [line, section]
+            if is_table:
+                date_cells = [index for index, cell in enumerate(cells) if variant in cell]
+                contexts = []
+                for index in date_cells:
+                    contexts.append(cells[index])
+                    if index:
+                        contexts.append(f"{cells[index - 1]} {cells[index]}")
+            if any(_is_admin_fact_context(context) for context in contexts):
+                yield iso, variant, line_number
+
+
+def _admin_date_offences(repo_root):
+    """Return duplicated academic-administration facts in operational outputs."""
+
     forms = _owned_admin_dates(repo_root)
     assert forms, "no owned admin dates found — the collector is broken"
 
@@ -126,17 +189,92 @@ def test_admin_dates_are_not_restated_in_live_operational_prose(repo_root):
         if not path.is_file():
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
-        for iso, variants in forms.items():
-            for form in sorted(variants):
-                if form in text:
-                    line = text[:text.index(form)].count("\n") + 1
-                    offences.append(
-                        f"{path.relative_to(repo_root)}:{line} restates {iso} "
-                        f"as '{form}'")
+        if path.suffix == ".yaml":
+            data = yaml.safe_load(text)
+            mentions = _yaml_admin_date_mentions(data, forms)
+            for iso, variant, field in mentions:
+                offences.append(
+                    f"{path.relative_to(repo_root)} field {field} restates {iso} "
+                    f"as '{variant}'"
+                )
+        else:
+            mentions = _markdown_admin_date_mentions(text, forms)
+            for iso, variant, line in mentions:
+                offences.append(
+                    f"{path.relative_to(repo_root)}:{line} restates {iso} "
+                    f"as '{variant}'"
+                )
+    return sorted(set(offences))
+
+
+@pytest.mark.full_repo
+def test_admin_dates_are_not_restated_in_live_operational_prose(repo_root):
+    """Hard rule #2 applies to facts that *direct current work*.
+
+    Deliberately scoped. Two trees legitimately contain these dates and are NOT
+    scanned:
+
+    * `work/active/*/inputs/` — preserved pre-migration plans. CLAUDE.md §5
+      forbids rewriting migration content; a preserved original that said
+      "Klausur Mo 27.07" is evidence of what was planned, not a competing
+      owner.
+    * `knowledge/notes/` — durable notes. Hard rule #3 forbids rewriting a note
+      body, and a note recording *"slide 39 said the exam is probably 27.7.26,
+      later confirmed"* is provenance, not a restatement.
+
+    What IS scanned is everything that tells you what to do now: coordination,
+    workspace CONTEXT files, and workspace outputs. Those must defer to the
+    owning module record, because when a date moves they are what goes stale.
+    Artifact filenames, creation dates, and verification/audit dates are
+    provenance rather than competing academic-administration facts.
+    """
+    offences = _admin_date_offences(repo_root)
     assert not offences, (
         "administrative dates restated in live operational prose — they belong "
         "only in the owning curriculum/modules/<id>/module.yaml:\n  "
-        + "\n  ".join(sorted(offences)))
+        + "\n  ".join(offences))
+
+
+def test_admin_date_check_rejects_real_exam_and_registration_duplicates(tmp_path):
+    module = tmp_path / "curriculum/modules/module-demo/module.yaml"
+    module.parent.mkdir(parents=True)
+    module.write_text(
+        yaml.safe_dump({
+            "examination": {
+                "sittings": [{"date": "2026-08-27"}],
+                "registration_windows": [{
+                    "opens": "2026-08-01",
+                    "closes": "2026-08-28",
+                }],
+            },
+        }),
+        encoding="utf-8",
+    )
+    work = tmp_path / "work"
+    work.mkdir()
+    (work / "COORDINATION.md").write_text(
+        "# Current operations\n\n"
+        "- Exam date: 2026-08-27.\n"
+        "- Registration closes: 28.08.2026.\n",
+        encoding="utf-8",
+    )
+    output = work / "active/workspace-demo/outputs"
+    output.mkdir(parents=True)
+    (output / "exam-plan-audit-2026-08-27.md").write_text(
+        "# Exam plan audit — 2026-08-27\n\n"
+        "The package was verified on 2026-08-27.\n",
+        encoding="utf-8",
+    )
+    (output / "package-2026-08-27.yaml").write_text(
+        "coverage_audit: outputs/exam-plan-audit-2026-08-27.md\n",
+        encoding="utf-8",
+    )
+
+    offences = _admin_date_offences(tmp_path)
+    assert len(offences) == 2
+    assert any("restates 2026-08-27" in offence for offence in offences)
+    assert any("restates 2026-08-28" in offence for offence in offences)
+    assert not any("exam-plan-audit" in offence for offence in offences)
 
 
 def test_scenario_4_file_move_keeps_id(mini_repo):
