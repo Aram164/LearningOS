@@ -1,0 +1,905 @@
+schema_version: 1
+basis_plan_sha256: "sha256:84f45251d26aa8d599f08785af4423bb0d07243e8c256fd27d2d38321e6b4acf"
+basis_snapshot_sha256: "sha256:1b21f23541a0b781fe88b9224b11fd4d27d891a205274a806209aec73aff475d"
+decisions:
+  R001:
+    unit_path: "curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-aml-ss26-lectures"
+    expected_locator: "exercise-slides/Übung 02-11.pdf and bonus-exercises/zusatz-blatt01-04.pdf; exercise-slides/Übung 10.pdf, slides 2–3; lecture-slides/VL 01-Introduction.pdf through VL 11-transformers.pdf"
+    action: "split-selection"
+    route_ids:
+      - "route-9be11f4c735b1fab72ff7fd5"
+      - "route-b3c9cda951cabf0f92743436"
+      - "route-5f890476996a6d9847807cc6"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R002:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l01/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §01 (2 curated) and Part 2 §01 (2 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R003:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l01/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Chapter 1 and Chapter 2 selected sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R004:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l01/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Lecture 1 systems/build-first overview"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R005:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l02/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §02 (4 curated) and Part 2 §02 (26 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R006:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l02/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "ML-in-DB, DB-inspired and lifecycle-system landscape"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R007:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l02/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "ML Systems and ML Frameworks selected sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R008:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l02/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Needle design lectures"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R009:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l03/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §03 (4 curated) and Part 2 §03 (17 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R010:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l03/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Rewrites and compilation sections (verify TOC after acquisition)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R011:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l03/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlc-book"
+    expected_locator: "Tensor program abstraction, graph rewrites and automatic optimization"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R012:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l03/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Computation-graph/autodiff lectures and HW1 autodiff parts"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R013:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l03/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Selected compiler/performance quiz items"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R014:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l04/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §04 (4 curated) and Part 2 §04 (13 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R015:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l04/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Fusion and code-generation sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R016:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l04/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlc-book"
+    expected_locator: "Graph optimization and fusion notebook"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R017:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l04/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Graph/compiler optimization material"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R018:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l04/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Vectorization and instruction-level parallelism quizzes"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R019:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §05 (4 curated) and Part 2 §05 (12 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R020:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Distributed Training"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R021:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-ultrascale-playbook"
+    expected_locator: "Data/tensor/pipeline parallelism sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R022:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Parallel execution sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R023:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Parallelism and race-condition quizzes"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R024:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l05/unit.yaml"
+    selection_index: 5
+    expected_source_id: "source-stanford-cs149"
+    expected_locator: "Parallel abstractions and written assignment"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R025:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l06/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §06 (6 curated) and Part 2 §06 (31 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R026:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l06/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Collective Communication and Distributed Training"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R027:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l06/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-ultrascale-playbook"
+    expected_locator: "ZeRO and communication sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R028:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l06/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Parameter-server sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R029:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l06/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Distributed/parallel training material"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R030:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l07/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §07 (6 curated) and Part 2 §07 (16 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R031:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l07/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-ultrascale-playbook"
+    expected_locator: "Full playbook with focus on 5D parallelism and ZeRO"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R032:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l07/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-htsym-scaling-book"
+    expected_locator: "Transformer FLOP and inference accounting"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R033:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l07/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Inference at Scale"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R034:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l07/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Transformer/parallel systems material"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R035:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §08 (4 curated) and Part 2 §08 (24 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R036:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Acceleration and hardware chapters"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R037:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Compute Infrastructure"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R038:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-htsym-scaling-book"
+    expected_locator: "Accelerator and roofline chapters"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R039:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "GPU lecture and exercise"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R040:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 5
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Caching and hardware quiz items"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R041:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l08/unit.yaml"
+    selection_index: 6
+    expected_source_id: "source-stanford-cs149"
+    expected_locator: "GPU assignment"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R042:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l09/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §09 (4 curated) and Part 2 §09 (22 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R043:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l09/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Data access and compression sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R044:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l09/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Data Storage"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R045:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l09/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Locality and caching quizzes"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R046:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l10/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §10 (5 curated) and Part 2 §10 (26 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R047:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l10/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Data foundations/engineering chapters and checkpoints"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R048:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l10/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-huyen-dmls"
+    expected_locator: "Chapters 3–4"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R049:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l10/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Lifecycle/data-preparation sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R050:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l11/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §11 (7 curated) and Part 2 §11 (42 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R051:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l11/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-dmmls-boehm"
+    expected_locator: "Model selection and management sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R052:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l11/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Benchmarking and model/data evaluation sections"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R053:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l11/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-huyen-dmls"
+    expected_locator: "Chapter 6"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R054:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l12/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §12 (5 curated) and Part 2 §12 (27 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R055:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l12/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Responsible AI and checkpoints"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R056:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l12/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Robust AI and Responsible AI"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R057:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l12/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-huyen-dmls"
+    expected_locator: "Chapter 8"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R058:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l13/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-amls-ss26-lectures"
+    expected_locator: "AMLS-Source-Papers-Reading-List.md — Part 1 §13 (5 curated) and Part 2 §13 (25 bibliography entries)"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R059:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l13/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Inference at Scale"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R060:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l13/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Model Serving and ML Operations"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R061:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-l13/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-huyen-dmls"
+    expected_locator: "Chapters 7–9"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R062:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-theory/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-mlsysbook-vol1"
+    expected_locator: "Routed SocratiQ/checkpoints"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R063:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-theory/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-mlsysbook-vol2"
+    expected_locator: "Routed at-scale checkpoints"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R064:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-theory/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-cmu-10414"
+    expected_locator: "Selected assignments"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R065:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-theory/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-mit-6172"
+    expected_locator: "Selected quizzes"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R066:
+    unit_path: "curriculum/modules/module-hu-amls/units/unit-amls-theory/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-stanford-cs149"
+    expected_locator: "Selected written assignment"
+    action: "add-route"
+    route_ids: []
+    rationale: "The persisted selection and legacy source-to-unit evidence agree, but no rich route exists; author the required rich-route fields before binding."
+  R067:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-analysis-skript"
+    expected_locator: "unser skript.pdf — the scope authority; HU exercise series 05-09 + WV"
+    action: "split-selection"
+    route_ids:
+      - "route-48d1d739684974399e4b3740"
+      - "route-a48e686044b1fba66f9e8d2a"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R068:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-professor-leonard"
+    expected_locator: "Professor Leonard — Calculus 1/2"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-f9778890c9e7265167f608f0"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R069:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-3b1b-essence-of-calculus"
+    expected_locator: "3Blue1Brown — Essence of Calculus"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-a64dbf344f291c5560229153"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R070:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-fritzsche-trainingsbuch"
+    expected_locator: "Fritzsche Kap. 1 — Die Sprache der Analysis; Fritzsche Kap. 2 — Der Grenzwertbegriff; Fritzsche Kap. 3 — Der Calculus; Fritzsche Kap. 4 — Vertauschung von Grenzprozessen"
+    action: "split-selection"
+    route_ids:
+      - "route-3961493aa361824b27515747"
+      - "route-0364210f2bf2e5e73a77e3e0"
+      - "route-dde0ae3e1c717d50c2dd4129"
+      - "route-3a90b45ba4e4b30b10cd1bb9"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R071:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-analysis-drill-blaetter-extern"
+    expected_locator: "Solved sequence and series drill sheets (7 files); u10_Loesung.pdf — epsilon-delta continuity worked out; IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection; Aufgabensammlung-M1_Loesung.pdf — mixed solved bank; Bestimmt_Scan.pdf — handwritten field and order axioms"
+    action: "split-selection"
+    route_ids:
+      - "route-c15f9959285e3ff67c374eb6"
+      - "route-06c72210d8c7162a4e7e324b"
+      - "route-0ac5b094f47905d9b9953e29"
+      - "route-d897a4d321c624e5e0ba984e"
+      - "route-4be15d4c28bc1e4c30405492"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R072:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 5
+    expected_source_id: "source-analysis-klausuren-extern"
+    expected_locator: "Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn); Unsolved German papers held for timed sittings (Ulm, Leipzig, Stuttgart); TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben; MIT 18.100C exam set (English, proof-heavy)"
+    action: "split-selection"
+    route_ids:
+      - "route-aaf173838cef94710269122f"
+      - "route-c91e9e143f88d74a2c5ac422"
+      - "route-bc6efdd2ebe18e504ad63196"
+      - "route-8adc912eb8c6fc7ccb206330"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R073:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 6
+    expected_source_id: "source-strang-calculus"
+    expected_locator: "Strang — Calculus"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-f01701bfb839ce8915bba1c9"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R074:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 7
+    expected_source_id: "source-mit-18100a"
+    expected_locator: "MIT 18.100A — Real Analysis"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-537e25d9bb590cd55bb5da3a"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R075:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 8
+    expected_source_id: "source-analysis-grundlagen-handouts"
+    expected_locator: "Mengen und Abbildungen / Relationen handouts; Maths220 — Proofs in Calculus"
+    action: "split-selection"
+    route_ids:
+      - "route-ac0c1912eabaa045ed7c12ed"
+      - "route-a1442e6b1df3a750f0084781"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R076:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 9
+    expected_source_id: "source-forster-wessoly"
+    expected_locator: "Forster/Wessoly §§1-9 — Induktion bis Punktmengen; Forster/Wessoly §§10-14 — Stetigkeit, Logarithmus, Exponentialfunktion; Forster/Wessoly §§15-20 — Differentiation und Riemann-Integral; Forster/Wessoly §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen"
+    action: "split-selection"
+    route_ids:
+      - "route-1c4b10303efc8da7e9133fe1"
+      - "route-02a07559f1cb99447eaf60b3"
+      - "route-60266649dc344c6d402ecd28"
+      - "route-27bfaa55ba30411268e3d3eb"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R077:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 10
+    expected_source_id: "source-deitmar-uebungsbuch"
+    expected_locator: "Deitmar Kap. 1-2 — Grundlagen und die reellen Zahlen; Deitmar Kap. 3 — Folgen und Reihen; Deitmar Kap. 4 — Funktionen und Stetigkeit; Deitmar Kap. 5-6 — Differential- und Integralrechnung; Deitmar §7.1 — Gleichmäßige Konvergenz"
+    action: "split-selection"
+    route_ids:
+      - "route-42ad73412e8797c46beae4dd"
+      - "route-2701158d19df2cf7d13adcd6"
+      - "route-9b54e351286122658dac9c88"
+      - "route-05dfb92beceba767b47956db"
+      - "route-8f5b65af3dd3cbc9250ec71c"
+    rationale: "The aggregate guard spans distinct reviewed same-unit/source routes; split in semantic order and preserve the selection's purpose and stages."
+  R078:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 11
+    expected_source_id: "source-ableitinger-musterloesungen"
+    expected_locator: "Ableitinger — Musterlösungen"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-ef62efc18a51eb84475aae38"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R079:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 12
+    expected_source_id: "source-abbott-understanding-analysis"
+    expected_locator: "Abbott — Understanding Analysis"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-fc9e81a8133b535183d2767b"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R080:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 13
+    expected_source_id: "source-grieser-analysis1"
+    expected_locator: "Grieser — Analysis I"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-8330bfb143b99392d3628870"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R081:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 14
+    expected_source_id: "source-lebl-basic-analysis"
+    expected_locator: "Lebl — Basic Analysis I + II"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-f372b2c183adfe2997c0f793"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R082:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 15
+    expected_source_id: "source-labs-schreyer-mathe-informatiker"
+    expected_locator: "Mathematik für Informatiker (Teil 1-3)"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-44e88e298af27dfc82b33810"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R083:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 16
+    expected_source_id: "source-mfnf-analysis1"
+    expected_locator: "Mathe für Nicht-Freaks — Analysis 1"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-18e98f94d9bf7051a3efbcd6"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R084:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 17
+    expected_source_id: "source-ohlbach-eisinger-beweise"
+    expected_locator: "Design Patterns für mathematische Beweise"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-308845449f1eee704f10b377"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R085:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 18
+    expected_source_id: "source-velleman-how-to-prove-it"
+    expected_locator: "How To Prove It — A Structured Approach"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-5498e854d61f55d23d6e66a8"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R086:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 19
+    expected_source_id: "source-ross-elementary-analysis"
+    expected_locator: "Ross — Elementary Analysis"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-b93e49127a1f514ea6133ffc"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R087:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 20
+    expected_source_id: "source-thomas-calculus"
+    expected_locator: "Thomas' Calculus: Early Transcendentals"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-68279eae28566f2676e8f62b"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R088:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml"
+    selection_index: 21
+    expected_source_id: "source-stewart-calculus"
+    expected_locator: "Stewart — Calculus: Early Transcendentals (8th ed.)"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-4675983707572c15d2ad8cf4"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R089:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-sad-ss26-lectures"
+    expected_locator: "current L01-L15 scope"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-eb5c6b1b09ac69064d94ade3"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R090:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-sad-uebungen"
+    expected_locator: "current Blatt/UE assets"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-bba83db0dc9d9f588c11fe61"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R091:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 2
+    expected_source_id: "source-sad-klausuren-extern"
+    expected_locator: "unused scope-matched German questions"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-1db639dec976a8c8a14a9bbc"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R092:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-fau-klausur-ws1415"
+    expected_locator: "unused solved questions"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-16b01eb7e461c69ae61e851a"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R093:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-analysis-skript"
+    expected_locator: "course contract, Chapters 1-7, and HU exercises"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-686945337831d30097efd0a5"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R094:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/unit.yaml"
+    selection_index: 5
+    expected_source_id: "source-analysis-klausuren-extern"
+    expected_locator: "two disjoint unused scope-matched selections"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-b52242711bc5df661f001fa7"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R095:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 0
+    expected_source_id: "source-sad-ss26-lectures"
+    expected_locator: "current L01-L15 decks"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-84b3767dc900c066ef0a88e5"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R096:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 1
+    expected_source_id: "source-sad-uebungen"
+    expected_locator: "current Blatt/UE assets"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-427abe0fd724b6323bd2bf36"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R097:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 3
+    expected_source_id: "source-fahrmeir-arbeitsbuch"
+    expected_locator: "matching Chapters 5, 9, and 10-11"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-eed7d55ff58f1e488e9c30c9"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R098:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 4
+    expected_source_id: "source-blitzstein-hwang"
+    expected_locator: "Chapters 1-2"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-d24a91f3c931a404ae77ff90"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R099:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 5
+    expected_source_id: "source-kelleher-fmlpda"
+    expected_locator: "workflow and Chapters 4, 6, 7"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-fabc07c65cb1dee886db114f"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R100:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 6
+    expected_source_id: "source-cs4780-homeworks"
+    expected_locator: "solution-backed HW1/HW8"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-451794696dc8ed8e32974e9e"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R101:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 7
+    expected_source_id: "source-mit-6034-quizzes"
+    expected_locator: "tree and neural-network selections"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-0591d0ea916475d5ea97b91d"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R102:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 8
+    expected_source_id: "source-fau-klausur-ws1415"
+    expected_locator: "solved German Statistics paper"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-6869536b1af99f612e9ffc59"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R103:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 9
+    expected_source_id: "source-sad-klausuren-extern"
+    expected_locator: "topic-matched unused German tasks"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-e6b26b277916b868a8da65a5"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R104:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 10
+    expected_source_id: "source-mit-1805"
+    expected_locator: "unused solved exam questions"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-1e172cc16490b20444290684"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
+  R105:
+    unit_path: "curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/unit.yaml"
+    selection_index: 11
+    expected_source_id: "source-statquest"
+    expected_locator: "CLT/MLE selections"
+    action: "revise-selection-guard"
+    route_ids:
+      - "route-adbac42d6f53614447d25d56"
+    rationale: "The reviewed same-unit/source route supplies the exact canonical locator; revise the guard and bind without changing the selection's purpose or stages."
