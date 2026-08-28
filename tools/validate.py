@@ -22,7 +22,7 @@ from learning_os.rules import render_report, validate  # noqa: E402
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--online", action="store_true",
-                        help="also audit external URLs (link rot never blocks offline validation)")
+                        help="also gate on external link rot (never runs during offline validation)")
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
     parser.add_argument("--no-report", action="store_true",

@@ -16,6 +16,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout import (
     build_backlinks,
@@ -127,7 +128,56 @@ def _print_rows(rows: list[dict]) -> int:
     return 0
 
 
-def _read_structured_file(path_value: str) -> dict:
+def _read_content_bound_file(
+    path_value: str,
+    expected_sha256: str | None = None,
+    *,
+    label: str = "file input",
+) -> tuple[Path, bytes]:
+    """Read an external file once and verify the bytes a V2 request approved.
+
+    The returned bytes are the bytes the caller must parse or write. Hashing
+    and then reopening the pathname would merely move the TOCTOU window.
+    Direct human CLI preflights may omit the digest; an active V2 gateway
+    context may not.
+    """
+    if path_value == "-" and current_gateway_request() is not None:
+        raise WriteRefused(
+            f"GatewayEnvelopeV2 {label} must be a real path with an approved SHA-256; "
+            "unbound stdin is not allowed"
+        )
+    source = Path(path_value).expanduser().resolve()
+    if not source.is_file():
+        raise WriteRefused(f"no such {label}: {source}")
+    try:
+        content = source.read_bytes()
+    except OSError as exc:
+        raise WriteRefused(f"cannot read {label} {source}: {exc}") from exc
+    if expected_sha256 is None:
+        if current_gateway_request() is not None:
+            raise WriteRefused(
+                f"GatewayEnvelopeV2 {label} requires a SHA-256 bound to the exact bytes"
+            )
+        return source, content
+    if not re.fullmatch(r"sha256:[a-f0-9]{64}", expected_sha256):
+        raise WriteRefused(
+            f"{label} SHA-256 must use sha256:<64 lowercase hexadecimal digits>"
+        )
+    actual_sha256 = "sha256:" + hashlib.sha256(content).hexdigest()
+    if actual_sha256 != expected_sha256:
+        raise WriteRefused(
+            f"approved {label} changed before use; expected {expected_sha256}, "
+            f"found {actual_sha256}. Review the new bytes and create a new approval."
+        )
+    return source, content
+
+
+def _read_structured_file(
+    path_value: str,
+    *,
+    expected_sha256: str | None = None,
+    label: str = "structured input",
+) -> dict:
     """Read a JSON/YAML object from a path, or from stdin when given ``-``.
 
     Stdin matters for callers that build an envelope in memory: writing it to
@@ -135,7 +185,8 @@ def _read_structured_file(path_value: str) -> dict:
     created, found, and cleaned up on every write path, including the ones
     that fail. ``-`` removes that lifecycle entirely.
     """
-    if path_value == "-":
+    if path_value == "-" and expected_sha256 is None \
+            and current_gateway_request() is None:
         raw = sys.stdin.read()
         try:
             data = json.loads(raw)
@@ -144,15 +195,18 @@ def _read_structured_file(path_value: str) -> dict:
         if not isinstance(data, dict):
             raise WriteRefused("structured input must be an object")
         return data
-    path = Path(path_value).expanduser().resolve()
-    if not path.is_file():
-        raise WriteRefused(f"no such file: {path}")
+    path, raw_bytes = _read_content_bound_file(
+        path_value,
+        expected_sha256,
+        label=label,
+    )
     try:
+        raw = raw_bytes.decode("utf-8")
         if path.suffix.lower() == ".json":
-            data = json.loads(path.read_text(encoding="utf-8"))
+            data = json.loads(raw)
         else:
-            data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError, yaml.YAMLError) as exc:
+            data = yaml.safe_load(raw)
+    except (UnicodeDecodeError, ValueError, yaml.YAMLError) as exc:
         raise WriteRefused(f"cannot parse {path}: {exc}") from exc
     if not isinstance(data, dict):
         raise WriteRefused(f"structured input must be an object: {path}")
@@ -165,14 +219,51 @@ def _session_ledger(root: Path) -> Path:
     return Path(tempfile.gettempdir()) / f"learningos-{token}-touched.json"
 
 
+def _session_path_state(root: Path, relative: str) -> dict[str, str]:
+    """Return the exact post-transaction state used to prove session ownership."""
+    lexical = root / relative
+    try:
+        resolved = lexical.resolve()
+        resolved.relative_to(root.resolve())
+    except (OSError, ValueError):
+        return {"state": "unsafe"}
+    if lexical.is_symlink():
+        return {"state": "unsafe"}
+    if not resolved.exists():
+        return {"state": "absent"}
+    if not resolved.is_file():
+        return {"state": "not-file"}
+    try:
+        digest = hashlib.sha256(resolved.read_bytes()).hexdigest()
+    except OSError:
+        return {"state": "unreadable"}
+    return {"state": "file", "sha256": digest}
+
+
+def _load_session_paths(root: Path) -> dict[str, dict[str, str]]:
+    ledger = _session_ledger(root)
+    if not ledger.is_file():
+        return {}
+    try:
+        data = json.loads(ledger.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as exc:
+        raise WriteRefused(f"session ownership ledger is unreadable: {exc}") from exc
+    if not isinstance(data, dict) or data.get("schema_version") != 1 \
+            or not isinstance(data.get("paths"), dict):
+        raise WriteRefused("session ownership ledger has an unsupported contract")
+    output: dict[str, dict[str, str]] = {}
+    for relative, state in data["paths"].items():
+        if not isinstance(relative, str) or not relative \
+                or Path(relative).is_absolute() or ".." in Path(relative).parts \
+                or not isinstance(state, dict):
+            raise WriteRefused("session ownership ledger contains an invalid path row")
+        output[relative] = {str(key): str(value) for key, value in state.items()}
+    return output
+
+
 def _record_touched(root: Path, paths) -> None:
     ledger = _session_ledger(root)
-    current: set[str] = set()
-    if ledger.is_file():
-        try:
-            current.update(json.loads(ledger.read_text(encoding="utf-8")))
-        except (json.JSONDecodeError, OSError):
-            current.clear()
+    current = _load_session_paths(root) if ledger.is_file() else {}
     for path in paths:
         p = Path(path)
         try:
@@ -183,14 +274,17 @@ def _record_touched(root: Path, paths) -> None:
         # action ledger. The protection is about the file type, not the first
         # three default names Obsidian happened to generate.
         if p.suffix.lower() != ".canvas":
-            current.add(rel)
-    _atomic_text(ledger, json.dumps(sorted(current), indent=2) + "\n")
+            current[rel] = _session_path_state(root, rel)
+    _atomic_text(ledger, json.dumps({
+        "schema_version": 1,
+        "paths": dict(sorted(current.items())),
+    }, indent=2, sort_keys=True) + "\n")
 
 
 def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
-                       artifact_ids=()) -> tuple[int, list, dict]:
+                       artifact_ids=(), deletes=()) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
 
     Returns ``(code, errors, confirmation)``. The confirmation travels back to
@@ -200,10 +294,16 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     On any failure the confirmation is empty, so a caller cannot accidentally
     report a receipt for a write that did not happen.
     """
+    if current_gateway_request() is None:
+        return 2, [
+            "canonical writes must use GatewayEnvelopeV2; direct CLI application "
+            "is disabled"
+        ], {}
     service = TransactionService(root)
-    for path in writes:
+    delete_paths = tuple(Path(path) for path in deletes)
+    for path in (*writes, *delete_paths):
         if path.exists() and not path.is_file():
-            return 2, [f"cannot write {path}: target is not a regular file"], {}
+            return 2, [f"cannot change {path}: target is not a regular file"], {}
     validated_repo = None
 
     def validation_errors():
@@ -224,6 +324,7 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
         result = service.commit(
             capability=capability,
             writes=writes,
+            deletes=delete_paths,
             artifact_ids=artifact_ids,
             expected_revisions=expected_revisions or {},
             validate_state=validation_errors,
@@ -273,6 +374,8 @@ def _confirmation_from(result) -> dict:
         "transaction_id": result.transaction_id,
         "receipt_path": relative,
         "artifact_revisions": dict(result.revisions),
+        "snapshot_after": result.snapshot_after,
+        "replayed": bool(result.replayed),
     }
 
 

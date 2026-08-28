@@ -53,7 +53,23 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         schema_dir = self.repo.root / "system" / "schema"
         schemas = {}
         for f in schema_dir.glob("*.schema.json"):
-            schemas[f.stem.replace(".schema", "")] = json.loads(f.read_text(encoding="utf-8"))
+            try:
+                schema = json.loads(f.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as exc:
+                self.err(
+                    "SCHEMA-UNREADABLE",
+                    f"cannot read or parse schema: {exc}",
+                    self._rel(f),
+                )
+                continue
+            if not isinstance(schema, dict):
+                self.err(
+                    "SCHEMA-UNREADABLE",
+                    "schema document must be a JSON object",
+                    self._rel(f),
+                )
+                continue
+            schemas[f.stem.replace(".schema", "")] = schema
         return schemas
 
     def _schema_check(self, name: str, instance, where: str):

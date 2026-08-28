@@ -3,20 +3,39 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from pathlib import Path
 from typing import Any, cast
 from uuid import uuid4
 
-from learning_os.contracts.capability_catalog import domain_capability_definitions
+import yaml
+
+from learning_os.contracts.capability_catalog import (
+    domain_capability_definitions,
+    load_capability_catalog,
+)
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.manifest_contract import declared_version
+from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
-from learning_os.transactions import TransactionConflict, TransactionFailure, TransactionService
+from learning_os.material_synthesis import (
+    current_unit_material_basis,
+    synthesis_destination,
+    validate_unit_material_synthesis,
+)
+from learning_os.transactions import (
+    TransactionConflict,
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionService,
+    artifact_revision,
+    replay_for_request,
+)
 
 from .errors import (
     ActionPolicyError,
-    ConfidentialityError,
     DeliveryValidationError,
     StaleDeliveryError,
     TargetNotFoundError,
@@ -31,6 +50,7 @@ from .support import (
     _now_utc,
     _projection,
     _read_yaml,
+    _sha256_bytes,
     _sha256_file,
     _snapshot,
     parse_frontmatter_request_id,
@@ -93,17 +113,150 @@ class AIActionService:
             raise DeliveryValidationError(
                 f"capability {capability} declares no write scope; refusing to write {rel}"
             )
-        if not any(rel.startswith(prefix) for prefix in allowed):
+        try:
+            require_write_scope(capability, rel, allowed)
+        except WriteScopeError as exc:
             raise DeliveryValidationError(
-                f"capability {capability} may not write {rel} "
-                f"(declared scope: {', '.join(allowed)})"
+                f"{exc} (declared scope: {', '.join(allowed)})"
+            ) from exc
+
+    @staticmethod
+    def _validated_sha256(value: Any, *, label: str) -> str:
+        if not isinstance(value, str) or not re.fullmatch(
+            r"sha256:[a-f0-9]{64}", value
+        ):
+            raise DeliveryValidationError(
+                f"{label} must be sha256 followed by 64 lowercase hexadecimal digits"
             )
+        return value
+
+    def _bound_delivery_content(
+        self,
+        directory: Path,
+        *,
+        delivery_sha256: str,
+        artifact_sha256: dict[str, Any],
+    ) -> tuple[DeliveryRecord, dict[str, bytes]]:
+        """Read and verify the exact bytes named by an approved V2 payload."""
+        expected_delivery = self._validated_sha256(
+            delivery_sha256, label="delivery_sha256"
+        )
+        delivery_path = directory / "delivery.yaml"
+        if not delivery_path.is_file() or delivery_path.is_symlink():
+            raise DeliveryValidationError(
+                "approved delivery record is missing or is not a regular file"
+            )
+        try:
+            delivery_bytes = delivery_path.read_bytes()
+        except OSError as exc:
+            raise DeliveryValidationError(
+                f"approved delivery record is unreadable: {exc}"
+            ) from exc
+        if _sha256_bytes(delivery_bytes) != expected_delivery:
+            raise DeliveryValidationError(
+                "approved delivery content hash does not match the imported delivery record"
+            )
+        try:
+            delivery = yaml.safe_load(delivery_bytes.decode("utf-8", errors="strict"))
+        except (UnicodeError, yaml.YAMLError) as exc:
+            raise DeliveryValidationError(
+                f"approved delivery record is unreadable: {exc}"
+            ) from exc
+        if not isinstance(delivery, dict):
+            raise DeliveryValidationError("delivery.yaml must contain a mapping")
+
+        operations = delivery.get("operations")
+        if not isinstance(operations, list):
+            raise DeliveryValidationError("delivery operations must be a list")
+        refs: set[str] = set()
+        for operation in operations:
+            if not isinstance(operation, dict):
+                raise DeliveryValidationError("each delivery operation must be a mapping")
+            artifact_ref = operation.get("artifact_ref")
+            if artifact_ref is not None:
+                if not isinstance(artifact_ref, str) or not artifact_ref:
+                    raise DeliveryValidationError(
+                        "delivery artifact_ref must be a non-empty relative path"
+                    )
+                refs.add(artifact_ref)
+        if not isinstance(artifact_sha256, dict):
+            raise DeliveryValidationError("artifact_sha256 must be an object")
+        if any(not isinstance(key, str) or not key for key in artifact_sha256):
+            raise DeliveryValidationError(
+                "artifact_sha256 keys must be non-empty artifact_ref strings"
+            )
+        supplied = set(artifact_sha256)
+        if supplied != refs:
+            raise DeliveryValidationError(
+                "approved delivery artifact hashes must bind exactly every artifact_ref "
+                f"(missing={sorted(refs - supplied)}, unexpected={sorted(supplied - refs)})"
+            )
+        artifacts: dict[str, bytes] = {}
+        for artifact_ref in sorted(refs):
+            expected = self._validated_sha256(
+                artifact_sha256[artifact_ref],
+                label=f"artifact_sha256[{artifact_ref}]",
+            )
+            artifact = _inside(directory, artifact_ref)
+            if not artifact.is_file() or artifact.is_symlink():
+                raise DeliveryValidationError(
+                    f"approved delivery artifact is missing or is not a regular file: {artifact_ref}"
+                )
+            try:
+                content = artifact.read_bytes()
+            except OSError as exc:
+                raise DeliveryValidationError(
+                    f"approved delivery artifact is unreadable: {artifact_ref}: {exc}"
+                ) from exc
+            if _sha256_bytes(content) != expected:
+                raise DeliveryValidationError(
+                    "approved delivery artifact content hash does not match "
+                    f"the imported bytes: {artifact_ref}"
+                )
+            artifacts[artifact_ref] = content
+        return cast(DeliveryRecord, delivery), artifacts
+
+    def _apply_result(
+        self,
+        result,
+        *,
+        touched_paths: list[Path],
+    ) -> ApplyDeliveryResult:
+        receipt = _read_yaml(result.receipt_path)
+        if not isinstance(receipt, dict):  # pragma: no cover - commit guarantees this
+            raise DeliveryValidationError(
+                "transaction committed without a readable receipt"
+            )
+        return cast(ApplyDeliveryResult, {
+            **receipt,
+            "transaction_id": result.transaction_id,
+            "revision_updates": dict(result.revisions),
+            "receipt_path": result.receipt_path.relative_to(self.root).as_posix(),
+            "replayed": bool(result.replayed),
+            "touched_paths": [
+                path.relative_to(self.root).as_posix() for path in touched_paths
+            ],
+        })
 
     def list_garden_targets(self) -> list[dict[str, Any]]:
         """Use the same Garden projection every other Core consumer uses."""
         return project_garden_entries(load_repo(self.root))
 
-    def _target(self, target_id: str) -> tuple[GardenTarget, Path]:
+    def _target(self, target_id: str, target_kind: str = "garden-note") -> tuple[GardenTarget, Path]:
+        if target_kind == "unit":
+            repo = load_repo(self.root)
+            unit = repo.units.get(target_id)
+            if unit is None:
+                raise TargetNotFoundError(f"Unit target not found: {target_id}")
+            return cast(GardenTarget, {
+                "id": unit.id,
+                "type": "unit",
+                "title": unit.data.get("title", unit.id),
+                "path": unit.path.relative_to(self.root).as_posix(),
+                "state": unit.data.get("status", "unknown"),
+                "tags": [],
+                "revision": artifact_revision(self.root, unit.id),
+            }), unit.path
         for row in self.list_garden_targets():
             if row["id"] == target_id:
                 target = cast(GardenTarget, row)
@@ -119,7 +272,6 @@ class AIActionService:
         provider: str = "manual-bundle",
         expected_snapshot: str | None = None,
         request_id: str | None = None,
-        job_export_confirmed: bool = False,
     ) -> AIActionRequest:
         action = self.registry.get(action_id)
         if target_kind not in action.target_kinds:
@@ -136,13 +288,7 @@ class AIActionService:
             raise ActionPolicyError(
                 f"adapter {adapter.id} does not support {action.interaction_mode} mode"
             )
-        target, source = self._target(target_id)
-        if (target.get("job_derived")
-                and action.confidentiality_policy.get("job_derived_requires_confirmation", True)
-                and not job_export_confirmed):
-            raise ConfidentialityError(
-                "job-derived content requires explicit export confirmation; Job/ remains inaccessible"
-            )
+        target, source = self._target(target_id, target_kind)
         snapshot = _snapshot(self.root)
         if expected_snapshot and expected_snapshot != snapshot:
             raise StaleDeliveryError(
@@ -178,9 +324,7 @@ class AIActionService:
             },
             "confidentiality": {
                 "classification": "private",
-                "job_derived": bool(target.get("job_derived")),
-                "export_confirmed": bool(job_export_confirmed),
-                "employer_repository_access": False,
+                "external_repository_access": False,
             },
             "created_at": _iso(now),
         }
@@ -199,7 +343,7 @@ class AIActionService:
             "Discuss this bounded Garden seed with the user. Preserve the original file "
             "unchanged. Keep transcription distinct from synthesis. Return an approved "
             "delivery directory containing `delivery.yaml`; use only capabilities listed "
-            "in `allowed-capabilities.json`. Do not request or read Job/.\n"
+            "in `allowed-capabilities.json`. Do not request or read external repositories.\n"
         )
         bundle_files = {
             "instructions.md": instructions.encode("utf-8"),
@@ -212,12 +356,66 @@ class AIActionService:
             ).encode("utf-8"),
             "contract-lock.json": (json.dumps({
                 "exchange_bundle_version": 1,
-                "capability_contract_version": 1,
+                "capability_contract_version": load_capability_catalog(self.root)[
+                    "contract_version"
+                ],
                 "manifest_contract_version": declared_version(self.root),
                 "action_registry_schema_version": 1,
             }, indent=2) + "\n").encode("utf-8"),
             original["bundle_path"]: source.read_bytes(),
         }
+        if action.id == "unit.compare-materials":
+            repo = load_repo(self.root)
+            unit = repo.units[target_id]
+            source_map_path = repo.module_source_map_origins.get(unit.module_id)
+            source_map = repo.module_source_maps.get(unit.module_id) or {}
+            routes = []
+            for source_row in source_map.get("sources", []) or []:
+                if not isinstance(source_row, dict):
+                    continue
+                for route in source_row.get("unit_routes", []) or []:
+                    if isinstance(route, dict) and route.get("unit_id") == target_id:
+                        routes.append({**route, "source_id": source_row.get("source_id")})
+            request["context"] = {
+                "artifact_ids": [target_id, *[str(row.get("id")) for row in routes]],
+                "attachment_ids": [original["id"]],
+                "originals": [original],
+            }
+            context = {
+                "target": {k: target[k] for k in
+                           ("id", "type", "title", "path", "state", "revision")},
+                "knowledge_map": unit.data.get("knowledge_map"),
+                "related_module_ids": unit.data.get("related_module_ids", []),
+                "artifacts": unit.data.get("artifacts", {}),
+                "routes": routes,
+                "basis": current_unit_material_basis(self.root, target_id),
+                "policy": {
+                    "all_routes_listed": True,
+                    "deep_scopes": ["current", "prerequisite"],
+                    "other_statuses": ["screened", "unevaluated", "unavailable"],
+                    "numeric_scores": False,
+                    "study_order": False,
+                    "time_recommendations": False,
+                    "standalone_lesson": False,
+                },
+            }
+            instructions = (
+                "# Compare one unit's materials\n\n"
+                "Work only from the explicitly listed local routes. List every route. "
+                "Deep-review current and prerequisite routes; label all others honestly. Use "
+                "qualitative evidence-bearing comparisons only. Do not score, order, schedule, "
+                "upload, create sources, create concepts, or write a standalone lesson. Return "
+                "one whole approved `unit-material-synthesis.schema.json` record as an artifact "
+                "for capability `unit.material-synthesis.publish`.\n"
+            )
+            bundle_files["instructions.md"] = instructions.encode("utf-8")
+            bundle_files["context.md"] = (
+                "# Bounded unit context\n\n```json\n"
+                + json.dumps(context, indent=2, ensure_ascii=False)
+                + "\n```\n"
+            ).encode("utf-8")
+            if source_map_path is not None and source_map_path.is_file():
+                bundle_files["attachments/source-map.yaml"] = source_map_path.read_bytes()
         self.repository.save_request(request, bundle_files)
         return request
 
@@ -229,11 +427,10 @@ class AIActionService:
         except Exception:
             shutil.rmtree(staged.parent, ignore_errors=True)
             raise
-        self.repository.publish_delivery(staged, delivery_id)
         request = self.repository.get_request(str(delivery["request_id"]))
         request["status"] = "delivery-ready"
         request["delivery_id"] = delivery_id
-        self.repository.update_request(request)
+        self.repository.commit_delivery_import(staged, delivery_id, request)
         return delivery
 
     def validate_delivery(self, delivery_id: str) -> DeliveryValidationResult:
@@ -295,7 +492,8 @@ class AIActionService:
         the read has to happen anyway for the guard to mean anything.
         """
         target_id = str((request.get("target") or {}).get("id", ""))
-        target, _ = self._target(target_id)
+        target_kind = str((request.get("target") or {}).get("kind", "garden-note"))
+        target, _ = self._target(target_id, target_kind)
         expected_revision = (request.get("preconditions") or {}).get(
             "artifact_revisions", {}).get(target_id)
         if target.get("revision") != expected_revision:
@@ -306,8 +504,50 @@ class AIActionService:
                 raise DeliveryValidationError("original artifact changed after request preparation")
         return target
 
-    def apply_delivery(self, delivery_id: str) -> ApplyDeliveryResult:
-        delivery, directory = self.repository.get_delivery(delivery_id)
+    def apply_delivery(
+        self,
+        delivery_id: str,
+        *,
+        delivery_sha256: str,
+        artifact_sha256: dict[str, Any],
+        expected_snapshot: str,
+        expected_revisions: dict[str, int],
+    ) -> ApplyDeliveryResult:
+        authority = current_gateway_request()
+        if authority is None or authority.capability != "ai-action.delivery.apply" \
+                or authority.approval_kind != "approved-delivery":
+            raise DeliveryValidationError(
+                "approved delivery application requires GatewayEnvelopeV2 "
+                "approved-delivery authority"
+            )
+        directory = self.repository.delivery_dir(delivery_id)
+        delivery, bound_artifacts = self._bound_delivery_content(
+            directory,
+            delivery_sha256=delivery_sha256,
+            artifact_sha256=artifact_sha256,
+        )
+        if delivery.get("id") != delivery_id:
+            raise DeliveryValidationError(
+                "approved delivery id does not match its imported directory"
+            )
+        try:
+            replay = replay_for_request(self.root, authority)
+        except TransactionIdempotencyConflict as exc:
+            raise DeliveryValidationError(f"delivery idempotency conflict: {exc}") from exc
+        except TransactionFailure as exc:
+            raise DeliveryValidationError(f"delivery replay failed: {exc}") from exc
+        if replay is not None:
+            return self._apply_result(replay, touched_paths=[])
+
+        expected_snapshot = self._validated_sha256(
+            expected_snapshot, label="expected_snapshot"
+        )
+        actual_snapshot = _snapshot(self.root)
+        if expected_snapshot != actual_snapshot:
+            raise StaleDeliveryError(
+                "approved delivery snapshot conflict "
+                f"(expected {expected_snapshot}, actual {actual_snapshot})"
+            )
         # Validation already read the delivery, the request and the target; reuse
         # them rather than parsing the same three files a second time.
         outcome = self._validate(delivery, directory)
@@ -315,6 +555,7 @@ class AIActionService:
         target = outcome.target
         capability_definitions = self.capability_definitions()
         target_id = str(request["target"]["id"])
+        is_unit_synthesis = request.get("action_id") == "unit.compare-materials"
         state_path = self.repository.state_path(target_id)
         state = _read_yaml(state_path, {})
         if not isinstance(state, dict):
@@ -337,7 +578,7 @@ class AIActionService:
             capability = operation["capability"]
             if capability == "garden.add-transcription":
                 artifact_ref = str(operation["artifact_ref"])
-                body = _inside(directory, artifact_ref).read_text(encoding="utf-8", errors="replace")
+                body = bound_artifacts[artifact_ref].decode("utf-8", errors="replace")
                 transcription_id = f"transcription-{target_id}"
                 destination = self.root / "knowledge" / "garden" / "transcriptions" / f"{target_id}.md"
                 # Re-shelving must not quietly discard an earlier AI reading of
@@ -376,7 +617,11 @@ class AIActionService:
                 state.update(patch)
             elif capability == "relationship.create":
                 payload = operation.get("payload") or {}
-                relation_id = str(payload.get("id") or f"relationship-{uuid4().hex[:12]}")
+                if not payload.get("id"):
+                    raise DeliveryValidationError(
+                        "relationship.create in an approved delivery requires a stable id"
+                    )
+                relation_id = str(payload["id"])
                 relation = {
                     "id": relation_id,
                     "from": payload.get("from"),
@@ -396,19 +641,57 @@ class AIActionService:
                     rows.append(relation)
                     created_ids.append(relation_id)
                     relations_added = True
+            elif capability == "unit.material-synthesis.publish":
+                artifact_ref = str(operation.get("artifact_ref", ""))
+                if not artifact_ref:
+                    raise DeliveryValidationError(
+                        "unit.material-synthesis.publish requires artifact_ref"
+                    )
+                try:
+                    synthesis = yaml.safe_load(
+                        bound_artifacts[artifact_ref].decode("utf-8", errors="strict")
+                    )
+                except (UnicodeError, yaml.YAMLError) as exc:
+                    raise DeliveryValidationError(
+                        f"material synthesis artifact is unreadable: {exc}"
+                    ) from exc
+                if not isinstance(synthesis, dict):
+                    raise DeliveryValidationError("material synthesis artifact must be an object")
+                try:
+                    validate_unit_material_synthesis(self.root, target_id, synthesis)
+                except ValueError as exc:
+                    raise DeliveryValidationError(str(exc)) from exc
+                provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
+                expected_provider = (request.get("provider") or {}).get("preferred")
+                if provenance != {
+                    "request_id": request["id"],
+                    "delivery_id": delivery_id,
+                    "provider": expected_provider,
+                }:
+                    raise DeliveryValidationError(
+                        "material synthesis provenance does not match its approved delivery"
+                    )
+                destination = synthesis_destination(self.root, target_id)
+                if destination.is_file() and operation.get("supersedes") != synthesis.get("id"):
+                    raise DeliveryValidationError(
+                        f"a dossier for {target_id} already exists; explicit supersedes is required"
+                    )
+                staged[destination] = (_dump_yaml(synthesis), capability)
+                (updated_ids if destination.is_file() else created_ids).append(synthesis["id"])
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")
 
-        state.update({
-            "schema_version": 1,
-            "id": target_id,
-            "type": "garden-ai-state",
-            "source_path": target["path"],
-            "source_revision": target["revision"],
-            "revision": int(state.get("revision", 0)) + 1,
-            "last_ai_request_id": request["id"],
-        })
-        staged[state_path] = (_dump_yaml(state), "garden.update")
+        if not is_unit_synthesis:
+            state.update({
+                "schema_version": 1,
+                "id": target_id,
+                "type": "garden-ai-state",
+                "source_path": target["path"],
+                "source_revision": target["revision"],
+                "revision": int(state.get("revision", 0)) + 1,
+                "last_ai_request_id": request["id"],
+            })
+            staged[state_path] = (_dump_yaml(state), "garden.update")
         # Only rewrite the AI-action relationship registry when this delivery
         # actually added a relation — re-serialising an untouched file would
         # reformat the user's own YAML for nothing.
@@ -431,6 +714,25 @@ class AIActionService:
         # write window; unrelated concurrent edits are not this delivery's
         # business, a changed target is.
         self._assert_target_unchanged(request)
+
+        # The delivery directory is exchange state and can be edited outside the
+        # canonical transaction engine. Re-hash it at the last possible point,
+        # inside the operator lock and immediately before the atomic commit.
+        final_delivery, final_artifacts = self._bound_delivery_content(
+            directory,
+            delivery_sha256=delivery_sha256,
+            artifact_sha256=artifact_sha256,
+        )
+        if final_delivery != delivery or final_artifacts != bound_artifacts:
+            raise DeliveryValidationError(
+                "approved delivery bytes changed while application was being prepared"
+            )
+        actual_snapshot = _snapshot(self.root)
+        if expected_snapshot != actual_snapshot:
+            raise StaleDeliveryError(
+                "approved delivery snapshot changed before commit "
+                f"(expected {expected_snapshot}, actual {actual_snapshot})"
+            )
 
         def request_write(transaction_id: str) -> dict[Path, str]:
             completed = dict(request)
@@ -468,6 +770,12 @@ class AIActionService:
             "request_id": request["id"],
             "delivery_id": delivery_id,
             "action_id": request["action_id"],
+            "approved_delivery": {
+                "delivery_sha256": delivery_sha256,
+                "artifact_sha256": {
+                    key: artifact_sha256[key] for key in sorted(artifact_sha256)
+                },
+            },
             "created_ids": created_ids,
             "updated_ids": updated_ids,
             "deleted_ids": [],
@@ -479,41 +787,38 @@ class AIActionService:
                 "projection": "passed",
             },
         }
-        expected = {
-            str(artifact): revision
-            for artifact, revision in (
-                (request.get("preconditions") or {}).get("artifact_revisions") or {}
-            ).items()
-            if isinstance(revision, int) and revision >= 0
-        }
         try:
             result = TransactionService(self.root, clock=self.clock).commit(
-                capability=f"ai-action.{request['action_id']}",
+                capability="ai-action.delivery.apply",
                 writes={path: content for path, (content, _capability) in staged.items()},
-                artifact_ids={target_id, *created_ids, *superseded_ids},
-                expected_revisions=expected,
+                artifact_ids={*created_ids, *updated_ids, *superseded_ids},
+                expected_revisions=expected_revisions,
                 validate_state=validation_errors,
                 publish=publish,
                 rollback_publish=rollback_publish,
                 metadata=metadata,
                 transaction_writes=request_write,
+                write_authorities={
+                    **{
+                        path: domain_capability
+                        for path, (_content, domain_capability) in staged.items()
+                    },
+                    request_path: "ai-action.delivery.apply",
+                },
             )
         except TransactionConflict as exc:
             raise StaleDeliveryError(str(exc)) from exc
+        except TransactionIdempotencyConflict as exc:
+            raise DeliveryValidationError(f"delivery idempotency conflict: {exc}") from exc
         except TransactionFailure as exc:
             raise DeliveryValidationError(f"delivery transaction failed: {exc}") from exc
-
-        receipt = _read_yaml(result.receipt_path)
-        if not isinstance(receipt, dict):  # pragma: no cover - commit guarantees this
-            raise DeliveryValidationError("transaction committed without a readable receipt")
-        return cast(ApplyDeliveryResult, {
-            **receipt,
-            "receipt_path": result.receipt_path.relative_to(self.root).as_posix(),
-            "touched_paths": [
-                path.relative_to(self.root).as_posix()
-                for path in [*staged, request_path, result.receipt_path]
-            ],
-        })
+        return self._apply_result(
+            result,
+            touched_paths=(
+                [] if result.replayed
+                else [*staged, request_path, result.receipt_path]
+            ),
+        )
 
     def request_status(self, request_id: str) -> RequestStatus:
         request = self.repository.get_request(request_id)

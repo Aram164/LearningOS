@@ -12,12 +12,61 @@ import re
 from pathlib import Path
 
 import yaml
+from yaml.constructor import ConstructorError
 
+from ..pathing import PathBoundaryError, read_text_inside
 from .vocabulary import FRONTMATTER_RE
 
 
 class LoaderError(Exception):
     """Raised when a file cannot be parsed at all (structural failure)."""
+
+
+class UniqueKeySafeLoader(yaml.SafeLoader):
+    """SafeLoader that rejects duplicate explicit keys at every depth.
+
+    Merge keys remain supported: an explicit key may intentionally override a
+    merged default, while duplicate declarations in the same authored mapping
+    are ambiguous and therefore structural failures.
+    """
+
+    def construct_mapping(self, node, deep=False):
+        if not isinstance(node, yaml.MappingNode):
+            return super().construct_mapping(node, deep=deep)
+        seen = set()
+        for key_node, _value_node in node.value:
+            if key_node.tag == "tag:yaml.org,2002:merge":
+                continue
+            key = self.construct_object(key_node, deep=False)
+            try:
+                duplicate = key in seen
+                seen.add(key)
+            except TypeError as exc:
+                raise ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    "found an unhashable mapping key",
+                    key_node.start_mark,
+                ) from exc
+            if duplicate:
+                raise ConstructorError(
+                    "while constructing a mapping",
+                    node.start_mark,
+                    f"found duplicate key {key!r}",
+                    key_node.start_mark,
+                )
+        return super().construct_mapping(node, deep=deep)
+
+
+def _safe_yaml(text: str):
+    return yaml.load(text, Loader=UniqueKeySafeLoader)
+
+
+def _read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
+    try:
+        return read_text_inside(root, path, errors=errors)
+    except (OSError, PathBoundaryError) as exc:
+        raise LoaderError(f"{path}: cannot read canonical file: {exc}") from exc
 
 
 def _normalize(value):
@@ -39,7 +88,7 @@ def parse_frontmatter(text: str, path: Path) -> tuple[dict, str]:
     if not m:
         return {}, text
     try:
-        meta = yaml.safe_load(m.group(1)) or {}
+        meta = _safe_yaml(m.group(1)) or {}
     except yaml.YAMLError as exc:  # pragma: no cover - surfaced as issue upstream
         raise LoaderError(f"{path}: invalid YAML frontmatter: {exc}") from exc
     if not isinstance(meta, dict):
@@ -47,17 +96,10 @@ def parse_frontmatter(text: str, path: Path) -> tuple[dict, str]:
     return _normalize(meta), text[m.end():]
 
 
-def _load_yaml(path: Path) -> dict:
+def _load_yaml(path: Path, root: Path) -> dict:
+    text = _read_text(path, root)
     try:
-        text = path.read_text(encoding="utf-8")
-    except OSError as exc:
-        # An unreadable file (replaced by a directory, permission denied) raises
-        # before YAML parsing starts, so it used to bypass the parse-failure
-        # mechanism and crash every command — including `validate`, the one a
-        # confused user runs first.
-        raise LoaderError(f"{path}: cannot read file: {exc.strerror or exc}") from exc
-    try:
-        data = yaml.safe_load(text)
+        data = _safe_yaml(text)
     except yaml.YAMLError as exc:
         raise LoaderError(f"{path}: invalid YAML: {exc}") from exc
     if data is None:
@@ -68,7 +110,7 @@ def _load_yaml(path: Path) -> dict:
 
 
 def _load_registry(
-    consolidated: Path, partition_dir: Path, key: str
+    consolidated: Path, partition_dir: Path, key: str, *, root: Path
 ) -> tuple[list, list[Path], list[tuple[Path, str]]]:
     """Load a registry from its consolidated file and/or partition directory.
 
@@ -86,7 +128,7 @@ def _load_registry(
         candidates.extend(sorted(partition_dir.glob("*.yaml")))
     for f in candidates:
         try:
-            data = _load_yaml(f)
+            data = _load_yaml(f, root)
         except LoaderError as exc:
             failures.append((f, str(exc)))
             continue

@@ -25,6 +25,8 @@ from pathlib import Path
 
 import yaml
 
+from ..loading.yamlio import UniqueKeySafeLoader
+from ..pathing import PathBoundaryError, read_text_inside, resolve_symlinks_inside
 from .common import CANONICAL_TREES, _in_garden, _in_quarantine
 
 # Material filenames legitimately contain spaces ("unser skript.pdf"), so a
@@ -73,13 +75,24 @@ class ChecksMaterials:
             return
 
         try:
-            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
-        except yaml.YAMLError as exc:
+            manifest = yaml.load(
+                read_text_inside(repo.root, manifest_path),
+                Loader=UniqueKeySafeLoader,
+            ) or {}
+        except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
             self.err("MATERIALS-MANIFEST", f"unparseable manifest: {exc}",
                      "records/materials-manifest.yaml")
             return
 
-        recorded: dict = manifest.get("files") or {}
+        if not isinstance(manifest, dict) or not isinstance(manifest.get("files"), dict):
+            self.err(
+                "MATERIALS-MANIFEST",
+                "manifest must be a mapping with a 'files' mapping",
+                "records/materials-manifest.yaml",
+            )
+            return
+
+        recorded: dict = manifest["files"]
 
         # Two coordinate systems meet here. The manifest indexes the PHYSICAL
         # topic tree (Books/analysis/…), because that is what a backup restores.
@@ -87,7 +100,7 @@ class ChecksMaterials:
         # materials/.flat/ symlink farm. Referenced URIs must therefore be
         # translated to physical paths before the inventory can be consulted.
         physical = repo.learningos_root / "materials"
-        if not physical.is_dir():
+        if physical.is_symlink() or not physical.is_dir():
             self.warn("MATERIALS-OFFLINE",
                       f"materials tree not mounted at {physical} — "
                       f"{len(recorded)} inventoried file(s) unverified this run "
@@ -155,8 +168,18 @@ class ChecksMaterials:
         drifted: list[str] = []
         missing_unreferenced = 0
         for rel, want in recorded.items():
-            path = physical / rel
-            if not path.is_file():
+            if not isinstance(rel, str) or not isinstance(want, dict):
+                self.err(
+                    "MATERIALS-MANIFEST",
+                    f"invalid inventory row: {rel!r}",
+                    "records/materials-manifest.yaml",
+                )
+                continue
+            try:
+                path = resolve_symlinks_inside(physical, physical / rel)
+            except PathBoundaryError:
+                path = None
+            if path is None or not path.is_file():
                 if rel in referenced:
                     missing_referenced.append(rel)
                 else:
@@ -210,13 +233,14 @@ class ChecksMaterials:
         """
         for base, form in ((self.repo.materials_root, "id"), (physical, "physical")):
             try:
-                resolved = (base / uri_path).resolve()
+                resolved = resolve_symlinks_inside(physical, base / uri_path)
+                relative = resolved.relative_to(physical)
                 if resolved.is_dir():
                     return None, form
                 if not resolved.is_file():
                     continue
-                return resolved.relative_to(physical.resolve()).as_posix(), form
-            except (OSError, ValueError):
+                return relative.as_posix(), form
+            except (OSError, PathBoundaryError, ValueError):
                 continue
         return None
 

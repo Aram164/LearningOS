@@ -10,6 +10,8 @@ import json
 import re
 import sys
 
+from learning_os.contracts.gateway import current_gateway_request
+
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
@@ -82,13 +84,19 @@ def cmd_garden_seed_create(args) -> int:
 
         relative = target.relative_to(root).as_posix()
         content = _seed_content(text, title)
+        gateway_request = current_gateway_request()
+        artifact_id = (
+            f"garden-request:{gateway_request.idempotency_key}"
+            if gateway_request is not None
+            else f"garden:{relative}"
+        )
 
         code, errors, confirmation = _write_transaction(
             root,
             {target: content},
             capability="garden.seed.create",
             expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=[f"garden:{relative}"],
+            artifact_ids=[artifact_id],
         )
 
         if code:

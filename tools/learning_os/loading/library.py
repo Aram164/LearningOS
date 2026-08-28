@@ -16,7 +16,8 @@ from .yamlio import LoaderError, _load_registry, _load_yaml, _record_id
 def load_sources(repo: Repo, root: Path) -> None:
     """Sources (consolidated or partitioned)."""
     records, origins, failures = _load_registry(
-        root / "sources" / "sources.yaml", root / "sources" / "registry", "sources"
+        root / "sources" / "sources.yaml", root / "sources" / "registry", "sources",
+        root=root,
     )
     repo.parse_failures.extend(failures)
     for rec, origin in zip(records, origins, strict=True):
@@ -37,7 +38,7 @@ def load_collections(repo: Repo, root: Path) -> None:
         return
     for f in sorted(collections_dir.glob("*.yaml")):
         try:
-            doc = _load_yaml(f)
+            doc = _load_yaml(f, root)
         except LoaderError as exc:
             repo.parse_failures.append((f, str(exc)))
             continue
@@ -61,7 +62,7 @@ def load_topics(repo: Repo, root: Path) -> None:
     if not topics_file.is_file():
         return
     try:
-        topics_doc = _load_yaml(topics_file)
+        topics_doc = _load_yaml(topics_file, root)
     except LoaderError as exc:
         repo.parse_failures.append((topics_file, str(exc)))
         return

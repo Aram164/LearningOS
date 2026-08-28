@@ -18,6 +18,7 @@ from pathlib import Path
 
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
+from learning_os.transactions import TransactionFailure  # noqa: E402
 
 
 def main() -> int:
@@ -28,7 +29,11 @@ def main() -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     repo = load_repo(root)
-    outputs = generate_all(repo)
+    try:
+        outputs = generate_all(repo)
+    except TransactionFailure as exc:
+        print(f"generation refused: {exc}")
+        return 2
     write_outputs(repo, outputs)
     for rel in sorted(outputs):
         print(f"wrote generated/{rel}")

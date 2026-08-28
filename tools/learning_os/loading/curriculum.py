@@ -23,7 +23,7 @@ def load_thematic_groups(repo: Repo, root: Path) -> None:
     if not thematic_groups_file.is_file():
         return
     try:
-        thematic_doc = _load_yaml(thematic_groups_file)
+        thematic_doc = _load_yaml(thematic_groups_file, root)
     except LoaderError as exc:
         repo.parse_failures.append((thematic_groups_file, str(exc)))
         return
@@ -62,7 +62,7 @@ def load_programs(repo: Repo, root: Path) -> None:
         return
     for f in sorted(programs_dir.glob("*.yaml")):
         try:
-            data = _load_yaml(f)
+            data = _load_yaml(f, root)
         except LoaderError as exc:
             repo.parse_failures.append((f, str(exc)))
             continue
@@ -79,7 +79,7 @@ def _load_legacy_modules(repo: Repo, modules_file: Path) -> None:
     if not modules_file.exists():
         return
     try:
-        data = _load_yaml(modules_file)
+        data = _load_yaml(modules_file, repo.root)
     except LoaderError as exc:
         repo.parse_failures.append((modules_file, str(exc)))
         data = {}
@@ -112,7 +112,7 @@ def _load_study_map(repo: Repo, unit_file: Path, module_id: str, unit_id: str) -
     if not map_file.is_file():
         return
     try:
-        map_data = _load_yaml(map_file)
+        map_data = _load_yaml(map_file, repo.root)
     except LoaderError as exc:
         repo.parse_failures.append((map_file, str(exc)))
         return
@@ -125,13 +125,48 @@ def _load_study_map(repo: Repo, unit_file: Path, module_id: str, unit_id: str) -
     _register(repo, repo.study_maps, smid, study_map, map_file, "study-map")
 
 
+def _load_material_synthesis(repo: Repo, unit_file: Path, unit_id: str) -> None:
+    """Load one approved unit dossier without traversing any source material."""
+    synthesis_file = unit_file.parent / "material-synthesis.yaml"
+    if not synthesis_file.is_file():
+        return
+    try:
+        data = _load_yaml(synthesis_file, repo.root)
+    except LoaderError as exc:
+        repo.parse_failures.append((synthesis_file, str(exc)))
+        return
+    synthesis_id = _record_id(data)
+    if synthesis_id is None:
+        repo.parse_failures.append((
+            synthesis_file,
+            f"{synthesis_file}: material synthesis with missing or empty id — skipped",
+        ))
+        return
+    if data.get("unit_id") != unit_id:
+        repo.parse_failures.append((
+            synthesis_file,
+            f"{synthesis_file}: material synthesis belongs to "
+            f"'{data.get('unit_id')}', not owning unit '{unit_id}'",
+        ))
+        return
+    if _register(
+        repo,
+        repo.unit_material_syntheses,
+        synthesis_id,
+        data,
+        synthesis_file,
+        "unit-material-synthesis",
+    ):
+        repo.unit_material_synthesis_origins[synthesis_id] = synthesis_file
+
+
 def _load_units(repo: Repo, module_file: Path, module_id: str) -> None:
     units_dir = module_file.parent / "units"
     if not units_dir.is_dir():
         return
     for unit_file in sorted(units_dir.glob("*/unit.yaml")):
         try:
-            unit_data = _load_yaml(unit_file)
+            unit_data = _load_yaml(unit_file, repo.root)
         except LoaderError as exc:
             repo.parse_failures.append((unit_file, str(exc)))
             continue
@@ -141,8 +176,9 @@ def _load_units(repo: Repo, module_file: Path, module_id: str) -> None:
                 (unit_file, f"{unit_file}: unit with missing or empty id — skipped"))
             continue
         unit = Unit(uid, unit_file, unit_data, module_id)
-        _register(repo, repo.units, uid, unit, unit_file, "unit")
-        _load_study_map(repo, unit_file, module_id, uid)
+        if _register(repo, repo.units, uid, unit, unit_file, "unit"):
+            _load_study_map(repo, unit_file, module_id, uid)
+            _load_material_synthesis(repo, unit_file, uid)
 
 
 def _load_module_source_map(repo: Repo, module_file: Path, module_id: str) -> None:
@@ -150,7 +186,7 @@ def _load_module_source_map(repo: Repo, module_file: Path, module_id: str) -> No
     if not source_map_file.is_file():
         return
     try:
-        source_map = _load_yaml(source_map_file)
+        source_map = _load_yaml(source_map_file, repo.root)
     except LoaderError as exc:
         repo.parse_failures.append((source_map_file, str(exc)))
         return
@@ -172,7 +208,7 @@ def load_modules(repo: Repo, root: Path) -> None:
 
     for f in partitioned_modules:
         try:
-            rec = _load_yaml(f)
+            rec = _load_yaml(f, root)
         except LoaderError as exc:
             repo.parse_failures.append((f, str(exc)))
             continue
@@ -181,10 +217,10 @@ def load_modules(repo: Repo, root: Path) -> None:
             repo.parse_failures.append(
                 (f, f"{f}: partitioned module with missing or empty id — skipped"))
             continue
-        _register(repo, repo.modules, mid, rec, f, "module")
-        repo.module_origins.setdefault(mid, f)
-        _load_module_source_map(repo, f, mid)
-        _load_units(repo, f, mid)
+        if _register(repo, repo.modules, mid, rec, f, "module"):
+            repo.module_origins.setdefault(mid, f)
+            _load_module_source_map(repo, f, mid)
+            _load_units(repo, f, mid)
 
 
 def load_resume_pointer(repo: Repo, root: Path) -> None:
@@ -192,7 +228,7 @@ def load_resume_pointer(repo: Repo, root: Path) -> None:
     if not resume_file.is_file():
         return
     try:
-        repo.resume_pointer = _load_yaml(resume_file)
+        repo.resume_pointer = _load_yaml(resume_file, root)
         repo.resume_pointer_path = resume_file
     except LoaderError as exc:
         repo.parse_failures.append((resume_file, str(exc)))
@@ -206,7 +242,7 @@ def load_quarantine_boundary(repo: Repo, root: Path) -> None:
     if not quarantine_index.is_file():
         return
     try:
-        quarantine_data = _load_yaml(quarantine_index)
+        quarantine_data = _load_yaml(quarantine_index, root)
     except LoaderError as exc:
         repo.parse_failures.append((quarantine_index, str(exc)))
         return

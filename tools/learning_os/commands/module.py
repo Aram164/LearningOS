@@ -12,12 +12,20 @@ from pathlib import Path
 import yaml
 
 from learning_os.contracts import PLAN_TEMPLATE_VERSION, current_template_problems
+from learning_os.contracts.gateway import current_gateway_request
+from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
+from learning_os.masters_planning import (
+    MasterPromotionPlan,
+    MastersPlanningError,
+    prepare_master_promotion,
+)
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.rules import validate
 from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
 
 from .support import (
+    WriteRefused,
     _atomic_text,
     _dump_yaml,
     _expected_ok,
@@ -25,6 +33,7 @@ from .support import (
     _fresh_manifest,
     _operator_lock,
     _print_rows,
+    _read_content_bound_file,
     _render_frontmatter,
     _replace_registry_list_record,
     _root,
@@ -67,11 +76,15 @@ def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
     else:
         audit = (root / audit_ref).resolve()
         try:
-            audit.relative_to(root.resolve())
+            audit_relative = audit.relative_to(root.resolve())
         except ValueError:
             problems.append("plan_contract.coverage_audit must stay inside the repository")
         else:
-            if not audit.is_file():
+            if audit_relative.parts[:2] != ("work", "active"):
+                problems.append(
+                    "plan_contract.coverage_audit must stay under snapshot-bound work/active/"
+                )
+            elif not audit.is_file():
                 problems.append(f"coverage audit does not exist: {audit_ref}")
             else:
                 audit_text = audit.read_text(encoding="utf-8")
@@ -307,6 +320,12 @@ def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
             ignored.update(ignored_at_root)
         if directory == (root / "knowledge").resolve():
             ignored.add("attachments")
+        if directory == (root / "curriculum").resolve():
+            # Prospective planning is a deliberately opened quarantine. A
+            # normal module-plan preflight must not copy or inspect it; a
+            # promotion supplies only the exact sanitized catalog write it
+            # wants the shadow repository to validate.
+            ignored.add("quarantine")
         return [name for name in names if name in ignored]
 
     with tempfile.TemporaryDirectory(prefix="learningos-plan-check-") as tmp:
@@ -333,6 +352,167 @@ def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
                     and issue.code not in ENVIRONMENTAL_WARNINGS)]
 
 
+def _master_promotion_preflight(
+    root: Path,
+    module_id: str,
+    plan: MasterPromotionPlan,
+    package: dict,
+) -> list[str]:
+    problems = _module_plan_contract_problems(root, package)
+    if problems:
+        return [f"contract: {problem}" for problem in problems]
+    repo = load_repo(root)
+    problems = _module_plan_routing_problems(repo, module_id, package)
+    if problems:
+        return [f"routing: {problem}" for problem in problems]
+    try:
+        errors = _module_plan_validation_errors(root, plan.writes)
+    except ValueError as exc:
+        return [str(exc)]
+    return [str(issue) for issue in errors]
+
+
+def _master_promotion_check_result(
+    root: Path,
+    module_id: str,
+    plan: MasterPromotionPlan,
+) -> dict:
+    return {
+        "ok": True,
+        "mode": "check",
+        "module_id": module_id,
+        "candidate_module_id": plan.provenance["candidate_module_id"],
+        "promotion_id": plan.provenance["id"],
+        "package_sha256": plan.package_sha256,
+        "expected_snapshot": f"sha256:{canonical_fingerprint(root)}",
+        "expected_revisions": dict(plan.expected_revisions),
+        "artifact_ids": list(plan.artifact_ids),
+        "affected_files": list(plan.affected_paths),
+        "provenance": plan.provenance,
+        "diff": plan.diff,
+        "canonical_files_written": 0,
+    }
+
+
+def _cmd_master_promotion_import(args) -> int:
+    root = _root(args)
+    value = args.promotion
+    if not isinstance(value, dict) or value.get("canonical_module_id") != args.module_id:
+        print(
+            "los: promotion must be an inline object whose canonical_module_id "
+            "matches the requested module",
+            file=sys.stderr,
+        )
+        return 2
+    if not args.check:
+        request = current_gateway_request()
+        if request is None or request.capability != "module.plan.import":
+            print(
+                "los: live Master Planning promotion requires an approved "
+                "GatewayEnvelopeV2; run --check directly for a no-write dry run",
+                file=sys.stderr,
+            )
+            return 2
+        if not getattr(args, "approve", False):
+            print("los: Master Planning promotion requires exact gateway approval",
+                  file=sys.stderr)
+            return 2
+        if not args.expected_snapshot:
+            print("los: Master Planning promotion requires expected_snapshot",
+                  file=sys.stderr)
+            return 2
+
+    with _operator_lock(root):
+        try:
+            plan = prepare_master_promotion(root, value)
+        except MastersPlanningError as exc:
+            print(f"los: Master Planning promotion refused: {exc}", file=sys.stderr)
+            return 2
+        supplied_hash = getattr(args, "package_sha256", None)
+        if supplied_hash is not None and supplied_hash != plan.package_sha256:
+            print(
+                "los: promotion package hash does not match the exact checked content",
+                file=sys.stderr,
+            )
+            print(json.dumps({
+                "expected": plan.package_sha256,
+                "supplied": supplied_hash,
+            }, ensure_ascii=False), file=sys.stderr)
+            return 3
+        if not args.check and supplied_hash is None:
+            print(
+                "los: live promotion requires the exact package_sha256 returned by --check",
+                file=sys.stderr,
+            )
+            return 2
+
+        problems = _master_promotion_preflight(
+            root,
+            args.module_id,
+            plan,
+            value["module_plan"],
+        )
+        if problems:
+            print(
+                "los: Master Planning promotion preflight failed; no canonical "
+                "files were written",
+                file=sys.stderr,
+            )
+            for problem in problems[:12]:
+                print(f"- {problem}", file=sys.stderr)
+            return 1
+        if args.check:
+            print(json.dumps(
+                _master_promotion_check_result(root, args.module_id, plan),
+                indent=2,
+                ensure_ascii=False,
+            ))
+            return 0
+
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        try:
+            expected_revisions = _expected_revisions_from_args(args)
+        except WriteRefused as exc:
+            print(f"los: {exc}", file=sys.stderr)
+            return 2
+        if expected_revisions != plan.expected_revisions:
+            print(
+                "los: promotion expected revisions must match the complete checked "
+                "bundle; reload and run --check again",
+                file=sys.stderr,
+            )
+            print(json.dumps({
+                "expected": plan.expected_revisions,
+                "supplied": expected_revisions,
+            }, ensure_ascii=False), file=sys.stderr)
+            return 3
+        code, errors, confirmation = _write_transaction(
+            root,
+            plan.writes,
+            capability="module.plan.import",
+            expected_revisions=expected_revisions,
+            artifact_ids=plan.artifact_ids,
+        )
+        if code:
+            print("los: Master Planning promotion failed", file=sys.stderr)
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+        result = {
+            "ok": True,
+            "mode": "apply",
+            "module_id": args.module_id,
+            "candidate_module_id": plan.provenance["candidate_module_id"],
+            "promotion_id": plan.provenance["id"],
+            "package_sha256": plan.package_sha256,
+            "files_written": len(plan.writes),
+            **confirmation,
+        }
+    print(json.dumps(result, ensure_ascii=False))
+    return 0
+
+
 def cmd_module_plan_import(args) -> int:
     """Apply one reviewable, module-scoped curriculum plan as a transaction.
 
@@ -341,14 +521,22 @@ def cmd_module_plan_import(args) -> int:
     explicit workspace joins together. It never deletes units or creates
     durable notes, and every stage remains bounded to the requested module.
     """
+    if getattr(args, "promotion", None) is not None:
+        return _cmd_master_promotion_import(args)
+
     root = _root(args)
-    source = Path(args.file).expanduser().resolve()
-    if not source.is_file():
-        print(f"los: no such module plan file: {source}", file=sys.stderr)
+    try:
+        _source, package_bytes = _read_content_bound_file(
+            args.file,
+            getattr(args, "file_sha256", None),
+            label="module plan file",
+        )
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
         return 2
     try:
-        package = yaml.safe_load(source.read_text(encoding="utf-8"))
-    except yaml.YAMLError as exc:
+        package = yaml.safe_load(package_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, yaml.YAMLError) as exc:
         print(f"los: invalid module-plan YAML: {exc}", file=sys.stderr)
         return 2
     if not isinstance(package, dict) or package.get("module_id") != args.module_id:

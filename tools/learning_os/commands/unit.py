@@ -17,6 +17,7 @@ from learning_os.contracts import (
     validate_contract,
 )
 from learning_os.loader import load_repo
+from learning_os.routes import route_with_identity
 
 from .support import (
     WriteRefused,
@@ -26,6 +27,7 @@ from .support import (
     _fresh_manifest,
     _operator_lock,
     _print_rows,
+    _read_content_bound_file,
     _root,
     _unit_map_or_error,
     _write_transaction,
@@ -46,9 +48,14 @@ def cmd_unit_list(args) -> int:
 
 def cmd_unit_map_import(args) -> int:
     root = _root(args)
-    source = Path(args.file).expanduser().resolve()
-    if not source.is_file():
-        print(f"los: no such map file: {source}", file=sys.stderr)
+    try:
+        _source, map_bytes = _read_content_bound_file(
+            args.file,
+            getattr(args, "file_sha256", None),
+            label="study-map file",
+        )
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
         return 2
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
@@ -64,8 +71,8 @@ def cmd_unit_map_import(args) -> int:
                   file=sys.stderr)
             return 2
         try:
-            data = yaml.safe_load(source.read_text(encoding="utf-8"))
-        except yaml.YAMLError as exc:
+            data = yaml.safe_load(map_bytes.decode("utf-8"))
+        except (UnicodeDecodeError, yaml.YAMLError) as exc:
             print(f"los: invalid study-map YAML: {exc}", file=sys.stderr)
             return 2
         if not isinstance(data, dict) or data.get("unit_id") != args.unit_id:
@@ -134,7 +141,9 @@ def cmd_unit_source_selection(args) -> int:
                     and route.get("unit_id") == args.unit_id
                     and route.get("locator") == args.locator
                 ):
-                    matching_route = route
+                    matching_route = route_with_identity(
+                        unit.module_id, args.source_id, route
+                    )
                     break
             if matching_route is not None:
                 break
@@ -161,6 +170,7 @@ def cmd_unit_source_selection(args) -> int:
                 print("los: a selected material needs a purpose", file=sys.stderr)
                 return 2
             replacement = {
+                "route_id": matching_route["id"],
                 "source_id": args.source_id,
                 "locator": args.locator,
                 "purpose": purpose,
@@ -236,10 +246,23 @@ def cmd_unit_note(args) -> int:
     if not value.strip():
         print("los: refusing to write an empty unit note — pass real text", file=sys.stderr)
         return 2
-    sources = [Path(raw).expanduser().resolve() for raw in (args.attachment or [])]
-    missing = [source for source in sources if not source.is_file()]
-    if missing:
-        print(f"los: no such attachment: {missing[0]}", file=sys.stderr)
+    raw_sources = list(args.attachment or [])
+    source_hashes = list(getattr(args, "attachment_sha256", None) or [])
+    if source_hashes and len(source_hashes) != len(raw_sources):
+        print("los: --attachment-sha256 must be repeated once per --attachment",
+              file=sys.stderr)
+        return 2
+    try:
+        sources = [
+            _read_content_bound_file(
+                raw,
+                source_hashes[index] if index < len(source_hashes) else None,
+                label=f"unit-note attachment[{index}]",
+            )
+            for index, raw in enumerate(raw_sources)
+        ]
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
         return 2
 
     with _operator_lock(root):
@@ -270,13 +293,13 @@ def cmd_unit_note(args) -> int:
         stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
         attachment_dir = unit.path.parent / "attachments" / f"unit-note-{stamp}"
         try:
-            for source in sources:
+            for source, source_bytes in sources:
                 target_file = attachment_dir / source.name
                 suffix = 2
                 while target_file.exists() or target_file in attachment_writes:
                     target_file = attachment_dir / f"{suffix}-{source.name}"
                     suffix += 1
-                attachment_writes[target_file] = source.read_bytes()
+                attachment_writes[target_file] = source_bytes
                 attachments.append({
                     "path": target_file.relative_to(root).as_posix(),
                     "label": source.stem,

@@ -6,13 +6,14 @@ import copy
 import datetime as _dt
 import json
 import sys
-from pathlib import Path
 
 from .support import (
+    WriteRefused,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
+    _read_content_bound_file,
     _root,
     _stage,
     _unit_map_or_error,
@@ -134,9 +135,14 @@ def cmd_stage_progress(args) -> int:
 
 def cmd_stage_attach(args) -> int:
     root = _root(args)
-    source = Path(args.file).expanduser().resolve()
-    if not source.is_file():
-        print(f"los: no such file: {source}", file=sys.stderr)
+    try:
+        source, source_bytes = _read_content_bound_file(
+            args.file,
+            getattr(args, "file_sha256", None),
+            label="stage attachment",
+        )
+    except WriteRefused as exc:
+        print(f"los: {exc}", file=sys.stderr)
         return 2
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
@@ -158,7 +164,7 @@ def cmd_stage_attach(args) -> int:
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data), target: source.read_bytes()},
+            root, {study_map.path: _dump_yaml(data), target: source_bytes},
             capability="stage.attachment.add",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],

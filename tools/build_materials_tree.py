@@ -114,6 +114,7 @@ PLACEMENT = {
     # --------------------------------------------------- software/python
     "automate-boring-stuff":             "software/python",
     "fluent-python":                     "software/python",
+    "polars-definitive-guide":          "software/python",
     "pydata-handbook":                   "software/python",
     "python-cheatsheets":                "software/python",
     "python-depth-drills":               "software/python",
@@ -132,6 +133,8 @@ PLACEMENT = {
     "compiler-construction-shelf":       "software/languages",
     "cs-classics-shelf":                 "software/engineering",
     "git-handbook-archive":              "software/tooling",
+    "scalable-dataframe-systems-paper":  "data-systems/architecture",
+    "stratum-paper":                     "data-systems/architecture",
     "lineare-algebra-archive":           "mathematics/linear-algebra",
     "marsland-ml-algorithmic":           "machine-learning/classical",
     "mathe-vorkurse":                    "mathematics/general",
