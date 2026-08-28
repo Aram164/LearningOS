@@ -1,0 +1,372 @@
+# The normative corpus — which documents bind, and which have been retired.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# CRITIQUE-POINTS §3: ~7,800 lines of normative prose live under system/. No
+# agent reads all of it, so each session reads a different subset, and a
+# different subset yields a different picture of the rules. The rules do not
+# contradict each other; nothing tells a reader which of them are rules.
+#
+# Three things were unavailable before this file:
+#
+#   1. WHAT BINDS.  Nothing distinguished law from rationale. OPERATOR.md is
+#      binding; PHILOSOPHY.md is reasoning; PILOT-CRITERIA.md is a frozen gate
+#      that was passed 5/5 in July. An agent could only guess, and guessed
+#      differently each time.
+#   2. WHAT IS RETIRED.  Supersession was carried per-document and by hand.
+#      ADR-010 says "superseded by ADR-013" and ADR-012 says "Amended by
+#      ADR-013" — both correct, both working only because someone wrote them
+#      there. Whether every retired document carried such a note was unmeasured.
+#      It is now measured on every `make check`: see NORMATIVE-CORPUS-NO-NOTICE.
+#   3. WHERE TO START.  Several documents read like entry points. Exactly one
+#      is: `entrypoint` below, and the checker fails if it is not indexed,
+#      binding and current.
+#
+# HOW IT IS ENFORCED
+# ------------------
+# `tools/learning_os/contracts/normative_corpus.py`, wired into the validator,
+# fails on: a system/*.md or system/adr/*.md file that is not indexed; an index
+# entry with no file; a duplicate path; a supersession edge to an unindexed
+# path; a cycle; a retired document not marked retired; a retired document that
+# does not say so in its own text; and an entrypoint that is not binding.
+#
+# EDGE DIRECTION (matches the repository's own convention)
+# --------------------------------------------------------
+# Forward edges are authored on the SUCCESSOR — `supersedes:` for a document
+# retired whole, `amends:` for one whose rules are retired in part. The reverse
+# links are DERIVED, never stored, exactly as ARCHITECTURE §"note identity"
+# requires of canonical notes: "the reverse link is generated, never stored."
+#
+# VOCABULARY
+# ----------
+#   class      contract | adapter | procedure | reference | rationale
+#              | decision | review | log
+#   status     current | superseded | frozen
+#              (`frozen` = complete by design and never to change — a historical
+#               record, not a retired rule)
+#   authority  binding      must be obeyed
+#              informative  read for understanding; creates no obligation
+#              historical   records what was true; never a current rule
+#
+# Adding a document under system/ without adding it here fails `make check`.
+# That is the point: the corpus cannot grow silently again.
+
+corpus_version: 1
+entrypoint: system/OPERATOR.md
+
+documents:
+
+  # ---- the binding spine ---------------------------------------------------
+
+  - path: system/OPERATOR.md
+    class: contract
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      The vendor-neutral operator contract. Every AI operator, local agent and
+      interface enters here; platform adapters may add mechanics but never
+      weaken it.
+
+  - path: system/CLAUDE.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      The Claude adapter to OPERATOR.md, plus the deeper policy reference. Its
+      twelve-invariant block is a deliberate degraded-mode fallback, not
+      sediment.
+
+  - path: system/ARCHITECTURE.md
+    class: reference
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The single architectural authority: entity families, ownership rules,
+      the physical tree, and the numbered invariants.
+
+  - path: system/VALIDATION.md
+    class: reference
+    status: current
+    authority: binding
+    owner: validation
+    summary: >-
+      The rules `tools/validate.py` enforces beyond the JSON Schemas, with each
+      rule's severity.
+
+  - path: system/WORKFLOWS.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The numbered operating procedures — starting a workspace, capture and
+      routing, plan revision, unit building, session closure.
+
+  - path: system/PLAN-CREATION-SOP.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: plan-authoring
+    summary: >-
+      The mandatory procedure for every new or revised learning plan and every
+      module material mapping.
+
+  - path: system/AI-ACTIONS.md
+    class: reference
+    status: current
+    authority: binding
+    owner: ai-actions
+    summary: >-
+      Provider-independent AI actions: exact-target request bundles, capability
+      validation, approval, and receipts.
+
+  - path: system/ACCEPTANCE-TESTS.md
+    class: reference
+    status: current
+    authority: binding
+    owner: acceptance
+    summary: >-
+      The acceptance criteria the rebuild is measured against; producer-owned
+      contracts outrank any version named here.
+
+  # ---- standing logs and reasoning ----------------------------------------
+
+  - path: system/CRITIQUE-POINTS.md
+    class: log
+    status: current
+    authority: informative
+    owner: critique-log
+    summary: >-
+      Append-only log of what Aram judges wrong about the system. Its own rules
+      bind the operator (never act on an open point); the points themselves are
+      not work items.
+
+  - path: system/PHILOSOPHY.md
+    class: rationale
+    status: current
+    authority: informative
+    owner: philosophy
+    summary: >-
+      The user's intent. Its principle "reduce organizational burden rather
+      than create it" is the tiebreaker for ambiguity the contract does not
+      settle.
+
+  - path: system/SPEC-README.md
+    class: reference
+    status: current
+    authority: informative
+    owner: spec-index
+    summary: >-
+      The index to the frozen v3 specification package and what it replaced.
+      Its "module records" bullet is annotated in place as superseded in detail
+      by the curriculum v2 cutover.
+
+  # ---- frozen history ------------------------------------------------------
+
+  - path: system/WHY-REDESIGN.md
+    class: rationale
+    status: frozen
+    authority: historical
+    owner: philosophy
+    summary: >-
+      Why v3 exists, written before the rebuild. Reasoning, not rules.
+
+  - path: system/BUILD-SPEC.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The build specification the rebuild was executed against. Complete since
+      the 2026-07-17 cutover.
+
+  - path: system/MIGRATION.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The migration plan. Executed and reported; kept as the record of how
+      content moved.
+
+  - path: system/PILOT-CRITERIA.md
+    class: reference
+    status: frozen
+    authority: historical
+    owner: migration
+    summary: >-
+      The five retrieval questions frozen before the pilot ran. Passed 5/5 on
+      2026-07-17; a gate, not a live rule.
+
+  # ---- decisions -----------------------------------------------------------
+
+  - path: system/adr/ADR-001-external-review-2026-07-17.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Disposition of the 12-point external review after the Stage-2 cutover.
+
+  - path: system/adr/ADR-002-garden-layer-2026-07-18.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: The Garden and Harvest exploratory layer, and the contract governing it.
+
+  - path: system/adr/ADR-003-architecture-review-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      External architecture review and the fixes applied the same day. Its
+      Job-quarantine portions are retired by ADR-013.
+
+  - path: system/adr/ADR-004-hygiene-sweep-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Mess becomes self-announcing inside the canonical repository. Its
+      Job/shadow-scan exclusions are retired by ADR-013.
+
+  - path: system/adr/ADR-005-domain-atlas-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Cross-domain reach through a generated domain atlas, without new canon.
+
+  - path: system/adr/ADR-006-interface-layer-boundary-2026-08-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The core/interface boundary: the CLI gateway is the only surface an
+      interface layer may read or write through.
+
+  - path: system/adr/ADR-007-library-taxonomy-2026-08-07.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Learning material is grouped by subject, not by the era it arrived in.
+
+  - path: system/adr/ADR-008-semantic-normalization-2026-08-08.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: A live-data and prose normalization pass; no new entity types or hierarchy.
+
+  - path: system/adr/ADR-009-faceted-library-and-resource-identity-2026-08-08.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Faceted Library and stable, id-based resource identity. Extends ADR-007.
+
+  - path: system/adr/ADR-010-job-surface-2026-08-14.md
+    class: decision
+    status: superseded
+    authority: historical
+    owner: architecture
+    summary: >-
+      The bounded first-party Job surface. Retired whole by ADR-013 when Job
+      learning became ordinary learning.
+
+  - path: system/adr/ADR-011-operator-drafted-artifacts-and-drop-records-2026-08-15.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Operator-drafted artifacts, drop records and unevaluated routes; three
+      additive schema extensions.
+
+  - path: system/adr/ADR-012-agent-ui-contract-consolidation-2026-08-19.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Public read contracts, canonical mutation receipts and UI mirrors. Its
+      Job dashboard/plan contracts are retired by ADR-013.
+
+  - path: system/adr/ADR-013-job-learning-collapse-2026-08-26.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Job learning is ordinary learning. Dissolves the Job quarantine into the
+      ordinary program, module, unit, note and source model.
+    supersedes:
+      - system/adr/ADR-010-job-surface-2026-08-14.md
+    amends:
+      - system/adr/ADR-003-architecture-review-2026-08-03.md
+      - system/adr/ADR-004-hygiene-sweep-2026-08-03.md
+      - system/adr/ADR-012-agent-ui-contract-consolidation-2026-08-19.md
+      - system/CLAUDE.md
+      - system/ARCHITECTURE.md
+
+  - path: system/adr/ADR-014-workspace-root-consolidation-2026-08-27.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: Consolidation of the semestercontext root into its current shape.
+
+  # ---- dated reviews (findings, not decisions) -----------------------------
+
+  - path: system/adr/external-review-2026-07-16.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Outside read of the pre-v3 system, deliberately carrying no system frontmatter.
+
+  - path: system/adr/human-operability-review-2026-07-17.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Post-cutover review of how operable the system is without an AI operator.
+
+  - path: system/adr/review-recommendations-2026-07-17.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: >-
+      A 30-point code/design review kept as an open backlog. Its status read is
+      dated; verify against code before relying on it.
+
+  - path: system/adr/engineering-audit-2026-08-08.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: External-perspective audit of the pushed heads; findings recorded.
+
+  - path: system/adr/semantic-state-report-2026-08-14.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: Semantic recheck of the live plans and the system; remediation applied the same day.
+
+  - path: system/adr/critical-review-2026-08-19.md
+    class: review
+    status: frozen
+    authority: historical
+    owner: reviews
+    summary: >-
+      Adversarial review — the strongest case against the system as built. No
+      decision is adopted in it.

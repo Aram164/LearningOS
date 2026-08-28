@@ -71,8 +71,15 @@ def cmd_status(args) -> int:
             "notes_with_evidence": ad["notes_with_evidence"],
         },
         "exam_spine": spine,
+        # `ok` means what validation success means: zero errors. It used to
+        # require zero warnings too, which made this field permanently false
+        # against a repository carrying 535 deliberately deferred warnings —
+        # an always-red light nobody can act on is not a signal. Whether a
+        # warning is NEW is a separate question with its own gate,
+        # `tools/warning_baseline.py --check`; status does not run it, because
+        # a status read must not depend on a recorded baseline being current.
         "validation": {"errors": errors, "warnings": warnings,
-                       "ok": errors == 0 and warnings == 0},
+                       "ok": errors == 0},
     }
 
     if args.json:
@@ -97,8 +104,10 @@ def cmd_status(args) -> int:
             print(f"  exam: {e['date']} — {e['title']} (Termin {e['termin']})")
     else:
         print("  exam: no registered attempts in records/modules.yaml")
-    state = "OK" if payload["validation"]["ok"] else \
-        f"{errors} error(s), {warnings} warning(s)"
+    state = f"{errors} error(s)" if errors else "OK"
+    if warnings:
+        state += (f" · {warnings} warning(s), visible and nonblocking "
+                  "(`make warnings` for the delta)")
     print(f"  validation: {state}")
     print("  human home page: generated/reading-room.md (make views)")
     return 0

@@ -5,6 +5,12 @@ system robust against everyday human mess (duplicates, misfiled files) without
 (a) requiring him to memorize the architecture, (b) adding rigidity, or
 (c) recurring Claude "cleanup sessions" that cost credits.
 
+> **Amended by ADR-013 (2026-08-26):** the HYGIENE-SHADOW check and its
+> `legacy/Job` shadow root are retired. With Job learning collapsed into the
+> ordinary model there is no twin tree for a canonical note to shadow. The
+> other three hygiene checks, and the principle that mess is policed by the
+> validator rather than by the operator's judgment, remain active.
+
 ## Decision
 
 Move mess-policing from the operator's judgment into the validator, as four

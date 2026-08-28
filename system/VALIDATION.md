@@ -2,6 +2,49 @@
 
 Structure is validated by `system/schema/*.schema.json` (canonical structural contracts). This file defines the **cross-file semantic rules** that JSON Schema cannot express. `tools/validate.py` enforces both. Severity: **E** = error (blocks acceptance), **W** = warning.
 
+## What a passing run means
+
+**Zero errors.** Warnings are visible and never block: `tools/validate.py`
+exits 0 while reporting them, and the pre-commit hook is written to let them
+through. That is deliberate — the warnings carried today are the measured
+content debt of CRITIQUE-POINTS §1 (vague locators, missing angle detail), and
+backfilling them is a decision Aram has deferred, not an oversight.
+
+Deferring them cost the ability to tell a deferred warning from a new one.
+`operations/validation-warning-baseline.yaml` restores it: every warning
+signature — **(code, path) with its multiplicity** — is recorded, and
+`python tools/warning_baseline.py --check` fails on a new signature or a grown
+one. A signature rather than a total, because a total is gamed by trading one
+warning for another. Environmental warnings (`MATERIALS-OFFLINE`,
+`HYGIENE-VIEWS`, `HYGIENE-LOCK`, and the rest of `ENVIRONMENTAL_WARNINGS`) are
+excluded: they describe the machine, not the content, and differ between one
+checkout and the next.
+
+Adopting a new baseline is an explicit act with a stated reason
+(`--update --note "…"`). An unexplained move is indistinguishable from a
+silent regression.
+
+## The normative corpus
+
+- **E** `NORMATIVE-CORPUS-MISSING` — a `system/*.md` or `system/adr/*.md` file
+  that `system/contracts/normative-corpus.yaml` does not classify.
+- **E** `NORMATIVE-CORPUS-ORPHAN` — an index entry naming a file that does not exist.
+- **E** `NORMATIVE-CORPUS-DUPLICATE` — one path indexed twice.
+- **E** `NORMATIVE-CORPUS-EDGE` — a `supersedes`/`amends` edge to an unindexed path.
+- **E** `NORMATIVE-CORPUS-CYCLE` — a supersession cycle; no rule in it resolves as current.
+- **E** `NORMATIVE-CORPUS-STATUS` — retired by an edge but still `current`, or
+  `superseded` with nothing superseding it.
+- **E** `NORMATIVE-CORPUS-AUTHORITY` — a retired or frozen document still `binding`.
+- **E** `NORMATIVE-CORPUS-NO-NOTICE` — a retired document whose own text never
+  names what retired it. An agent that opens the file directly never sees the
+  index, so the notice has to be in the document.
+- **E** `NORMATIVE-CORPUS-ENTRYPOINT` — the declared entry point is missing,
+  retired, or not binding.
+- **E** `NORMATIVE-CORPUS-UNREADABLE` — the index or its schema cannot be read.
+
+Errors rather than warnings: the failure mode is an agent reading a retired
+rule as current, which is indistinguishable from the rule being wrong.
+
 ## Identity
 
 - **E** IDs unique within each family (note, concept, source, workspace,

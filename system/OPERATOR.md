@@ -4,6 +4,42 @@ This is the vendor-neutral entry point for every AI operator, local agent, and
 interface. Platform-specific instructions may add mechanics but may not weaken
 this contract.
 
+It is the **declared** entry point, not merely the customary one:
+`system/contracts/normative-corpus.yaml` names this file as `entrypoint`, and
+the validator fails if that declaration points anywhere else, or at a document
+that is not both current and binding.
+
+## What binds, and what does not
+
+`system/` holds roughly 7,800 lines of prose. Not all of it is rules. The
+index at `system/contracts/normative-corpus.yaml` classifies every
+`system/*.md` and `system/adr/*.md` file exactly once — class, status,
+authority, owner, and its supersession edges — and `make check` fails if a
+document is added without being classified, or if a retired document is still
+marked binding.
+
+Read it before treating any document under `system/` as law. In particular:
+`authority: informative` documents (PHILOSOPHY, CRITIQUE-POINTS, SPEC-README)
+create no obligation, and `authority: historical` documents (the frozen build
+and migration records, every dated review) record what was true and are never
+a current rule.
+
+## What "clean" means
+
+Validation success means **zero errors**. Warnings stay visible and never
+block — `tools/validate.py` exits 0 with them, and the pre-commit hook lets
+them through by design. What is not permitted is a *new* one:
+
+```bash
+python tools/warning_baseline.py --check
+```
+
+compares the current warning signatures against
+`operations/validation-warning-baseline.yaml` — (code, path) with multiplicity,
+so a total that stays level while one warning is traded for another is still a
+failure. The warnings carried today are the measured content debt of
+CRITIQUE-POINTS §1, deferred deliberately.
+
 ## Start here
 
 Do not recursively discover the repository. Begin with:

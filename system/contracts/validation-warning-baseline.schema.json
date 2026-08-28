@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/validation-warning-baseline.schema.json",
+  "title": "Validation warning baseline",
+  "description": "The set of warning signatures deliberately carried, so a new warning is distinguishable from a deferred one. Lives under system/contracts/ rather than system/schema/ because it governs an operational record, not a canonical record — the data contract fingerprints only the record schemas.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_version", "recorded", "note", "total", "distinct_signatures", "signatures"],
+  "properties": {
+    "baseline_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Bumped when the signature shape changes, not when the baseline is re-adopted."
+    },
+    "recorded": {
+      "type": "string",
+      "format": "date",
+      "description": "The day this set was adopted."
+    },
+    "note": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Why the baseline stands where it does. Required: an unexplained baseline move is indistinguishable from a silent regression."
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Reported, never asserted as a permanent expected value. The gate is the per-signature comparison below."
+    },
+    "distinct_signatures": { "type": "integer", "minimum": 0 },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "path", "count"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z0-9][A-Z0-9-]*$",
+            "description": "The validator's warning code."
+          },
+          "path": {
+            "type": "string",
+            "description": "Repository-relative location the warning was reported against; empty for repository-wide warnings."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Multiplicity. Growth is a regression even when the total is unchanged."
+          }
+        }
+      }
+    }
+  }
+}

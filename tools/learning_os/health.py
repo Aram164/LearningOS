@@ -203,7 +203,10 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
     checks.append(_check(
         "validation", "error" if errors else ("warning" if warnings else "ok"),
         f"Validation found {len(errors)} error(s) and {len(warnings)} warning(s).",
-        "core", "Resolve every reported issue before a live canonical transaction.",
+        "core",
+        "Clear every error before a live canonical transaction. Warnings stay "
+        "visible and never block; `python tools/warning_baseline.py --check` "
+        "is what refuses a NEW one.",
         errors=errors[:20], warnings=warnings[:20],
     ))
 
@@ -218,7 +221,13 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
         "error" if route_errors else ("warning" if route_warnings else "ok"),
         f"Route validation found {len(route_errors)} error(s) and "
         f"{len(route_warnings)} warning(s).",
-        "curriculum", "Resolve route IDs and guarded references through the v13 migration.",
+        # The v13 route-identity migration was applied and recorded
+        # (system/contracts/data-contract.yaml, generation 13). Sending a
+        # reader back to it left the one remedy in this report that could not
+        # be carried out.
+        "curriculum",
+        "Repair routes through the plan gateway — `los module-plan-import` "
+        "(system/PLAN-CREATION-SOP.md). Never hand-edit a source map.",
         errors=route_errors[:20], warnings=route_warnings[:20],
     ))
 

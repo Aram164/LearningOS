@@ -89,6 +89,19 @@ class ChecksContract:
             self.err("MANIFEST-CONTRACT-UNREADABLE", str(exc).replace("\n", " "),
                      "system/contracts/manifest-contract.yaml")
 
+    def check_normative_corpus(self):
+        """Every document under system/ is classified, and retirement is visible.
+
+        The corpus grew to ~7,800 lines with nothing saying which parts of it
+        bind (CRITIQUE-POINTS §3). Errors rather than warnings, because the
+        failure mode is an agent reading a retired rule as current — which is
+        indistinguishable from the rule being wrong.
+        """
+        from ..contracts import normative_corpus
+
+        for issue in normative_corpus.check(self.repo.root):
+            self.err(f"NORMATIVE-CORPUS-{issue.code}", issue.message, issue.path)
+
     def check_contract_documentation(self):
         """Living instructions point to contract owners instead of copying versions."""
         root = self.repo.root

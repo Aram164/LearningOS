@@ -10,6 +10,12 @@ clean (0 errors, 0 warnings) at review time. Findings are ranked by severity;
 each names its fix. Nothing here was applied without approval except the
 explicitly commanded `Job/WORKFLOW.md`.
 
+> **Amended by ADR-013 (2026-08-26):** every Job-quarantine finding and fix
+> below is retired — S6's Job-boundary duplication, the §3.1 quarantine
+> pointer, and the formalized `Job/WORKFLOW.md` boundary. Job learning is
+> ordinary learning under `program-job`; there is no boundary to cross. The
+> remaining findings (S1–S5, S7 onward) and their fixes are active.
+
 ## Verdict in one paragraph
 
 The core design is sound and unusually disciplined: single-owner facts
