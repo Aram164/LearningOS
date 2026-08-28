@@ -22,7 +22,7 @@ They version different things and move independently. The manifest contains
 programs, semesters, partitioned modules,
 components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
-sittings, and registration windows), and boundary-only quarantine records. Interfaces must not reconstruct
+sittings, and registration windows), and the Future Master's Planning boundary. Interfaces must not reconstruct
 application state by parsing canonical Markdown or YAML. Use `list-*`,
 `inspect`, `search`, and `related` for targeted reads.
 
@@ -50,14 +50,12 @@ Skills and projects use modules and units without false academic metadata.
 1. Never edit `generated/`; change authored input, validate, and regenerate.
 2. Preserve user wording. Semantic rewriting, note identity changes, deletion,
    inferred concept relations, and pedagogical judgments require visible review.
-3. `Job/` is outside LearningOS. Never read, scan, index, cite, or route it
-   without an explicit Job task; it never appears in the manifest. The sole UI
-   exception is the ephemeral `job-dashboard` query: deliberately opening Job
-   confirms one read-only session against the bounded `Job/dashboard.yaml`
-   catalogue. It cannot feed search, AI context, recommendations, or writes.
-   The nested `Job/stratum/` checkout is immutable to the whole system: neither
-   its worktree nor `.git/` metadata may be written. The only permitted access
-   is an exact, option-free hash-and-path drift query with Git locks disabled.
+3. `semestercontext/Stratum/` is an external sibling code repository, not
+   LearningOS data. LearningOS never indexes, validates, migrates, or manages
+   it. An agent may inspect relevant paths when the current task explicitly
+   needs code context; repository work happens directly in Stratum only when
+   requested. No LearningOS query, manifest build, validator, or AI action
+   traverses it automatically.
 4. Master's Planning is Git-tracked under `curriculum/quarantine/`, excluded
    from normal loading and search, and represented only by a boundary record.
 5. Academic administrative facts live only in the owning partitioned
@@ -89,7 +87,7 @@ Skills and projects use modules and units without false academic metadata.
     reachable and be explicitly selected, reference-only, or deferred with a
     reason. Registered-source counts never prove inventory completeness, and
     silent omission is forbidden.
-15. Every newly authored curriculum or Job learning plan uses
+15. Every newly authored learning plan uses
     `plan_template_version: 1` and the shared numbered-stage/resource contract
     in `system/schema/learning-plan.schema.json`. Domain fields extend that
     contract; they never redefine it. Old plans are readable evidence, not

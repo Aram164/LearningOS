@@ -1,12 +1,12 @@
 # Standard plan creation and lecture-material mapping procedure
 
-This procedure is mandatory for every new or revised plan in LearningOS or the
-bounded Job learning area, and for every module learning surface.
+This procedure is mandatory for every new or revised LearningOS plan and every
+module learning surface, including modules grouped under `program-job`.
 It turns a material review into one reviewable `module-plan-import` package
 without silently losing sources, inventing scope, forcing one study order, or
 discovering structural mistakes only after canonical files have been touched.
 
-## One plan template, two bounded profiles
+## One plan template, one learning profile
 
 All newly authored plans use `plan_template_version: 1`. There is one shared
 stage and resource contract in `system/schema/learning-plan.schema.json`:
@@ -14,36 +14,37 @@ stage and resource contract in `system/schema/learning-plan.schema.json`:
 - every stage has `id`, sequential `number`, `title`, `status`, `objective`,
   `done_when`, `exam_critical`, `concepts`, `scope_triage`, `resources`,
   `attachments`, and `source_feedback`;
-- curriculum stages add `working_note` (plus curriculum-only detour/completion
-  state); and
-- Job stages add `job_context`. Its Stratum anchor is descriptive and strictly
-  read-only; no plan operation may write the Stratum worktree or `.git`.
+- stages add `working_note` plus the ordinary detour/completion state owned by
+  their module and unit. Job modules do not add a second schema or profile.
 
 Generate a valid starting record instead of copying an old plan:
 
 ```bash
 .venv/bin/python tools/los.py plan-template curriculum \
   --module-id module-example --unit-id unit-example-l01 --title "Lecture 01"
-.venv/bin/python tools/los.py plan-template job --title "Rust systems track"
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-job-rust-engineering \
+  --unit-id unit-job-rust-engineering-fluency \
+  --title "Rust systems fluency"
 ```
 
-The curriculum and Job schemas both reference that shared contract. The Core
-Job gateway expands editor drafts using it. Legacy records remain readable as
-history, but creation gateways reject them as templates.
+Every module uses the same study-map schema and gateway. Legacy records remain
+readable as history, but creation gateways reject them as templates.
 
 The interface reads the same generator rather than carrying its own defaults.
 `plan.template` is a declared read-only query (`system/contracts/capabilities.yaml`)
 answering the `plan-template-v1` envelope in `system/schema/plan-template.schema.json`:
 
 ```bash
-.venv/bin/python tools/los.py plan-template job --title "Rust systems track" --json
+.venv/bin/python tools/los.py plan-template curriculum \
+  --module-id module-job-rust-engineering \
+  --unit-id unit-job-rust-engineering-fluency \
+  --title "Rust systems fluency" --json
 ```
 
-Obsidian's *Create study plan* prefills from that answer, and the Job dashboard
-projects each plan's `plan_template_version` so a record that predates the
-standard is labelled rather than silently shown as conforming. Anything that
-authors a plan — SOP, gateway, or interface — must go through this generator;
-a second copy of the defaults is the drift this standard exists to remove.
+Obsidian's *Create study plan* prefills from that answer. Anything that authors
+a plan — SOP, gateway, or interface — must go through this generator; a second
+copy of the defaults is the drift this standard exists to remove.
 
 Use the project environment. If `.venv/bin/python` does not exist, run
 `make setup` once. Do not assume a global `los` executable exists.
@@ -114,7 +115,10 @@ Inventory all of these, even when they will not be selected:
 
 `rg --files` is the first file inventory tool. If the materials tree is
 gitignored and therefore invisible to it, use a narrowly scoped `find` on the
-exact material root. Never scan the quarantined `Job/` tree.
+exact material root. Sibling code repositories are not automatic material
+roots. If the current task explicitly needs Stratum context, inspect only the
+relevant paths and turn confirmed learning into ordinary LearningOS records;
+do not register or copy the repository as managed LearningOS content.
 
 Open the materials. For PDFs and slide decks, extract text for search and inspect
 the relevant rendered pages for formulas, diagrams, tables, exercise prompts,

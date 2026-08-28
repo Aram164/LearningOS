@@ -105,17 +105,24 @@ Produced by the operator through reasoning, never canonical: study plans, source
 ### 3.1 Root
 
 ```text
-LearningOS/
-├── repository/     ← the authored repository (the operator's default search space)
-├── materials/      ← books, slides, videos, PDFs, datasets (material:// root)
-└── projects/       ← active code repositories (mlprov, amls-project, …)
+semestercontext/
+├── LearningOS/
+│   ├── repository/     ← authored repository; operator default search space
+│   ├── obsidian-ui/    ← independent interface repository
+│   ├── materials/      ← books, slides, videos, PDFs, datasets
+│   ├── projects/       ← active LearningOS-owned code repositories
+│   ├── workbench/      ← disposable audits, strategy, and scratch tooling
+│   ├── legacy/         ← frozen pre-v3 tree and preserved former Job source
+│   └── archive/        ← retired, recoverable non-active artifacts
+└── Stratum/            ← independent external Git repository
 ```
 
-> **Correction (2026-08-03, ADR-003 S7):** as built, the frozen `legacy/` tree
-> and the quarantined `Job/` folder live at the *semestercontext root*, beside
-> `LearningOS/` — not under it. The stratum repository moved from `projects/`
-> into `Job/` on 2026-07-17 under the quarantine (CLAUDE.md §13); the
-> Job↔LearningOS boundary workflow is `Job/WORKFLOW.md`.
+> **Placement update (2026-08-27, ADR-014):** `semestercontext/` has two visible
+> roots: `LearningOS/` and `Stratum/`. The frozen pre-v3 tree is
+> `LearningOS/legacy/`; the source retained after the ADR-013 Job migration is
+> `LearningOS/legacy/Job/`. These are recovery/history shelves, not active
+> authored data. `Stratum/` keeps its own remotes and worktree and remains
+> external code context.
 
 > **Amendment (2026-08-03, ADR-006):** interface layers may exist as further
 > `LearningOS/` siblings — first: `obsidian-ui/` (the Obsidian desktop
@@ -127,7 +134,10 @@ LearningOS/
 
 Code repositories are neither authored knowledge nor materials; `projects/` is their owned home. A repository is moved there only when the move is safe (paths, remotes, teammates); otherwise its location is documented and it is excluded from the knowledge search space. References use `github://` (remote) or `project://` (local) URIs.
 
-**Placement decisions (2026-07-16):** `LearningOS/` lives beside the legacy `semestercontext/` folder. It may be scaffolded *inside* the legacy folder temporarily (tooling access) and relocated after cutover — the authored repository is a **fresh Git repository**, location-independent; legacy history stays with the legacy tree. `legacy/` may be a pointer to the frozen semestercontext rather than a physical move.
+**Placement history (2026-07-16):** LearningOS was initially scaffolded inside
+the legacy semester tree for tooling access. ADR-014 completes that cutover by
+shelving the frozen tree inside the LearningOS umbrella while keeping the
+authored repository and interface as independent Git repositories.
 
 ### 3.2 Authored repository
 
@@ -496,10 +506,11 @@ IDs are lowercase, ASCII, hyphen-separated, stable after creation, unique within
 
 ## 14A. Module-first curriculum model
 
-The default active program is the current Bachelor's. Skills and
-Thesis/Projects are active non-semester areas. Master's Planning is prospective
-and operationally quarantined. Job is a stronger external confidentiality
-boundary. Archive preserves completed semesters and work.
+The default active program is the current Bachelor's. Skills,
+Thesis/Projects, and Job are active non-semester areas. Job learning uses
+ordinary modules under `program-job`; its badge or section is presentation, not
+a data boundary. Master's Planning is prospective and operationally
+quarantined. Archive preserves completed semesters and work.
 
 Module `kind` is `academic`, `skill`, `project`, or `foundation`. Only academic
 modules may be required to carry institution, code, credits, semester, and
@@ -623,12 +634,14 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
     not exist.
 23. Workspace-to-module/unit joins are explicit in v2; interfaces never infer
     them from names or prose.
-24. Master's quarantined content and Job content never enter the normal
-    manifest; only declared boundary records may appear. Job additionally has
-    one explicit, ephemeral read model: opening the Job destination invokes the
-    bounded `job-dashboard-v2` query. Its in-memory response belongs only to
-    that view and is excluded from global search, recommendations, AI actions,
-    generated artifacts, and normal resource opening.
+24. Future Master's Planning content never enters the normal manifest; only its
+    declared boundary record may appear. Job learning is ordinary canonical
+    learning under `program-job` and participates in the normal manifest,
+    search, recommendations, AI actions, and inter-module concept system.
+    Sibling code repositories such as Stratum remain external: they are never
+    indexed or validated and are inspected only when the current task needs
+    exact code context. Cross-module relations are recorded after learner
+    confirmation, never pre-populated speculatively.
 25. Interface writes use action-specific, snapshot-checked gateway commands;
     no interface writes canonical files directly.
 26. A learning-session commit stages only its action ledger. Unrelated files,

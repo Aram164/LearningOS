@@ -4,6 +4,11 @@
 - **Date:** 2026-08-19
 - **Scope:** public read contracts, canonical mutation receipts, and UI mirrors
 
+> **Amended by ADR-013 (2026-08-26):** the producer-owned Job dashboard/plan
+> contracts and structured Job workspace decisions below are retired. The
+> manifest, transaction, stable-module-name, shared-reader, rollback, and
+> fingerprint decisions remain active.
+
 ## Context
 
 The 2026-08-18 engineering review found several places where an architectural

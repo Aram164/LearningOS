@@ -40,7 +40,7 @@ One internal loader API supporting: consolidated and partitioned concept/source 
 - module attempt consistency;
 - archived-workspace exclusion; active-workspace count warning at 8+.
 
-**Consolidation:** validate.py replaces `check_links.py`, `check_system.py`, and routine offline lychee runs. External URLs are checked only via `validate.py --online` (or an occasional manual lychee run) — link rot is audited deliberately, not on every validation.
+**Consolidation:** validate.py replaces `check_links.py`, `check_system.py`, and routine offline lychee runs. External URLs are checked only via `validate.py --online` — confirmed link rot blocks that deliberate gate, while access-controlled destinations remain advisory. Network checks never run during ordinary offline validation.
 
 ### Step 5 — Implement generation
 `tools/generate.py` produces, deterministically except timestamps: manifest; concept index; source index **including per-lecture and per-concept selector views** (first-learning / review / implementation recommendations); module view; coordination view (modules.yaml exam spine + workspace frontmatter + COORDINATION facts + Git-derived neglect signals); backlinks; health report.

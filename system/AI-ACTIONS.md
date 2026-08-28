@@ -18,10 +18,10 @@ only:
   `operations/ai-actions/garden-state/`;
 - add a typed relationship to `operations/ai-actions/relationships.yaml`.
 
-No action may read `Job/`, overwrite the original artifact, delete content, or
-write outside its capability allowlist. A job-derived export requires explicit
-operator confirmation and still does not grant access to the employer
-repository.
+No action may read an external repository, overwrite the original artifact,
+delete content, or write outside its capability allowlist. External code
+context is supplied only by an explicitly scoped user task; it is never an
+ambient AI-action capability.
 
 ## Manual-bundle workflow
 
@@ -36,17 +36,25 @@ python tools/los.py ai-action-prepare \
 
 python tools/los.py ai-action-import-delivery /path/to/approved-delivery
 python tools/los.py ai-action-validate-delivery '<delivery id>'
-python tools/los.py ai-action-apply-delivery '<delivery id>'
+python tools/los.py capability ai-action.delivery.apply \
+  --payload-file /path/to/approved-apply-v2.json
 ```
+
+Application is a GatewayEnvelopeV2-only write. Its approval kind is
+`approved-delivery`, and its payload names the imported `delivery_id`, the
+SHA-256 of the exact stored `delivery.yaml` bytes, and an `artifact_sha256`
+mapping that covers every `artifact_ref` exactly. The envelope carries the
+current canonical snapshot and one expected revision for every transaction
+artifact. The approval subject is the standard Gateway V2 hash over that whole
+intent. Calling `ai-action-apply-delivery` directly is deliberately refused.
 
 Prepared bundles live under `operations/ai-actions/requests/`. An imported
 response is copied into `operations/ai-actions/incoming/` first and only
 published to `deliveries/` once it validates against the contract lock, target
 checksum, provider identity, explicit approval and capability allowlist — a
 rejected bundle never occupies a canonical-looking path. Successful application
-is atomic and creates the standard transaction receipt under
-`operations/transactions/` before
-the manifest projection is refreshed.
+is atomic, refreshes the deterministic manifest projection, and creates a
+ReceiptV2 under `operations/transactions/` before success is reported.
 
 ## Contracts
 
@@ -63,11 +71,13 @@ request arrives from Obsidian or from the CLI.
 
 ## Staleness and supersession
 
-Staleness is scoped to the target. A delivery is rejected when the Garden seed
-or an original attachment changed after preparation; unrelated edits elsewhere
-in the repository do not invalidate prepared work. The repository fingerprint is
-still recorded in the request and in the receipt's `snapshot_before` /
-`snapshot_after` as provenance.
+Prepared-delivery validity is scoped to the target: a delivery is rejected when
+the Garden seed or an original attachment changed after preparation, while an
+unrelated edit does not force the discussion to be repeated. Application has a
+second, stricter boundary. The approved Gateway V2 intent carries the current
+whole-canonical snapshot, so any change after that final approval is refused.
+The receipt records the enforced `snapshot_before` and resulting
+`snapshot_after`.
 
 Re-shelving a seed that already has an AI transcription requires the delivery to
 name what it replaces:

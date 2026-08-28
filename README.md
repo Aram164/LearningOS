@@ -36,8 +36,8 @@ The rest of this file is the full manual; the four commands are under
 - **What this is / how it works:** `system/SPEC-README.md` → `system/PHILOSOPHY.md` → `system/ARCHITECTURE.md`
 - **How the operator behaves:** `system/CLAUDE.md` — the single canonical contract; root `CLAUDE.md` (and the `LearningOS/` project-root entry) are symlinks to it
 - **Bounded AI actions:** `system/AI-ACTIONS.md` — exact-target request bundles, capability validation, approval and receipts
-- **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed same day (`migration/final-report.md`). This repository is the operational root; the legacy `semestercontext/` tree is frozen history (banners point here).
-- **Legacy:** the frozen pre-v3 tree is `semestercontext/` (tag `pre-v3-baseline`); this folder is designed to be moved beside it after cutover.
+- **Migration state:** **COMPLETE — cutover 2026-07-17.** Pilot approved (5/5 frozen criteria, `migration/pilot-report.md`); Stage 2 full migration executed the same day (`migration/final-report.md`). This repository is the operational root.
+- **Legacy:** the frozen pre-v3 tree is shelved at `../legacy/`; the former Job source retained after ADR-013 is at `../legacy/Job/`.
 - **Roots:** materials → `../materials/` (`material://<source-id>/…` resolves there), code projects → `../projects/` — both outside the authored tree by design (materials move in Stage 2, Step 8).
 
 ## How to use it (the whole manual)
@@ -110,8 +110,15 @@ make inventory  # rebuild the materials manifest (see "Materials durability")
 make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
 make test       # complete suite, including full-repository integration checks
 make system-check # Core lint/validation/tests + the sibling UI's complete check
+make stress     # deliberate deep audit: release pair + production/fuzz/concurrency + URLs
 make            # list the one-word commands
 ```
+
+Use `make check` after ordinary edits, `make system-check` before a paired
+Core/UI release, and `make stress` when deliberately auditing resilience. The
+stress command is the single owner of repeated generation, atomic publication,
+concurrent CLI reads, repeated UI rounds, and online URL reachability; those
+checks should not be reconstructed as personal shell recipes.
 
 Interface layers (the Obsidian UI project, scripts, other agents) use the
 stable CLI gateway instead of parsing YAML — `python tools/los.py status
