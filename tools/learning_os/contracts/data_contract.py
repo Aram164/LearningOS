@@ -87,6 +87,16 @@ def check(schema_dir: Path = SCHEMA_DIR, path: Path = CONTRACT) -> tuple[bool, s
     )
 
 
+def _newest_frozen_fixture(repo_root: Path, version: int) -> str:
+    """Return the highest `tests/fixtures/formats/v<N>/` that exists on disk."""
+    formats = repo_root / "tests" / "fixtures" / "formats"
+    frozen = sorted(
+        (int(p.name.removeprefix("v")) for p in formats.glob("v[0-9]*") if p.is_dir()),
+        reverse=True,
+    )
+    return f"tests/fixtures/formats/v{frozen[0] if frozen else version}/"
+
+
 def bump(
     note: str,
     migration: str | None = None,
@@ -100,7 +110,14 @@ def bump(
         "adopted": dt.date.today().isoformat(),
         "note": note,
         "migration": migration,
-        "fixture": f"tests/fixtures/formats/v{version}/",
+        # Point at the newest shape that is actually frozen, not at the one this
+        # bump hopes will be. The freeze is step 4 of the README procedure and
+        # has not happened yet at bump time, so writing `v{version}/` here
+        # records a directory that does not exist — v13 carried exactly that
+        # claim for three days and no test could see it. When a new fixture is
+        # frozen, update this entry to name it;
+        # `test_every_recorded_fixture_pointer_resolves` enforces the rest.
+        "fixture": _newest_frozen_fixture(path.parent.parent.parent, version),
     }
     updated = {
         "contract_version": version,

@@ -201,3 +201,62 @@ Prince, Goodfellow, Bishop, Nielsen, Jurafsky) where a page range cannot be
 verified against a file. Repository-wide the counts are 546 warnings, of which
 311 are `ROUTE-ANGLE-DETAIL-MISSING` outside SaD — AML, AMLS, Algo 2, Python and
 the exam-prep units have not had this pass.
+
+---
+
+## 2. `records/materials-manifest.yaml` has two writers that disagree on its bytes
+
+**Raised:** 2026-08-28 (operator finding, logged on Aram's instruction) ·
+**Status:** open · **Do not act.**
+
+Not a complaint of Aram's — surfaced during the 2026-08-28 audit and recorded
+here rather than fixed, because the drift is latent and repairing it changes a
+migration's plan hash for no present benefit.
+
+The manifest is the repository's only durable record of the ~1.9 GB `materials/`
+tree, and README "Materials durability" treats it as the thing that
+distinguishes an unmounted drive from actual data loss. It has two writers, and
+they do not agree on how to serialise the same content.
+
+### Evidence (measured 2026-08-28)
+
+- **`tools/materials_manifest.py:180`** — `yaml.safe_dump(manifest,
+  sort_keys=False, allow_unicode=True)`, i.e. PyYAML's default `width=80`; keys
+  ordered by `sorted(base.rglob("*"))`, which sorts **`Path` objects
+  component-wise**.
+- **`tools/migrations/job_quarantine_collapse.py:267` (`_dump`)** — the same
+  dump with **`width=100`**; keys merged into a dict whose ordering is
+  **string-wise**.
+- The two disagree on both axes, and the disagreement is live on disk today:
+  - **Ordering.** `software/tooling/git-handbook-archive/git-handbook-v5.zip`
+    and `…/git-handbook.zip` sit *after* the `git-handbook/` directory rows in
+    the checked-in file, because `Path` comparison puts the directory first.
+    String comparison puts them before it (`-` = 0x2D < `/` = 0x2F). The
+    planner would move them.
+  - **Wrapping.** At least six long non-ASCII keys re-wrap at a different
+    column — e.g. `_unsorted/Das gelbe Rechenbuch…`,
+    `…/Sei L eine reguläre Sprache…`, `…/Machine Learning_ An Algorithmic
+    Perspective…`.
+- Net effect: `python tools/migrations/job_quarantine_collapse.py --root .`
+  reports **1 change** against a fully-migrated repository, and that change is
+  a cosmetic rewrite of a ~3,400-line file. `make inventory` would flip it back.
+
+### Blast radius
+
+- `tools/materials_manifest.py` and `tools/migrations/job_quarantine_collapse.py`
+  would have to share one rendering function — the manifest module is the
+  natural owner, since it is the file's steady-state writer.
+- Changing `_dump` changes `plan_sha256` for any future synthetic run of the
+  collapse planner. The applied migration is unaffected: its provenance record
+  is hash-pinned at `f4b6a8b8…` and `tests/test_job_quarantine_collapse.py`
+  asserts that hash independently.
+- No validation rule currently notices the disagreement, which is why it went
+  unrecorded through the migration itself.
+
+### Operator note
+
+Nothing is churning right now: the collapse migration is applied and terminal,
+so the second writer is not expected to run again on live data. The risk is that
+it *can* — the planner is still reachable and reported `ready` after the
+2026-08-28 attachment repair — and a single accidental apply would produce a
+3,400-line diff that looks like material loss and is not.

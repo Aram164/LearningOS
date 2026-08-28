@@ -511,13 +511,39 @@ breaks a stage exactly as thoroughly whether it arrived alone or in a batch.
    anyone reads it.
 2. **Review** the draft as a diff against what is live. This is the step the
    gateway cannot do for you.
-3. **Apply through the gateway**, never by writing the canonical file directly:
-   - `module-plan-import --module-id … --file … --check`, then again with
-     `--expected-snapshot`, when the change touches a module's `source-map.yaml`
-     or several units together;
-   - `unit-map-import` when it is one unit's `study-map.yaml`;
-   - the stage capabilities (`stage-progress`, `stage-note`, `source-feedback`,
-     `detour-create`) for work *inside* a stage, which is not a plan revision.
+3. **Preflight from the CLI.** `module-plan-import MODULE_ID --file … --check`
+   when the change touches a module's `source-map.yaml` or several units
+   together; `unit-map-import UNIT_ID --file …` when it is one unit's
+   `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
+   `--check` runs the contract, ordering, routing and shadow-repository
+   validation and reports `"canonical_files_written": 0`.
+4. **Apply through the gateway**, never by writing the canonical file directly
+   — and note that "through the gateway" means an envelope, not a flag:
+
+   ```bash
+   python tools/los.py capability module.plan.import --payload-file envelope.json
+   ```
+
+   `module-plan-import … --expected-snapshot` does **not** write. Every
+   canonical write refuses when no gateway request is in context
+   (`commands/support.py`: *"canonical writes must use GatewayEnvelopeV2;
+   direct CLI application is disabled"*), so the bare CLI can preflight and
+   nothing more. The envelope carries `schema_version: 2`, `request_id`,
+   `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
+   `los.py bootstrap`), `expected_revisions` covering **exactly** every
+   artifact the transaction touches — the module plus each unit in the
+   package, no more and no fewer — an `approval` whose `subject_sha256` is
+   `intent_sha256(envelope)`, and the payload. `approve` never appears in the
+   payload; a `file` payload always carries its `file_sha256`.
+
+   `module.plan.import` additionally requires a coverage audit under
+   `work/active/` carrying the literal headings `## Local`, `## Linked` and
+   `## Completeness`, with all six `plan_contract.checks` true. Start from
+   `system/templates/plan-coverage-audit.template.md`.
+
+   For work *inside* a stage — `stage-progress`, `stage-note`,
+   `source-feedback`, `detour-create` — this section does not apply; that is
+   not a plan revision.
 
 Hand-editing a `study-map.yaml` or a `source-map.yaml` produces a file the
 validator accepts and the pre-commit hook passes, so nothing will object — but
