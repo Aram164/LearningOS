@@ -1,0 +1,8 @@
+type: module-source-map
+module_id: module-job-rust-engineering
+sources:
+- source_id: source-rust-book
+  role: reference
+  why: Referenced by migrated learning plan job-track-rust.
+  priority: 0
+  unit_routes: []

@@ -1,0 +1,20 @@
+id: unit-job-python-engineering-fluency
+type: unit
+module_id: module-job-python-engineering
+kind: topic
+title: Python engineering fluency — independent design, implementation, and review
+order: 1
+scope: Given an ambiguous Python idea, unfamiliar codebase, or Job ticket, independently turn it into
+  a precise contract; choose clear data and module boundaries; implement a small reviewable change; test
+  normal, boundary, and failure behavior; debug from evidence; reason about types, complexity, resources,
+  concurrency, packaging, and operations; and review or maintain the result over time. AI is a bounded
+  reviewer and accelerator, never the source of the specification or proof of correctness. Fluency is
+  evidenced by delayed no-AI reconstruction, open-source code traces, engineering decision records, and
+  a final maintainable package whose design and every accepted line can be explained.
+status: ready
+scope_sources: []
+source_selections: []
+working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/notes.md
+artifacts: {}
+workspace_ids: []
+current_study_map: study-map-job-python-engineering-fluency

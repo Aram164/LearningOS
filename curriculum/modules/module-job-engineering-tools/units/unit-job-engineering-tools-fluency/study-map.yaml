@@ -1,0 +1,1833 @@
+id: study-map-job-engineering-tools-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-engineering-tools-fluency
+status: ready
+current_stage: stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga
+source_plan:
+  path: Job/plans/job-track-missing-semester.yaml
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga
+  number: 1
+  title: The shell, filesystem, paths, permissions, and safe navigation
+  status: pending
+  objective: Use The shell, filesystem, paths, permissions, and safe navigation fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - a one-page shell/filesystem model, ten-command safety checklist, and a lab transcript with predicted
+    versus observed targets.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — course shell
+    id: resource-missing-semester-01-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 shell lecture
+    url: https://missing.csail.mit.edu/2026/course-shell/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-01-02-local-material-note-programming-toolbo
+    locator: Historical toolbox shell section
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — pubs.opengroup.org — V3_chap02.html
+    id: resource-missing-semester-01-03-official-reference-pubs-opengroup-org
+    locator: POSIX shell command language
+    url: https://pubs.opengroup.org/onlinepubs/9799919799/utilities/V3_chap02.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — course shell
+    id: resource-missing-semester-01-04-guided-exercises-missing-csail-mit-edu
+    locator: Complete the lecture exercises and the stage's path/permission safety lab
+    url: https://missing.csail.mit.edu/2026/course-shell/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — course shell
+    id: resource-missing-semester-01-05-alternative-explanation-missing-csail
+    locator: MIT 2020 shell telling
+    url: https://missing.csail.mit.edu/2020/course-shell/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — www.gnu.org — coreutils.html
+    id: resource-missing-semester-01-06-optional-depth-www-gnu-org-coreutils-h
+    locator: GNU coreutils manual
+    url: https://www.gnu.org/software/coreutils/manual/coreutils.html
+    scope_triage: deferred
+  - kind: practise
+    label: Draw terminal → shell → child process → filesystem for one command.
+    id: resource-missing-semester-01-07-draw-terminal-shell-child-process-file
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: In a disposable directory, create nested paths including spaces and leading dashes; navigate
+      and operate on them safely with quoting and --.
+    id: resource-missing-semester-01-08-in-a-disposable-directory-create-neste
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Predict absolute, relative, ., .., and symlink resolution in ten cases, then verify with pwd
+      -P and readlink where available.
+    id: resource-missing-semester-01-09-predict-absolute-relative-and-symlink
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Decode rwx permissions for files versus directories and test only on lab files.
+    id: resource-missing-semester-01-10-decode-rwx-permissions-for-files-versu
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Diagnose three PATH scenarios using command -v, type, and an absolute executable path.
+    id: resource-missing-semester-01-11-diagnose-three-path-scenarios-using-co
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-01-the-shell-filesystem-paths-permissions-and-safe-naviga/notes.md
+- id: stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta
+  number: 2
+  title: Arguments, quoting, globs, streams, pipelines, and exit status
+  status: pending
+  objective: Use Arguments, quoting, globs, streams, pipelines, and exit status fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - an expansion-order diagram, redirection matrix, and a pipeline whose output and failure behavior are
+    both tested.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-02-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 arguments, streams, environment, return-code, and signal sections
+    url: https://missing.csail.mit.edu/2026/command-line-environment/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-02-02-local-material-note-programming-toolbo
+    locator: Pipes/redirection drills
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.gnu.org — bash.html
+    id: resource-missing-semester-02-03-official-reference-www-gnu-org-bash-ht
+    locator: Bash expansions/pipelines/redirections
+    url: https://www.gnu.org/software/bash/manual/bash.html#Shell-Expansions
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — bash.html
+    id: resource-missing-semester-02-04-official-reference-www-gnu-org-bash-ht
+    locator: Bash expansions/pipelines/redirections
+    url: https://www.gnu.org/software/bash/manual/bash.html#Pipelines
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — bash.html
+    id: resource-missing-semester-02-05-official-reference-www-gnu-org-bash-ht
+    locator: Bash expansions/pipelines/redirections
+    url: https://www.gnu.org/software/bash/manual/bash.html#Redirections
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-02-06-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's stream/return-code exercises and the argv/redirection matrix
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — shell tools
+    id: resource-missing-semester-02-07-alternative-explanation-missing-csail
+    locator: MIT 2020 shell tools
+    url: https://missing.csail.mit.edu/2020/shell-tools/
+    scope_triage: helpful-now
+  - kind: practise
+    label: Predict argv for fifteen examples using spaces, quotes, command substitution, variables, brace
+      expansion, and globs; verify with a tiny argv-printer.
+    id: resource-missing-semester-02-08-predict-argv-for-fifteen-examples-usin
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Build pipelines that separately capture stdout, stderr, and both while preserving the original
+      status.
+    id: resource-missing-semester-02-09-build-pipelines-that-separately-captur
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Compare >, >>, <, 2>, 2>&1, and tee on disposable files.
+    id: resource-missing-semester-02-10-compare-2-2-1-and-tee-on-disposable-fi
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Demonstrate a hidden pipeline failure with and without pipefail and explain PIPESTATUS.
+    id: resource-missing-semester-02-11-demonstrate-a-hidden-pipeline-failure
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Count and transform a safe text corpus using only small composable commands.
+    id: resource-missing-semester-02-12-count-and-transform-a-safe-text-corpus
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-02-arguments-quoting-globs-streams-pipelines-and-exit-sta/notes.md
+- id: stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design
+  number: 3
+  title: Dependable shell scripting and humane CLI design
+  status: pending
+  objective: Use Dependable shell scripting and humane CLI design fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - a tested command-line script, Bats-style or ordinary test matrix, shellcheck result, and a short ‘when
+    shell stops being the right language’ rule.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shell tools
+    id: resource-missing-semester-03-01-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2020 shell scripting and the scripting portions
+    url: https://missing.csail.mit.edu/2020/shell-tools/
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-03-02-required-core-missing-csail-mit-edu-co
+    locator: MIT 2020 shell scripting and the scripting portions
+    url: https://missing.csail.mit.edu/2026/command-line-environment/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-03-03-local-material-note-programming-toolbo
+    locator: Toolbox command examples
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.gnu.org — Conditional Constructs.html
+    id: resource-missing-semester-03-04-official-reference-www-gnu-org-conditi
+    locator: Bash conditionals/functions/traps and ShellCheck
+    url: https://www.gnu.org/software/bash/manual/html_node/Conditional-Constructs.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — Shell Functions.html
+    id: resource-missing-semester-03-05-official-reference-www-gnu-org-shell-f
+    locator: Bash conditionals/functions/traps and ShellCheck
+    url: https://www.gnu.org/software/bash/manual/html_node/Shell-Functions.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — Bourne Shell Builtins.html
+    id: resource-missing-semester-03-06-official-reference-www-gnu-org-bourne
+    locator: Bash conditionals/functions/traps and ShellCheck
+    url: https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html#index-trap
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.shellcheck.net
+    id: resource-missing-semester-03-07-official-reference-www-shellcheck-net
+    locator: Bash conditionals/functions/traps and ShellCheck
+    url: https://www.shellcheck.net/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete both lecture exercise sets and produce the tested idempotent CLI
+      required by this stage.
+    id: resource-missing-semester-03-08-guided-exercises-complete-both-lecture
+    locator: Complete both lecture exercise sets and produce the tested idempotent CLI required by this
+      stage.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — google.github.io — shellguide.html
+    id: resource-missing-semester-03-09-optional-depth-google-github-io-shellg
+    locator: Google Shell Style Guide
+    url: https://google.github.io/styleguide/shellguide.html
+    scope_triage: deferred
+  - kind: practise
+    label: Write a lab script with --help, two flags, positional validation, clear stderr, and documented
+      exit codes.
+    id: resource-missing-semester-03-10-write-a-lab-script-with-help-two-flags
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: 'Make it idempotent: two runs produce the same final state and the second explains that nothing
+      changed.'
+    id: resource-missing-semester-03-11-make-it-idempotent-two-runs-produce-th
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Use mktemp and trap so success, failure, and Ctrl-C all clean up.
+    id: resource-missing-semester-03-12-use-mktemp-and-trap-so-success-failure
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Run shellcheck, explain every diagnostic, and fix or narrowly justify it.
+    id: resource-missing-semester-03-13-run-shellcheck-explain-every-diagnosti
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Port one parsing-heavy part to Python and compare maintainability and error handling.
+    id: resource-missing-semester-03-14-port-one-parsing-heavy-part-to-python
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-03-dependable-shell-scripting-and-humane-cli-design/notes.md
+- id: stage-missing-semester-04-processes-jobs-signals-and-resource-ownership
+  number: 4
+  title: Processes, jobs, signals, and resource ownership
+  status: pending
+  objective: Use Processes, jobs, signals, and resource ownership fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - a process-tree diagram, signal escalation policy, and a cleanup-aware worker transcript.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-04-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 processes, job control, and signals
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#signals
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — pubs.opengroup.org — V1_chap08.html
+    id: resource-missing-semester-04-02-official-reference-pubs-opengroup-org
+    locator: POSIX process environment and Python signal handling
+    url: https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap08.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — signal.html
+    id: resource-missing-semester-04-03-official-reference-docs-python-org-sig
+    locator: POSIX process environment and Python signal handling
+    url: https://docs.python.org/3/library/signal.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the MIT signal exercises and the stage's foreground/background/graceful-shutdown
+      matrix on lab processes only.
+    id: resource-missing-semester-04-04-guided-exercises-complete-the-mit-sign
+    locator: Complete the MIT signal exercises and the stage's foreground/background/graceful-shutdown
+      matrix on lab processes only.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — www.gnu.org — Job Control.html
+    id: resource-missing-semester-04-05-alternative-explanation-www-gnu-org-jo
+    locator: Bash job-control manual
+    url: https://www.gnu.org/software/bash/manual/html_node/Job-Control.html
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — man7.org — proc.5.html
+    id: resource-missing-semester-04-06-optional-depth-man7-org-proc-5-html
+    locator: Linux proc filesystem manual
+    url: https://man7.org/linux/man-pages/man5/proc.5.html
+    scope_triage: deferred
+  - kind: practise
+    label: Start foreground and background sleep jobs and map shell job IDs to PIDs/process groups.
+    id: resource-missing-semester-04-07-start-foreground-and-background-sleep
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Exercise Ctrl-C, Ctrl-Z, bg, fg, wait, SIGHUP, SIGTERM, and SIGKILL on lab processes only;
+      record which allow cleanup.
+    id: resource-missing-semester-04-08-exercise-ctrl-c-ctrl-z-bg-fg-wait-sigh
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Write a Python worker that logs SIGINT/SIGTERM and performs bounded cleanup.
+    id: resource-missing-semester-04-09-write-a-python-worker-that-logs-sigint
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Create and diagnose a zombie or orphan only in an isolated lab if the OS permits, then explain
+      reaping.
+    id: resource-missing-semester-04-10-create-and-diagnose-a-zombie-or-orphan
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Find which lab process owns a chosen local port and stop it gracefully.
+    id: resource-missing-semester-04-11-find-which-lab-process-owns-a-chosen-l
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-04-processes-jobs-signals-and-resource-ownership/notes.md
+- id: stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions
+  number: 5
+  title: SSH, remote execution, tmux, and durable sessions
+  status: pending
+  objective: Use SSH, remote execution, tmux, and durable sessions fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - a redacted remote-runbook, tmux layout, and local-versus-remote parsing worksheet.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-05-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 remote machines and terminal multiplexers
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#remote-machines
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-05-02-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 remote machines and terminal multiplexers
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#terminal-multiplexers
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — man.openbsd.org — ssh
+    id: resource-missing-semester-05-03-official-reference-man-openbsd-org-ssh
+    locator: OpenSSH and tmux manuals
+    url: https://man.openbsd.org/ssh
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — man.openbsd.org — ssh_config
+    id: resource-missing-semester-05-04-official-reference-man-openbsd-org-ssh
+    locator: OpenSSH and tmux manuals
+    url: https://man.openbsd.org/ssh_config
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — man7.org — tmux.1.html
+    id: resource-missing-semester-05-05-official-reference-man7-org-tmux-1-htm
+    locator: OpenSSH and tmux manuals
+    url: https://man7.org/linux/man-pages/man1/tmux.1.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete MIT's remote-machine/tmux exercises and the authorized disconnect/reconnect
+      lab.
+    id: resource-missing-semester-05-06-guided-exercises-complete-mit-s-remote
+    locator: Complete MIT's remote-machine/tmux exercises and the authorized disconnect/reconnect lab.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — command line
+    id: resource-missing-semester-05-07-alternative-explanation-missing-csail
+    locator: MIT 2020 command-line environment
+    url: https://missing.csail.mit.edu/2020/command-line/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — download.samba.org — rsync.1
+    id: resource-missing-semester-05-08-optional-depth-download-samba-org-rsyn
+    locator: rsync manual
+    url: https://download.samba.org/pub/rsync/rsync.1
+    scope_triage: deferred
+  - kind: practise
+    label: On an authorized lab host or local VM, inspect a host-key fingerprint before first connection.
+    id: resource-missing-semester-05-09-on-an-authorized-lab-host-or-local-vm
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Create an SSH config alias with explicit user, host, key, and keepalive settings using dummy/lab
+      values.
+    id: resource-missing-semester-05-10-create-an-ssh-config-alias-with-explic
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Predict where quoting occurs for ssh host 'command with variables' and verify with harmless
+      echo/printf examples.
+    id: resource-missing-semester-05-11-predict-where-quoting-occurs-for-ssh-h
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Start a named tmux session with editor, test, and log windows; detach, disconnect, reconnect,
+      and reattach.
+    id: resource-missing-semester-05-12-start-a-named-tmux-session-with-editor
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Transfer one lab artifact with scp and rsync, then compare restartability and deletion semantics.
+    id: resource-missing-semester-05-13-transfer-one-lab-artifact-with-scp-and
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-05-ssh-remote-execution-tmux-and-durable-sessions/notes.md
+- id: stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang
+  number: 6
+  title: Search, regular expressions, and command-line data wrangling
+  status: pending
+  objective: Use Search, regular expressions, and command-line data wrangling fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - a search decision table, tested regex notebook, and reproducible wrangling pipeline with invariants.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — data wrangling
+    id: resource-missing-semester-06-01-required-core-missing-csail-mit-edu-da
+    locator: MIT 2020 data-wrangling lecture
+    url: https://missing.csail.mit.edu/2020/data-wrangling/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — 01.05-IPython-And-Shell-Commands.ipynb
+    id: resource-missing-semester-06-02-local-material-01-05-ipython-and-shell
+    source_id: source-pydata-handbook
+    locator: IPython shell-command notebook
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.05-IPython-And-Shell-Commands.ipynb
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — github.com — GUIDE.md
+    id: resource-missing-semester-06-03-official-reference-github-com-guide-md
+    locator: ripgrep and jq guides plus GNU sed/awk
+    url: https://github.com/BurntSushi/ripgrep/blob/master/GUIDE.md
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — jqlang.org — manual
+    id: resource-missing-semester-06-04-official-reference-jqlang-org-manual
+    locator: ripgrep and jq guides plus GNU sed/awk
+    url: https://jqlang.org/manual/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — sed.html
+    id: resource-missing-semester-06-05-official-reference-www-gnu-org-sed-htm
+    locator: ripgrep and jq guides plus GNU sed/awk
+    url: https://www.gnu.org/software/sed/manual/sed.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.gnu.org — gawk.html
+    id: resource-missing-semester-06-06-official-reference-www-gnu-org-gawk-ht
+    locator: ripgrep and jq guides plus GNU sed/awk
+    url: https://www.gnu.org/software/gawk/manual/gawk.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — data wrangling
+    id: resource-missing-semester-06-07-guided-exercises-missing-csail-mit-edu
+    locator: Complete the MIT data-wrangling exercises and the validated log/JSON pipelines
+    url: https://missing.csail.mit.edu/2020/data-wrangling/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — code quality
+    id: resource-missing-semester-06-08-alternative-explanation-missing-csail
+    locator: MIT 2026 regex section
+    url: https://missing.csail.mit.edu/2026/code-quality/#regular-expressions
+    scope_triage: helpful-now
+  - kind: practise
+    label: Write regex examples for anchors, classes, quantifiers, alternation, groups, and backreferences;
+      include a counterexample for each.
+    id: resource-missing-semester-06-09-write-regex-examples-for-anchors-class
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Search a lab repository by filename, literal, regex, file type, and surrounding context with
+      rg/find.
+    id: resource-missing-semester-06-10-search-a-lab-repository-by-filename-li
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Turn a synthetic log into counts by severity and module using grep/sed/awk/sort/uniq, validating
+      input/output line counts.
+    id: resource-missing-semester-06-11-turn-a-synthetic-log-into-counts-by-se
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Extract the same answer from JSON with jq and prove why text splitting is unsafe.
+    id: resource-missing-semester-06-12-extract-the-same-answer-from-json-with
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Replace a repeated manual search with a parameterized script that emits stable TSV or JSON.
+    id: resource-missing-semester-06-13-replace-a-repeated-manual-search-with
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-06-search-regular-expressions-and-command-line-data-wrang/notes.md
+- id: stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag
+  number: 7
+  title: Environment variables, PATH, dotfiles, aliases, and package managers
+  status: pending
+  objective: Use Environment variables, PATH, dotfiles, aliases, and package managers fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - redacted environment map, tested dotfiles installer, and scope policy for tools/config/secrets.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-07-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#environment-variables
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — command line environment
+    id: resource-missing-semester-07-02-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 environment variables, aliases, dotfiles, and package managers
+    url: https://missing.csail.mit.edu/2026/command-line-environment/#aliases-and-dotfiles
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-07-03-local-material-note-programming-toolbo
+    locator: Environment and PATH material
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — zsh.sourceforge.io — Files.html
+    id: resource-missing-semester-07-04-official-reference-zsh-sourceforge-io
+    locator: Zsh startup files and Homebrew docs
+    url: https://zsh.sourceforge.io/Doc/Release/Files.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.brew.sh
+    id: resource-missing-semester-07-05-official-reference-docs-brew-sh
+    locator: Zsh startup files and Homebrew docs
+    url: https://docs.brew.sh/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete MIT's dotfiles exercises and build the isolated, dry-running, idempotent
+      installer from this stage.
+    id: resource-missing-semester-07-06-guided-exercises-complete-mit-s-dotfil
+    locator: Complete MIT's dotfiles exercises and build the isolated, dry-running, idempotent installer
+      from this stage.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — specifications.freedesktop.org — latest
+    id: resource-missing-semester-07-07-optional-depth-specifications-freedesk
+    locator: XDG Base Directory specification
+    url: https://specifications.freedesktop.org/basedir-spec/latest/
+    scope_triage: deferred
+  - kind: practise
+    label: Launch clean and login/non-login shells and record which test startup files load.
+    id: resource-missing-semester-07-08-launch-clean-and-login-non-login-shell
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Create a temporary PATH with two same-named executables, predict resolution, and verify with
+      type -a.
+    id: resource-missing-semester-07-09-create-a-temporary-path-with-two-same
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Build a minimal versioned dotfiles lab with symlink installer, dry-run, backup behavior, and
+      idempotence.
+    id: resource-missing-semester-07-10-build-a-minimal-versioned-dotfiles-lab
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Turn three aliases into functions when arguments/control flow require it.
+    id: resource-missing-semester-07-11-turn-three-aliases-into-functions-when
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Compare Homebrew/global tool installation with a project environment and lockfile for one Python
+      tool.
+    id: resource-missing-semester-07-12-compare-homebrew-global-tool-installat
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-07-environment-variables-path-dotfiles-aliases-and-packag/notes.md
+- id: stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics
+  number: 8
+  title: Editors, Vim's editing language, LSP, and IDE diagnostics
+  status: pending
+  objective: Use Editors, Vim's editing language, LSP, and IDE diagnostics fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - editor capability checklist, Vim command grammar sheet, and a reproducible environment-diagnosis note.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — development environment
+    id: resource-missing-semester-08-01-required-core-missing-csail-mit-edu-de
+    locator: MIT 2026 development environment and tools
+    url: https://missing.csail.mit.edu/2026/development-environment/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-08-02-local-material-note-programming-toolbo
+    locator: VS Code/tooling section
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — microsoft.github.io — language server protocol
+    id: resource-missing-semester-08-03-official-reference-microsoft-github-io
+    locator: Language Server Protocol and VS Code Python environments
+    url: https://microsoft.github.io/language-server-protocol/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — code.visualstudio.com — environments
+    id: resource-missing-semester-08-04-official-reference-code-visualstudio-c
+    locator: Language Server Protocol and VS Code Python environments
+    url: https://code.visualstudio.com/docs/python/environments
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — development environment
+    id: resource-missing-semester-08-05-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's editor/LSP exercises plus vimtutor and the broken-environment diagnosis
+    url: https://missing.csail.mit.edu/2026/development-environment/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — editors
+    id: resource-missing-semester-08-06-alternative-explanation-missing-csail
+    locator: MIT 2020 Vim lecture
+    url: https://missing.csail.mit.edu/2020/editors/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — vimhelp.org
+    id: resource-missing-semester-08-07-optional-depth-vimhelp-org
+    locator: Vim help index
+    url: https://vimhelp.org/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete vimtutor or equivalent and demonstrate ten operator+motion/text-object edits without
+      arrows or mouse.
+    id: resource-missing-semester-08-08-complete-vimtutor-or-equivalent-and-de
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Perform the same multi-file rename once as text replacement and once as semantic rename; inspect
+      differences.
+    id: resource-missing-semester-08-09-perform-the-same-multi-file-rename-onc
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Configure a disposable Python project so imports, hover types, definitions, references, formatting,
+      linting, and tests all use one environment.
+    id: resource-missing-semester-08-10-configure-a-disposable-python-project
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Break environment selection deliberately and diagnose the symptoms.
+    id: resource-missing-semester-08-11-break-environment-selection-deliberate
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Document a minimal extension set with one owner for each feature.
+    id: resource-missing-semester-08-12-document-a-minimal-extension-set-with
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-08-editors-vim-s-editing-language-lsp-and-ide-diagnostics/notes.md
+- id: stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima
+  number: 9
+  title: 'Debugging: hypotheses, logs, debuggers, tracing, and minimal reproductions'
+  status: pending
+  objective: 'Use Debugging: hypotheses, logs, debuggers, tracing, and minimal reproductions fluently
+    in a reproducible workflow, explain the underlying model, and prove it with the stage exercises and
+    a concrete artifact.'
+  done_when:
+  - a timestamped debugging journal from symptom to falsified hypotheses to root cause and test.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — debugging profiling
+    id: resource-missing-semester-09-01-required-core-missing-csail-mit-edu-de
+    locator: MIT 2026 debugging lecture
+    url: https://missing.csail.mit.edu/2026/debugging-profiling/#debugging
+    scope_triage: required-now
+  - kind: read
+    label: Local material — 01.06-Errors-and-Debugging.ipynb
+    id: resource-missing-semester-09-02-local-material-01-06-errors-and-debugg
+    source_id: source-pydata-handbook
+    locator: Runnable debugging notebook and Python debugging shelf
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.06-Errors-and-Debugging.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-missing-semester-09-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Runnable debugging notebook and Python debugging shelf
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — pdb.html
+    id: resource-missing-semester-09-04-official-reference-docs-python-org-pdb
+    locator: pdb, logging cookbook, and LLDB tutorial
+    url: https://docs.python.org/3/library/pdb.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — logging cookbook.html
+    id: resource-missing-semester-09-05-official-reference-docs-python-org-log
+    locator: pdb, logging cookbook, and LLDB tutorial
+    url: https://docs.python.org/3/howto/logging-cookbook.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — lldb.llvm.org — tutorial.html
+    id: resource-missing-semester-09-06-official-reference-lldb-llvm-org-tutor
+    locator: pdb, logging cookbook, and LLDB tutorial
+    url: https://lldb.llvm.org/use/tutorial.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — debugging profiling
+    id: resource-missing-semester-09-07-guided-exercises-missing-csail-mit-edu
+    locator: Complete the MIT debugging exercises and the seeded-bug hypothesis journal
+    url: https://missing.csail.mit.edu/2026/debugging-profiling/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — debugging profiling
+    id: resource-missing-semester-09-08-alternative-explanation-missing-csail
+    locator: MIT 2020 debugging lecture
+    url: https://missing.csail.mit.edu/2020/debugging-profiling/
+    scope_triage: helpful-now
+  - kind: practise
+    label: Given a seeded bug, write three competing hypotheses and the cheapest discriminating observation
+      for each.
+    id: resource-missing-semester-09-09-given-a-seeded-bug-write-three-competi
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Replace ad-hoc prints with leveled structured logs and filter by module/severity.
+    id: resource-missing-semester-09-10-replace-ad-hoc-prints-with-leveled-str
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Use pdb breakpoints, conditional breakpoints, step/next/return, stack inspection, and post-mortem
+      debugging.
+    id: resource-missing-semester-09-11-use-pdb-breakpoints-conditional-breakp
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Use a platform-appropriate tracer on a harmless lab program to find a missing file or blocked
+      I/O.
+    id: resource-missing-semester-09-12-use-a-platform-appropriate-tracer-on-a
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Reduce a large failing input to a minimal reproduction and turn it into a regression test.
+    id: resource-missing-semester-09-13-reduce-a-large-failing-input-to-a-mini
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-09-debugging-hypotheses-logs-debuggers-tracing-and-minima/notes.md
+- id: stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query
+  number: 10
+  title: 'Profiling: measurement design, CPU, memory, I/O, and query plans'
+  status: pending
+  objective: 'Use Profiling: measurement design, CPU, memory, I/O, and query plans fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  done_when:
+  - a benchmark report containing environment, hypothesis, method, raw samples, profile evidence, semantic
+    checks, and bounded conclusion.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — debugging profiling
+    id: resource-missing-semester-10-01-required-core-missing-csail-mit-edu-de
+    locator: MIT 2026 profiling lecture
+    url: https://missing.csail.mit.edu/2026/debugging-profiling/#profiling
+    scope_triage: required-now
+  - kind: read
+    label: Local material — 01.07-Timing-and-Profiling.ipynb
+    id: resource-missing-semester-10-02-local-material-01-07-timing-and-profil
+    source_id: source-pydata-handbook
+    locator: Runnable profiling notebook and performance shelf
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.07-Timing-and-Profiling.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-missing-semester-10-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Runnable profiling notebook and performance shelf
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — profile.html
+    id: resource-missing-semester-10-04-official-reference-docs-python-org-pro
+    locator: Python cProfile/timeit/tracemalloc
+    url: https://docs.python.org/3/library/profile.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — timeit.html
+    id: resource-missing-semester-10-05-official-reference-docs-python-org-tim
+    locator: Python cProfile/timeit/tracemalloc
+    url: https://docs.python.org/3/library/timeit.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — tracemalloc.html
+    id: resource-missing-semester-10-06-official-reference-docs-python-org-tra
+    locator: Python cProfile/timeit/tracemalloc
+    url: https://docs.python.org/3/library/tracemalloc.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete MIT's profiling exercises and produce the controlled CPU/memory/query-plan
+      report.
+    id: resource-missing-semester-10-07-guided-exercises-complete-mit-s-profil
+    locator: Complete MIT's profiling exercises and produce the controlled CPU/memory/query-plan report.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — docs.pola.rs — query plan
+    id: resource-missing-semester-10-08-optional-depth-docs-pola-rs-query-plan
+    locator: Polars query plans
+    url: https://docs.pola.rs/user-guide/lazy/query-plan/
+    scope_triage: deferred
+  - kind: practise
+    label: Distinguish real/user/sys time on CPU-bound, sleep, and file-I/O lab commands.
+    id: resource-missing-semester-10-09-distinguish-real-user-sys-time-on-cpu
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Design a microbenchmark with warm-up, repeated samples, median/dispersion, fixed data, and
+      correctness assertion.
+    id: resource-missing-semester-10-10-design-a-microbenchmark-with-warm-up-r
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Profile a slow Python program with cProfile and identify cumulative versus self time.
+    id: resource-missing-semester-10-11-profile-a-slow-python-program-with-cpr
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: diagnose a memory-growth example with tracemalloc snapshots.
+    id: resource-missing-semester-10-12-diagnose-a-memory-growth-example-with
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Compare eager and lazy dataframe tasks with explain/optimized plan, then state whether the
+      result generalizes.
+    id: resource-missing-semester-10-13-compare-eager-and-lazy-dataframe-tasks
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-10-profiling-measurement-design-cpu-memory-i-o-and-query/notes.md
+- id: stage-missing-semester-11-version-control-integration-applying-the-git-track-to
+  number: 11
+  title: 'Version-control integration: applying the Git track to tool work'
+  status: pending
+  objective: 'Use Version-control integration: applying the Git track to tool work fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  done_when:
+  - a clean tooling repository with atomic history, ignore/secret checks, and a review-ready change description.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — version control
+    id: resource-missing-semester-11-01-required-core-missing-csail-mit-edu-ve
+    locator: Dedicated Git track Stages 1–7 and MIT 2026 version control
+    url: https://missing.csail.mit.edu/2026/version-control/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — git-handbook
+    id: resource-missing-semester-11-02-local-material-git-handbook
+    source_id: source-git-handbook-archive
+    locator: Git handbook and Pro Git
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — ProGit_2ed.pdf
+    id: resource-missing-semester-11-03-local-material-progit-2ed-pdf
+    source_id: source-progit
+    locator: Git handbook and Pro Git
+    vault_path: material://source-progit/ProGit_2ed.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — git-scm.com — docs
+    id: resource-missing-semester-11-04-official-reference-git-scm-com-docs
+    locator: Git reference index
+    url: https://git-scm.com/docs
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — version control
+    id: resource-missing-semester-11-05-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's Git exercises then version all prior-stage lab artifacts as an atomic reviewable
+      series
+    url: https://missing.csail.mit.edu/2026/version-control/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — HU-intro-to-git.pdf
+    id: resource-missing-semester-11-06-alternative-explanation-hu-intro-to-gi
+    source_id: source-hu-git-intro
+    locator: HU Git introduction
+    vault_path: material://source-hu-git-intro/HU-intro-to-git.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Put the lab scripts, dotfiles, editor settings, and tests from earlier stages into a new practice
+      repo while excluding machine/secret state.
+    id: resource-missing-semester-11-07-put-the-lab-scripts-dotfiles-editor-se
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Split the initial dump into a coherent history using interactive staging.
+    id: resource-missing-semester-11-08-split-the-initial-dump-into-a-coherent
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Review each commit from a clean checkout and prove it remains runnable at that point.
+    id: resource-missing-semester-11-09-review-each-commit-from-a-clean-checko
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Use history search to answer when and why one configuration choice changed.
+    id: resource-missing-semester-11-10-use-history-search-to-answer-when-and
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Draft a PR explaining portability, risks, and verification.
+    id: resource-missing-semester-11-11-draft-a-pr-explaining-portability-risk
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-11-version-control-integration-applying-the-git-track-to/notes.md
+- id: stage-missing-semester-12-dependencies-environments-artifacts-and-versioning
+  number: 12
+  title: Dependencies, environments, artifacts, and versioning
+  status: pending
+  objective: Use Dependencies, environments, artifacts, and versioning fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - installable package, clean-environment proof, dependency map, and versioning decision record.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-12-01-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2026 dependencies, environments, artifacts, and versioning
+    url: https://missing.csail.mit.edu/2026/shipping-code/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-12-02-local-material-note-programming-toolbo
+    locator: Virtual-environment section
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — packaging.python.org — latest
+    id: resource-missing-semester-12-03-official-reference-packaging-python-or
+    locator: Python packaging/pyproject and Semantic Versioning
+    url: https://packaging.python.org/en/latest/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — packaging.python.org — pyproject toml
+    id: resource-missing-semester-12-04-official-reference-packaging-python-or
+    locator: Python packaging/pyproject and Semantic Versioning
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — semver.org
+    id: resource-missing-semester-12-05-official-reference-semver-org
+    locator: Python packaging/pyproject and Semantic Versioning
+    url: https://semver.org/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-12-06-guided-exercises-missing-csail-mit-edu
+    locator: Complete the shipping lecture exercises and install the built wheel in a clean environment
+    url: https://missing.csail.mit.edu/2026/shipping-code/#exercises
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — packaging.python.org — binary distribution format
+    id: resource-missing-semester-12-07-optional-depth-packaging-python-org-bi
+    locator: Python binary distribution format
+    url: https://packaging.python.org/en/latest/specifications/binary-distribution-format/
+    scope_triage: deferred
+  - kind: practise
+    label: Define artifact, audience, runtime assumptions, and compatibility surface for a small Python
+      CLI/library.
+    id: resource-missing-semester-12-08-define-artifact-audience-runtime-assum
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Create an isolated environment, install only declared dependencies, and prove no global package
+      is required.
+    id: resource-missing-semester-12-09-create-an-isolated-environment-install
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Build wheel and source distribution, inspect their contents, install the wheel into a clean
+      environment, and run tests against the installation.
+    id: resource-missing-semester-12-10-build-wheel-and-source-distribution-in
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Introduce a dependency-range conflict and explain resolver output.
+    id: resource-missing-semester-12-11-introduce-a-dependency-range-conflict
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Classify ten changes as patch/minor/major under an explicit API policy.
+    id: resource-missing-semester-12-12-classify-ten-changes-as-patch-minor-ma
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-12-dependencies-environments-artifacts-and-versioning/notes.md
+- id: stage-missing-semester-13-containers-configuration-services-and-publishing
+  number: 13
+  title: Containers, configuration, services, and publishing
+  status: pending
+  objective: Use Containers, configuration, services, and publishing fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - small image, threat/config table, reproducible build instructions, and clean-run evidence.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-13-01-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2026 containers, configuration, services, and publishing
+    url: https://missing.csail.mit.edu/2026/shipping-code/#vms--containers
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-13-02-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2026 containers, configuration, services, and publishing
+    url: https://missing.csail.mit.edu/2026/shipping-code/#configuration
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-13-03-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2026 containers, configuration, services, and publishing
+    url: https://missing.csail.mit.edu/2026/shipping-code/#services--orchestration
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — shipping code
+    id: resource-missing-semester-13-04-required-core-missing-csail-mit-edu-sh
+    locator: MIT 2026 containers, configuration, services, and publishing
+    url: https://missing.csail.mit.edu/2026/shipping-code/#publishing
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-13-05-local-material-note-programming-toolbo
+    locator: Docker section
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.docker.com — build
+    id: resource-missing-semester-13-06-official-reference-docs-docker-com-bui
+    locator: Docker build, OCI image spec, and Twelve-Factor config
+    url: https://docs.docker.com/build/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — github.com — image spec
+    id: resource-missing-semester-13-07-official-reference-github-com-image-sp
+    locator: Docker build, OCI image spec, and Twelve-Factor config
+    url: https://github.com/opencontainers/image-spec
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — 12factor.net — config
+    id: resource-missing-semester-13-08-official-reference-12factor-net-config
+    locator: Docker build, OCI image spec, and Twelve-Factor config
+    url: https://12factor.net/config
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the relevant shipping exercises and the pinned/non-root/secret-free
+      clean-runtime container lab.
+    id: resource-missing-semester-13-09-guided-exercises-complete-the-relevant
+    locator: Complete the relevant shipping exercises and the pinned/non-root/secret-free clean-runtime
+      container lab.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — docs.docker.com — dockerfile
+    id: resource-missing-semester-13-10-optional-depth-docs-docker-com-dockerf
+    locator: Dockerfile reference
+    url: https://docs.docker.com/reference/dockerfile/
+    scope_triage: deferred
+  - kind: practise
+    label: Containerize the Stage 12 artifact with a pinned base, .dockerignore, non-root user, entrypoint,
+      and health behavior.
+    id: resource-missing-semester-13-11-containerize-the-stage-12-artifact-wit
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild twice and explain cache hits and any nondeterministic layer.
+    id: resource-missing-semester-13-12-rebuild-twice-and-explain-cache-hits-a
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Pass ordinary config at runtime and a fake secret through a safer mechanism; inspect image
+      history to prove neither is baked in.
+    id: resource-missing-semester-13-13-pass-ordinary-config-at-runtime-and-a
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Mount a disposable volume, then distinguish image, container, bind mount, and named-volume
+      state.
+    id: resource-missing-semester-13-14-mount-a-disposable-volume-then-disting
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Publish only to a local registry or archive, pin by digest, and verify the artifact on a clean
+      runtime.
+    id: resource-missing-semester-13-15-publish-only-to-a-local-registry-or-ar
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-13-containers-configuration-services-and-publishing/notes.md
+- id: stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci
+  number: 14
+  title: Build systems, task runners, dependency graphs, and CI
+  status: pending
+  objective: Use Build systems, task runners, dependency graphs, and CI fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - executable build graph, CI workflow, local parity commands, and cache correctness note.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — metaprogramming
+    id: resource-missing-semester-14-01-required-core-missing-csail-mit-edu-me
+    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI
+    url: https://missing.csail.mit.edu/2020/metaprogramming/
+    scope_triage: required-now
+  - kind: read
+    label: Required core — missing.csail.mit.edu — code quality
+    id: resource-missing-semester-14-02-required-core-missing-csail-mit-edu-co
+    locator: MIT 2020 metaprogramming and MIT 2026 command runners/CI
+    url: https://missing.csail.mit.edu/2026/code-quality/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-14-03-local-material-note-programming-toolbo
+    locator: Tool commands and Docker/test context
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.gnu.org — make.html
+    id: resource-missing-semester-14-04-official-reference-www-gnu-org-make-ht
+    locator: GNU Make and GitHub Actions
+    url: https://www.gnu.org/software/make/manual/make.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.github.com — actions
+    id: resource-missing-semester-14-05-official-reference-docs-github-com-act
+    locator: GNU Make and GitHub Actions
+    url: https://docs.github.com/en/actions
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the metaprogramming and code-quality build/CI exercises, then prove
+      incremental rebuild and local/CI parity.
+    id: resource-missing-semester-14-06-guided-exercises-complete-the-metaprog
+    locator: Complete the metaprogramming and code-quality build/CI exercises, then prove incremental
+      rebuild and local/CI parity.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — just.systems — en
+    id: resource-missing-semester-14-07-optional-depth-just-systems-en
+    locator: just command runner manual
+    url: https://just.systems/man/en/
+    scope_triage: deferred
+  - kind: practise
+    label: Express the lab package pipeline as a DAG with sources, generated output, tests, package, and
+      image.
+    id: resource-missing-semester-14-08-express-the-lab-package-pipeline-as-a
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Implement it with Make, just, or the project's preferred runner using correct phony/real targets.
+    id: resource-missing-semester-14-09-implement-it-with-make-just-or-the-pro
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Prove incremental behavior by changing one input and listing exactly which targets rerun.
+    id: resource-missing-semester-14-10-prove-incremental-behavior-by-changing
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Create a CI workflow for format-check, lint, type, tests, build, and artifact upload with pinned
+      actions/versions.
+    id: resource-missing-semester-14-11-create-a-ci-workflow-for-format-check
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Reproduce each CI job locally through the same command and deliberately break a cache key to
+      diagnose stale output.
+    id: resource-missing-semester-14-12-reproduce-each-ci-job-locally-through
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-14-build-systems-task-runners-dependency-graphs-and-ci/notes.md
+- id: stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and
+  number: 15
+  title: 'Code quality: formatting, linting, typing, tests, hooks, and gates'
+  status: pending
+  objective: 'Use Code quality: formatting, linting, typing, tests, hooks, and gates fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  done_when:
+  - one-command quality gate, seeded-failure matrix, and testing strategy tied to risks.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — code quality
+    id: resource-missing-semester-15-01-required-core-missing-csail-mit-edu-co
+    locator: MIT 2026 code quality
+    url: https://missing.csail.mit.edu/2026/code-quality/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-15-02-local-material-note-programming-toolbo
+    locator: pytest section and testing shelf
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-missing-semester-15-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: pytest section and testing shelf
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.pytest.org — stable
+    id: resource-missing-semester-15-04-official-reference-docs-pytest-org-sta
+    locator: pytest, Ruff, mypy, and pre-commit
+    url: https://docs.pytest.org/en/stable/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.astral.sh — ruff
+    id: resource-missing-semester-15-05-official-reference-docs-astral-sh-ruff
+    locator: pytest, Ruff, mypy, and pre-commit
+    url: https://docs.astral.sh/ruff/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — mypy.readthedocs.io — stable
+    id: resource-missing-semester-15-06-official-reference-mypy-readthedocs-io
+    locator: pytest, Ruff, mypy, and pre-commit
+    url: https://mypy.readthedocs.io/en/stable/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — pre-commit.com
+    id: resource-missing-semester-15-07-official-reference-pre-commit-com
+    locator: pytest, Ruff, mypy, and pre-commit
+    url: https://pre-commit.com/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — code quality
+    id: resource-missing-semester-15-08-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's code-quality exercises and the seeded-failure matrix for every quality layer
+    url: https://missing.csail.mit.edu/2026/code-quality/#exercises
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — hypothesis.readthedocs.io — latest
+    id: resource-missing-semester-15-09-optional-depth-hypothesis-readthedocs
+    locator: Hypothesis property-based testing
+    url: https://hypothesis.readthedocs.io/en/latest/
+    scope_triage: deferred
+  - kind: practise
+    label: Configure formatter, linter, type checker, and pytest for the lab package with one source of
+      truth.
+    id: resource-missing-semester-15-10-configure-formatter-linter-type-checke
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Seed one formatting issue, lint issue, type issue, unit bug, integration bug, and property
+      violation; prove the intended layer catches each.
+    id: resource-missing-semester-15-11-seed-one-formatting-issue-lint-issue-t
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add parameterized, regression, and property-based tests and explain why each style fits.
+    id: resource-missing-semester-15-12-add-parameterized-regression-and-prope
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Measure coverage, add a meaningless covered test, and demonstrate why execution is not assertion
+      quality.
+    id: resource-missing-semester-15-13-measure-coverage-add-a-meaningless-cov
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Install pre-commit in the lab and prove CI remains independently authoritative.
+    id: resource-missing-semester-15-14-install-pre-commit-in-the-lab-and-prov
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-15-code-quality-formatting-linting-typing-tests-hooks-and/notes.md
+- id: stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver
+  number: 16
+  title: 'Agentic coding: specification, authority, privacy, and verification loops'
+  status: pending
+  objective: 'Use Agentic coding: specification, authority, privacy, and verification loops fluently in
+    a reproducible workflow, explain the underlying model, and prove it with the stage exercises and a
+    concrete artifact.'
+  done_when:
+  - reusable agent-task template, verification checklist, privacy/authority matrix, and one audited lab
+    transcript.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — agentic coding
+    id: resource-missing-semester-16-01-required-core-missing-csail-mit-edu-ag
+    locator: MIT 2026 agentic coding
+    url: https://missing.csail.mit.edu/2026/agentic-coding/
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.nist.gov — ai risk management framework
+    id: resource-missing-semester-16-02-official-reference-www-nist-gov-ai-ris
+    locator: NIST AI Risk Management Framework
+    url: https://www.nist.gov/itl/ai-risk-management-framework
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — agentic coding
+    id: resource-missing-semester-16-03-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's agent exercises and the stage's bounded specification/verification/privacy
+      labs
+    url: https://missing.csail.mit.edu/2026/agentic-coding/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — development environment
+    id: resource-missing-semester-16-04-alternative-explanation-missing-csail
+    locator: MIT AI-powered development section
+    url: https://missing.csail.mit.edu/2026/development-environment/#ai-powered-development
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — www.nist.gov — artificial intelligence risk management framework generative
+      artificial intelligence
+    id: resource-missing-semester-16-05-optional-depth-www-nist-gov-artificial
+    locator: NIST Generative AI profile
+    url: https://www.nist.gov/publications/artificial-intelligence-risk-management-framework-generative-artificial-intelligence
+    scope_triage: deferred
+  - kind: practise
+    label: Rewrite a vague feature request into objective, scope, constraints, non-goals, acceptance tests,
+      and authority boundaries.
+    id: resource-missing-semester-16-06-rewrite-a-vague-feature-request-into-o
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Give an agent a synthetic read-only codebase question, then verify every claim by direct file
+      evidence.
+    id: resource-missing-semester-16-07-give-an-agent-a-synthetic-read-only-co
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Let an agent implement a lab change behind tests; audit both tests and implementation for shared
+      blind spots.
+    id: resource-missing-semester-16-08-let-an-agent-implement-a-lab-change-be
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Seed a misleading comment or failing tool invocation and practice correction plus interruption.
+    id: resource-missing-semester-16-09-seed-a-misleading-comment-or-failing-t
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Threat-model what repository/context/tool data leaves the machine for three agent configurations.
+    id: resource-missing-semester-16-10-threat-model-what-repository-context-t
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-16-agentic-coding-specification-authority-privacy-and-ver/notes.md
+- id: stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col
+  number: 17
+  title: 'Beyond code: documentation, issue reports, review, and collaboration'
+  status: pending
+  objective: 'Use Beyond code: documentation, issue reports, review, and collaboration fluently in a reproducible
+    workflow, explain the underlying model, and prove it with the stage exercises and a concrete artifact.'
+  done_when:
+  - communication portfolio containing README, issue, review, commit message, and decision record.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — beyond code
+    id: resource-missing-semester-17-01-required-core-missing-csail-mit-edu-be
+    locator: MIT 2026 Beyond the Code
+    url: https://missing.csail.mit.edu/2026/beyond-code/
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.github.com — using issues
+    id: resource-missing-semester-17-02-official-reference-docs-github-com-usi
+    locator: GitHub issue guidance and Keep a Changelog
+    url: https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — keepachangelog.com — 1.1.0
+    id: resource-missing-semester-17-03-official-reference-keepachangelog-com
+    locator: GitHub issue guidance and Keep a Changelog
+    url: https://keepachangelog.com/en/1.1.0/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — beyond code
+    id: resource-missing-semester-17-04-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's communication exercises and produce the README/issue/review/decision portfolio
+    url: https://missing.csail.mit.edu/2026/beyond-code/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — docs.github.com — reviewing changes in pull requests
+    id: resource-missing-semester-17-05-alternative-explanation-docs-github-co
+    locator: GitHub pull-request review guidance
+    url: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — diataxis.fr
+    id: resource-missing-semester-17-06-optional-depth-diataxis-fr
+    locator: Diátaxis documentation framework
+    url: https://diataxis.fr/
+    scope_triage: deferred
+  - kind: practise
+    label: Write a README funnel answering what, why, use, install, verify, and troubleshoot for the lab
+      artifact.
+    id: resource-missing-semester-17-07-write-a-readme-funnel-answering-what-w
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Turn a vague bug report into environment, expected/actual, steps, minimal reproduction, logs,
+      and attempted diagnoses.
+    id: resource-missing-semester-17-08-turn-a-vague-bug-report-into-environme
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Write comments for one correctness argument, load-bearing choice, why-not alternative, and
+      non-obvious constant; delete comments that merely narrate syntax.
+    id: resource-missing-semester-17-09-write-comments-for-one-correctness-arg
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Review a synthetic PR with prioritized correctness, design, tests, security, performance, and
+      clarity feedback.
+    id: resource-missing-semester-17-10-review-a-synthetic-pr-with-prioritized
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Record a short decision note with context, alternatives, decision, consequences, and revisit
+      trigger.
+    id: resource-missing-semester-17-11-record-a-short-decision-note-with-cont
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-17-beyond-code-documentation-issue-reports-review-and-col/notes.md
+- id: stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and
+  number: 18
+  title: 'Systems potpourri: daemons, filesystems, backups, APIs, and personal automation'
+  status: pending
+  objective: 'Use Systems potpourri: daemons, filesystems, backups, APIs, and personal automation fluently
+    in a reproducible workflow, explain the underlying model, and prove it with the stage exercises and
+    a concrete artifact.'
+  done_when:
+  - restore-tested backup plan, read-only API script, and automation risk checklist.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — potpourri
+    id: resource-missing-semester-18-01-required-core-missing-csail-mit-edu-po
+    locator: MIT 2020 Potpourri
+    url: https://missing.csail.mit.edu/2020/potpourri/
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.freedesktop.org — latest
+    id: resource-missing-semester-18-02-official-reference-www-freedesktop-org
+    locator: systemd, restic, and GitHub REST API
+    url: https://www.freedesktop.org/software/systemd/man/latest/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — restic.readthedocs.io — stable
+    id: resource-missing-semester-18-03-official-reference-restic-readthedocs
+    locator: systemd, restic, and GitHub REST API
+    url: https://restic.readthedocs.io/en/stable/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.github.com — rest
+    id: resource-missing-semester-18-04-official-reference-docs-github-com-res
+    locator: systemd, restic, and GitHub REST API
+    url: https://docs.github.com/en/rest
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete the applicable Potpourri exercises and the restore-tested backup/read-only
+      API/safe automation labs.
+    id: resource-missing-semester-18-05-guided-exercises-complete-the-applicab
+    locator: Complete the applicable Potpourri exercises and the restore-tested backup/read-only API/safe
+      automation labs.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — 2019
+    id: resource-missing-semester-18-06-alternative-explanation-missing-csail
+    locator: MIT 2019 lecture archive
+    url: https://missing.csail.mit.edu/2019/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — www.kernel.org — fuse.html
+    id: resource-missing-semester-18-07-optional-depth-www-kernel-org-fuse-htm
+    locator: FUSE project documentation
+    url: https://www.kernel.org/doc/html/latest/filesystems/fuse.html
+    scope_triage: deferred
+  - kind: practise
+    label: Inspect one harmless user service and map unit/config, process, logs, restart policy, and permissions
+      without changing a system service.
+    id: resource-missing-semester-18-08-inspect-one-harmless-user-service-and
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Explain a FUSE example and compare file API semantics with its underlying remote/storage behavior.
+    id: resource-missing-semester-18-09-explain-a-fuse-example-and-compare-fil
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Design 3-2-1 backups for the lab repository plus untracked artifacts; perform and verify one
+      restore to a separate location.
+    id: resource-missing-semester-18-10-design-3-2-1-backups-for-the-lab-repos
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Query a public read-only JSON API with curl, handle status/pagination/rate limits, and transform
+      output with jq.
+    id: resource-missing-semester-18-11-query-a-public-read-only-json-api-with
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Automate one repeated editor/shell action with observable preconditions and a safe escape.
+    id: resource-missing-semester-18-12-automate-one-repeated-editor-shell-act
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-18-systems-potpourri-daemons-filesystems-backups-apis-and/notes.md
+- id: stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too
+  number: 19
+  title: Security and cryptography for everyday engineering tools
+  status: pending
+  objective: Use Security and cryptography for everyday engineering tools fluently in a reproducible workflow,
+    explain the underlying model, and prove it with the stage exercises and a concrete artifact.
+  done_when:
+  - threat model, crypto-purpose comparison table, verified signature, and incident runbook using fake
+    credentials only.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — security
+    id: resource-missing-semester-19-01-required-core-missing-csail-mit-edu-se
+    locator: MIT 2020 security and cryptography
+    url: https://missing.csail.mit.edu/2020/security/
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — www.openssh.com — manual.html
+    id: resource-missing-semester-19-02-official-reference-www-openssh-com-man
+    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    url: https://www.openssh.com/manual.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — cheatsheetseries.owasp.org — Secrets_Management_Cheat_Sheet.html
+    id: resource-missing-semester-19-03-official-reference-cheatsheetseries-ow
+    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    url: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.sigstore.dev
+    id: resource-missing-semester-19-04-official-reference-docs-sigstore-dev
+    locator: OpenSSH manuals, OWASP secrets management, and Sigstore
+    url: https://docs.sigstore.dev/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — missing.csail.mit.edu — security
+    id: resource-missing-semester-19-05-guided-exercises-missing-csail-mit-edu
+    locator: Complete MIT's security exercises and the fake-credential threat/sign/incident labs only
+    url: https://missing.csail.mit.edu/2020/security/#exercises
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — missing.csail.mit.edu — security
+    id: resource-missing-semester-19-06-alternative-explanation-missing-csail
+    locator: MIT 2019 security and privacy lecture
+    url: https://missing.csail.mit.edu/2019/security/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — cheatsheetseries.owasp.org — Threat_Modeling_Cheat_Sheet.html
+    id: resource-missing-semester-19-07-optional-depth-cheatsheetseries-owasp
+    locator: OWASP threat-modeling cheat sheet
+    url: https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html
+    scope_triage: deferred
+  - kind: practise
+    label: Build a threat model with assets, actors, entry points, trust boundaries, abuse cases, mitigations,
+      and residual risk for the lab shipping pipeline.
+    id: resource-missing-semester-19-08-build-a-threat-model-with-assets-actor
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Demonstrate avalanche/determinism of a hash and state why SHA-style hashes are not password
+      storage.
+    id: resource-missing-semester-19-09-demonstrate-avalanche-determinism-of-a
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Generate a disposable signing key, sign and verify a lab artifact, then explain authenticity
+      versus confidentiality.
+    id: resource-missing-semester-19-10-generate-a-disposable-signing-key-sign
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect a TLS certificate chain or SSH host-key flow and map identity checks.
+    id: resource-missing-semester-19-11-inspect-a-tls-certificate-chain-or-ssh
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Simulate a fake committed token, then document detection, containment, revocation, history
+      cleanup, audit, and prevention in the correct order.
+    id: resource-missing-semester-19-12-simulate-a-fake-committed-token-then-d
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-19-security-and-cryptography-for-everyday-engineering-too/notes.md
+- id: stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c
+  number: 20
+  title: 'Capstone: bootstrap, diagnose, ship, and hand off from a clean machine'
+  status: pending
+  objective: 'Use Capstone: bootstrap, diagnose, ship, and hand off from a clean machine fluently in a
+    reproducible workflow, explain the underlying model, and prove it with the stage exercises and a concrete
+    artifact.'
+  done_when:
+  - repository, bootstrap/task scripts, CI, package, container, diagnostic report, threat model, backup-restore
+    proof, agent audit, README, and a 15-minute closed-book walkthrough.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts: []
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — missing.csail.mit.edu — 2026
+    id: resource-missing-semester-20-01-required-core-missing-csail-mit-edu-20
+    locator: Current MIT syllabus synthesis plus the exact lecture pages assigned in Stages 1–19
+    url: https://missing.csail.mit.edu/2026/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-missing-semester-20-02-local-material-note-programming-toolbo
+    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — git-handbook
+    id: resource-missing-semester-20-03-local-material-git-handbook
+    source_id: source-git-handbook-archive
+    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    vault_path: material://source-git-handbook-archive/git-handbook/index.html
+    scope_triage: required-now
+  - kind: read
+    label: Local material — 01.06-Errors-and-Debugging.ipynb
+    id: resource-missing-semester-20-04-local-material-01-06-errors-and-debugg
+    source_id: source-pydata-handbook
+    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.06-Errors-and-Debugging.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Local material — 01.07-Timing-and-Profiling.ipynb
+    id: resource-missing-semester-20-05-local-material-01-07-timing-and-profil
+    source_id: source-pydata-handbook
+    locator: Historical toolbox Git handbook debugging/profiling notebooks
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.07-Timing-and-Profiling.ipynb
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — Use each tool's official reference already assigned; do not add a new
+      tool during the capstone.
+    id: resource-missing-semester-20-06-official-reference-use-each-tool-s-off
+    locator: Use each tool's official reference already assigned; do not add a new tool during the capstone.
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Execute the full clean-machine capstone and have a fresh shell or another
+      person reproduce it from the README alone.
+    id: resource-missing-semester-20-07-guided-exercises-execute-the-full-clea
+    locator: Execute the full clean-machine capstone and have a fresh shell or another person reproduce
+      it from the README alone.
+    scope_triage: required-now
+  - kind: practise
+    label: Retrieval — Randomly select one artifact from shell, Git, debugging, profiling, packaging,
+      quality, communication, and security and rebuild or explain it without notes.
+    id: resource-missing-semester-20-08-retrieval-randomly-select-one-artifact
+    locator: Randomly select one artifact from shell, Git, debugging, profiling, packaging, quality, communication,
+      and security and rebuild or explain it without notes.
+    scope_triage: helpful-now
+  - kind: practise
+    label: From a clean shell, bootstrap the Stage 12 lab project with one documented command, pinned
+      dependencies, editor/LSP setup, and a redacted configuration contract.
+    id: resource-missing-semester-20-09-from-a-clean-shell-bootstrap-the-stage
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Use version control to make an atomic feature change with tests and a review-ready explanation.
+    id: resource-missing-semester-20-10-use-version-control-to-make-an-atomic
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Seed one runtime bug and one performance regression; reproduce, debug, profile, fix, and preserve
+      evidence.
+    id: resource-missing-semester-20-11-seed-one-runtime-bug-and-one-performan
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Run format/lint/type/test/build gates locally and in CI, build a package and minimal container,
+      and verify both in clean environments.
+    id: resource-missing-semester-20-12-run-format-lint-type-test-build-gates
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Operate the workflow through a named remote/tmux session or faithful local simulation, including
+      disconnect/recovery and logs.
+    id: resource-missing-semester-20-13-operate-the-workflow-through-a-named-r
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: practise
+    label: Use an agent for one bounded subtask with explicit read/write/privacy rules and independent
+      verification.
+    id: resource-missing-semester-20-14-use-an-agent-for-one-bounded-subtask-w
+    locator: Exercise 6
+    scope_triage: required-now
+  - kind: practise
+    label: Restore artifacts from backup, verify signatures/checksums, and give another person or a fresh
+      shell only the README to reproduce the result.
+    id: resource-missing-semester-20-15-restore-artifacts-from-backup-verify-s
+    locator: Exercise 7
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/stages/stage-missing-semester-20-capstone-bootstrap-diagnose-ship-and-hand-off-from-a-c/notes.md

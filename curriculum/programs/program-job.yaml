@@ -1,0 +1,9 @@
+id: program-job
+type: program
+title: Job
+kind: skills
+status: active
+default: false
+semester_bound: false
+description: Job learning represented as ordinary LearningOS skill modules.
+semesters: []

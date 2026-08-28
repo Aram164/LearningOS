@@ -1,0 +1,9 @@
+id: module-job-polars
+type: module
+kind: skill
+area_id: program-job
+title: Polars and pandas
+status: active
+source_map: source-map.yaml
+unit_order:
+- unit-job-polars-pandas-fluency

@@ -1,0 +1,2075 @@
+id: study-map-job-python-engineering-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-python-engineering-fluency
+status: ready
+current_stage: stage-python-01-names-identity-mutation-and-graph-invariants
+source_plan:
+  path: Job/plans/job-track-python.yaml
+  provenance: migrated-mini-plan
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-python-01-names-identity-mutation-and-graph-invariants
+  number: 1
+  title: Names, identity, mutation, and graph invariants
+  status: pending
+  objective: Use Names, identity, mutation, and graph invariants fluently, explain the language and runtime
+    model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - passing weighted question Q0.11, the tested diamond rewrite, and a one-paragraph graph invariant.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-0-names-and-identity.md
+    id: resource-python-01-01-required-core-stage-0-names-and-identi
+    source_id: source-python-depth-drills
+    locator: Stage 0 guide and Fluent Python Ch. 6
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-01-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 0 guide and Fluent Python Ch. 6
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-01-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python mapped items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-01-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python mapped items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — datamodel.html
+    id: resource-python-01-05-official-reference-docs-python-org-dat
+    locator: Python data model identity/hash contract and copy protocol
+    url: https://docs.python.org/3/reference/datamodel.html#object.__hash__
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — copy.html
+    id: resource-python-01-06-official-reference-docs-python-org-cop
+    locator: Python data model identity/hash contract and copy protocol
+    url: https://docs.python.org/3/library/copy.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-0-names-and-identity.ipynb
+    id: resource-python-01-07-guided-exercises-stage-0-names-and-ide
+    source_id: source-python-depth-drills
+    locator: Prediction notebook complete every weighted question before opening solutions
+    vault_path: material://source-python-depth-drills/stage-0-names-and-identity.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — nedbatchelder.com — names.html
+    id: resource-python-01-08-alternative-explanation-nedbatchelder
+    locator: Ned Batchelder's names model and Python Tutor
+    url: https://nedbatchelder.com/text/names.html
+    scope_triage: helpful-now
+  - kind: read
+    label: Alternative explanation — pythontutor.com
+    id: resource-python-01-09-alternative-explanation-pythontutor-co
+    locator: Ned Batchelder's names model and Python Tutor
+    url: https://pythontutor.com/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — hypothesis.readthedocs.io — quickstart.html
+    id: resource-python-01-10-optional-depth-hypothesis-readthedocs
+    locator: Hypothesis properties and weak references
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — docs.python.org — weakref.html
+    id: resource-python-01-11-optional-depth-docs-python-org-weakref
+    locator: Hypothesis properties and weak references
+    url: https://docs.python.org/3/library/weakref.html
+    scope_triage: deferred
+  - kind: practise
+    label: Complete the Stage 0 notebook with written predictions and record every miss.
+    id: resource-python-01-12-complete-the-stage-0-notebook-with-wri
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Build aliasing, rebinding, shallow-copy, mutable-default, is-versus-==, and hash-contract counterexamples
+      from memory.
+    id: resource-python-01-13-build-aliasing-rebinding-shallow-copy
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Draw a five-node diamond DAG as plain Python objects and label every shared reference.
+    id: resource-python-01-14-draw-a-five-node-diamond-dag-as-plain
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Implement remove_node without looking at Stratum and prove both sides of every edge are repaired
+      by identity.
+    id: resource-python-01-15-implement-remove-node-without-looking
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Explain why adding structural __eq__ to Op could break deduplication and BufferPool keys.
+    id: resource-python-01-16-explain-why-adding-structural-eq-to-op
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: practise
+    label: Engineering drill — specify the mutation contract before code
+    id: resource-python-01-17-contract-before-code
+    locator: Before remove_node, write inputs, side effects, identity rules, edge invariants, failure
+      behavior, non-goals, and the smallest adversarial test matrix. Compare the implementation to this
+      contract after tests pass.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-01-names-identity-mutation-and-graph-invariants/notes.md
+- id: stage-python-02-functions-as-first-class-objects-and-higher-order-apis
+  number: 2
+  title: Functions as first-class objects and higher-order APIs
+  status: pending
+  objective: Use Functions as first-class objects and higher-order APIs fluently, explain the language
+    and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - tested higher-order utility module plus a call-timing diagram.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-1-functions-as-objects.md
+    id: resource-python-02-01-required-core-stage-1-functions-as-obj
+    source_id: source-python-depth-drills
+    locator: Stage 1 guide and Fluent Python Ch. 7
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-02-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 1 guide and Fluent Python Ch. 7
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-02-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python function-interface items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-02-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python function-interface items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — compound_stmts.html
+    id: resource-python-02-05-official-reference-docs-python-org-com
+    locator: Function definitions, functools, operator, and inspect
+    url: https://docs.python.org/3/reference/compound_stmts.html#function-definitions
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — functools.html
+    id: resource-python-02-06-official-reference-docs-python-org-fun
+    locator: Function definitions, functools, operator, and inspect
+    url: https://docs.python.org/3/library/functools.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — operator.html
+    id: resource-python-02-07-official-reference-docs-python-org-ope
+    locator: Function definitions, functools, operator, and inspect
+    url: https://docs.python.org/3/library/operator.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — inspect.html
+    id: resource-python-02-08-official-reference-docs-python-org-ins
+    locator: Function definitions, functools, operator, and inspect
+    url: https://docs.python.org/3/library/inspect.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-1-functions-as-objects.ipynb
+    id: resource-python-02-09-guided-exercises-stage-1-functions-as
+    source_id: source-python-depth-drills
+    locator: Prediction notebook and the compose/matcher rebuilds
+    vault_path: material://source-python-depth-drills/stage-1-functions-as-objects.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — github.com — 07 1class func
+    id: resource-python-02-10-alternative-explanation-github-com-07
+    locator: Fluent Python examples and Corey Schafer first-class functions
+    url: https://github.com/fluentpython/example-code-2e/tree/master/07-1class-func
+    scope_triage: helpful-now
+  - kind: watch
+    label: Alternative explanation — www.youtube.com — watch
+    id: resource-python-02-11-alternative-explanation-www-youtube-co
+    locator: Fluent Python examples and Corey Schafer first-class functions
+    url: https://www.youtube.com/watch?v=kr0mpwqttM0
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — exercism.org — python
+    id: resource-python-02-12-optional-depth-exercism-org-python
+    locator: Exercism higher-order-function practice
+    url: https://exercism.org/tracks/python
+    scope_triage: deferred
+  - kind: practise
+    label: Complete the Stage 1 notebook and pass weighted Q1.10.
+    id: resource-python-02-13-complete-the-stage-1-notebook-and-pass
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: For six expressions, classify function object, bound method, partial, closure, or return value
+      before running them.
+    id: resource-python-02-14-for-six-expressions-classify-function
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Write compose, negate, and a keyword-only match factory with parameterized tests.
+    id: resource-python-02-15-write-compose-negate-and-a-keyword-onl
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild match_n_op_chain(op_cls, types) from a blank file.
+    id: resource-python-02-16-rebuild-match-n-op-chain-op-cls-types
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: State in words when the factory, returned matcher, action, and rewrite runner each execute.
+    id: resource-python-02-17-state-in-words-when-the-factory-return
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — more-itertools
+    id: resource-python-02-18-open-source-more-itertools
+    locator: In more_itertools/recipes.py and its tests, trace three short higher-order functions from
+      signature to iterator behavior to edge-case tests. Predict consumption and errors before running
+      anything.
+    url: https://github.com/more-itertools/more-itertools
+    scope_triage: required-now
+  - kind: practise
+    label: Repository reconstruction — reimplement one traced function
+    id: resource-python-02-19-reconstruct-library-function
+    locator: Close the repository, rebuild one function from its contract rather than memory of its lines,
+      and write tests that distinguish your design from the original.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-02-functions-as-first-class-objects-and-higher-order-apis/notes.md
+- id: stage-python-03-scope-closures-frames-and-captured-state
+  number: 3
+  title: Scope, closures, frames, and captured state
+  status: pending
+  objective: Use Scope, closures, frames, and captured state fluently, explain the language and runtime
+    model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - scope table, passing closure tests, and a 90-second explanation of mutation versus rebinding.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-2-scope-and-closures.md
+    id: resource-python-03-01-required-core-stage-2-scope-and-closur
+    source_id: source-python-depth-drills
+    locator: Stage 2 guide and Fluent Python Ch. 9 scope sections
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-03-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 2 guide and Fluent Python Ch. 9 scope sections
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-03-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python closure items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-03-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python closure items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — executionmodel.html
+    id: resource-python-03-05-official-reference-docs-python-org-exe
+    locator: Execution model, dis, and inspect frames
+    url: https://docs.python.org/3/reference/executionmodel.html#naming-and-binding
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — dis.html
+    id: resource-python-03-06-official-reference-docs-python-org-dis
+    locator: Execution model, dis, and inspect frames
+    url: https://docs.python.org/3/library/dis.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — inspect.html
+    id: resource-python-03-07-official-reference-docs-python-org-ins
+    locator: Execution model, dis, and inspect frames
+    url: https://docs.python.org/3/library/inspect.html#the-interpreter-stack
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-2-scope-and-closures.ipynb
+    id: resource-python-03-08-guided-exercises-stage-2-scope-and-clo
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus late-binding and shared-cell rebuilds
+    vault_path: material://source-python-depth-drills/stage-2-scope-and-closures.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — realpython.com — python scope legb rule
+    id: resource-python-03-09-alternative-explanation-realpython-com
+    locator: LEGB explanation and Python Tutor
+    url: https://realpython.com/python-scope-legb-rule/
+    scope_triage: helpful-now
+  - kind: read
+    label: Alternative explanation — pythontutor.com
+    id: resource-python-03-10-alternative-explanation-pythontutor-co
+    locator: LEGB explanation and Python Tutor
+    url: https://pythontutor.com/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — aosabook.org — a python interpreter written in python.html
+    id: resource-python-03-11-optional-depth-aosabook-org-a-python-i
+    locator: Byterun frames and PEP 3104
+    url: https://aosabook.org/en/500L/a-python-interpreter-written-in-python.html
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — peps.python.org — pep 3104
+    id: resource-python-03-12-optional-depth-peps-python-org-pep-310
+    locator: Byterun frames and PEP 3104
+    url: https://peps.python.org/pep-3104/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 2 and pass Q2.2 and Q2.10.
+    id: resource-python-03-13-complete-stage-2-and-pass-q2-2-and-q2
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Predict FAST, DEREF, or GLOBAL for 15 names, then verify with dis.
+    id: resource-python-03-14-predict-fast-deref-or-global-for-15-na
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Build and repair the loop-lambda late-binding trap three ways.
+    id: resource-python-03-15-build-and-repair-the-loop-lambda-late
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Write make_counter returning inc and read closures and prove both reference the same cell.
+    id: resource-python-03-16-write-make-counter-returning-inc-and-r
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect one real matcher through __code__.co_freevars and __closure__ without modifying Stratum.
+    id: resource-python-03-17-inspect-one-real-matcher-through-code
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-03-scope-closures-frames-and-captured-state/notes.md
+- id: stage-python-04-decorators-import-time-execution-and-registration
+  number: 4
+  title: Decorators, import-time execution, and registration
+  status: pending
+  objective: Use Decorators, import-time execution, and registration fluently, explain the language and
+    runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - a tested mini registry and an import-versus-call timeline.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-3-decorators.md
+    id: resource-python-04-01-required-core-stage-3-decorators-md
+    source_id: source-python-depth-drills
+    locator: Stage 3 guide and Fluent Python Ch. 9
+    vault_path: material://source-python-depth-drills/stage-3-decorators.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-04-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 3 guide and Fluent Python Ch. 9
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-04-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python decorator items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-04-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python decorator items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — functools.html
+    id: resource-python-04-05-official-reference-docs-python-org-fun
+    locator: functools.wraps and decorator grammar
+    url: https://docs.python.org/3/library/functools.html#functools.wraps
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — peps.python.org — pep 0318
+    id: resource-python-04-06-official-reference-peps-python-org-pep
+    locator: functools.wraps and decorator grammar
+    url: https://peps.python.org/pep-0318/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-3-decorators.ipynb
+    id: resource-python-04-07-guided-exercises-stage-3-decorators-ip
+    source_id: source-python-depth-drills
+    locator: Prediction notebook and the import-time registry rebuild
+    vault_path: material://source-python-depth-drills/stage-3-decorators.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — realpython.com — primer on python decorators
+    id: resource-python-04-08-alternative-explanation-realpython-com
+    locator: Decorator primer and Fluent examples
+    url: https://realpython.com/primer-on-python-decorators/
+    scope_triage: helpful-now
+  - kind: read
+    label: Alternative explanation — github.com — 09 closure deco
+    id: resource-python-04-09-alternative-explanation-github-com-09
+    locator: Decorator primer and Fluent examples
+    url: https://github.com/fluentpython/example-code-2e/tree/master/09-closure-deco
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — python-patterns.guide — decorator pattern
+    id: resource-python-04-10-optional-depth-python-patterns-guide-d
+    locator: Decorator pattern distinction
+    url: https://python-patterns.guide/gang-of-four/decorator-pattern/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 3 and pass weighted Q3.2.
+    id: resource-python-04-11-complete-stage-3-and-pass-weighted-q3
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Expand five decorator syntaxes into ordinary assignments and number every call.
+    id: resource-python-04-12-expand-five-decorator-syntaxes-into-or
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Implement retry with arguments and wraps.
+    id: resource-python-04-13-implement-retry-with-arguments-and-wra
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild a physical_impl-style registration decorator from blank and prove decoration happens
+      at import.
+    id: resource-python-04-14-rebuild-a-physical-impl-style-registra
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Create a deliberately unimported implementation module, explain the silent registration failure,
+      then repair it.
+    id: resource-python-04-15-create-a-deliberately-unimported-imple
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — pluggy
+    id: resource-python-04-16-open-source-pluggy
+    locator: Trace one hook marker through src/pluggy/_hooks.py and _manager.py into one focused test.
+      Draw decoration time, registration time, and call time before comparing with the mini registry.
+    url: https://github.com/pytest-dev/pluggy
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-04-decorators-import-time-execution-and-registration/notes.md
+- id: stage-python-05-classes-as-objects-attribute-lookup-mro-and-super
+  number: 5
+  title: Classes as objects, attribute lookup, MRO, and super
+  status: pending
+  objective: Use Classes as objects, attribute lookup, MRO, and super fluently, explain the language and
+    runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - MRO trace, attribute-lookup table, and passing cooperative-inheritance tests.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-4-classes-as-objects.md
+    id: resource-python-05-01-required-core-stage-4-classes-as-objec
+    source_id: source-python-depth-drills
+    locator: Stage 4 guide and Fluent Python Chs. 5, 11, 14
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-05-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 4 guide and Fluent Python Chs. 5, 11, 14
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-python-oop-scope-repair-plan.md
+    id: resource-python-05-03-local-material-note-python-oop-scope-r
+    locator: OOP repair plan and Effective Python mapping
+    vault_path: knowledge/notes/programming/note-python-oop-scope-repair-plan.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-05-04-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: OOP repair plan and Effective Python mapping
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — classes.html
+    id: resource-python-05-05-official-reference-docs-python-org-cla
+    locator: Classes, MRO, descriptors, and dataclasses
+    url: https://docs.python.org/3/tutorial/classes.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — mro.html
+    id: resource-python-05-06-official-reference-docs-python-org-mro
+    locator: Classes, MRO, descriptors, and dataclasses
+    url: https://docs.python.org/3/howto/mro.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — descriptor.html
+    id: resource-python-05-07-official-reference-docs-python-org-des
+    locator: Classes, MRO, descriptors, and dataclasses
+    url: https://docs.python.org/3/howto/descriptor.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — dataclasses.html
+    id: resource-python-05-08-official-reference-docs-python-org-dat
+    locator: Classes, MRO, descriptors, and dataclasses
+    url: https://docs.python.org/3/library/dataclasses.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-4-classes-as-objects.ipynb
+    id: resource-python-05-09-guided-exercises-stage-4-classes-as-ob
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus cooperative-diamond and slots drills
+    vault_path: material://source-python-depth-drills/stage-4-classes-as-objects.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — rhettinger.wordpress.com — super considered super
+    id: resource-python-05-10-alternative-explanation-rhettinger-wor
+    locator: Hettinger super model and class toolkit
+    url: https://rhettinger.wordpress.com/2011/05/26/super-considered-super/
+    scope_triage: helpful-now
+  - kind: watch
+    label: Alternative explanation — www.youtube.com — watch
+    id: resource-python-05-11-alternative-explanation-www-youtube-co
+    locator: Hettinger super model and class toolkit
+    url: https://www.youtube.com/watch?v=HTLu2DFOdTg
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — python-patterns.guide — composition over inheritance
+    id: resource-python-05-12-optional-depth-python-patterns-guide-c
+    locator: Composition over inheritance
+    url: https://python-patterns.guide/gang-of-four/composition-over-inheritance/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 4 and pass weighted Q4.6.
+    id: resource-python-05-13-complete-stage-4-and-pass-weighted-q4
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Predict instance/class dictionary lookup in ten examples.
+    id: resource-python-05-14-predict-instance-class-dictionary-look
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Build a cooperative diamond hierarchy, predict D.__mro__, and trace every super call.
+    id: resource-python-05-15-build-a-cooperative-diamond-hierarchy
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Contrast one cooperative mixin with one explicit-parent adapter for a non-cooperative class.
+    id: resource-python-05-16-contrast-one-cooperative-mixin-with-on
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild a small slotted expression class and show which subclass choices reintroduce __dict__.
+    id: resource-python-05-17-rebuild-a-small-slotted-expression-cla
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-05-classes-as-objects-attribute-lookup-mro-and-super/notes.md
+- id: stage-python-06-modules-imports-circular-dependencies-and-plugin-disco
+  number: 6
+  title: Modules, imports, circular dependencies, and plugin discovery
+  status: pending
+  objective: Use Modules, imports, circular dependencies, and plugin discovery fluently, explain the language
+    and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - three repaired cycles and a registration smoke test.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-5-imports-and-registration.md
+    id: resource-python-06-01-required-core-stage-5-imports-and-regi
+    source_id: source-python-depth-drills
+    locator: Stage 5 guide and intermediate roadmap
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — note-python-intermediate-roadmap.md
+    id: resource-python-06-02-required-core-note-python-intermediate
+    locator: Stage 5 guide and intermediate roadmap
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-06-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python module/package items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-06-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python module/package items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — import.html
+    id: resource-python-06-05-official-reference-docs-python-org-imp
+    locator: Import system and importlib
+    url: https://docs.python.org/3/reference/import.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — importlib.html
+    id: resource-python-06-06-official-reference-docs-python-org-imp
+    locator: Import system and importlib
+    url: https://docs.python.org/3/library/importlib.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-5-imports-and-registration.ipynb
+    id: resource-python-06-07-guided-exercises-stage-5-imports-and-r
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus three circular-import repairs and registration smoke test
+    vault_path: material://source-python-depth-drills/stage-5-imports-and-registration.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — python-notes.curiousefficiency.org — import_traps.html
+    id: resource-python-06-08-alternative-explanation-python-notes-c
+    locator: Coghlan's import traps
+    url: https://python-notes.curiousefficiency.org/en/latest/python_concepts/import_traps.html
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — docs.python.org — modules.html
+    id: resource-python-06-09-optional-depth-docs-python-org-modules
+    locator: Python packages tutorial
+    url: https://docs.python.org/3/tutorial/modules.html#packages
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 5 and pass weighted Q5.8.
+    id: resource-python-06-10-complete-stage-5-and-pass-weighted-q5
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Mark every line of a two-module example as first-import, cached-import, or call-time work.
+    id: resource-python-06-11-mark-every-line-of-a-two-module-exampl
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Build a circular import that fails and repair it with local import, dependency inversion, and
+      extracted shared module.
+    id: resource-python-06-12-build-a-circular-import-that-fails-and
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Demonstrate where-to-patch with from-import versus module import.
+    id: resource-python-06-13-demonstrate-where-to-patch-with-from-i
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Design a deterministic plugin discovery test that fails if one implementation module is never
+      imported.
+    id: resource-python-06-14-design-a-deterministic-plugin-discover
+    locator: Exercise 5
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-06-modules-imports-circular-dependencies-and-plugin-disco/notes.md
+- id: stage-python-07-the-data-model-dunders-slots-equality-and-hashing
+  number: 7
+  title: The data model, dunders, slots, equality, and hashing
+  status: pending
+  objective: Use The data model, dunders, slots, equality, and hashing fluently, explain the language
+    and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - two contrasting node classes and adversarial protocol tests.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-6-data-model-and-dunders.md
+    id: resource-python-07-01-required-core-stage-6-data-model-and-d
+    source_id: source-python-depth-drills
+    locator: Stage 6 guide and Fluent Python Chs. 1, 11
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-07-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 6 guide and Fluent Python Chs. 1, 11
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-07-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python protocol items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-07-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python protocol items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — datamodel.html
+    id: resource-python-07-05-official-reference-docs-python-org-dat
+    locator: Python data model and collections ABCs
+    url: https://docs.python.org/3/reference/datamodel.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — collections.abc.html
+    id: resource-python-07-06-official-reference-docs-python-org-col
+    locator: Python data model and collections ABCs
+    url: https://docs.python.org/3/library/collections.abc.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-6-data-model-and-dunders.ipynb
+    id: resource-python-07-07-guided-exercises-stage-6-data-model-an
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus contrasting value/node classes and property tests
+    vault_path: material://source-python-depth-drills/stage-6-data-model-and-dunders.ipynb
+    scope_triage: required-now
+  - kind: watch
+    label: Alternative explanation — www.youtube.com — watch
+    id: resource-python-07-08-alternative-explanation-www-youtube-co
+    locator: James Powell's data-model derivation
+    url: https://www.youtube.com/watch?v=cKPlPJyQrt4
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — hypothesis.readthedocs.io — quickstart.html
+    id: resource-python-07-09-optional-depth-hypothesis-readthedocs
+    locator: Hypothesis quickstart and PEP 557
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — peps.python.org — pep 0557
+    id: resource-python-07-10-optional-depth-peps-python-org-pep-055
+    locator: Hypothesis quickstart and PEP 557
+    url: https://peps.python.org/pep-0557/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 6 and pass weighted Q6.4.
+    id: resource-python-07-11-complete-stage-6-and-pass-weighted-q6
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Map 20 pieces of Python syntax to invoked dunders.
+    id: resource-python-07-12-map-20-pieces-of-python-syntax-to-invo
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Write a slotted immutable expression value with validating init, structural equality, hash,
+      repr, and remap.
+    id: resource-python-07-13-write-a-slotted-immutable-expression-v
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Use property-based or parameterized tests for the equality/hash contract, including 1, 1.0,
+      and True.
+    id: resource-python-07-14-use-property-based-or-parameterized-te
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Design a separate identity-based graph node and explain why sharing the value object's equality
+      would be wrong.
+    id: resource-python-07-15-design-a-separate-identity-based-graph
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — attrs
+    id: resource-python-07-16-open-source-attrs
+    locator: Trace one @define class through the public import, generated repr/equality/hash logic in
+      src/attr, and a corresponding test. Read only the functions on that call path.
+    url: https://github.com/python-attrs/attrs
+    scope_triage: required-now
+  - kind: practise
+    label: Engineering comparison — generated versus handwritten value object
+    id: resource-python-07-17-api-contract-comparison
+    locator: State the invariants and public contract first, then compare a small handwritten class, dataclass,
+      and attrs class for equality, hashing, mutability, slots, errors, and maintenance cost.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-07-the-data-model-dunders-slots-equality-and-hashing/notes.md
+- id: stage-python-08-iterators-generators-structural-recursion-and-mutation
+  number: 8
+  title: Iterators, generators, structural recursion, and mutation while walking
+  status: pending
+  objective: Use Iterators, generators, structural recursion, and mutation while walking fluently, explain
+    the language and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - tested iter_refs/topo utilities plus a mutation-safety note.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-7-generators-and-iterators.md
+    id: resource-python-08-01-required-core-stage-7-generators-and-i
+    source_id: source-python-depth-drills
+    locator: Stage 7 guide and Fluent Python Ch. 17
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — fluent-python.pdf
+    id: resource-python-08-02-required-core-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Stage 7 guide and Fluent Python Ch. 17
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-08-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Effective Python iterator items
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-08-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python iterator items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — itertools.html
+    id: resource-python-08-05-official-reference-docs-python-org-ite
+    locator: Iterator/itertools/generator protocols
+    url: https://docs.python.org/3/library/itertools.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — expressions.html
+    id: resource-python-08-06-official-reference-docs-python-org-exp
+    locator: Iterator/itertools/generator protocols
+    url: https://docs.python.org/3/reference/expressions.html#yield-expressions
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-7-generators-and-iterators.ipynb
+    id: resource-python-08-07-guided-exercises-stage-7-generators-an
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus recursive traversal and mutation-safety drills
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — treyhunner.com — python iterator protocol how for loops work
+    id: resource-python-08-08-alternative-explanation-treyhunner-com
+    locator: Trey Hunner iterator protocol and Beazley generator pipelines
+    url: https://treyhunner.com/2016/12/python-iterator-protocol-how-for-loops-work/
+    scope_triage: helpful-now
+  - kind: read
+    label: Alternative explanation — www.dabeaz.com — generators
+    id: resource-python-08-09-alternative-explanation-www-dabeaz-com
+    locator: Trey Hunner iterator protocol and Beazley generator pipelines
+    url: https://www.dabeaz.com/generators/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — peps.python.org — pep 0380
+    id: resource-python-08-10-optional-depth-peps-python-org-pep-038
+    locator: Generator control-flow PEP 380
+    url: https://peps.python.org/pep-0380/
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 7 and pass weighted Q7.4.
+    id: resource-python-08-11-complete-stage-7-and-pass-weighted-q7
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Predict creation-time versus first-next behavior for ten generators.
+    id: resource-python-08-12-predict-creation-time-versus-first-nex
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Implement recursive iter_refs over tuple, list, dict, and expression leaves.
+    id: resource-python-08-13-implement-recursive-iter-refs-over-tup
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Implement topological traversal with cycle detection, then construct a rewrite that mutates
+      mid-walk and explain the failure.
+    id: resource-python-08-14-implement-topological-traversal-with-c
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Compare eager list and lazy generator versions for lifetime, memory, and repeatability.
+    id: resource-python-08-15-compare-eager-list-and-lazy-generator
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — more-itertools iterator implementations
+    id: resource-python-08-16-open-source-more-itertools
+    locator: Trace iterate, with_iter, and one (or their current equivalents) into tests. Record laziness,
+      exhaustion, cleanup, exception, and memory behavior; do not read the large module linearly.
+    url: https://github.com/more-itertools/more-itertools
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-08-iterators-generators-structural-recursion-and-mutation/notes.md
+- id: stage-python-09-interfaces-typing-protocols-and-dispatch-design
+  number: 9
+  title: Interfaces, typing, protocols, and dispatch design
+  status: pending
+  objective: Use Interfaces, typing, protocols, and dispatch design fluently, explain the language and
+    runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - typed selector, mypy result, and a dispatch decision table.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — stage-8-interfaces-and-dispatch.md
+    id: resource-python-09-01-required-core-stage-8-interfaces-and-d
+    source_id: source-python-depth-drills
+    locator: Stage 8 guide and the interface chapters
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — SHELF.md
+    id: resource-python-09-02-required-core-shelf-md
+    source_id: source-python-depth-drills
+    locator: Stage 8 guide and the interface chapters
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-09-03-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python dispatch items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — typing.html
+    id: resource-python-09-05-official-reference-docs-python-org-typ
+    locator: typing.Protocol, ABCs, and singledispatch
+    url: https://docs.python.org/3/library/typing.html#typing.Protocol
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — abc.html
+    id: resource-python-09-06-official-reference-docs-python-org-abc
+    locator: typing.Protocol, ABCs, and singledispatch
+    url: https://docs.python.org/3/library/abc.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — functools.html
+    id: resource-python-09-07-official-reference-docs-python-org-fun
+    locator: typing.Protocol, ABCs, and singledispatch
+    url: https://docs.python.org/3/library/functools.html#functools.singledispatch
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — stage-8-interfaces-and-dispatch.ipynb
+    id: resource-python-09-08-guided-exercises-stage-8-interfaces-an
+    source_id: source-python-depth-drills
+    locator: Prediction notebook plus typed selector and dispatch decision table
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — www.cosmicpython.com — chapter_02_repository.html
+    id: resource-python-09-09-alternative-explanation-www-cosmicpyth
+    locator: Architecture Patterns with Python Chs. 2–4 and Python patterns
+    url: https://www.cosmicpython.com/book/chapter_02_repository.html
+    scope_triage: helpful-now
+  - kind: read
+    label: Alternative explanation — python-patterns.guide
+    id: resource-python-09-10-alternative-explanation-python-pattern
+    locator: Architecture Patterns with Python Chs. 2–4 and Python patterns
+    url: https://python-patterns.guide/
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — peps.python.org — pep 0544
+    id: resource-python-09-11-optional-depth-peps-python-org-pep-054
+    locator: PEP 544 rationale and expression problem background
+    url: https://peps.python.org/pep-0544/
+    scope_triage: deferred
+  - kind: reference
+    label: Optional depth — en.wikipedia.org — Expression_problem
+    id: resource-python-09-12-optional-depth-en-wikipedia-org-expres
+    locator: PEP 544 rationale and expression problem background
+    url: https://en.wikipedia.org/wiki/Expression_problem
+    scope_triage: deferred
+  - kind: practise
+    label: Complete Stage 8 and pass weighted Q8.10.
+    id: resource-python-09-13-complete-stage-8-and-pass-weighted-q8
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Classify ten examples as duck typing, Protocol, ABC, subclass polymorphism, singledispatch,
+      tag dispatch, or registry.
+    id: resource-python-09-14-classify-ten-examples-as-duck-typing-p
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild a Selector with MRO fallback, duplicate detection, supports, cost, and useful errors.
+    id: resource-python-09-15-rebuild-a-selector-with-mro-fallback-d
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Express a ColumnExpr-like consumer contract as a Protocol without adding an import edge.
+    id: resource-python-09-16-express-a-columnexpr-like-consumer-con
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Convert one elif dispatch chain and honestly compare extensibility, readability, and testability.
+    id: resource-python-09-17-convert-one-elif-dispatch-chain-and-ho
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Pydantic
+    id: resource-python-09-18-open-source-pydantic
+    locator: Trace one small typed public API from pydantic/main.py or type_adapter.py through an internal
+      boundary and its tests. Identify where static hints end and runtime validation begins.
+    url: https://github.com/pydantic/pydantic
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-09-interfaces-typing-protocols-and-dispatch-design/notes.md
+- id: stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together
+  number: 10
+  title: 'Core retrieval capstone: all nine mechanisms together'
+  status: pending
+  objective: 'Use Core retrieval capstone: all nine mechanisms together fluently, explain the language
+    and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.'
+  done_when:
+  - green core capstone package, miss ledger, and walkthrough notes.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — capstone.ipynb
+    id: resource-python-10-01-required-core-capstone-ipynb
+    source_id: source-python-depth-drills
+    locator: Core capstone and ladder rules
+    vault_path: material://source-python-depth-drills/capstone.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Required core — README.md
+    id: resource-python-10-02-required-core-readme-md
+    source_id: source-python-depth-drills
+    locator: Core capstone and ladder rules
+    vault_path: material://source-python-depth-drills/README.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-10-03-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Cross-cutting shelf and Fluent Python only when a recorded miss identifies the relevant chapter
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — fluent-python.pdf
+    id: resource-python-10-04-local-material-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Cross-cutting shelf and Fluent Python only when a recorded miss identifies the relevant chapter
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — reference
+    id: resource-python-10-05-official-reference-docs-python-org-ref
+    locator: Use the exact Python references assigned in Stages 1–9; start from the language reference
+    url: https://docs.python.org/3/reference/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Complete all capstone problems closed-book, then run the integrated package's
+      parameterized tests.
+    id: resource-python-10-06-guided-exercises-complete-all-capstone
+    locator: Complete all capstone problems closed-book, then run the integrated package's parameterized
+      tests.
+    scope_triage: required-now
+  - kind: practise
+    label: Retrieval — Randomly redraw the identity, call-timing, import, MRO, protocol, and iterator
+      models before opening any guide.
+    id: resource-python-10-07-retrieval-randomly-redraw-the-identity
+    locator: Randomly redraw the identity, call-timing, import, MRO, protocol, and iterator models before
+      opening any guide.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Complete all three capstone problems before opening any anchor.
+    id: resource-python-10-08-complete-all-three-capstone-problems-b
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Rebuild a match factory, rewrite runner, registration decorator, typed selector, and lazy traversal
+      in one miniature package.
+    id: resource-python-10-09-rebuild-a-match-factory-rewrite-runner
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add an intentional circular import and repair the architecture instead of hiding it.
+    id: resource-python-10-10-add-an-intentional-circular-import-and
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Write at least 20 parameterized cases covering aliasing, duplicates, unsupported implementations,
+      cycles, and generator exhaustion.
+    id: resource-python-10-11-write-at-least-20-parameterized-cases
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Give a ten-minute walkthrough naming every Python mechanism and when it executes.
+    id: resource-python-10-12-give-a-ten-minute-walkthrough-naming-e
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: practise
+    label: Repository retrieval — explain one earlier open-source call path closed-book
+    id: resource-python-10-13-open-source-trace-retrieval
+    locator: Redraw one public API → implementation → test path from Stages 2, 4, 7, 8, or 9, then reopen
+      the repository and correct the trace.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-10-core-retrieval-capstone-all-nine-mechanisms-together/notes.md
+- id: stage-python-11-graph-algorithms-and-safe-dag-surgery
+  number: 11
+  title: Graph algorithms and safe DAG surgery
+  status: pending
+  objective: Use Graph algorithms and safe DAG surgery fluently, explain the language and runtime model,
+    and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - DAG utility module with at least 25 named cases and complexity notes for every operation.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — note-python-intermediate-roadmap.md
+    id: resource-python-11-01-required-core-note-python-intermediate
+    locator: Roadmap Step 26 and the Stage 7 traversal guide
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — stage-7-generators-and-iterators.md
+    id: resource-python-11-02-local-material-stage-7-generators-and
+    source_id: source-python-depth-drills
+    locator: Stage 7 guide/notebook
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — stage-7-generators-and-iterators.ipynb
+    id: resource-python-11-03-local-material-stage-7-generators-and
+    source_id: source-python-depth-drills
+    locator: Stage 7 guide/notebook
+    vault_path: material://source-python-depth-drills/stage-7-generators-and-iterators.ipynb
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — graphlib.html
+    id: resource-python-11-04-official-reference-docs-python-org-gra
+    locator: graphlib topological sorter
+    url: https://docs.python.org/3/library/graphlib.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Build and test the DAG surgery utility from blank, including duplicates,
+      cycles, cloning, root replacement, and mutation during traversal.
+    id: resource-python-11-05-guided-exercises-build-and-test-the-da
+    locator: Build and test the DAG surgery utility from blank, including duplicates, cycles, cloning,
+      root replacement, and mutation during traversal.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — craftinginterpreters.com — representing code.html
+    id: resource-python-11-06-alternative-explanation-craftinginterp
+    locator: Crafting Interpreters representation chapter
+    url: https://craftinginterpreters.com/representing-code.html
+    scope_triage: helpful-now
+  - kind: reference
+    label: Optional depth — networkx.org — dag.html
+    id: resource-python-11-07-optional-depth-networkx-org-dag-html
+    locator: NetworkX DAG algorithms reference
+    url: https://networkx.org/documentation/stable/reference/algorithms/dag.html
+    scope_triage: deferred
+  - kind: practise
+    label: Derive Kahn's algorithm on paper and hand-run it on a diamond, chain, disconnected branch,
+      and cycle.
+    id: resource-python-11-08-derive-kahn-s-algorithm-on-paper-and-h
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Implement BFS and DFS topological variants from blank and state what ordering is and is not
+      guaranteed.
+    id: resource-python-11-09-implement-bfs-and-dfs-topological-vari
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Implement clone_sub_dag with stop and replacement boundaries.
+    id: resource-python-11-10-implement-clone-sub-dag-with-stop-and
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Write an invariant checker for reciprocal edges, duplicate inputs, reachability, and cycle
+      refusal.
+    id: resource-python-11-11-write-an-invariant-checker-for-recipro
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Mutation-test the checker by introducing four incorrect rewires.
+    id: resource-python-11-12-mutation-test-the-checker-by-introduci
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — NetworkX DAG algorithms
+    id: resource-python-11-13-open-source-networkx
+    locator: Trace topological_generations and is_directed_acyclic_graph (or current equivalents) into
+      their tests. Compare state, mutation assumptions, ordering guarantees, exceptions, and complexity
+      with your implementation.
+    url: https://github.com/networkx/networkx/blob/main/networkx/algorithms/dag.py
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-11-graph-algorithms-and-safe-dag-surgery/notes.md
+- id: stage-python-12-testing-and-debugging-optimizer-shaped-python
+  number: 12
+  title: Testing and debugging optimizer-shaped Python
+  status: pending
+  objective: Use Testing and debugging optimizer-shaped Python fluently, explain the language and runtime
+    model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - reusable scratch test harness, mutation-sensitivity table, and debugging playbook.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — SHELF.md
+    id: resource-python-12-01-required-core-shelf-md
+    source_id: source-python-depth-drills
+    locator: Testing/debugging section and local debugging notebook
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — 01.06-Errors-and-Debugging.ipynb
+    id: resource-python-12-02-required-core-01-06-errors-and-debuggi
+    source_id: source-pydata-handbook
+    locator: Testing/debugging section and local debugging notebook
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.06-Errors-and-Debugging.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-12-03-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python testing/debugging items and toolbox pytest section
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-python-12-05-local-material-note-programming-toolbo
+    locator: Effective Python testing/debugging items and toolbox pytest section
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.pytest.org — getting started.html
+    id: resource-python-12-06-official-reference-docs-pytest-org-get
+    locator: pytest, mock patching, pdb, and logging
+    url: https://docs.pytest.org/en/stable/getting-started.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — unittest.mock.html
+    id: resource-python-12-07-official-reference-docs-python-org-uni
+    locator: pytest, mock patching, pdb, and logging
+    url: https://docs.python.org/3/library/unittest.mock.html#where-to-patch
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — pdb.html
+    id: resource-python-12-08-official-reference-docs-python-org-pdb
+    locator: pytest, mock patching, pdb, and logging
+    url: https://docs.python.org/3/library/pdb.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — logging.html
+    id: resource-python-12-09-official-reference-docs-python-org-log
+    locator: pytest, mock patching, pdb, and logging
+    url: https://docs.python.org/3/howto/logging.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Write tests first for three optimizer-shaped utilities, seed failures, debug
+      them with hypotheses, and preserve each fix as a regression test.
+    id: resource-python-12-10-guided-exercises-write-tests-first-for
+    locator: Write tests first for three optimizer-shaped utilities, seed failures, debug them with hypotheses,
+      and preserve each fix as a regression test.
+    scope_triage: required-now
+  - kind: read
+    label: Alternative explanation — hypothesis.readthedocs.io — quickstart.html
+    id: resource-python-12-11-alternative-explanation-hypothesis-rea
+    locator: Hypothesis quickstart
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    scope_triage: helpful-now
+  - kind: practise
+    label: Write tests first for compose, topo, and Selector before reimplementing them.
+    id: resource-python-12-12-write-tests-first-for-compose-topo-and
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Build factories that return fresh graph fixtures and prove two tests cannot leak mutations.
+    id: resource-python-12-13-build-factories-that-return-fresh-grap
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Add property tests for reciprocal edges, topological precedence, and equality/hash.
+    id: resource-python-12-14-add-property-tests-for-reciprocal-edge
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Introduce five deliberate bugs and prove distinct tests catch each.
+    id: resource-python-12-15-introduce-five-deliberate-bugs-and-pro
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Debug one failure using traceback reduction, vars/type/MRO, breakpoint, and a minimal reproducer;
+      record which tool answered which question.
+    id: resource-python-12-16-debug-one-failure-using-traceback-redu
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Hypothesis
+    id: resource-python-12-17-open-source-hypothesis
+    locator: Choose one small strategy or shrinking behavior. Start from a test, trace only the implementation
+      it exercises, and write the invariant that makes the test valuable.
+    url: https://github.com/HypothesisWorks/hypothesis
+    scope_triage: required-now
+  - kind: practise
+    label: AI resistance drill — review plausible but wrong code
+    id: resource-python-12-18-agent-generated-bug-hunt
+    locator: Ask an agent for two subtly flawed implementations only after your correct version passes.
+      Without hints, find each defect through contract review and targeted tests; record why the code
+      looked convincing.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-12-testing-and-debugging-optimizer-shaped-python/notes.md
+- id: stage-python-13-complexity-profiling-and-memory-evidence
+  number: 13
+  title: Complexity, profiling, and memory evidence
+  status: pending
+  objective: Use Complexity, profiling, and memory evidence fluently, explain the language and runtime
+    model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - annotated profile, scaling plot/table, memory comparison, and one evidence-backed optimization or
+    a justified no-change decision.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — SHELF.md
+    id: resource-python-13-01-required-core-shelf-md
+    source_id: source-python-depth-drills
+    locator: Performance section and local profiling notebook
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — 01.07-Timing-and-Profiling.ipynb
+    id: resource-python-13-02-required-core-01-07-timing-and-profili
+    source_id: source-pydata-handbook
+    locator: Performance section and local profiling notebook
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/01.07-Timing-and-Profiling.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-13-03-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Effective Python performance items and their mapping
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — profile.html
+    id: resource-python-13-05-official-reference-docs-python-org-pro
+    locator: cProfile, timeit, and tracemalloc
+    url: https://docs.python.org/3/library/profile.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — timeit.html
+    id: resource-python-13-06-official-reference-docs-python-org-tim
+    locator: cProfile, timeit, and tracemalloc
+    url: https://docs.python.org/3/library/timeit.html
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — docs.python.org — tracemalloc.html
+    id: resource-python-13-07-official-reference-docs-python-org-tra
+    locator: cProfile, timeit, and tracemalloc
+    url: https://docs.python.org/3/library/tracemalloc.html
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Measure the stage's graph and slots claims with controlled inputs, profiles,
+      memory snapshots, correctness checks, and repeated samples.
+    id: resource-python-13-08-guided-exercises-measure-the-stage-s-g
+    locator: Measure the stage's graph and slots claims with controlled inputs, profiles, memory snapshots,
+      correctness checks, and repeated samples.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — pyperf.readthedocs.io — latest
+    id: resource-python-13-09-optional-depth-pyperf-readthedocs-io-l
+    locator: pyperf system benchmark runner
+    url: https://pyperf.readthedocs.io/en/latest/
+    scope_triage: deferred
+  - kind: practise
+    label: State big-O for traversal, indegree construction, clone, validation, and one naive alternative.
+    id: resource-python-13-10-state-big-o-for-traversal-indegree-con
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Generate synthetic DAGs at four sizes outside Stratum and test the scaling prediction.
+    id: resource-python-13-11-generate-synthetic-dags-at-four-sizes
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Profile the miniature optimizer with cProfile and identify cumulative versus internal time.
+    id: resource-python-13-12-profile-the-miniature-optimizer-with-c
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Compare 100000 slotted and unslotted nodes with tracemalloc.
+    id: resource-python-13-13-compare-100000-slotted-and-unslotted-n
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Produce a fair before/after benchmark that separates graph construction, planning, and execution
+      and reports repeated distributions.
+    id: resource-python-13-14-produce-a-fair-before-after-benchmark
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — NetworkX implementation and tests
+    id: resource-python-13-15-open-source-networkx-evidence
+    locator: Select the DAG path traced in Stage 11. Form a performance hypothesis from the code, design
+      a controlled measurement, and distinguish algorithmic work from graph construction and library overhead.
+    url: https://github.com/networkx/networkx
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-13-complexity-profiling-and-memory-evidence/notes.md
+- id: stage-python-14-packaging-environments-maturin-and-the-python-to-rust
+  number: 14
+  title: Packaging, environments, maturin, and the Python to Rust boundary
+  status: pending
+  objective: Use Packaging, environments, maturin, and the Python to Rust boundary fluently, explain the
+    language and runtime model, and prove it with targeted code, retrieval, and a Job-relevant artifact.
+  done_when:
+  - build-boundary diagram, disposable toy package, and FFI contract.
+  - Complete every required-now practice action and record corrections to failed predictions.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 105
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — note-python-intermediate-roadmap.md
+    id: resource-python-14-01-required-core-note-python-intermediate
+    locator: Roadmap Step 25 and Python packaging tutorial
+    vault_path: knowledge/notes/programming/note-python-intermediate-roadmap.md
+    scope_triage: required-now
+  - kind: read
+    label: Required core — packaging.python.org — packaging projects
+    id: resource-python-14-02-required-core-packaging-python-org-pac
+    locator: Roadmap Step 25 and Python packaging tutorial
+    url: https://packaging.python.org/en/latest/tutorials/packaging-projects/
+    scope_triage: required-now
+  - kind: read
+    label: Local material — note-programming-toolbox-bootcamp.md
+    id: resource-python-14-03-local-material-note-programming-toolbo
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: knowledge/notes/programming/note-programming-toolbox-bootcamp.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-14-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Toolbox environment section and Effective Python packaging items
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — packaging.python.org — pyproject toml
+    id: resource-python-14-05-official-reference-packaging-python-or
+    locator: pyproject, maturin, and PyO3
+    url: https://packaging.python.org/en/latest/specifications/pyproject-toml/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — www.maturin.rs
+    id: resource-python-14-06-official-reference-www-maturin-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://www.maturin.rs/
+    scope_triage: reference-only
+  - kind: reference
+    label: Official reference — pyo3.rs
+    id: resource-python-14-07-official-reference-pyo3-rs
+    locator: pyproject, maturin, and PyO3
+    url: https://pyo3.rs/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Build a minimal wheel and native-extension package in a clean lab environment,
+      inspect artifacts, and test the installed result rather than the source tree.
+    id: resource-python-14-08-guided-exercises-build-a-minimal-wheel
+    locator: Build a minimal wheel and native-extension package in a clean lab environment, inspect artifacts,
+      and test the installed result rather than the source tree.
+    scope_triage: required-now
+  - kind: reference
+    label: Optional depth — docs.python.org — stable.html
+    id: resource-python-14-09-optional-depth-docs-python-org-stable
+    locator: Python binary extension ABI guidance
+    url: https://docs.python.org/3/c-api/stable.html
+    scope_triage: deferred
+  - kind: practise
+    label: Diagram interpreter, virtual environment, package source, wheel, shared library, import name,
+      and build backend.
+    id: resource-python-14-10-diagram-interpreter-virtual-environmen
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Create a tiny pure-Python package outside Stratum with pyproject and editable install in a
+      disposable environment.
+    id: resource-python-14-11-create-a-tiny-pure-python-package-outs
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Inspect a wheel's contents and map import names to files.
+    id: resource-python-14-12-inspect-a-wheel-s-contents-and-map-imp
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Sketch one PyO3 function contract including ownership, error conversion, GIL, and copy expectations
+      without building Stratum.
+    id: resource-python-14-13-sketch-one-pyo3-function-contract-incl
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Explain exactly when maturin develop, a Python import, and a Rust function call execute.
+    id: resource-python-14-14-explain-exactly-when-maturin-develop-a
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Pydantic's Python/Rust boundary
+    id: resource-python-14-15-open-source-pydantic-boundary
+    locator: Trace one validation request from a Python public API into pydantic-core and back to a Python
+      error/result. Record ownership, conversion, exception, packaging, and test boundaries without reading
+      the whole validator.
+    url: https://github.com/pydantic/pydantic
+    scope_triage: required-now
+  - kind: practise
+    label: Engineering drill — review the built artifact as a consumer
+    id: resource-python-14-16-installed-artifact-review
+    locator: Install the toy wheel into a clean environment, inspect only its published API and metadata,
+      and list every assumption that leaked from the source tree.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-14-packaging-environments-maturin-and-the-python-to-rust/notes.md
+- id: stage-python-15-requirements-decomposition-and-design-records
+  number: 15
+  title: Requirements, decomposition, and design records
+  status: pending
+  objective: 'Turn a vague idea into an executable engineering contract before code: identify the user
+    and problem, define scope and non-goals, make uncertainty visible, choose a thin vertical slice, and
+    record consequential decisions.'
+  done_when:
+  - A one-page brief contains user/problem, examples, non-goals, inputs/outputs, invariants, failure behavior,
+    observability, test matrix, and acceptance criteria.
+  - A no-AI vertical slice proves the riskiest assumption; three short decision records state context,
+    options, choice, consequences, and reversal cost.
+  - An AI critique happens only after the brief and slice exist; disagreements are resolved with evidence
+    rather than deference.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Architecture Patterns with Python — domain modelling and service boundaries
+    id: resource-python-15-01-architecture-patterns
+    source_id: source-cosmicpython-architecture-patterns
+    locator: Use the preface plus one relevant early chapter to separate domain intent from infrastructure.
+    url: https://www.cosmicpython.com/book/preface.html
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — Architecture Patterns with Python examples
+    id: resource-python-15-02-open-source-cosmic-python
+    locator: Trace one use case from an acceptance-facing example through a service/domain boundary into
+      tests. Record what the code makes easy or hard to change.
+    url: https://github.com/cosmicpython/book
+    scope_triage: required-now
+  - kind: practise
+    label: No-AI product slice — turn one personal idea into a tested contract
+    id: resource-python-15-03-spec-first-vertical-slice
+    locator: Pick an idea you would normally hand to an agent. Write the brief, implement the smallest
+      end-to-end slice yourself, then ask AI only to challenge assumptions and missing cases.
+    scope_triage: required-now
+  - kind: practise
+    label: Write three lightweight architecture decision records
+    id: resource-python-15-04-decision-records
+    locator: Cover data model, dependency direction, and error contract. Each record must include a rejected
+      alternative and what evidence would change the decision.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-15-requirements-decomposition-and-design-records/notes.md
+- id: stage-python-16-api-design-boundaries-and-refactoring
+  number: 16
+  title: Readable APIs, boundaries, and refactoring
+  status: pending
+  objective: Design small unsurprising Python APIs, keep dependencies pointing inward, and improve existing
+    code through behavior-preserving, test-guarded refactoring.
+  done_when:
+  - A working module is refactored through small commits with no behavior change until an explicit contract
+    change is introduced.
+  - The public API has typed signatures, stable errors, documented ownership/mutation, narrow dependencies,
+    and consumer-focused examples.
+  - A self-review explains naming, abstraction level, compatibility, cohesion, coupling, and why each
+    new type or layer earns its cost.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Open-source reading lab — HTTPX public API
+    id: resource-python-16-01-open-source-httpx-api
+    locator: Trace one simple Client request from the public method in httpx/_client.py into transport
+      behavior and tests. Note sync/async symmetry, context ownership, errors, and what remains private.
+    url: https://github.com/encode/httpx
+    scope_triage: required-now
+  - kind: read
+    label: Effective Python — interfaces, composition, and maintainability
+    id: resource-python-16-02-effective-python
+    source_id: source-slatkin-effective-python
+    locator: Use the locally mapped items on functions, classes, interfaces, and collaboration.
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Refactoring lab — characterize, simplify, and preserve behavior
+    id: resource-python-16-03-characterization-refactor
+    locator: Take a deliberately tangled but working module. Write characterization tests, split responsibilities,
+      remove one accidental abstraction, and review the final diff as if it were a pull request.
+    scope_triage: required-now
+  - kind: practise
+    label: Consumer test — use the package from outside its source tree
+    id: resource-python-16-04-consumer-test
+    locator: Write a short script using only the published API. Any need to reach into internals becomes
+      an API-design observation, not an immediate export.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-16-api-design-boundaries-and-refactoring/notes.md
+- id: stage-python-17-concurrency-async-and-resource-lifetimes
+  number: 17
+  title: Concurrency, async, cancellation, and resource lifetimes
+  status: pending
+  objective: Choose threads, processes, asyncio, native parallelism, or sequential execution from the
+    workload and correctness requirements; make cancellation, cleanup, backpressure, and ownership explicit.
+  done_when:
+  - One bounded workload has sequential, threaded, and async or process-oriented versions with a written
+    choice based on evidence.
+  - Tests cover timeout, cancellation, partial failure, cleanup, ordering, backpressure, and repeated
+    execution without leaked tasks or resources.
+  - A resource-lifetime diagram identifies who creates, owns, closes, and observes every client, task,
+    executor, queue, and temporary artifact.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Python asyncio — tasks, cancellation, timeouts, and synchronization
+    id: resource-python-17-01-asyncio-docs
+    locator: Focus on task lifecycle, TaskGroup, cancellation, timeouts, queues, and running blocking
+      work.
+    url: https://docs.python.org/3/library/asyncio.html
+    scope_triage: required-now
+  - kind: reference
+    label: Python concurrent.futures
+    id: resource-python-17-02-concurrent-futures
+    locator: ThreadPoolExecutor, ProcessPoolExecutor, futures, shutdown, and deadlock warnings.
+    url: https://docs.python.org/3/library/concurrent.futures.html
+    scope_triage: reference-only
+  - kind: read
+    label: Open-source reading lab — HTTPX sync/async clients
+    id: resource-python-17-03-open-source-httpx-sync-async
+    locator: Compare Client and AsyncClient on one narrow request path. Trace context-manager cleanup,
+      transports, timeouts, and tests; do not infer that async is faster for CPU work.
+    url: https://github.com/encode/httpx
+    scope_triage: required-now
+  - kind: practise
+    label: Build a bounded, cancellable work pipeline
+    id: resource-python-17-04-bounded-concurrency-lab
+    locator: Start from a sequential oracle. Add bounded concurrency, inject slow and failing jobs, prove
+      cleanup, and measure throughput and overhead before choosing the final design.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-17-concurrency-async-and-resource-lifetimes/notes.md
+- id: stage-python-18-errors-observability-and-operational-debugging
+  number: 18
+  title: Errors, observability, and operational debugging
+  status: pending
+  objective: Design errors and telemetry so another engineer can understand what failed, where, for which
+    input and operation, without reproducing the entire process.
+  done_when:
+  - A service or pipeline has an error taxonomy, preserved exception causes, stable user-facing messages,
+    and structured events at boundaries rather than noisy internal spam.
+  - Failure-injection tests prove correlation context, cleanup, retry/refusal behavior, and that sensitive
+    values are not logged.
+  - A cold debugging exercise reaches the cause from logs, traceback, metrics/timing, and a minimal reproducer;
+    the evidence chain is recorded.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 150
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Python exceptions and exception chaining
+    id: resource-python-18-01-exceptions-docs
+    locator: Raising, handling, cleanup, user-defined exceptions, and explicit chaining.
+    url: https://docs.python.org/3/tutorial/errors.html
+    scope_triage: required-now
+  - kind: read
+    label: Python logging cookbook
+    id: resource-python-18-02-logging-docs
+    locator: Context, configuration, handlers, concurrency, and library/application responsibilities.
+    url: https://docs.python.org/3/howto/logging-cookbook.html
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — structlog
+    id: resource-python-18-03-open-source-structlog
+    locator: Trace one event dictionary through processors into a renderer and corresponding tests. Identify
+      pure transformations, context binding, exception handling, and performance choices.
+    url: https://github.com/hynek/structlog
+    scope_triage: required-now
+  - kind: practise
+    label: Operational lab — inject five failures and diagnose from evidence
+    id: resource-python-18-04-failure-injection
+    locator: Cover invalid input, dependency failure, timeout/cancellation, corrupted state, and programmer
+      bug. Define which are retried, refused, wrapped, or allowed to crash.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-18-errors-observability-and-operational-debugging/notes.md
+- id: stage-python-19-code-review-maintenance-and-contribution-rehearsal
+  number: 19
+  title: Code review, maintenance, and contribution rehearsal
+  status: pending
+  objective: Read changes in context, identify correctness and maintenance risks, communicate actionable
+    feedback, preserve compatibility, and rehearse the full open-source contribution loop.
+  done_when:
+  - A review packet for a real small merged change includes problem restatement, call-path map, test assessment,
+    correctness risks, API/compatibility concerns, and prioritized comments.
+  - A maintenance lab adds one backward-compatible feature, one deprecation path, changelog and migration
+    note, targeted tests, and a rollback plan.
+  - One contribution rehearsal reproduces an issue or proposes a documentation/test improvement in a local
+    fork; publishing is optional, but the patch is reviewable and follows the repository's guide.
+  - The stage receipt records the no-AI first attempt, any AI help and accepted/rejected advice, one independently
+    chosen test against a plausible generated-code mistake, and a successful no-AI rebuild or explanation
+    within 48 hours.
+  estimate_minutes: 180
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Open-source reading lab — pytest contribution workflow
+    id: resource-python-19-01-open-source-pytest-contributing
+    locator: Use the current contributing guide, then select one small merged pull request. Read the issue,
+      patch, tests, review discussion, and final change in that order.
+    url: https://github.com/pytest-dev/pytest/blob/main/CONTRIBUTING.rst
+    scope_triage: required-now
+  - kind: read
+    label: Open-source reading lab — pluggy as a compact mature library
+    id: resource-python-19-02-open-source-pluggy-maintenance
+    locator: Trace one small recent behavior change through changelog, implementation, compatibility handling,
+      and tests. Focus on why the patch is shaped as it is.
+    url: https://github.com/pytest-dev/pluggy
+    scope_triage: required-now
+  - kind: practise
+    label: Review drill — write the review before asking an agent
+    id: resource-python-19-03-review-without-ai
+    locator: Review a 100–250 line patch with repository context and tests. Only afterward ask AI for
+      a second review; classify unique, overlapping, false-positive, and missed findings with evidence.
+    scope_triage: required-now
+  - kind: practise
+    label: Maintenance lab — evolve an API without breaking callers
+    id: resource-python-19-04-maintenance-change
+    locator: Add a feature to an earlier package, preserve or deliberately deprecate behavior, update
+      docs and changelog, test old and new callers, and write a rollback plan.
+    scope_triage: required-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-19-code-review-maintenance-and-contribution-rehearsal/notes.md
+- id: stage-python-20-final-independent-engineering-capstone
+  number: 20
+  title: Final capstone — own a maintainable Python system
+  status: pending
+  objective: Independently take one bounded idea from ambiguous intent to a maintainable, reviewable,
+    packaged Python system; use AI only after a working no-AI baseline and treat its output as untrusted
+    review input.
+  done_when:
+  - Before code, a no-AI engineering brief defines user/problem, examples, non-goals, data and API contracts,
+    invariants, errors, observability, concurrency choice, test matrix, and acceptance criteria.
+  - A no-AI vertical slice and core architecture work from a blank repository before any agent reviews
+    implementation.
+  - The system passes unit, integration, property-oriented, failure-injection, and installed-artifact
+    tests; type checks and quality checks are clean or every exception is justified.
+  - The package has consumer documentation, an architecture note, decision records, changelog, reproducible
+    environment/build instructions, structured failure evidence, and a reviewable commit history.
+  - Performance claims separate construction, I/O, planning, and execution with repeated evidence; concurrency
+    is included only if the workload justifies it.
+  - After the baseline, an AI review may be used. Every suggestion is accepted or rejected with a reason,
+    every accepted change is understood line by line, and at least one convincing but incorrect suggestion
+    is caught by your tests or reasoning.
+  - A self-review and one external-style review identify correctness, API, compatibility, security/privacy,
+    operability, and maintenance risks.
+  - Seven days later, the core data model, one critical path, and its tests are rebuilt or explained closed-book
+    without AI.
+  - Only after completion, a read-only comparison with Stratum and the staged open-source repositories
+    records deliberate similarities, differences, and remaining questions.
+  estimate_minutes: 480
+  exam_critical: false
+  concepts:
+  - concept-python
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — capstone.ipynb
+    id: resource-python-20-01-required-core-capstone-ipynb
+    source_id: source-python-depth-drills
+    locator: Final capstone starting point and ladder contract
+    vault_path: material://source-python-depth-drills/capstone.ipynb
+    scope_triage: required-now
+  - kind: read
+    label: Required core — README.md
+    id: resource-python-20-02-required-core-readme-md
+    source_id: source-python-depth-drills
+    locator: Final capstone starting point and ladder contract
+    vault_path: material://source-python-depth-drills/README.md
+    scope_triage: required-now
+  - kind: read
+    label: Local material — fluent-python.pdf
+    id: resource-python-20-03-local-material-fluent-python-pdf
+    source_id: source-fluent-python
+    locator: Fluent Python Effective Python and cross-cutting shelf are pull-based references, not pre-capstone
+      reading
+    vault_path: material://source-fluent-python/fluent-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — effective-python.pdf
+    id: resource-python-20-04-local-material-effective-python-pdf
+    source_id: source-slatkin-effective-python
+    locator: Fluent Python Effective Python and cross-cutting shelf are pull-based references, not pre-capstone
+      reading
+    vault_path: material://source-slatkin-effective-python/effective-python.pdf
+    scope_triage: required-now
+  - kind: read
+    label: Local material — SHELF.md
+    id: resource-python-20-05-local-material-shelf-md
+    source_id: source-python-depth-drills
+    locator: Fluent Python Effective Python and cross-cutting shelf are pull-based references, not pre-capstone
+      reading
+    vault_path: material://source-python-depth-drills/SHELF.md
+    scope_triage: required-now
+  - kind: reference
+    label: Official reference — docs.python.org — reference
+    id: resource-python-20-06-official-reference-docs-python-org-ref
+    locator: Use exact official references from the stages implicated by a failing invariant
+    url: https://docs.python.org/3/reference/
+    scope_triage: reference-only
+  - kind: practise
+    label: Guided exercises — Author the miniature optimizer from blank, test adversarial invariants,
+      package it, profile it, and give the complete mechanism walkthrough.
+    id: resource-python-20-07-guided-exercises-author-the-miniature
+    locator: Author the miniature optimizer from blank, test adversarial invariants, package it, profile
+      it, and give the complete mechanism walkthrough.
+    scope_triage: required-now
+  - kind: practise
+    label: Retrieval — Rebuild one mechanism from each of Stages 1–19 without notes before diagnosing
+      capstone misses.
+    id: resource-python-20-08-retrieval-rebuild-one-mechanism-from-e
+    locator: Rebuild one mechanism from each of Stages 1–19 without notes before diagnosing capstone misses.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Specify identity, edge, traversal, rewrite, dispatch, error, and unsupported-case contracts
+      on one page.
+    id: resource-python-20-09-specify-identity-edge-traversal-rewrit
+    locator: Exercise 1
+    scope_triage: required-now
+  - kind: practise
+    label: Implement typed Node/Expr protocols, reciprocal graph wiring, topological validation, match/action
+      rewrite passes, decorator registration, and cost-based implementation selection from blank.
+    id: resource-python-20-10-implement-typed-node-expr-protocols-re
+    locator: Exercise 2
+    scope_triage: required-now
+  - kind: practise
+    label: Pass at least 35 named cases, five property cases, and five mutation tests that prove sensitivity.
+    id: resource-python-20-11-pass-at-least-35-named-cases-five-prop
+    locator: Exercise 3
+    scope_triage: required-now
+  - kind: practise
+    label: Package the project, import it from a clean disposable environment, and demonstrate one deliberate
+      registration failure and recovery.
+    id: resource-python-20-12-package-the-project-import-it-from-a-c
+    locator: Exercise 4
+    scope_triage: required-now
+  - kind: practise
+    label: Profile three graph sizes, explain the scaling, and make at most one evidence-backed optimization.
+    id: resource-python-20-13-profile-three-graph-sizes-explain-the
+    locator: Exercise 5
+    scope_triage: required-now
+  - kind: practise
+    label: Give a 15-minute closed-book walkthrough, then compare architecture against the read-only Stratum
+      paths and list deliberate differences. Done when every semantic claim is tested, every refusal is
+      explicit, and no neighboring Stratum implementation was needed.
+    id: resource-python-20-14-give-a-15-minute-closed-book-walkthrou
+    locator: Exercise 6
+    scope_triage: required-now
+  - kind: practise
+    label: Capstone gate — complete the engineering brief and no-AI vertical slice
+    id: resource-python-20-15-independent-capstone-brief
+    locator: AI may not generate the specification, architecture, or baseline implementation. Record uncertainties
+      explicitly and reduce scope rather than outsourcing unclear decisions.
+    scope_triage: required-now
+  - kind: practise
+    label: Capstone review — treat agent output as an untrusted patch
+    id: resource-python-20-16-adversarial-agent-review
+    locator: After the baseline, request one bounded review. Inspect the diff, verify references, test
+      failure paths, record accept/reject reasons, and keep only changes you can defend.
+    scope_triage: required-now
+  - kind: read
+    label: Open-source comparison — revisit three staged repositories
+    id: resource-python-20-17-open-source-comparison
+    locator: Compare one public boundary, one test strategy, and one operational or maintenance choice
+      from three repositories against the capstone. Cite exact files and explain why your smaller system
+      differs.
+    scope_triage: helpful-now
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-20-final-independent-engineering-capstone/notes.md

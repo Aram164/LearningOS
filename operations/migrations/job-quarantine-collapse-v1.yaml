@@ -1,0 +1,194 @@
+schema_version: 1
+id: job-quarantine-collapse-v1
+type: migration-provenance
+status: applied
+applied: '2026-08-26'
+application: legacy.job-learning.migrate via GatewayEnvelopeV2
+program_id: program-job
+statistics:
+  notes: 19
+  plans: 5
+  probes: 8
+  resources: 1051
+  stages: 93
+plans:
+- source: Job/plans/job-track-git.yaml
+  module_id: module-job-git
+  unit_id: unit-job-git-fluency
+  study_map_id: study-map-job-git-fluency
+- source: Job/plans/job-track-missing-semester.yaml
+  module_id: module-job-engineering-tools
+  unit_id: unit-job-engineering-tools-fluency
+  study_map_id: study-map-job-engineering-tools-fluency
+- source: Job/plans/job-track-polars.yaml
+  module_id: module-job-polars
+  unit_id: unit-job-polars-pandas-fluency
+  study_map_id: study-map-job-polars-pandas-fluency
+- source: Job/plans/job-track-python.yaml
+  module_id: module-job-python-engineering
+  unit_id: unit-job-python-engineering-fluency
+  study_map_id: study-map-job-python-engineering-fluency
+- source: Job/plans/job-track-rust.yaml
+  module_id: module-job-rust-engineering
+  unit_id: unit-job-rust-engineering-fluency
+  study_map_id: study-map-job-rust-engineering-fluency
+source_files:
+  plans:
+  - path: Job/plans/job-track-git.yaml
+    size: 93946
+    sha256: 5939d91dbfe74cf0a86ccfe8c8f7f06c441103bbc06d6c3447f4e66b5cb48225
+  - path: Job/plans/job-track-missing-semester.yaml
+    size: 118219
+    sha256: de7553ea72784d11861d17d89f75d886f502df4b5d16d1684ffb10aa96e904f8
+  - path: Job/plans/job-track-polars.yaml
+    size: 115766
+    sha256: 81804fc5f761bc9f0a50b1ef8821a23f9c96b1b54eb7d57d2ed3697e408af0d2
+  - path: Job/plans/job-track-python.yaml
+    size: 131364
+    sha256: 4f5e9e37a414e294e2d60af18353b7119d3840916c160818b4f5a87806aa5dbe
+  - path: Job/plans/job-track-rust.yaml
+    size: 50256
+    sha256: 491e5e498e824fabe87f3f2ef47ed0271715e2fbf3f77b9b214c876a7c5f7b8e
+  notes:
+  - path: Job/notes/dataframe-semantics/note-pandas-groupby-signatures.md
+    size: 46151
+    sha256: 6d4061a369a0376c87e0ccdb400b5bffb7a8fccdf115aa62b0167c1abcd9bfe4
+  - path: Job/notes/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+    size: 92774
+    sha256: ce7540d290975993be0becc2f5020d09f19662e9251a7572478c1b89f1dfb10d
+  - path: Job/notes/note-skrub-dataop-dag.md
+    size: 15715
+    sha256: 7e0a78dd725f02b302f6da09c3562edaa3201790d1b3d79c2bc6e8d1a352b95a
+  - path: Job/notes/note-skrub-evaluation-engine.md
+    size: 22788
+    sha256: 0e4212b5a21bb61808cfa100269da36fc36a1be1bb32ca3a55d1cdd3a825524d
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-aggregateop.md
+    size: 2442
+    sha256: cfda0932e565b1b09790df63d3dec4143ce0f93458b9d10d010c9e0569616afc
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-applyudfop.md
+    size: 1353
+    sha256: 29e6c63d7e813e019919808ca1ad906df64ddbd8ce6ed44af8647978dd732b29
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-assignmapop.md
+    size: 2044
+    sha256: fbe602f1810264f750c5912d397c385ca6888320b3019cae8c06caafb23d6f95
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-assignop.md
+    size: 1329
+    sha256: c9a9fe1224431e130131c65fadd3cee784a300eff08ec00aa128ec5159db61fb
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-columnprojectionop.md
+    size: 1607
+    sha256: 1136893077b45ed753cb9b9603d90156c3986ad83d7d7ec3195c1eb6149d9bde
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-columnselectorop.md
+    size: 1659
+    sha256: 9793bf1c5812dcf51ff5af108c77863d8e5515f4fd16d365f7669252afdcb057
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-datetimeconversionop.md
+    size: 1607
+    sha256: fb63d7a391a99b8aa9f076bfdb6af8019964c00171704be495091ce7a03abc2c
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-dropop.md
+    size: 1129
+    sha256: 596be8cbac7b2dcfbceec704434574aedbadeed945c5b78a70cae529058b8aaf
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-getattrprojectionop.md
+    size: 1756
+    sha256: edc88da68628890b8bb2be66decee4ec2989f64c1a94c44f79394518e26ed3bd
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-joinop.md
+    size: 1974
+    sha256: 7cd910e01cb64102d52702b9dd5ded8f37545eaab52de4ea72521c16a1e90c98
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-metadataop.md
+    size: 1338
+    sha256: 669fa47686b6c37292fead38ad4e719a862bc719528d0af73e08e90843d4fc2f
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-missingmaskop.md
+    size: 2485
+    sha256: 4de033fe7f2f1ab0980f14fc3cddc5b5123aef413a8a072d3fc9a9e7ce63f311
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-selectionop.md
+    size: 1983
+    sha256: eede7af39632a3f18e60f547a1d552978e501b9c280f6634761d0f5c8ce6b81a
+  - path: Job/notes/stratum/dataframe-ops/note-stratum-op-stringmethodop.md
+    size: 1857
+    sha256: ac018156e229b601f47930a8907a1132825720a00c86eaa26fdd95448bee8c42
+  - path: Job/notes/stratum/note-stratum-extract-dataframe-op.md
+    size: 7241
+    sha256: 602c9bb08bce6c4fca5ae19c2647dd889c61883914fe586886dd61eeadbddfc7
+  probes:
+  - path: Job/notes/dataframe-semantics/probes/audit_doc.py
+    size: 15099
+    sha256: 0465a93a38a53194925dc88b56527b7c211cd7f7c664872177bbccb37a1f53e0
+  - path: Job/notes/dataframe-semantics/probes/audit_tables.py
+    size: 4732
+    sha256: 9206d1e36f3368556dfacabbe6ed866ffaab08b8dc0a52053fd9e6a82230324e
+  - path: Job/notes/dataframe-semantics/probes/check_all.py
+    size: 2247
+    sha256: 3d04ea8e0ce545404799bdedbf7a381a7e688016942f3213f2d4df40acc3882b
+  - path: Job/notes/dataframe-semantics/probes/gen_tables.py
+    size: 2689
+    sha256: 2f6a2b079d47e06d7e69609ff5876ddef97de48a089b56d4e81cba8d8fa0acaf
+  - path: Job/notes/dataframe-semantics/probes/probe.py
+    size: 2596
+    sha256: 3fc6feafde825f2eea88000c4bcc6d22418166465c64a484a429143473cb8d3c
+  - path: Job/notes/dataframe-semantics/probes/semantics.py
+    size: 5938
+    sha256: 32e7a543a65198efa89eab933ec82c9802e66f6e16894131b5aa38e544256e3d
+  - path: Job/notes/dataframe-semantics/probes/semantics2.py
+    size: 5667
+    sha256: e2529939e01cca0cb7110f344f5809213f4fdba91cb56f4f00c00cd416c664eb
+  - path: Job/notes/dataframe-semantics/probes/verify.py
+    size: 27998
+    sha256: 3d040ac4c0c7932b2d7219ef7deb3e99529f0c7861324fbb8e9b79dca2d7b858
+  materials:
+  - path: Job/legacy-plans/Towards Scalable Dataframe Systems.pdf
+    size: 1033120
+    sha256: d73d3f96dad8724fdab0a4a6dc0774f31b9a830ed9eb96b2f931a01fcb351ff5
+  - path: Job/papers/stratum-paper.pdf
+    size: 853556
+    sha256: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
+  - path: LearningOS/materials/data-systems/architecture/scalable-dataframe-systems/Towards Scalable Dataframe
+      Systems.pdf
+    size: 1033120
+    sha256: d73d3f96dad8724fdab0a4a6dc0774f31b9a830ed9eb96b2f931a01fcb351ff5
+  - path: LearningOS/materials/data-systems/architecture/stratum-paper/stratum-paper.pdf
+    size: 853556
+    sha256: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
+  - path: LearningOS/materials/software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    size: 5517393
+    sha256: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+  - path: LearningOS/python-polars-the-definitive-guide.pdf
+    size: 5517393
+    sha256: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+material_targets:
+- source_id: source-polars-definitive-guide
+  source: LearningOS/python-polars-the-definitive-guide.pdf
+  destination: LearningOS/materials/software/python/polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  size: 5517393
+  sha256: 8a8fdf9e87135e7eb2c42d198d66ea66ef2799d92947969e1287ddd7fbf318fe
+- source_id: source-stratum-paper
+  source: Job/papers/stratum-paper.pdf
+  destination: LearningOS/materials/data-systems/architecture/stratum-paper/stratum-paper.pdf
+  size: 853556
+  sha256: ce3ee00a41b1162352b6a069fe81eead5c8b733b93a0a0e0a5d7e035a91ab112
+- source_id: source-scalable-dataframe-systems-paper
+  source: Job/legacy-plans/Towards Scalable Dataframe Systems.pdf
+  destination: LearningOS/materials/data-systems/architecture/scalable-dataframe-systems/Towards Scalable
+    Dataframe Systems.pdf
+  size: 1033120
+  sha256: d73d3f96dad8724fdab0a4a6dc0774f31b9a830ed9eb96b2f931a01fcb351ff5
+normalizations:
+  authorship: aram -> user
+  legacy_concepts:
+  - concept-aggregation
+  - concept-aggregation-family
+  - concept-dataframe-ops
+  - concept-dataframe-semantics
+  - concept-dispatch
+  - concept-join-family
+  - concept-logical-ir
+  - concept-map-family
+  - concept-op-rewriting
+  - concept-projection-family
+  - concept-selection-family
+  legacy_note_fields:
+  - component
+  - verified_against
+  - status
+preservation:
+  original_job_data: retained
+  stratum_references: prose-only
+  concept_relations_inferred: false
+  source_evaluations_inferred: false

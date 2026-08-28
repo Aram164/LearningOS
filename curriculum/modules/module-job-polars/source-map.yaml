@@ -1,0 +1,23 @@
+type: module-source-map
+module_id: module-job-polars
+sources:
+- source_id: source-polars-definitive-guide
+  role: reference
+  why: Referenced by migrated learning plan job-track-polars.
+  priority: 0
+  unit_routes: []
+- source_id: source-pydata-handbook
+  role: reference
+  why: Referenced by migrated learning plan job-track-polars.
+  priority: 0
+  unit_routes: []
+- source_id: source-python-cheatsheets
+  role: reference
+  why: Referenced by migrated learning plan job-track-polars.
+  priority: 0
+  unit_routes: []
+- source_id: source-python-depth-drills
+  role: reference
+  why: Referenced by migrated learning plan job-track-polars.
+  priority: 0
+  unit_routes: []
