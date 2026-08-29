@@ -12,6 +12,12 @@ on:
     - cron: "0 6 * * 1" # Mondays 06:00 UTC ≈ 08:00 Berlin
   workflow_dispatch: {}
 
+# Read-only: this workflow checks out both repositories and runs the local
+# paired gate. It never pushes, tags, releases, or otherwise needs write
+# access to anything — narrowing this is free safety, not a functional change.
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -54,25 +60,36 @@ jobs:
           ref: ${{ steps.consumer-ref.outputs.ref }}
           path: obsidian-ui
 
+      # Named by SHA, not only by ref: a branch name can move between the
+      # checkout above and anyone reading this log later. Printing the exact
+      # commit is what lets a reviewer answer "which UI did this run actually
+      # verify against?" without re-running anything.
+      - name: Print the resolved UI ref and commit
+        working-directory: obsidian-ui
+        run: |
+          echo "UI ref resolved: ${{ steps.consumer-ref.outputs.ref }}"
+          echo "UI commit checked out: $(git rev-parse HEAD)"
+
       - uses: actions/setup-python@v5
         with:
           python-version: "3.14"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: pip install -e ".[dev]"
-      # Runs before the validator and the tests because it is the cheapest gate
-      # and it catches the class of finding that previously only careful reading
-      # found — dead imports, dead re-exports, bindings never read.
-      - name: lint (ruff)
-        run: ruff check tools tests
-      - name: producer-side Core/UI contract gate
+      - name: Install Core development dependencies
+        run: pip install -e ".[dev]"
+      - name: Install UI dependencies
         working-directory: obsidian-ui
-        run: npm run contract:check
-      - name: validate (schemas + VALIDATION.md rules)
-        run: python tools/validate.py
+        run: npm ci --ignore-scripts
+
+      # The exact local paired release gate — not a partial duplicate of it.
+      # This installs both dependency sets above specifically because
+      # `make system-check` ends by running the UI's own complete `npm run
+      # check` (build, typecheck, contract gate, fixture suites, and the
+      # real cross-process Gateway recovery harness against this Core), so
+      # ordinary CI exercises the identical command a release does locally.
+      - name: paired release gate (make system-check)
+        run: make system-check
       - name: URL-rot audit (weekly only)
         if: github.event_name == 'schedule'
         run: python tools/validate.py --online
-      - name: tests
-        run: python -m pytest -q
