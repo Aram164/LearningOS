@@ -47,7 +47,15 @@ from .contracts.write_scopes import (
 from .fingerprint import canonical_fingerprint
 from .pathing import PathBoundaryError, read_text_inside
 
+# Writes the transaction service itself owns rather than any capability's
+# declared authority (see the ``service_owned_scopes`` check in
+# ``TransactionService.commit``). Replay-evidence write-scope validation uses
+# the same boundary so a replayed AI-action delivery row is not mistaken for
+# an out-of-scope write.
+_SERVICE_OWNED_WRITE_SCOPES = ("operations/ai-actions/requests/**",)
+
 __all__ = [
+    "ReplayEvidenceError",
     "TransactionConflict",
     "TransactionFailure",
     "TransactionIdempotencyConflict",
@@ -86,6 +94,18 @@ class TransactionIdempotencyConflict(TransactionFailure):
     """An idempotency key was reused for a different approved intent."""
 
 
+class ReplayEvidenceError(TransactionFailure):
+    """A persisted success claim does not match its own recorded evidence.
+
+    Raised by ``replay_for_request`` whenever the idempotency ledger row and
+    its named receipt disagree, are malformed, or fail schema validation.
+    Always non-retryable: the underlying write may or may not have happened,
+    but the *evidence* is contradictory, so the only safe response is a
+    refusal that preserves everything for manual reconciliation. The original
+    capability handler must never run in response to this.
+    """
+
+
 @dataclass(frozen=True)
 class TransactionResult:
     transaction_id: str
@@ -94,6 +114,12 @@ class TransactionResult:
     snapshot_before: str
     snapshot_after: str
     replayed: bool = False
+    # Populated only for a replayed result: the exact validated receipt
+    # ``replay_for_request`` cross-bound against the idempotency ledger. A
+    # caller building the replay response or repairing session ownership must
+    # read this rather than reopening the receipt file through a separate,
+    # weaker helper — every field here has already been checked.
+    receipt: Mapping[str, object] | None = None
 
 
 def parse_expected_revisions(values: Sequence[str] | None) -> dict[str, int]:
@@ -229,35 +255,204 @@ def _dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
     )
 
 
-def replay_for_request(root: Path, request: GatewayRequestContext) -> TransactionResult | None:
-    """Return the original committed receipt for an exact approved retry."""
+def _default_authority_root(root: Path) -> Path | None:
+    implicit_catalogue = root / "system" / "contracts" / "capabilities.yaml"
+    return root if implicit_catalogue.is_file() else None
+
+
+def replay_for_request(
+    root: Path,
+    request: GatewayRequestContext,
+    *,
+    authority_root: Path | None = None,
+) -> TransactionResult | None:
+    """Return the original committed receipt for an exact approved retry.
+
+    Every cross-binding below runs before anything is returned, and a
+    mismatch or malformed value always raises rather than silently choosing a
+    lenient reading. ``None`` means only one thing: no ledger row exists for
+    this idempotency key at all — every other outcome is either a validated
+    replay or an exception. Nothing here invokes a capability handler.
+    """
     row = _load_idempotency_entries(root).get(request.idempotency_key)
     if row is None:
         return None
-    if row["intent_sha256"] != request.intent_sha256 \
-            or row["capability"] != request.capability:
+    if row["capability"] != request.capability \
+            or row["intent_sha256"] != request.intent_sha256:
         raise TransactionIdempotencyConflict(
             "idempotency key was already used for a different approved intent"
         )
+    if row["request_id"] != request.request_id:
+        raise ReplayEvidenceError(
+            "idempotency ledger records a different request id for this key"
+        )
+    if row["channel"] != request.channel:
+        raise ReplayEvidenceError(
+            "idempotency ledger records a different channel for this key"
+        )
+
     receipt_relative = str(row["receipt_path"])
     try:
         receipt_path, normalized = write_target(root, root / receipt_relative)
     except WriteScopeError as exc:
-        raise TransactionFailure(f"idempotency ledger names an unsafe receipt: {exc}") from exc
+        raise ReplayEvidenceError(
+            f"idempotency ledger names an unsafe receipt: {exc}"
+        ) from exc
     if normalized != receipt_relative or not receipt_path.is_file():
-        raise TransactionFailure(
+        raise ReplayEvidenceError(
             "idempotency ledger names a missing or non-canonical receipt"
         )
+
+    from .loading.yamlio import UniqueKeySafeLoader
+
     try:
-        receipt = yaml.safe_load(read_text_inside(root, receipt_path))
+        receipt = yaml.load(read_text_inside(root, receipt_path), Loader=UniqueKeySafeLoader)
     except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
-        raise TransactionFailure(f"idempotent receipt is unreadable: {exc}") from exc
-    receipt_request = receipt.get("request") if isinstance(receipt, dict) else None
-    if not isinstance(receipt, dict) or receipt.get("schema_version") != 2 \
-            or not isinstance(receipt_request, dict) \
-            or receipt_request.get("idempotency_key") != request.idempotency_key \
-            or receipt_request.get("intent_sha256") != request.intent_sha256:
-        raise TransactionFailure("idempotent receipt does not match its ledger entry")
+        raise ReplayEvidenceError(f"idempotent receipt is unreadable: {exc}") from exc
+    if not isinstance(receipt, dict):
+        raise ReplayEvidenceError("idempotent receipt is not a mapping")
+
+    schema_root = authority_root or _default_authority_root(root) or root
+    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
+    if not schema_path.is_file():
+        raise ReplayEvidenceError(
+            "no transaction receipt schema available to verify replay evidence"
+        )
+    receipt_schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    schema_errors = sorted(
+        Draft202012Validator(receipt_schema).iter_errors(receipt),
+        key=lambda error: list(error.path),
+    )
+    if schema_errors:
+        detail = "; ".join(
+            f"{'/'.join(str(part) for part in error.path) or '<receipt>'}: {error.message}"
+            for error in schema_errors[:4]
+        )
+        raise ReplayEvidenceError(f"idempotent receipt fails schema validation: {detail}")
+
+    if receipt.get("schema_version") != 2:
+        raise ReplayEvidenceError("idempotent receipt is not a GatewayEnvelopeV2 receipt")
+    if receipt.get("id") != row["transaction_id"]:
+        raise ReplayEvidenceError("idempotent receipt id does not match its ledger entry")
+    if receipt.get("capability") != request.capability:
+        raise ReplayEvidenceError("idempotent receipt names a different capability")
+    if receipt.get("status") != "committed":
+        raise ReplayEvidenceError("idempotent receipt is not committed")
+
+    receipt_request = receipt.get("request")
+    if not isinstance(receipt_request, dict):
+        raise ReplayEvidenceError("idempotent receipt has no request record")
+    if receipt_request.get("idempotency_key") != request.idempotency_key:
+        raise ReplayEvidenceError("idempotent receipt does not match its ledger entry")
+    if receipt_request.get("intent_sha256") != request.intent_sha256:
+        raise ReplayEvidenceError("idempotent receipt does not match its ledger entry")
+    if receipt_request.get("request_id") != request.request_id:
+        raise ReplayEvidenceError("idempotent receipt names a different request id")
+    if receipt_request.get("channel") != request.channel:
+        raise ReplayEvidenceError("idempotent receipt names a different channel")
+    approval = receipt_request.get("approval")
+    approval_subject = approval.get("subject_sha256") if isinstance(approval, dict) else None
+    if approval_subject != request.approval_subject_sha256:
+        raise ReplayEvidenceError(
+            "idempotent receipt approval subject does not match this request"
+        )
+
+    if receipt.get("snapshot_before") != row["snapshot_before"] \
+            or receipt.get("snapshot_after") != row["snapshot_after"]:
+        raise ReplayEvidenceError("idempotent receipt snapshot does not match its ledger entry")
+
+    artifact_revisions = receipt.get("artifact_revisions")
+    if not isinstance(artifact_revisions, dict):
+        raise ReplayEvidenceError("idempotent receipt has no artifact revisions")
+    for artifact, after in row["revisions"].items():
+        entry = artifact_revisions.get(artifact)
+        if not isinstance(entry, dict) or entry.get("after") != after:
+            raise ReplayEvidenceError(
+                f"idempotent receipt artifact revision does not match its ledger entry: {artifact}"
+            )
+
+    writes = receipt.get("writes")
+    if not isinstance(writes, list) or not writes:
+        raise ReplayEvidenceError("idempotent receipt records no writes")
+
+    # A transaction's writes are not always all authorized by its own top-level
+    # capability: `ai-action.delivery.apply`, for example, writes its own
+    # service-owned bookkeeping directly but delegates the canonical write to
+    # whatever domain capability originally owns that destination (recorded in
+    # `write_authorities` at commit time). The receipt's own `authority.grants`
+    # is exactly the list of authorities actually used to authorize this
+    # transaction's writes — re-deriving "the" scope from `request.capability`
+    # alone would wrongly refuse every legitimately delegated write. Each grant
+    # is still cross-checked against the real capability catalog below, so a
+    # tampered receipt cannot simply claim a broader scope for a real
+    # capability name than that capability actually has.
+    authority = receipt.get("authority")
+    grants = authority.get("grants") if isinstance(authority, dict) else None
+    if not isinstance(grants, list):
+        raise ReplayEvidenceError("idempotent receipt has no authority grants")
+
+    resolved_authority_root = authority_root or _default_authority_root(root)
+    allowed_scopes: list[str] = []
+    if resolved_authority_root is not None:
+        from .contracts.capability_catalog import (
+            command_definitions,
+            domain_capability_definitions,
+        )
+
+        scopes_by_capability = {
+            name: definition.writes
+            for name, definition in {
+                **command_definitions(resolved_authority_root, include_internal=True),
+                **domain_capability_definitions(resolved_authority_root),
+            }.items()
+        }
+        for grant in grants:
+            if not isinstance(grant, dict):
+                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
+            granted_capability = grant.get("capability")
+            declared = grant.get("declared_writes")
+            if not isinstance(granted_capability, str) or not isinstance(declared, list):
+                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
+            catalog_scopes = scopes_by_capability.get(granted_capability)
+            if catalog_scopes is None:
+                raise ReplayEvidenceError(
+                    f"idempotent receipt names an unknown write authority: {granted_capability}"
+                )
+            if tuple(declared) != tuple(catalog_scopes):
+                raise ReplayEvidenceError(
+                    "idempotent receipt authority grant does not match the declared "
+                    f"capability scope: {granted_capability}"
+                )
+            allowed_scopes.extend(catalog_scopes)
+
+    for entry in writes:
+        if not isinstance(entry, dict):
+            raise ReplayEvidenceError("idempotent receipt write row is malformed")
+        relative = entry.get("path")
+        if not isinstance(relative, str) or not relative:
+            raise ReplayEvidenceError("idempotent receipt write row names no path")
+        try:
+            _write_path, normalized_write = write_target(root, root / relative)
+        except WriteScopeError as exc:
+            raise ReplayEvidenceError(
+                f"idempotent receipt write path is unsafe: {exc}"
+            ) from exc
+        if normalized_write != relative:
+            raise ReplayEvidenceError(
+                f"idempotent receipt write path is not canonical: {relative}"
+            )
+        if resolved_authority_root is not None:
+            service_owned = any(
+                scope_matches(relative, pattern) for pattern in _SERVICE_OWNED_WRITE_SCOPES
+            )
+            if not service_owned and not any(
+                scope_matches(relative, pattern) for pattern in allowed_scopes
+            ):
+                raise ReplayEvidenceError(
+                    "idempotent receipt write path is outside its capability's "
+                    f"declared scope: {relative}"
+                )
+
     return TransactionResult(
         transaction_id=str(row["transaction_id"]),
         receipt_path=receipt_path,
@@ -265,6 +460,7 @@ def replay_for_request(root: Path, request: GatewayRequestContext) -> Transactio
         snapshot_before=str(row["snapshot_before"]),
         snapshot_after=str(row["snapshot_after"]),
         replayed=True,
+        receipt=receipt,
     )
 
 
@@ -384,7 +580,7 @@ class TransactionService:
                 raise TransactionScopeError(
                     "GatewayEnvelopeV2 requires an enforced capability catalogue"
                 )
-            replay = replay_for_request(self.root, request)
+            replay = replay_for_request(self.root, request, authority_root=self.authority_root)
             if replay is not None:
                 return replay
 
