@@ -35,11 +35,23 @@ is — one regression and one repair, not a wash.
 
 WHAT IS DELIBERATELY EXCLUDED
 ------------------------------
-Environmental warnings (`rules.common.ENVIRONMENTAL_WARNINGS`) are about the
-machine, not the content: an unmounted materials drive, a stale generated view,
-a crashed git process's lock file. They are true before and after any change,
-they differ between Aram's laptop and CI, and baselining them would make an
-unrelated commit fail because a drive happened to be offline.
+`rules.common.BASELINE_EXEMPT_WARNINGS` is the exact union of two named sets,
+each excluded for its own reason:
+
+- `ENVIRONMENTAL_WARNINGS` — about the machine, not the content: an unmounted
+  materials drive, a stale generated view, a crashed git process's lock file
+  (`HYGIENE-LOCK`). True before and after any change, and they differ between
+  Aram's laptop and CI; baselining them would make an unrelated commit fail
+  because a drive happened to be offline.
+- `DYNAMIC_ADVISORY_WARNINGS` — about elapsed wall-clock time, not an authored
+  edit: `WS-NEGLECT` and `INBOX-STALE` can newly appear with zero authored
+  files touched, purely because days passed. Baselining them would make an
+  unrelated release fail on a clock tick.
+
+Membership in either set is by exact warning code only — never a prefix, a
+severity band, or a path heuristic — so an unknown future warning code is
+baseline-managed by default, and every other authored-content warning (a new
+`LOCATOR-VAGUE`, a grown `ROUTE-ANGLE-DETAIL-MISSING`) still fails the gate.
 """
 
 from __future__ import annotations
@@ -56,7 +68,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import validate  # noqa: E402
-from learning_os.rules.common import ENVIRONMENTAL_WARNINGS  # noqa: E402
+from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 
 BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
 
@@ -70,9 +82,12 @@ _HEADER = """\
 # A signature is (code, path) with its multiplicity, not a total. A total is
 # gamed by trading one warning for another; a signature is not.
 #
-# Environmental warnings are excluded on purpose — they describe the machine
-# (unmounted drive, stale view, crashed git lock), not the content, and differ
-# between one checkout and the next.
+# Two exact sets are excluded on purpose: environmental warnings describe the
+# machine (unmounted drive, stale view, crashed git lock), not the content,
+# and differ between one checkout and the next; dynamic-advisory warnings
+# (WS-NEGLECT, INBOX-STALE) are clock-derived and can appear with no authored
+# edit. Both stay visible in normal validation output; neither is exempt by
+# prefix or heuristic, only by exact code (learning_os.rules.common).
 #
 # These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
 # them here defers them; it does not close the point.
@@ -92,7 +107,7 @@ def collect(root: Path) -> tuple[Counter, list[str]]:
         if issue.severity == "E":
             errors.append(str(issue))
             continue
-        if issue.code in ENVIRONMENTAL_WARNINGS:
+        if issue.code in BASELINE_EXEMPT_WARNINGS:
             continue
         signatures[(issue.code, issue.path)] += 1
     return signatures, errors

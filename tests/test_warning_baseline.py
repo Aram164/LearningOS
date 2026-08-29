@@ -105,8 +105,110 @@ def test_environmental_warnings_are_excluded_by_name():
     """They describe the machine, not the content, and differ per checkout."""
     from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
 
-    for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS"):
+    for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS", "HYGIENE-LOCK"):
         assert code in ENVIRONMENTAL_WARNINGS
+
+
+def test_baseline_exempt_union_is_exactly_the_two_named_sets():
+    """No prefix, severity band, or path heuristic — an exact code union only."""
+    from learning_os.rules.common import (
+        BASELINE_EXEMPT_WARNINGS,
+        DYNAMIC_ADVISORY_WARNINGS,
+        ENVIRONMENTAL_WARNINGS,
+    )
+
+    assert BASELINE_EXEMPT_WARNINGS == ENVIRONMENTAL_WARNINGS | DYNAMIC_ADVISORY_WARNINGS
+    assert ENVIRONMENTAL_WARNINGS.isdisjoint(DYNAMIC_ADVISORY_WARNINGS)
+    for code in ("WS-NEGLECT", "INBOX-STALE"):
+        assert code in DYNAMIC_ADVISORY_WARNINGS
+        assert code not in ENVIRONMENTAL_WARNINGS
+
+
+def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
+    from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
+
+    assert "TOTALLY-MADE-UP-WARNING-CODE" not in BASELINE_EXEMPT_WARNINGS
+    before = Counter()
+    after = Counter({("TOTALLY-MADE-UP-WARNING-CODE", "x.yaml"): 1})
+    regressions, _ = wb.delta(before, after)
+    assert regressions, "a novel non-exempt code must still fail the gate"
+
+
+# ---- exact-code exemption against the real emitting rules -------------------
+# These reproduce the same fixture conditions as test_hygiene.py and
+# test_improvements.py, then assert the resulting signature is present in
+# normal validator output (proving visibility is unchanged) but absent from
+# the baseline-managed counter `wb.collect()` produces (proving the exemption
+# applies to the gate only, never to what an operator or `make check` sees).
+
+def test_hygiene_lock_is_visible_but_baseline_exempt(mini_repo):
+    import os
+    import time
+
+    lockdir = mini_repo / ".git"
+    lockdir.mkdir()
+    lock = lockdir / "index.lock"
+    lock.write_text("", encoding="utf-8")
+    old = time.time() - 3600
+    os.utime(lock, (old, old))
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    issues = validate(load_repo(mini_repo))
+    assert any(i.code == "HYGIENE-LOCK" for i in issues), "must remain visible"
+
+    signatures, errors = wb.collect(mini_repo)
+    assert errors == []
+    assert not any(code == "HYGIENE-LOCK" for code, _path in signatures)
+
+
+def test_inbox_stale_is_visible_but_baseline_exempt(mini_repo):
+    import os
+    import time
+
+    item = mini_repo / "work" / "inbox" / "old-capture.md"
+    item.write_text("unrouted capture\n", encoding="utf-8")
+    old = time.time() - 20 * 86400
+    os.utime(item, (old, old))
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    issues = validate(load_repo(mini_repo))
+    assert any(i.code == "INBOX-STALE" for i in issues), "must remain visible"
+
+    signatures, errors = wb.collect(mini_repo)
+    assert errors == []
+    assert not any(code == "INBOX-STALE" for code, _path in signatures)
+
+
+def test_ws_neglect_is_visible_but_baseline_exempt(mini_repo):
+    import datetime
+    import os
+    import subprocess
+
+    old = (datetime.datetime.now() - datetime.timedelta(days=30)).isoformat()
+    env = {
+        **os.environ,
+        "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@e",
+        "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@e",
+        "GIT_AUTHOR_DATE": old, "GIT_COMMITTER_DATE": old,
+    }
+    subprocess.run(["git", "init", "-q"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "add", "-A"], cwd=mini_repo, check=True, env=env)
+    subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=mini_repo,
+                   check=True, env=env)
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    issues = validate(load_repo(mini_repo))
+    assert any(i.code == "WS-NEGLECT" for i in issues), "must remain visible"
+
+    signatures, errors = wb.collect(mini_repo)
+    assert errors == []
+    assert not any(code == "WS-NEGLECT" for code, _path in signatures)
 
 
 # ---- the live repository ---------------------------------------------------
@@ -122,9 +224,9 @@ def test_the_recorded_baseline_still_matches_this_repository():
 
 
 @pytest.mark.full_repo
-def test_no_environmental_warning_reached_the_recorded_baseline():
-    from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
+def test_no_baseline_exempt_warning_reached_the_recorded_baseline():
+    from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
 
     baseline, _ = wb.load_baseline(ROOT)
     for code, _path in baseline:
-        assert code not in ENVIRONMENTAL_WARNINGS, code
+        assert code not in BASELINE_EXEMPT_WARNINGS, code
