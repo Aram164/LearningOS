@@ -447,6 +447,68 @@ def test_direct_live_promotion_refuses_but_check_emits_exact_no_write_plan(
     assert comparison.read_bytes() == comparison_bytes
 
 
+def test_dynamic_advisory_warnings_do_not_block_master_promotion_preflight(
+    mini_repo, capsys
+):
+    """A clock-derived advisory elsewhere in the repository must not block an
+    unrelated promotion — the same rationale ENVIRONMENTAL_WARNINGS already
+    gets, extended to WS-NEGLECT/INBOX-STALE (module.py, formerly filtering on
+    ENVIRONMENTAL_WARNINGS alone rather than BASELINE_EXEMPT_WARNINGS).
+
+    A stale work/inbox/ item reproduces inside the preflight's shadow copy
+    (file mtimes survive shutil.copytree) and is confirmed here to have
+    actually blocked promotion before the fix. A stale-workspace WS-NEGLECT
+    does not currently reproduce in the shadow (the shadow never receives a
+    .git directory, so the Git-history lookup behind WS-NEGLECT finds
+    nothing and is silently skipped) — asserted here too, so this stops
+    being true silently if the shadow-build logic ever starts copying .git.
+    """
+    import os
+    import time
+
+    package, comparison_bytes = _setup(mini_repo)
+    package_hash = promotion_package_sha256(package)
+
+    item = mini_repo / "work" / "inbox" / "old-capture.md"
+    item.write_text("unrouted capture\n", encoding="utf-8")
+    old = time.time() - 20 * 86400
+    os.utime(item, (old, old))
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    live_codes = {i.code for i in validate(load_repo(mini_repo)) if i.severity == "W"}
+    assert "INBOX-STALE" in live_codes, "fixture must actually produce the warning"
+
+    args = argparse.Namespace(
+        root=str(mini_repo),
+        module_id="module-future-demo",
+        file=None,
+        promotion=package,
+        package_sha256=package_hash,
+        approve=True,
+        check=True,
+        expected_snapshot=f"sha256:{canonical_fingerprint(mini_repo)}",
+        expected_revision=[],
+    )
+    assert cmd_module_plan_import(args) == 0, capsys.readouterr().err
+    result = json.loads(capsys.readouterr().out)
+    assert result["canonical_files_written"] == 0
+    comparison = (
+        mini_repo / "curriculum/quarantine/masters-planning/comparisons/"
+        "candidate-comparison-preserved.yaml"
+    )
+    assert comparison.read_bytes() == comparison_bytes
+
+    # INBOX-STALE demonstrably reaches the shadow; WS-NEGLECT currently does
+    # not, because the shadow copy never contains .git.
+    from learning_os.commands.module import _module_plan_validation_errors
+
+    shadow_codes = {i.code for i in _module_plan_validation_errors(mini_repo, {})}
+    assert "INBOX-STALE" not in shadow_codes
+    assert "WS-NEGLECT" not in shadow_codes
+
+
 def test_gateway_refuses_stale_revision_without_partial_promotion(
     mini_repo, repo_root, tmp_path
 ):
