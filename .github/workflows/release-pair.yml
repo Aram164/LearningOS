@@ -1,0 +1,140 @@
+# Learning OS v3 — exact-pair release CI (release-hardening plan, Phase 9).
+#
+# Branch-based CI (validate.yml, ui-ci.yml) is useful but mutable: today's
+# green run says nothing about whether the Core commit it verified is still
+# paired with the same UI commit tomorrow. This workflow is dispatched by
+# hand with two exact, full commit SHAs, checks out precisely those two
+# commits (never a branch), runs the same local paired gate a release
+# requires, and uploads a schema-validated pair-receipt.json plus the four
+# shipped plugin files as one downloadable, independently verifiable proof
+# that this exact Core/UI pair was built and tested together.
+#
+# This workflow never tags, releases, or merges to main — see plan §5 rule 8
+# and §12 out-of-scope items.
+name: release-pair
+
+on:
+  workflow_dispatch:
+    inputs:
+      core_sha:
+        description: "Exact Core commit — 40 lowercase hex characters"
+        required: true
+      ui_sha:
+        description: "Exact UI commit — 40 lowercase hex characters"
+        required: true
+
+permissions:
+  contents: read
+
+run-name: "release pair core ${{ github.event.inputs.core_sha }} ui ${{ github.event.inputs.ui_sha }}"
+
+jobs:
+  release-pair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate the exact-SHA inputs before checking anything out
+        id: inputs
+        run: |
+          core_sha="${{ github.event.inputs.core_sha }}"
+          ui_sha="${{ github.event.inputs.ui_sha }}"
+          echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
+            || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha_short=${core_sha:0:12}" >> "$GITHUB_OUTPUT"
+          echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out Core at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          path: repository
+          ref: ${{ github.event.inputs.core_sha }}
+          fetch-depth: 0
+
+      - name: Check out UI at the exact SHA
+        uses: actions/checkout@v4
+        with:
+          repository: Aram164/learningos-obsidian-ui
+          path: obsidian-ui
+          ref: ${{ github.event.inputs.ui_sha }}
+          fetch-depth: 0
+
+      - name: Verify each checkout is exactly the requested commit and clean
+        run: |
+          set -eu
+          core_actual="$(git -C repository rev-parse HEAD)"
+          if [ "$core_actual" != "${{ github.event.inputs.core_sha }}" ]; then
+            echo "Core checked out $core_actual, requested ${{ github.event.inputs.core_sha }}" >&2
+            exit 1
+          fi
+          test -z "$(git -C repository status --porcelain)" \
+            || { echo "Core checkout is not clean" >&2; exit 1; }
+          ui_actual="$(git -C obsidian-ui rev-parse HEAD)"
+          if [ "$ui_actual" != "${{ github.event.inputs.ui_sha }}" ]; then
+            echo "UI checked out $ui_actual, requested ${{ github.event.inputs.ui_sha }}" >&2
+            exit 1
+          fi
+          test -z "$(git -C obsidian-ui status --porcelain)" \
+            || { echo "UI checkout is not clean" >&2; exit 1; }
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install Core development dependencies
+        working-directory: repository
+        run: pip install -e ".[dev]"
+      - name: Install UI dependencies
+        working-directory: obsidian-ui
+        run: npm ci --ignore-scripts
+
+      # The exact local paired gate. Full `make stress` is not run here: the
+      # checkout provisions neither repository's external materials tree, so
+      # it stays the mandatory *local* gate — the receipt below records this
+      # scope explicitly rather than implying stress ran.
+      - name: paired release gate (make system-check)
+        working-directory: repository
+        run: make system-check
+
+      # The UI build always uses its own checked-out Git revision (never a
+      # generic GITHUB_SHA, which here would be the *Core* checkout's SHA) —
+      # build.mjs enforces this itself; nothing extra is set here.
+      - name: Rebuild the UI once more to record the exact, now-verified pair
+        working-directory: obsidian-ui
+        run: npm run build:info
+
+      - name: Generate the pair receipt
+        working-directory: repository
+        run: |
+          python tools/release_pair_receipt.py generate \
+            --core-root . \
+            --ui-root ../obsidian-ui \
+            --core-sha "${{ github.event.inputs.core_sha }}" \
+            --ui-sha "${{ github.event.inputs.ui_sha }}" \
+            --workflow-run-id "${{ github.run_id }}" \
+            --workflow-run-attempt "${{ github.run_attempt }}" \
+            --out ../release-pair-artifact/pair-receipt.json
+
+      - name: Assemble the fixed upload layout
+        run: |
+          mkdir -p release-pair-artifact/plugin
+          cp obsidian-ui/plugin/main.js release-pair-artifact/plugin/main.js
+          cp obsidian-ui/plugin/styles.css release-pair-artifact/plugin/styles.css
+          cp obsidian-ui/plugin/manifest.json release-pair-artifact/plugin/manifest.json
+          cp obsidian-ui/plugin/build-info.json release-pair-artifact/plugin/build-info.json
+
+      - name: Verify the assembled artifact against its own receipt
+        working-directory: repository
+        run: |
+          python tools/release_pair_receipt.py verify \
+            --receipt ../release-pair-artifact/pair-receipt.json \
+            --artifact-dir ../release-pair-artifact
+
+      - name: Upload learningos-pair-<core-12>-<ui-12>
+        uses: actions/upload-artifact@v4
+        with:
+          name: "learningos-pair-${{ steps.inputs.outputs.core_sha_short }}-${{ steps.inputs.outputs.ui_sha_short }}"
+          path: release-pair-artifact
+          if-no-files-found: error

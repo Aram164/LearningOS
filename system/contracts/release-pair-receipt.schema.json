@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/release-pair-receipt.schema.json",
+  "title": "LearningOS exact-pair release receipt",
+  "description": "Operational evidence produced by the release-pair GitHub Actions workflow, proving one immutable Core SHA and one immutable UI SHA were checked out clean, built, and passed the paired release gate together. This is not a canonical LearningOS entity: it does not alter the data-contract version, and it lives only under the workbench evidence directory and the workflow's own artifact upload.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "type", "core_sha", "ui_sha", "core_branch", "ui_branch",
+    "data_contract_version", "manifest_contract_version",
+    "manifest_contract_schema_sha256", "runtime_source_fingerprint",
+    "bundle_sha256", "stylesheet_sha256", "system_check_passed",
+    "stress_scope", "workflow_run_id", "workflow_run_attempt"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "type": {"const": "release-pair-receipt"},
+    "core_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "ui_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "core_branch": {"type": "string", "minLength": 1},
+    "ui_branch": {"type": "string", "minLength": 1},
+    "data_contract_version": {"type": "integer", "minimum": 1},
+    "manifest_contract_version": {"type": "integer", "minimum": 1},
+    "manifest_contract_schema_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "runtime_source_fingerprint": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "bundle_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "stylesheet_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "system_check_passed": {"const": true},
+    "stress_scope": {
+      "enum": ["not-run-materials-unprovisioned", "full"],
+      "description": "The workflow checkout provisions neither repository's external materials tree, so `make stress` cannot run in CI; the mandatory stress gate stays local. A receipt states this explicitly rather than implying stress ran."
+    },
+    "workflow_run_id": {"type": "string", "minLength": 1},
+    "workflow_run_attempt": {"type": "string", "minLength": 1}
+  }
+}
