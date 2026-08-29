@@ -20,6 +20,18 @@ def repo_root() -> Path:
 @pytest.fixture()
 def mini_repo(tmp_path: Path) -> Path:
     """A minimal, valid synthetic repository (inside LearningOS-shaped parents)."""
+    return build_mini_repo(tmp_path)
+
+
+def build_mini_repo(tmp_path: Path) -> Path:
+    """The builder behind the fixture.
+
+    Exposed as a plain function because one test needs the same synthetic
+    repository at module scope — a cross-process harness acts on a single
+    repository across several scenarios. Reaching inside the fixture object to
+    get at this was the alternative, and a second copy of the description was
+    the worse one.
+    """
     los = tmp_path / "LearningOS"
     root = los / "repository"
     for d in ("knowledge/notes/mathematics", "knowledge/attachments", "records",

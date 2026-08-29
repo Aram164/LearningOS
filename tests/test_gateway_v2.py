@@ -11,7 +11,7 @@ from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
 from learning_os.commands.capability import _classify_failure
-from learning_os.commands.support import _read_content_bound_file
+from learning_os.commands.support import _read_content_bound_file, _session_ledger
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import TransactionIdempotencyConflict, TransactionService
@@ -44,10 +44,10 @@ def _run(
     envelope: dict,
     *,
     stdin: str | None = None,
+    replay_only: bool = False,
 ):
     request_file.write_text(json.dumps(envelope), encoding="utf-8")
-    return subprocess.run(
-        [
+    command = [
             sys.executable,
             str(repo_root / "tools/los.py"),
             "--root",
@@ -56,7 +56,11 @@ def _run(
             envelope["capability"],
             "--payload-file",
             str(request_file),
-        ],
+        ]
+    if replay_only:
+        command.append("--replay-only")
+    return subprocess.run(
+        command,
         cwd=repo_root,
         text=True,
         capture_output=True,
@@ -180,6 +184,94 @@ def test_gateway_v2_receipt_and_exact_retry_are_idempotent(
     assert sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml")) \
         == receipts_before
     assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
+
+
+def test_gateway_v2_replay_only_verifies_a_receipt_without_creating_one(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    envelope = _envelope(mini_repo, key="capture-replay-only-001")
+    absent = _run(
+        repo_root, mini_repo, tmp_path / "absent.json", envelope,
+        replay_only=True,
+    )
+    assert absent.returncode == 2
+    absent_response = json.loads(absent.stdout)
+    assert absent_response["ok"] is False
+    assert absent_response["error"]["code"] == "UNCONFIRMED"
+    assert not list((mini_repo / "work/inbox").glob("*.md"))
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    committed = _run(repo_root, mini_repo, tmp_path / "commit.json", envelope)
+    assert committed.returncode == 0, committed.stderr or committed.stdout
+    committed_response = json.loads(committed.stdout)
+    receipts_before = sorted(
+        (mini_repo / "operations/transactions").glob("transaction-*.yaml")
+    )
+    captures_before = sorted((mini_repo / "work/inbox").glob("*.md"))
+
+    verified = _run(
+        repo_root, mini_repo, tmp_path / "verify.json", envelope,
+        replay_only=True,
+    )
+    assert verified.returncode == 0, verified.stderr or verified.stdout
+    verified_response = json.loads(verified.stdout)
+    assert verified_response["replayed"] is True
+    assert verified_response["transaction_id"] == committed_response["transaction_id"]
+    assert sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml")) \
+        == receipts_before
+    assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
+
+
+def test_gateway_v2_replay_repairs_session_ownership_after_a_crash_window(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    subprocess.run(["git", "init", "-q"], cwd=mini_repo, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "learningos-tests@example.invalid"],
+        cwd=mini_repo, check=True,
+    )
+    subprocess.run(
+        ["git", "config", "user.name", "LearningOS Tests"],
+        cwd=mini_repo, check=True,
+    )
+    subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
+    subprocess.run(
+        ["git", "commit", "-qm", "fixture baseline"],
+        cwd=mini_repo, check=True,
+    )
+    envelope = _envelope(mini_repo, key="capture-replay-ownership-001")
+    committed = _run(repo_root, mini_repo, tmp_path / "commit-owned.json", envelope)
+    assert committed.returncode == 0, committed.stderr or committed.stdout
+    response = json.loads(committed.stdout)
+    captured = response["result"]["captured"]
+
+    # Simulate a process death after the receipt/idempotency commit but before
+    # the ephemeral session ledger write.  The exact replay must reconstruct
+    # ownership from Receipt V2 rather than rerun the handler.
+    _session_ledger(mini_repo).unlink(missing_ok=True)
+    replayed = _run(
+        repo_root, mini_repo, tmp_path / "replay-owned.json", envelope,
+        replay_only=True,
+    )
+    assert replayed.returncode == 0, replayed.stderr or replayed.stdout
+    assert json.loads(replayed.stdout)["replayed"] is True
+
+    ended = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "tools/los.py"),
+            "--root",
+            str(mini_repo),
+            "session-end",
+        ],
+        cwd=repo_root,
+        text=True,
+        capture_output=True,
+    )
+    assert ended.returncode == 0, ended.stderr or ended.stdout
+    review = json.loads(ended.stdout)
+    assert captured in review["touched"]
+    assert any(row[3:] == captured for row in review["owned_changes"]), review
 
 
 def test_gateway_v2_refuses_idempotency_key_reuse_for_changed_intent(
@@ -343,6 +435,22 @@ def test_gateway_v2_classifies_in_lock_snapshot_race_as_stale_snapshot():
         "approved delivery snapshot changed before commit",
     )
     assert error["code"] == "STALE_SNAPSHOT"
+    assert error["retryable"] is True
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "transaction failed canonical validation; rollback incomplete for: work/inbox/a.md",
+        "projection publication failed; rollback incomplete for: generated/manifest.json",
+        "disk full; rollback incomplete for: work/inbox/a.md",
+    ],
+)
+def test_gateway_v2_never_classifies_an_incomplete_rollback_as_no_commit(
+    message: str,
+):
+    error = _classify_failure(2, message)
+    assert error["code"] == "INTERNAL_FAILURE"
     assert error["retryable"] is True
 
 
@@ -682,7 +790,10 @@ def test_gateway_v2_replay_refuses_a_receipt_written_out_of_scope(
     assert refused.returncode == 2
     response = json.loads(refused.stdout)
     assert response["error"]["code"] == "INTERNAL_FAILURE"
-    assert "outside work/inbox/" in response["error"]["message"]
+    assert response["error"]["retryable"] is False, (
+        "contradictory replay evidence is never retryable"
+    )
+    assert "declared scope" in response["error"]["message"]
 
 
 def test_gateway_v2_replay_returns_the_identical_file_capture_path(
@@ -715,3 +826,343 @@ def test_gateway_v2_replay_returns_the_identical_file_capture_path(
         == first_response["result"]["captured"]
     assert (mini_repo / replay_response["result"]["captured"]).read_bytes() \
         == b"approved file bytes"
+
+
+# ============================================================================
+# Phase 2 — replay-evidence cross-binding (release-hardening 2026-08-29)
+#
+# One immutable, schema-validated evidence object is built from the
+# idempotency ledger row and its named Receipt V2 before session ownership is
+# touched. Every field named in the plan is cross-bound; a mismatch is always
+# a non-retryable INTERNAL_FAILURE and never invokes the capability handler.
+# ============================================================================
+
+def _idempotency_ledger_path(root: Path) -> Path:
+    return root / "operations" / "transactions" / "idempotency.yaml"
+
+
+def _load_idempotency(root: Path) -> dict:
+    return yaml.safe_load(_idempotency_ledger_path(root).read_text(encoding="utf-8"))
+
+
+def _save_idempotency(root: Path, data: dict) -> None:
+    _idempotency_ledger_path(root).write_text(
+        yaml.safe_dump(data, sort_keys=False), encoding="utf-8"
+    )
+
+
+def _committed(repo_root: Path, mini_repo: Path, tmp_path: Path,
+              key: str) -> tuple[dict, dict, Path]:
+    """Commit one ordinary capture; return (envelope, response, receipt_path).
+
+    The caller must reuse the returned envelope object for any later replay
+    call — rebuilding a fresh envelope from the current repository state would
+    recompute ``expected_snapshot`` against post-commit state and change the
+    intent hash, which is not what an exact retry ever does.
+    """
+    envelope = _envelope(mini_repo, text=key, key=key)
+    result = _run(repo_root, mini_repo, tmp_path / f"{key}-commit.json", envelope)
+    assert result.returncode == 0, result.stderr or result.stdout
+    response = json.loads(result.stdout)
+    return envelope, response, mini_repo / response["receipt_path"]
+
+
+def _replay_refusal(repo_root: Path, mini_repo: Path, tmp_path: Path,
+                    envelope: dict, key: str) -> dict:
+    result = _run(
+        repo_root, mini_repo, tmp_path / f"{key}-replay.json", envelope,
+        replay_only=True,
+    )
+    assert result.returncode == 2, (result.returncode, result.stdout, result.stderr)
+    response = json.loads(result.stdout)
+    assert response["ok"] is False
+    return response
+
+
+def test_replay_missing_receipt_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
+    key = "capture-missing-receipt-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    captures_before = sorted((mini_repo / "work/inbox").glob("*.md"))
+    receipt_path.unlink()
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "missing or non-canonical receipt" in response["error"]["message"]
+    assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
+
+
+def test_replay_receipt_path_outside_transaction_directory_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-escaping-receipt-001"
+    envelope, _, _ = _committed(repo_root, mini_repo, tmp_path, key)
+    ledger = _load_idempotency(mini_repo)
+    ledger["entries"][key]["receipt_path"] = "../outside-the-repository.yaml"
+    _save_idempotency(mini_repo, ledger)
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "unsafe receipt" in response["error"]["message"]
+
+
+def test_replay_malformed_receipt_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
+    key = "capture-malformed-receipt-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    # A receipt that parses as YAML but is not a mapping at all.
+    receipt_path.write_text("- just\n- a\n- list\n", encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "not a mapping" in response["error"]["message"]
+
+
+def test_replay_duplicate_yaml_key_in_receipt_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """The unique-key loader must catch what ``yaml.safe_load`` silently allows."""
+    key = "capture-duplicate-key-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    text = receipt_path.read_text(encoding="utf-8")
+    # Any top-level scalar key repeated is a duplicate under the unique-key
+    # loader, regardless of what the second value is.
+    tampered = text + "\nstatus: committed\n"
+    receipt_path.write_text(tampered, encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "unreadable" in response["error"]["message"]
+
+
+def test_replay_transaction_id_mismatch_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-txid-mismatch-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["id"] = "transaction-99999999-999999-999"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "id does not match" in response["error"]["message"]
+
+
+def test_replay_receipt_capability_mismatch_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-capability-mismatch-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["capability"] = "garden.seed.create"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "different capability" in response["error"]["message"]
+
+
+def test_replay_non_committed_status_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """The receipt schema pins ``status`` to ``committed`` (a receipt is only
+    ever written once a transaction commits), so an altered status is caught
+    by schema validation before reaching the explicit status check — both
+    layers refuse it, and either is an acceptable failure mode here.
+    """
+    key = "capture-not-committed-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["status"] = "rolled-back"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "status" in response["error"]["message"] or "schema validation" in response["error"]["message"]
+
+
+def test_replay_request_id_mismatch_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Same idempotency key and intent, a genuinely different request id.
+
+    ``intent_sha256`` deliberately excludes request identities, so this cannot
+    be caught by the idempotency-conflict check alone — it needs its own
+    cross-binding.
+    """
+    key = "capture-request-id-mismatch-001"
+    envelope, _, _ = _committed(repo_root, mini_repo, tmp_path, key)
+
+    resent = dict(envelope)
+    resent["request_id"] = "request-a-completely-different-retry"
+    result = _run(repo_root, mini_repo, tmp_path / "reqid-replay.json", resent, replay_only=True)
+    assert result.returncode == 2, (result.returncode, result.stdout, result.stderr)
+    response = json.loads(result.stdout)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "request id" in response["error"]["message"]
+
+
+def test_replay_channel_mismatch_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
+    """Channel is part of the intent hash, so this can only be a tampered ledger."""
+    key = "capture-channel-mismatch-001"
+    envelope, _, _ = _committed(repo_root, mini_repo, tmp_path, key)
+    ledger = _load_idempotency(mini_repo)
+    ledger["entries"][key]["channel"] = "codex"
+    _save_idempotency(mini_repo, ledger)
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "channel" in response["error"]["message"]
+
+
+def test_replay_snapshot_mismatch_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
+    key = "capture-snapshot-mismatch-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["snapshot_after"] = "sha256:" + "f" * 64
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "snapshot does not match" in response["error"]["message"]
+
+
+def test_replay_artifact_revision_mismatch_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-revision-mismatch-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    artifact = next(iter(receipt["artifact_revisions"]))
+    receipt["artifact_revisions"][artifact]["after"] += 1
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "artifact revision does not match" in response["error"]["message"]
+
+
+def test_replay_approval_subject_mismatch_fails_closed(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-approval-mismatch-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["request"]["approval"]["subject_sha256"] = "sha256:" + "a" * 64
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "approval subject" in response["error"]["message"]
+
+
+def test_replay_unsafe_write_path_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
+    key = "capture-unsafe-path-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["writes"][0]["path"] = "../escaped.md"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+
+
+def test_replay_only_with_no_ledger_row_never_invokes_the_handler(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    envelope = _envelope(mini_repo, text="never-committed", key="capture-never-committed-001")
+    result = _run(
+        repo_root, mini_repo, tmp_path / "no-row.json", envelope, replay_only=True,
+    )
+    assert result.returncode == 2
+    response = json.loads(result.stdout)
+    assert response["error"]["code"] == "UNCONFIRMED"
+    assert not list((mini_repo / "work/inbox").glob("*.md"))
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_two_concurrent_replays_of_distinct_transactions_retain_both_rows(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Concurrent exact replays for distinct writes must not lose either row.
+
+    Before the operator lock wrapped replay lookup through session-ledger
+    repair, this read-modify-write on the session ledger could race across
+    processes and silently drop one gesture's ownership row.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    keys = [f"capture-concurrent-{i:03d}" for i in range(4)]
+    envelopes: dict[str, dict] = {}
+    captured_paths = []
+    for key in keys:
+        envelope, response, _ = _committed(repo_root, mini_repo, tmp_path, key)
+        envelopes[key] = envelope
+        captured_paths.append(response["result"]["captured"])
+
+    _session_ledger(mini_repo).unlink(missing_ok=True)
+
+    def replay(key: str):
+        return _run(
+            repo_root, mini_repo, tmp_path / f"{key}-concurrent-replay.json",
+            envelopes[key], replay_only=True,
+        )
+
+    with ThreadPoolExecutor(max_workers=len(keys)) as pool:
+        results = list(pool.map(replay, keys))
+
+    for result in results:
+        assert result.returncode == 0, (result.returncode, result.stdout, result.stderr)
+        assert json.loads(result.stdout)["replayed"] is True
+
+    ended = subprocess.run(
+        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo), "session-end"],
+        cwd=repo_root, text=True, capture_output=True,
+    )
+    assert ended.returncode == 0, ended.stderr or ended.stdout
+    review = json.loads(ended.stdout)
+    for path in captured_paths:
+        assert path in review["touched"], (
+            f"{path} is missing from session ownership — a concurrent replay lost this row"
+        )
+    assert len(set(captured_paths)) == len(captured_paths)
+
+
+def test_two_concurrent_replays_of_the_same_transaction_do_not_duplicate_rows(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    key = "capture-same-transaction-concurrent-001"
+    envelope, response, _ = _committed(repo_root, mini_repo, tmp_path, key)
+    captured = response["result"]["captured"]
+    _session_ledger(mini_repo).unlink(missing_ok=True)
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    def replay(i: int):
+        return _run(
+            repo_root, mini_repo, tmp_path / f"same-txn-replay-{i}.json",
+            envelope, replay_only=True,
+        )
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(pool.map(replay, range(4)))
+
+    for result in results:
+        assert result.returncode == 0, (result.returncode, result.stdout, result.stderr)
+
+    ledger = json.loads(_session_ledger(mini_repo).read_text(encoding="utf-8"))
+    assert list(ledger["paths"]).count(captured) == 1, (
+        "concurrent replays of the same transaction must not duplicate the ownership row"
+    )

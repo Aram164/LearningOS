@@ -83,8 +83,15 @@ system-check:
 	$(MAKE) lint
 	$(PY) tools/validate.py --no-report
 	$(PY) tools/warning_baseline.py --check
-	$(PY) -m pytest -q
 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
+# The cross-process recovery test skips itself when the UI is absent, because
+# Core is usable alone. The paired gate is the one place where that skip would
+# be a lie, so the harness is required here by name — a green release must mean
+# the interrupted-write path was actually exercised against this Core.
+	@test -f tests/test_ui_gateway_recovery.py || { echo "system-check: tests/test_ui_gateway_recovery.py is missing — the paired Gateway recovery driver cannot run" >&2; exit 1; }
+	@test -f ../obsidian-ui/tests/gateway-recovery-harness.js || { echo "system-check: ../obsidian-ui/tests/gateway-recovery-harness.js is missing — the paired Gateway recovery test cannot run" >&2; exit 1; }
+	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
+	$(PY) -m pytest -q
 	npm --prefix ../obsidian-ui run check
 
 # Deliberate deep audit. Routine work stays on `make check`; release work uses

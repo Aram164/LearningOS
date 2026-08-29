@@ -8,7 +8,6 @@ import json
 import sys
 from pathlib import Path
 
-import yaml
 from jsonschema import Draft202012Validator
 
 from learning_os.contracts.capability_catalog import command_definitions
@@ -18,15 +17,15 @@ from learning_os.contracts.gateway import (
     intent_sha256,
 )
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.transactions import (
+    ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionResult,
     replay_for_request,
 )
 
-from .support import WriteRefused, _read_structured_file, _root
+from .support import WriteRefused, _operator_lock, _read_structured_file, _record_touched, _root
 
 _CONTENT_BOUND_V2 = frozenset({
     "legacy.archive.lock.publish",
@@ -178,6 +177,15 @@ def _gateway_error(code: str, message: str, *, retryable: bool = False,
 
 def _classify_failure(code: int, message: str) -> dict:
     lowered = message.lower()
+    # TransactionService normally rolls every authored byte back before a
+    # refusal reaches this boundary.  When it explicitly reports an incomplete
+    # rollback, however, the repository may contain part of the attempted
+    # write.  Never let a more specific word later in the message (validation,
+    # projection, approval, …) turn that unknown outcome into a typed
+    # "nothing committed" refusal: recovery must keep the original request and
+    # reconcile it under the same idempotency key.
+    if "rollback incomplete" in lowered:
+        return _gateway_error("INTERNAL_FAILURE", message, retryable=True)
     if "belongs only in the envelope" in lowered \
             or "requires an inline record" in lowered \
             or "changed before use" in lowered \
@@ -268,36 +276,23 @@ class _ReplayRecoveryError(Exception):
 
 def _replayed_domain_result(root: Path, capability: str,
                             replay: TransactionResult) -> dict:
-    """Recover the original domain path from the verified Receipt V2.
+    """Recover the original domain path from the already-validated receipt.
 
-    Everything here is a refusal rather than a recovery: a receipt that does
-    not name this capability, is not committed, or does not describe exactly
-    one created file inside the capability's own directory is not evidence of
-    what happened, and inventing a path from it would be worse than answering
-    nothing.
+    ``replay.receipt`` has already been schema-validated and cross-bound to
+    this exact request by ``replay_for_request`` — its capability, status, and
+    transaction id are trustworthy. This checks only the domain-specific shape
+    every capture-like capability's receipt must have: exactly one created
+    write inside the capability's own directory. Rereading or re-verifying the
+    generic fields here would be the "weaker helper" the recovery design
+    forbids.
     """
     try:
         field, prefix = _REPLAY_DOMAIN_RESULT[capability]
     except KeyError:
         return {}
-    try:
-        receipt = yaml.safe_load(read_text_inside(root, replay.receipt_path))
-    except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
-        raise _ReplayRecoveryError(f"replayed receipt is unreadable: {exc}") from exc
+    receipt = replay.receipt
     if not isinstance(receipt, dict):
-        raise _ReplayRecoveryError("replayed receipt is not a mapping")
-    if receipt.get("schema_version") != 2:
-        raise _ReplayRecoveryError("replayed receipt is not a GatewayEnvelopeV2 receipt")
-    if receipt.get("capability") != capability:
-        raise _ReplayRecoveryError(
-            "replayed receipt records a different capability"
-        )
-    if receipt.get("status") != "committed":
-        raise _ReplayRecoveryError("replayed receipt is not committed")
-    if receipt.get("id") != replay.transaction_id:
-        raise _ReplayRecoveryError(
-            "replayed receipt does not carry its own transaction id"
-        )
+        raise _ReplayRecoveryError("replayed evidence carries no receipt")
     writes = receipt.get("writes")
     if not isinstance(writes, list) or len(writes) != 1:
         raise _ReplayRecoveryError(
@@ -314,6 +309,52 @@ def _replayed_domain_result(root: Path, capability: str,
             f"replayed receipt writes outside {prefix}: {written}"
         )
     return {field: written}
+
+
+def _repair_replayed_session_ownership(root: Path,
+                                       replay: TransactionResult) -> None:
+    """Rebuild ephemeral session ownership from the already-validated receipt.
+
+    A process can die after Receipt V2 and the idempotency ledger are durable
+    but before the temporary learning-session ledger is written.  Exact replay
+    is the recovery boundary, so it also repairs that bookkeeping; otherwise
+    the UI would retire its durable record while ``session-end`` forgot the
+    canonical file the recovered gesture authored.
+
+    ``replay.receipt["writes"]`` rows were already proven safe and canonical
+    by ``replay_for_request`` (each path was resolved with ``write_target``
+    and checked against the capability's declared write scope), so this only
+    rebuilds the touched-path list — it never re-derives safety from scratch.
+    """
+    receipt = replay.receipt
+    if not isinstance(receipt, dict):
+        raise _ReplayRecoveryError(
+            "cannot repair session ownership: replayed evidence carries no receipt"
+        )
+    writes = receipt.get("writes")
+    if not isinstance(writes, list):
+        raise _ReplayRecoveryError(
+            "cannot repair session ownership: replayed receipt writes are malformed"
+        )
+    touched = []
+    for row in writes:
+        relative = row.get("path") if isinstance(row, dict) else None
+        if not isinstance(relative, str) or not relative:
+            raise _ReplayRecoveryError(
+                "cannot repair session ownership: replayed receipt path is unsafe"
+            )
+        touched.append(root / relative)
+    touched.extend([
+        root / "operations" / "transactions" / "revisions.yaml",
+        root / "operations" / "transactions" / "idempotency.yaml",
+        replay.receipt_path,
+    ])
+    try:
+        _record_touched(root, touched)
+    except (OSError, WriteRefused) as exc:
+        raise _ReplayRecoveryError(
+            f"cannot repair replayed session ownership: {exc}"
+        ) from exc
 
 
 def _replay_response(root: Path, envelope: dict,
@@ -417,13 +458,41 @@ def cmd_capability(args) -> int:
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 2
+        # Replay lookup, evidence validation, response construction, and
+        # session-ledger repair are one critical section under the repository
+        # operator lock — the same lock every ordinary write-handling command
+        # holds while it runs. Two concurrent exact replays for the same
+        # request must not race the session ledger's read-modify-write, and a
+        # replay must never be evaluated against a receipt an in-flight write
+        # is still committing. Exactly this function owns the lock: neither
+        # helper below acquires it again, so there is no re-entrant deadlock.
+        replay: TransactionResult | None = None
         try:
-            replay = replay_for_request(root, context)
+            with _operator_lock(root):
+                replay = replay_for_request(root, context)
+                if replay is not None:
+                    response = _replay_response(root, envelope, replay)
+                    _validate_capability_envelope(root, response, kind="result")
+                    _repair_replayed_session_ownership(root, replay)
         except TransactionIdempotencyConflict as exc:
             response = _v2_response(
                 envelope,
                 ok=False,
                 error=_gateway_error("IDEMPOTENCY_CONFLICT", str(exc)),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
+            # Fail closed. Evidence is contradictory or the original write
+            # already happened; rerunning the handler here would risk
+            # duplicating it, and answering with a guessed path would be a lie
+            # about canonical state. Never retryable: the fix is manual
+            # reconciliation, not a client resend.
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error("INTERNAL_FAILURE", str(exc), retryable=False),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
@@ -438,23 +507,24 @@ def cmd_capability(args) -> int:
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 2
         if replay is not None:
-            try:
-                response = _replay_response(root, envelope, replay)
-            except _ReplayRecoveryError as exc:
-                # Fail closed. The original write already happened; rerunning
-                # the handler here would duplicate it, and answering with a
-                # guessed path would be a lie about canonical state.
-                response = _v2_response(
-                    envelope,
-                    ok=False,
-                    error=_gateway_error("INTERNAL_FAILURE", str(exc)),
-                )
-                _validate_capability_envelope(root, response, kind="result")
-                print(json.dumps(response, indent=2, ensure_ascii=False))
-                return 2
-            _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 0
+        if args.replay_only:
+            # A persisted UI confirmation is only untrusted settings JSON until
+            # Core proves that this exact approved intent is present in the
+            # idempotency ledger with a valid Receipt V2.  This probe must never
+            # turn a forged or corrupt confirmation into a new canonical write.
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "UNCONFIRMED",
+                    "no committed receipt exists for this exact request",
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
         actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
         if envelope["expected_snapshot"] != actual_snapshot:
             response = _v2_response(

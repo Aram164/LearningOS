@@ -215,6 +215,10 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("capability", help="execute a declared capability request envelope")
     p.add_argument("name")
     p.add_argument("--payload-file", required=True)
+    p.add_argument(
+        "--replay-only", action="store_true",
+        help="verify an already committed idempotent receipt without running the handler",
+    )
     p.set_defaults(func=cmd_capability)
 
     p = sub.add_parser("validate", help="delegate to tools/validate.py")
