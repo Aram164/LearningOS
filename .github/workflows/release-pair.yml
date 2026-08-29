@@ -1,0 +1,17 @@
+name: release-pair
+on:
+  workflow_dispatch:
+    inputs:
+      core_sha:
+        description: 'Core SHA'
+        required: true
+        type: string
+      ui_sha:
+        description: 'UI SHA'
+        required: true
+        type: string
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Placeholder"
