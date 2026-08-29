@@ -22,7 +22,7 @@ from learning_os.masters_planning import (
 )
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.rules import validate
-from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
+from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
 
 from .support import (
     WriteRefused,
@@ -349,7 +349,7 @@ def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
         return [issue for issue in validate(load_repo(shadow), online=False)
                 if issue.severity == "E"
                 or (issue.severity == "W"
-                    and issue.code not in ENVIRONMENTAL_WARNINGS)]
+                    and issue.code not in BASELINE_EXEMPT_WARNINGS)]
 
 
 def _master_promotion_preflight(
