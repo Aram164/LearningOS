@@ -51,7 +51,26 @@ ENVIRONMENTAL_WARNINGS = frozenset({
     "MATERIALS-OFFLINE",
     "MATERIALS-DRIFT",
     "MATERIAL-URI-FORM",
+    "HYGIENE-LOCK",
 })
+
+# Warnings that depend on wall-clock age rather than on any authored file's
+# content. A release can turn red with no authored change simply because time
+# passed (a workspace crossed its neglect threshold, an inbox item aged out).
+# Kept as its own exact set — never merged into ENVIRONMENTAL_WARNINGS, which
+# is about machine state, not elapsed time — so each category's rationale
+# stays legible and neither one can absorb an unrelated code by accident.
+DYNAMIC_ADVISORY_WARNINGS = frozenset({
+    "WS-NEGLECT",
+    "INBOX-STALE",
+})
+
+# The exact, explicit union `warning_baseline.py` treats as baseline-exempt.
+# Membership is by exact code only — never a prefix, a severity band, or a
+# path heuristic — so an unknown future warning code is baseline-managed
+# (visible and blocking on regression) unless someone deliberately adds it
+# here.
+BASELINE_EXEMPT_WARNINGS = ENVIRONMENTAL_WARNINGS | DYNAMIC_ADVISORY_WARNINGS
 
 CANONICAL_TREES = ("knowledge", "sources", "records", "work", "curriculum", "projects")
 

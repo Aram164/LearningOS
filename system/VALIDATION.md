@@ -15,10 +15,25 @@ Deferring them cost the ability to tell a deferred warning from a new one.
 signature — **(code, path) with its multiplicity** — is recorded, and
 `python tools/warning_baseline.py --check` fails on a new signature or a grown
 one. A signature rather than a total, because a total is gamed by trading one
-warning for another. Environmental warnings (`MATERIALS-OFFLINE`,
-`HYGIENE-VIEWS`, `HYGIENE-LOCK`, and the rest of `ENVIRONMENTAL_WARNINGS`) are
-excluded: they describe the machine, not the content, and differ between one
-checkout and the next.
+warning for another.
+
+Two exact, named sets are excluded from the baseline — `BASELINE_EXEMPT_WARNINGS`
+in `learning_os.rules.common`, never a prefix, severity band, or path heuristic:
+
+- **Environmental** (`ENVIRONMENTAL_WARNINGS`: `MATERIALS-OFFLINE`,
+  `HYGIENE-VIEWS`, `HYGIENE-LOCK`, and the rest) describe the machine, not the
+  content, and differ between one checkout and the next.
+- **Dynamic advisory** (`DYNAMIC_ADVISORY_WARNINGS`: `WS-NEGLECT`,
+  `INBOX-STALE`) are clock-derived: they can newly appear with no authored file
+  changed, purely because days elapsed.
+
+Both categories remain fully visible in normal `validate.py` output and normal
+health reporting — exemption applies only to the baseline gate's regression
+check. Every other warning code, including one not yet invented, is
+baseline-managed by default: a new or grown signature fails
+`warning_baseline.py --check` regardless of how sympathetic the cause. A
+baseline-managed signature that *shrinks* is reported as a repair and passes;
+it is never restored merely to match a prior total.
 
 Adopting a new baseline is an explicit act with a stated reason
 (`--update --note "…"`). An unexplained move is indistinguishable from a

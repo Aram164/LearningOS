@@ -38,7 +38,12 @@ compares the current warning signatures against
 `operations/validation-warning-baseline.yaml` — (code, path) with multiplicity,
 so a total that stays level while one warning is traded for another is still a
 failure. The warnings carried today are the measured content debt of
-CRITIQUE-POINTS §1, deferred deliberately.
+CRITIQUE-POINTS §1, deferred deliberately. A small named set of operational and
+clock-derived advisories (`learning_os.rules.common.BASELINE_EXEMPT_WARNINGS`;
+see `system/VALIDATION.md`) stays visible in every run but is exempt from this
+gate by exact code, never by heuristic. A baseline-managed signature that
+shrinks is a repair and passes; it is never restored merely to match the old
+total.
 
 ## Start here
 
@@ -117,7 +122,10 @@ Skills and projects use modules and units without false academic metadata.
     capability and must remain inside its module/unit/stage scope.
 12. Every app mutation carries the current manifest snapshot. On conflict,
     reload rather than overwrite.
-13. Validate after authored changes. Acceptance requires 0 errors and 0 warnings.
+13. Validate after authored changes. Acceptance requires zero errors and no new
+    or grown warning signature (`python tools/warning_baseline.py --check`).
+    Baseline-exempt operational and clock-derived advisories stay visible and
+    never block; see "What 'clean' means" above.
 14. Source completeness is mandatory. Every learning source named by an
     authoritative template, bibliography, plan, or course artifact must remain
     reachable and be explicitly selected, reference-only, or deferred with a

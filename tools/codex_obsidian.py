@@ -71,17 +71,38 @@ def allowed_prefixes(capability: dict) -> tuple[str, ...]:
     return (unit_prefix,)
 
 
+class GitStatusError(Exception):
+    """Repository status could not be established.
+
+    Every caller must treat this as a safety failure, not as "nothing is
+    dirty" — unknown is never clean.
+    """
+
+
 def dirty_paths() -> set[str]:
-    proc = subprocess.run(
-        ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
-        cwd=ROOT, capture_output=True, text=True, timeout=30)
+    try:
+        proc = subprocess.run(
+            ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
+            cwd=ROOT, capture_output=True, text=True, timeout=30)
+    except subprocess.TimeoutExpired as exc:
+        raise GitStatusError(f"git status timed out: {exc}") from exc
+    except (OSError, UnicodeDecodeError) as exc:
+        raise GitStatusError(f"git status could not be run: {exc}") from exc
     if proc.returncode != 0:
-        return set()
+        detail = proc.stderr.strip() or proc.stdout.strip() or "no output"
+        raise GitStatusError(f"git status exited {proc.returncode}: {detail}")
     paths = set()
     for line in proc.stdout.splitlines():
+        # Porcelain v1: two status characters, one space, then the path (a
+        # rename line adds " -> new" after it). Anything shorter or missing
+        # that separator is not a status line this wrapper understands.
+        if len(line) < 4 or line[2] != " ":
+            raise GitStatusError(f"git status produced a line this wrapper cannot parse: {line!r}")
         path = line[3:]
         if " -> " in path:
             path = path.split(" -> ", 1)[1]
+        if not path:
+            raise GitStatusError(f"git status produced a line this wrapper cannot parse: {line!r}")
         paths.add(path)
     return paths
 
@@ -106,7 +127,14 @@ def main() -> int:
     approved_write = capability is not None
     prefixes = allowed_prefixes(capability) if capability else ()
     if capability:
-        unrelated = outside_scope(dirty_paths(), prefixes)
+        try:
+            before = dirty_paths()
+        except GitStatusError as exc:
+            print(f"learningos-codex: cannot establish repository status before "
+                  f"launching Codex ({exc}); refusing to start — review the working "
+                  "tree manually", file=sys.stderr)
+            return 2
+        unrelated = outside_scope(before, prefixes)
         if unrelated:
             print("learningos-codex: refusing scoped write while unrelated changes exist: "
                   + ", ".join(sorted(unrelated)), file=sys.stderr)
@@ -128,7 +156,15 @@ def main() -> int:
     if result.returncode != 0 or not approved_write:
         return result.returncode
 
-    escaped = outside_scope(dirty_paths(), prefixes)
+    try:
+        after = dirty_paths()
+    except GitStatusError as exc:
+        print(f"learningos-codex: cannot establish repository status after Codex ran "
+              f"({exc}); refusing to validate or publish — the diff cannot be proven "
+              "bounded, review the working tree manually", file=sys.stderr)
+        return 2
+
+    escaped = outside_scope(after, prefixes)
     if escaped:
         print("learningos-codex: scoped action changed files outside its capability: "
               + ", ".join(sorted(escaped)), file=sys.stderr)
