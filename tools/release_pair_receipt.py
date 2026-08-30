@@ -28,6 +28,7 @@ import argparse
 import hashlib
 import json
 import re
+import stat as stat_module
 import subprocess
 import sys
 from pathlib import Path
@@ -59,9 +60,19 @@ def _sha256_bytes(data: bytes) -> str:
 
 def _sha256_file(path: Path) -> str:
     try:
+        st = path.lstat()
+        if path.is_symlink() or not stat_module.S_ISREG(st.st_mode):
+            raise ReleasePairReceiptError(
+                f"cannot hash {path}: shipped assets must be regular files, not links or directories"
+            )
         return _sha256_bytes(path.read_bytes())
     except OSError as exc:
         raise ReleasePairReceiptError(f"cannot read {path}: {exc}") from exc
+
+
+def _shipped_asset_sha256(plugin_dir: Path) -> dict[str, str]:
+    """Hash the complete, closed shipped inventory in its declared order."""
+    return {name: _sha256_file(plugin_dir / name) for name in SHIPPED_ASSETS}
 
 
 def _require_full_sha(value: object, label: str) -> str:
@@ -191,19 +202,22 @@ def generate(
     except ManifestContractError as exc:
         raise ReleasePairReceiptError(str(exc)) from exc
 
-    for name in SHIPPED_ASSETS:
-        asset = ui_root / "plugin" / name
-        if not asset.is_file():
-            raise ReleasePairReceiptError(f"missing shipped asset: {asset}")
-    actual_bundle_sha256 = _sha256_file(ui_root / "plugin" / "main.js")
+    shipped_asset_sha256 = _shipped_asset_sha256(ui_root / "plugin")
+    actual_bundle_sha256 = shipped_asset_sha256["main.js"]
     if actual_bundle_sha256 != build_info["bundle_sha256"]:
         raise ReleasePairReceiptError(
             "plugin/main.js does not match build-info.json's own bundle_sha256"
         )
-    actual_stylesheet_sha256 = _sha256_file(ui_root / "plugin" / "styles.css")
+    actual_stylesheet_sha256 = shipped_asset_sha256["styles.css"]
     if actual_stylesheet_sha256 != build_info["stylesheet_sha256"]:
         raise ReleasePairReceiptError(
             "plugin/styles.css does not match build-info.json's own stylesheet_sha256"
+        )
+    if build_info.get("manifest_contract_version") != manifest_contract_version:
+        raise ReleasePairReceiptError(
+            f"{build_info_path} manifest_contract_version "
+            f"({build_info.get('manifest_contract_version')!r}) does not equal the Core "
+            f"manifest contract version ({manifest_contract_version})"
         )
 
     receipt = {
@@ -219,6 +233,7 @@ def generate(
         "runtime_source_fingerprint": build_info["source_fingerprint"],
         "bundle_sha256": build_info["bundle_sha256"],
         "stylesheet_sha256": build_info["stylesheet_sha256"],
+        "shipped_asset_sha256": shipped_asset_sha256,
         "system_check_passed": True,
         "stress_scope": "not-run-materials-unprovisioned",
         "workflow_run_id": str(workflow_run_id),
@@ -246,17 +261,22 @@ def verify(receipt: dict, artifact_dir: Path) -> None:
     if surplus:
         raise ReleasePairReceiptError(f"artifact carries undeclared file(s): {', '.join(surplus)}")
 
-    actual_bundle = _sha256_file(plugin_dir / "main.js")
-    if actual_bundle != receipt["bundle_sha256"]:
+    expected_assets = receipt["shipped_asset_sha256"]
+    for name in SHIPPED_ASSETS:
+        actual = _sha256_file(plugin_dir / name)
+        expected = expected_assets[name]
+        if actual != expected:
+            raise ReleasePairReceiptError(
+                f"plugin/{name} sha256 ({actual}) does not match the receipt ({expected})"
+            )
+
+    if receipt["bundle_sha256"] != expected_assets["main.js"]:
         raise ReleasePairReceiptError(
-            f"plugin/main.js sha256 ({actual_bundle}) does not match the receipt "
-            f"({receipt['bundle_sha256']})"
+            "receipt bundle_sha256 does not match shipped_asset_sha256['main.js']"
         )
-    actual_styles = _sha256_file(plugin_dir / "styles.css")
-    if actual_styles != receipt["stylesheet_sha256"]:
+    if receipt["stylesheet_sha256"] != expected_assets["styles.css"]:
         raise ReleasePairReceiptError(
-            f"plugin/styles.css sha256 ({actual_styles}) does not match the receipt "
-            f"({receipt['stylesheet_sha256']})"
+            "receipt stylesheet_sha256 does not match shipped_asset_sha256['styles.css']"
         )
 
     try:
@@ -273,6 +293,18 @@ def verify(receipt: dict, artifact_dir: Path) -> None:
         raise ReleasePairReceiptError(
             "plugin/build-info.json source_fingerprint does not match the receipt's "
             "runtime_source_fingerprint"
+        )
+    if build_info.get("bundle_sha256") != expected_assets["main.js"]:
+        raise ReleasePairReceiptError(
+            "plugin/build-info.json bundle_sha256 does not match the receipt's main.js hash"
+        )
+    if build_info.get("stylesheet_sha256") != expected_assets["styles.css"]:
+        raise ReleasePairReceiptError(
+            "plugin/build-info.json stylesheet_sha256 does not match the receipt's styles.css hash"
+        )
+    if build_info.get("manifest_contract_version") != receipt["manifest_contract_version"]:
+        raise ReleasePairReceiptError(
+            "plugin/build-info.json manifest_contract_version does not match the receipt"
         )
 
 

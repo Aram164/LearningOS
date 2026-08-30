@@ -222,56 +222,200 @@ def test_gateway_v2_replay_only_verifies_a_receipt_without_creating_one(
     assert sorted((mini_repo / "work/inbox").glob("*.md")) == captures_before
 
 
-def test_gateway_v2_replay_repairs_session_ownership_after_a_crash_window(
+def test_gateway_v2_replay_refuses_to_rebuild_ownership_from_a_lost_ledger(
     mini_repo: Path, repo_root: Path, tmp_path: Path
 ):
-    subprocess.run(["git", "init", "-q"], cwd=mini_repo, check=True)
-    subprocess.run(
-        ["git", "config", "user.email", "learningos-tests@example.invalid"],
-        cwd=mini_repo, check=True,
-    )
-    subprocess.run(
-        ["git", "config", "user.name", "LearningOS Tests"],
-        cwd=mini_repo, check=True,
-    )
-    subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
-    subprocess.run(
-        ["git", "commit", "-qm", "fixture baseline"],
-        cwd=mini_repo, check=True,
-    )
+    """A lost session ledger is reconciled by hand, never reconstructed.
+
+    Replay used to rebuild ownership from Receipt V2 after a process died
+    between the durable commit and the ephemeral session-ledger write. It
+    cannot do that safely: rebuilding requires claiming
+    ``revisions.yaml``/``idempotency.yaml``, whose bytes carry rows for many
+    transactions while this receipt proves only its own. Claiming them anyway
+    would launder an unrelated edit into this session's authorship; omitting
+    them would let ``session-end`` commit the authored file while leaving its
+    revision bump out of the same commit. So the replay fails closed, nothing
+    is fabricated, and the operator reconciles manually.
+    """
+    _git_init(mini_repo)
     envelope = _envelope(mini_repo, key="capture-replay-ownership-001")
     committed = _run(repo_root, mini_repo, tmp_path / "commit-owned.json", envelope)
     assert committed.returncode == 0, committed.stderr or committed.stdout
-    response = json.loads(committed.stdout)
-    captured = response["result"]["captured"]
+    captured = json.loads(committed.stdout)["result"]["captured"]
 
-    # Simulate a process death after the receipt/idempotency commit but before
-    # the ephemeral session ledger write.  The exact replay must reconstruct
-    # ownership from Receipt V2 rather than rerun the handler.
     _session_ledger(mini_repo).unlink(missing_ok=True)
     replayed = _run(
         repo_root, mini_repo, tmp_path / "replay-owned.json", envelope,
         replay_only=True,
     )
-    assert replayed.returncode == 0, replayed.stderr or replayed.stdout
-    assert json.loads(replayed.stdout)["replayed"] is True
+    assert replayed.returncode == 2, replayed.stdout or replayed.stderr
+    error = json.loads(replayed.stdout)["error"]
+    assert error["code"] == "INTERNAL_FAILURE"
+    assert error["retryable"] is False
+    assert "cannot prove the bytes" in error["message"]
+    assert not _session_ledger(mini_repo).is_file(), (
+        "a refused repair must not fabricate a replacement ownership ledger"
+    )
 
+    # The write really did land; it is simply not claimed by this session.
+    assert (mini_repo / captured).is_file()
     ended = subprocess.run(
-        [
-            sys.executable,
-            str(repo_root / "tools/los.py"),
-            "--root",
-            str(mini_repo),
-            "session-end",
-        ],
-        cwd=repo_root,
-        text=True,
-        capture_output=True,
+        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo),
+         "session-end"],
+        cwd=repo_root, text=True, capture_output=True,
     )
     assert ended.returncode == 0, ended.stderr or ended.stdout
     review = json.loads(ended.stdout)
-    assert captured in review["touched"]
-    assert any(row[3:] == captured for row in review["owned_changes"]), review
+    assert captured not in review["touched"]
+    assert any(row[3:] == captured for row in review["unrelated_changes"]), review
+
+
+def _git_init(root: Path) -> None:
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    subprocess.run(
+        ["git", "config", "user.email", "learningos-tests@example.invalid"],
+        cwd=root, check=True,
+    )
+    subprocess.run(["git", "config", "user.name", "LearningOS Tests"], cwd=root, check=True)
+    subprocess.run(["git", "add", "."], cwd=root, check=True)
+    subprocess.run(["git", "commit", "-qm", "fixture baseline"], cwd=root, check=True)
+
+
+def test_replay_never_launders_an_out_of_band_edit_into_session_ownership(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """The exact end-to-end scenario the 2026-08-29 audit reproduced.
+
+    Commit bytes A through the gateway, edit the same file out of band to
+    bytes B, then replay the identical approved envelope. The replay must
+    never adopt B as though the gateway transaction itself wrote it: the
+    ownership ledger must still claim A, and a later ``session-end
+    --commit-message`` must refuse rather than stage and commit B as owned.
+    """
+    _git_init(mini_repo)
+    key = "capture-laundering-001"
+    envelope, response, _receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    captured_path = mini_repo / response["result"]["captured"]
+    before_ledger = json.loads(_session_ledger(mini_repo).read_text(encoding="utf-8"))
+
+    captured_path.write_bytes(b"out-of-band substituted content\n")
+
+    refused = _run(
+        repo_root, mini_repo, tmp_path / "launder-replay.json", envelope,
+        replay_only=True,
+    )
+    assert refused.returncode == 2, (refused.returncode, refused.stdout, refused.stderr)
+    error = json.loads(refused.stdout)["error"]
+    assert error["code"] == "INTERNAL_FAILURE"
+    assert error["retryable"] is False
+
+    after_ledger = json.loads(_session_ledger(mini_repo).read_text(encoding="utf-8"))
+    assert after_ledger == before_ledger, "the ownership ledger must be left completely untouched"
+
+    ended = subprocess.run(
+        [sys.executable, str(repo_root / "tools/los.py"), "--root", str(mini_repo),
+         "session-end", "--commit-message", "should never land"],
+        cwd=repo_root, text=True, capture_output=True,
+    )
+    assert ended.returncode == 2, ended.stdout + ended.stderr
+    assert response["result"]["captured"] in ended.stderr
+    assert "refusing to stage" in ended.stderr
+    log = subprocess.run(
+        ["git", "log", "--oneline"], cwd=mini_repo, text=True, capture_output=True,
+    ).stdout
+    assert "should never land" not in log
+
+
+def test_replay_after_out_of_band_mutation_creates_no_replacement_ledger(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """A missing session ledger is not license to trust a fresh filesystem read.
+
+    With no prior ownership row to compare against, the only honest source of
+    truth is Receipt V2's own recorded ``sha256_after``. When the live file
+    disagrees with it, repair must refuse outright rather than silently adopt
+    the current (possibly tampered) bytes and manufacture a brand-new ledger
+    around them.
+    """
+    _git_init(mini_repo)
+    key = "capture-missing-ledger-mutation-001"
+    envelope, response, _receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    captured_path = mini_repo / response["result"]["captured"]
+    captured_path.write_bytes(b"substituted after the ledger was lost\n")
+    _session_ledger(mini_repo).unlink()
+
+    refused = _run(
+        repo_root, mini_repo, tmp_path / "missing-ledger-replay.json", envelope,
+        replay_only=True,
+    )
+    assert refused.returncode == 2, (refused.returncode, refused.stdout, refused.stderr)
+    error = json.loads(refused.stdout)["error"]
+    assert error["code"] == "INTERNAL_FAILURE"
+    assert error["retryable"] is False
+    assert not _session_ledger(mini_repo).is_file(), (
+        "a failed repair must not fabricate a replacement ownership ledger"
+    )
+
+
+def test_replay_refuses_a_mutated_revision_ledger(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """A rolled-back revision ledger is provable mutation, so replay refuses.
+
+    A receipt proves only its own row inside these shared, multi-entry
+    ledgers — but revisions only ever increase, so an artifact standing below
+    the value this transaction recorded is exactly the contradiction a single
+    receipt *can* detect. Nothing compared the live ``revisions.yaml`` against
+    the receipt before this, so a hand-edited one replayed cleanly.
+    """
+    _git_init(mini_repo)
+    key = "capture-mutated-revisions-001"
+    envelope, _response, _receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    revisions_path = mini_repo / "operations" / "transactions" / "revisions.yaml"
+    ledger = yaml.safe_load(revisions_path.read_text(encoding="utf-8"))
+    artifact = request_artifact_id("capture.create", key)
+    assert ledger["revisions"][artifact] == 1
+    ledger["revisions"][artifact] = 0
+    revisions_path.write_text(yaml.safe_dump(ledger, sort_keys=False), encoding="utf-8")
+    _session_ledger(mini_repo).unlink()
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "revision ledger contradicts" in response["error"]["message"]
+    assert not _session_ledger(mini_repo).is_file(), (
+        "a refused replay must not fabricate an ownership ledger"
+    )
+
+
+def test_replay_refuses_a_shared_ledger_changed_since_its_recorded_transaction(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """An earlier proof is only good while it still describes the file.
+
+    Here the session ledger survives, so a prior proven row for
+    ``revisions.yaml`` does exist — but the file was changed afterwards in a
+    way that preserves every fact the receipt records (an appended comment),
+    so no semantic check can see it. The recorded ownership hash still can,
+    and the replay must refuse rather than quietly re-observe the new bytes.
+    """
+    _git_init(mini_repo)
+    key = "capture-shared-ledger-001"
+    envelope, _response, _receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    before_ledger = json.loads(_session_ledger(mini_repo).read_text(encoding="utf-8"))
+    revisions_path = mini_repo / "operations" / "transactions" / "revisions.yaml"
+    revisions_path.write_text(
+        revisions_path.read_text(encoding="utf-8") + "# appended out of band\n",
+        encoding="utf-8",
+    )
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "operations/transactions/revisions.yaml changed" in response["error"]["message"]
+    assert json.loads(_session_ledger(mini_repo).read_text(encoding="utf-8")) == before_ledger, (
+        "a refused repair must leave the ownership ledger exactly as it was"
+    )
 
 
 def test_gateway_v2_refuses_idempotency_key_reuse_for_changed_intent(
@@ -1079,6 +1223,74 @@ def test_replay_unsafe_write_path_fails_closed(mini_repo: Path, repo_root: Path,
     assert response["error"]["retryable"] is False
 
 
+def test_replay_refuses_an_extra_capability_grant_injected_into_an_ordinary_receipt(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """A catalogue-real grant is not evidence it was ever actually issued.
+
+    An ordinary gateway receipt (anything other than
+    ``ai-action.delivery.apply``) may carry exactly the one grant its own
+    top-level capability produced. Injecting a second, catalogue-valid grant
+    (with correctly copied ``declared_writes``, so only the grant *set* is
+    wrong) must still be refused — accepting it would let a tampered receipt
+    launder a write into a completely unrelated capability's scope.
+    """
+    key = "capture-extra-grant-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["authority"]["grants"].append({
+        "capability": "note.revise",
+        "declared_writes": ["knowledge/notes/**"],
+    })
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "exactly the top-level" in response["error"]["message"]
+
+
+def test_replay_refuses_a_receipt_missing_its_top_level_grant(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """Swapping out the one legitimate grant for another real one is still a lie."""
+    key = "capture-swapped-grant-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["authority"]["grants"] = [{
+        "capability": "note.revise",
+        "declared_writes": ["knowledge/notes/**"],
+    }]
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "exactly the top-level" in response["error"]["message"]
+
+
+def test_replay_refuses_a_service_owned_write_path_on_an_ordinary_receipt(
+    mini_repo: Path, repo_root: Path, tmp_path: Path,
+):
+    """The AI-action service-owned scope is not a blanket replay exemption.
+
+    Only a receipt actually carrying an ``ai-action.delivery.apply`` grant may
+    write under ``operations/ai-actions/requests/**``. A ``capture.create``
+    receipt claiming a write there — with no such grant — must be refused
+    exactly like any other out-of-scope write.
+    """
+    key = "capture-service-scope-001"
+    envelope, _, receipt_path = _committed(repo_root, mini_repo, tmp_path, key)
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["writes"][0]["path"] = "operations/ai-actions/requests/forged/request.yaml"
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False), encoding="utf-8")
+
+    response = _replay_refusal(repo_root, mini_repo, tmp_path, envelope, key)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is False
+    assert "declared scope" in response["error"]["message"]
+
+
 def test_replay_only_with_no_ledger_row_never_invokes_the_handler(
     mini_repo: Path, repo_root: Path, tmp_path: Path,
 ):
@@ -1101,6 +1313,10 @@ def test_two_concurrent_replays_of_distinct_transactions_retain_both_rows(
     Before the operator lock wrapped replay lookup through session-ledger
     repair, this read-modify-write on the session ledger could race across
     processes and silently drop one gesture's ownership row.
+
+    The ledger is deliberately left in place: replay now refuses outright
+    rather than rebuilding a lost one, so deleting it here would test the
+    refusal path instead of the concurrent merge this exists to guard.
     """
     from concurrent.futures import ThreadPoolExecutor
 
@@ -1111,8 +1327,6 @@ def test_two_concurrent_replays_of_distinct_transactions_retain_both_rows(
         envelope, response, _ = _committed(repo_root, mini_repo, tmp_path, key)
         envelopes[key] = envelope
         captured_paths.append(response["result"]["captured"])
-
-    _session_ledger(mini_repo).unlink(missing_ok=True)
 
     def replay(key: str):
         return _run(
@@ -1146,7 +1360,6 @@ def test_two_concurrent_replays_of_the_same_transaction_do_not_duplicate_rows(
     key = "capture-same-transaction-concurrent-001"
     envelope, response, _ = _committed(repo_root, mini_repo, tmp_path, key)
     captured = response["result"]["captured"]
-    _session_ledger(mini_repo).unlink(missing_ok=True)
 
     from concurrent.futures import ThreadPoolExecutor
 

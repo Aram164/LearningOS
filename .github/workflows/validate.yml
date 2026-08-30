@@ -66,9 +66,11 @@ jobs:
       # verify against?" without re-running anything.
       - name: Print the resolved UI ref and commit
         working-directory: obsidian-ui
+        env:
+          RESOLVED_UI_REF: ${{ steps.consumer-ref.outputs.ref }}
         run: |
-          echo "UI ref resolved: ${{ steps.consumer-ref.outputs.ref }}"
-          echo "UI commit checked out: $(git rev-parse HEAD)"
+          printf 'UI ref resolved: %s\n' "$RESOLVED_UI_REF"
+          printf 'UI commit checked out: %s\n' "$(git rev-parse HEAD)"
 
       - uses: actions/setup-python@v5
         with:

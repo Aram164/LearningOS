@@ -34,13 +34,18 @@ jobs:
     steps:
       - name: Validate the exact-SHA inputs before checking anything out
         id: inputs
+        env:
+          CORE_SHA_INPUT: ${{ github.event.inputs.core_sha }}
+          UI_SHA_INPUT: ${{ github.event.inputs.ui_sha }}
         run: |
-          core_sha="${{ github.event.inputs.core_sha }}"
-          ui_sha="${{ github.event.inputs.ui_sha }}"
+          core_sha="$CORE_SHA_INPUT"
+          ui_sha="$UI_SHA_INPUT"
           echo "$core_sha" | grep -Eq '^[0-9a-f]{40}$' \
             || { echo "core_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
           echo "$ui_sha" | grep -Eq '^[0-9a-f]{40}$' \
             || { echo "ui_sha must be exactly 40 lowercase hex characters" >&2; exit 1; }
+          echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"
+          echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"
           echo "core_sha_short=${core_sha:0:12}" >> "$GITHUB_OUTPUT"
           echo "ui_sha_short=${ui_sha:0:12}" >> "$GITHUB_OUTPUT"
 
@@ -48,7 +53,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: repository
-          ref: ${{ github.event.inputs.core_sha }}
+          ref: ${{ steps.inputs.outputs.core_sha }}
           fetch-depth: 0
 
       - name: Check out UI at the exact SHA
@@ -56,22 +61,25 @@ jobs:
         with:
           repository: Aram164/learningos-obsidian-ui
           path: obsidian-ui
-          ref: ${{ github.event.inputs.ui_sha }}
+          ref: ${{ steps.inputs.outputs.ui_sha }}
           fetch-depth: 0
 
       - name: Verify each checkout is exactly the requested commit and clean
+        env:
+          EXPECTED_CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
+          EXPECTED_UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
         run: |
           set -eu
           core_actual="$(git -C repository rev-parse HEAD)"
-          if [ "$core_actual" != "${{ github.event.inputs.core_sha }}" ]; then
-            echo "Core checked out $core_actual, requested ${{ github.event.inputs.core_sha }}" >&2
+          if [ "$core_actual" != "$EXPECTED_CORE_SHA" ]; then
+            echo "Core checked out $core_actual, requested $EXPECTED_CORE_SHA" >&2
             exit 1
           fi
           test -z "$(git -C repository status --porcelain)" \
             || { echo "Core checkout is not clean" >&2; exit 1; }
           ui_actual="$(git -C obsidian-ui rev-parse HEAD)"
-          if [ "$ui_actual" != "${{ github.event.inputs.ui_sha }}" ]; then
-            echo "UI checked out $ui_actual, requested ${{ github.event.inputs.ui_sha }}" >&2
+          if [ "$ui_actual" != "$EXPECTED_UI_SHA" ]; then
+            echo "UI checked out $ui_actual, requested $EXPECTED_UI_SHA" >&2
             exit 1
           fi
           test -z "$(git -C obsidian-ui status --porcelain)" \
@@ -107,14 +115,19 @@ jobs:
 
       - name: Generate the pair receipt
         working-directory: repository
+        env:
+          CORE_SHA: ${{ steps.inputs.outputs.core_sha }}
+          UI_SHA: ${{ steps.inputs.outputs.ui_sha }}
+          WORKFLOW_RUN_ID: ${{ github.run_id }}
+          WORKFLOW_RUN_ATTEMPT: ${{ github.run_attempt }}
         run: |
           python tools/release_pair_receipt.py generate \
             --core-root . \
             --ui-root ../obsidian-ui \
-            --core-sha "${{ github.event.inputs.core_sha }}" \
-            --ui-sha "${{ github.event.inputs.ui_sha }}" \
-            --workflow-run-id "${{ github.run_id }}" \
-            --workflow-run-attempt "${{ github.run_attempt }}" \
+            --core-sha "$CORE_SHA" \
+            --ui-sha "$UI_SHA" \
+            --workflow-run-id "$WORKFLOW_RUN_ID" \
+            --workflow-run-attempt "$WORKFLOW_RUN_ATTEMPT" \
             --out ../release-pair-artifact/pair-receipt.json
 
       - name: Assemble the fixed upload layout

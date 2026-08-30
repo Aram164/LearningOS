@@ -80,30 +80,73 @@ class GitStatusError(Exception):
 
 
 def dirty_paths() -> set[str]:
+    """Every path git considers dirty, including a rename's source and destination.
+
+    ``-z`` is not a formatting nicety here: the quoted line form the wrapper
+    used to parse renders a rename as ``R  old -> new`` and gives no
+    unambiguous way to split "old" from "new" when either name contains
+    literal " -> " or embedded quoting, and it discarded "old" outright. NUL
+    output instead gives one unquoted path per record, with rename and copy
+    records carrying the source as a *second* NUL-terminated field
+    immediately after the destination — both are folded into the returned
+    set, so an out-of-scope source can never hide behind an in-scope
+    destination.
+    """
     try:
         proc = subprocess.run(
-            ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
-            cwd=ROOT, capture_output=True, text=True, timeout=30)
+            ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", "."],
+            cwd=ROOT, capture_output=True, timeout=30)
     except subprocess.TimeoutExpired as exc:
         raise GitStatusError(f"git status timed out: {exc}") from exc
-    except (OSError, UnicodeDecodeError) as exc:
+    except OSError as exc:
         raise GitStatusError(f"git status could not be run: {exc}") from exc
     if proc.returncode != 0:
-        detail = proc.stderr.strip() or proc.stdout.strip() or "no output"
+        detail = (proc.stderr or proc.stdout).decode("utf-8", "replace").strip() or "no output"
         raise GitStatusError(f"git status exited {proc.returncode}: {detail}")
-    paths = set()
-    for line in proc.stdout.splitlines():
-        # Porcelain v1: two status characters, one space, then the path (a
-        # rename line adds " -> new" after it). Anything shorter or missing
-        # that separator is not a status line this wrapper understands.
-        if len(line) < 4 or line[2] != " ":
-            raise GitStatusError(f"git status produced a line this wrapper cannot parse: {line!r}")
-        path = line[3:]
-        if " -> " in path:
-            path = path.split(" -> ", 1)[1]
+
+    raw = proc.stdout
+    if raw.endswith(b"\0"):
+        raw = raw[:-1]
+    records = raw.split(b"\0") if raw else []
+
+    def decoded(token: bytes) -> str:
+        try:
+            return token.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise GitStatusError(
+                f"git status produced an undecodable record: {token!r}"
+            ) from exc
+
+    paths: set[str] = set()
+    index = 0
+    while index < len(records):
+        record = decoded(records[index])
+        index += 1
+        # Porcelain: two status characters, one space, then the path. Anything
+        # shorter or missing that separator is not a record this wrapper
+        # understands.
+        if len(record) < 4 or record[2] != " ":
+            raise GitStatusError(f"git status produced a record this wrapper cannot parse: {record!r}")
+        status, path = record[:2], record[3:]
         if not path:
-            raise GitStatusError(f"git status produced a line this wrapper cannot parse: {line!r}")
+            raise GitStatusError(f"git status produced a record this wrapper cannot parse: {record!r}")
         paths.add(path)
+        if "R" in status or "C" in status:
+            # Rename/copy records carry their source as the next NUL-terminated
+            # field. A record ending the stream with no source field left is a
+            # truncated record, not an ordinary one, and must not be silently
+            # treated as if it named no source at all.
+            if index >= len(records):
+                raise GitStatusError(
+                    f"git status truncated the rename/copy source for: {record!r}"
+                )
+            source = decoded(records[index])
+            index += 1
+            if not source:
+                raise GitStatusError(
+                    f"git status produced an empty rename/copy source for: {record!r}"
+                )
+            paths.add(source)
     return paths
 
 
