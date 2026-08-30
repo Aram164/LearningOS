@@ -71,13 +71,21 @@ def test_material_locator_fuzz_accepts_one_file_and_refuses_hostile_compounds():
 
 @pytest.mark.full_repo
 def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path):
-    """Every production stage target exposed as exact work must be usable."""
+    """Every production stage target is exact, and local bytes are checked when mounted.
+
+    The materials tree is intentionally not stored in Git and is absent on the
+    hosted runners.  In that environment the projection must report local
+    targets as unavailable, while still preserving a file-shaped path so the
+    same source falls back safely.  A provisioned workstation additionally
+    proves that every exposed local target resolves to a regular file.
+    """
     manifest = json.loads(
         generate_all(load_repo(repo_root), generated_at="RESOURCE-INTEGRITY")[
             "manifest.json"
         ]
     )
     learning_root = repo_root.parent
+    materials_available = (learning_root / "materials").is_dir()
     unique_resources = {
         json.dumps(
             [
@@ -99,8 +107,11 @@ def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path):
         material_path = resource.get("material_path")
         if material_path:
             assert _is_file_shaped(material_path), resource
-            assert resource.get("material_exists") is True, resource
-            assert (learning_root / material_path).is_file(), resource
+            if materials_available:
+                assert resource.get("material_exists") is True, resource
+                assert (learning_root / material_path).is_file(), resource
+            else:
+                assert resource.get("material_exists") is False, resource
 
         vault_path = resource.get("vault_path")
         if isinstance(vault_path, str) \
@@ -117,4 +128,5 @@ def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path):
         if resource.get("label") == "Current L11 Transformers lecture deck"
     )
     assert aml_l11["material_path"].endswith("VL 11-transformers.pdf")
-    assert (learning_root / aml_l11["material_path"]).is_file()
+    if materials_available:
+        assert (learning_root / aml_l11["material_path"]).is_file()
