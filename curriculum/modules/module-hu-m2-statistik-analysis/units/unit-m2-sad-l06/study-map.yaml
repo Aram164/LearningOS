@@ -176,12 +176,15 @@ stages:
       functions and the abstract expectation integral
     angle: Says what a random variable formally is — a measurable function — which every course-level
       source deliberately avoids.
-    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
-      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
-      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
-      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
-      it will cost days and will not help the exam. Open it to see that the answer exists, then close
-      it.
+    angle_detail: '⚠ Held for review, 2026-08-29, and not repaired in this pass. The route''s angle says
+      this book ''says what a random variable formally is — a measurable function''. Opened, LNM 2384
+      is a monograph on inductive and probabilistic logic: Ch 2 Background carries Boolean Algebras p.
+      47 and a four-page §2.3 Measure Spaces p. 48, and the body is propositional calculus (Ch 3 p. 56),
+      propositional models (Ch 4 p. 103) and predicate logic (Ch 5 p. 147), where §5.4 ''Predicate Models
+      and Random Variables'' p. 182 treats random variables inside predicate logic rather than as measurable
+      functions. The address is therefore not merely vague — the judgment describes a different book.
+      Changing a contextual source evaluation needs review (CLAUDE.md §4), so the angle is left standing
+      and the mismatch is recorded here and in the audit for Aram to settle.'
     vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md
@@ -425,12 +428,15 @@ stages:
       functions and the abstract expectation integral
     angle: Says what a random variable formally is — a measurable function — which every course-level
       source deliberately avoids.
-    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
-      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
-      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
-      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
-      it will cost days and will not help the exam. Open it to see that the answer exists, then close
-      it.
+    angle_detail: '⚠ Held for review, 2026-08-29, and not repaired in this pass. The route''s angle says
+      this book ''says what a random variable formally is — a measurable function''. Opened, LNM 2384
+      is a monograph on inductive and probabilistic logic: Ch 2 Background carries Boolean Algebras p.
+      47 and a four-page §2.3 Measure Spaces p. 48, and the body is propositional calculus (Ch 3 p. 56),
+      propositional models (Ch 4 p. 103) and predicate logic (Ch 5 p. 147), where §5.4 ''Predicate Models
+      and Random Variables'' p. 182 treats random variables inside predicate logic rather than as measurable
+      functions. The address is therefore not merely vague — the judgment describes a different book.
+      Changing a contextual source evaluation needs review (CLAUDE.md §4), so the angle is left standing
+      and the mismatch is recorded here and in the audit for Aram to settle.'
     vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md
@@ -914,12 +920,15 @@ stages:
       functions and the abstract expectation integral
     angle: Says what a random variable formally is — a measurable function — which every course-level
       source deliberately avoids.
-    angle_detail: Routed here as a deliberate boundary marker, not as study material. L06 defines a random
-      variable as 'a variable whose value depends on chance', which is a description rather than a definition,
-      and some readers find that unsatisfying enough to be distracting. This is where the actual definition
-      lives, along with the reason discrete and continuous cases can be treated by one integral. Reading
-      it will cost days and will not help the exam. Open it to see that the answer exists, then close
-      it.
+    angle_detail: '⚠ Held for review, 2026-08-29, and not repaired in this pass. The route''s angle says
+      this book ''says what a random variable formally is — a measurable function''. Opened, LNM 2384
+      is a monograph on inductive and probabilistic logic: Ch 2 Background carries Boolean Algebras p.
+      47 and a four-page §2.3 Measure Spaces p. 48, and the body is propositional calculus (Ch 3 p. 56),
+      propositional models (Ch 4 p. 103) and predicate logic (Ch 5 p. 147), where §5.4 ''Predicate Models
+      and Random Variables'' p. 182 treats random variables inside predicate logic rather than as measurable
+      functions. The address is therefore not merely vague — the judgment describes a different book.
+      Changing a contextual source evaluation needs review (CLAUDE.md §4), so the angle is left standing
+      and the mismatch is recorded here and in the audit for Aram to settle.'
     vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md

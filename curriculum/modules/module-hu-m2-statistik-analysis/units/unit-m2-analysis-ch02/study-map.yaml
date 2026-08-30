@@ -1,0 +1,1216 @@
+id: study-map-m2-analysis-ch02
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch02
+status: not-started
+current_stage: stage-m2-analysis-ch02-koerperaxiome
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch02-koerperaxiome
+  number: 1
+  title: Wiederholung – Körperaxiome (§2.1)
+  status: pending
+  objective: 'The field axioms and the consequences drawn from them. Labelled Wiederholung: assumed from
+    M1.2, restated here only to fix notation.'
+  done_when:
+  - 'Reproduce without notes: The field axioms and the consequences drawn from them. Labelled Wiederholung:
+    assumed from M1.2, restated here only to fix notation.'
+  - Work Bestimmt_Scan.pdf — handwritten field and order axioms, then the remaining 2, and record every
+    miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Bestimmt_Scan.pdf — handwritten field and order axioms
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Bestimmt_Scan.pdf (12 pp; scanned, weak text layer)
+    angle: Handwritten axiom manipulation of the kind §2.1 and §2.2 assume and never demonstrate.
+    angle_detail: 'A short scanned set on deriving the order rules from the axioms. Its limitation is
+      mechanical rather than mathematical: the text layer is weak, so it cannot be searched or excerpted,
+      and it was flagged as such in the 2026-08-03 inventory. Worth a pass only if the axiom-level manipulation
+      in §2.2 is genuinely unfamiliar; otherwise Forster §2/§3 does the same job with solutions you can
+      search. The scan has no usable text layer: it cannot be searched or excerpted and has to be read
+      as images.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on order, suprema and bounded sets
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A2 (make a ring totally ordered
+      from a positivity set — the order axioms as axioms), A6 (for which n is a two-index set bounded,
+      and what are its inf and sup); Regensburg_...pdf A2.1 (if every element of A is negative, must sup
+      A be negative?) with its ''Häufige Fehler'' note that this was widely got wrong'
+    angle: Exam-shaped supremum questions with solutions, including one that is graded commentary on the
+      standard mistake.
+    angle_detail: 'Regensburg''s A2.1 is worth more than its three points suggest: it is the sup-versus-max
+      confusion set as a true/false with justification, and the printed ''Häufige Fehler'' records that
+      students asserted sup A = 0 for every A ⊂ R_<0. That is the same error the HU Hausaufgabe 5.4 is
+      built to expose. Marburg''s A6 is the closer match for a full written answer. Both are solved, so
+      spend them on a diagnosed gap rather than as a test.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§3-4 — the set R and the completeness axiom
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §3 The Set R of Real Numbers p. 25, §4 The Completeness
+      Axiom p. 32, §5 The Symbols +∞ and −∞ p. 40; Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Proof-oriented and unusually explicit about which axiom is being used in which step.
+    angle_detail: Ross numbers his sections rather than chapters and keeps them short, which makes him
+      easy to enter at a point. §4 is the completeness axiom with the Archimedean property drawn out as
+      an immediate consequence — the script's §2.3.4. The book has been unassessed against this exam since
+      it was located; the locator is a fact, the judgement about whether it earns time here is not, and
+      is left open deliberately.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-koerperaxiome/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-anordnung
+  number: 2
+  title: Anordnung von R (§2.2)
+  status: pending
+  objective: The order axioms and the rules for manipulating inequalities. Every later estimate is an
+    inequality argument, so fluency here is what makes epsilon arguments writable.
+  done_when:
+  - 'Reproduce without notes: The order axioms and the rules for manipulating inequalities. Every later
+    estimate is an inequality argument, so fluency here is what makes epsilon arguments writable.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 3, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §1.3 Vollständigkeit
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §1.3 Vollständigkeit p. 25 (with §1.1 Mengen von Zahlen p. 9 for the order
+      rules); Lösungen in Kap. 5 Anhang from p. 253
+    angle: Explained German solutions on suprema and completeness, at the pace that makes the definition's
+      two halves visible.
+    angle_detail: Fritzsche's treatment is unusual in spending its words on why an upper bound and a least
+      upper bound are different objects, which is the distinction the HU Hausaufgabe is built on. The
+      exercises come with fully written solutions in the Anhang, so this is the route that shows what
+      a supremum proof looks like when it is written out rather than asserted.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Bestimmt_Scan.pdf — handwritten field and order axioms
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Bestimmt_Scan.pdf (12 pp; scanned, weak text layer)
+    angle: Handwritten axiom manipulation of the kind §2.1 and §2.2 assume and never demonstrate.
+    angle_detail: 'A short scanned set on deriving the order rules from the axioms. Its limitation is
+      mechanical rather than mathematical: the text layer is weak, so it cannot be searched or excerpted,
+      and it was flagged as such in the 2026-08-03 inventory. Worth a pass only if the axiom-level manipulation
+      in §2.2 is genuinely unfamiliar; otherwise Forster §2/§3 does the same job with solutions you can
+      search. The scan has no usable text layer: it cannot be searched or excerpted and has to be read
+      as images.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on order, suprema and bounded sets
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A2 (make a ring totally ordered
+      from a positivity set — the order axioms as axioms), A6 (for which n is a two-index set bounded,
+      and what are its inf and sup); Regensburg_...pdf A2.1 (if every element of A is negative, must sup
+      A be negative?) with its ''Häufige Fehler'' note that this was widely got wrong'
+    angle: Exam-shaped supremum questions with solutions, including one that is graded commentary on the
+      standard mistake.
+    angle_detail: 'Regensburg''s A2.1 is worth more than its three points suggest: it is the sup-versus-max
+      confusion set as a true/false with justification, and the printed ''Häufige Fehler'' records that
+      students asserted sup A = 0 for every A ⊂ R_<0. That is the same error the HU Hausaufgabe 5.4 is
+      built to expose. Marburg''s A6 is the closer match for a full written answer. Both are solved, so
+      spend them on a diagnosed gap rather than as a test.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§3-4 — the set R and the completeness axiom
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §3 The Set R of Real Numbers p. 25, §4 The Completeness
+      Axiom p. 32, §5 The Symbols +∞ and −∞ p. 40; Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Proof-oriented and unusually explicit about which axiom is being used in which step.
+    angle_detail: Ross numbers his sections rather than chapters and keeps them short, which makes him
+      easy to enter at a point. §4 is the completeness axiom with the Archimedean property drawn out as
+      an immediate consequence — the script's §2.3.4. The book has been unassessed against this exam since
+      it was located; the locator is a fact, the judgement about whether it earns time here is not, and
+      is left open deliberately.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-anordnung/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-intervalle-betrag
+  number: 3
+  title: Intervalle und Betragsfunktion (§2.3.1)
+  status: pending
+  objective: Interval notation and the absolute value as a distance, including the triangle inequality
+    in the form the convergence definition uses.
+  done_when:
+  - 'Reproduce without notes: Interval notation and the absolute value as a distance, including the triangle
+    inequality in the form the convergence definition uses.'
+  - Work HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof, then the remaining
+    2, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-distance-metrics
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The only current HU task on this chapter, and it is graded — so it is the most reliable single
+      signal of the expected depth.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-intervalle-betrag/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-supremum-infimum
+  number: 4
+  title: Supremum und Infimum von Mengen (§2.3.2)
+  status: pending
+  objective: Bounded sets, upper and lower bounds, supremum and infimum, and the difference between a
+    supremum and a maximum. The distinction is a standing exam question and the reason Serie 05's Hausaufgabe
+    5.4 exists.
+  done_when:
+  - 'Reproduce without notes: Bounded sets, upper and lower bounds, supremum and infimum, and the difference
+    between a supremum and a maximum. The distinction is a standing exam question and the reason Serie
+    05''s Hausaufgabe 5.4 exists.'
+  - Work HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof, then the remaining
+    4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 05, Hausaufgabe 5.4 — supremum, infimum, maximum, minimum with proof
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The only current HU task on this chapter, and it is graded — so it is the most reliable single
+      signal of the expected depth.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §1.3 Vollständigkeit
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §1.3 Vollständigkeit p. 25 (with §1.1 Mengen von Zahlen p. 9 for the order
+      rules); Lösungen in Kap. 5 Anhang from p. 253
+    angle: Explained German solutions on suprema and completeness, at the pace that makes the definition's
+      two halves visible.
+    angle_detail: Fritzsche's treatment is unusual in spending its words on why an upper bound and a least
+      upper bound are different objects, which is the distinction the HU Hausaufgabe is built on. The
+      exercises come with fully written solutions in the Anhang, so this is the route that shows what
+      a supremum proof looks like when it is written out rather than asserted.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — Aufgabe über Supremum und Infimum, worked in full
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.8 ''Supremum und Infimum'' p. 9 with Lösung 2.8 p. 42; Aufgabe
+      1.7 ''Abgeschlossenheit'' p. 8 with Lösung 2.7 p. 37'
+    angle: One supremum problem solved with every thought step shown, including the false starts — the
+      opposite of a model solution.
+    angle_detail: 'The author''s stated intention is to write out what a person actually needs while solving,
+      not the polished result: sketches, the reasoning that motivates each estimate, and enough detail
+      to resume the proof once the idea lands. That makes it the right route when the HU Hausaufgabe 5.4
+      has been attempted and stalled — it is thirty pages of solution for ten problems, and Aufgabe 1.8
+      is the one that matches.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on order, suprema and bounded sets
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A2 (make a ring totally ordered
+      from a positivity set — the order axioms as axioms), A6 (for which n is a two-index set bounded,
+      and what are its inf and sup); Regensburg_...pdf A2.1 (if every element of A is negative, must sup
+      A be negative?) with its ''Häufige Fehler'' note that this was widely got wrong'
+    angle: Exam-shaped supremum questions with solutions, including one that is graded commentary on the
+      standard mistake.
+    angle_detail: 'Regensburg''s A2.1 is worth more than its three points suggest: it is the sup-versus-max
+      confusion set as a true/false with justification, and the printed ''Häufige Fehler'' records that
+      students asserted sup A = 0 for every A ⊂ R_<0. That is the same error the HU Hausaufgabe 5.4 is
+      built to expose. Marburg''s A6 is the closer match for a full written answer. Both are solved, so
+      spend them on a diagnosed gap rather than as a test.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs §1.3 — Supremum und Infimum
+    source_id: source-analysis-klausuren-extern
+    locator: TUM_Ferienkurs-Analysis-1_Skriptum.pdf §1.3 Supremum und Infimum PDF p. 8; Kap. 1 Übungsaufgaben
+      PDF p. 17
+    angle: The compressed statement plus a matching exercise set, when what is wanted is a fast second
+      pass rather than a fuller explanation.
+    angle_detail: Three pages against MfNF's twelve. This is the route for revision — after the definition
+      is understood once, to check it is still there — rather than for first repair. Its exercises are
+      grouped at the end of the chapter and carry no separate solutions section, which is the one thing
+      it does worse than Forster or Fritzsche.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — characterizing R and the Archimedean property
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Cantor''s Remarkable Theorem and the Rationals'' Lack of
+      the Least Upper Bound Property'' p. 9, ''The Characterization of the Real Numbers'' p. 13, ''The
+      Archimedian Property, Density of the Rationals, and Absolute Value'' p. 16'
+    angle: Full rigour for one blocked distinction — deliberately more than this exam needs.
+    angle_detail: 'The rule attached to this source has not changed: it is opened for a single definition
+      that refuses to make sense, never watched or read through. What is new is that the lecture titles
+      are now named rather than referred to as ''lectures 7-9''. For Chapter 2 the useful pair is p. 9
+      (why Q fails the least-upper-bound property, which is the negative result the axiom answers) and
+      p. 16 (Archimedean property and density, the script''s §2.3.4).'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 1 — The Real Numbers
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §1.2 Some Preliminaries p. 18, §1.3 The Axiom of Completeness p. 27, §1.4 Consequences
+      of Completeness p. 33 (§§1.5-1.6 cardinality and Cantor are past the script)
+    angle: The most readable argument in the collection for *why* completeness has to be an axiom at all,
+      opened by the irrationality of √2.
+    angle_detail: Abbott opens each chapter with a discussion section whose only job is to make the coming
+      definition feel necessary, and Chapter 1's is the gap in Q that √2 falls through. If the completeness
+      axiom reads as an arbitrary extra rule, this is the twenty pages that fix that, and it is English
+      written for undergraduates rather than for specialists. It is more rigour than this exam asks for,
+      so it is a reference to enter for one blocked idea, not a parallel text to read through.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Supremum und Infimum
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Einleitung – Was sind reelle Zahlen?'' p. 20; ''Supremum und Infimum''
+      p. 29 (Definition p. 30, uneigentliches Supremum p. 38, ''Supremum und Infimum bestimmen und beweisen''
+      p. 41, Eigenschaften p. 48). Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A German open text with a section devoted specifically to *determining and proving* a supremum,
+      which is the exact verb the HU Hausaufgabe uses.
+    angle_detail: 'This route is new at chapter level: the source previously carried only foundations/sequences/series
+      and a bare page count. It is a Wikibook, so it is verbose and assumes nothing, and it splits every
+      idea into its own titled section — which is why it can offer twelve pages on the single question
+      of how you prove that a number is the supremum. It is not a substitute for the script''s statement
+      of completeness; it is the route for when the proof technique, not the definition, is what is missing.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§3-4 — the set R and the completeness axiom
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §3 The Set R of Real Numbers p. 25, §4 The Completeness
+      Axiom p. 32, §5 The Symbols +∞ and −∞ p. 40; Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Proof-oriented and unusually explicit about which axiom is being used in which step.
+    angle_detail: Ross numbers his sections rather than chapters and keeps them short, which makes him
+      easy to enter at a point. §4 is the completeness axiom with the Archimedean property drawn out as
+      an immediate consequence — the script's §2.3.4. The book has been unassessed against this exam since
+      it was located; the locator is a fact, the judgement about whether it earns time here is not, and
+      is left open deliberately.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-supremum-infimum/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-vollstaendigkeitsaxiom
+  number: 5
+  title: Das Vollständigkeitsaxiom (§2.3.3)
+  status: pending
+  objective: The completeness axiom in the script's supremum form. It is the axiom that separates R from
+    Q and the one every convergence theorem later cites, directly or through Bolzano-Weierstraß.
+  done_when:
+  - 'Reproduce without notes: The completeness axiom in the script''s supremum form. It is the axiom that
+    separates R from Q and the one every convergence theorem later cites, directly or through Bolzano-Weierstraß.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 2, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §1.3 Vollständigkeit
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §1.3 Vollständigkeit p. 25 (with §1.1 Mengen von Zahlen p. 9 for the order
+      rules); Lösungen in Kap. 5 Anhang from p. 253
+    angle: Explained German solutions on suprema and completeness, at the pace that makes the definition's
+      two halves visible.
+    angle_detail: Fritzsche's treatment is unusual in spending its words on why an upper bound and a least
+      upper bound are different objects, which is the distinction the HU Hausaufgabe is built on. The
+      exercises come with fully written solutions in the Anhang, so this is the route that shows what
+      a supremum proof looks like when it is written out rather than asserted.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs §1.3 — Supremum und Infimum
+    source_id: source-analysis-klausuren-extern
+    locator: TUM_Ferienkurs-Analysis-1_Skriptum.pdf §1.3 Supremum und Infimum PDF p. 8; Kap. 1 Übungsaufgaben
+      PDF p. 17
+    angle: The compressed statement plus a matching exercise set, when what is wanted is a fast second
+      pass rather than a fuller explanation.
+    angle_detail: Three pages against MfNF's twelve. This is the route for revision — after the definition
+      is understood once, to check it is still there — rather than for first repair. Its exercises are
+      grouped at the end of the chapter and carry no separate solutions section, which is the one thing
+      it does worse than Forster or Fritzsche.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — characterizing R and the Archimedean property
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Cantor''s Remarkable Theorem and the Rationals'' Lack of
+      the Least Upper Bound Property'' p. 9, ''The Characterization of the Real Numbers'' p. 13, ''The
+      Archimedian Property, Density of the Rationals, and Absolute Value'' p. 16'
+    angle: Full rigour for one blocked distinction — deliberately more than this exam needs.
+    angle_detail: 'The rule attached to this source has not changed: it is opened for a single definition
+      that refuses to make sense, never watched or read through. What is new is that the lecture titles
+      are now named rather than referred to as ''lectures 7-9''. For Chapter 2 the useful pair is p. 9
+      (why Q fails the least-upper-bound property, which is the negative result the axiom answers) and
+      p. 16 (Archimedean property and density, the script''s §2.3.4).'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 1 — The Real Numbers
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §1.2 Some Preliminaries p. 18, §1.3 The Axiom of Completeness p. 27, §1.4 Consequences
+      of Completeness p. 33 (§§1.5-1.6 cardinality and Cantor are past the script)
+    angle: The most readable argument in the collection for *why* completeness has to be an axiom at all,
+      opened by the irrationality of √2.
+    angle_detail: Abbott opens each chapter with a discussion section whose only job is to make the coming
+      definition feel necessary, and Chapter 1's is the gap in Q that √2 falls through. If the completeness
+      axiom reads as an arbitrary extra rule, this is the twenty pages that fix that, and it is English
+      written for undergraduates rather than for specialists. It is more rigour than this exam asks for,
+      so it is a reference to enter for one blocked idea, not a parallel text to read through.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Supremum und Infimum
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Einleitung – Was sind reelle Zahlen?'' p. 20; ''Supremum und Infimum''
+      p. 29 (Definition p. 30, uneigentliches Supremum p. 38, ''Supremum und Infimum bestimmen und beweisen''
+      p. 41, Eigenschaften p. 48). Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A German open text with a section devoted specifically to *determining and proving* a supremum,
+      which is the exact verb the HU Hausaufgabe uses.
+    angle_detail: 'This route is new at chapter level: the source previously carried only foundations/sequences/series
+      and a bare page count. It is a Wikibook, so it is verbose and assumes nothing, and it splits every
+      idea into its own titled section — which is why it can offer twelve pages on the single question
+      of how you prove that a number is the supremum. It is not a substitute for the script''s statement
+      of completeness; it is the route for when the proof technique, not the definition, is what is missing.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§3-4 — the set R and the completeness axiom
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §3 The Set R of Real Numbers p. 25, §4 The Completeness
+      Axiom p. 32, §5 The Symbols +∞ and −∞ p. 40; Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Proof-oriented and unusually explicit about which axiom is being used in which step.
+    angle_detail: Ross numbers his sections rather than chapters and keeps them short, which makes him
+      easy to enter at a point. §4 is the completeness axiom with the Archimedean property drawn out as
+      an immediate consequence — the script's §2.3.4. The book has been unassessed against this exam since
+      it was located; the locator is a fact, the judgement about whether it earns time here is not, and
+      is left open deliberately.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-vollstaendigkeitsaxiom/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-folgerungen
+  number: 6
+  title: Folgerungen aus dem Vollständigkeitsaxiom (§2.3.4)
+  status: pending
+  objective: 'What completeness immediately buys: the Archimedean property and the density of Q in R.
+    These are the steps that let an epsilon argument choose an N at all.'
+  done_when:
+  - 'Reproduce without notes: What completeness immediately buys: the Archimedean property and the density
+    of Q in R. These are the steps that let an epsilon argument choose an N at all.'
+  - Work Fritzsche §1.3 Vollständigkeit, then the remaining 2, and record every miss with the step it
+    failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §1.3 Vollständigkeit
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §1.3 Vollständigkeit p. 25 (with §1.1 Mengen von Zahlen p. 9 for the order
+      rules); Lösungen in Kap. 5 Anhang from p. 253
+    angle: Explained German solutions on suprema and completeness, at the pace that makes the definition's
+      two halves visible.
+    angle_detail: Fritzsche's treatment is unusual in spending its words on why an upper bound and a least
+      upper bound are different objects, which is the distinction the HU Hausaufgabe is built on. The
+      exercises come with fully written solutions in the Anhang, so this is the route that shows what
+      a supremum proof looks like when it is written out rather than asserted.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — characterizing R and the Archimedean property
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Cantor''s Remarkable Theorem and the Rationals'' Lack of
+      the Least Upper Bound Property'' p. 9, ''The Characterization of the Real Numbers'' p. 13, ''The
+      Archimedian Property, Density of the Rationals, and Absolute Value'' p. 16'
+    angle: Full rigour for one blocked distinction — deliberately more than this exam needs.
+    angle_detail: 'The rule attached to this source has not changed: it is opened for a single definition
+      that refuses to make sense, never watched or read through. What is new is that the lecture titles
+      are now named rather than referred to as ''lectures 7-9''. For Chapter 2 the useful pair is p. 9
+      (why Q fails the least-upper-bound property, which is the negative result the axiom answers) and
+      p. 16 (Archimedean property and density, the script''s §2.3.4).'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 1 — The Real Numbers
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §1.2 Some Preliminaries p. 18, §1.3 The Axiom of Completeness p. 27, §1.4 Consequences
+      of Completeness p. 33 (§§1.5-1.6 cardinality and Cantor are past the script)
+    angle: The most readable argument in the collection for *why* completeness has to be an axiom at all,
+      opened by the irrationality of √2.
+    angle_detail: Abbott opens each chapter with a discussion section whose only job is to make the coming
+      definition feel necessary, and Chapter 1's is the gap in Q that √2 falls through. If the completeness
+      axiom reads as an arbitrary extra rule, this is the twenty pages that fix that, and it is English
+      written for undergraduates rather than for specialists. It is more rigour than this exam asks for,
+      so it is a reference to enter for one blocked idea, not a parallel text to read through.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Supremum und Infimum
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Einleitung – Was sind reelle Zahlen?'' p. 20; ''Supremum und Infimum''
+      p. 29 (Definition p. 30, uneigentliches Supremum p. 38, ''Supremum und Infimum bestimmen und beweisen''
+      p. 41, Eigenschaften p. 48). Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: A German open text with a section devoted specifically to *determining and proving* a supremum,
+      which is the exact verb the HU Hausaufgabe uses.
+    angle_detail: 'This route is new at chapter level: the source previously carried only foundations/sequences/series
+      and a bare page count. It is a Wikibook, so it is verbose and assumes nothing, and it splits every
+      idea into its own titled section — which is why it can offer twelve pages on the single question
+      of how you prove that a number is the supremum. It is not a substitute for the script''s statement
+      of completeness; it is the route for when the proof technique, not the definition, is what is missing.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§3-4 — the set R and the completeness axiom
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §3 The Set R of Real Numbers p. 25, §4 The Completeness
+      Axiom p. 32, §5 The Symbols +∞ and −∞ p. 40; Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Proof-oriented and unusually explicit about which axiom is being used in which step.
+    angle_detail: Ross numbers his sections rather than chapters and keeps them short, which makes him
+      easy to enter at a point. §4 is the completeness axiom with the Archimedean property drawn out as
+      an immediate consequence — the script's §2.3.4. The book has been unassessed against this exam since
+      it was located; the locator is a fact, the judgement about whether it earns time here is not, and
+      is left open deliberately.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-folgerungen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-potenzen-wurzeln
+  number: 7
+  title: Potenzen und Wurzeln reeller Zahlen (§§2.3.5-2.3.6)
+  status: pending
+  objective: Powers with integer and rational exponents, and the existence of n-th roots as the first
+    genuine payoff of completeness — an existence proof rather than a calculation. Serie 07's Heron task
+    is its computational counterpart.
+  done_when:
+  - 'Reproduce without notes: Powers with integer and rational exponents, and the existence of n-th roots
+    as the first genuine payoff of completeness — an existence proof rather than a calculation. Serie
+    07''s Heron task is its computational counterpart.'
+  - Work Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln, then the remaining
+    1, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Forster/Wessoly §§2, 3, 5, 6 — Körper, Anordnung, Vollständigkeit, Wurzeln
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §2 Die Körperaxiome p. 15, §3 Anordnungsaxiome p. 18, §5 Das
+      Vollständigkeitsaxiom p. 23, §6 Wurzeln p. 24; Lösungen §2 p. 78, §3 p. 84, §5 p. 93, §6 p. 101
+    angle: Section-for-section the closest external match to §§2.1-2.3.6, with solutions, in the German
+      the exam is written in.
+    angle_detail: 'The alignment here is unusually tight: Forster''s §2/§3/§5/§6 map onto the script''s
+      §2.1/§2.2/§2.3.3/§2.3.6 almost one to one, including the same ordering of ideas. That makes this
+      the default drill for the chapter and the reason it is listed before the English texts. The solutions
+      are terse — they show the argument, not the search for it — so pair a first attempt with Fritzsche''s
+      fuller write-up when one does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 2 — Die reellen Zahlen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf Kap. 2 Die reellen Zahlen p. 19 (§2.1 Körper, §2.2 Anordnung p. 20, §2.3 Intervalle
+      und beschränkte Mengen p. 21, §2.4 Dedekind-Vollständigkeit p. 22); Lösungen Kap. 22 p. 138
+    angle: Fresh problems on the same four subsections, in reserve once Forster is spent.
+    angle_detail: 'One difference worth knowing before opening it: Deitmar states completeness in the
+      Dedekind-cut form while the script uses the supremum form. The two are equivalent and the exercises
+      are unaffected, but a definition read here and reproduced in the exam would be in the wrong vocabulary.
+      Use it for problems, not for the statement.'
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 2 und Kap. 5 — reelle Zahlen und Vollständigkeit
+    source_id: source-grieser-analysis1
+    locator: grieser.pdf Kap. 2 'Reelle, rationale und ganze Zahlen' p. 20 (§2.1 Die reellen Zahlen p.
+      20, §2.3 vollständige Induktion p. 33, Übungen p. 40); Kap. 5 'Die Vollständigkeit der reellen Zahlen'
+      p. 74 (§5.1 Das Supremumsaxiom p. 74, §5.2 Potenzen mit rationalen Exponenten p. 79, §5.3 Das Extremalprinzip
+      p. 83, Übungen p. 87); Lösungen und Hinweise p. 329
+    angle: 'The German second voice: same rigour as the English texts, with motivation, and exercises
+      that carry both hints and solutions.'
+    angle_detail: 'Grieser separates the number systems (Kap. 2) from completeness (Kap. 5) and puts combinatorics
+      between them, so it is read by section rather than in order. Two things make it worth the detour
+      on this chapter: §5.2 derives rational powers from the supremum axiom, which is the script''s §2.3.5-2.3.6
+      done slowly; and the exercises come with Hinweise as well as Lösungen, so a stuck problem has an
+      intermediate step between ''nothing'' and ''the answer''.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Real Numbers
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''Real Numbers'' p. 23: Basic properties p. 23, The set of real numbers p.
+      29, Absolute value and bounded functions p. 36, Intervals and the size of R p. 41'
+    angle: The free English text whose section order tracks the script most closely — the structural second
+      reading.
+    angle_detail: 'Lebl builds R in the same sequence the script does: ordered field, then bounded sets
+      and suprema, then completeness, then absolute value and intervals. That makes it useful in a way
+      Abbott is not — you can read a script section and its Lebl counterpart side by side and the arguments
+      line up. Volume II (realanal2.pdf) is multivariable and out of scope entirely.'
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Die reellen Zahlen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil II ''Analysis in einer Veränderlichen''
+      p. 75: ''Die reellen Zahlen'' p. 79 (Die Körperaxiome p. 79, Ringe p. 81, Folgerungen aus den Körperaxiomen
+      p. 81, Die Anordnungsaxiome p. 83, Irrationale Zahlen p. 85); ''Das Vollständigkeitsaxiom'' p. 95,
+      ''Quadratwurzeln'' p. 100, ''Zur Existenz der reellen Zahlen'' p. 103. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, written for computer scientists, and structured like the script — the closest match
+      in framing to the lecture itself.
+    angle_detail: The 2026-08-03 audit routed this source to 'AN.0 prerequisite gap' because 669 pages
+      made it look too broad to use. Opened, its Teil II is a complete one-variable Analysis in the same
+      order as the script, and the Chapter 2 material is a well-marked 25-page span. Note that it puts
+      the completeness axiom inside its Konvergenz chapter rather than with the field axioms — a different
+      arrangement from the script, and a reason to take problems from it rather than structure.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-potenzen-wurzeln/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch02-maschinenzahlen
+  number: 8
+  title: Ausflug – Darstellung reeller Zahlen im Rechner (§2.4)
+  status: pending
+  objective: 'Floating-point machine numbers, rounding error and machine arithmetic: why a complete ordered
+    field cannot be represented exactly and what breaks when you pretend otherwise. Ausflug depth — understand
+    and apply the core claims; not an exam focus.'
+  done_when:
+  - 'Reproduce without notes: Floating-point machine numbers, rounding error and machine arithmetic: why
+    a complete ordered field cannot be represented exactly and what breaks when you pretend otherwise.
+    Ausflug depth — understand and apply the core claims; not an exam focus.'
+  exam_critical: true
+  concepts:
+  - concept-real-numbers
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 2 — the scope authority
+    source_id: source-analysis-skript
+    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
+      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
+      7.1 (Heron) reaches §2.3.6'
+    angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
+      this examiner states it.
+    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
+      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
+      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
+      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
+      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
+      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
+      audit.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/stages/stage-m2-analysis-ch02-maschinenzahlen/notes.md
+  attachments: []
+  source_feedback: []

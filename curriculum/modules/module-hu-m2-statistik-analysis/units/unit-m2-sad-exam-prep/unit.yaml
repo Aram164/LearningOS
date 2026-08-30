@@ -137,7 +137,11 @@ source_selections:
   - stage-m2-sad-s12-probabilistic-learning
   - stage-m2-sad-s13-neural-networks
 - source_id: source-fahrmeir-statistik
-  locator: Chapters 2-7 and 9-11, topic matched
+  locator: statistik.pdf Kap. 2 Univariate Deskription p. 46, Kap. 3 Multivariate Deskription p. 126 (§3.6
+    Regression p. 168), Kap. 4 Wahrscheinlichkeitsrechnung p. 193, Kap. 5 Diskrete Zufallsvariablen p.
+    242, Kap. 6 Stetige Zufallsvariablen p. 288, Kap. 7 Mehr über Zufallsvariablen p. 329, Kap. 9 Parameterschätzung
+    p. 382, Kap. 10 Testen von Hypothesen p. 416 (§10.2 Prinzipien des Testens p. 430), Kap. 11 Spezielle
+    Testprobleme p. 450, Kap. 12 Regressionsanalyse p. 491
   route_id: route-5ef907d26eefddbfc3abd22c
   purpose: German notation-aligned derivation for descriptive statistics, probability, estimation, and
     testing.

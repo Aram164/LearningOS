@@ -3,306 +3,45 @@ type: unit
 module_id: module-hu-m2-statistik-analysis
 component_id: component-m2-analysis
 kind: exam-block
-title: Analysis — independent script-led exam preparation
-order: 100
-scope: 'Learner-selected authority: Hella Rabus, unser skript.pdf (Stand 4 February 2025), introduction
-  and Chapters 1-7. Wiederholung sections are required; Ausflug sections are exam-light application context;
-  Exkurs sections and Chapter 8 are deferred as non-exam material. Current local HU series 05-09 and WV
-  define the closest available exercise evidence. The script itself says proofs need not be memorized:
-  definitions, theorem conditions/results, and application control the plan. This map owns Analysis only;
-  Statistics and combined-exam timing live in their own units.'
+title: Analysis — calibration, retrieval and timed transfer
+order: 108
+scope: The two Analysis sessions that are not a script chapter. Calibration owns the course contract (script
+  pp. iv-vii), the exam boundary, and the cold diagnostic that decides which chapters need which support.
+  Retrieval owns mixed Analysis-only practice, the HU WV set under exam conditions, the scope-filtered
+  external Klausuren, and the theorem-condition ledger. Switching between Analysis and Statistics is rehearsed
+  in unit-m2-combined-exam-rehearsal, not here. Chapter 8 and every Exkurs stay deferred.
 status: ready
 knowledge_map:
-  summary: The script builds analysis in one dependency chain — the real numbers and completeness make
-    limits of sequences meaningful; sequences underwrite series and function limits; continuity and differentiation
-    follow from function limits; Taylor and Riemann integration are the two payoffs. Proof presentation
-    runs alongside as a skill rather than a topic, because the script states proofs need not be memorized
-    — definitions, theorem conditions and application carry the exam. Chapter 8 and the Exkurs sections
-    are deliberately outside exam scope.
+  summary: Everything in the chapter units is learning one chapter; this unit is the two jobs that cut
+    across all of them. Calibration is run once, before Chapter 1, and answers what counts as in scope
+    and at what depth. Retrieval is run repeatedly, after chapters are in place, and is the only session
+    where whole papers are worked cold and timed.
   nodes:
-  - id: knowledge-an-foundations
-    title: Foundations and the real numbers
-    summary: Assumed prerequisites, real-number axioms, order, completeness, intervals, suprema and infima,
-      powers and roots. Completeness is the load-bearing idea everything later rests on.
-  - id: knowledge-an-proof-presentation
-    title: Proof reading and presentation
-    summary: Reading theorem conditions precisely and writing a correct, presentable argument. A cross-cutting
-      skill, not a chapter — the script's kleine_beweise disclaimer sets the depth.
-    builds_on:
-    - knowledge-an-foundations
-  - id: knowledge-an-sequences
-    title: Sequences and convergence
-    summary: Sequence definitions, epsilon-N arguments, accumulation points, subsequences, Cauchy sequences,
-      monotone convergence and divergence criteria. Chapter 3 is the spine.
-    builds_on:
-    - knowledge-an-foundations
-  - id: knowledge-an-series
-    title: Series and convergence criteria
-    summary: Necessary conditions, geometric and telescoping series, comparison, ratio, root and Leibniz
-      criteria, absolute convergence. Chapter 4, best held as a decision process.
-    builds_on:
-    - knowledge-an-sequences
-  - id: knowledge-an-limits-continuity
-    title: Function limits and continuity
-    summary: Sequence criteria for limits, one-sided and improper limits, continuity, the intermediate
-      value theorem, inverse functions, extrema and the compact-interval theorems. Sections 5.1-5.5.
-    builds_on:
-    - knowledge-an-sequences
-  - id: knowledge-an-exp-log-uniform
-    title: Exponential, logarithm and uniform convergence
-    summary: Exponential and logarithm laws kept computational, and the distinction between pointwise
-      and uniform convergence at script depth. Sections 5.6-5.7.
-    builds_on:
-    - knowledge-an-limits-continuity
-    - knowledge-an-series
-  - id: knowledge-an-differentiation
-    title: Differentiation and the mean-value theorems
-    summary: The derivative definition and theorem chain — calculating derivatives, justifying extrema
-      and monotonicity, Rolle and the mean-value theorem, l'Hospital.
-    builds_on:
-    - knowledge-an-limits-continuity
-  - id: knowledge-an-taylor
-    title: Taylor approximation
-    summary: Taylor polynomials, the remainder and error bound, and approximation as a usable tool. Section
-      6.8; 6.9 excluded, 6.10 at Ausflug overview depth only.
-    builds_on:
-    - knowledge-an-differentiation
-  - id: knowledge-an-integration
-    title: Riemann integration and the fundamental theorem
-    summary: Riemann sums, integrability, the fundamental theorem, substitution, integration by parts
-      and improper integrals. Sections 7.1-7.3.
-    builds_on:
-    - knowledge-an-limits-continuity
-    - knowledge-an-differentiation
-  - id: knowledge-an-exam-transfer
+  - id: knowledge-m2-analysis-calibrate
+    title: Calibrate the script-led method and the exam boundary
+    summary: Read the course contract and fix the three depths it defines — Wiederholung required, Ausflug
+      at overview depth, Exkurs out of scope — then run a cold diagnostic so the chapter sessions can
+      be entered at the right level rather than uniformly from zero.
+  - id: knowledge-m2-analysis-anx
     title: Analysis-only retrieval and timed transfer
-    summary: 'Converting the Analysis blocks into subject-only exam performance: mixed retrieval, HU-style
-      tasks, theorem-condition discipline, timing, and Analysis half-mocks. Switching between Analysis
-      and Statistics is rehearsed only in the joint unit.'
+    summary: Mixed retrieval across all seven chapters, the HU WV set at its stated 30-45 minutes per
+      task, scope-filtered external Klausuren under exam conditions, and a theorem-condition ledger that
+      records which hypotheses were dropped.
     builds_on:
-    - knowledge-an-series
-    - knowledge-an-exp-log-uniform
-    - knowledge-an-taylor
-    - knowledge-an-integration
-    - knowledge-an-proof-presentation
+    - knowledge-m2-analysis-calibrate
+  - id: knowledge-m2-analysis-exkurse
+    title: Deferred – Chapter 8 and the non-exam Exkurse
+    summary: 'The explicit deferral ledger: script Chapter 8 in full, and every section labelled Exkurs.
+      Held as a named boundary so a deferred topic is never re-discovered as a gap, and so the decision
+      can be revisited if the lecturer changes scope.'
+    builds_on:
+    - knowledge-m2-analysis-calibrate
 scope_sources:
 - source_id: source-analysis-skript
   authority: brief
-  locator: 'unser skript.pdf: pp. iv-vii course contract, pp. ii-iii contents, Chapters 1-7; Stand 04.02.2025'
-- source_id: source-analysis-skript
-  authority: reference
-  locator: ana_inf_serie05.pdf through serie09.pdf and ana_inf_serieWV.pdf; WiSe 2024/25 current local
-    HU exercise evidence
-source_selections:
-- source_id: source-analysis-skript
-  locator: unser skript.pdf — the scope authority; HU exercise series 05-09 + WV
-  purpose: Scope, notation, current HU practice, and correction authority. The HU series stops at §5.5;
-    Chapters 6-7 have no HU sheet.
-  stage_ids:
-  - stage-m2-analysis-calibrate
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-  - stage-m2-analysis-anx
-  - stage-m2-analysis-exkurse
-- source_id: source-professor-leonard
-  locator: Professor Leonard — Calculus 1/2
-  purpose: Conditional intuition unlock, chosen per diagnosed block rather than watched through.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-- source_id: source-3b1b-essence-of-calculus
-  locator: 3Blue1Brown — Essence of Calculus
-  purpose: Short visual preview when the mental picture, not the technique, is missing.
-  stage_ids:
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-- source_id: source-fritzsche-trainingsbuch
-  locator: Fritzsche Kap. 1 — Die Sprache der Analysis; Fritzsche Kap. 2 — Der Grenzwertbegriff; Fritzsche
-    Kap. 3 — Der Calculus; Fritzsche Kap. 4 — Vertauschung von Grenzprozessen
-  purpose: Explained German solutions, chapter-matched to every script block including Taylor and integration.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-  - stage-m2-analysis-anx
-- source_id: source-analysis-drill-blaetter-extern
-  locator: Solved sequence and series drill sheets (7 files); u10_Loesung.pdf — epsilon-delta continuity
-    worked out; IngMath2_Aufgaben.pdf — the only Ch 6-7 drill in this collection; Aufgabensammlung-M1_Loesung.pdf
-    — mixed solved bank; Bestimmt_Scan.pdf — handwritten field and order axioms
-  purpose: Solved calculation drills after the HU tasks; IngMath2_Aufgaben.pdf carries the Chapter 6-7
-    half by itself.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-  - stage-m2-analysis-anx
-- source_id: source-analysis-klausuren-extern
-  locator: Solved German Klausuren (Marburg, Regensburg, Darmstadt, Paderborn); Unsolved German papers
-    held for timed sittings (Ulm, Leipzig, Stuttgart); TUM Ferienkurs Analysis 1 — Skriptum with Übungsaufgaben;
-    MIT 18.100C exam set (English, proof-heavy)
-  purpose: German exam wording, timed transfer, and the TUM Skriptum’s Chapter 6-7 exercise sets.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-  - stage-m2-analysis-anx
-- source_id: source-strang-calculus
-  locator: Strang — Calculus
-  purpose: Applied-first local intuition for integration, Taylor, and (in reserve) derivatives.
-  stage_ids:
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-- source_id: source-mit-18100a
-  locator: MIT 18.100A — Real Analysis
-  purpose: One blocked rigorous distinction, not linear viewing.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-and
-- source_id: source-analysis-grundlagen-handouts
-  locator: Mengen und Abbildungen / Relationen handouts; Maths220 — Proofs in Calculus
-  purpose: Prerequisite repair, plus the Maths220 handout on how a limit or series proof is written.
-  stage_ids:
-  - stage-m2-analysis-calibrate
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-anx
-- source_id: source-forster-wessoly
-  locator: Forster/Wessoly §§1-9 — Induktion bis Punktmengen; Forster/Wessoly §§10-14 — Stetigkeit, Logarithmus,
-    Exponentialfunktion; Forster/Wessoly §§15-20 — Differentiation und Riemann-Integral; Forster/Wessoly
-    §§21-22 — Gleichmäßige Konvergenz und Taylor-Reihen
-  purpose: Terse solved German problems matched paragraph by paragraph, Taylor-Reihen §22 included.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-  - stage-m2-analysis-anx
-- source_id: source-deitmar-uebungsbuch
-  locator: Deitmar Kap. 1-2 — Grundlagen und die reellen Zahlen; Deitmar Kap. 3 — Folgen und Reihen; Deitmar
-    Kap. 4 — Funktionen und Stetigkeit; Deitmar Kap. 5-6 — Differential- und Integralrechnung; Deitmar
-    §7.1 — Gleichmäßige Konvergenz
-  purpose: Third solved bank; fresh problems once Fritzsche and Forster are spent on a topic.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-ang
-- source_id: source-ableitinger-musterloesungen
-  locator: Ableitinger — Musterlösungen
-  purpose: Proof-writing repair only.
-  stage_ids:
-  - stage-m2-analysis-anx
-- source_id: source-abbott-understanding-analysis
-  locator: Abbott — Understanding Analysis
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-ang
-- source_id: source-grieser-analysis1
-  locator: Grieser — Analysis I
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-ane
-- source_id: source-lebl-basic-analysis
-  locator: Lebl — Basic Analysis I + II
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-  - stage-m2-analysis-and
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-anf
-  - stage-m2-analysis-ang
-- source_id: source-labs-schreyer-mathe-informatiker
-  locator: Mathematik für Informatiker (Teil 1-3)
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-an0
-- source_id: source-mfnf-analysis1
-  locator: Mathe für Nicht-Freaks — Analysis 1
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-an0
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-- source_id: source-ohlbach-eisinger-beweise
-  locator: Design Patterns für mathematische Beweise
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-anx
-- source_id: source-velleman-how-to-prove-it
-  locator: How To Prove It — A Structured Approach
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-anx
-- source_id: source-ross-elementary-analysis
-  locator: Ross — Elementary Analysis
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-ana
-  - stage-m2-analysis-anb
-  - stage-m2-analysis-anc
-- source_id: source-thomas-calculus
-  locator: 'Thomas'' Calculus: Early Transcendentals'
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-ang
-- source_id: source-stewart-calculus
-  locator: 'Stewart — Calculus: Early Transcendentals (8th ed.)'
-  purpose: Reserve route; the angle it highlights is on each stage and in the module source map.
-  stage_ids:
-  - stage-m2-analysis-ane
-  - stage-m2-analysis-ang
-current_study_map: study-map-m2-analysis-exam-prep
-artifacts:
-  ultimate_reference: note-an-source-crosswalk
+  locator: unser skript.pdf course contract pp. iv-vii and Inhaltsverzeichnis pp. ii-iii; Stand 04.02.2025
+source_selections: []
+artifacts: {}
 workspace_ids:
 - workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-exam-prep

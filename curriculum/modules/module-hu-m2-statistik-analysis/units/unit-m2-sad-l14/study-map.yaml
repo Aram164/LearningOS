@@ -170,14 +170,14 @@ stages:
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
-      (multinomial vs Bernoulli)
+    locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
+      for text classification p. 48
     angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
-    angle_detail: These are two genuinely different models — one counts occurrences, one records presence
-      — and they give different answers on the same documents. L14 introduces multinomial Naive Bayes
-      without naming the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two
-      pages and settles it. Also gives the maximum-likelihood derivation of the smoothed estimates rather
-      than presenting smoothing as a hack.
+    angle_detail: '§4.2.2 is why this route exists on L14 rather than only on L04: it separates the multinomial
+      event model from the Bernoulli one explicitly, and shows that they give different likelihoods for
+      the same document. L14 extends the categorical classifier without naming which event model it is
+      using, so this is the section that makes the distinction sayable — and it is the kind of distinction
+      an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   - kind: reference
@@ -194,14 +194,16 @@ stages:
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier
-      set)
+    locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
+      vs. Discriminative models, §8.7 Naïve Bayes; §7.2 Bayes'' Rule and §7.3 Parameter estimation (printed
+      p. 35 onward) for the estimation step'
     angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
       for L14.
-    angle_detail: 'University lecture notes written to be revised from rather than learned from: model,
-      assumption, estimates, prediction rule, all on a couple of pages with the algebra intact. Use it
-      the day before the exam to check that you can still reconstruct the derivation, not to meet the
-      topic.'
+    angle_detail: 'Two to three pages of pure derivation with no worked example and no prose, which is
+      exactly what makes it the fastest revision reference for L14 — everything is symbols and the structure
+      is visible at a glance. §8.5 is the part worth reading even if the classifier is already solid:
+      it names the generative/discriminative distinction that L14 never states, and that distinction is
+      what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
   - kind: practise
@@ -327,14 +329,14 @@ stages:
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
-      (multinomial vs Bernoulli)
+    locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
+      for text classification p. 48
     angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
-    angle_detail: These are two genuinely different models — one counts occurrences, one records presence
-      — and they give different answers on the same documents. L14 introduces multinomial Naive Bayes
-      without naming the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two
-      pages and settles it. Also gives the maximum-likelihood derivation of the smoothed estimates rather
-      than presenting smoothing as a hack.
+    angle_detail: '§4.2.2 is why this route exists on L14 rather than only on L04: it separates the multinomial
+      event model from the Bernoulli one explicitly, and shows that they give different likelihoods for
+      the same document. L14 extends the categorical classifier without naming which event model it is
+      using, so this is the section that makes the distinction sayable — and it is the kind of distinction
+      an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   - kind: practise
@@ -577,14 +579,16 @@ stages:
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier
-      set)
+    locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
+      vs. Discriminative models, §8.7 Naïve Bayes; §7.2 Bayes'' Rule and §7.3 Parameter estimation (printed
+      p. 35 onward) for the estimation step'
     angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
       for L14.
-    angle_detail: 'University lecture notes written to be revised from rather than learned from: model,
-      assumption, estimates, prediction rule, all on a couple of pages with the algebra intact. Use it
-      the day before the exam to check that you can still reconstruct the derivation, not to meet the
-      topic.'
+    angle_detail: 'Two to three pages of pure derivation with no worked example and no prose, which is
+      exactly what makes it the fastest revision reference for L14 — everything is symbols and the structure
+      is visible at a glance. §8.5 is the part worth reading even if the classifier is already solid:
+      it names the generative/discriminative distinction that L14 never states, and that distinction is
+      what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-gaussian/notes.md
@@ -658,14 +662,14 @@ stages:
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     source_id: source-cs229-notes
-    locator: Main notes §4.2 Naive Bayes, §4.2.1 Laplace smoothing, and §4.2.2 event models for text classification
-      (multinomial vs Bernoulli)
+    locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
+      for text classification p. 48
     angle: Distinguishes the multinomial from the Bernoulli event model explicitly, which L14 blurs.
-    angle_detail: These are two genuinely different models — one counts occurrences, one records presence
-      — and they give different answers on the same documents. L14 introduces multinomial Naive Bayes
-      without naming the alternative, which makes it easy to apply the wrong likelihood. §4.2.2 is two
-      pages and settles it. Also gives the maximum-likelihood derivation of the smoothed estimates rather
-      than presenting smoothing as a hack.
+    angle_detail: '§4.2.2 is why this route exists on L14 rather than only on L04: it separates the multinomial
+      event model from the Bernoulli one explicitly, and shows that they give different likelihoods for
+      the same document. L14 extends the categorical classifier without naming which event model it is
+      using, so this is the section that makes the distinction sayable — and it is the kind of distinction
+      an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   - kind: reference
@@ -696,14 +700,16 @@ stages:
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     source_id: source-csc411-notes
-    locator: The Naive Bayes lecture notes (Toronto CSC411/2515 course notes, the generative-classifier
-      set)
+    locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
+      vs. Discriminative models, §8.7 Naïve Bayes; §7.2 Bayes'' Rule and §7.3 Parameter estimation (printed
+      p. 35 onward) for the estimation step'
     angle: A two-to-three page summary with the full derivation and no prose — the fastest revision reference
       for L14.
-    angle_detail: 'University lecture notes written to be revised from rather than learned from: model,
-      assumption, estimates, prediction rule, all on a couple of pages with the algebra intact. Use it
-      the day before the exam to check that you can still reconstruct the derivation, not to meet the
-      topic.'
+    angle_detail: 'Two to three pages of pure derivation with no worked example and no prose, which is
+      exactly what makes it the fastest revision reference for L14 — everything is symbols and the structure
+      is visible at a glance. §8.5 is the part worth reading even if the classifier is already solid:
+      it names the generative/discriminative distinction that L14 never states, and that distinction is
+      what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
   - kind: read

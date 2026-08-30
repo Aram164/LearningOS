@@ -538,15 +538,17 @@ stages:
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     source_id: source-mml
-    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
-      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
+      Estimation p. 298 (maximum likelihood and MAP); read with Ch 5 Vector Calculus p. 145, §5.2 Partial
+      Differentiation and Gradients p. 152, for the notation'
     angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
       L08 are one derivation rather than two lectures.
-    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
-      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
-      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
-      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
-      free PDF from mml-book.github.io.
+    angle_detail: 'Derives least squares as maximum likelihood under Gaussian noise from the first page
+      of §9.2, rather than presenting the squared-error objective and justifying it later. That matters
+      across two lectures: L03 introduces the objective and L08 introduces the Gaussian likelihood, and
+      this makes them one derivation instead of two facts. It is the most mathematically demanding route
+      on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
+      with.'
     scope_triage: helpful-now
   - kind: read
     label: OpenIntro — correlation and linear regression
@@ -715,15 +717,17 @@ stages:
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     source_id: source-mml
-    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
-      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
+      Estimation p. 298 (maximum likelihood and MAP); read with Ch 5 Vector Calculus p. 145, §5.2 Partial
+      Differentiation and Gradients p. 152, for the notation'
     angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
       L08 are one derivation rather than two lectures.
-    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
-      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
-      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
-      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
-      free PDF from mml-book.github.io.
+    angle_detail: 'Derives least squares as maximum likelihood under Gaussian noise from the first page
+      of §9.2, rather than presenting the squared-error objective and justifying it later. That matters
+      across two lectures: L03 introduces the objective and L08 introduces the Gaussian likelihood, and
+      this makes them one derivation instead of two facts. It is the most mathematically demanding route
+      on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
+      with.'
     scope_triage: helpful-now
   - kind: reference
     label: University of Cologne pp. 7-8 — multivariate regression interpretation
@@ -846,15 +850,17 @@ stages:
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     source_id: source-mml
-    locator: Ch 9 Linear Regression §9.1 problem formulation, §9.2 parameter estimation (maximum likelihood
-      and MAP); read with Ch 5 Vector Calculus §§5.1-5.3 for the gradient notation
+    locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
+      Estimation p. 298 (maximum likelihood and MAP); read with Ch 5 Vector Calculus p. 145, §5.2 Partial
+      Differentiation and Gradients p. 152, for the notation'
     angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
       L08 are one derivation rather than two lectures.
-    angle_detail: §9.2 does not present squared error as a design choice; it starts from a Gaussian noise
-      model and derives the squared-error objective as the negative log-likelihood. That is the same bridge
-      L08's Gaussian-error slides build, arrived at from the regression side. Reading it after L08 makes
-      the whole regression thread cohere. Ch 5 supplies the vector-calculus notation the derivation uses;
-      free PDF from mml-book.github.io.
+    angle_detail: 'Derives least squares as maximum likelihood under Gaussian noise from the first page
+      of §9.2, rather than presenting the squared-error objective and justifying it later. That matters
+      across two lectures: L03 introduces the objective and L08 introduces the Gaussian likelihood, and
+      this makes them one derivation instead of two facts. It is the most mathematically demanding route
+      on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
+      with.'
     scope_triage: helpful-now
   - kind: read
     label: Ng — linear regression and gradient descent lectures

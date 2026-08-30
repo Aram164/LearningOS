@@ -1,0 +1,2082 @@
+id: study-map-m2-analysis-ch06
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch06
+status: not-started
+current_stage: stage-m2-analysis-ch06-differenzierbarkeit
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch06-differenzierbarkeit
+  number: 1
+  title: Differenzierbarkeit und Ableitungen (§6.1)
+  status: pending
+  objective: The derivative as a limit of difference quotients, differentiability implying continuity,
+    and the calculation rules including chain rule and the derivative of an inverse function.
+  done_when:
+  - 'Reproduce without notes: The derivative as a limit of difference quotients, differentiability implying
+    continuity, and the calculation rules including chain rule and the derivative of an inverse function.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-chain-rule
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the six Chapter 6 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 6: Differentialrechnung II'': Lemma 6.3 (differentiable
+      ⇒ continuous), Satz 6.4 (Rechenregeln der Differenziation), Lemma 6.11 (f''(x₀) = 0 is necessary
+      for an extremum), Korollar 6.13 written out explicitly via 6.12 (Satz von Rolle), Korollar 6.14
+      (zero derivative ⇒ constant), Satz 6.15 (monotonicity and the first derivative)'
+    angle: The longest per-chapter list in the handout — six results, and together they are the chain
+      from the definition to the monotonicity test.
+    angle_detail: 'Read the six in order and they are one argument: differentiability gives continuity,
+      the rules let you compute, a vanishing derivative is necessary at an extremum, Rolle follows, the
+      mean value theorem follows from Rolle, and monotonicity follows from that. That is the chapter.
+      Since no HU sheet reaches Chapter 6, this handout is the closest thing to a statement of expected
+      depth for it — with the authors'' standing disclaimer that it has no known relation to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on derivatives, extrema and the mean value theorem
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A5 (define sin and cos, prove sin is differentiable with sin' = cos), A6
+      (show f ∈ C¹ and compute the derivative; then whether an antiderivative with two given values exists
+      — a mean value theorem argument). Paderborn_...pdf A3(b) (derivative of an inverse function at a
+      point), A5 (local extrema of e^x/x^e, then decide whether e^π or π^e is larger). Marburg_...pdf
+      2. Klausur A11 (a maximum exists), Wiederholungsklausur A11. ⚠ No paper in this bank contains a
+      Taylor task.
+    angle: Real exam wording for the derivative half of the chapter — and a documented absence for the
+      Taylor half.
+    angle_detail: 'The absence is the important part and is recorded rather than left to be discovered:
+      four solved German papers, three unsolved ones and the MIT set, and not one Taylor question among
+      them. Chapter 6''s Taylor practice must therefore be assembled from Fritzsche §4.2, Forster §22,
+      IngMath2 §14.3 and the TUM Übungsaufgaben, and that assembly is a deliberate construction rather
+      than a found exam set. Paderborn A5(b) is the most interesting solved task here: comparing e^π with
+      π^e is a monotonicity argument disguised as arithmetic.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+    angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
+    angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
+      and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
+      Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
+      at a time, not a course.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5 — Differentialrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §5.1 Differenzierbarkeit p. 38, §5.2 Lokale Extrema, Mittelwertsatz p. 39, §5.3
+      Die Regeln von de l'Hospital p. 42; Lösungen Kap. 25 p. 158
+    angle: A third solved bank with a section devoted to l'Hospital specifically.
+    angle_detail: Its §5.3 is the only place in the three German exercise books where l'Hospital gets
+      its own problem section rather than appearing inside a limits set — useful because the script gives
+      it its own §6.5 and because the hypothesis check is the part that gets skipped. Deitmar has no Taylor
+      section in scope (its Kap. 9.4 is the multivariable Taylor formula), so Taylor practice has to come
+      from elsewhere.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §6.8 und §6.9 — Musterlösungen für Differenzierbarkeit und Taylorpolynom
+    source_id: source-ableitinger-musterloesungen
+    locator: ableitinger.pdf §6.8 Differenzierbarkeit p. 77, §6.9 Taylorpolynom p. 80; Lösungsvorschläge
+      §11.2 p. 190
+    angle: A model Taylor-polynomial solution with the solver's decisions annotated — the only worked
+      *presentation* of a Taylor task in the collection.
+    angle_detail: Newly routed at chapter level. §6.9 matters because §6.8 of the script has no HU sheet
+      and no HU marking scheme, which leaves the question of how much working to show completely open.
+      This is the one source that answers it by showing a full write-up and explaining why each step is
+      there.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 5 and §6.6 — The Derivative, Taylor Series
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §5.2 Derivatives and the Intermediate Value Property p. 159, §5.3 The Mean Value
+      Theorems p. 166, §5.4 A Continuous Nowhere-Differentiable Function p. 173; §6.6 Taylor Series p.
+      207
+    angle: Its chapter opens by asking whether derivatives must be continuous — a question that makes
+      the mean value theorem's role visible.
+    angle_detail: Abbott's §5.1 discussion ('Are Derivatives Continuous?') sets up why the derivative
+      is a more delicate object than the difference quotient suggests, and §5.3 then treats the mean value
+      theorems as the answer. That is the framing the script's §6.3 states without motivating. §6.6 is
+      a rigorous Taylor treatment — more than this exam needs, but it is one of the four Taylor routes
+      available and the only one that proves the remainder estimate carefully.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Ableitung, one section per rule
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Ableitung'' p. 273: Ableitung p. 274, Ableitungsregeln p. 292, Ableitung
+      der Umkehrfunktion p. 294, Beispiele p. 300, Ableitung höherer Ordnung p. 302, Satz von Rolle p.
+      304, Mittelwertsatz p. 309, Konstanzkriterium p. 315, Monotoniekriterium p. 318, Ableitung und lokale
+      Extrema p. 320. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so
+      depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The whole Rolle → mean value theorem → constancy → monotonicity → extrema chain, one German
+      section per link — which is the same chain the tutors' proof list picks out.
+    angle_detail: 'Compare the section list here with the kleine_beweise Chapter 6 entries and they are
+      the same six results in the same order. That correspondence makes this the natural place to repair
+      any single link: each has its own worked section rather than a paragraph inside a longer theorem.
+      It has no Taylor section, so §6.8 must come from elsewhere. Unassessed against this exam.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-differenzierbarkeit/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-mittelwertsatz
+  number: 2
+  title: Mittelwertsatz der Differentialrechnung (§6.3)
+  status: pending
+  objective: 'Rolle''s theorem and the mean value theorem, and the corollaries that do the actual work:
+    zero derivative means constant, and the sign of the derivative controls monotonicity.'
+  done_when:
+  - 'Reproduce without notes: Rolle''s theorem and the mean value theorem, and the corollaries that do
+    the actual work: zero derivative means constant, and the sign of the derivative controls monotonicity.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the six Chapter 6 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 6: Differentialrechnung II'': Lemma 6.3 (differentiable
+      ⇒ continuous), Satz 6.4 (Rechenregeln der Differenziation), Lemma 6.11 (f''(x₀) = 0 is necessary
+      for an extremum), Korollar 6.13 written out explicitly via 6.12 (Satz von Rolle), Korollar 6.14
+      (zero derivative ⇒ constant), Satz 6.15 (monotonicity and the first derivative)'
+    angle: The longest per-chapter list in the handout — six results, and together they are the chain
+      from the definition to the monotonicity test.
+    angle_detail: 'Read the six in order and they are one argument: differentiability gives continuity,
+      the rules let you compute, a vanishing derivative is necessary at an extremum, Rolle follows, the
+      mean value theorem follows from Rolle, and monotonicity follows from that. That is the chapter.
+      Since no HU sheet reaches Chapter 6, this handout is the closest thing to a statement of expected
+      depth for it — with the authors'' standing disclaimer that it has no known relation to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on derivatives, extrema and the mean value theorem
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A5 (define sin and cos, prove sin is differentiable with sin' = cos), A6
+      (show f ∈ C¹ and compute the derivative; then whether an antiderivative with two given values exists
+      — a mean value theorem argument). Paderborn_...pdf A3(b) (derivative of an inverse function at a
+      point), A5 (local extrema of e^x/x^e, then decide whether e^π or π^e is larger). Marburg_...pdf
+      2. Klausur A11 (a maximum exists), Wiederholungsklausur A11. ⚠ No paper in this bank contains a
+      Taylor task.
+    angle: Real exam wording for the derivative half of the chapter — and a documented absence for the
+      Taylor half.
+    angle_detail: 'The absence is the important part and is recorded rather than left to be discovered:
+      four solved German papers, three unsolved ones and the MIT set, and not one Taylor question among
+      them. Chapter 6''s Taylor practice must therefore be assembled from Fritzsche §4.2, Forster §22,
+      IngMath2 §14.3 and the TUM Übungsaufgaben, and that assembly is a deliberate construction rather
+      than a found exam set. Paderborn A5(b) is the most interesting solved task here: comparing e^π with
+      π^e is a monotonicity argument disguised as arithmetic.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+    angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
+    angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
+      and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
+      Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
+      at a time, not a course.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5 — Differentialrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §5.1 Differenzierbarkeit p. 38, §5.2 Lokale Extrema, Mittelwertsatz p. 39, §5.3
+      Die Regeln von de l'Hospital p. 42; Lösungen Kap. 25 p. 158
+    angle: A third solved bank with a section devoted to l'Hospital specifically.
+    angle_detail: Its §5.3 is the only place in the three German exercise books where l'Hospital gets
+      its own problem section rather than appearing inside a limits set — useful because the script gives
+      it its own §6.5 and because the hypothesis check is the part that gets skipped. Deitmar has no Taylor
+      section in scope (its Kap. 9.4 is the multivariable Taylor formula), so Taylor practice has to come
+      from elsewhere.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 5 and §6.6 — The Derivative, Taylor Series
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §5.2 Derivatives and the Intermediate Value Property p. 159, §5.3 The Mean Value
+      Theorems p. 166, §5.4 A Continuous Nowhere-Differentiable Function p. 173; §6.6 Taylor Series p.
+      207
+    angle: Its chapter opens by asking whether derivatives must be continuous — a question that makes
+      the mean value theorem's role visible.
+    angle_detail: Abbott's §5.1 discussion ('Are Derivatives Continuous?') sets up why the derivative
+      is a more delicate object than the difference quotient suggests, and §5.3 then treats the mean value
+      theorems as the answer. That is the framing the script's §6.3 states without motivating. §6.6 is
+      a rigorous Taylor treatment — more than this exam needs, but it is one of the four Taylor routes
+      available and the only one that proves the remainder estimate carefully.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Ableitung, one section per rule
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Ableitung'' p. 273: Ableitung p. 274, Ableitungsregeln p. 292, Ableitung
+      der Umkehrfunktion p. 294, Beispiele p. 300, Ableitung höherer Ordnung p. 302, Satz von Rolle p.
+      304, Mittelwertsatz p. 309, Konstanzkriterium p. 315, Monotoniekriterium p. 318, Ableitung und lokale
+      Extrema p. 320. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so
+      depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The whole Rolle → mean value theorem → constancy → monotonicity → extrema chain, one German
+      section per link — which is the same chain the tutors' proof list picks out.
+    angle_detail: 'Compare the section list here with the kleine_beweise Chapter 6 entries and they are
+      the same six results in the same order. That correspondence makes this the natural place to repair
+      any single link: each has its own worked section rather than a paragraph inside a longer theorem.
+      It has no Taylor section, so §6.8 must come from elsewhere. Unassessed against this exam.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-mittelwertsatz/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-trigonometrie
+  number: 3
+  title: Ausflug – Sinus-, Kosinus- und Tangensfunktion (§6.4)
+  status: pending
+  objective: The trigonometric functions and their derivatives. Ausflug depth in the script, but they
+    appear as raw material in almost every external limit, derivative and integral task, so they are kept
+    usable rather than skipped.
+  done_when:
+  - 'Reproduce without notes: The trigonometric functions and their derivatives. Ausflug depth in the
+    script, but they appear as raw material in almost every external limit, derivative and integral task,
+    so they are kept usable rather than skipped.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 2, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on derivatives, extrema and the mean value theorem
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A5 (define sin and cos, prove sin is differentiable with sin' = cos), A6
+      (show f ∈ C¹ and compute the derivative; then whether an antiderivative with two given values exists
+      — a mean value theorem argument). Paderborn_...pdf A3(b) (derivative of an inverse function at a
+      point), A5 (local extrema of e^x/x^e, then decide whether e^π or π^e is larger). Marburg_...pdf
+      2. Klausur A11 (a maximum exists), Wiederholungsklausur A11. ⚠ No paper in this bank contains a
+      Taylor task.
+    angle: Real exam wording for the derivative half of the chapter — and a documented absence for the
+      Taylor half.
+    angle_detail: 'The absence is the important part and is recorded rather than left to be discovered:
+      four solved German papers, three unsolved ones and the MIT set, and not one Taylor question among
+      them. Chapter 6''s Taylor practice must therefore be assembled from Fritzsche §4.2, Forster §22,
+      IngMath2 §14.3 and the TUM Übungsaufgaben, and that assembly is a deliberate construction rather
+      than a found exam set. Paderborn A5(b) is the most interesting solved task here: comparing e^π with
+      π^e is a monotonicity argument disguised as arithmetic.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-trigonometrie/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-hospital
+  number: 4
+  title: Regel von l'Hospital (§6.5)
+  status: pending
+  objective: L'Hospital's rule, its indeterminate forms, and the hypothesis check that has to precede
+    every application. The commonest way to lose points here is applying it to a form that is not indeterminate.
+  done_when:
+  - 'Reproduce without notes: L''Hospital''s rule, its indeterminate forms, and the hypothesis check that
+    has to precede every application. The commonest way to lose points here is applying it to a form that
+    is not indeterminate.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the six Chapter 6 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 6: Differentialrechnung II'': Lemma 6.3 (differentiable
+      ⇒ continuous), Satz 6.4 (Rechenregeln der Differenziation), Lemma 6.11 (f''(x₀) = 0 is necessary
+      for an extremum), Korollar 6.13 written out explicitly via 6.12 (Satz von Rolle), Korollar 6.14
+      (zero derivative ⇒ constant), Satz 6.15 (monotonicity and the first derivative)'
+    angle: The longest per-chapter list in the handout — six results, and together they are the chain
+      from the definition to the monotonicity test.
+    angle_detail: 'Read the six in order and they are one argument: differentiability gives continuity,
+      the rules let you compute, a vanishing derivative is necessary at an extremum, Rolle follows, the
+      mean value theorem follows from Rolle, and monotonicity follows from that. That is the chapter.
+      Since no HU sheet reaches Chapter 6, this handout is the closest thing to a statement of expected
+      depth for it — with the authors'' standing disclaimer that it has no known relation to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on derivatives, extrema and the mean value theorem
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A5 (define sin and cos, prove sin is differentiable with sin' = cos), A6
+      (show f ∈ C¹ and compute the derivative; then whether an antiderivative with two given values exists
+      — a mean value theorem argument). Paderborn_...pdf A3(b) (derivative of an inverse function at a
+      point), A5 (local extrema of e^x/x^e, then decide whether e^π or π^e is larger). Marburg_...pdf
+      2. Klausur A11 (a maximum exists), Wiederholungsklausur A11. ⚠ No paper in this bank contains a
+      Taylor task.
+    angle: Real exam wording for the derivative half of the chapter — and a documented absence for the
+      Taylor half.
+    angle_detail: 'The absence is the important part and is recorded rather than left to be discovered:
+      four solved German papers, three unsolved ones and the MIT set, and not one Taylor question among
+      them. Chapter 6''s Taylor practice must therefore be assembled from Fritzsche §4.2, Forster §22,
+      IngMath2 §14.3 and the TUM Übungsaufgaben, and that assembly is a deliberate construction rather
+      than a found exam set. Paderborn A5(b) is the most interesting solved task here: comparing e^π with
+      π^e is a monotonicity argument disguised as arithmetic.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+    angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
+    angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
+      and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
+      Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
+      at a time, not a course.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5 — Differentialrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §5.1 Differenzierbarkeit p. 38, §5.2 Lokale Extrema, Mittelwertsatz p. 39, §5.3
+      Die Regeln von de l'Hospital p. 42; Lösungen Kap. 25 p. 158
+    angle: A third solved bank with a section devoted to l'Hospital specifically.
+    angle_detail: Its §5.3 is the only place in the three German exercise books where l'Hospital gets
+      its own problem section rather than appearing inside a limits set — useful because the script gives
+      it its own §6.5 and because the hypothesis check is the part that gets skipped. Deitmar has no Taylor
+      section in scope (its Kap. 9.4 is the multivariable Taylor formula), so Taylor practice has to come
+      from elsewhere.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 5 and §6.6 — The Derivative, Taylor Series
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §5.2 Derivatives and the Intermediate Value Property p. 159, §5.3 The Mean Value
+      Theorems p. 166, §5.4 A Continuous Nowhere-Differentiable Function p. 173; §6.6 Taylor Series p.
+      207
+    angle: Its chapter opens by asking whether derivatives must be continuous — a question that makes
+      the mean value theorem's role visible.
+    angle_detail: Abbott's §5.1 discussion ('Are Derivatives Continuous?') sets up why the derivative
+      is a more delicate object than the difference quotient suggests, and §5.3 then treats the mean value
+      theorems as the answer. That is the framing the script's §6.3 states without motivating. §6.6 is
+      a rigorous Taylor treatment — more than this exam needs, but it is one of the four Taylor routes
+      available and the only one that proves the remainder estimate carefully.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Ableitung, one section per rule
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Ableitung'' p. 273: Ableitung p. 274, Ableitungsregeln p. 292, Ableitung
+      der Umkehrfunktion p. 294, Beispiele p. 300, Ableitung höherer Ordnung p. 302, Satz von Rolle p.
+      304, Mittelwertsatz p. 309, Konstanzkriterium p. 315, Monotoniekriterium p. 318, Ableitung und lokale
+      Extrema p. 320. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so
+      depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The whole Rolle → mean value theorem → constancy → monotonicity → extrema chain, one German
+      section per link — which is the same chain the tutors' proof list picks out.
+    angle_detail: 'Compare the section list here with the kleine_beweise Chapter 6 entries and they are
+      the same six results in the same order. That correspondence makes this the natural place to repair
+      any single link: each has its own worked section rather than a paragraph inside a longer theorem.
+      It has no Taylor section, so §6.8 must come from elsewhere. Unassessed against this exam.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hospital/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-hoehere-ableitungen
+  number: 5
+  title: Höhere Ableitungen (§6.7)
+  status: pending
+  objective: Higher derivatives, the C^k classes, and convexity — the vocabulary Taylor's theorem is stated
+    in.
+  done_when:
+  - 'Reproduce without notes: Higher derivatives, the C^k classes, and convexity — the vocabulary Taylor''s
+    theorem is stated in.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-differentiation
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the six Chapter 6 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 6: Differentialrechnung II'': Lemma 6.3 (differentiable
+      ⇒ continuous), Satz 6.4 (Rechenregeln der Differenziation), Lemma 6.11 (f''(x₀) = 0 is necessary
+      for an extremum), Korollar 6.13 written out explicitly via 6.12 (Satz von Rolle), Korollar 6.14
+      (zero derivative ⇒ constant), Satz 6.15 (monotonicity and the first derivative)'
+    angle: The longest per-chapter list in the handout — six results, and together they are the chain
+      from the definition to the monotonicity test.
+    angle_detail: 'Read the six in order and they are one argument: differentiability gives continuity,
+      the rules let you compute, a vanishing derivative is necessary at an extremum, Rolle follows, the
+      mean value theorem follows from Rolle, and monotonicity follows from that. That is the chapter.
+      Since no HU sheet reaches Chapter 6, this handout is the closest thing to a statement of expected
+      depth for it — with the authors'' standing disclaimer that it has no known relation to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on derivatives, extrema and the mean value theorem
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A5 (define sin and cos, prove sin is differentiable with sin' = cos), A6
+      (show f ∈ C¹ and compute the derivative; then whether an antiderivative with two given values exists
+      — a mean value theorem argument). Paderborn_...pdf A3(b) (derivative of an inverse function at a
+      point), A5 (local extrema of e^x/x^e, then decide whether e^π or π^e is larger). Marburg_...pdf
+      2. Klausur A11 (a maximum exists), Wiederholungsklausur A11. ⚠ No paper in this bank contains a
+      Taylor task.
+    angle: Real exam wording for the derivative half of the chapter — and a documented absence for the
+      Taylor half.
+    angle_detail: 'The absence is the important part and is recorded rather than left to be discovered:
+      four solved German papers, three unsolved ones and the MIT set, and not one Taylor question among
+      them. Chapter 6''s Taylor practice must therefore be assembled from Fritzsche §4.2, Forster §22,
+      IngMath2 §14.3 and the TUM Übungsaufgaben, and that assembly is a deliberate construction rather
+      than a found exam set. Paderborn A5(b) is the most interesting solved task here: comparing e^π with
+      π^e is a monotonicity argument disguised as arithmetic.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+    angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
+    angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
+      and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
+      Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
+      at a time, not a course.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 5 — Differentialrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §5.1 Differenzierbarkeit p. 38, §5.2 Lokale Extrema, Mittelwertsatz p. 39, §5.3
+      Die Regeln von de l'Hospital p. 42; Lösungen Kap. 25 p. 158
+    angle: A third solved bank with a section devoted to l'Hospital specifically.
+    angle_detail: Its §5.3 is the only place in the three German exercise books where l'Hospital gets
+      its own problem section rather than appearing inside a limits set — useful because the script gives
+      it its own §6.5 and because the hypothesis check is the part that gets skipped. Deitmar has no Taylor
+      section in scope (its Kap. 9.4 is the multivariable Taylor formula), so Taylor practice has to come
+      from elsewhere.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 5 and §6.6 — The Derivative, Taylor Series
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §5.2 Derivatives and the Intermediate Value Property p. 159, §5.3 The Mean Value
+      Theorems p. 166, §5.4 A Continuous Nowhere-Differentiable Function p. 173; §6.6 Taylor Series p.
+      207
+    angle: Its chapter opens by asking whether derivatives must be continuous — a question that makes
+      the mean value theorem's role visible.
+    angle_detail: Abbott's §5.1 discussion ('Are Derivatives Continuous?') sets up why the derivative
+      is a more delicate object than the difference quotient suggests, and §5.3 then treats the mean value
+      theorems as the answer. That is the framing the script's §6.3 states without motivating. §6.6 is
+      a rigorous Taylor treatment — more than this exam needs, but it is one of the four Taylor routes
+      available and the only one that proves the remainder estimate carefully.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Ableitung, one section per rule
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Ableitung'' p. 273: Ableitung p. 274, Ableitungsregeln p. 292, Ableitung
+      der Umkehrfunktion p. 294, Beispiele p. 300, Ableitung höherer Ordnung p. 302, Satz von Rolle p.
+      304, Mittelwertsatz p. 309, Konstanzkriterium p. 315, Monotoniekriterium p. 318, Ableitung und lokale
+      Extrema p. 320. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so
+      depth and scope stay unassessed (CLAUDE.md §4).'
+    angle: The whole Rolle → mean value theorem → constancy → monotonicity → extrema chain, one German
+      section per link — which is the same chain the tutors' proof list picks out.
+    angle_detail: 'Compare the section list here with the kleine_beweise Chapter 6 entries and they are
+      the same six results in the same order. That correspondence makes this the natural place to repair
+      any single link: each has its own worked section rather than a paragraph inside a longer theorem.
+      It has no Taylor section, so §6.8 must come from elsewhere. Unassessed against this exam.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-hoehere-ableitungen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-taylor
+  number: 6
+  title: Taylorpolynome und Taylorreihen (§6.8)
+  status: pending
+  objective: The Taylor polynomial, the Lagrange remainder and the error bound that makes the approximation
+    usable. No HU sheet reaches this section, so the whole practice load is assembled from four named
+    external sets.
+  done_when:
+  - 'Reproduce without notes: The Taylor polynomial, the Lagrange remainder and the error bound that makes
+    the approximation usable. No HU sheet reaches this section, so the whole practice load is assembled
+    from four named external sets.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 2, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-taylor-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+    angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
+    angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
+      and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
+      Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
+      at a time, not a course.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §6.8 und §6.9 — Musterlösungen für Differenzierbarkeit und Taylorpolynom
+    source_id: source-ableitinger-musterloesungen
+    locator: ableitinger.pdf §6.8 Differenzierbarkeit p. 77, §6.9 Taylorpolynom p. 80; Lösungsvorschläge
+      §11.2 p. 190
+    angle: A model Taylor-polynomial solution with the solver's decisions annotated — the only worked
+      *presentation* of a Taylor task in the collection.
+    angle_detail: Newly routed at chapter level. §6.9 matters because §6.8 of the script has no HU sheet
+      and no HU marking scheme, which leaves the question of how much working to show completely open.
+      This is the one source that answers it by showing a full write-up and explaining why each step is
+      there.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 5 and §6.6 — The Derivative, Taylor Series
+    source_id: source-abbott-understanding-analysis
+    locator: abbott.pdf §5.2 Derivatives and the Intermediate Value Property p. 159, §5.3 The Mean Value
+      Theorems p. 166, §5.4 A Continuous Nowhere-Differentiable Function p. 173; §6.6 Taylor Series p.
+      207
+    angle: Its chapter opens by asking whether derivatives must be continuous — a question that makes
+      the mean value theorem's role visible.
+    angle_detail: Abbott's §5.1 discussion ('Are Derivatives Continuous?') sets up why the derivative
+      is a more delicate object than the difference quotient suggests, and §5.3 then treats the mean value
+      theorems as the answer. That is the framing the script's §6.3 states without motivating. §6.6 is
+      a rigorous Taylor treatment — more than this exam needs, but it is one of the four Taylor routes
+      available and the only one that proves the remainder estimate carefully.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-taylor/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch06-interpolation
+  number: 7
+  title: Ausflug – Einblick in die numerische Interpolation (§6.10)
+  status: pending
+  objective: Polynomial interpolation and its error term, the chapter's second Informatik excursion. Ausflug
+    depth — the idea and the error statement, not the algorithms.
+  done_when:
+  - 'Reproduce without notes: Polynomial interpolation and its error term, the chapter''s second Informatik
+    excursion. Ausflug depth — the idea and the error statement, not the algorithms.'
+  - Work Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung, then
+    the remaining 2, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-complex-roots-of-unity
+  - concept-taylor-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 6 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 6, printed p. 137 (PDF p. 147)–printed p. 190 (PDF p. 200); §6.1
+      Differenzierbarkeit und Ableitungen printed p. 137 (PDF p. 147), §6.3 Mittelwertsatz printed p.
+      145 (PDF p. 155), §6.4 Ausflug Sinus, Kosinus, Tangens printed p. 148 (PDF p. 158), §6.5 Regel von
+      l'Hospital printed p. 151 (PDF p. 161), §6.7 Höhere Ableitungen printed p. 165 (PDF p. 175), §6.8
+      Taylorpolynome und Taylorreihen printed p. 168 (PDF p. 178), §6.10 Ausflug numerische Interpolation
+      printed p. 174 (PDF p. 184). §§6.2, 6.6 and 6.9 are Exkurse and are not worked here.
+    angle: The longest chapter in the script, and the first with no current HU exercise sheet behind it
+      at all.
+    angle_detail: 'Two things govern this session. First, the chapter is really one theorem and its consequences:
+      §6.3''s mean value theorem is what makes the derivative say anything about the function, and monotonicity,
+      extrema, l''Hospital and Taylor all descend from it. Second, the practice situation changes here:
+      the local HU set stops at §5.5, so every drill on this menu is a substitute chosen by topic rather
+      than calibrated to this examiner. That has been an open, unowned gap since the 2026-08-03 audit,
+      and it is the reason this session leans harder on IngMath2 and the German exercise books than any
+      earlier one.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
+      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
+      copy, so the selection is by topic rather than by timestamp.'
+    angle: The chapter where a US calculus course covers the most of what is actually examined — at blackboard
+      pace, with every step of the computation shown.
+    angle_detail: 'Chapter 6 is the best fit for this source in the whole module: derivative rules, the
+      mean value theorem, l''Hospital and Taylor polynomials are standard calculus-course content, taught
+      computationally, which is the level §§6.1-6.8 mostly ask for. Still conditional on a diagnosed block
+      and still one topic at a time — the pace angle is a repair tool, not a syllabus.'
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
+      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
+      list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
+      — that the formula alone does not.
+    angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
+      is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
+      and the visual account of why matching derivatives at a point produces a good local approximation
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
+      Die Taylorentwicklung p. 200; Lösungen in Kap. 5 Anhang from p. 253. §§3.5-3.6 (Bogenlänge, Differentialgleichungen)
+      are outside this script.
+    angle: Explained German solutions covering both halves of the chapter, including a dedicated Taylor
+      section — one of only four Taylor sources in the whole collection.
+    angle_detail: 'Fritzsche splits the chapter across two of its own chapters: Der Calculus for §§6.1-6.7
+      and Vertauschung von Grenzprozessen for Taylor. §4.2 is the one to note — the script''s §6.8 has
+      no HU sheet, and this is the gentlest of the four available substitutes, with solutions written
+      as prose. Work §3.1 and §3.2 first; they are the chapter''s spine.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 13 und Kap. 14 — the chapter's practice workhorse
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 13 Differenzierbare reelle Funktionen p. 127 (§13.1 Motivation
+      und Definition p. 127, §13.2 Rechenregeln p. 132); Kap. 14 Anwendungen der Differentialrechnung
+      p. 140 (§14.1 Mittelwertsätze p. 140, §14.2 Regeln von de l''Hospital p. 150, §14.3 Der Satz von
+      Taylor p. 158, §14.4 Kurvendiskussion p. 180, §14.5 Noch einmal Polynominterpolation p. 190). Kap.
+      15 (numerische Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.'
+    angle: The only source in the local collection that covers every section of this chapter with solved
+      exercises — including twenty-two pages on Taylor alone.
+    angle_detail: 'This file carries the Chapter 6 practice load by itself, and §14.3 is why: twenty-two
+      pages of Taylor problems with solutions, where no HU sheet exists and the German exercise books
+      offer a section each. §14.5 matches the script''s §6.10 Ausflug on interpolation — the only external
+      drill for it anywhere. The style is engineering-computational: it will build fluency and will not
+      explain why the remainder term has the form it does. Sections are numbered by the printed chapter
+      numbering shown above, which starts at 10 rather than 1.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 5 Differenzierbarkeit — Satz von Taylor with exercises
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 5 Differenzierbarkeit PDF p. 39 (§5.1 Definition,
+      Grundbegriffe und Rechenregeln, §5.2 Stammfunktionen PDF p. 42, §5.3 Anwendungen der Differentialrechnung
+      PDF p. 43, with the Satz von Taylor at PDF pp. 47-48), Übungsaufgaben PDF p. 49'
+    angle: One of only four sources with Taylor exercises, and the only one that is a revision script
+      rather than a textbook.
+    angle_detail: 'This is why the TUM file was separated from the Klausur papers in the 2026-08-22 fix:
+      it is not a past paper to be spent once but a revision script with its own exercise sets, and its
+      Taylor pages plus the exercise set at PDF p. 49 are a scarce resource for §6.8. Its §5.2 on Stammfunktionen
+      arrives before the integral, which is the reverse of the script''s order — read it with Chapter
+      7 rather than here.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2-4 and §10.4 — derivatives, the MVT with l'Hôpital, the Taylor series
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch02.pdf Derivatives (§2.1 The Derivative of a Function p. 87, §2.5 The
+      Product and Quotient and Power Rules p. 116); mitres_18_001_f17_ch03.pdf Applications of the Derivative
+      (§3.2 Maximum and Minimum Problems p. 143, §3.8 The Mean Value Theorem and l'Hôpital's Rule p. 197);
+      mitres_18_001_f17_ch04.pdf Derivatives by the Chain Rule (§4.3 Inverse Functions and Their Derivatives
+      p. 216); mitres_18_001_f17_ch10.pdf §10.4 The Taylor Series for e^x, sin x, and cos x p. 452; matching
+      guide_chNN.pdf are secondary
+    angle: Applied-first intuition, with §3.8 putting the mean value theorem and l'Hôpital in the same
+      section — as consequence and application.
+    angle_detail: 'Strang''s arrangement makes an argument the script leaves implicit: l''Hôpital is a
+      corollary of the mean value theorem, and putting them in one section says so. §10.4 develops the
+      Taylor series for the three functions it is usually wanted for. Reserve intuition, chosen per diagnosed
+      block.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §15, §16 und §22 — Differentiation, Extrema, Taylor-Reihen
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §15 Differentiation p. 43, §16 Lokale Extrema. Mittelwertsatz.
+      Konvexität p. 45, §22 Taylor-Reihen p. 61; Lösungen §15 p. 150, §16 p. 156, §22 p. 195. §17 (numerische
+      Lösung von Gleichungen) parallels the §6.6 Exkurs and is skipped.
+    angle: Section-matched German drill for the whole chapter, with §22 supplying Taylor problems and
+      solutions.
+    angle_detail: '§16''s title is the script''s §§6.3-6.7 in one line — local extrema, mean value theorem,
+      convexity — which makes it the single most efficient drill section for the chapter. §22 was added
+      to the routing in the 2026-08-22 fix and is confirmed here: Taylor-Reihen with Aufgaben on p. 61
+      and Lösungen on p. 195. Terse solutions, so pair with Fritzsche when an argument does not come out.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 12 — Differentialrechnung mit Taylorapproximation
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 12 ''Differentialrechnung'' p. 219: §12.1 Definition und Bedeutung der
+      Ableitung p. 219, §12.2 Berechnung der Ableitung p. 226, §12.3 Ableitung und Funktionseigenschaften
+      p. 236, §12.4 Ableitung und Grenzwertberechnung p. 242, §12.5 Zweite Ableitung und Konvexität p.
+      245, §12.6 Taylorapproximation und Taylorreihen p. 248, Übungen p. 259; Lösungen und Hinweise p.
+      329. Kap. 14 Die trigonometrischen Funktionen p. 278 covers the §6.4 Ausflug.'
+    angle: One German chapter covering all seven in-scope sections, including Taylor, with hints and solutions
+      on the exercises.
+    angle_detail: 'The section titles say what each part is *for*: §12.3 is the derivative used to read
+      off function properties (the script''s §§6.3 and 6.7), §12.4 is the derivative used to compute limits
+      (l''Hospital, §6.5). For a chapter with no HU sheet, a German text that is organised by purpose
+      and carries graded hints is a strong substitute. Kap. 14 supplies the §6.4 Ausflug material separately.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Derivative, with Taylor's theorem in place
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Derivative'' p. 155: The derivative p. 155, Mean value theorem p. 162,
+      Taylor''s theorem p. 171, Inverse function theorem p. 176'
+    angle: Four sections that are the script's §§6.1, 6.3, 6.8 and the derivative half of §5.4 — the tightest
+      structural match available for this chapter.
+    angle_detail: Lebl puts Taylor's theorem inside the derivative chapter rather than with series, which
+      is exactly the script's arrangement and unusual among the English references. That makes it the
+      best route for reading §6.8 as a consequence of the mean value theorem rather than as a series topic.
+      Free, English, and structured for a second pass over an argument already read once.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Differentiation, Mittelwertsatz, L'Hospital, Taylorpolynom
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Differentiation' p. 153 (Differenzierbarkeit
+      p. 153, Rechenregeln p. 155); 'Mittelwertsatz und lokale Extrema' p. 161 (Die erste Ableitung p.
+      161, Höhere Ableitungen p. 164, Das Newtonverfahren p. 166); 'Asymptotisches Verhalten und Regel
+      von L'Hospital' p. 181; 'Taylorpolynom und Taylorreihe' p. 209. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: German, CS-framed, and it gives Taylor its own chapter — one of the four Taylor routes, and
+      the only German textbook one.
+    angle_detail: 'The chapter divisions match the script closely: differentiation, then mean value theorem
+      with higher derivatives, then l''Hospital, then Taylor. Its Newtonverfahren section corresponds
+      to the script''s §6.6 Exkurs and can be skipped. For a chapter this thinly practised, a German account
+      at the right level is worth more than another English reference.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§28-31 — the derivative, mean value theorem, l'Hospital, Taylor
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §28 Basic Properties of the Derivative p. 232, §29 The Mean
+      Value Theorem p. 241, §30 L'Hospital's Rule p. 250, §31 Taylor's Theorem p. 258; Selected Hints
+      and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Four short numbered sections that match §§6.1, 6.3, 6.5 and 6.8 one to one.
+    angle_detail: Ross gives l'Hospital and Taylor a section each rather than folding them into a longer
+      chapter, which makes both easy to enter directly — and both are sections of the script that have
+      no calibrated practice. Unassessed against this exam; the locator is a fact, the judgement is not.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 3, §§4.1-4.5 and §§10.8-10.10 — derivatives, applications, Taylor
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §3.2 The Derivative as a Function p. 142, §3.3
+      Differentiation Rules p. 150, §3.6 The Chain Rule p. 177, §3.8 Derivatives of Inverse Functions
+      and Logarithms p. 191; §4.1 Extreme Values of Functions p. 237, §4.2 The Mean Value Theorem p. 245,
+      §4.3 Monotonic Functions and the First Derivative Test p. 253, §4.4 Concavity and Curve Sketching
+      p. 258, §4.5 Indeterminate Forms and L'Hôpital's Rule p. 269; §10.8 Taylor and Maclaurin Series
+      p. 640, §10.9 Convergence of Taylor Series p. 645, §10.10 The Binomial Series and Applications of
+      Taylor Series p. 652. Located by the 2026-08-03 coverage audit; no contextual evaluation registered,
+      so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with the largest exercise sets on this menu, section-matched to
+      the whole chapter.
+    angle_detail: Named at section level for the first time — the pre-2026-08-29 record carried only a
+      file path and 1205 pages. For a chapter with no HU practice, having a large exercise bank indexed
+      to each script section is worth more than it would be elsewhere. §4.4 (curve sketching) corresponds
+      to IngMath2's §14.4 Kurvendiskussion; neither is a script section, and both are the standard application
+      of §6.7. Overlaps with Stewart — open one.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 3, §§4.1-4.4 and §§11.10-11.11 — derivatives, applications, Taylor
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §3.1-§3.6 Differentiation Rules p. 204-250 (chain rule §3.4 p. 229, logarithmic
+      §3.6 p. 250); §4.1 Maximum and Minimum Values p. 308, §4.2 The Mean Value Theorem p. 319, §4.3 How
+      Derivatives Affect the Shape of a Graph p. 325, §4.4 Indeterminate Forms and L'Hospital's Rule p.
+      336; §11.10 Taylor and Maclaurin Series p. 791, §11.11 Applications of Taylor Polynomials p. 806.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, with §11.11 devoted to using Taylor polynomials with an error bound.
+    angle_detail: '§11.11 is the reason to prefer Stewart here: it is a section about applying Taylor
+      polynomials *with the remainder estimate*, which is the part of §6.8 that turns the polynomial into
+      something usable and the part most likely to be skipped. Otherwise interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/stages/stage-m2-analysis-ch06-interpolation/notes.md
+  attachments: []
+  source_feedback: []

@@ -1,0 +1,1029 @@
+id: study-map-m2-analysis-ch04
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch04
+status: not-started
+current_stage: stage-m2-analysis-ch04-reihen
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch04-reihen
+  number: 1
+  title: Reihen (§4.1)
+  status: pending
+  objective: 'Series as sequences of partial sums, the necessary null-sequence condition, and the two
+    series whose sums can actually be computed: geometric and telescoping.'
+  done_when:
+  - 'Reproduce without notes: Series as sequences of partial sums, the necessary null-sequence condition,
+    and the two series whose sums can actually be computed: geometric and telescoping.'
+  - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+    6, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 4 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 4, printed p. 80 (PDF p. 90)–printed p. 97 (PDF p. 107); §4.1 Reihen
+      printed p. 80 (PDF p. 90), §4.2 Konvergenzkriterien für Reihen printed p. 84 (PDF p. 94), §4.3 Absolute
+      Konvergenz printed p. 88 (PDF p. 98), §4.4 Ausflug Umordnungen printed p. 92 (PDF p. 102), §4.5
+      Exkurs Produktreihen printed p. 95 (PDF p. 105)
+    angle: The shortest exam-bearing chapter and the most procedural — eighteen pages that amount to a
+      decision tree.
+    angle_detail: 'Chapter 4 introduces no new notion of convergence: a series is the sequence of its
+      partial sums, so everything from §3.5 still applies. What it adds is a set of criteria and, implicitly,
+      the problem of choosing among them. Build the decision tree from §4.2 with the script''s own theorem
+      numbers on it — the hypotheses are what the exam checks, and §4.3''s absolute-versus-conditional
+      distinction is the hypothesis that §4.4''s rearrangement result turns on. §4.5 is an Exkurs and
+      out of scope.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice
+    source_id: source-analysis-skript
+    locator: 'Pd3szO-ana_inf_serie08.pdf (Serie 08 exists only under this download-mangled name): 8.1
+      compute three series sums (geometric, alternating geometric, and 1/(4k²−1) by telescoping), 8.2
+      decide convergence for four series including a case split on x, 8.3 HA (20 P) one sum plus three
+      convergence decisions. ana_inf_serieWV.pdf: Hausaufgabe WV1.3 (20 P) — prove that Σ(−11)^n/3^(n²+1)
+      converges four times over, by the ratio, root, comparison and Leibniz criteria in turn'
+    angle: Current, graded, and WV1.3 is the clearest statement anywhere of what this chapter is actually
+      testing.
+    angle_detail: 'WV1.3 is the single most informative task in the Analysis half of the local HU set.
+      It takes one series and demands it be settled with four different criteria — which only makes sense
+      as a test of whether each criterion''s hypotheses can be checked and stated, since the answer is
+      never in doubt. Build the §4.2 decision tree against it. Serie 08.2(iv) is the other one to notice:
+      it needs a case split on the parameter before any criterion applies, which is the step that gets
+      skipped. 8.4 belongs to Chapter 5, not here.'
+    vault_path: material://source-analysis-skript/Pd3szO-ana_inf_serie08.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, series and convergence tests
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 2: the series block (series, convergence tests, alternating
+      series). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Every criterion worked at blackboard pace with full arithmetic — the pace angle again, applied
+      to the chapter with the most mechanical content.
+    angle_detail: 'Conditional and capped, as always. This chapter is where the pace angle is most defensible:
+      the criteria are mechanical, the failure is usually in executing the estimate, and a US calculus
+      course covers the ratio, root, comparison and alternating tests at exactly the computational level
+      the script assumes. It will not cover absolute-versus-conditional convergence at §4.3''s depth.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.2 Unendliche Reihen
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.2 Unendliche Reihen p. 68; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Series presented as the continuation of the sequence chapter it belongs to, with solutions
+      written out as prose.
+    angle_detail: 'Fritzsche keeps sequences (§2.1), series (§2.2) and function limits (§2.3) in one chapter
+      called Der Grenzwertbegriff, which is the same dependency the script builds. On this chapter that
+      framing pays: the partial-sum definition stops being a formality when the previous section is fresh.
+      First drill after the HU sheets.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: auf-2-3 Reihen — the Cauchy criterion for series, worked in German
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'auf-2-3_Reihen_Loesungen.pdf (20 pp), Aufgabenkatalog Analysis SoSe 2019: opens with Aufgabe
+      1 ''Cauchy Konvergenzkriterium'', with Lösungen inline'
+    angle: The one drill that makes the sequence-to-series translation explicit instead of assuming it.
+    angle_detail: 'Its first task is not a computation: it prints the Cauchy criterion for sequences and
+      for series and asks for the relationship in words. That is exactly the step the script performs
+      silently when it defines a series as its partial sums, and it is the step that, if left implicit,
+      makes the whole chapter feel like a new set of rules. Aufgabe 1 asks for the sequence form and the
+      series form side by side and for the connection in your own words. Twenty pages, university level,
+      solutions inline.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.3 ''Beispiele von geometrischen Reihen'' p. 5 (Lösung p.
+      20), 1.4 ''Das Cauchy-Produkt von Reihen'' p. 5 (Lösung p. 23 — matches the §4.5 Exkurs), 1.6 ''Teleskopreihen''
+      p. 8 (Lösung p. 33), 1.9 ''Die Koch''sche Schneeflocke'' p. 10 (Lösung p. 45)'
+    angle: The two series types that can actually be summed, worked at length — plus one geometric application
+      that is a real object rather than an exercise.
+    angle_detail: Geometric and telescoping are the only families the exam can ask for a *value* from,
+      and HU Serie 08.1 asks for exactly those three. This is the route that works them slowly. The Koch
+      snowflake task is the one place in the whole Analysis collection where a geometric series answers
+      a question someone might actually ask. Aufgabe 1.4 covers the Cauchy product, which is the script's
+      §4.5 Exkurs — worked here if the boundary is ever revisited, not needed for the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 §10.6 Konvergenzkriterien für Reihen
+    source_id: source-analysis-drill-blaetter-extern
+    locator: IngMath2_Aufgaben.pdf §10.6 Konvergenzkriterien für Reihen p. 47-74 (27 pages of solved exercises)
+    angle: Twenty-seven pages of criterion drill with solutions — the largest single block of series practice
+      available.
+    angle_detail: 'Volume, when the decision tree is built and what remains is making the choice fast.
+      Engineering-style and computational: it will not explain why a criterion works, and it does not
+      need to by the time this route is the right one.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on series and convergence criteria
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A11 (Σ n!/n^n by the ratio
+      criterion), A12 (Σ√k·x^k — absolute convergence for |x|<1, divergence for |x|>1); 2. Klausur A6
+      (disprove: Σa_l convergent and (b_l) bounded ⇒ Σa_l b_l convergent), A7, A8; Wiederholungsklausur
+      A5, A6, A7. Darmstadt_...pdf A3 (decide convergence for each of several series). Regensburg_...pdf
+      A2.4. Paderborn_...pdf A2(b) (for which x does Σ(n+1)x^n converge, and to what), A4(a) (absolutely
+      convergent times bounded)'
+    angle: Exam-shaped criterion selection with solutions — and two papers set the same trap about 'absolutely
+      convergent times bounded'.
+    angle_detail: 'Marburg 2. Klausur A6 and Paderborn A4(a) are the same statement with one word changed:
+      Paderborn''s series is absolutely convergent and the claim is true; Marburg''s is merely convergent
+      and the claim is false, with (−1)^l/(l+1) against b_l = (−1)^l as the counterexample. Working the
+      pair is the sharpest available drill on why §4.3 exists. Paderborn A2(b) additionally wants the
+      *value*, which needs the derivative trick rather than a criterion.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 3 Reihen + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 3 Reihen PDF p. 26 (§3.1 Konvergenzkriterien
+      für Reihen PDF p. 27, §3.2 Potenzreihen PDF p. 28 — matches the §5.8 Exkurs), Übungsaufgaben PDF
+      p. 31'
+    angle: The criteria compressed to two pages with a matching exercise set — a revision pass, not a
+      first account.
+    angle_detail: Fast and complete for what it covers. Its §3.2 on power series belongs to the script's
+      §5.8 Exkurs and is out of scope here; the boundary is worth knowing before working the exercise
+      set, which does not separate them.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
+      of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
+      Ratio, Root, and Alternating Series Tests'' p. 43'
+    angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
+    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
+      which derives the basic series facts *from completeness* — making explicit the dependency the script
+      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §7 Konvergenzkriterien für Reihen und §8 Die Exponentialreihe
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §7 Konvergenzkriterien für Reihen p. 26, §8 Die Exponentialreihe
+      p. 30; Lösungen §7 p. 106, §8 p. 114
+    angle: A whole section of criterion-selection problems in the German the exam is set in, with solutions.
+    angle_detail: '§7 is the closest external match to the script''s §4.2 and the natural drill for the
+      decision tree. §8 is included deliberately even though the exponential series belongs to the script''s
+      §5.6: it is the worked example that shows a series *defining* a function, which is the join Chapter
+      5 will need and which no other Chapter 4 route makes.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.2 Reihen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §3.2 Reihen p. 29; Lösungen Kap. 23 p. 142
+    angle: Fresh criterion problems in reserve, once Forster §7 is spent.
+    angle_detail: Two pages of problems with worked Lösungsvorschläge. Its role on this chapter is unchanged
+      from Chapter 3 — unseen repetitions rather than a different explanation — and its Kap. 7.2 (Potenzreihen)
+      matches the script's §5.8 Exkurs and is therefore left closed.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 8 — Reihen
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 8 ''Reihen'' p. 128: §8.1 Definition und Beispiele p. 128, §8.2 Konvergenzkriterien
+      für Reihen p. 133, §8.3 Umordnung von Reihen p. 141, §8.4 Doppelreihen, Cauchy-Produkt p. 143, Übungen
+      p. 146; Lösungen und Hinweise p. 329'
+    angle: German, rigorous, with hints as well as solutions — and §8.3 covers the Ausflug that most references
+      skip.
+    angle_detail: Grieser's Kap. 8 maps onto the script's Chapter 4 section for section, including §8.3
+      for the §4.4 Umordnungen Ausflug and §8.4 for the §4.5 Produktreihen Exkurs. Since both of those
+      are below exam priority, the practical value here is §8.2 plus exercises that come with an intermediate
+      hint layer.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Series and More on series
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Series p. 87, More on series p. 100 (inside 'Sequences and Series' p. 51)
+    angle: 'The structural twin again: criteria in the same order as §4.2, in English, free.'
+    angle_detail: Used the same way as on Chapter 3 — a second pass over the same argument rather than
+      a different account. Its 'More on series' section carries absolute convergence and rearrangement,
+      matching §4.3-§4.4.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Reihen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Reihen'' p. 113: Definition und erste Eigenschaften
+      p. 113, Konvergenzkriterien für Reihen p. 115, Umordnung von Reihen p. 120. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, CS-framed, and short — the criteria in seven pages, in the same order as §4.2.
+    angle_detail: The compact German alternative to MfNF's sixty pages on the same material. Use it when
+      the criteria are known and what is wanted is the German statement to check a write-up against.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Reihen und die Konvergenzkriterien, one section per criterion
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Reihen'' p. 153 (Begriff der Reihe p. 154, Rechenregeln p. 162, Teleskopsumme
+      und Teleskopreihe p. 169, Geometrische Reihe p. 173, Harmonische Reihe p. 177, Absolute Konvergenz
+      p. 179, Umordnungssatz p. 184); ''Kriterien für Konvergenz von Reihen'' p. 189 (Trivialkriterium
+      p. 190, Majoranten-/Minorantenkriterium p. 193, Wurzelkriterium p. 199, Quotientenkriterium p. 205,
+      Leibniz-Kriterium p. 216, ''Anwendung der Konvergenzkriterien'' p. 222). Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: Every criterion in the script's §4.2 gets its own titled section here, and the chapter ends
+      with a section on choosing between them.
+    angle_detail: 'The structure is the value: where the script gives §4.2 as one section, this gives
+      six, and then adds ''Anwendung der Konvergenzkriterien'' — the choosing step, written down as its
+      own topic. That is the one thing WV1.3 is testing and the one thing most texts leave to osmosis.
+      It also has separate sections for the harmonic and geometric series, which are the two comparison
+      series everything else is measured against. German, free, verbose; no contextual evaluation registered
+      yet.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §14 Series and §15 Alternating Series
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §14 Series p. 107, §15 Alternating Series and Integral Tests
+      p. 117; Selected Hints and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Two short numbered sections, entered directly, with the alternating case separated out.
+    angle_detail: Ross's §15 pairs the Leibniz criterion with the integral test. The integral test is
+      not in the script's §4.2 and is not examinable here — noted so it is recognised as extra rather
+      than assumed missing from the script.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas §§10.2-10.6 — series and the convergence tests
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §10.2 Infinite Series p. 598, §10.3 The Integral
+      Test p. 607, §10.4 Comparison Tests p. 614, §10.5 Absolute Convergence; The Ratio and Root Tests
+      p. 618, §10.6 Alternating Series and Conditional Convergence p. 624. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: One section per test with large exercise sets — reserve computational volume.
+    angle_detail: Named at section level for the first time. §10.3 (integral test) is not in the script's
+      §4.2 and is not examinable; the other four sections map onto it directly. Overlaps almost completely
+      with Stewart §§11.2-11.6, so open one book, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart §§11.2-11.7 — series, the tests, and a strategy section
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §11.2 Series p. 739, §11.3 The Integral Test p. 751, §11.4 The Comparison Tests
+      p. 759, §11.5 Alternating Series p. 764, §11.6 Absolute Convergence and the Ratio and Root Tests
+      p. 769, §11.7 Strategy for Testing Series p. 776. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The same coverage as Thomas plus §11.7, which is a section on nothing but choosing the test.
+    angle_detail: '§11.7 is the reason to prefer Stewart over Thomas on this one chapter: a short section
+      whose entire content is how to decide which test to reach for, which is what WV1.3 examines and
+      what §4.2 leaves as an exercise for the reader. Everything else here is interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-reihen/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch04-konvergenzkriterien
+  number: 2
+  title: Konvergenzkriterien für Reihen (§4.2)
+  status: pending
+  objective: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria, each with its hypotheses
+    and its inconclusive case. The exam failure mode is method choice, not missing knowledge of the list.
+  done_when:
+  - 'Reproduce without notes: Comparison (Majoranten/Minoranten), ratio, root and Leibniz criteria, each
+    with its hypotheses and its inconclusive case. The exam failure mode is method choice, not missing
+    knowledge of the list.'
+  - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+    7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 4 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 4, printed p. 80 (PDF p. 90)–printed p. 97 (PDF p. 107); §4.1 Reihen
+      printed p. 80 (PDF p. 90), §4.2 Konvergenzkriterien für Reihen printed p. 84 (PDF p. 94), §4.3 Absolute
+      Konvergenz printed p. 88 (PDF p. 98), §4.4 Ausflug Umordnungen printed p. 92 (PDF p. 102), §4.5
+      Exkurs Produktreihen printed p. 95 (PDF p. 105)
+    angle: The shortest exam-bearing chapter and the most procedural — eighteen pages that amount to a
+      decision tree.
+    angle_detail: 'Chapter 4 introduces no new notion of convergence: a series is the sequence of its
+      partial sums, so everything from §3.5 still applies. What it adds is a set of criteria and, implicitly,
+      the problem of choosing among them. Build the decision tree from §4.2 with the script''s own theorem
+      numbers on it — the hypotheses are what the exam checks, and §4.3''s absolute-versus-conditional
+      distinction is the hypothesis that §4.4''s rearrangement result turns on. §4.5 is an Exkurs and
+      out of scope.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice
+    source_id: source-analysis-skript
+    locator: 'Pd3szO-ana_inf_serie08.pdf (Serie 08 exists only under this download-mangled name): 8.1
+      compute three series sums (geometric, alternating geometric, and 1/(4k²−1) by telescoping), 8.2
+      decide convergence for four series including a case split on x, 8.3 HA (20 P) one sum plus three
+      convergence decisions. ana_inf_serieWV.pdf: Hausaufgabe WV1.3 (20 P) — prove that Σ(−11)^n/3^(n²+1)
+      converges four times over, by the ratio, root, comparison and Leibniz criteria in turn'
+    angle: Current, graded, and WV1.3 is the clearest statement anywhere of what this chapter is actually
+      testing.
+    angle_detail: 'WV1.3 is the single most informative task in the Analysis half of the local HU set.
+      It takes one series and demands it be settled with four different criteria — which only makes sense
+      as a test of whether each criterion''s hypotheses can be checked and stated, since the answer is
+      never in doubt. Build the §4.2 decision tree against it. Serie 08.2(iv) is the other one to notice:
+      it needs a case split on the parameter before any criterion applies, which is the step that gets
+      skipped. 8.4 belongs to Chapter 5, not here.'
+    vault_path: material://source-analysis-skript/Pd3szO-ana_inf_serie08.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the two Chapter 4 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 4: Reihen'': Satz 4.12 (Majorantenkriterium), Satz
+      4.15 (Wurzelkriterium)'
+    angle: Two proofs for the whole chapter — the shortest per-chapter list in the handout, and worth
+      reading as a statement about where the value is.
+    angle_detail: 'The tutors picked comparison and root, and nothing else. That is consistent with how
+      the criteria relate: comparison is the one the others are proved from, and the root criterion is
+      the one whose proof is a direct comparison with a geometric series. Understanding those two arguments
+      makes the rest of §4.2 a corollary rather than a list to memorise. Same disclaimer as always — the
+      authors state the handout has no known relation to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, series and convergence tests
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 2: the series block (series, convergence tests, alternating
+      series). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Every criterion worked at blackboard pace with full arithmetic — the pace angle again, applied
+      to the chapter with the most mechanical content.
+    angle_detail: 'Conditional and capped, as always. This chapter is where the pace angle is most defensible:
+      the criteria are mechanical, the failure is usually in executing the estimate, and a US calculus
+      course covers the ratio, root, comparison and alternating tests at exactly the computational level
+      the script assumes. It will not cover absolute-versus-conditional convergence at §4.3''s depth.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.2 Unendliche Reihen
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.2 Unendliche Reihen p. 68; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Series presented as the continuation of the sequence chapter it belongs to, with solutions
+      written out as prose.
+    angle_detail: 'Fritzsche keeps sequences (§2.1), series (§2.2) and function limits (§2.3) in one chapter
+      called Der Grenzwertbegriff, which is the same dependency the script builds. On this chapter that
+      framing pays: the partial-sum definition stops being a formality when the previous section is fresh.
+      First drill after the HU sheets.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: auf-2-3 Reihen — the Cauchy criterion for series, worked in German
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'auf-2-3_Reihen_Loesungen.pdf (20 pp), Aufgabenkatalog Analysis SoSe 2019: opens with Aufgabe
+      1 ''Cauchy Konvergenzkriterium'', with Lösungen inline'
+    angle: The one drill that makes the sequence-to-series translation explicit instead of assuming it.
+    angle_detail: 'Its first task is not a computation: it prints the Cauchy criterion for sequences and
+      for series and asks for the relationship in words. That is exactly the step the script performs
+      silently when it defines a series as its partial sums, and it is the step that, if left implicit,
+      makes the whole chapter feel like a new set of rules. Aufgabe 1 asks for the sequence form and the
+      series form side by side and for the connection in your own words. Twenty pages, university level,
+      solutions inline.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: KIT-Blatt and Tutorium-Musterlösung — criterion practice with an exam-write-up note
+    source_id: source-analysis-drill-blaetter-extern
+    locator: KIT_Blatt-Reihen.pdf (4 pp; 6. Übungsblatt, Aufgaben mit Lösungen — e.g. Aufgabe 26 on Σ(−1)^(k+1)·k/2^k);
+      Tutorium-Musterloesung-Reihen.pdf (6 pp; the rules for combining series, the necessary null-sequence
+      condition, the list of series 'die jeder kennen muss', and a 'Hinweis für die Klausur' on what need
+      not be written out)
+    angle: Short, dense criterion practice — and the Tutorium sheet is the only source here that says
+      which steps a marker expects to *see*.
+    angle_detail: 'The Tutorium sheet is worth its six pages for one paragraph: it states that the null-sequence
+      condition need not be mentioned explicitly except for the Leibniz criterion, and that a non-null
+      term is a trivial divergence argument that saves working through any criterion. That is presentation
+      advice of the kind the script''s contract does not give, and it converts directly into time in a
+      three-hour paper. The KIT sheet is four pages of standard tasks with solutions.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.3 ''Beispiele von geometrischen Reihen'' p. 5 (Lösung p.
+      20), 1.4 ''Das Cauchy-Produkt von Reihen'' p. 5 (Lösung p. 23 — matches the §4.5 Exkurs), 1.6 ''Teleskopreihen''
+      p. 8 (Lösung p. 33), 1.9 ''Die Koch''sche Schneeflocke'' p. 10 (Lösung p. 45)'
+    angle: The two series types that can actually be summed, worked at length — plus one geometric application
+      that is a real object rather than an exercise.
+    angle_detail: Geometric and telescoping are the only families the exam can ask for a *value* from,
+      and HU Serie 08.1 asks for exactly those three. This is the route that works them slowly. The Koch
+      snowflake task is the one place in the whole Analysis collection where a geometric series answers
+      a question someone might actually ask. Aufgabe 1.4 covers the Cauchy product, which is the script's
+      §4.5 Exkurs — worked here if the boundary is ever revisited, not needed for the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 §10.6 Konvergenzkriterien für Reihen
+    source_id: source-analysis-drill-blaetter-extern
+    locator: IngMath2_Aufgaben.pdf §10.6 Konvergenzkriterien für Reihen p. 47-74 (27 pages of solved exercises)
+    angle: Twenty-seven pages of criterion drill with solutions — the largest single block of series practice
+      available.
+    angle_detail: 'Volume, when the decision tree is built and what remains is making the choice fast.
+      Engineering-style and computational: it will not explain why a criterion works, and it does not
+      need to by the time this route is the right one.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on series and convergence criteria
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A11 (Σ n!/n^n by the ratio
+      criterion), A12 (Σ√k·x^k — absolute convergence for |x|<1, divergence for |x|>1); 2. Klausur A6
+      (disprove: Σa_l convergent and (b_l) bounded ⇒ Σa_l b_l convergent), A7, A8; Wiederholungsklausur
+      A5, A6, A7. Darmstadt_...pdf A3 (decide convergence for each of several series). Regensburg_...pdf
+      A2.4. Paderborn_...pdf A2(b) (for which x does Σ(n+1)x^n converge, and to what), A4(a) (absolutely
+      convergent times bounded)'
+    angle: Exam-shaped criterion selection with solutions — and two papers set the same trap about 'absolutely
+      convergent times bounded'.
+    angle_detail: 'Marburg 2. Klausur A6 and Paderborn A4(a) are the same statement with one word changed:
+      Paderborn''s series is absolutely convergent and the claim is true; Marburg''s is merely convergent
+      and the claim is false, with (−1)^l/(l+1) against b_l = (−1)^l as the counterexample. Working the
+      pair is the sharpest available drill on why §4.3 exists. Paderborn A2(b) additionally wants the
+      *value*, which needs the derivative trick rather than a criterion.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 3 Reihen + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 3 Reihen PDF p. 26 (§3.1 Konvergenzkriterien
+      für Reihen PDF p. 27, §3.2 Potenzreihen PDF p. 28 — matches the §5.8 Exkurs), Übungsaufgaben PDF
+      p. 31'
+    angle: The criteria compressed to two pages with a matching exercise set — a revision pass, not a
+      first account.
+    angle_detail: Fast and complete for what it covers. Its §3.2 on power series belongs to the script's
+      §5.8 Exkurs and is out of scope here; the boundary is worth knowing before working the exercise
+      set, which does not separate them.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
+      of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
+      Ratio, Root, and Alternating Series Tests'' p. 43'
+    angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
+    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
+      which derives the basic series facts *from completeness* — making explicit the dependency the script
+      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §7 Konvergenzkriterien für Reihen und §8 Die Exponentialreihe
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §7 Konvergenzkriterien für Reihen p. 26, §8 Die Exponentialreihe
+      p. 30; Lösungen §7 p. 106, §8 p. 114
+    angle: A whole section of criterion-selection problems in the German the exam is set in, with solutions.
+    angle_detail: '§7 is the closest external match to the script''s §4.2 and the natural drill for the
+      decision tree. §8 is included deliberately even though the exponential series belongs to the script''s
+      §5.6: it is the worked example that shows a series *defining* a function, which is the join Chapter
+      5 will need and which no other Chapter 4 route makes.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.2 Reihen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §3.2 Reihen p. 29; Lösungen Kap. 23 p. 142
+    angle: Fresh criterion problems in reserve, once Forster §7 is spent.
+    angle_detail: Two pages of problems with worked Lösungsvorschläge. Its role on this chapter is unchanged
+      from Chapter 3 — unseen repetitions rather than a different explanation — and its Kap. 7.2 (Potenzreihen)
+      matches the script's §5.8 Exkurs and is therefore left closed.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §6.4 — Musterlösung für Konvergenz von Reihen
+    source_id: source-ableitinger-musterloesungen
+    locator: ableitinger.pdf §6.4 Konvergenz von Reihen p. 66; Lösungsvorschläge in §11.2 p. 190
+    angle: One series-convergence solution written with the solver's reasoning annotated beside the mathematics.
+    angle_detail: 'Routed to this chapter for the first time. Read after WV1.3 has been attempted: WV1.3
+      asks for four write-ups of the same fact, which makes it the ideal place to compare your presentation
+      against a model that explains its own choices.'
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott §2.7 Properties of Infinite Series and the rearrangement discussion
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §2.1 Discussion: Rearrangements of Infinite Series p. 51, §2.7 Properties of
+      Infinite Series p. 83, §2.8 Double Summations and Products of Infinite Series p. 91 (matches the
+      §4.5 Exkurs)'
+    angle: The book opens its whole sequences-and-series chapter on the rearrangement paradox, which makes
+      the absolute-convergence hypothesis feel earned rather than technical.
+    angle_detail: Abbott's §2.1 shows a conditionally convergent series being rearranged to a different
+      sum before any theory is developed, and then spends the chapter earning the right to explain it.
+      For the script's §4.3-§4.4 that is the ideal order — the script states absolute convergence as a
+      definition and rearrangement as an Ausflug, which leaves the connection available but not felt.
+      Four pages of reading for the discussion; the rest as needed.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 8 — Reihen
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 8 ''Reihen'' p. 128: §8.1 Definition und Beispiele p. 128, §8.2 Konvergenzkriterien
+      für Reihen p. 133, §8.3 Umordnung von Reihen p. 141, §8.4 Doppelreihen, Cauchy-Produkt p. 143, Übungen
+      p. 146; Lösungen und Hinweise p. 329'
+    angle: German, rigorous, with hints as well as solutions — and §8.3 covers the Ausflug that most references
+      skip.
+    angle_detail: Grieser's Kap. 8 maps onto the script's Chapter 4 section for section, including §8.3
+      for the §4.4 Umordnungen Ausflug and §8.4 for the §4.5 Produktreihen Exkurs. Since both of those
+      are below exam priority, the practical value here is §8.2 plus exercises that come with an intermediate
+      hint layer.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Series and More on series
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Series p. 87, More on series p. 100 (inside 'Sequences and Series' p. 51)
+    angle: 'The structural twin again: criteria in the same order as §4.2, in English, free.'
+    angle_detail: Used the same way as on Chapter 3 — a second pass over the same argument rather than
+      a different account. Its 'More on series' section carries absolute convergence and rearrangement,
+      matching §4.3-§4.4.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Reihen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Reihen'' p. 113: Definition und erste Eigenschaften
+      p. 113, Konvergenzkriterien für Reihen p. 115, Umordnung von Reihen p. 120. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, CS-framed, and short — the criteria in seven pages, in the same order as §4.2.
+    angle_detail: The compact German alternative to MfNF's sixty pages on the same material. Use it when
+      the criteria are known and what is wanted is the German statement to check a write-up against.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Reihen und die Konvergenzkriterien, one section per criterion
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Reihen'' p. 153 (Begriff der Reihe p. 154, Rechenregeln p. 162, Teleskopsumme
+      und Teleskopreihe p. 169, Geometrische Reihe p. 173, Harmonische Reihe p. 177, Absolute Konvergenz
+      p. 179, Umordnungssatz p. 184); ''Kriterien für Konvergenz von Reihen'' p. 189 (Trivialkriterium
+      p. 190, Majoranten-/Minorantenkriterium p. 193, Wurzelkriterium p. 199, Quotientenkriterium p. 205,
+      Leibniz-Kriterium p. 216, ''Anwendung der Konvergenzkriterien'' p. 222). Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: Every criterion in the script's §4.2 gets its own titled section here, and the chapter ends
+      with a section on choosing between them.
+    angle_detail: 'The structure is the value: where the script gives §4.2 as one section, this gives
+      six, and then adds ''Anwendung der Konvergenzkriterien'' — the choosing step, written down as its
+      own topic. That is the one thing WV1.3 is testing and the one thing most texts leave to osmosis.
+      It also has separate sections for the harmonic and geometric series, which are the two comparison
+      series everything else is measured against. German, free, verbose; no contextual evaluation registered
+      yet.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §14 Series and §15 Alternating Series
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §14 Series p. 107, §15 Alternating Series and Integral Tests
+      p. 117; Selected Hints and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Two short numbered sections, entered directly, with the alternating case separated out.
+    angle_detail: Ross's §15 pairs the Leibniz criterion with the integral test. The integral test is
+      not in the script's §4.2 and is not examinable here — noted so it is recognised as extra rather
+      than assumed missing from the script.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas §§10.2-10.6 — series and the convergence tests
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §10.2 Infinite Series p. 598, §10.3 The Integral
+      Test p. 607, §10.4 Comparison Tests p. 614, §10.5 Absolute Convergence; The Ratio and Root Tests
+      p. 618, §10.6 Alternating Series and Conditional Convergence p. 624. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: One section per test with large exercise sets — reserve computational volume.
+    angle_detail: Named at section level for the first time. §10.3 (integral test) is not in the script's
+      §4.2 and is not examinable; the other four sections map onto it directly. Overlaps almost completely
+      with Stewart §§11.2-11.6, so open one book, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart §§11.2-11.7 — series, the tests, and a strategy section
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §11.2 Series p. 739, §11.3 The Integral Test p. 751, §11.4 The Comparison Tests
+      p. 759, §11.5 Alternating Series p. 764, §11.6 Absolute Convergence and the Ratio and Root Tests
+      p. 769, §11.7 Strategy for Testing Series p. 776. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The same coverage as Thomas plus §11.7, which is a section on nothing but choosing the test.
+    angle_detail: '§11.7 is the reason to prefer Stewart over Thomas on this one chapter: a short section
+      whose entire content is how to decide which test to reach for, which is what WV1.3 examines and
+      what §4.2 leaves as an exercise for the reader. Everything else here is interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-konvergenzkriterien/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch04-absolute-konvergenz
+  number: 3
+  title: Absolute Konvergenz (§4.3)
+  status: pending
+  objective: 'Absolute versus conditional convergence, and why the distinction is not pedantry: it is
+    the hypothesis the rearrangement result turns on.'
+  done_when:
+  - 'Reproduce without notes: Absolute versus conditional convergence, and why the distinction is not
+    pedantry: it is the hypothesis the rearrangement result turns on.'
+  - Work HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice, then the remaining
+    7, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 4 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 4, printed p. 80 (PDF p. 90)–printed p. 97 (PDF p. 107); §4.1 Reihen
+      printed p. 80 (PDF p. 90), §4.2 Konvergenzkriterien für Reihen printed p. 84 (PDF p. 94), §4.3 Absolute
+      Konvergenz printed p. 88 (PDF p. 98), §4.4 Ausflug Umordnungen printed p. 92 (PDF p. 102), §4.5
+      Exkurs Produktreihen printed p. 95 (PDF p. 105)
+    angle: The shortest exam-bearing chapter and the most procedural — eighteen pages that amount to a
+      decision tree.
+    angle_detail: 'Chapter 4 introduces no new notion of convergence: a series is the sequence of its
+      partial sums, so everything from §3.5 still applies. What it adds is a set of criteria and, implicitly,
+      the problem of choosing among them. Build the decision tree from §4.2 with the script''s own theorem
+      numbers on it — the hypotheses are what the exam checks, and §4.3''s absolute-versus-conditional
+      distinction is the hypothesis that §4.4''s rearrangement result turns on. §4.5 is an Exkurs and
+      out of scope.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08 (8.1-8.3) and Hausaufgabe WV1.3 — the calibrated series practice
+    source_id: source-analysis-skript
+    locator: 'Pd3szO-ana_inf_serie08.pdf (Serie 08 exists only under this download-mangled name): 8.1
+      compute three series sums (geometric, alternating geometric, and 1/(4k²−1) by telescoping), 8.2
+      decide convergence for four series including a case split on x, 8.3 HA (20 P) one sum plus three
+      convergence decisions. ana_inf_serieWV.pdf: Hausaufgabe WV1.3 (20 P) — prove that Σ(−11)^n/3^(n²+1)
+      converges four times over, by the ratio, root, comparison and Leibniz criteria in turn'
+    angle: Current, graded, and WV1.3 is the clearest statement anywhere of what this chapter is actually
+      testing.
+    angle_detail: 'WV1.3 is the single most informative task in the Analysis half of the local HU set.
+      It takes one series and demands it be settled with four different criteria — which only makes sense
+      as a test of whether each criterion''s hypotheses can be checked and stated, since the answer is
+      never in doubt. Build the §4.2 decision tree against it. Serie 08.2(iv) is the other one to notice:
+      it needs a case split on the parameter before any criterion applies, which is the step that gets
+      skipped. 8.4 belongs to Chapter 5, not here.'
+    vault_path: material://source-analysis-skript/Pd3szO-ana_inf_serie08.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 2, series and convergence tests
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 2: the series block (series, convergence tests, alternating
+      series). Topic-matched selection from the source record''s own list; no local copy, so the selection
+      is by topic rather than by timestamp.'
+    angle: Every criterion worked at blackboard pace with full arithmetic — the pace angle again, applied
+      to the chapter with the most mechanical content.
+    angle_detail: 'Conditional and capped, as always. This chapter is where the pace angle is most defensible:
+      the criteria are mechanical, the failure is usually in executing the estimate, and a US calculus
+      course covers the ratio, root, comparison and alternating tests at exactly the computational level
+      the script assumes. It will not cover absolute-versus-conditional convergence at §4.3''s depth.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.2 Unendliche Reihen
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §2.2 Unendliche Reihen p. 68; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Series presented as the continuation of the sequence chapter it belongs to, with solutions
+      written out as prose.
+    angle_detail: 'Fritzsche keeps sequences (§2.1), series (§2.2) and function limits (§2.3) in one chapter
+      called Der Grenzwertbegriff, which is the same dependency the script builds. On this chapter that
+      framing pays: the partial-sum definition stops being a formality when the previous section is fresh.
+      First drill after the HU sheets.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: auf-2-3 Reihen — the Cauchy criterion for series, worked in German
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'auf-2-3_Reihen_Loesungen.pdf (20 pp), Aufgabenkatalog Analysis SoSe 2019: opens with Aufgabe
+      1 ''Cauchy Konvergenzkriterium'', with Lösungen inline'
+    angle: The one drill that makes the sequence-to-series translation explicit instead of assuming it.
+    angle_detail: 'Its first task is not a computation: it prints the Cauchy criterion for sequences and
+      for series and asks for the relationship in words. That is exactly the step the script performs
+      silently when it defines a series as its partial sums, and it is the step that, if left implicit,
+      makes the whole chapter feel like a new set of rules. Aufgabe 1 asks for the sequence form and the
+      series form side by side and for the connection in your own words. Twenty pages, university level,
+      solutions inline.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: KIT-Blatt and Tutorium-Musterlösung — criterion practice with an exam-write-up note
+    source_id: source-analysis-drill-blaetter-extern
+    locator: KIT_Blatt-Reihen.pdf (4 pp; 6. Übungsblatt, Aufgaben mit Lösungen — e.g. Aufgabe 26 on Σ(−1)^(k+1)·k/2^k);
+      Tutorium-Musterloesung-Reihen.pdf (6 pp; the rules for combining series, the necessary null-sequence
+      condition, the list of series 'die jeder kennen muss', and a 'Hinweis für die Klausur' on what need
+      not be written out)
+    angle: Short, dense criterion practice — and the Tutorium sheet is the only source here that says
+      which steps a marker expects to *see*.
+    angle_detail: 'The Tutorium sheet is worth its six pages for one paragraph: it states that the null-sequence
+      condition need not be mentioned explicitly except for the Leibniz criterion, and that a non-null
+      term is a trivial divergence argument that saves working through any criterion. That is presentation
+      advice of the kind the script''s contract does not give, and it converts directly into time in a
+      three-hour paper. The KIT sheet is four pages of standard tasks with solutions.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.3 ''Beispiele von geometrischen Reihen'' p. 5 (Lösung p.
+      20), 1.4 ''Das Cauchy-Produkt von Reihen'' p. 5 (Lösung p. 23 — matches the §4.5 Exkurs), 1.6 ''Teleskopreihen''
+      p. 8 (Lösung p. 33), 1.9 ''Die Koch''sche Schneeflocke'' p. 10 (Lösung p. 45)'
+    angle: The two series types that can actually be summed, worked at length — plus one geometric application
+      that is a real object rather than an exercise.
+    angle_detail: Geometric and telescoping are the only families the exam can ask for a *value* from,
+      and HU Serie 08.1 asks for exactly those three. This is the route that works them slowly. The Koch
+      snowflake task is the one place in the whole Analysis collection where a geometric series answers
+      a question someone might actually ask. Aufgabe 1.4 covers the Cauchy product, which is the script's
+      §4.5 Exkurs — worked here if the boundary is ever revisited, not needed for the exam.
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 §10.6 Konvergenzkriterien für Reihen
+    source_id: source-analysis-drill-blaetter-extern
+    locator: IngMath2_Aufgaben.pdf §10.6 Konvergenzkriterien für Reihen p. 47-74 (27 pages of solved exercises)
+    angle: Twenty-seven pages of criterion drill with solutions — the largest single block of series practice
+      available.
+    angle_detail: 'Volume, when the decision tree is built and what remains is making the choice fast.
+      Engineering-style and computational: it will not explain why a criterion works, and it does not
+      need to by the time this route is the right one.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on series and convergence criteria
+    source_id: source-analysis-klausuren-extern
+    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A11 (Σ n!/n^n by the ratio
+      criterion), A12 (Σ√k·x^k — absolute convergence for |x|<1, divergence for |x|>1); 2. Klausur A6
+      (disprove: Σa_l convergent and (b_l) bounded ⇒ Σa_l b_l convergent), A7, A8; Wiederholungsklausur
+      A5, A6, A7. Darmstadt_...pdf A3 (decide convergence for each of several series). Regensburg_...pdf
+      A2.4. Paderborn_...pdf A2(b) (for which x does Σ(n+1)x^n converge, and to what), A4(a) (absolutely
+      convergent times bounded)'
+    angle: Exam-shaped criterion selection with solutions — and two papers set the same trap about 'absolutely
+      convergent times bounded'.
+    angle_detail: 'Marburg 2. Klausur A6 and Paderborn A4(a) are the same statement with one word changed:
+      Paderborn''s series is absolutely convergent and the claim is true; Marburg''s is merely convergent
+      and the claim is false, with (−1)^l/(l+1) against b_l = (−1)^l as the counterexample. Working the
+      pair is the sharpest available drill on why §4.3 exists. Paderborn A2(b) additionally wants the
+      *value*, which needs the derivative trick rather than a criterion.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 3 Reihen + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 3 Reihen PDF p. 26 (§3.1 Konvergenzkriterien
+      für Reihen PDF p. 27, §3.2 Potenzreihen PDF p. 28 — matches the §5.8 Exkurs), Übungsaufgaben PDF
+      p. 31'
+    angle: The criteria compressed to two pages with a matching exercise set — a revision pass, not a
+      first account.
+    angle_detail: Fast and complete for what it covers. Its §3.2 on power series belongs to the script's
+      §5.8 Exkurs and is out of scope here; the boundary is worth knowing before working the exercise
+      set, which does not separate them.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
+      of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
+      Ratio, Root, and Alternating Series Tests'' p. 43'
+    angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
+    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
+      which derives the basic series facts *from completeness* — making explicit the dependency the script
+      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §7 Konvergenzkriterien für Reihen und §8 Die Exponentialreihe
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §7 Konvergenzkriterien für Reihen p. 26, §8 Die Exponentialreihe
+      p. 30; Lösungen §7 p. 106, §8 p. 114
+    angle: A whole section of criterion-selection problems in the German the exam is set in, with solutions.
+    angle_detail: '§7 is the closest external match to the script''s §4.2 and the natural drill for the
+      decision tree. §8 is included deliberately even though the exponential series belongs to the script''s
+      §5.6: it is the worked example that shows a series *defining* a function, which is the join Chapter
+      5 will need and which no other Chapter 4 route makes.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar §3.2 Reihen
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §3.2 Reihen p. 29; Lösungen Kap. 23 p. 142
+    angle: Fresh criterion problems in reserve, once Forster §7 is spent.
+    angle_detail: Two pages of problems with worked Lösungsvorschläge. Its role on this chapter is unchanged
+      from Chapter 3 — unseen repetitions rather than a different explanation — and its Kap. 7.2 (Potenzreihen)
+      matches the script's §5.8 Exkurs and is therefore left closed.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott §2.7 Properties of Infinite Series and the rearrangement discussion
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §2.1 Discussion: Rearrangements of Infinite Series p. 51, §2.7 Properties of
+      Infinite Series p. 83, §2.8 Double Summations and Products of Infinite Series p. 91 (matches the
+      §4.5 Exkurs)'
+    angle: The book opens its whole sequences-and-series chapter on the rearrangement paradox, which makes
+      the absolute-convergence hypothesis feel earned rather than technical.
+    angle_detail: Abbott's §2.1 shows a conditionally convergent series being rearranged to a different
+      sum before any theory is developed, and then spends the chapter earning the right to explain it.
+      For the script's §4.3-§4.4 that is the ideal order — the script states absolute convergence as a
+      definition and rearrangement as an Ausflug, which leaves the connection available but not felt.
+      Four pages of reading for the discussion; the rest as needed.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 8 — Reihen
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 8 ''Reihen'' p. 128: §8.1 Definition und Beispiele p. 128, §8.2 Konvergenzkriterien
+      für Reihen p. 133, §8.3 Umordnung von Reihen p. 141, §8.4 Doppelreihen, Cauchy-Produkt p. 143, Übungen
+      p. 146; Lösungen und Hinweise p. 329'
+    angle: German, rigorous, with hints as well as solutions — and §8.3 covers the Ausflug that most references
+      skip.
+    angle_detail: Grieser's Kap. 8 maps onto the script's Chapter 4 section for section, including §8.3
+      for the §4.4 Umordnungen Ausflug and §8.4 for the §4.5 Produktreihen Exkurs. Since both of those
+      are below exam priority, the practical value here is §8.2 plus exercises that come with an intermediate
+      hint layer.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Series and More on series
+    source_id: source-lebl-basic-analysis
+    locator: realanal.pdf Series p. 87, More on series p. 100 (inside 'Sequences and Series' p. 51)
+    angle: 'The structural twin again: criteria in the same order as §4.2, in English, free.'
+    angle_detail: Used the same way as on Chapter 3 — a second pass over the same argument rather than
+      a different account. Its 'More on series' section carries absolute convergence and rearrangement,
+      matching §4.3-§4.4.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Reihen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Reihen'' p. 113: Definition und erste Eigenschaften
+      p. 113, Konvergenzkriterien für Reihen p. 115, Umordnung von Reihen p. 120. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, CS-framed, and short — the criteria in seven pages, in the same order as §4.2.
+    angle_detail: The compact German alternative to MfNF's sixty pages on the same material. Use it when
+      the criteria are known and what is wanted is the German statement to check a write-up against.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Reihen und die Konvergenzkriterien, one section per criterion
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Reihen'' p. 153 (Begriff der Reihe p. 154, Rechenregeln p. 162, Teleskopsumme
+      und Teleskopreihe p. 169, Geometrische Reihe p. 173, Harmonische Reihe p. 177, Absolute Konvergenz
+      p. 179, Umordnungssatz p. 184); ''Kriterien für Konvergenz von Reihen'' p. 189 (Trivialkriterium
+      p. 190, Majoranten-/Minorantenkriterium p. 193, Wurzelkriterium p. 199, Quotientenkriterium p. 205,
+      Leibniz-Kriterium p. 216, ''Anwendung der Konvergenzkriterien'' p. 222). Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: Every criterion in the script's §4.2 gets its own titled section here, and the chapter ends
+      with a section on choosing between them.
+    angle_detail: 'The structure is the value: where the script gives §4.2 as one section, this gives
+      six, and then adds ''Anwendung der Konvergenzkriterien'' — the choosing step, written down as its
+      own topic. That is the one thing WV1.3 is testing and the one thing most texts leave to osmosis.
+      It also has separate sections for the harmonic and geometric series, which are the two comparison
+      series everything else is measured against. German, free, verbose; no contextual evaluation registered
+      yet.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §14 Series and §15 Alternating Series
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §14 Series p. 107, §15 Alternating Series and Integral Tests
+      p. 117; Selected Hints and Answers p. 376. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Two short numbered sections, entered directly, with the alternating case separated out.
+    angle_detail: Ross's §15 pairs the Leibniz criterion with the integral test. The integral test is
+      not in the script's §4.2 and is not examinable here — noted so it is recognised as extra rather
+      than assumed missing from the script.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas §§10.2-10.6 — series and the convergence tests
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §10.2 Infinite Series p. 598, §10.3 The Integral
+      Test p. 607, §10.4 Comparison Tests p. 614, §10.5 Absolute Convergence; The Ratio and Root Tests
+      p. 618, §10.6 Alternating Series and Conditional Convergence p. 624. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: One section per test with large exercise sets — reserve computational volume.
+    angle_detail: Named at section level for the first time. §10.3 (integral test) is not in the script's
+      §4.2 and is not examinable; the other four sections map onto it directly. Overlaps almost completely
+      with Stewart §§11.2-11.6, so open one book, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart §§11.2-11.7 — series, the tests, and a strategy section
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §11.2 Series p. 739, §11.3 The Integral Test p. 751, §11.4 The Comparison Tests
+      p. 759, §11.5 Alternating Series p. 764, §11.6 Absolute Convergence and the Ratio and Root Tests
+      p. 769, §11.7 Strategy for Testing Series p. 776. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The same coverage as Thomas plus §11.7, which is a section on nothing but choosing the test.
+    angle_detail: '§11.7 is the reason to prefer Stewart over Thomas on this one chapter: a short section
+      whose entire content is how to decide which test to reach for, which is what WV1.3 examines and
+      what §4.2 leaves as an exercise for the reader. Everything else here is interchangeable with Thomas.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-absolute-konvergenz/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch04-umordnungen
+  number: 4
+  title: Ausflug – Umordnungen (§4.4)
+  status: pending
+  objective: 'The Riemann rearrangement phenomenon: a conditionally convergent series can be reordered
+    to any value. Ausflug depth — know the statement and what it costs.'
+  done_when:
+  - 'Reproduce without notes: The Riemann rearrangement phenomenon: a conditionally convergent series
+    can be reordered to any value. Ausflug depth — know the statement and what it costs.'
+  - Work AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke, and record
+    every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 4 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 4, printed p. 80 (PDF p. 90)–printed p. 97 (PDF p. 107); §4.1 Reihen
+      printed p. 80 (PDF p. 90), §4.2 Konvergenzkriterien für Reihen printed p. 84 (PDF p. 94), §4.3 Absolute
+      Konvergenz printed p. 88 (PDF p. 98), §4.4 Ausflug Umordnungen printed p. 92 (PDF p. 102), §4.5
+      Exkurs Produktreihen printed p. 95 (PDF p. 105)
+    angle: The shortest exam-bearing chapter and the most procedural — eighteen pages that amount to a
+      decision tree.
+    angle_detail: 'Chapter 4 introduces no new notion of convergence: a series is the sequence of its
+      partial sums, so everything from §3.5 still applies. What it adds is a set of criteria and, implicitly,
+      the problem of choosing among them. Build the decision tree from §4.2 with the script''s own theorem
+      numbers on it — the hypotheses are what the exam checks, and §4.3''s absolute-versus-conditional
+      distinction is the hypothesis that §4.4''s rearrangement result turns on. §4.5 is an Exkurs and
+      out of scope.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: AS-Ana1 — geometrische Reihen, Teleskopreihen, Cauchy-Produkt, Koch'sche Schneeflocke
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.3 ''Beispiele von geometrischen Reihen'' p. 5 (Lösung p.
+      20), 1.4 ''Das Cauchy-Produkt von Reihen'' p. 5 (Lösung p. 23 — matches the §4.5 Exkurs), 1.6 ''Teleskopreihen''
+      p. 8 (Lösung p. 33), 1.9 ''Die Koch''sche Schneeflocke'' p. 10 (Lösung p. 45)'
+    angle: The two series types that can actually be summed, worked at length — plus one geometric application
+      that is a real object rather than an exercise.
+    angle_detail: Geometric and telescoping are the only families the exam can ask for a *value* from,
+      and HU Serie 08.1 asks for exactly those three. This is the route that works them slowly. The Koch
+      snowflake task is the one place in the whole Analysis collection where a geometric series answers
+      a question someone might actually ask. Aufgabe 1.4 covers the Cauchy product, which is the script's
+      §4.5 Exkurs — worked here if the boundary is ever revisited, not needed for the exam.
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott §2.7 Properties of Infinite Series and the rearrangement discussion
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §2.1 Discussion: Rearrangements of Infinite Series p. 51, §2.7 Properties of
+      Infinite Series p. 83, §2.8 Double Summations and Products of Infinite Series p. 91 (matches the
+      §4.5 Exkurs)'
+    angle: The book opens its whole sequences-and-series chapter on the rearrangement paradox, which makes
+      the absolute-convergence hypothesis feel earned rather than technical.
+    angle_detail: Abbott's §2.1 shows a conditionally convergent series being rearranged to a different
+      sum before any theory is developed, and then spends the chapter earning the right to explain it.
+      For the script's §4.3-§4.4 that is the ideal order — the script states absolute convergence as a
+      definition and rearrangement as an Ausflug, which leaves the connection available but not felt.
+      Four pages of reading for the discussion; the rest as needed.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 8 — Reihen
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 8 ''Reihen'' p. 128: §8.1 Definition und Beispiele p. 128, §8.2 Konvergenzkriterien
+      für Reihen p. 133, §8.3 Umordnung von Reihen p. 141, §8.4 Doppelreihen, Cauchy-Produkt p. 143, Übungen
+      p. 146; Lösungen und Hinweise p. 329'
+    angle: German, rigorous, with hints as well as solutions — and §8.3 covers the Ausflug that most references
+      skip.
+    angle_detail: Grieser's Kap. 8 maps onto the script's Chapter 4 section for section, including §8.3
+      for the §4.4 Umordnungen Ausflug and §8.4 for the §4.5 Produktreihen Exkurs. Since both of those
+      are below exam priority, the practical value here is §8.2 plus exercises that come with an intermediate
+      hint layer.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Reihen
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf ''Reihen'' p. 113: Definition und erste Eigenschaften
+      p. 113, Konvergenzkriterien für Reihen p. 115, Umordnung von Reihen p. 120. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: German, CS-framed, and short — the criteria in seven pages, in the same order as §4.2.
+    angle_detail: The compact German alternative to MfNF's sixty pages on the same material. Use it when
+      the criteria are known and what is wanted is the German statement to check a write-up against.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Reihen und die Konvergenzkriterien, one section per criterion
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf: ''Reihen'' p. 153 (Begriff der Reihe p. 154, Rechenregeln p. 162, Teleskopsumme
+      und Teleskopreihe p. 169, Geometrische Reihe p. 173, Harmonische Reihe p. 177, Absolute Konvergenz
+      p. 179, Umordnungssatz p. 184); ''Kriterien für Konvergenz von Reihen'' p. 189 (Trivialkriterium
+      p. 190, Majoranten-/Minorantenkriterium p. 193, Wurzelkriterium p. 199, Quotientenkriterium p. 205,
+      Leibniz-Kriterium p. 216, ''Anwendung der Konvergenzkriterien'' p. 222). Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).'
+    angle: Every criterion in the script's §4.2 gets its own titled section here, and the chapter ends
+      with a section on choosing between them.
+    angle_detail: 'The structure is the value: where the script gives §4.2 as one section, this gives
+      six, and then adds ''Anwendung der Konvergenzkriterien'' — the choosing step, written down as its
+      own topic. That is the one thing WV1.3 is testing and the one thing most texts leave to osmosis.
+      It also has separate sections for the harmonic and geometric series, which are the two comparison
+      series everything else is measured against. German, free, verbose; no contextual evaluation registered
+      yet.'
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/stages/stage-m2-analysis-ch04-umordnungen/notes.md
+  attachments: []
+  source_feedback: []

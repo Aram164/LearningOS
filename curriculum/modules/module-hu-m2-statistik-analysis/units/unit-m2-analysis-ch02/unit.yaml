@@ -1,0 +1,76 @@
+id: unit-m2-analysis-ch02
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 2 — Die reellen Zahlen
+order: 102
+scope: Script Chapter 2 'Die reellen Zahlen', printed pp. 7-40 (PDF pp. 17-50). §2.1 is Wiederholung;
+  §§2.2-2.3 are the load-bearing content, with completeness (§2.3.3) the axiom every limit in the script
+  ultimately rests on; §2.4 'Darstellung reeller Zahlen im Rechner' is an Ausflug and is held at overview
+  depth.
+status: ready
+knowledge_map:
+  summary: 'Chapter 2 turns R from a set you compute in into an ordered, complete field — and completeness
+    is the single hinge of the whole script: without it suprema need not exist, monotone bounded sequences
+    need not converge, and Chapters 3 to 7 have nothing to stand on. The Ausflug on machine numbers is
+    the chapter''s CS payoff and the reason the module is called ''Analysis und ihre Bezüge zur Informatik''.'
+  nodes:
+  - id: knowledge-m2-analysis-ch02-koerperaxiome
+    title: Wiederholung – Körperaxiome (§2.1)
+    summary: 'The field axioms and the consequences drawn from them. Labelled Wiederholung: assumed from
+      M1.2, restated here only to fix notation.'
+  - id: knowledge-m2-analysis-ch02-anordnung
+    title: Anordnung von R (§2.2)
+    summary: The order axioms and the rules for manipulating inequalities. Every later estimate is an
+      inequality argument, so fluency here is what makes epsilon arguments writable.
+    builds_on:
+    - knowledge-m2-analysis-ch02-koerperaxiome
+  - id: knowledge-m2-analysis-ch02-intervalle-betrag
+    title: Intervalle und Betragsfunktion (§2.3.1)
+    summary: Interval notation and the absolute value as a distance, including the triangle inequality
+      in the form the convergence definition uses.
+    builds_on:
+    - knowledge-m2-analysis-ch02-anordnung
+  - id: knowledge-m2-analysis-ch02-supremum-infimum
+    title: Supremum und Infimum von Mengen (§2.3.2)
+    summary: Bounded sets, upper and lower bounds, supremum and infimum, and the difference between a
+      supremum and a maximum. The distinction is a standing exam question and the reason Serie 05's Hausaufgabe
+      5.4 exists.
+    builds_on:
+    - knowledge-m2-analysis-ch02-intervalle-betrag
+  - id: knowledge-m2-analysis-ch02-vollstaendigkeitsaxiom
+    title: Das Vollständigkeitsaxiom (§2.3.3)
+    summary: The completeness axiom in the script's supremum form. It is the axiom that separates R from
+      Q and the one every convergence theorem later cites, directly or through Bolzano-Weierstraß.
+    builds_on:
+    - knowledge-m2-analysis-ch02-supremum-infimum
+  - id: knowledge-m2-analysis-ch02-folgerungen
+    title: Folgerungen aus dem Vollständigkeitsaxiom (§2.3.4)
+    summary: 'What completeness immediately buys: the Archimedean property and the density of Q in R.
+      These are the steps that let an epsilon argument choose an N at all.'
+    builds_on:
+    - knowledge-m2-analysis-ch02-vollstaendigkeitsaxiom
+  - id: knowledge-m2-analysis-ch02-potenzen-wurzeln
+    title: Potenzen und Wurzeln reeller Zahlen (§§2.3.5-2.3.6)
+    summary: Powers with integer and rational exponents, and the existence of n-th roots as the first
+      genuine payoff of completeness — an existence proof rather than a calculation. Serie 07's Heron
+      task is its computational counterpart.
+    builds_on:
+    - knowledge-m2-analysis-ch02-folgerungen
+  - id: knowledge-m2-analysis-ch02-maschinenzahlen
+    title: Ausflug – Darstellung reeller Zahlen im Rechner (§2.4)
+    summary: 'Floating-point machine numbers, rounding error and machine arithmetic: why a complete ordered
+      field cannot be represented exactly and what breaks when you pretend otherwise. Ausflug depth —
+      understand and apply the core claims; not an exam focus.'
+    builds_on:
+    - knowledge-m2-analysis-ch02-potenzen-wurzeln
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 2, printed pp. 7-40 (PDF pp. 17-50); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch02

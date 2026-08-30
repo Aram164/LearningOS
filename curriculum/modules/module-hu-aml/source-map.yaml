@@ -75,7 +75,9 @@ sources:
     - knowledge-aml-l02-validation
     depth: practice
     scope: current
-    locator: exercise-slides/Übung 02 .pdf
+    locator: exercise-slides/Übung 02 .pdf, slides 3-17 (CLIP), 19-33 (Blatt 1 k-NN exercise), and 35-43
+      (NumPy refresher)
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 02 .pdf
   - id: route-395dcc13f28ee6b07d06b1f9
     unit_id: unit-aml-l02
     title: Bonusblatt 01 — k-NN task
@@ -263,7 +265,9 @@ sources:
     - knowledge-aml-l05-gradient
     depth: practice
     scope: current
-    locator: exercise-slides/Übung 06 .pdf
+    locator: exercise-slides/Übung 06 .pdf, slides 3-10 (logistic model, loss, and gradient), 16-21 (sigmoid
+      and overfitting), and 23-27 (decision-boundary exercise)
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
   - id: route-c42e153ad62162b678786456
     unit_id: unit-aml-l05
     title: Bonusblatt 02 — classification task
@@ -318,7 +322,9 @@ sources:
     - knowledge-aml-l06-rate-scaling
     depth: practice
     scope: current
-    locator: exercise-slides/Übung 06 .pdf
+    locator: exercise-slides/Übung 06 .pdf, slides 12-14 (gradient descent) and 16-21 (sigmoid saturation
+      and overfitting)
+    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
   - id: route-5be9b7f03fc0793a0b8e1d96
     unit_id: unit-aml-l06
     title: Bonusblatt 03 — gradient descent
@@ -648,20 +654,64 @@ sources:
     - knowledge-aml-l01-generalization
     depth: intuition
     scope: complementary
-    locator: Chapter 2, especially §§2.1–2.2
-  - id: route-6fb1231d5d6cf9a542e91137
+    locator: islp.pdf §2.1 What Is Statistical Learning?, pdf pp. 25-36; §2.2 Assessing Model Accuracy,
+      pdf pp. 37-48 (bias-variance §2.2.2 p. 41; classification setting §2.2.3 p. 44)
+  - id: route-9654e119999a435926afd588
     unit_id: unit-aml-l02
-    title: ISLP k-NN, flexibility, and validation selections
+    title: ISLP bias-variance and classification setting
     format: book
-    angle: The clearest gentle reading for the U-shaped test-error curve, k-NN versus linear models, bias-variance,
-      and choosing k by validation.
+    angle: The gentlest entry to the U-shaped test-error curve and its regression/classification distinction.
+    covers:
+    - knowledge-aml-l02-bias-variance
+    depth: intuition
+    scope: complementary
+    locator: islp.pdf §2.2.2 The Bias-Variance Trade-Off, pdf pp. 41-43; §2.2.3 The Classification Setting,
+      pdf pp. 44-48
+    angle_detail: Start here when the U-shaped test-error curve is not yet intuitive. ISLP separates regression
+      from classification and explains the flexibility trade-off with lighter algebra than ESL; it prepares
+      the lecture but does not provide the exact L02 algorithm trace or course notation.
+  - id: route-70fa847b6d98c5b1c15f1b67
+    unit_id: unit-aml-l02
+    title: ISLP linear regression versus k-NN
+    format: book
+    angle: Compares the parametric linear fit and flexible k-NN directly on the same prediction problem.
     covers:
     - knowledge-aml-l02-algorithm
     - knowledge-aml-l02-bias-variance
+    depth: intuition
+    scope: complementary
+    locator: islp.pdf §3.5 Comparison of Linear Regression with K-Nearest Neighbors, pdf pp. 120-124
+    angle_detail: 'This short comparison is the cleanest bridge from L02 to L03: the same prediction setting
+      exposes where a rigid linear model or a flexible neighbourhood model wins. Use it to explain model
+      assumptions, not as a source for implementation details, distance scaling, or validation procedure.'
+  - id: route-27f0b891c4075763371fc04b
+    unit_id: unit-aml-l02
+    title: ISLP k-NN implementation lab
+    format: code
+    angle: Turns the classifier into an executable lab and makes the decision rule observable in code.
+    covers:
+    - knowledge-aml-l02-algorithm
+    depth: implementation
+    scope: complementary
+    locator: islp.pdf §4.7.6 K-Nearest Neighbors, pdf pp. 192-195
+    angle_detail: Run this lab when you want to see the classification rule operate on real data and compare
+      predicted classes. Its value is executable feedback rather than additional theory; the lab's Python
+      workflow is complementary and may not match the lecturer's exact variable names or exam presentation.
+  - id: route-7721480f8976c20d5fa0b4eb
+    unit_id: unit-aml-l02
+    title: ISLP validation for choosing k
+    format: book
+    angle: Provides the resampling machinery needed to choose k without touching the test set.
+    covers:
     - knowledge-aml-l02-validation
     depth: intuition
     scope: complementary
-    locator: §§2.2.2–2.2.3, §3.5, §4.7.6, §5.1 including §5.1.4
+    locator: islp.pdf §5.1 Cross-Validation, pdf pp. 210-219 (§5.1.3 k-fold p. 214; §5.1.4 bias-variance
+      p. 216)
+    angle_detail: Use these sections to turn the lecture's validation warning into an actual selection
+      protocol for k. They distinguish validation-set, leave-one-out, and k-fold estimates and discuss
+      their bias-variance behavior; the route is broader than the exam's required procedure and should
+      not replace the course deck's split discipline.
   - id: route-d3bb781518afd9298b86e667
     unit_id: unit-aml-l03
     title: ISLP Chapter 3 — linear regression
@@ -674,7 +724,8 @@ sources:
     - knowledge-aml-l03-solution
     depth: intuition
     scope: complementary
-    locator: §§3.1–3.3
+    locator: islp.pdf §3.1 Simple Linear Regression, pdf pp. 79-88; §3.2 Multiple Linear Regression, pdf
+      pp. 89-99
   - id: route-9b7338b2096b7f03eef6d176
     unit_id: unit-aml-l04
     title: ISLP polynomial regression, Ridge, and Lasso
@@ -689,7 +740,9 @@ sources:
     - knowledge-aml-l04-lasso
     depth: intuition
     scope: complementary
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
   - id: route-b5479427410717e42df4b6af
     unit_id: unit-aml-l05
     title: ISLP logistic-regression sections
@@ -702,7 +755,8 @@ sources:
     - knowledge-aml-l05-likelihood
     depth: intuition
     scope: complementary
-    locator: §4.3, especially §§4.3.1 and 4.3.4
+    locator: islp.pdf §4.3 Logistic Regression, pdf pp. 147-155 (logistic model §4.3.1 p. 148; multiple
+      logistic regression §4.3.4 p. 151)
   - id: route-f0ccf205ed8c7df0ef0c8687
     unit_id: unit-aml-l06
     title: ISLP neural-network optimization selection
@@ -714,7 +768,8 @@ sources:
     - knowledge-aml-l06-stochastic
     depth: orientation
     scope: optional
-    locator: §10.7
+    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438 (backpropagation §10.7.1 p. 435;
+      regularization and SGD §10.7.2 p. 436)
   - id: route-250a1234665348201198e7ef
     unit_id: unit-aml-l07
     title: ISLP one-versus-all and kernel enrichment
@@ -726,7 +781,8 @@ sources:
     - knowledge-aml-l07-multiclass
     depth: advanced-reference
     scope: optional
-    locator: §9.4.2; optional §9.3.2 only
+    locator: 'islp.pdf §9.4.2 Support Vector Machines with More than Two Classes, pdf p. 391; optional
+      context only: §9.3.2 Support Vector Classifiers with Non-Linear Boundaries, pdf p. 384'
   - id: route-987303d08d29f8315ce9a8e6
     unit_id: unit-aml-l08
     title: ISLP feedforward-network introduction
@@ -739,7 +795,8 @@ sources:
     - knowledge-aml-l08-output
     depth: intuition
     scope: complementary
-    locator: §§10.1–10.2
+    locator: islp.pdf §10.1 Single Layer Neural Networks, pdf pp. 407-408; §10.2 Multilayer Neural Networks,
+      pdf pp. 409-412
   - id: route-9479853098e251427bc92b4a
     unit_id: unit-aml-l09
     title: ISLP training, regularization, and double descent
@@ -752,7 +809,8 @@ sources:
     - knowledge-aml-l09-stopping
     depth: intuition
     scope: complementary
-    locator: §§10.7–10.8
+    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438; §10.8 Interpolation and Double
+      Descent, pdf pp. 439-441
   - id: route-96b3bc3586d74e35b541bcb5
     unit_id: unit-aml-l10
     title: ISLP convolutional-neural-network section
@@ -766,27 +824,90 @@ sources:
     - knowledge-aml-l10-network
     depth: intuition
     scope: complementary
-    locator: §10.3, pp. 406–415
+    locator: islp.pdf §10.3 Convolutional Neural Networks, pdf pp. 413-419 (§10.3.1 convolution layers
+      p. 414, §10.3.2 pooling p. 417, §10.3.3 architecture p. 417, §10.3.4 data augmentation p. 418)
+    vault_path: material://source-islp/islp.pdf
 - source_id: source-esl
   role: optional-depth
   why: Graduate-depth statistical learning; selected only after the course/ISLP pass and never as the
     first neural-network source.
   priority: 10
   unit_routes:
-  - id: route-296d58fc7c7c51f9dc02c203
+  - id: route-f57ab8d5f480edd3bc6cf623
     unit_id: unit-aml-l02
-    title: ESL nearest-neighbour and model-selection depth
+    title: 'ESL flexibility spectrum: least squares to k-NN'
     format: book
-    angle: A rigorous account of k-NN, the least-squares-to-neighbours flexibility spectrum, explicit
-      bias-variance decomposition, and cross-validation.
+    angle: Places least squares and k-NN on one flexibility axis, making the L02-to-L03 bridge explicit.
     covers:
     - knowledge-aml-l02-algorithm
     - knowledge-aml-l02-dimensionality
+    depth: derivation
+    scope: optional
+    locator: esl.pdf §2.3.2 Nearest-Neighbor Methods, pdf pp. 33-34; §2.3.3 From Least Squares to Nearest
+      Neighbors, pdf p. 35
+    angle_detail: Read this when the apparent opposition between parametric regression and instance-based
+      prediction is still fuzzy. ESL uses the two methods as endpoints of a flexibility spectrum and makes
+      their inductive assumptions comparable; it is mathematical context, not an implementation recipe
+      or the 2026 lecturer's scope authority.
+  - id: route-0086c6cff5d3c462f714408f
+    unit_id: unit-aml-l02
+    title: ESL k-NN variance term
+    format: book
+    angle: Derives the k-NN variance term sigma-squared over k instead of leaving the bias-variance claim
+      qualitative.
+    covers:
     - knowledge-aml-l02-bias-variance
+    depth: derivation
+    scope: optional
+    locator: esl.pdf §2.9 Model Selection and the Bias-Variance Tradeoff, pdf pp. 56-57
+    angle_detail: This fragment earns its own route because it supplies the formula behind the lecture's
+      qualitative statement that increasing k reduces variance. Use it to reproduce the sigma-squared-over-k
+      argument; move to the separate ESL decomposition route for the full MSE identity and to the course
+      deck for examined notation.
+  - id: route-0e95ad858b8e59f63b8fe519
+    unit_id: unit-aml-l02
+    title: ESL bias-variance decomposition
+    format: book
+    angle: Gives the rigorous MSE decomposition and a worked comparison of k-NN with linear regression.
+    covers:
+    - knowledge-aml-l02-bias-variance
+    depth: derivation
+    scope: optional
+    locator: esl.pdf §7.2 Bias, Variance, and Model Complexity, pdf pp. 238-241; §7.3 The Bias-Variance
+      Decomposition, pdf pp. 242-247 (§7.3.1 example p. 245)
+    angle_detail: This is the proof-depth route for Bias squared plus Variance plus irreducible noise,
+      with k-NN and linear regression compared inside the same framework. It assumes comfort with expectations
+      and squared error, goes beyond the deck's derivation depth, and does not teach the k-NN search algorithm.
+  - id: route-7e3161b4c0b53524a0ce4dfa
+    unit_id: unit-aml-l02
+    title: ESL cross-validation rationale
+    format: book
+    angle: Explains why k-fold cross-validation estimates generalization error, complementing procedural
+      sources.
+    covers:
     - knowledge-aml-l02-validation
     depth: derivation
     scope: optional
-    locator: §§2.3.2–2.3.3, §2.9, §§7.2–7.3, §7.10, §13.3
+    locator: esl.pdf §7.10 Cross-Validation, pdf pp. 260-264
+    angle_detail: Use this after you can run a train-validation-test split but cannot justify why cross-validation
+      is a reasonable estimator. ESL emphasizes the statistical rationale and its bias, complementing
+      procedural code sources; it is not the place to memorize the lecturer's workflow or choose a library
+      API.
+  - id: route-83427e17512bd5e78ca4603e
+    unit_id: unit-aml-l02
+    title: ESL applied nearest-neighbour classification
+    format: book
+    angle: Shows prototype and nearest-neighbour classifiers with decision-boundary examples.
+    covers:
+    - knowledge-aml-l02-algorithm
+    - knowledge-aml-l02-dimensionality
+    depth: derivation
+    scope: optional
+    locator: esl.pdf §13.3 Prototypes and Nearest-Neighbors, pdf pp. 482-491
+    angle_detail: This later chapter turns nearest neighbours into a classifier with visible decision
+      regions and prototype comparisons. It is useful for geometric intuition after the L02 algorithm
+      is known, but its broader classification setting and notation extend beyond what the current k-NN
+      deck examines.
   - id: route-0c5b2516f89b5265bb3c86e2
     unit_id: unit-aml-l03
     title: ESL least-squares statistical depth
@@ -799,7 +920,7 @@ sources:
     - knowledge-aml-l03-probabilistic
     depth: advanced-reference
     scope: optional
-    locator: Chapter 3 selected sections
+    locator: esl.pdf §3.2 Linear Regression Models and Least Squares, pdf pp. 63-75
   - id: route-387627946adffa7177aebbb4
     unit_id: unit-aml-l04
     title: ESL Ridge and Lasso depth
@@ -812,7 +933,8 @@ sources:
     - knowledge-aml-l04-lasso
     depth: derivation
     scope: optional
-    locator: §§3.4.1–3.4.3
+    locator: esl.pdf §3.4.1 Ridge Regression, pdf pp. 80-86; §3.4.2 The Lasso, pdf p. 87; §3.4.3 Discussion,
+      pdf pp. 88-91 (stop before §3.4.4 Least Angle Regression p. 92)
   - id: route-da6e469fc665bfad1ee8045c
     unit_id: unit-aml-l05
     title: ESL logistic-regression depth
@@ -825,7 +947,8 @@ sources:
     - knowledge-aml-l05-cross-entropy
     depth: advanced-reference
     scope: optional
-    locator: §4.4, especially §§4.4.1 and 4.4.4
+    locator: esl.pdf §4.4 Logistic Regression, pdf pp. 138-147 (fitting by Newton-Raphson/IRLS §4.4.1
+      p. 139; L1-regularized logistic regression §4.4.4 p. 144)
   - id: route-f9bae648830b68b38885701f
     unit_id: unit-aml-l07
     title: ESL perceptron convergence
@@ -837,7 +960,8 @@ sources:
     - knowledge-aml-l07-linear-geometry
     depth: derivation
     scope: optional
-    locator: §4.5.1
+    locator: esl.pdf §4.5.1 Rosenblatt's Perceptron Learning Algorithm, pdf pp. 149-150 (stop before optimal
+      separating hyperplanes §4.5.2 p. 151)
   - id: route-48d3ff104dc9cf8297be28ca
     unit_id: unit-aml-l08
     title: ESL neural-network historical and statistical view
@@ -849,7 +973,8 @@ sources:
     - knowledge-aml-l08-activations
     depth: advanced-reference
     scope: optional
-    locator: Chapter 11 selected sections
+    locator: esl.pdf §11.3 Neural Networks, pdf pp. 411-413; §11.4 Fitting Neural Networks, pdf pp. 414-415;
+      §11.5 Some Issues in Training Neural Networks, pdf pp. 416-422
   - id: route-5537c790ee855af15adac484
     unit_id: unit-aml-l09
     title: ESL neural-network training depth
@@ -861,7 +986,8 @@ sources:
     - knowledge-aml-l09-regularization
     depth: advanced-reference
     scope: optional
-    locator: Chapter 11 training selections
+    locator: esl.pdf §11.4 Fitting Neural Networks, pdf pp. 414-415; §11.5 Some Issues in Training Neural
+      Networks, pdf pp. 416-422
   - id: route-ff147162ccc891125fca6e2c
     unit_id: unit-aml-l10
     title: ESL early weight-sharing example
@@ -873,7 +999,8 @@ sources:
     - knowledge-aml-l10-architectures
     depth: advanced-reference
     scope: optional
-    locator: §11.7
+    locator: 'esl.pdf §11.7 Example: A Convolutional Neural Network for Digit Classification, pdf pp.
+      423-425'
 - source_id: source-murphy-pml1
   role: derivation
   why: Best end-to-end MLE/optimization and neural-network derivation spine; exact sections are routed
@@ -892,7 +1019,8 @@ sources:
     - knowledge-aml-l02-bias-variance
     depth: derivation
     scope: complementary
-    locator: §16.1; §4.7.6
+    locator: pml1.pdf §16.1 K nearest neighbor (KNN) classification, pdf pp. 577-580 (curse of dimensionality
+      §16.1.2 p. 578); §4.7.6 The bias-variance tradeoff, pdf pp. 189-193
   - id: route-773bc4e5073c9add77b9f2d8
     unit_id: unit-aml-l03
     title: Murphy linear regression and Gaussian MLE
@@ -906,7 +1034,7 @@ sources:
     - knowledge-aml-l03-probabilistic
     depth: derivation
     scope: complementary
-    locator: Chapter 11 selected sections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410
   - id: route-edfd22e1d584f506b0efdd2c
     unit_id: unit-aml-l04
     title: Murphy basis functions and regularized regression
@@ -920,7 +1048,8 @@ sources:
     - knowledge-aml-l04-lasso
     depth: derivation
     scope: complementary
-    locator: Chapter 11 regression and regularization selections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3 Ridge regression,
+      pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
   - id: route-37104c3c217b32519e132f1f
     unit_id: unit-aml-l05
     title: Murphy logistic regression end to end
@@ -934,7 +1063,8 @@ sources:
     - knowledge-aml-l05-gradient
     depth: derivation
     scope: complementary
-    locator: Chapter 10, especially §§10.2.3–10.2.5
+    locator: pml1.pdf §10.2.3 Maximum likelihood estimation, pdf pp. 372-374; §10.2.4 Stochastic gradient
+      descent, pdf p. 375; §10.2.5 Perceptron algorithm, pdf p. 376
   - id: route-2859463c0a0acd4759eb3acb
     unit_id: unit-aml-l06
     title: Murphy optimization chapter
@@ -951,7 +1081,8 @@ sources:
     - knowledge-aml-l06-newton
     depth: derivation
     scope: complementary
-    locator: Chapter 8, especially §8.4
+    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
+      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
   - id: route-cd7615636cab19837678f3bc
     unit_id: unit-aml-l07
     title: Murphy kernels and perceptron link
@@ -964,7 +1095,8 @@ sources:
     - knowledge-aml-l07-rbf
     depth: derivation
     scope: optional
-    locator: §§10.2.5, 17.1–17.1.2
+    locator: pml1.pdf §10.2.5 Perceptron algorithm, pdf p. 376; §17.1 Mercer kernels, pdf pp. 597-603
+      (§17.1.1 Mercer's theorem p. 598; §17.1.2 popular kernels p. 599)
   - id: route-c1a26eea429baf963f8f3ed4
     unit_id: unit-aml-l08
     title: Murphy MLPs, XOR, and activations
@@ -978,7 +1110,8 @@ sources:
     - knowledge-aml-l08-output
     depth: derivation
     scope: complementary
-    locator: §13.2
+    locator: pml1.pdf §13.2 Multilayer perceptrons, pdf pp. 456-467 (XOR §13.2.1 p. 457; activation functions
+      §13.2.3 p. 458)
   - id: route-e25d9a6869ecc1aabd95b158
     unit_id: unit-aml-l09
     title: Murphy reverse-mode backprop and training
@@ -993,7 +1126,8 @@ sources:
     - knowledge-aml-l09-gradient-health
     depth: derivation
     scope: complementary
-    locator: §§13.3–13.5
+    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
+      476-484; §13.5 Regularization, pdf pp. 485-489
   - id: route-4d9bdcdef94d579ed5bc99c8
     unit_id: unit-aml-l10
     title: Murphy convolution and classic CNN architectures
@@ -1008,7 +1142,8 @@ sources:
     - knowledge-aml-l10-architectures
     depth: derivation
     scope: complementary
-    locator: §§14.1–14.3
+    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
+      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
   - id: route-c67a99b0cdc7f85ce29bece8
     unit_id: unit-aml-l03
     title: Murphy §11.2.2 — least squares as a negative log-likelihood
@@ -1020,7 +1155,9 @@ sources:
     - knowledge-aml-l03-probabilistic
     depth: derivation
     scope: complementary
-    locator: §11.2.2 Least squares estimation p. 372; §11.2.4 Measuring goodness of fit p. 380
+    locator: pml1.pdf §11.2.2 Least squares estimation, pdf pp. 402-405; §11.2.4 Measuring goodness of
+      fit, pdf p. 410
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-09ae79cd78e352276370c8d0
     unit_id: unit-aml-l06
     title: Murphy §8.1.3 — convex versus nonconvex, and the Hessian test
@@ -1031,8 +1168,9 @@ sources:
     - knowledge-aml-l06-convexity
     depth: derivation
     scope: complementary
-    locator: §8.1.3 Convex vs nonconvex optimization pp. 277–281 (Hessian and positive-definite test on
-      pp. 277 and 280)
+    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310 (convex sets and functions
+      p. 307, the Hessian positive-definite test p. 310)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-d2797d2723a780a4c3715a01
     unit_id: unit-aml-l06
     title: Murphy §8.3 — Newton and the quasi-Newton family
@@ -1043,8 +1181,9 @@ sources:
     - knowledge-aml-l06-newton
     depth: derivation
     scope: complementary
-    locator: §8.3 Second-order methods pp. 289–291 (Newton's method p. 289, BFGS and quasi-Newton p. 290,
-      trust region p. 291)
+    locator: pml1.pdf §8.3 Second-order methods, pdf pp. 319-321 (Newton's method p. 319, BFGS and quasi-Newton
+      p. 320, trust region p. 321)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-c446c7532bc169a9759f14ce
     unit_id: unit-aml-l06
     title: Murphy §8.4.6 — the adaptive optimizers derived in one place
@@ -1056,8 +1195,10 @@ sources:
     - knowledge-aml-l06-stochastic
     depth: derivation
     scope: complementary
-    locator: §8.4.6 Preconditioned SGD pp. 298–301 (AdaGrad p. 299, RMSProp and AdaDelta pp. 299–300,
-      Adam p. 300, issues with adaptive learning rates p. 301); momentum and Nesterov in §8.2.4 pp. 287–288
+    locator: pml1.pdf §8.4.6 Preconditioned SGD, pdf pp. 328-331 (AdaGrad p. 329, RMSProp and AdaDelta
+      pp. 329-330, Adam p. 330, issues with adaptive learning rates p. 331); momentum and Nesterov in
+      §8.2.4, pdf pp. 317-318
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-c16dd407fb2579c179f20a8a
     unit_id: unit-aml-l06
     title: Murphy solution manual §10.1 — gradient and Hessian worked out
@@ -1070,8 +1211,9 @@ sources:
     - knowledge-aml-l06-newton
     depth: practice
     scope: complementary
-    locator: solutions-public.pdf §10.1 'Gradient and Hessian of log-likelihood for multinomial logistic
-      regression' (solves exercise 10.1 of the main text)
+    locator: solutions-public.pdf 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
+      (exercise 10.1), pdf p. 25
+    vault_path: material://source-murphy-pml1/solutions-public.pdf
   - id: route-3224d420145c8529499ae635
     unit_id: unit-aml-l11
     title: Murphy §15.4 — attention as a soft dictionary lookup
@@ -1083,8 +1225,9 @@ sources:
     - knowledge-aml-l11-attention
     depth: derivation
     scope: complementary
-    locator: §15.4 Attention pp. 518–525 (attention as soft dictionary lookup p. 519, parametric attention
-      p. 521)
+    locator: pml1.pdf §15.4 Attention, pdf pp. 548-555 (attention as soft dictionary lookup p. 549, parametric
+      attention p. 551)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-2c65706e0f943446ed4f5f28
     unit_id: unit-aml-l11
     title: Murphy §15.5 — the Transformer assembled step by step
@@ -1099,8 +1242,10 @@ sources:
     - knowledge-aml-l11-block
     depth: derivation
     scope: complementary
-    locator: §15.5 Transformers pp. 526–532 (self-attention p. 526, multi-headed attention p. 527, positional
-      encoding p. 528, putting it all together p. 529, comparing transformers, CNNs and RNNs p. 531)
+    locator: pml1.pdf §15.5 Transformers, pdf pp. 556-562 (self-attention p. 556, multi-headed attention
+      p. 557, positional encoding p. 558, putting it all together p. 559, comparing transformers, CNNs
+      and RNNs p. 561)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-480b485364dfde6ba7eba3ca
     unit_id: unit-aml-l11
     title: Murphy §15.7 — language modelling as the training objective
@@ -1112,8 +1257,9 @@ sources:
     - knowledge-aml-l11-training
     depth: advanced-reference
     scope: optional
-    locator: §15.7 Language models and unsupervised representation learning pp. 537–546 (non-generative
-      models p. 538, generative causal LLMs p. 542)
+    locator: pml1.pdf §15.7 Language models and unsupervised representation learning, pdf pp. 567-576
+      (non-generative models p. 568, generative causal LLMs p. 572)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-b4767511bb52dcb8e0cdd2d0
     unit_id: unit-aml-l11
     title: Murphy §20.5 — where static embeddings come from
@@ -1124,8 +1270,9 @@ sources:
     - knowledge-aml-l11-embeddings
     depth: derivation
     scope: complementary
-    locator: §20.5 Word embeddings pp. 705–712 (latent semantic analysis p. 705, word2vec p. 707, GloVe
-      p. 710, word analogies p. 710)
+    locator: pml1.pdf §20.5 Word embeddings, pdf pp. 735-742 (latent semantic analysis p. 735, word2vec
+      p. 737, GloVe p. 740, word analogies p. 740)
+    vault_path: material://source-murphy-pml1/pml1.pdf
   - id: route-f426a3cf4e1b48b8f1c408d3
     unit_id: unit-aml-exam-prep
     title: Murphy — the derivation bank behind the two repair clusters
@@ -1137,8 +1284,10 @@ sources:
     - knowledge-aml-exam-neural
     depth: derivation
     scope: complementary
-    locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
-      solution manual §10.1 and §13.1
+    locator: pml1.pdf §8.1.3 pdf pp. 307-310, §8.3 pdf pp. 319-321, §8.4.6 pdf pp. 328-331; §15.4 pdf
+      pp. 548-555, §15.5 pdf pp. 556-562; solutions-public.pdf 'Gradient and Hessian of log-likelihood
+      for multinomial logistic regression' pdf p. 25 and 'Backpropagation for a 1 layer MLP' pdf p. 30
+    vault_path: material://source-murphy-pml1/pml1.pdf
 - source_id: source-csc411-notes
   role: reference
   why: Compact independent notes for regression, classifiers, metrics, neural networks, backpropagation,
@@ -1156,7 +1305,8 @@ sources:
     - knowledge-aml-l02-distance
     depth: orientation
     scope: complementary
-    locator: §3.4 and §8.4
+    locator: csc411.pdf §3.4 K-Nearest Neighbors regression, pdf pp. 20-21; §8.4 K-Nearest Neighbors Classification,
+      pdf pp. 51-52
   - id: route-b7ac85a63282e28ca20f2a5d
     unit_id: unit-aml-l03
     title: CSC411 linear-regression notes
@@ -1179,10 +1329,10 @@ sources:
     - knowledge-aml-l04-basis
     - knowledge-aml-l04-overfitting
     - knowledge-aml-l04-ridge
-    - knowledge-aml-l04-lasso
     depth: course-aligned
     scope: complementary
-    locator: Chapter 3 selected sections
+    locator: csc411.pdf §3.1 Basis function regression, pdf pp. 14-15; §3.2 Overfitting and Regularization,
+      pdf pp. 16-18
   - id: route-7523f3a6574bcd59ec9049dc
     unit_id: unit-aml-l05
     title: CSC411 classification and logistic loss
@@ -1193,10 +1343,10 @@ sources:
     - knowledge-aml-l05-classification
     - knowledge-aml-l05-boundary
     - knowledge-aml-l05-sigmoid
-    - knowledge-aml-l05-cross-entropy
     depth: orientation
     scope: complementary
-    locator: Classification selections
+    locator: csc411.pdf §8.2 Logistic Regression, pdf pp. 49-50; §8.6 Classification by LS Regression,
+      pdf pp. 53-54
   - id: route-9a435fb743f7e6a7298b2ff1
     unit_id: unit-aml-l06
     title: CSC411 gradient-descent reference
@@ -1205,10 +1355,9 @@ sources:
     covers:
     - knowledge-aml-l06-gradient
     - knowledge-aml-l06-batch-gd
-    - knowledge-aml-l06-stochastic
     depth: orientation
     scope: complementary
-    locator: Optimization selections
+    locator: csc411.pdf §9 Gradient Descent, pdf pp. 58-59; §9.1 Finite differences, pdf pp. 60-61
   - id: route-3a57aca9cbff2316a93e4e6e
     unit_id: unit-aml-l07
     title: CSC411 linear-classifier reference
@@ -1217,11 +1366,11 @@ sources:
       feature mappings.
     covers:
     - knowledge-aml-l07-linear-geometry
-    - knowledge-aml-l07-perceptron
     - knowledge-aml-l07-kernels
     depth: orientation
     scope: complementary
-    locator: Linear-classifier selections
+    locator: csc411.pdf §17.1 Maximizing the margin, pdf pp. 120-121; §17.3 Loss Functions, pdf pp. 123-124
+      (perceptron mentioned, not taught); §17.4 The Lagrangian and the Kernel Trick, pdf pp. 125-126
   - id: route-0a14c0a2625dad335f7469e3
     unit_id: unit-aml-l08
     title: CSC411 network and metrics notes
@@ -1231,34 +1380,22 @@ sources:
     - knowledge-aml-l08-forward
     - knowledge-aml-l08-activations
     - knowledge-aml-l08-output
-    - knowledge-aml-l08-metrics
     depth: orientation
     scope: complementary
-    locator: §3.3 and §8.3 selections
+    locator: csc411.pdf §3.3 Artificial Neural Networks for regression, pdf pp. 18-20; §8.3 Artificial
+      Neural Networks for classification, pdf p. 51
   - id: route-cc1692a36cdffbe573dd3279
     unit_id: unit-aml-l09
-    title: CSC411 backpropagation notes
+    title: CSC411 finite-difference gradient check
     format: documentation
-    angle: A concise second derivation for backward passes and training when the full books are too slow.
+    angle: A compact numerical-gradient check and optimization note; it mentions backpropagation but does
+      not derive it.
     covers:
-    - knowledge-aml-l09-chain-rule
-    - knowledge-aml-l09-backprop
-    - knowledge-aml-l09-regularization
+    - knowledge-aml-l09-gradient-health
     depth: orientation
     scope: complementary
-    locator: Neural-network training selections
-  - id: route-7093e25725cfab05e05ac643
-    unit_id: unit-aml-l10
-    title: CSC411 CNN notes
-    format: documentation
-    angle: A compact independent reference for convolutional layers, shape flow, and architecture structure.
-    covers:
-    - knowledge-aml-l10-convolution
-    - knowledge-aml-l10-shapes
-    - knowledge-aml-l10-network
-    depth: orientation
-    scope: complementary
-    locator: CNN selections
+    locator: csc411.pdf §9.1 Finite differences, pdf pp. 60-61 (backpropagation is identified as efficient
+      derivative computation, not developed)
 - source_id: source-kroese-dsml
   role: reference
   why: Independent data-science/ML text; selected sections support evaluation, neural networks, and implementation.
@@ -1275,7 +1412,8 @@ sources:
     - knowledge-aml-l01-generalization
     depth: orientation
     scope: optional
-    locator: Introductory ML and evaluation selections
+    locator: kroese.pdf Statistical Learning, pdf pp. 37-76 (training/test loss p. 41; tradeoffs p. 49;
+      cross-validation p. 55); Classification Metrics, pdf pp. 271-274
   - id: route-214b495f9a3e48dae5e1dbb2
     unit_id: unit-aml-l02
     title: Kroese k-NN and cross-validation
@@ -1286,7 +1424,7 @@ sources:
     - knowledge-aml-l02-validation
     depth: advanced-reference
     scope: optional
-    locator: §7.6 and §2.5.2
+    locator: kroese.pdf Cross-Validation, pdf pp. 55-57; K-Nearest Neighbors Classification, pdf pp. 285-286
   - id: route-350570d160a9c93e8e15c31b
     unit_id: unit-aml-l03
     title: Kroese regression reference
@@ -1299,7 +1437,7 @@ sources:
     - knowledge-aml-l03-probabilistic
     depth: advanced-reference
     scope: optional
-    locator: Regression selections
+    locator: kroese.pdf Regression, pdf pp. 185-232; Linear Regression, pdf pp. 187-205
   - id: route-fa5c8cd2be60115843c542e9
     unit_id: unit-aml-l04
     title: Kroese nonlinear and regularized regression
@@ -1312,7 +1450,8 @@ sources:
     - knowledge-aml-l04-lasso
     depth: advanced-reference
     scope: optional
-    locator: Regression and regularization selections
+    locator: kroese.pdf Linear Regression, pdf pp. 187-205; Nonlinear Regression Models, pdf pp. 206-208;
+      Regularization, pdf pp. 234-238
   - id: route-cba6b8ab6cc94afb1e892c0f
     unit_id: unit-aml-l05
     title: Kroese logistic and softmax models
@@ -1324,7 +1463,7 @@ sources:
     - knowledge-aml-l05-cross-entropy
     depth: derivation
     scope: optional
-    locator: §7.5
+    locator: kroese.pdf Logistic Regression and Softmax Classification, pdf p. 284
   - id: route-d87a2b230c35407d76c77688
     unit_id: unit-aml-l08
     title: Kroese networks and evaluation
@@ -1336,7 +1475,8 @@ sources:
     - knowledge-aml-l08-metrics
     depth: derivation
     scope: optional
-    locator: §9.2 and §7.2
+    locator: kroese.pdf Classification Metrics, pdf pp. 271-274; Feed-Forward Neural Networks, pdf pp.
+      344-348
   - id: route-207185556058e90371302703
     unit_id: unit-aml-l09
     title: Kroese layer-wise backpropagation
@@ -1347,7 +1487,7 @@ sources:
     - knowledge-aml-l09-backprop
     depth: derivation
     scope: complementary
-    locator: §9.3
+    locator: kroese.pdf Back-Propagation, pdf pp. 349-351; Methods for Training, pdf pp. 352-358
   - id: route-08a08216d5d79326650ef693
     unit_id: unit-aml-l10
     title: Kroese CNN reference
@@ -1359,7 +1499,8 @@ sources:
     - knowledge-aml-l10-network
     depth: advanced-reference
     scope: optional
-    locator: CNN selections
+    locator: kroese.pdf Deep Learning subsection 'convolution neural network', pdf pp. 348-349; §9.5.2
+      Image Classification, pdf pp. 363-366
 - source_id: source-mml
   role: derivation
   why: Mathematical safety net, especially Ch 5 chain rule/matrix calculus and Ch 7 optimization; it has
@@ -1433,7 +1574,8 @@ sources:
     - knowledge-aml-l02-validation
     depth: derivation
     scope: optional
-    locator: §8.1 and §9.3
+    locator: cs229-notes.pdf pdf pp. 106-111 ('Bias-variance tradeoff'); pdf pp. 130-132 (cross-validation
+      heading)
   - id: route-8ec3da0114ef9468d3f63a51
     unit_id: unit-aml-l03
     title: CS229 LMS and normal-equation notes
@@ -1447,7 +1589,8 @@ sources:
     - knowledge-aml-l03-probabilistic
     depth: derivation
     scope: complementary
-    locator: §§1.1–1.3
+    locator: cs229-notes.pdf 'LMS algorithm', pdf pp. 10-13; 'The normal equations', pdf pp. 14-15; 'Probabilistic
+      interpretation', pdf pp. 16-17
   - id: route-645d8b43b56e2e686b72e717
     unit_id: unit-aml-l04
     title: CS229 feature maps and regularization
@@ -1461,7 +1604,8 @@ sources:
     - knowledge-aml-l04-lasso
     depth: derivation
     scope: complementary
-    locator: §§5.1–5.2 and §9.1
+    locator: cs229-notes.pdf 'Feature maps', pdf p. 50; 'LMS with features' and 'LMS with the kernel trick',
+      pdf pp. 51-54; 'Regularization', pdf pp. 126-127
   - id: route-bd9f3f470427052f4909004e
     unit_id: unit-aml-l05
     title: CS229 logistic and GLM derivations
@@ -1474,7 +1618,8 @@ sources:
     - knowledge-aml-l05-gradient
     depth: derivation
     scope: complementary
-    locator: §2.1 and §3.2.2; optional §2.3 Newton
+    locator: cs229-notes.pdf 'Logistic regression', pdf pp. 21-23; 'Another algorithm for maximizing l(theta)'
+      (Newton), pdf pp. 25-26; 'Constructing GLMs', pdf pp. 29-35
   - id: route-f7a2035554358e7bdf8c0472
     unit_id: unit-aml-l06
     title: CS229 gradient-descent derivation
@@ -1488,7 +1633,8 @@ sources:
     - knowledge-aml-l06-convexity
     depth: derivation
     scope: complementary
-    locator: §1.1 and optimization selections
+    locator: cs229-notes.pdf 'LMS algorithm' batch and stochastic gradient updates, pdf pp. 10-13; 'Regularization',
+      pdf pp. 126-127; cross-validation heading, pdf pp. 130-132
   - id: route-e480cde6a573a897e7bc2390
     unit_id: unit-aml-l07
     title: CS229 kernels without an SVM dependency
@@ -1514,7 +1660,8 @@ sources:
     - knowledge-aml-l08-output
     depth: derivation
     scope: complementary
-    locator: §§7.1–7.2 and §7.4
+    locator: cs229-notes.pdf 'Supervised learning with non-linear models', pdf pp. 82-83; 'Neural networks',
+      pdf pp. 84-92; 'Vectorization over training examples', pdf pp. 100-102
   - id: route-034d7a304227e9ea24516e86
     unit_id: unit-aml-l09
     title: CS229 backprop, regularization, and double descent
@@ -1528,19 +1675,8 @@ sources:
     - knowledge-aml-l09-stopping
     depth: derivation
     scope: complementary
-    locator: §7.3, §8.2, and §9.1
-  - id: route-6d31131942fa99c15b4da015
-    unit_id: unit-aml-l10
-    title: CS229 convolutional-network overview
-    format: documentation
-    angle: A broad neural-network reference only; use CS231n or Murphy for exact convolution arithmetic
-      and architecture depth.
-    covers:
-    - knowledge-aml-l10-motivation
-    - knowledge-aml-l10-network
-    depth: orientation
-    scope: optional
-    locator: CNN overview selections
+    locator: cs229-notes.pdf 'Backpropagation', pdf pp. 93-100; 'The double descent phenomenon', pdf pp.
+      112-116; 'Regularization', pdf pp. 126-127
 - source_id: source-cs229-2022-videos
   role: optional-depth
   why: Topic-matched lecture spine only; numbering is verified by topic and the course is never watched
@@ -2216,7 +2352,9 @@ sources:
     - knowledge-aml-l01-generalization
     depth: implementation
     scope: optional
-    locator: Chapter 2 selected workflow sections
+    locator: geron-copy2.pdf Ch 2 End-to-End Machine Learning Project, pdf pp. 70-155 (Frame the Problem
+      p. 73; Create a Test Set p. 92; cross-validation p. 138; final test p. 147)
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-21d8ed20ec2a60ffd4fabe71
     unit_id: unit-aml-l03
     title: Géron linear regression implementations
@@ -2229,7 +2367,9 @@ sources:
     - knowledge-aml-l03-vectorization
     depth: implementation
     scope: complementary
-    locator: Chapter 4 linear-regression sections and exercises
+    locator: geron-copy2.pdf Ch 4 'Linear Regression', pdf pp. 197-203; 'Gradient Descent', pdf pp. 204-215;
+      Exercises, pdf pp. 243-244
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-33a411ac067444cf1a290747
     unit_id: unit-aml-l04
     title: Géron polynomial regression and regularization
@@ -2243,7 +2383,9 @@ sources:
     - knowledge-aml-l04-lasso
     depth: implementation
     scope: complementary
-    locator: Chapter 4 polynomial and regularized-regression sections
+    locator: geron-copy2.pdf Ch 4 'Polynomial Regression', pdf pp. 216-217; 'Learning Curves', pdf pp.
+      218-222; 'Regularized Linear Models', pdf pp. 223-231
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-760cfc6e64bcdad0cfffaa15
     unit_id: unit-aml-l05
     title: Géron logistic and softmax regression
@@ -2256,7 +2398,9 @@ sources:
     - knowledge-aml-l05-cross-entropy
     depth: implementation
     scope: complementary
-    locator: Chapter 4 logistic/softmax sections
+    locator: geron-copy2.pdf Ch 4 'Logistic Regression', pdf pp. 232-242 (training and cost p. 234; decision
+      boundaries p. 235; softmax p. 238)
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-be37c217e550b50efbf0cfd3
     unit_id: unit-aml-l06
     title: Géron batch, stochastic, and mini-batch GD code
@@ -2269,7 +2413,9 @@ sources:
     - knowledge-aml-l06-stochastic
     depth: implementation
     scope: complementary
-    locator: Chapter 4 gradient-descent sections
+    locator: geron-copy2.pdf Ch 4 'Gradient Descent', pdf pp. 204-215 (batch p. 208; stochastic p. 211;
+      mini-batch p. 214)
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-4973b76c89eb8da1abe050fe
     unit_id: unit-aml-l08
     title: Géron feedforward-network implementation
@@ -2283,7 +2429,9 @@ sources:
     - knowledge-aml-l08-softmax
     depth: implementation
     scope: optional
-    locator: Artificial-neural-network chapters, dense-network selections
+    locator: geron-copy2.pdf Ch 10, 'The Perceptron', pdf pp. 384-390; 'The Multilayer Perceptron and
+      Backpropagation', pdf pp. 391-401; Keras forward models, pdf pp. 402-449
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-f94d721af516f6854fdf31e8
     unit_id: unit-aml-l09
     title: Géron training deep neural networks
@@ -2297,7 +2445,9 @@ sources:
     - knowledge-aml-l09-autograd
     depth: implementation
     scope: optional
-    locator: Training-deep-networks chapter selections
+    locator: geron-copy2.pdf Ch 11 Training Deep Neural Networks, pdf pp. 456-518 (unstable gradients
+      pp. 457-475; optimizers pp. 485-495; regularization pp. 502-514)
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-515ab334a05432e324931153
     unit_id: unit-aml-l10
     title: Géron convolutional-network implementation
@@ -2310,7 +2460,9 @@ sources:
     - knowledge-aml-l10-network
     depth: implementation
     scope: optional
-    locator: CNN chapter selections
+    locator: geron-copy2.pdf Ch 14 Deep Computer Vision Using CNNs, pdf pp. 619-698 (visual cortex p.
+      620; convolution pp. 621-633; pooling pp. 634-639; architectures pp. 640-667; exercises p. 694)
+    vault_path: material://source-geron-handson/geron-copy2.pdf
   - id: route-de995049c1e4ed54a8327621
     unit_id: unit-aml-l01
     title: Géron 3rd ed. Ch 10 — from biological to artificial neurons
@@ -2598,7 +2750,8 @@ sources:
     - knowledge-aml-l02-validation
     depth: practice
     scope: complementary
-    locator: 2017/2018 HW1 selected problems and solutions
+    locator: '2018Fall/HW1/hw1_2018.tex and hw1_2018_solution.tex: Problems 1-3 (train/test splits; k-nearest
+      neighbors; curse of dimensionality)'
   - id: route-de41680ef804c0fc37e8e06d
     unit_id: unit-aml-l03
     title: Cornell CS4780 HW6 — regression selections
@@ -2624,7 +2777,8 @@ sources:
     - knowledge-aml-l04-ridge
     depth: practice
     scope: complementary
-    locator: 2017/2018 HW6 selected problems and solutions
+    locator: '2018Fall/HW6/hw6.tex and hw6_solution.tex: Problem 1 ''Regularization Mitigates Overfitting''
+      (ridge) and Problem 2 ''Bias and Variance in KNN'''
   - id: route-65bed215329cde7808ec68c1
     unit_id: unit-aml-l05
     title: Cornell CS4780 HW4 — logistic likelihood
@@ -2662,7 +2816,9 @@ sources:
     - knowledge-aml-l07-rbf
     depth: practice
     scope: complementary
-    locator: HW2 perceptron and HW7 kernel selections with solutions
+    locator: '2018Fall/HW2/hw2_2018.tex and hw2_2018_solution.tex: Problems 1-4 (perceptron); 2018Fall/HW7/hw7.tex
+      and hw7_solution.tex: Problems 1-2 (kernelized perceptron; constructing kernels), excluding Problem
+      3 Gaussian processes'
   - id: route-62bb1d35141bbcdf47a06b0c
     unit_id: unit-aml-l08
     title: Cornell CS4780 HW9 — forward/ReLU tasks
@@ -2674,7 +2830,8 @@ sources:
     - knowledge-aml-l08-output
     depth: practice
     scope: complementary
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions
+    locator: '2018Fall/HW9/hw9.tex and hw9_sol.tex: Problem 3 ''RELU-network'', parts (a)-(c) (forward
+      pass, boundary, and loss gradient)'
   - id: route-366bca385def5fe993e5ea6a
     unit_id: unit-aml-l09
     title: Cornell CS4780 HW9 — neural-network training
@@ -2687,7 +2844,8 @@ sources:
     - knowledge-aml-l09-regularization
     depth: practice
     scope: complementary
-    locator: 2018 Spring/Fall HW9 selected tasks and solutions
+    locator: '2018Fall/HW9/hw9.tex and hw9_sol.tex: Problem 3 ''RELU-network'', part (c) (cross-entropy
+      gradients for W and V)'
   - id: route-a269546b5d7bdf957ea5fbba
     unit_id: unit-aml-l10
     title: Cornell CS4780 HW9 — CNN tasks
@@ -2792,7 +2950,8 @@ sources:
     - knowledge-aml-l01-generalization
     depth: orientation
     scope: complementary
-    locator: Introductory chapters
+    locator: kelleher.pdf Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56 (§1.2 What
+      Is Machine Learning? p. 39; §1.4 What Can Go Wrong? p. 46)
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-8b24329d3d132e44d2db2bad
     unit_id: unit-aml-l08
@@ -2806,7 +2965,8 @@ sources:
     - knowledge-aml-l08-activations
     depth: intuition
     scope: complementary
-    locator: Ch 7 Error-based Learning
+    locator: kelleher.pdf Ch 7 Error-based Learning, pdf pp. 351-413 (§7.2.1 simple linear regression
+      p. 354; §7.2.3 error surfaces p. 360; §7.3 gradient descent p. 362)
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-af0dec1a20a6184eaf0ca273
     unit_id: unit-aml-l09
@@ -2819,7 +2979,8 @@ sources:
     - knowledge-aml-l09-regularization
     depth: intuition
     scope: complementary
-    locator: Ch 7 Error-based Learning
+    locator: kelleher.pdf Ch 7 Error-based Learning, pdf pp. 351-413 (§7.3.2 gradient descent p. 365;
+      §7.3.3 learning rates p. 371; §7.4.2 weight decay p. 379)
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
 - source_id: source-domingos-useful-things
   role: optional-depth
@@ -2910,7 +3071,9 @@ sources:
     - knowledge-aml-l08-softmax
     depth: course-aligned
     scope: complementary
-    locator: lecture-slides/L15 — Neural networks
+    locator: lecture-slides/15_neural_networks.pdf, slides 5-9 (one-layer ANN), 10-13 (linear-model restriction
+      and AI winter), and 20 (MLP)
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/15_neural_networks.pdf
   - id: route-b907809826ba756aa1d65f9d
     unit_id: unit-aml-l09
     title: SaD L15 — backpropagation preview
@@ -2922,7 +3085,9 @@ sources:
     - knowledge-aml-l09-backprop
     depth: orientation
     scope: complementary
-    locator: lecture-slides/L15 — backpropagation overview
+    locator: lecture-slides/15_neural_networks.pdf, slides 26 (gradient descent) and 30 (training a multilayer
+      perceptron/backpropagation overview)
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/15_neural_networks.pdf
 - source_id: source-goodfellow-dl
   role: optional-depth
   why: Free deep-learning depth reference for the current L08-L10 arc. Sequence-model chapters are not
@@ -3044,10 +3209,10 @@ sources:
     - knowledge-aml-l11-training
     depth: practice
     scope: optional
-    locator: 11.1 Queries, Keys, and Values; 11.3 Attention Scoring Functions; 11.5 Multi-Head Attention;
-      11.6 Self-Attention and Positional Encoding; 11.7 The Transformer Architecture — each with an Exercises
-      subsection. 11.4 Bahdanau attention is RNN-era and 11.8–11.9 (vision, large-scale pretraining) are
-      outside the 2026 scope. Verified 2026-08-22.
+    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
+      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
+      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
+      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
     url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
   - id: route-9b89cb595b8b44604cd30acf
     unit_id: unit-aml-exam-prep
@@ -3065,8 +3230,10 @@ sources:
     url: https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html
 - source_id: source-sutton-barto-rl
   role: reference
-  why: Present on the shared AML shelf but reinforcement learning is outside the locally posted L01–L10
-    scope.
+  why: 'Reference-only, deliberately unrouted (2026-08-30). Reinforcement learning appears nowhere in
+    the current L01-L11 decks or in the Themen list on Uebung 10 slide 3, so no lecture route can honestly
+    claim it. The record is kept rather than dropped so the decision stays visible: revisit only if a
+    future deck adds RL.'
   priority: 98
   unit_routes: []
 - source_id: source-zacharski-data-mining
@@ -3087,8 +3254,11 @@ sources:
     - knowledge-aml-l02-distance
     depth: intuition
     scope: optional
-    locator: Similarity and nearest-neighbour sections
+    locator: 'Zacharski_Programmers-Guide-to-Data-Mining.pdf Ch 2: ''Manhattan Distance'' pdf p. 23; ''Euclidean
+      Distance'' pdf p. 24; ''A generalization'' (Minkowski) pdf pp. 31-34; nearest-neighbor recommendation
+      code, pdf pp. 35-39'
     url: http://guidetodatamining.com/
+    vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
 - source_id: source-jurafsky-slp3
   role: derivation
   why: The current L11 deck's own named further reading; Chapter 8 follows the lecture's Transformer notation
