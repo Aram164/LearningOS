@@ -105,6 +105,15 @@ def test_ordinary_ci_does_not_run_full_stress():
     assert "stress_check.py" not in runs
 
 
+def test_workflow_run_scripts_never_interpolate_github_expressions():
+    """Expressions are data, not shell source; steps receive them through env."""
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        for script in _all_run_steps(_load(workflow)):
+            assert "${{" not in script, (
+                f"{workflow.name} interpolates a GitHub expression into run-shell code"
+            )
+
+
 # ---- immutable exact-pair CI (release-pair.yml) ----------------------------
 
 def test_release_pair_workflow_declares_exact_sha_inputs():
@@ -118,7 +127,10 @@ def test_release_pair_workflow_validates_and_uses_full_sha_format():
     # The format check itself is anchored to exactly 40 lowercase hex chars —
     # a 12-character short SHA or an uppercase one must not slip past it.
     assert re.search(r"\^\[0-9a-f\]\{40\}\$", text)
-    assert "core_sha" in text and "ui_sha" in text
+    assert 'echo "core_sha=$core_sha" >> "$GITHUB_OUTPUT"' in text
+    assert 'echo "ui_sha=$ui_sha" >> "$GITHUB_OUTPUT"' in text
+    assert "ref: ${{ steps.inputs.outputs.core_sha }}" in text
+    assert "ref: ${{ steps.inputs.outputs.ui_sha }}" in text
 
 
 def test_release_pair_workflow_is_manual_only_and_read_only():

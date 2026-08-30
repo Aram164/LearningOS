@@ -126,6 +126,8 @@ def apply_approved_delivery(
     delivery_id: str,
     *,
     idempotency_key: str | None = None,
+    expected_snapshot: str | None = None,
+    expected_revisions: dict[str, int] | None = None,
 ):
     """Exercise the same content-bound authority the public V2 gateway supplies."""
     delivery, directory = app.repository.get_delivery(delivery_id)
@@ -150,7 +152,7 @@ def apply_approved_delivery(
     delivery_hash = "sha256:" + hashlib.sha256(
         (directory / "delivery.yaml").read_bytes()
     ).hexdigest()
-    expected_revisions = {
+    expected_revisions = expected_revisions or {
         artifact_id: artifact_revision(app.root, artifact_id)
         for artifact_id in sorted(artifact_ids)
     }
@@ -160,7 +162,7 @@ def apply_approved_delivery(
         "idempotency_key": idempotency_key or f"apply-{delivery_id}",
         "capability": "ai-action.delivery.apply",
         "channel": "operator",
-        "expected_snapshot": f"sha256:{canonical_fingerprint(app.root)}",
+        "expected_snapshot": expected_snapshot or f"sha256:{canonical_fingerprint(app.root)}",
         "expected_revisions": expected_revisions,
         "approval": {
             "kind": "approved-delivery",
@@ -291,6 +293,161 @@ def test_full_round_trip_preserves_original_and_commits_receipt(ai_repo: Path, t
     assert manifest["garden_entries"][0]["transcription_path"].startswith(
         "knowledge/garden/transcriptions/"
     )
+
+
+def test_replay_refuses_a_delegated_grant_its_bound_delivery_never_used(
+    ai_repo: Path, tmp_path: Path
+):
+    """A tampered receipt cannot buy a domain grant its own delivery never proves.
+
+    ``ai-action.delivery.apply`` may legitimately delegate to several domain
+    capabilities, but only the ones its hash-verified delivery actually named
+    as operations. Appending a real, catalogue-valid grant for a capability
+    this delivery never used (here ``unit.material-synthesis.publish``, which
+    the ``garden.shelve`` delivery in ``make_delivery`` never names) must be
+    refused on replay, never accepted because the grant happens to be real.
+    """
+    app, request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    tid = target_id(ai_repo)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {
+        artifact_id: artifact_revision(ai_repo, artifact_id)
+        for artifact_id in (
+            tid, f"transcription-{tid}", "relationship-garden-module-demo",
+        )
+    }
+    receipt = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+    )
+    receipt_path = ai_repo / receipt["receipt_path"]
+    on_disk = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    on_disk["authority"]["grants"].append({
+        "capability": "unit.material-synthesis.publish",
+        "declared_writes": ["curriculum/modules/**/units/**/material-synthesis.yaml"],
+    })
+    receipt_path.write_text(yaml.safe_dump(on_disk, sort_keys=False), encoding="utf-8")
+
+    # An exact retry must reuse the identical intent — the same explicit
+    # expected_snapshot and expected_revisions the first call bound its
+    # approval to — so this call reaches replay-evidence validation rather
+    # than a stale-intent refusal.
+    with pytest.raises(DeliveryValidationError, match="does not prove"):
+        apply_approved_delivery(
+            app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+        )
+
+
+def test_an_untampered_ai_action_replay_still_returns_its_original_receipt(
+    ai_repo: Path, tmp_path: Path
+):
+    """Proving delegation must not break the legitimate exact retry.
+
+    Delegated grants are now re-derived by re-reading the bound delivery, so
+    this pins the other side of that change: an untouched receipt still
+    replays, returns the same transaction, and re-runs nothing.
+    """
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    tid = target_id(ai_repo)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {
+        artifact_id: artifact_revision(ai_repo, artifact_id)
+        for artifact_id in (
+            tid, f"transcription-{tid}", "relationship-garden-module-demo",
+        )
+    }
+    first = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+    )
+    replayed = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+    )
+    assert replayed["id"] == first["id"]
+    assert replayed["receipt_path"] == first["receipt_path"]
+    assert artifact_revision(ai_repo, tid) == 1, "an exact replay must not re-apply the write"
+
+
+def test_replay_refuses_a_receipt_repointed_at_another_real_delivery(
+    ai_repo: Path, tmp_path: Path
+):
+    """Naming a real delivery is not the same as naming *this* one.
+
+    ``metadata.delivery_id`` is part of the evidence under review, so a
+    tampered receipt could point at a different, genuinely-present delivery
+    whose operations carry the capability it wants proven — every hash would
+    check out. The delivery's request must therefore match the request record
+    this transaction actually wrote.
+    """
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    tid = target_id(ai_repo)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {
+        artifact_id: artifact_revision(ai_repo, artifact_id)
+        for artifact_id in (
+            tid, f"transcription-{tid}", "relationship-garden-module-demo",
+        )
+    }
+    receipt = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+    )
+
+    # A second, genuinely-present delivery belonging to a different request.
+    other_dir = app.repository.delivery_dir("ai-delivery-other-001")
+    shutil.copytree(app.repository.delivery_dir(delivery["id"]), other_dir)
+    other = yaml.safe_load((other_dir / "delivery.yaml").read_text(encoding="utf-8"))
+    other["id"] = "ai-delivery-other-001"
+    other["request_id"] = "ai-request-other-001"
+    write_yaml(other_dir / "delivery.yaml", other)
+
+    receipt_path = ai_repo / receipt["receipt_path"]
+    on_disk = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    on_disk["metadata"]["delivery_id"] = "ai-delivery-other-001"
+    on_disk["metadata"]["approved_delivery"]["delivery_sha256"] = "sha256:" + hashlib.sha256(
+        (other_dir / "delivery.yaml").read_bytes()
+    ).hexdigest()
+    receipt_path.write_text(yaml.safe_dump(on_disk, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(DeliveryValidationError, match="different request"):
+        apply_approved_delivery(
+            app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+        )
+
+
+def test_replay_refuses_a_receipt_naming_an_unsafe_delivery_id(
+    ai_repo: Path, tmp_path: Path
+):
+    """An id the schema allows but the repository refuses must fail closed.
+
+    The receipt schema's `safeArtifactId` accepts a two-character id, while
+    the exchange-identifier rule requires three. Resolving it therefore raises
+    an AI-action error from inside replay-evidence validation, which must
+    surface as an ordinary typed refusal rather than escaping the gateway as
+    an unhandled traceback.
+    """
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    delivery = app.import_delivery(source)
+    tid = target_id(ai_repo)
+    snapshot = f"sha256:{canonical_fingerprint(ai_repo)}"
+    revisions = {
+        artifact_id: artifact_revision(ai_repo, artifact_id)
+        for artifact_id in (
+            tid, f"transcription-{tid}", "relationship-garden-module-demo",
+        )
+    }
+    receipt = apply_approved_delivery(
+        app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+    )
+    receipt_path = ai_repo / receipt["receipt_path"]
+    on_disk = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    on_disk["metadata"]["delivery_id"] = "ab"
+    receipt_path.write_text(yaml.safe_dump(on_disk, sort_keys=False), encoding="utf-8")
+
+    with pytest.raises(DeliveryValidationError, match="cannot re-verify the delivery"):
+        apply_approved_delivery(
+            app, delivery["id"], expected_snapshot=snapshot, expected_revisions=revisions,
+        )
 
 
 def test_import_rolls_back_delivery_if_request_transition_fails(

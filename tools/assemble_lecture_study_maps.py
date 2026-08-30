@@ -302,6 +302,60 @@ NODE_CONCEPTS: dict[str, tuple[str, ...]] = {
         "concept-k-means", "concept-clustering"),
     "knowledge-sad-clustering-evaluation": (
         "concept-clustering", "concept-distance-metrics"),
+    # Its title names the three families rather than a registered concept, so
+    # the automatic matcher finds nothing on it.
+    "knowledge-sad-clustering-families": ("concept-clustering",),
+    # ---- M2 Analysis: one unit per script chapter (2026-08-29)
+    #
+    # The automatic matcher fires on registered concept names appearing in a
+    # node title. These titles are the script's own German section headings
+    # ("Konvergenzkriterien für Folgen", "Das Riemann-Integral"), which the
+    # register spells differently, so the edges are curated here instead.
+    "knowledge-m2-analysis-ch01-zahlenmengen": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch01-induktion": ("concept-proof-technique",),
+    "knowledge-m2-analysis-ch01-beziehungen": (
+        "concept-proof-technique", "concept-real-numbers"),
+    "knowledge-m2-analysis-ch02-koerperaxiome": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-anordnung": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-intervalle-betrag": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-supremum-infimum": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-vollstaendigkeitsaxiom": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-folgerungen": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-potenzen-wurzeln": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch02-maschinenzahlen": ("concept-real-numbers",),
+    "knowledge-m2-analysis-ch03-folgen": ("concept-sequences-convergence",),
+    "knowledge-m2-analysis-ch03-rekursionen": (
+        "concept-sequences-convergence", "concept-proof-technique"),
+    "knowledge-m2-analysis-ch03-konvergenzkriterien": ("concept-sequences-convergence",),
+    "knowledge-m2-analysis-ch03-rechenregeln": ("concept-sequences-convergence",),
+    "knowledge-m2-analysis-ch03-bestimmte-divergenz": ("concept-sequences-convergence",),
+    "knowledge-m2-analysis-ch03-quadratwurzel": (
+        "concept-sequences-convergence", "concept-real-numbers"),
+    "knowledge-m2-analysis-ch04-reihen": ("concept-series",),
+    "knowledge-m2-analysis-ch04-konvergenzkriterien": ("concept-series",),
+    "knowledge-m2-analysis-ch04-absolute-konvergenz": ("concept-series",),
+    "knowledge-m2-analysis-ch04-umordnungen": ("concept-series",),
+    "knowledge-m2-analysis-ch05-funktionsgrenzwerte": ("concept-limits-continuity",),
+    "knowledge-m2-analysis-ch05-einseitige-grenzwerte": ("concept-limits-continuity",),
+    "knowledge-m2-analysis-ch05-stetigkeit": ("concept-limits-continuity",),
+    "knowledge-m2-analysis-ch05-zwischenwertsatz": ("concept-limits-continuity",),
+    "knowledge-m2-analysis-ch05-kompakte-intervalle": ("concept-limits-continuity",),
+    "knowledge-m2-analysis-ch05-exponentialfunktion": (
+        "concept-limits-continuity", "concept-series"),
+    "knowledge-m2-analysis-ch05-gleichmaessige-konvergenz": ("concept-uniform-convergence",),
+    "knowledge-m2-analysis-ch06-differenzierbarkeit": ("concept-differentiation",),
+    "knowledge-m2-analysis-ch06-mittelwertsatz": ("concept-differentiation",),
+    "knowledge-m2-analysis-ch06-trigonometrie": ("concept-differentiation",),
+    "knowledge-m2-analysis-ch06-hospital": ("concept-differentiation",),
+    "knowledge-m2-analysis-ch06-hoehere-ableitungen": ("concept-differentiation",),
+    "knowledge-m2-analysis-ch06-taylor": ("concept-taylor-series",),
+    "knowledge-m2-analysis-ch06-interpolation": ("concept-taylor-series",),
+    "knowledge-m2-analysis-ch07-riemann-integral": ("concept-riemann-integral",),
+    "knowledge-m2-analysis-ch07-hauptsatz": ("concept-riemann-integral",),
+    "knowledge-m2-analysis-ch07-uneigentliche-integrale": ("concept-riemann-integral",),
+    "knowledge-m2-analysis-calibrate": ("concept-proof-technique",),
+    "knowledge-m2-analysis-anx": ("concept-proof-technique",),
+    "knowledge-m2-analysis-exkurse": ("concept-asymptotic-analysis",),
 }
 
 

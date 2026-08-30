@@ -9,7 +9,8 @@
     "schema_version", "type", "core_sha", "ui_sha", "core_branch", "ui_branch",
     "data_contract_version", "manifest_contract_version",
     "manifest_contract_schema_sha256", "runtime_source_fingerprint",
-    "bundle_sha256", "stylesheet_sha256", "system_check_passed",
+    "bundle_sha256", "stylesheet_sha256", "shipped_asset_sha256",
+    "system_check_passed",
     "stress_scope", "workflow_run_id", "workflow_run_attempt"
   ],
   "properties": {
@@ -25,6 +26,18 @@
     "runtime_source_fingerprint": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "bundle_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "stylesheet_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "shipped_asset_sha256": {
+      "type": "object",
+      "description": "Closed hash inventory for every byte shipped in plugin/.",
+      "additionalProperties": false,
+      "required": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+      "properties": {
+        "main.js": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "styles.css": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "manifest.json": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "build-info.json": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      }
+    },
     "system_check_passed": {"const": true},
     "stress_scope": {
       "enum": ["not-run-materials-unprovisioned", "full"],

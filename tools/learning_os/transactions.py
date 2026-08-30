@@ -47,13 +47,6 @@ from .contracts.write_scopes import (
 from .fingerprint import canonical_fingerprint
 from .pathing import PathBoundaryError, read_text_inside
 
-# Writes the transaction service itself owns rather than any capability's
-# declared authority (see the ``service_owned_scopes`` check in
-# ``TransactionService.commit``). Replay-evidence write-scope validation uses
-# the same boundary so a replayed AI-action delivery row is not mistaken for
-# an out-of-scope write.
-_SERVICE_OWNED_WRITE_SCOPES = ("operations/ai-actions/requests/**",)
-
 __all__ = [
     "ReplayEvidenceError",
     "TransactionConflict",
@@ -260,6 +253,90 @@ def _default_authority_root(root: Path) -> Path | None:
     return root if implicit_catalogue.is_file() else None
 
 
+def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
+    """Return the domain capabilities this receipt's bound delivery actually proves.
+
+    An ``ai-action.delivery.apply`` receipt may claim delegated grants, but a
+    claim in the receipt under review is not evidence of itself. This
+    re-reads and hash-verifies the exact approved delivery the receipt names
+    (the same binding ``apply_delivery`` performed at commit time) and treats
+    only the capability names its own operations record as proven. It never
+    trusts ``receipt["authority"]`` for this — that is precisely the field
+    being checked.
+    """
+    metadata = receipt.get("metadata")
+    delivery_id = metadata.get("delivery_id") if isinstance(metadata, dict) else None
+    approved = metadata.get("approved_delivery") if isinstance(metadata, dict) else None
+    delivery_sha256 = approved.get("delivery_sha256") if isinstance(approved, dict) else None
+    artifact_sha256 = approved.get("artifact_sha256") if isinstance(approved, dict) else None
+    if not isinstance(delivery_id, str) or not delivery_id \
+            or not isinstance(delivery_sha256, str) \
+            or not isinstance(artifact_sha256, dict):
+        raise ReplayEvidenceError(
+            "idempotent receipt for ai-action.delivery.apply carries no bound "
+            "delivery evidence to prove its delegated authority"
+        )
+
+    from .ai_actions.errors import AIActionError
+    from .ai_actions.service import read_bound_delivery
+    from .ai_actions.storage import FilesystemAIActionRepository
+
+    # Resolving the id is inside the guard too: the exchange-identifier rule is
+    # stricter than the receipt schema's `safeArtifactId` (which accepts a
+    # two-character id the repository refuses), so a schema-valid receipt can
+    # still make this raise. Letting an AIActionError escape here would leave
+    # the gateway with an unhandled traceback instead of a typed refusal.
+    try:
+        directory = FilesystemAIActionRepository(root).delivery_dir(delivery_id)
+        delivery, _artifacts = read_bound_delivery(
+            directory, delivery_sha256=delivery_sha256, artifact_sha256=artifact_sha256,
+        )
+    except AIActionError as exc:
+        raise ReplayEvidenceError(
+            f"cannot re-verify the delivery this receipt claims: {exc}"
+        ) from exc
+
+    # The delivery must be the one whose request this transaction actually
+    # wrote. `metadata.delivery_id` is part of the evidence under review, so on
+    # its own it only proves that *some* real delivery has those bytes: a
+    # tampered receipt could point at an unrelated delivery that happens to
+    # carry the capability it wants proven. Every `ai-action.delivery.apply`
+    # transaction writes its request record, and a delivery names that same
+    # request, so requiring the two to agree ties the delivery back to a write
+    # row this receipt cannot invent.
+    request_id = delivery.get("request_id")
+    if not isinstance(request_id, str) or not request_id:
+        raise ReplayEvidenceError("bound delivery for this receipt names no request")
+    written_paths = {
+        row.get("path") for row in receipt.get("writes") or () if isinstance(row, dict)
+    }
+    if f"operations/ai-actions/requests/{request_id}/request.yaml" not in written_paths:
+        raise ReplayEvidenceError(
+            "the delivery this receipt names belongs to a different request than "
+            "the one this transaction wrote"
+        )
+
+    operations = delivery.get("operations")
+    if not isinstance(operations, list):
+        raise ReplayEvidenceError("bound delivery for this receipt has no operations")
+    proven: set[str] = set()
+    for operation in operations:
+        if not isinstance(operation, dict) or not isinstance(operation.get("capability"), str):
+            raise ReplayEvidenceError("bound delivery for this receipt has a malformed operation")
+        proven.add(operation["capability"])
+    # `garden.update` bookkeeping (the AI-side state file) is written on every
+    # pilot delivery except a whole-unit material-synthesis delivery, whether
+    # or not an explicit `garden.update` operation is present — see
+    # `AIActionService.apply_delivery`. The `action_id` that decides it is read
+    # from the hash-verified delivery, never from the receipt's own metadata:
+    # metadata is part of the evidence under review, so letting it name the
+    # action would let a tampered receipt grant itself this scope by writing a
+    # different action id.
+    if delivery.get("action_id") != "unit.compare-materials":
+        proven.add("garden.update")
+    return proven
+
+
 def replay_for_request(
     root: Path,
     request: GatewayRequestContext,
@@ -371,6 +448,25 @@ def replay_for_request(
                 f"idempotent receipt artifact revision does not match its ledger entry: {artifact}"
             )
 
+    # The live revision ledger must not contradict this receipt.
+    #
+    # Everything above cross-binds the ledger *row* against the receipt; until
+    # this check, nothing compared either against `revisions.yaml` itself, so a
+    # rolled-back or hand-edited revision ledger replayed cleanly. Revisions
+    # only ever increase, so an artifact standing below the value this
+    # transaction recorded is provable mutation — the one thing about these
+    # shared, multi-entry ledgers a single receipt *can* prove. (The
+    # idempotency ledger needs no equivalent: its row for this key is already
+    # cross-bound field by field above.)
+    live_revisions = load_revisions(root)
+    for artifact, after in row["revisions"].items():
+        current = live_revisions.get(artifact, 0)
+        if current < after:
+            raise ReplayEvidenceError(
+                f"the artifact revision ledger contradicts this receipt: {artifact} "
+                f"stands at {current}, below the {after} this transaction recorded"
+            )
+
     writes = receipt.get("writes")
     if not isinstance(writes, list) or not writes:
         raise ReplayEvidenceError("idempotent receipt records no writes")
@@ -379,16 +475,17 @@ def replay_for_request(
     # capability: `ai-action.delivery.apply`, for example, writes its own
     # service-owned bookkeeping directly but delegates the canonical write to
     # whatever domain capability originally owns that destination (recorded in
-    # `write_authorities` at commit time). The receipt's own `authority.grants`
-    # is exactly the list of authorities actually used to authorize this
-    # transaction's writes — re-deriving "the" scope from `request.capability`
-    # alone would wrongly refuse every legitimately delegated write. Each grant
-    # is still cross-checked against the real capability catalog below, so a
-    # tampered receipt cannot simply claim a broader scope for a real
-    # capability name than that capability actually has.
+    # `write_authorities` at commit time). But the receipt's own
+    # `authority.grants` is a claim made by the same untrusted evidence under
+    # review here — it can never be trusted merely because every named
+    # capability is a real, known catalogue entry. An ordinary gateway receipt
+    # may claim exactly the one grant its own top-level capability produced;
+    # an `ai-action.delivery.apply` receipt may additionally claim delegated
+    # domain grants, but only ones proven by re-reading and hash-verifying the
+    # exact approved delivery this receipt names, never merely asserted.
     authority = receipt.get("authority")
     grants = authority.get("grants") if isinstance(authority, dict) else None
-    if not isinstance(grants, list):
+    if not isinstance(grants, list) or not grants:
         raise ReplayEvidenceError("idempotent receipt has no authority grants")
 
     resolved_authority_root = authority_root or _default_authority_root(root)
@@ -406,6 +503,16 @@ def replay_for_request(
                 **domain_capability_definitions(resolved_authority_root),
             }.items()
         }
+
+        def catalog_scopes_for(name: str) -> tuple[str, ...]:
+            scopes = scopes_by_capability.get(name)
+            if scopes is None:
+                raise ReplayEvidenceError(
+                    f"idempotent receipt names an unknown write authority: {name}"
+                )
+            return scopes
+
+        granted_capabilities: list[str] = []
         for grant in grants:
             if not isinstance(grant, dict):
                 raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
@@ -413,17 +520,38 @@ def replay_for_request(
             declared = grant.get("declared_writes")
             if not isinstance(granted_capability, str) or not isinstance(declared, list):
                 raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
-            catalog_scopes = scopes_by_capability.get(granted_capability)
-            if catalog_scopes is None:
-                raise ReplayEvidenceError(
-                    f"idempotent receipt names an unknown write authority: {granted_capability}"
-                )
-            if tuple(declared) != tuple(catalog_scopes):
+            if tuple(declared) != tuple(catalog_scopes_for(granted_capability)):
                 raise ReplayEvidenceError(
                     "idempotent receipt authority grant does not match the declared "
                     f"capability scope: {granted_capability}"
                 )
-            allowed_scopes.extend(catalog_scopes)
+            granted_capabilities.append(granted_capability)
+
+        if request.capability == "ai-action.delivery.apply":
+            if "ai-action.delivery.apply" not in granted_capabilities:
+                raise ReplayEvidenceError(
+                    "idempotent receipt for ai-action.delivery.apply carries no grant "
+                    "for its own top-level capability"
+                )
+            delegated = sorted(
+                {c for c in granted_capabilities if c != "ai-action.delivery.apply"}
+            )
+            if delegated:
+                proven = _proven_delivery_delegation(root, receipt)
+                unproven = [c for c in delegated if c not in proven]
+                if unproven:
+                    raise ReplayEvidenceError(
+                        "idempotent receipt claims AI-action delegated authority its "
+                        f"bound delivery does not prove: {', '.join(unproven)}"
+                    )
+        elif granted_capabilities != [request.capability]:
+            raise ReplayEvidenceError(
+                "idempotent receipt authority grants must carry exactly the top-level "
+                "request capability"
+            )
+
+        for granted_capability in granted_capabilities:
+            allowed_scopes.extend(catalog_scopes_for(granted_capability))
 
     for entry in writes:
         if not isinstance(entry, dict):
@@ -441,17 +569,13 @@ def replay_for_request(
             raise ReplayEvidenceError(
                 f"idempotent receipt write path is not canonical: {relative}"
             )
-        if resolved_authority_root is not None:
-            service_owned = any(
-                scope_matches(relative, pattern) for pattern in _SERVICE_OWNED_WRITE_SCOPES
+        if resolved_authority_root is not None and not any(
+            scope_matches(relative, pattern) for pattern in allowed_scopes
+        ):
+            raise ReplayEvidenceError(
+                "idempotent receipt write path is outside its capability's "
+                f"declared scope: {relative}"
             )
-            if not service_owned and not any(
-                scope_matches(relative, pattern) for pattern in allowed_scopes
-            ):
-                raise ReplayEvidenceError(
-                    "idempotent receipt write path is outside its capability's "
-                    f"declared scope: {relative}"
-                )
 
     return TransactionResult(
         transaction_id=str(row["transaction_id"]),

@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -75,6 +76,7 @@ def _write_build_info(ui: Path, *, ui_sha: str, core_sha: str, **overrides) -> N
         "core_revision": core_sha,
         "source_dirty": False,
         "core_dirty": False,
+        "manifest_contract_version": 8,
         "source_fingerprint": "sha256:" + "a" * 64,
         "bundle_sha256": bundle_sha256,
         "stylesheet_sha256": stylesheet_sha256,
@@ -112,6 +114,11 @@ def test_a_valid_exact_pair_generates_a_schema_valid_receipt(clean_pair):
     assert receipt["ui_sha"] == clean_pair["ui_sha"]
     assert receipt["data_contract_version"] == 14
     assert receipt["manifest_contract_version"] == 8
+    assert set(receipt["shipped_asset_sha256"]) == set(rpr.SHIPPED_ASSETS)
+    for name in rpr.SHIPPED_ASSETS:
+        assert receipt["shipped_asset_sha256"][name] == _sha256(
+            (clean_pair["ui"] / "plugin" / name).read_bytes()
+        )
     assert receipt["system_check_passed"] is True
     assert receipt["stress_scope"] == "not-run-materials-unprovisioned"
 
@@ -161,6 +168,15 @@ def test_build_info_dirty_flag_is_refused(clean_pair):
         _generate(clean_pair)
 
 
+def test_build_info_contract_version_mismatch_is_refused(clean_pair):
+    _write_build_info(
+        clean_pair["ui"], ui_sha=clean_pair["ui_sha"],
+        core_sha=clean_pair["core_sha"], manifest_contract_version=9,
+    )
+    with pytest.raises(rpr.ReleasePairReceiptError, match="manifest_contract_version"):
+        _generate(clean_pair)
+
+
 # ---- verification --------------------------------------------------------
 
 def _artifact_dir(clean_pair: dict, receipt: dict, tmp_path: Path) -> Path:
@@ -186,31 +202,33 @@ def test_wrong_schema_version_is_refused(clean_pair, tmp_path):
         rpr.verify(receipt, artifact)
 
 
-def test_bundle_hash_mismatch_is_refused(clean_pair, tmp_path):
+@pytest.mark.parametrize("name", rpr.SHIPPED_ASSETS)
+def test_every_shipped_asset_hash_mismatch_is_refused(clean_pair, tmp_path, name):
     receipt = _generate(clean_pair)
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
-    (artifact / "plugin" / "main.js").write_bytes(b"tampered\n")
-    with pytest.raises(rpr.ReleasePairReceiptError, match="main.js sha256"):
+    target = artifact / "plugin" / name
+    target.write_bytes(target.read_bytes() + b"\ntampered\n")
+    with pytest.raises(rpr.ReleasePairReceiptError, match=rf"{re.escape(name)} sha256"):
         rpr.verify(receipt, artifact)
 
 
-def test_stylesheet_hash_mismatch_is_refused(clean_pair, tmp_path):
+def test_runtime_source_fingerprint_mismatch_is_refused(clean_pair, tmp_path):
     receipt = _generate(clean_pair)
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
-    (artifact / "plugin" / "styles.css").write_bytes(b"tampered\n")
-    with pytest.raises(rpr.ReleasePairReceiptError, match="styles.css sha256"):
-        rpr.verify(receipt, artifact)
-
-
-def test_contract_hash_mismatch_is_refused(clean_pair, tmp_path):
-    receipt = _generate(clean_pair)
-    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
-    receipt["manifest_contract_schema_sha256"] = "sha256:" + "f" * 64
-    # The schema itself still validates (it is a well-formed hash) — the
-    # mismatch this proves matters for is against build-info's own recorded
-    # fingerprint, exercised via runtime_source_fingerprint below.
     receipt["runtime_source_fingerprint"] = "sha256:" + "e" * 64
     with pytest.raises(rpr.ReleasePairReceiptError, match="source_fingerprint"):
+        rpr.verify(receipt, artifact)
+
+
+@pytest.mark.parametrize("mutation", ["missing", "surplus"])
+def test_shipped_asset_hash_map_is_closed(clean_pair, tmp_path, mutation):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    if mutation == "missing":
+        receipt["shipped_asset_sha256"].pop("manifest.json")
+    else:
+        receipt["shipped_asset_sha256"]["extra.js"] = "sha256:" + "f" * 64
+    with pytest.raises(rpr.ReleasePairReceiptError, match="schema validation"):
         rpr.verify(receipt, artifact)
 
 
@@ -235,8 +253,26 @@ def test_verify_rejects_a_receipt_whose_build_info_sha_disagrees(clean_pair, tmp
     artifact = _artifact_dir(clean_pair, receipt, tmp_path)
     tampered_info = json.loads((artifact / "plugin" / "build-info.json").read_text(encoding="utf-8"))
     tampered_info["core_revision"] = "9" * 40
-    (artifact / "plugin" / "build-info.json").write_text(json.dumps(tampered_info), encoding="utf-8")
+    build_info_path = artifact / "plugin" / "build-info.json"
+    build_info_path.write_text(json.dumps(tampered_info), encoding="utf-8")
+    receipt["shipped_asset_sha256"]["build-info.json"] = _sha256(
+        build_info_path.read_bytes()
+    )
     with pytest.raises(rpr.ReleasePairReceiptError, match="core_revision"):
+        rpr.verify(receipt, artifact)
+
+
+def test_verify_cross_checks_build_info_contract_version(clean_pair, tmp_path):
+    receipt = _generate(clean_pair)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    build_info_path = artifact / "plugin" / "build-info.json"
+    tampered_info = json.loads(build_info_path.read_text(encoding="utf-8"))
+    tampered_info["manifest_contract_version"] = 9
+    build_info_path.write_text(json.dumps(tampered_info), encoding="utf-8")
+    receipt["shipped_asset_sha256"]["build-info.json"] = _sha256(
+        build_info_path.read_bytes()
+    )
+    with pytest.raises(rpr.ReleasePairReceiptError, match="manifest_contract_version"):
         rpr.verify(receipt, artifact)
 
 
@@ -245,8 +281,8 @@ def test_verify_rejects_a_receipt_whose_build_info_sha_disagrees(clean_pair, tmp
 def test_release_pair_workflow_checks_out_both_repositories_at_exact_shas():
     text = (rpr.ROOT / ".github" / "workflows" / "release-pair.yml").read_text(encoding="utf-8")
     assert "core_sha" in text and "ui_sha" in text
-    assert "ref: ${{ github.event.inputs.core_sha }}" in text
-    assert "ref: ${{ github.event.inputs.ui_sha }}" in text
+    assert "ref: ${{ steps.inputs.outputs.core_sha }}" in text
+    assert "ref: ${{ steps.inputs.outputs.ui_sha }}" in text
 
 
 def test_release_pair_workflow_runs_system_check():

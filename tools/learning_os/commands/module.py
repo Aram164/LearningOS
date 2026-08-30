@@ -22,7 +22,7 @@ from learning_os.masters_planning import (
 )
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.rules import validate
-from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS
+from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
 from .support import (
     WriteRefused,
@@ -306,8 +306,18 @@ def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[s
     return problems
 
 
-def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
-    """Validate planned files in a small shadow repository without canonical writes."""
+def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list[str]:
+    """Validate planned files in a small shadow repository without canonical writes.
+
+    The gate is the repository's one warning policy (CLAUDE.md hard rule 9,
+    `learning_os.warning_baseline`): zero errors, and no warning signature that
+    is new or grown relative to the recorded baseline. Until 2026-08-29 this
+    function instead failed on every non-exempt warning anywhere in the shadow
+    repository, which made it unsatisfiable — the baselined content debt of
+    CRITIQUE-POINTS §1 lives in the source maps, so `module-plan-import` for one
+    module failed on another module's deferred locators. A plan must still be
+    refused when it *introduces* a warning; that is what the delta measures.
+    """
     ignored_at_root = {
         ".git", ".obsidian", ".pytest_cache", ".venv", "generated",
         "migration", "tests", "tools",
@@ -346,10 +356,17 @@ def _module_plan_validation_errors(root: Path, writes: dict[Path, str]) -> list:
             except ValueError:
                 raise ValueError(f"planned write escapes repository: {path}") from None
             _atomic_text(shadow / rel, content)
-        return [issue for issue in validate(load_repo(shadow), online=False)
-                if issue.severity == "E"
-                or (issue.severity == "W"
-                    and issue.code not in BASELINE_EXEMPT_WARNINGS)]
+        signatures, errors = signatures_from_issues(
+            validate(load_repo(shadow), online=False))
+    # The baseline is read from the real repository: the shadow is a copy of it
+    # plus the planned writes, so the baseline describes exactly the "before".
+    baseline, _ = load_baseline(root)
+    regressions, _repairs = delta(baseline, signatures)
+    return errors + [
+        f"W NEW-OR-GROWN-WARNING: {line} (introduced by this plan; fix it, or "
+        "adopt it deliberately with `python tools/warning_baseline.py --update`)"
+        for line in regressions
+    ]
 
 
 def _master_promotion_preflight(

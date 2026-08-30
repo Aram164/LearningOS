@@ -57,109 +57,22 @@ baseline-managed by default, and every other authored-content warning (a new
 from __future__ import annotations
 
 import argparse
-import datetime as dt
 import sys
-from collections import Counter
 from pathlib import Path
-
-import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from learning_os.loader import load_repo  # noqa: E402
-from learning_os.rules import validate  # noqa: E402
-from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
-
-BASELINE_RELATIVE = "operations/validation-warning-baseline.yaml"
-
-_HEADER = """\
-# The validation warning baseline — what is deferred, and nothing more.
-#
-# Validation success means ZERO ERRORS. Warnings stay visible and never block.
-# What this file adds is the third clause: no NEW warning signature, and no
-# existing signature that grows.
-#
-# A signature is (code, path) with its multiplicity, not a total. A total is
-# gamed by trading one warning for another; a signature is not.
-#
-# Two exact sets are excluded on purpose: environmental warnings describe the
-# machine (unmounted drive, stale view, crashed git lock), not the content,
-# and differ between one checkout and the next; dynamic-advisory warnings
-# (WS-NEGLECT, INBOX-STALE) are clock-derived and can appear with no authored
-# edit. Both stay visible in normal validation output; neither is exempt by
-# prefix or heuristic, only by exact code (learning_os.rules.common).
-#
-# These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
-# them here defers them; it does not close the point.
-#
-#   python tools/warning_baseline.py --check                 # gate
-#   python tools/warning_baseline.py --show                  # the delta
-#   python tools/warning_baseline.py --update --note "…"     # adopt current
-"""
-
-
-def collect(root: Path) -> tuple[Counter, list[str]]:
-    """(signature counter, error strings) for the repository at ``root``."""
-    issues = validate(load_repo(root), online=False)
-    signatures: Counter = Counter()
-    errors: list[str] = []
-    for issue in issues:
-        if issue.severity == "E":
-            errors.append(str(issue))
-            continue
-        if issue.code in BASELINE_EXEMPT_WARNINGS:
-            continue
-        signatures[(issue.code, issue.path)] += 1
-    return signatures, errors
-
-
-def load_baseline(root: Path) -> tuple[Counter, dict]:
-    path = root / BASELINE_RELATIVE
-    if not path.is_file():
-        return Counter(), {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-    counter: Counter = Counter()
-    for row in data.get("signatures") or ():
-        counter[(row["code"], row.get("path", ""))] = int(row["count"])
-    return counter, data
-
-
-def write_baseline(root: Path, signatures: Counter, note: str) -> None:
-    rows = [
-        {"code": code, "path": path, "count": count}
-        for (code, path), count in sorted(signatures.items())
-    ]
-    payload = {
-        "baseline_version": 1,
-        "recorded": dt.date.today().isoformat(),
-        "note": note,
-        "total": sum(signatures.values()),
-        "distinct_signatures": len(rows),
-        "signatures": rows,
-    }
-    path = root / BASELINE_RELATIVE
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        _HEADER + yaml.safe_dump(payload, sort_keys=False, allow_unicode=True),
-        encoding="utf-8",
-    )
-
-
-def delta(baseline: Counter, current: Counter) -> tuple[list[str], list[str]]:
-    """(regressions, repairs) as human-readable lines."""
-    regressions: list[str] = []
-    repairs: list[str] = []
-    for key in sorted(set(baseline) | set(current)):
-        before, after = baseline.get(key, 0), current.get(key, 0)
-        if after > before:
-            code, path = key
-            regressions.append(
-                f"{code} at {path or '<repository>'}: {before} → {after}")
-        elif after < before:
-            code, path = key
-            repairs.append(
-                f"{code} at {path or '<repository>'}: {before} → {after}")
-    return regressions, repairs
+# The policy itself lives in the package so the module-plan preflight applies
+# the same gate; this file is its command line. Re-exported here because the
+# tests and any existing caller address these names through this module.
+from learning_os.warning_baseline import (  # noqa: E402,F401
+    BASELINE_RELATIVE,
+    collect,
+    delta,
+    load_baseline,
+    signatures_from_issues,
+    write_baseline,
+)
 
 
 def main() -> int:
