@@ -25,8 +25,8 @@ revisions:
   job-quarantine-collapse-v1: 1
   materials-manifest: 1
   module-hu-algo2: 1
-  module-hu-aml: 4
-  module-hu-m2-statistik-analysis: 5
+  module-hu-aml: 7
+  module-hu-m2-statistik-analysis: 10
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 1
@@ -166,7 +166,7 @@ revisions:
   study-map-aml-l07: 2
   study-map-aml-l08: 2
   study-map-aml-l09: 2
-  study-map-aml-l10: 3
+  study-map-aml-l10: 4
   study-map-aml-l11: 2
   study-map-job-engineering-tools-fluency: 1
   study-map-job-git-fluency: 1
@@ -191,7 +191,7 @@ revisions:
   study-map-m2-sad-l14: 2
   study-map-m2-sad-l15: 2
   unit-algo2-exam-prep: 1
-  unit-aml-exam-prep: 4
+  unit-aml-exam-prep: 5
   unit-aml-l01: 2
   unit-aml-l02: 2
   unit-aml-l03: 2
@@ -201,23 +201,30 @@ revisions:
   unit-aml-l07: 2
   unit-aml-l08: 2
   unit-aml-l09: 2
-  unit-aml-l10: 3
+  unit-aml-l10: 5
   unit-aml-l11: 4
   unit-job-engineering-tools-fluency: 1
   unit-job-git-fluency: 1
   unit-job-polars-pandas-fluency: 1
   unit-job-python-engineering-fluency: 1
   unit-job-rust-engineering-fluency: 1
-  unit-m2-analysis-exam-prep: 3
+  unit-m2-analysis-ch01: 2
+  unit-m2-analysis-ch02: 5
+  unit-m2-analysis-ch03: 2
+  unit-m2-analysis-ch04: 2
+  unit-m2-analysis-ch05: 2
+  unit-m2-analysis-ch06: 2
+  unit-m2-analysis-ch07: 2
+  unit-m2-analysis-exam-prep: 8
   unit-m2-combined-exam-rehearsal: 3
-  unit-m2-sad-clustering: 2
-  unit-m2-sad-exam-prep: 4
+  unit-m2-sad-clustering: 6
+  unit-m2-sad-exam-prep: 5
   unit-m2-sad-l01: 3
   unit-m2-sad-l02: 3
-  unit-m2-sad-l03: 3
-  unit-m2-sad-l04: 3
+  unit-m2-sad-l03: 7
+  unit-m2-sad-l04: 7
   unit-m2-sad-l05: 3
-  unit-m2-sad-l06: 3
+  unit-m2-sad-l06: 7
   unit-m2-sad-l07: 4
   unit-m2-sad-l08: 3
   unit-m2-sad-l09: 3
@@ -225,6 +232,6 @@ revisions:
   unit-m2-sad-l11: 3
   unit-m2-sad-l12: 3
   unit-m2-sad-l13: 3
-  unit-m2-sad-l14: 3
-  unit-m2-sad-l15: 3
+  unit-m2-sad-l14: 7
+  unit-m2-sad-l15: 7
   workspace-thesis-mle-medical: 1

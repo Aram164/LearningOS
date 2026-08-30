@@ -107,8 +107,9 @@ source_selections:
   - stage-aml-mock-one-repair
   - stage-aml-final-repair
 - source_id: source-murphy-pml1
-  locator: §8.1.3 pp. 277–281, §8.3 pp. 289–291, §8.4.6 pp. 298–301; §15.4 pp. 518–525, §15.5 pp. 526–532;
-    solution manual §10.1 and §13.1
+  locator: pml1.pdf §8.1.3 pdf pp. 307-310, §8.3 pdf pp. 319-321, §8.4.6 pdf pp. 328-331; §15.4 pdf pp.
+    548-555, §15.5 pdf pp. 556-562; solutions-public.pdf 'Gradient and Hessian of log-likelihood for multinomial
+    logistic regression' pdf p. 25 and 'Backpropagation for a 1 layer MLP' pdf p. 30
   route_id: route-f426a3cf4e1b48b8f1c408d3
   purpose: 'Section-addressed derivation bank for a diagnosed miss: Ch 8 for convexity, Newton and the
     adaptive optimizers, §15.4–15.5 for attention and the Transformer block.'

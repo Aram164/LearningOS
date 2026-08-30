@@ -1,0 +1,937 @@
+id: study-map-m2-analysis-ch07
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch07
+status: not-started
+current_stage: stage-m2-analysis-ch07-riemann-integral
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch07-riemann-integral
+  number: 1
+  title: Das Riemann-Integral (§7.1)
+  status: pending
+  objective: Partitions, upper and lower sums, the integrability criterion, and the classes of function
+    it covers — continuous and monotone. The definition is asked for in words at least as often as it
+    is computed.
+  done_when:
+  - 'Reproduce without notes: Partitions, upper and lower sums, the integrability criterion, and the classes
+    of function it covers — continuous and monotone. The definition is asked for in words at least as
+    often as it is computed.'
+  - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+    then the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-riemann-integral
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 7 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 7, printed p. 191 (PDF p. 201)–printed p. 225 (PDF p. 235); §7.1
+      Das Riemann-Integral printed p. 192 (PDF p. 202), §7.2 Hauptsatz und Integrationsregeln printed
+      p. 203 (PDF p. 213), §7.3 Uneigentliche Integrale printed p. 212 (PDF p. 222). §7.4 is an Exkurs
+      and is not worked here.
+    angle: The chapter that cashes in Chapter 5 — continuity on a compact interval is what makes the integral
+      exist — and then hands over the fundamental theorem.
+    angle_detail: 'Three sections and a clear division of labour: §7.1 is the definition and the integrability
+      criterion, and it is asked for in words at least as often as it is computed; §7.2 is the fundamental
+      theorem with substitution and integration by parts as its corollaries, and is where the marks are;
+      §7.3 turns integrals back into limits and so re-uses Chapter 4''s convergence thinking. Like Chapter
+      6 there is no HU sheet — but unlike Chapter 6, the external Klausur bank covers this ground well,
+      so the substitutes here are stronger.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 definite integral and FTC, Calculus 2 techniques and improper
+      integrals
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the definite integral and the fundamental theorem. Calculus
+      2: integration techniques, improper integrals. Topic-matched selection from the source record''s
+      own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on substitution and parts, where the failure is almost always execution rather
+      than understanding.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. Integration technique is the
+      part of the module where watching someone work through the algebra is genuinely the efficient repair,
+      because the errors are arithmetic and bookkeeping. It will not cover the integrability criterion
+      of §7.1 at the script's depth.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — integration and the fundamental theorem
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the integration and fundamental-theorem episode (and the following
+      one on areas). Topic-matched selection from the source record''s own list; no local copy, so the
+      selection is by topic rather than by timestamp.'
+    angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
+      and does not motivate.
+    angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
+      most surprising statement in the module and the one most often held as a rule rather than understood;
+      this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
+      from.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
+      §4.4 Uneigentliche Integrale p. 225; Lösungen in Kap. 5 Anhang from p. 253. §2.5 'Flächen als Grenzwerte'
+      p. 105 is the gentle preview of §7.1.
+    angle: All three script sections covered, with explained solutions — and §2.5 approaches the integral
+      as a limit of areas before any formalism.
+    angle_detail: '§2.5 is the entry point worth knowing about: it develops area as a limit inside the
+      chapter on limits, which is where the Riemann sum idea actually comes from and which the script''s
+      §7.1 presents already formalised. §3.4 is the technique drill — substitution and parts — and §4.4
+      is one of the few dedicated improper-integral exercise sections available.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 16-18 — the integral, the techniques, and improper integrals at volume
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition
+      p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225,
+      §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234,
+      §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung
+      p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte
+      Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and
+      are skipped.'
+    angle: Thirty-five pages of solved integration technique, split exactly the way the script splits
+      the chapter — including both kinds of improper integral separately.
+    angle_detail: 'Together with Chapter 6 this file is the substitute for the missing HU sheets, and
+      here it is at its strongest: §17.2 and §17.3 are dedicated sections for parts and substitution,
+      which are the two techniques §7.2 introduces, and §§18.1-18.2 separate the unbounded-interval and
+      unbounded-integrand cases that the script''s §7.3 treats together. §17.4 (Partialbruchzerlegung)
+      is not a script section but is standard preparation for the integrals the external papers set.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on the fundamental theorem and integration technique
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A4 (state the second Hauptsatz, state partielle Integration, then prove
+      partielle Integration from the Hauptsatz — 3+3+4 points), A5.3 (show x ↦ sin x·cos x is Riemann-integrable
+      on [0,1] and compute the integral), A6.2 (does an antiderivative with two prescribed values exist).
+      Paderborn_...pdf A6 (∫₀¹ arcsin t dt — substitution followed by integration by parts, 10 points)
+    angle: The best-covered chapter in the external bank, and Regensburg A4 is the closest thing available
+      to a marking scheme for §7.2.
+    angle_detail: 'Regensburg A4 is worth working carefully even though it is solved: it separates ''state
+      the theorem'' from ''prove the corollary'' and prices them (3 + 3 + 4), which is direct evidence
+      that stating a theorem with its hypotheses is independently graded — the same signal HU''s WV1.4
+      gives for the Zwischenwertsatz. Paderborn A6 is the standard two-technique integral. Both solved,
+      so spend them on diagnosed gaps; Ulm''s task 8 (two antiderivatives) is on the unsolved list and
+      stays with the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 6 Riemann-Integral + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 6 Riemann-Integral PDF p. 51 (§6.1 Definition
+      und Grundbegriffe, §6.2 Integrationstechniken PDF p. 54, §6.3 Uneigentliche Integrale PDF p. 56),
+      Übungsaufgaben PDF p. 59'
+    angle: The chapter compressed to eight pages with its own exercise set — a revision pass for a chapter
+      with no HU sheet.
+    angle_detail: 'Its three sections match the script''s three exactly, and the exercise set at PDF p.
+      59 is one of the few German problem sets for this chapter that is not inside a textbook. Revision
+      pace: it will confirm what is there, not build it.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 5 and Ch 7 — Integrals and Techniques of Integration
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch05.pdf Integrals (§5.1 The Idea of the Integral p. 229, §5.3 Summation
+      versus Integration p. 240, §5.5 The Definite Integral p. 254, §5.7 The Fundamental Theorem and Its
+      Applications p. 267); mitres_18_001_f17_ch07.pdf Techniques of Integration (§7.1 Integration by
+      Parts p. 342, §7.5 Improper Integrals p. 367); matching guide_ch05.pdf and guide_ch07.pdf are secondary
+    angle: The two chapters the 2026-08-03 audit marked `selected` out of the whole Strang bundle — applied-first
+      intuition for the chapter where it works best.
+    angle_detail: 'Only chapters 5, 7 and 10 of Strang were selected; the rest of the bundle is reserve
+      or multivariable and out of scope. §5.3 ''Summation versus Integration'' is the section worth the
+      detour: it sets the Riemann sum against the finite sum explicitly, which is what makes §7.1''s partitions
+      read as an approximation being refined rather than as notation.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
+      69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
+      Integration by Parts, and Change of Variable Formula'' p. 76'
+    angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
+      — which is Regensburg's Aufgabe 4.
+    angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
+      change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
+      which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
+      be reproduced. One blocked idea at a time, as always.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§18-20 — Riemannsches Integral, Integration und Differentiation, uneigentliche
+      Integrale
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §18 Das Riemannsche Integral p. 49, §19 Integration und Differentiation
+      p. 51, §20 Uneigentliche Integrale. Die Gamma-Funktion p. 57; Lösungen §18 p. 174, §19 p. 177, §20
+      p. 186
+    angle: Three German exercise sections that map onto the script's three, one to one, with solutions.
+    angle_detail: 'The mapping is exact: §18 ↔ §7.1, §19 ↔ §7.2, §20 ↔ §7.3. For a chapter with no HU
+      sheet that alignment makes this the default drill. The Gamma function part of §20 goes past the
+      script and can be left; the improper-integral problems before it are in scope.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 6 — Integralrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §6.1 Hauptsatz der Differential- und Integralrechnung p. 43, §6.2 Uneigentliche
+      Integrale p. 44; Lösungen Kap. 26 p. 162
+    angle: 'Short and precisely targeted: one section on the fundamental theorem, one on improper integrals.'
+    angle_detail: Two pages of problems, which is small — but they are on exactly the two sections that
+      carry the marks, with worked Lösungsvorschläge. Reserve volume once Forster §§18-20 is spent.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 7 — The Riemann Integral
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §7.1 Discussion: How Should Integration be Defined? p. 224, §7.2 The Definition
+      of the Riemann Integral p. 227, §7.3 Integrating Functions with Discontinuities p. 233, §7.4 Properties
+      of the Integral p. 237, §7.5 The Fundamental Theorem of Calculus p. 243'
+    angle: Opens by asking what an integral should be before defining one — which is what makes upper
+      and lower sums look inevitable rather than arbitrary.
+    angle_detail: The script's §7.1 introduces partitions and upper/lower sums as machinery. Abbott's
+      §7.1 discussion asks first what properties an integral ought to have, so the machinery arrives as
+      an answer. §7.3 (functions with discontinuities) is the sharpest available treatment of which functions
+      are integrable, which is the script's integrability criterion. One blocked idea at a time.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 15 — Integration
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 15 ''Integration'' p. 291: §15.1 Das Integral für Treppenfunktionen p.
+      292, §15.2 Das Integral für Regelfunktionen p. 295, §15.3 Der Hauptsatz p. 302, §15.4 Berechnung
+      von Integralen: Partielle Integration, Substitution und Potenzreihen p. 308, §15.5 Uneigentliche
+      Integrale p. 318, Übungen p. 326; Lösungen und Hinweise p. 329'
+    angle: German, complete for the chapter, with hints before solutions — but note it builds the integral
+      for Regelfunktionen, not the Riemann integral.
+    angle_detail: 'The construction difference is worth knowing before opening it: Grieser goes via step
+      functions and regulated functions, where the script uses Riemann upper and lower sums. The theorems
+      and the techniques are the same and §§15.3-15.5 are directly usable; §§15.1-15.2 are a different
+      route to the same place and should not be reproduced as if they were the script''s definition.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Riemann Integral, including improper integrals
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Riemann Integral'' p. 181: The Riemann integral p. 181, Properties of
+      the integral p. 191, Fundamental theorem of calculus p. 200, The logarithm and the exponential p.
+      207, Improper integrals p. 214'
+    angle: The closest structural twin again — and one of the few references with a dedicated improper
+      integrals section.
+    angle_detail: Five subsections against the script's three, in the same order, plus improper integrals
+      treated properly rather than as an appendix. Its logarithm-and-exponential section defines them
+      via the integral, which is a different construction from the script's §5.6 series definition — interesting,
+      but not the one to reproduce in the exam.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Integration und uneigentliche Integrale
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Integration' p. 189 ((Riemann-)Integrierbarkeit
+      p. 190, Stammfunktionen p. 196, Elementare Funktionen p. 201); 'Uneigentliche Integrale' p. 205.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: German, Riemann-based like the script, with improper integrals as their own chapter.
+    angle_detail: Unlike Grieser it builds the Riemann integral directly, so its definition matches the
+      script's and can be used to check a written statement. Short — about twenty pages for the whole
+      chapter — which makes it a second reading rather than a first one.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Integrale, from the definition to the two techniques
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Integrale'' p. 329: Das Integral p. 330, Riemannintegral p. 332, Eigenschaften
+      des Riemannintegrals p. 347, Mittelwertsatz für Integrale p. 348, Hauptsatz der Differential- und
+      Integralrechnung p. 355, Substitutionsregel p. 363, Partielle Integration p. 366. Located by the
+      2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).'
+    angle: German, section by section, and it includes the Mittelwertsatz für Integrale — one of the two
+      proofs the tutors named for this chapter.
+    angle_detail: The section list is close to the script's own order, and the presence of a dedicated
+      Mittelwertsatz-für-Integrale section matters because that is kleine_beweise's Satz 7.24 and is otherwise
+      easy to lose between §7.1 and §7.2. It stops before improper integrals, so §7.3 needs another route.
+      Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§32-34 and §36 — the Riemann integral, its properties, the fundamental theorem
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §32 The Riemann Integral p. 278, §33 Properties of the Riemann
+      Integral p. 289, §34 Fundamental Theorem of Calculus p. 300, §36 Improper Integrals p. 340 (§35
+      Riemann-Stieltjes is past this script); Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Short numbered sections matching §§7.1-7.3, entered directly.
+    angle_detail: §35 (Riemann-Stieltjes) sits between §34 and §36 and is out of scope — worth naming
+      so it is skipped deliberately rather than worked by accident when paging from the fundamental theorem
+      to improper integrals. Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 5, §§8.1-8.2, §8.5 and §8.8 — integrals and techniques
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §5.2 Sigma Notation and Limits of Finite Sums p.
+      323, §5.3 The Definite Integral p. 330, §5.4 The Fundamental Theorem of Calculus p. 342, §5.5 Indefinite
+      Integrals and the Substitution Method p. 353; §8.1 Using Basic Integration Formulas p. 470, §8.2
+      Integration by Parts p. 475, §8.5 Integration of Rational Functions by Partial Fractions p. 494,
+      §8.8 Improper Integrals p. 518. Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with a large exercise set for every technique in §7.2 and for
+      §7.3.
+    angle_detail: Named at section level for the first time. §8.8 is a full section of improper integrals
+      with convergence tests, which is more practice on §7.3 than any German source here offers. Overlaps
+      with Stewart §§7.1-7.8 — open one, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 5, §7.1, §7.4 and §7.8 — integrals and techniques
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §5.2 The Definite Integral p. 410, §5.3 The Fundamental Theorem of Calculus p.
+      424, §5.5 The Substitution Rule p. 444; §7.1 Integration by Parts p. 504, §7.4 Integration of Rational
+      Functions by Partial Fractions p. 525, §7.5 Strategy for Integration p. 535, §7.8 Improper Integrals
+      p. 559. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth
+      and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, and §7.5 is a section on nothing but choosing the technique.
+    angle_detail: '§7.5 ''Strategy for Integration'' is the counterpart to §11.7 for series: a short section
+      whose content is the decision, which is the step that a section-organised exercise book removes.
+      For an exam where the integral arrives without a label, that is the practice worth having.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-riemann-integral/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch07-hauptsatz
+  number: 2
+  title: Hauptsatz und Integrationsregeln (§7.2)
+  status: pending
+  objective: 'Both parts of the fundamental theorem, then substitution and integration by parts as its
+    corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz, state partielle
+    Integration, then derive the second from the first.'
+  done_when:
+  - 'Reproduce without notes: Both parts of the fundamental theorem, then substitution and integration
+    by parts as its corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz,
+    state partielle Integration, then derive the second from the first.'
+  - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+    then the remaining 4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-riemann-integral
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 7 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 7, printed p. 191 (PDF p. 201)–printed p. 225 (PDF p. 235); §7.1
+      Das Riemann-Integral printed p. 192 (PDF p. 202), §7.2 Hauptsatz und Integrationsregeln printed
+      p. 203 (PDF p. 213), §7.3 Uneigentliche Integrale printed p. 212 (PDF p. 222). §7.4 is an Exkurs
+      and is not worked here.
+    angle: The chapter that cashes in Chapter 5 — continuity on a compact interval is what makes the integral
+      exist — and then hands over the fundamental theorem.
+    angle_detail: 'Three sections and a clear division of labour: §7.1 is the definition and the integrability
+      criterion, and it is asked for in words at least as often as it is computed; §7.2 is the fundamental
+      theorem with substitution and integration by parts as its corollaries, and is where the marks are;
+      §7.3 turns integrals back into limits and so re-uses Chapter 4''s convergence thinking. Like Chapter
+      6 there is no HU sheet — but unlike Chapter 6, the external Klausur bank covers this ground well,
+      so the substitutes here are stronger.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the two Chapter 7 proofs the tutors named
+    source_id: source-analysis-skript
+    locator: 'kleine_beweise.pdf, section ''Kapitel 7: Integralrechnung'': Satz 7.20 (Partielle Integration),
+      Satz 7.24 (Mittelwertsatz der Integralrechnung)'
+    angle: Two proofs, and the first is the one Regensburg's Aufgabe 4 asks to be produced from the fundamental
+      theorem.
+    angle_detail: The correspondence is worth acting on. The tutors name partielle Integration as a proof
+      worth knowing; Regensburg's Aufgabe 4 asks precisely for the second Hauptsatz, then the statement
+      of partielle Integration, then its proof from the Hauptsatz. That is two independent sources pointing
+      at the same short argument, in a chapter with no HU practice. The tutor disclaimer stands.
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 definite integral and FTC, Calculus 2 techniques and improper
+      integrals
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the definite integral and the fundamental theorem. Calculus
+      2: integration techniques, improper integrals. Topic-matched selection from the source record''s
+      own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on substitution and parts, where the failure is almost always execution rather
+      than understanding.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. Integration technique is the
+      part of the module where watching someone work through the algebra is genuinely the efficient repair,
+      because the errors are arithmetic and bookkeeping. It will not cover the integrability criterion
+      of §7.1 at the script's depth.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — integration and the fundamental theorem
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the integration and fundamental-theorem episode (and the following
+      one on areas). Topic-matched selection from the source record''s own list; no local copy, so the
+      selection is by topic rather than by timestamp.'
+    angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
+      and does not motivate.
+    angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
+      most surprising statement in the module and the one most often held as a rule rather than understood;
+      this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
+      from.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
+      §4.4 Uneigentliche Integrale p. 225; Lösungen in Kap. 5 Anhang from p. 253. §2.5 'Flächen als Grenzwerte'
+      p. 105 is the gentle preview of §7.1.
+    angle: All three script sections covered, with explained solutions — and §2.5 approaches the integral
+      as a limit of areas before any formalism.
+    angle_detail: '§2.5 is the entry point worth knowing about: it develops area as a limit inside the
+      chapter on limits, which is where the Riemann sum idea actually comes from and which the script''s
+      §7.1 presents already formalised. §3.4 is the technique drill — substitution and parts — and §4.4
+      is one of the few dedicated improper-integral exercise sections available.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 16-18 — the integral, the techniques, and improper integrals at volume
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition
+      p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225,
+      §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234,
+      §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung
+      p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte
+      Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and
+      are skipped.'
+    angle: Thirty-five pages of solved integration technique, split exactly the way the script splits
+      the chapter — including both kinds of improper integral separately.
+    angle_detail: 'Together with Chapter 6 this file is the substitute for the missing HU sheets, and
+      here it is at its strongest: §17.2 and §17.3 are dedicated sections for parts and substitution,
+      which are the two techniques §7.2 introduces, and §§18.1-18.2 separate the unbounded-interval and
+      unbounded-integrand cases that the script''s §7.3 treats together. §17.4 (Partialbruchzerlegung)
+      is not a script section but is standard preparation for the integrals the external papers set.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: Aufgabensammlung-M1 Aufgabe 13 — the integration item in the mixed bank
+    source_id: source-analysis-drill-blaetter-extern
+    locator: Aufgabensammlung-M1_Loesung.pdf (7 pp), Aufgabe 13
+    angle: One integration task sitting inside a mixed set — a small check that the technique survives
+      when it is not signposted.
+    angle_detail: 'Small by design. Its value is not the problem but the context: every other integration
+      route on this menu is a section of integration problems, which removes the recognition step. This
+      one is item thirteen in a bank whose other items are sequences and series, so the technique has
+      to be recognised before it can be applied.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on the fundamental theorem and integration technique
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A4 (state the second Hauptsatz, state partielle Integration, then prove
+      partielle Integration from the Hauptsatz — 3+3+4 points), A5.3 (show x ↦ sin x·cos x is Riemann-integrable
+      on [0,1] and compute the integral), A6.2 (does an antiderivative with two prescribed values exist).
+      Paderborn_...pdf A6 (∫₀¹ arcsin t dt — substitution followed by integration by parts, 10 points)
+    angle: The best-covered chapter in the external bank, and Regensburg A4 is the closest thing available
+      to a marking scheme for §7.2.
+    angle_detail: 'Regensburg A4 is worth working carefully even though it is solved: it separates ''state
+      the theorem'' from ''prove the corollary'' and prices them (3 + 3 + 4), which is direct evidence
+      that stating a theorem with its hypotheses is independently graded — the same signal HU''s WV1.4
+      gives for the Zwischenwertsatz. Paderborn A6 is the standard two-technique integral. Both solved,
+      so spend them on diagnosed gaps; Ulm''s task 8 (two antiderivatives) is on the unsolved list and
+      stays with the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 6 Riemann-Integral + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 6 Riemann-Integral PDF p. 51 (§6.1 Definition
+      und Grundbegriffe, §6.2 Integrationstechniken PDF p. 54, §6.3 Uneigentliche Integrale PDF p. 56),
+      Übungsaufgaben PDF p. 59'
+    angle: The chapter compressed to eight pages with its own exercise set — a revision pass for a chapter
+      with no HU sheet.
+    angle_detail: 'Its three sections match the script''s three exactly, and the exercise set at PDF p.
+      59 is one of the few German problem sets for this chapter that is not inside a textbook. Revision
+      pace: it will confirm what is there, not build it.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 5 and Ch 7 — Integrals and Techniques of Integration
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch05.pdf Integrals (§5.1 The Idea of the Integral p. 229, §5.3 Summation
+      versus Integration p. 240, §5.5 The Definite Integral p. 254, §5.7 The Fundamental Theorem and Its
+      Applications p. 267); mitres_18_001_f17_ch07.pdf Techniques of Integration (§7.1 Integration by
+      Parts p. 342, §7.5 Improper Integrals p. 367); matching guide_ch05.pdf and guide_ch07.pdf are secondary
+    angle: The two chapters the 2026-08-03 audit marked `selected` out of the whole Strang bundle — applied-first
+      intuition for the chapter where it works best.
+    angle_detail: 'Only chapters 5, 7 and 10 of Strang were selected; the rest of the bundle is reserve
+      or multivariable and out of scope. §5.3 ''Summation versus Integration'' is the section worth the
+      detour: it sets the Riemann sum against the finite sum explicitly, which is what makes §7.1''s partitions
+      read as an approximation being refined rather than as notation.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
+      69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
+      Integration by Parts, and Change of Variable Formula'' p. 76'
+    angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
+      — which is Regensburg's Aufgabe 4.
+    angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
+      change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
+      which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
+      be reproduced. One blocked idea at a time, as always.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§18-20 — Riemannsches Integral, Integration und Differentiation, uneigentliche
+      Integrale
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §18 Das Riemannsche Integral p. 49, §19 Integration und Differentiation
+      p. 51, §20 Uneigentliche Integrale. Die Gamma-Funktion p. 57; Lösungen §18 p. 174, §19 p. 177, §20
+      p. 186
+    angle: Three German exercise sections that map onto the script's three, one to one, with solutions.
+    angle_detail: 'The mapping is exact: §18 ↔ §7.1, §19 ↔ §7.2, §20 ↔ §7.3. For a chapter with no HU
+      sheet that alignment makes this the default drill. The Gamma function part of §20 goes past the
+      script and can be left; the improper-integral problems before it are in scope.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 6 — Integralrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §6.1 Hauptsatz der Differential- und Integralrechnung p. 43, §6.2 Uneigentliche
+      Integrale p. 44; Lösungen Kap. 26 p. 162
+    angle: 'Short and precisely targeted: one section on the fundamental theorem, one on improper integrals.'
+    angle_detail: Two pages of problems, which is small — but they are on exactly the two sections that
+      carry the marks, with worked Lösungsvorschläge. Reserve volume once Forster §§18-20 is spent.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §7.2 und §7.3 — Musterlösungen für Integrationsmethoden und uneigentliche Integrale
+    source_id: source-ableitinger-musterloesungen
+    locator: ableitinger.pdf §7.2 Integrationsmethoden p. 90, §7.3 Uneigentliche Integrale p. 93; Lösungsvorschläge
+      §11.3 p. 202
+    angle: Model solutions for the two techniques and for improper integrals, with the choice of method
+      explained rather than assumed.
+    angle_detail: 'These sit in the book''s ''Analysis 2'' part, which is a labelling difference rather
+      than a scope one: integration methods and improper integrals are the script''s §§7.2-7.3. The value
+      is the same as elsewhere in this source — how the solution is written and why each step was chosen,
+      read after your own attempt.'
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 7 — The Riemann Integral
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §7.1 Discussion: How Should Integration be Defined? p. 224, §7.2 The Definition
+      of the Riemann Integral p. 227, §7.3 Integrating Functions with Discontinuities p. 233, §7.4 Properties
+      of the Integral p. 237, §7.5 The Fundamental Theorem of Calculus p. 243'
+    angle: Opens by asking what an integral should be before defining one — which is what makes upper
+      and lower sums look inevitable rather than arbitrary.
+    angle_detail: The script's §7.1 introduces partitions and upper/lower sums as machinery. Abbott's
+      §7.1 discussion asks first what properties an integral ought to have, so the machinery arrives as
+      an answer. §7.3 (functions with discontinuities) is the sharpest available treatment of which functions
+      are integrable, which is the script's integrability criterion. One blocked idea at a time.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 15 — Integration
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 15 ''Integration'' p. 291: §15.1 Das Integral für Treppenfunktionen p.
+      292, §15.2 Das Integral für Regelfunktionen p. 295, §15.3 Der Hauptsatz p. 302, §15.4 Berechnung
+      von Integralen: Partielle Integration, Substitution und Potenzreihen p. 308, §15.5 Uneigentliche
+      Integrale p. 318, Übungen p. 326; Lösungen und Hinweise p. 329'
+    angle: German, complete for the chapter, with hints before solutions — but note it builds the integral
+      for Regelfunktionen, not the Riemann integral.
+    angle_detail: 'The construction difference is worth knowing before opening it: Grieser goes via step
+      functions and regulated functions, where the script uses Riemann upper and lower sums. The theorems
+      and the techniques are the same and §§15.3-15.5 are directly usable; §§15.1-15.2 are a different
+      route to the same place and should not be reproduced as if they were the script''s definition.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Riemann Integral, including improper integrals
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Riemann Integral'' p. 181: The Riemann integral p. 181, Properties of
+      the integral p. 191, Fundamental theorem of calculus p. 200, The logarithm and the exponential p.
+      207, Improper integrals p. 214'
+    angle: The closest structural twin again — and one of the few references with a dedicated improper
+      integrals section.
+    angle_detail: Five subsections against the script's three, in the same order, plus improper integrals
+      treated properly rather than as an appendix. Its logarithm-and-exponential section defines them
+      via the integral, which is a different construction from the script's §5.6 series definition — interesting,
+      but not the one to reproduce in the exam.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Integration und uneigentliche Integrale
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Integration' p. 189 ((Riemann-)Integrierbarkeit
+      p. 190, Stammfunktionen p. 196, Elementare Funktionen p. 201); 'Uneigentliche Integrale' p. 205.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: German, Riemann-based like the script, with improper integrals as their own chapter.
+    angle_detail: Unlike Grieser it builds the Riemann integral directly, so its definition matches the
+      script's and can be used to check a written statement. Short — about twenty pages for the whole
+      chapter — which makes it a second reading rather than a first one.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Integrale, from the definition to the two techniques
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Integrale'' p. 329: Das Integral p. 330, Riemannintegral p. 332, Eigenschaften
+      des Riemannintegrals p. 347, Mittelwertsatz für Integrale p. 348, Hauptsatz der Differential- und
+      Integralrechnung p. 355, Substitutionsregel p. 363, Partielle Integration p. 366. Located by the
+      2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).'
+    angle: German, section by section, and it includes the Mittelwertsatz für Integrale — one of the two
+      proofs the tutors named for this chapter.
+    angle_detail: The section list is close to the script's own order, and the presence of a dedicated
+      Mittelwertsatz-für-Integrale section matters because that is kleine_beweise's Satz 7.24 and is otherwise
+      easy to lose between §7.1 and §7.2. It stops before improper integrals, so §7.3 needs another route.
+      Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§32-34 and §36 — the Riemann integral, its properties, the fundamental theorem
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §32 The Riemann Integral p. 278, §33 Properties of the Riemann
+      Integral p. 289, §34 Fundamental Theorem of Calculus p. 300, §36 Improper Integrals p. 340 (§35
+      Riemann-Stieltjes is past this script); Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Short numbered sections matching §§7.1-7.3, entered directly.
+    angle_detail: §35 (Riemann-Stieltjes) sits between §34 and §36 and is out of scope — worth naming
+      so it is skipped deliberately rather than worked by accident when paging from the fundamental theorem
+      to improper integrals. Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 5, §§8.1-8.2, §8.5 and §8.8 — integrals and techniques
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §5.2 Sigma Notation and Limits of Finite Sums p.
+      323, §5.3 The Definite Integral p. 330, §5.4 The Fundamental Theorem of Calculus p. 342, §5.5 Indefinite
+      Integrals and the Substitution Method p. 353; §8.1 Using Basic Integration Formulas p. 470, §8.2
+      Integration by Parts p. 475, §8.5 Integration of Rational Functions by Partial Fractions p. 494,
+      §8.8 Improper Integrals p. 518. Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with a large exercise set for every technique in §7.2 and for
+      §7.3.
+    angle_detail: Named at section level for the first time. §8.8 is a full section of improper integrals
+      with convergence tests, which is more practice on §7.3 than any German source here offers. Overlaps
+      with Stewart §§7.1-7.8 — open one, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 5, §7.1, §7.4 and §7.8 — integrals and techniques
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §5.2 The Definite Integral p. 410, §5.3 The Fundamental Theorem of Calculus p.
+      424, §5.5 The Substitution Rule p. 444; §7.1 Integration by Parts p. 504, §7.4 Integration of Rational
+      Functions by Partial Fractions p. 525, §7.5 Strategy for Integration p. 535, §7.8 Improper Integrals
+      p. 559. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth
+      and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, and §7.5 is a section on nothing but choosing the technique.
+    angle_detail: '§7.5 ''Strategy for Integration'' is the counterpart to §11.7 for series: a short section
+      whose content is the decision, which is the step that a section-organised exercise book removes.
+      For an exam where the integral arrives without a label, that is the practice worth having.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-hauptsatz/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch07-uneigentliche-integrale
+  number: 3
+  title: Uneigentliche Integrale (§7.3)
+  status: pending
+  objective: Integrals over unbounded intervals and of unbounded integrands, defined as limits — so convergence
+    criteria return in an integral costume.
+  done_when:
+  - 'Reproduce without notes: Integrals over unbounded intervals and of unbounded integrands, defined
+    as limits — so convergence criteria return in an integral costume.'
+  - Work Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale,
+    then the remaining 3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-riemann-integral
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 7 — the scope authority
+    source_id: source-analysis-skript
+    locator: unser skript.pdf Kapitel 7, printed p. 191 (PDF p. 201)–printed p. 225 (PDF p. 235); §7.1
+      Das Riemann-Integral printed p. 192 (PDF p. 202), §7.2 Hauptsatz und Integrationsregeln printed
+      p. 203 (PDF p. 213), §7.3 Uneigentliche Integrale printed p. 212 (PDF p. 222). §7.4 is an Exkurs
+      and is not worked here.
+    angle: The chapter that cashes in Chapter 5 — continuity on a compact interval is what makes the integral
+      exist — and then hands over the fundamental theorem.
+    angle_detail: 'Three sections and a clear division of labour: §7.1 is the definition and the integrability
+      criterion, and it is asked for in words at least as often as it is computed; §7.2 is the fundamental
+      theorem with substitution and integration by parts as its corollaries, and is where the marks are;
+      §7.3 turns integrals back into limits and so re-uses Chapter 4''s convergence thinking. Like Chapter
+      6 there is no HU sheet — but unlike Chapter 6, the external Klausur bank covers this ground well,
+      so the substitutes here are stronger.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1 definite integral and FTC, Calculus 2 techniques and improper
+      integrals
+    source_id: source-professor-leonard
+    locator: 'Professor Leonard, Calculus 1: the definite integral and the fundamental theorem. Calculus
+      2: integration techniques, improper integrals. Topic-matched selection from the source record''s
+      own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on substitution and parts, where the failure is almost always execution rather
+      than understanding.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. Integration technique is the
+      part of the module where watching someone work through the algebra is genuinely the efficient repair,
+      because the errors are arithmetic and bookkeeping. It will not cover the integrability criterion
+      of §7.1 at the script's depth.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — integration and the fundamental theorem
+    source_id: source-3b1b-essence-of-calculus
+    locator: 'Essence of Calculus: the integration and fundamental-theorem episode (and the following
+      one on areas). Topic-matched selection from the source record''s own list; no local copy, so the
+      selection is by topic rather than by timestamp.'
+    angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
+      and does not motivate.
+    angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
+      most surprising statement in the module and the one most often held as a rule rather than understood;
+      this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
+      from.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
+    source_id: source-fritzsche-trainingsbuch
+    locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
+      §4.4 Uneigentliche Integrale p. 225; Lösungen in Kap. 5 Anhang from p. 253. §2.5 'Flächen als Grenzwerte'
+      p. 105 is the gentle preview of §7.1.
+    angle: All three script sections covered, with explained solutions — and §2.5 approaches the integral
+      as a limit of areas before any formalism.
+    angle_detail: '§2.5 is the entry point worth knowing about: it develops area as a limit inside the
+      chapter on limits, which is where the Riemann sum idea actually comes from and which the script''s
+      §7.1 presents already formalised. §3.4 is the technique drill — substitution and parts — and §4.4
+      is one of the few dedicated improper-integral exercise sections available.'
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 16-18 — the integral, the techniques, and improper integrals at volume
+    source_id: source-analysis-drill-blaetter-extern
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 16 Das bestimmte Riemannsche Integral p. 219 (§16.1 Definition
+      p. 219, §16.2 Integrierbarkeitskriterien p. 221, §16.3 Klassen integrierbarer Funktionen p. 225,
+      §16.4 Rechenregeln p. 227); Kap. 17 Das unbestimmte Integral p. 234 (§17.1 Fundamentalsatz p. 234,
+      §17.2 Partielle Integration p. 238, §17.3 Substitutionsregel p. 245, §17.4 Partialbruchzerlegung
+      p. 246); Kap. 18 Uneigentliche Integrale p. 252 (§18.1 unbeschränkte Intervalle p. 252, §18.2 unbeschränkte
+      Integranden p. 265). Kap. 19-20 (numerische Integration, Anwendungen) parallel the §7.4 Exkurs and
+      are skipped.'
+    angle: Thirty-five pages of solved integration technique, split exactly the way the script splits
+      the chapter — including both kinds of improper integral separately.
+    angle_detail: 'Together with Chapter 6 this file is the substitute for the missing HU sheets, and
+      here it is at its strongest: §17.2 and §17.3 are dedicated sections for parts and substitution,
+      which are the two techniques §7.2 introduces, and §§18.1-18.2 separate the unbounded-interval and
+      unbounded-integrand cases that the script''s §7.3 treats together. §17.4 (Partialbruchzerlegung)
+      is not a script section but is standard preparation for the integrals the external papers set.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on the fundamental theorem and integration technique
+    source_id: source-analysis-klausuren-extern
+    locator: Regensburg_...pdf A4 (state the second Hauptsatz, state partielle Integration, then prove
+      partielle Integration from the Hauptsatz — 3+3+4 points), A5.3 (show x ↦ sin x·cos x is Riemann-integrable
+      on [0,1] and compute the integral), A6.2 (does an antiderivative with two prescribed values exist).
+      Paderborn_...pdf A6 (∫₀¹ arcsin t dt — substitution followed by integration by parts, 10 points)
+    angle: The best-covered chapter in the external bank, and Regensburg A4 is the closest thing available
+      to a marking scheme for §7.2.
+    angle_detail: 'Regensburg A4 is worth working carefully even though it is solved: it separates ''state
+      the theorem'' from ''prove the corollary'' and prices them (3 + 3 + 4), which is direct evidence
+      that stating a theorem with its hypotheses is independently graded — the same signal HU''s WV1.4
+      gives for the Zwischenwertsatz. Paderborn A6 is the standard two-technique integral. Both solved,
+      so spend them on diagnosed gaps; Ulm''s task 8 (two antiderivatives) is on the unsolved list and
+      stays with the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 6 Riemann-Integral + Übungsaufgaben
+    source_id: source-analysis-klausuren-extern
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 6 Riemann-Integral PDF p. 51 (§6.1 Definition
+      und Grundbegriffe, §6.2 Integrationstechniken PDF p. 54, §6.3 Uneigentliche Integrale PDF p. 56),
+      Übungsaufgaben PDF p. 59'
+    angle: The chapter compressed to eight pages with its own exercise set — a revision pass for a chapter
+      with no HU sheet.
+    angle_detail: 'Its three sections match the script''s three exactly, and the exercise set at PDF p.
+      59 is one of the few German problem sets for this chapter that is not inside a textbook. Revision
+      pace: it will confirm what is there, not build it.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 5 and Ch 7 — Integrals and Techniques of Integration
+    source_id: source-strang-calculus
+    locator: mitres_18_001_f17_ch05.pdf Integrals (§5.1 The Idea of the Integral p. 229, §5.3 Summation
+      versus Integration p. 240, §5.5 The Definite Integral p. 254, §5.7 The Fundamental Theorem and Its
+      Applications p. 267); mitres_18_001_f17_ch07.pdf Techniques of Integration (§7.1 Integration by
+      Parts p. 342, §7.5 Improper Integrals p. 367); matching guide_ch05.pdf and guide_ch07.pdf are secondary
+    angle: The two chapters the 2026-08-03 audit marked `selected` out of the whole Strang bundle — applied-first
+      intuition for the chapter where it works best.
+    angle_detail: 'Only chapters 5, 7 and 10 of Strang were selected; the rest of the bundle is reserve
+      or multivariable and out of scope. §5.3 ''Summation versus Integration'' is the section worth the
+      detour: it sets the Riemann sum against the finite sum explicitly, which is what makes §7.1''s partitions
+      read as an approximation being refined rather than as notation.'
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
+    source_id: source-mit-18100a
+    locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
+      69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
+      Integration by Parts, and Change of Variable Formula'' p. 76'
+    angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
+      — which is Regensburg's Aufgabe 4.
+    angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
+      change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
+      which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
+      be reproduced. One blocked idea at a time, as always.'
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§18-20 — Riemannsches Integral, Integration und Differentiation, uneigentliche
+      Integrale
+    source_id: source-forster-wessoly
+    locator: forster-wessoly.pdf Aufgaben §18 Das Riemannsche Integral p. 49, §19 Integration und Differentiation
+      p. 51, §20 Uneigentliche Integrale. Die Gamma-Funktion p. 57; Lösungen §18 p. 174, §19 p. 177, §20
+      p. 186
+    angle: Three German exercise sections that map onto the script's three, one to one, with solutions.
+    angle_detail: 'The mapping is exact: §18 ↔ §7.1, §19 ↔ §7.2, §20 ↔ §7.3. For a chapter with no HU
+      sheet that alignment makes this the default drill. The Gamma function part of §20 goes past the
+      script and can be left; the improper-integral problems before it are in scope.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 6 — Integralrechnung
+    source_id: source-deitmar-uebungsbuch
+    locator: deitmar.pdf §6.1 Hauptsatz der Differential- und Integralrechnung p. 43, §6.2 Uneigentliche
+      Integrale p. 44; Lösungen Kap. 26 p. 162
+    angle: 'Short and precisely targeted: one section on the fundamental theorem, one on improper integrals.'
+    angle_detail: Two pages of problems, which is small — but they are on exactly the two sections that
+      carry the marks, with worked Lösungsvorschläge. Reserve volume once Forster §§18-20 is spent.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §7.2 und §7.3 — Musterlösungen für Integrationsmethoden und uneigentliche Integrale
+    source_id: source-ableitinger-musterloesungen
+    locator: ableitinger.pdf §7.2 Integrationsmethoden p. 90, §7.3 Uneigentliche Integrale p. 93; Lösungsvorschläge
+      §11.3 p. 202
+    angle: Model solutions for the two techniques and for improper integrals, with the choice of method
+      explained rather than assumed.
+    angle_detail: 'These sit in the book''s ''Analysis 2'' part, which is a labelling difference rather
+      than a scope one: integration methods and improper integrals are the script''s §§7.2-7.3. The value
+      is the same as elsewhere in this source — how the solution is written and why each step was chosen,
+      read after your own attempt.'
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 7 — The Riemann Integral
+    source_id: source-abbott-understanding-analysis
+    locator: 'abbott.pdf §7.1 Discussion: How Should Integration be Defined? p. 224, §7.2 The Definition
+      of the Riemann Integral p. 227, §7.3 Integrating Functions with Discontinuities p. 233, §7.4 Properties
+      of the Integral p. 237, §7.5 The Fundamental Theorem of Calculus p. 243'
+    angle: Opens by asking what an integral should be before defining one — which is what makes upper
+      and lower sums look inevitable rather than arbitrary.
+    angle_detail: The script's §7.1 introduces partitions and upper/lower sums as machinery. Abbott's
+      §7.1 discussion asks first what properties an integral ought to have, so the machinery arrives as
+      an answer. §7.3 (functions with discontinuities) is the sharpest available treatment of which functions
+      are integrable, which is the script's integrability criterion. One blocked idea at a time.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 15 — Integration
+    source_id: source-grieser-analysis1
+    locator: 'grieser.pdf Kap. 15 ''Integration'' p. 291: §15.1 Das Integral für Treppenfunktionen p.
+      292, §15.2 Das Integral für Regelfunktionen p. 295, §15.3 Der Hauptsatz p. 302, §15.4 Berechnung
+      von Integralen: Partielle Integration, Substitution und Potenzreihen p. 308, §15.5 Uneigentliche
+      Integrale p. 318, Übungen p. 326; Lösungen und Hinweise p. 329'
+    angle: German, complete for the chapter, with hints before solutions — but note it builds the integral
+      for Regelfunktionen, not the Riemann integral.
+    angle_detail: 'The construction difference is worth knowing before opening it: Grieser goes via step
+      functions and regulated functions, where the script uses Riemann upper and lower sums. The theorems
+      and the techniques are the same and §§15.3-15.5 are directly usable; §§15.1-15.2 are a different
+      route to the same place and should not be reproduced as if they were the script''s definition.'
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — The Riemann Integral, including improper integrals
+    source_id: source-lebl-basic-analysis
+    locator: 'realanal.pdf ''The Riemann Integral'' p. 181: The Riemann integral p. 181, Properties of
+      the integral p. 191, Fundamental theorem of calculus p. 200, The logarithm and the exponential p.
+      207, Improper integrals p. 214'
+    angle: The closest structural twin again — and one of the few references with a dedicated improper
+      integrals section.
+    angle_detail: Five subsections against the script's three, in the same order, plus improper integrals
+      treated properly rather than as an appendix. Its logarithm-and-exponential section defines them
+      via the integral, which is a different construction from the script's §5.6 series definition — interesting,
+      but not the one to reproduce in the exam.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Integration und uneigentliche Integrale
+    source_id: source-labs-schreyer-mathe-informatiker
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Integration' p. 189 ((Riemann-)Integrierbarkeit
+      p. 190, Stammfunktionen p. 196, Elementare Funktionen p. 201); 'Uneigentliche Integrale' p. 205.
+      Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope
+      stay unassessed (CLAUDE.md §4).
+    angle: German, Riemann-based like the script, with improper integrals as their own chapter.
+    angle_detail: Unlike Grieser it builds the Riemann integral directly, so its definition matches the
+      script's and can be used to check a written statement. Short — about twenty pages for the whole
+      chapter — which makes it a second reading rather than a first one.
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Integrale, from the definition to the two techniques
+    source_id: source-mfnf-analysis1
+    locator: 'MfNF_Analysis-1.pdf ''Integrale'' p. 329: Das Integral p. 330, Riemannintegral p. 332, Eigenschaften
+      des Riemannintegrals p. 347, Mittelwertsatz für Integrale p. 348, Hauptsatz der Differential- und
+      Integralrechnung p. 355, Substitutionsregel p. 363, Partielle Integration p. 366. Located by the
+      2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).'
+    angle: German, section by section, and it includes the Mittelwertsatz für Integrale — one of the two
+      proofs the tutors named for this chapter.
+    angle_detail: The section list is close to the script's own order, and the presence of a dedicated
+      Mittelwertsatz-für-Integrale section matters because that is kleine_beweise's Satz 7.24 and is otherwise
+      easy to lose between §7.1 and §7.2. It stops before improper integrals, so §7.3 needs another route.
+      Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§32-34 and §36 — the Riemann integral, its properties, the fundamental theorem
+    source_id: source-ross-elementary-analysis
+    locator: Ross_Elementary-Analysis_2ed.pdf §32 The Riemann Integral p. 278, §33 Properties of the Riemann
+      Integral p. 289, §34 Fundamental Theorem of Calculus p. 300, §36 Improper Integrals p. 340 (§35
+      Riemann-Stieltjes is past this script); Selected Hints and Answers p. 376. Located by the 2026-08-03
+      coverage audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md
+      §4).
+    angle: Short numbered sections matching §§7.1-7.3, entered directly.
+    angle_detail: §35 (Riemann-Stieltjes) sits between §34 and §36 and is out of scope — worth naming
+      so it is skipped deliberately rather than worked by accident when paging from the fundamental theorem
+      to improper integrals. Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 5, §§8.1-8.2, §8.5 and §8.8 — integrals and techniques
+    source_id: source-thomas-calculus
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §5.2 Sigma Notation and Limits of Finite Sums p.
+      323, §5.3 The Definite Integral p. 330, §5.4 The Fundamental Theorem of Calculus p. 342, §5.5 Indefinite
+      Integrals and the Substitution Method p. 353; §8.1 Using Basic Integration Formulas p. 470, §8.2
+      Integration by Parts p. 475, §8.5 Integration of Rational Functions by Partial Fractions p. 494,
+      §8.8 Improper Integrals p. 518. Located by the 2026-08-03 coverage audit; no contextual evaluation
+      registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Reserve computational volume with a large exercise set for every technique in §7.2 and for
+      §7.3.
+    angle_detail: Named at section level for the first time. §8.8 is a full section of improper integrals
+      with convergence tests, which is more practice on §7.3 than any German source here offers. Overlaps
+      with Stewart §§7.1-7.8 — open one, not both.
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 5, §7.1, §7.4 and §7.8 — integrals and techniques
+    source_id: source-stewart-calculus
+    locator: Stewart.pdf §5.2 The Definite Integral p. 410, §5.3 The Fundamental Theorem of Calculus p.
+      424, §5.5 The Substitution Rule p. 444; §7.1 Integration by Parts p. 504, §7.4 Integration of Rational
+      Functions by Partial Fractions p. 525, §7.5 Strategy for Integration p. 535, §7.8 Improper Integrals
+      p. 559. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth
+      and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative, and §7.5 is a section on nothing but choosing the technique.
+    angle_detail: '§7.5 ''Strategy for Integration'' is the counterpart to §11.7 for series: a short section
+      whose content is the decision, which is the step that a section-organised exercise book removes.
+      For an exam where the integral arrives without a label, that is the practice worth having.'
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/stages/stage-m2-analysis-ch07-uneigentliche-integrale/notes.md
+  attachments: []
+  source_feedback: []

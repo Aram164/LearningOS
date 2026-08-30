@@ -1,0 +1,2012 @@
+id: study-map-m2-analysis-ch05
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-analysis-ch05
+status: not-started
+current_stage: stage-m2-analysis-ch05-funktionsgrenzwerte
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-m2-analysis-ch05-funktionsgrenzwerte
+  number: 1
+  title: Grenzwerte bei Funktionen (§5.1)
+  status: pending
+  objective: The limit of a function at an accumulation point, defined both directly and through the sequence
+    criterion. Serie 08.4 asks for one limit proved both ways, which is the clearest signal of what the
+    course wants here.
+  done_when:
+  - 'Reproduce without notes: The limit of a function at an accumulation point, defined both directly
+    and through the sequence criterion. Serie 08.4 asks for one limit proved both ways, which is the clearest
+    signal of what the course wants here.'
+  - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice, then
+    the remaining 4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice
+    locator: 'Pd3szO-ana_inf_serie08.pdf: 8.4 Grenzwerte von Funktionen — compute the limits and prove
+      one of them twice, once from Definition 5.5 and once from the Folgenkriterium Satz 5.6. ana_inf_serie09.pdf:
+      9.1 Stetigkeit, 9.2 Eigenschaften von Grenzwerten von Funktionen, 9.3 HA (20 P) Grenzwerte von Funktionen
+      und Stetigkeit. ana_inf_serieWV.pdf: WV1.2 (20 P), parts (a) define continuity at a point, (b) the
+      function that is x on Q and −x elsewhere is continuous only at 0, (c) three limits built on it;
+      WV1.4 (20 P), parts (a) state the Zwischenwertsatz with complete hypotheses, (b) a unique solution
+      exists, (c)-(d) the bisection method and its iteration count'
+    angle: The last current HU material in the script's order, and the two WV Hausaufgaben are the closest
+      thing available to real exam questions on this chapter.
+    angle_detail: Two things in these sheets are worth reading as instructions rather than tasks. Serie
+      8.4(a) asks for one limit proved *both* ways and names the script's Definition 5.5 and Satz 5.6
+      — so the sequence criterion is expected to be usable in both directions, not just recognised. WV1.4
+      asks for the theorem statement first and the application second, and says 'achten Sie insbesondere
+      auf die korrekte und vollständige Angabe der Voraussetzungen' — the hypotheses are separately graded.
+      After Serie 09 and the WV set the local HU material stops; Chapters 6 and 7 have nothing, and that
+      gap has been open since 2026-08-03.
+    vault_path: material://source-analysis-skript/ana_inf_serie09.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the three Chapter 5 proofs the tutors named
+    locator: 'kleine_beweise.pdf, section ''Kapitel 5: Differentialrechnung I'': Lemma 5.3 (accumulation
+      points of a set ⇔ existence of a convergent sequence), Satz 5.20(i) and (ii) written out explicitly
+      via Satz 3.25 (Rechenregeln stetiger Funktionen), Satz 5.21 (continuity of a composition)'
+    angle: Three proofs, and the middle one is chosen precisely because it shows Chapter 5 standing on
+      Chapter 3.
+    angle_detail: 'The instruction attached to Satz 5.20 in the handout is ''explizit mittels Satz 3.25
+      aufschreiben'' — write it out using the limit laws for sequences. That is the dependency this whole
+      chapter rests on, made into an exercise. Lemma 5.3 is the technical result that makes the sequence
+      criterion for function limits work at all. Same tutor disclaimer as elsewhere: no known relation
+      to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1, limits and continuity
+    locator: 'Professor Leonard, Calculus 1: the limits and continuity block. Topic-matched selection
+      from the source record''s own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on the computational half of the chapter — one-sided limits and the indeterminate
+      forms, worked in full.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. It is a good fit for §5.2 specifically,
+      where the work is case analysis and algebra rather than proof. It does not reach the sequence criterion,
+      the compactness theorems or uniform convergence at the script's depth — for those the routes are
+      Abbott, Lebl or MIT 18.100A.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the limits episode
+    locator: 'Essence of Calculus: the limits episode (which also introduces l''Hôpital). Topic-matched
+      selection from the source record''s own list; no local copy, so the selection is by topic rather
+      than by timestamp.'
+    angle: A short visual preview for when the *picture* of a limit is missing, not the technique.
+    angle_detail: Ten to fifteen minutes, watched once, before rather than instead of the script. It shows
+      the ε-δ picture geometrically, which is the one thing a written definition cannot do. It is not
+      a source of rigour and should never be the thing an exam answer is reconstructed from. The l'Hôpital
+      half of the same episode belongs to Chapter 6.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.3 Grenzwerte von Funktionen
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Function limits presented as the third step of one continuous argument that began with sequences
+      — the same move the script makes.
+    angle_detail: By placing §2.3 immediately after series in the same chapter, Fritzsche makes the sequence
+      criterion feel like a consequence rather than a new definition. Explained solutions in the Anhang.
+      Its §2.5 'Flächen als Grenzwerte' previews integration and is Chapter 7's business, not this session's.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on continuity, IVT and compactness
+    locator: 'Regensburg_...pdf A3 (four quickfire questions on which sets can be the continuous image
+      of [0,1] — IVT and compactness together, with ''Häufige Fehler'' notes), A7 (no continuous f: [0,1]
+      → R≥0 with f(0)=f(1)=0 takes every value exactly twice — Extremwertsatz plus IVT). Marburg_...pdf
+      2. Klausur A9 (for which a is a piecewise function continuous), A10 (exactly one solution of 1 −
+      x² = exp(x−1) on [0,1]), A11 (a maximum exists on [0,∞)), A12 (injectivity, image, and continuity
+      of the inverse); Wiederholungsklausur A9, A10, A12. Paderborn_...pdf A3(a) (show x ↦ e^x + x + 1
+      is bijective), A4(b) (is sin(1/(x−1)) extended by 0 continuous), A4(c) (a function sequence)'
+    angle: The richest chapter in the external bank — and the tasks come in exactly the two shapes the
+      HU WV set uses.
+    angle_detail: 'Sort them into the two shapes before working any: ''is this piecewise function continuous,
+      and for which parameter'' (Marburg 2.A9, WK A9, Paderborn A4(b)) and ''show a solution exists and
+      is unique'' (Marburg 2.A10, WK A10, Paderborn A3(a)) — the second being WV1.4''s shape exactly,
+      IVT for existence plus monotonicity for uniqueness. Regensburg A3 and A7 are a third, rarer shape:
+      reasoning about what continuity forbids. All solved, so spend them on diagnosed gaps; the unsolved
+      papers stay on the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2.6-2.7 and Ch 6 — limits, continuity, exp and log
+    locator: mitres_18_001_f17_ch02.pdf §2.6 Limits p. 123, §2.7 Continuous Functions p. 131; mitres_18_001_f17_ch06.pdf
+      Exponentials and Logarithms (§6.2 The Exponential e^x p. 292, §6.4 Logarithms p. 310); matching
+      guide_ch02.pdf and guide_ch06.pdf are secondary
+    angle: 'Applied-first intuition: Strang reaches limits only after using them, which is the opposite
+      of the script''s order and occasionally the more memorable one.'
+    angle_detail: Strang puts limits in §2.6 — after two chapters of derivatives — precisely because he
+      thinks the definition is easier once you have needed it. That makes this a reserve route rather
+      than a parallel text, useful when the formal definition has been read several times without landing.
+      Chapter 6 is the applied account of exp and log for §5.6.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Stetigkeit, one section per proof obligation
+    locator: 'MfNF_Analysis-1.pdf ''Stetigkeit von Funktionen'' p. 227: Folgenkriterium p. 228, Epsilon-Delta-Kriterium
+      p. 232, Komposition stetiger Funktionen p. 240, ''Stetigkeit beweisen'' p. 242, ''Unstetigkeit beweisen''
+      p. 249, Zwischenwertsatz p. 257, Satz vom Minimum und Maximum p. 264, Gleichmäßige Stetigkeit p.
+      268. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and
+      scope stay unassessed (CLAUDE.md §4).'
+    angle: Separate German sections for proving continuity and for proving *dis*continuity — and the second
+      is what WV1.2 actually asks for.
+    angle_detail: WV1.2(b) asks to show a function is continuous only at 0, which means one continuity
+      proof and a discontinuity proof for every other point. Almost every text on this menu treats discontinuity
+      as the negation of a definition and moves on; this one gives it seven pages of its own. Both criteria
+      (sequence and ε-δ) also get separate sections, matching the script's §5.3 and Serie 8.4's demand
+      for both. Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-funktionsgrenzwerte/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-einseitige-grenzwerte
+  number: 2
+  title: Uneigentliche und einseitige Grenzwerte (§5.2)
+  status: pending
+  objective: One-sided limits, limits at infinity and infinite limits, and the discipline of falling back
+    to one-sided limits when the two-sided one fails to exist.
+  done_when:
+  - 'Reproduce without notes: One-sided limits, limits at infinity and infinite limits, and the discipline
+    of falling back to one-sided limits when the two-sided one fails to exist.'
+  - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice, then
+    the remaining 4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice
+    locator: 'Pd3szO-ana_inf_serie08.pdf: 8.4 Grenzwerte von Funktionen — compute the limits and prove
+      one of them twice, once from Definition 5.5 and once from the Folgenkriterium Satz 5.6. ana_inf_serie09.pdf:
+      9.1 Stetigkeit, 9.2 Eigenschaften von Grenzwerten von Funktionen, 9.3 HA (20 P) Grenzwerte von Funktionen
+      und Stetigkeit. ana_inf_serieWV.pdf: WV1.2 (20 P), parts (a) define continuity at a point, (b) the
+      function that is x on Q and −x elsewhere is continuous only at 0, (c) three limits built on it;
+      WV1.4 (20 P), parts (a) state the Zwischenwertsatz with complete hypotheses, (b) a unique solution
+      exists, (c)-(d) the bisection method and its iteration count'
+    angle: The last current HU material in the script's order, and the two WV Hausaufgaben are the closest
+      thing available to real exam questions on this chapter.
+    angle_detail: Two things in these sheets are worth reading as instructions rather than tasks. Serie
+      8.4(a) asks for one limit proved *both* ways and names the script's Definition 5.5 and Satz 5.6
+      — so the sequence criterion is expected to be usable in both directions, not just recognised. WV1.4
+      asks for the theorem statement first and the application second, and says 'achten Sie insbesondere
+      auf die korrekte und vollständige Angabe der Voraussetzungen' — the hypotheses are separately graded.
+      After Serie 09 and the WV set the local HU material stops; Chapters 6 and 7 have nothing, and that
+      gap has been open since 2026-08-03.
+    vault_path: material://source-analysis-skript/ana_inf_serie09.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1, limits and continuity
+    locator: 'Professor Leonard, Calculus 1: the limits and continuity block. Topic-matched selection
+      from the source record''s own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on the computational half of the chapter — one-sided limits and the indeterminate
+      forms, worked in full.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. It is a good fit for §5.2 specifically,
+      where the work is case analysis and algebra rather than proof. It does not reach the sequence criterion,
+      the compactness theorems or uniform convergence at the script's depth — for those the routes are
+      Abbott, Lebl or MIT 18.100A.
+    scope_triage: helpful-now
+  - kind: watch
+    label: 3Blue1Brown — the limits episode
+    locator: 'Essence of Calculus: the limits episode (which also introduces l''Hôpital). Topic-matched
+      selection from the source record''s own list; no local copy, so the selection is by topic rather
+      than by timestamp.'
+    angle: A short visual preview for when the *picture* of a limit is missing, not the technique.
+    angle_detail: Ten to fifteen minutes, watched once, before rather than instead of the script. It shows
+      the ε-δ picture geometrically, which is the one thing a written definition cannot do. It is not
+      a source of rigour and should never be the thing an exam answer is reconstructed from. The l'Hôpital
+      half of the same episode belongs to Chapter 6.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.3 Grenzwerte von Funktionen
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Function limits presented as the third step of one continuous argument that began with sequences
+      — the same move the script makes.
+    angle_detail: By placing §2.3 immediately after series in the same chapter, Fritzsche makes the sequence
+      criterion feel like a consequence rather than a new definition. Explained solutions in the Anhang.
+      Its §2.5 'Flächen als Grenzwerte' previews integration and is Chapter 7's business, not this session's.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on continuity, IVT and compactness
+    locator: 'Regensburg_...pdf A3 (four quickfire questions on which sets can be the continuous image
+      of [0,1] — IVT and compactness together, with ''Häufige Fehler'' notes), A7 (no continuous f: [0,1]
+      → R≥0 with f(0)=f(1)=0 takes every value exactly twice — Extremwertsatz plus IVT). Marburg_...pdf
+      2. Klausur A9 (for which a is a piecewise function continuous), A10 (exactly one solution of 1 −
+      x² = exp(x−1) on [0,1]), A11 (a maximum exists on [0,∞)), A12 (injectivity, image, and continuity
+      of the inverse); Wiederholungsklausur A9, A10, A12. Paderborn_...pdf A3(a) (show x ↦ e^x + x + 1
+      is bijective), A4(b) (is sin(1/(x−1)) extended by 0 continuous), A4(c) (a function sequence)'
+    angle: The richest chapter in the external bank — and the tasks come in exactly the two shapes the
+      HU WV set uses.
+    angle_detail: 'Sort them into the two shapes before working any: ''is this piecewise function continuous,
+      and for which parameter'' (Marburg 2.A9, WK A9, Paderborn A4(b)) and ''show a solution exists and
+      is unique'' (Marburg 2.A10, WK A10, Paderborn A3(a)) — the second being WV1.4''s shape exactly,
+      IVT for existence plus monotonicity for uniqueness. Regensburg A3 and A7 are a third, rarer shape:
+      reasoning about what continuity forbids. All solved, so spend them on diagnosed gaps; the unsolved
+      papers stay on the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Stetigkeit, one section per proof obligation
+    locator: 'MfNF_Analysis-1.pdf ''Stetigkeit von Funktionen'' p. 227: Folgenkriterium p. 228, Epsilon-Delta-Kriterium
+      p. 232, Komposition stetiger Funktionen p. 240, ''Stetigkeit beweisen'' p. 242, ''Unstetigkeit beweisen''
+      p. 249, Zwischenwertsatz p. 257, Satz vom Minimum und Maximum p. 264, Gleichmäßige Stetigkeit p.
+      268. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and
+      scope stay unassessed (CLAUDE.md §4).'
+    angle: Separate German sections for proving continuity and for proving *dis*continuity — and the second
+      is what WV1.2 actually asks for.
+    angle_detail: WV1.2(b) asks to show a function is continuous only at 0, which means one continuity
+      proof and a discontinuity proof for every other point. Almost every text on this menu treats discontinuity
+      as the negation of a definition and moves on; this one gives it seven pages of its own. Both criteria
+      (sequence and ε-δ) also get separate sections, matching the script's §5.3 and Serie 8.4's demand
+      for both. Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-einseitige-grenzwerte/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-stetigkeit
+  number: 3
+  title: Stetige Funktionen (§5.3)
+  status: pending
+  objective: Continuity at a point and on a set, the epsilon-delta and sequence formulations, and the
+    rules for sums, products, quotients and compositions. Proving continuity at exactly one point is a
+    recurring exam shape.
+  done_when:
+  - 'Reproduce without notes: Continuity at a point and on a set, the epsilon-delta and sequence formulations,
+    and the rules for sums, products, quotients and compositions. Proving continuity at exactly one point
+    is a recurring exam shape.'
+  - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice, then
+    the remaining 5, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice
+    locator: 'Pd3szO-ana_inf_serie08.pdf: 8.4 Grenzwerte von Funktionen — compute the limits and prove
+      one of them twice, once from Definition 5.5 and once from the Folgenkriterium Satz 5.6. ana_inf_serie09.pdf:
+      9.1 Stetigkeit, 9.2 Eigenschaften von Grenzwerten von Funktionen, 9.3 HA (20 P) Grenzwerte von Funktionen
+      und Stetigkeit. ana_inf_serieWV.pdf: WV1.2 (20 P), parts (a) define continuity at a point, (b) the
+      function that is x on Q and −x elsewhere is continuous only at 0, (c) three limits built on it;
+      WV1.4 (20 P), parts (a) state the Zwischenwertsatz with complete hypotheses, (b) a unique solution
+      exists, (c)-(d) the bisection method and its iteration count'
+    angle: The last current HU material in the script's order, and the two WV Hausaufgaben are the closest
+      thing available to real exam questions on this chapter.
+    angle_detail: Two things in these sheets are worth reading as instructions rather than tasks. Serie
+      8.4(a) asks for one limit proved *both* ways and names the script's Definition 5.5 and Satz 5.6
+      — so the sequence criterion is expected to be usable in both directions, not just recognised. WV1.4
+      asks for the theorem statement first and the application second, and says 'achten Sie insbesondere
+      auf die korrekte und vollständige Angabe der Voraussetzungen' — the hypotheses are separately graded.
+      After Serie 09 and the WV set the local HU material stops; Chapters 6 and 7 have nothing, and that
+      gap has been open since 2026-08-03.
+    vault_path: material://source-analysis-skript/ana_inf_serie09.pdf
+    scope_triage: required-now
+  - kind: read
+    label: kleine_beweise.pdf — the three Chapter 5 proofs the tutors named
+    locator: 'kleine_beweise.pdf, section ''Kapitel 5: Differentialrechnung I'': Lemma 5.3 (accumulation
+      points of a set ⇔ existence of a convergent sequence), Satz 5.20(i) and (ii) written out explicitly
+      via Satz 3.25 (Rechenregeln stetiger Funktionen), Satz 5.21 (continuity of a composition)'
+    angle: Three proofs, and the middle one is chosen precisely because it shows Chapter 5 standing on
+      Chapter 3.
+    angle_detail: 'The instruction attached to Satz 5.20 in the handout is ''explizit mittels Satz 3.25
+      aufschreiben'' — write it out using the limit laws for sequences. That is the dependency this whole
+      chapter rests on, made into an exercise. Lemma 5.3 is the technical result that makes the sequence
+      criterion for function limits work at all. Same tutor disclaimer as elsewhere: no known relation
+      to exam contents.'
+    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+    scope_triage: required-now
+  - kind: watch
+    label: Professor Leonard — Calculus 1, limits and continuity
+    locator: 'Professor Leonard, Calculus 1: the limits and continuity block. Topic-matched selection
+      from the source record''s own list; no local copy, so the selection is by topic rather than by timestamp.'
+    angle: Blackboard pace on the computational half of the chapter — one-sided limits and the indeterminate
+      forms, worked in full.
+    angle_detail: Conditional on a diagnosed block, one topic at a time. It is a good fit for §5.2 specifically,
+      where the work is case analysis and algebra rather than proof. It does not reach the sequence criterion,
+      the compactness theorems or uniform convergence at the script's depth — for those the routes are
+      Abbott, Lebl or MIT 18.100A.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Fritzsche §2.3 Grenzwerte von Funktionen
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Function limits presented as the third step of one continuous argument that began with sequences
+      — the same move the script makes.
+    angle_detail: By placing §2.3 immediately after series in the same chapter, Fritzsche makes the sequence
+      criterion feel like a consequence rather than a new definition. Explained solutions in the Anhang.
+      Its §2.5 'Flächen als Grenzwerte' previews integration and is Chapter 7's business, not this session's.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: u10_Loesung.pdf — epsilon-delta continuity worked out in full
+    locator: 'u10_Loesung.pdf (4 pp, TU Darmstadt SoSe 2007, 10. Übungsblatt): Aufgabe G31 — prove the
+      square-root function is continuous at p = 0 directly from the definition, with an ''Informelle Vorüberlegung''
+      section shown before the ''Formaler Beweis'''
+    angle: One ε-δ continuity proof with the scratch-work printed above the clean proof — the exact shape
+      HU Serie 09.1 asks for.
+    angle_detail: 'Four pages, one idea, and the layout is the point: the informal estimate that finds
+      δ = ε² is written out first, and only then the formal argument that presents it. Students who can
+      follow an ε-δ proof but cannot produce one are usually missing that first half, and it is almost
+      never printed. Use it immediately before attempting Serie 09.1 or WV1.2(b).'
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on continuity, IVT and compactness
+    locator: 'Regensburg_...pdf A3 (four quickfire questions on which sets can be the continuous image
+      of [0,1] — IVT and compactness together, with ''Häufige Fehler'' notes), A7 (no continuous f: [0,1]
+      → R≥0 with f(0)=f(1)=0 takes every value exactly twice — Extremwertsatz plus IVT). Marburg_...pdf
+      2. Klausur A9 (for which a is a piecewise function continuous), A10 (exactly one solution of 1 −
+      x² = exp(x−1) on [0,1]), A11 (a maximum exists on [0,∞)), A12 (injectivity, image, and continuity
+      of the inverse); Wiederholungsklausur A9, A10, A12. Paderborn_...pdf A3(a) (show x ↦ e^x + x + 1
+      is bijective), A4(b) (is sin(1/(x−1)) extended by 0 continuous), A4(c) (a function sequence)'
+    angle: The richest chapter in the external bank — and the tasks come in exactly the two shapes the
+      HU WV set uses.
+    angle_detail: 'Sort them into the two shapes before working any: ''is this piecewise function continuous,
+      and for which parameter'' (Marburg 2.A9, WK A9, Paderborn A4(b)) and ''show a solution exists and
+      is unique'' (Marburg 2.A10, WK A10, Paderborn A3(a)) — the second being WV1.4''s shape exactly,
+      IVT for existence plus monotonicity for uniqueness. Regensburg A3 and A7 are a third, rarer shape:
+      reasoning about what continuity forbids. All solved, so spend them on diagnosed gaps; the unsolved
+      papers stay on the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2.6-2.7 and Ch 6 — limits, continuity, exp and log
+    locator: mitres_18_001_f17_ch02.pdf §2.6 Limits p. 123, §2.7 Continuous Functions p. 131; mitres_18_001_f17_ch06.pdf
+      Exponentials and Logarithms (§6.2 The Exponential e^x p. 292, §6.4 Logarithms p. 310); matching
+      guide_ch02.pdf and guide_ch06.pdf are secondary
+    angle: 'Applied-first intuition: Strang reaches limits only after using them, which is the opposite
+      of the script''s order and occasionally the more memorable one.'
+    angle_detail: Strang puts limits in §2.6 — after two chapters of derivatives — precisely because he
+      thinks the definition is easier once you have needed it. That makes this a reserve route rather
+      than a parallel text, useful when the formal definition has been read several times without landing.
+      Chapter 6 is the applied account of exp and log for §5.6.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Stetigkeit, one section per proof obligation
+    locator: 'MfNF_Analysis-1.pdf ''Stetigkeit von Funktionen'' p. 227: Folgenkriterium p. 228, Epsilon-Delta-Kriterium
+      p. 232, Komposition stetiger Funktionen p. 240, ''Stetigkeit beweisen'' p. 242, ''Unstetigkeit beweisen''
+      p. 249, Zwischenwertsatz p. 257, Satz vom Minimum und Maximum p. 264, Gleichmäßige Stetigkeit p.
+      268. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and
+      scope stay unassessed (CLAUDE.md §4).'
+    angle: Separate German sections for proving continuity and for proving *dis*continuity — and the second
+      is what WV1.2 actually asks for.
+    angle_detail: WV1.2(b) asks to show a function is continuous only at 0, which means one continuity
+      proof and a discontinuity proof for every other point. Almost every text on this menu treats discontinuity
+      as the negation of a definition and moves on; this one gives it seven pages of its own. Both criteria
+      (sequence and ε-δ) also get separate sections, matching the script's §5.3 and Serie 8.4's demand
+      for both. Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-stetigkeit/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-zwischenwertsatz
+  number: 4
+  title: Zwischenwertsatz, Umkehrfunktion und Extrempunkte (§5.4)
+  status: pending
+  objective: The intermediate value theorem with its hypotheses stated exactly, the existence and continuity
+    of inverse functions on intervals, and extreme points. WV1.4 asks for the statement first and the
+    application second, in that order.
+  done_when:
+  - 'Reproduce without notes: The intermediate value theorem with its hypotheses stated exactly, the existence
+    and continuity of inverse functions on intervals, and extreme points. WV1.4 asks for the statement
+    first and the application second, in that order.'
+  - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice, then
+    the remaining 4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice
+    locator: 'Pd3szO-ana_inf_serie08.pdf: 8.4 Grenzwerte von Funktionen — compute the limits and prove
+      one of them twice, once from Definition 5.5 and once from the Folgenkriterium Satz 5.6. ana_inf_serie09.pdf:
+      9.1 Stetigkeit, 9.2 Eigenschaften von Grenzwerten von Funktionen, 9.3 HA (20 P) Grenzwerte von Funktionen
+      und Stetigkeit. ana_inf_serieWV.pdf: WV1.2 (20 P), parts (a) define continuity at a point, (b) the
+      function that is x on Q and −x elsewhere is continuous only at 0, (c) three limits built on it;
+      WV1.4 (20 P), parts (a) state the Zwischenwertsatz with complete hypotheses, (b) a unique solution
+      exists, (c)-(d) the bisection method and its iteration count'
+    angle: The last current HU material in the script's order, and the two WV Hausaufgaben are the closest
+      thing available to real exam questions on this chapter.
+    angle_detail: Two things in these sheets are worth reading as instructions rather than tasks. Serie
+      8.4(a) asks for one limit proved *both* ways and names the script's Definition 5.5 and Satz 5.6
+      — so the sequence criterion is expected to be usable in both directions, not just recognised. WV1.4
+      asks for the theorem statement first and the application second, and says 'achten Sie insbesondere
+      auf die korrekte und vollständige Angabe der Voraussetzungen' — the hypotheses are separately graded.
+      After Serie 09 and the WV set the local HU material stops; Chapters 6 and 7 have nothing, and that
+      gap has been open since 2026-08-03.
+    vault_path: material://source-analysis-skript/ana_inf_serie09.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §2.3 Grenzwerte von Funktionen
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Function limits presented as the third step of one continuous argument that began with sequences
+      — the same move the script makes.
+    angle_detail: By placing §2.3 immediately after series in the same chapter, Fritzsche makes the sequence
+      criterion feel like a consequence rather than a new definition. Explained solutions in the Anhang.
+      Its §2.5 'Flächen als Grenzwerte' previews integration and is Chapter 7's business, not this session's.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on continuity, IVT and compactness
+    locator: 'Regensburg_...pdf A3 (four quickfire questions on which sets can be the continuous image
+      of [0,1] — IVT and compactness together, with ''Häufige Fehler'' notes), A7 (no continuous f: [0,1]
+      → R≥0 with f(0)=f(1)=0 takes every value exactly twice — Extremwertsatz plus IVT). Marburg_...pdf
+      2. Klausur A9 (for which a is a piecewise function continuous), A10 (exactly one solution of 1 −
+      x² = exp(x−1) on [0,1]), A11 (a maximum exists on [0,∞)), A12 (injectivity, image, and continuity
+      of the inverse); Wiederholungsklausur A9, A10, A12. Paderborn_...pdf A3(a) (show x ↦ e^x + x + 1
+      is bijective), A4(b) (is sin(1/(x−1)) extended by 0 continuous), A4(c) (a function sequence)'
+    angle: The richest chapter in the external bank — and the tasks come in exactly the two shapes the
+      HU WV set uses.
+    angle_detail: 'Sort them into the two shapes before working any: ''is this piecewise function continuous,
+      and for which parameter'' (Marburg 2.A9, WK A9, Paderborn A4(b)) and ''show a solution exists and
+      is unique'' (Marburg 2.A10, WK A10, Paderborn A3(a)) — the second being WV1.4''s shape exactly,
+      IVT for existence plus monotonicity for uniqueness. Regensburg A3 and A7 are a third, rarer shape:
+      reasoning about what continuity forbids. All solved, so spend them on diagnosed gaps; the unsolved
+      papers stay on the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Stetigkeit, one section per proof obligation
+    locator: 'MfNF_Analysis-1.pdf ''Stetigkeit von Funktionen'' p. 227: Folgenkriterium p. 228, Epsilon-Delta-Kriterium
+      p. 232, Komposition stetiger Funktionen p. 240, ''Stetigkeit beweisen'' p. 242, ''Unstetigkeit beweisen''
+      p. 249, Zwischenwertsatz p. 257, Satz vom Minimum und Maximum p. 264, Gleichmäßige Stetigkeit p.
+      268. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and
+      scope stay unassessed (CLAUDE.md §4).'
+    angle: Separate German sections for proving continuity and for proving *dis*continuity — and the second
+      is what WV1.2 actually asks for.
+    angle_detail: WV1.2(b) asks to show a function is continuous only at 0, which means one continuity
+      proof and a discontinuity proof for every other point. Almost every text on this menu treats discontinuity
+      as the negation of a definition and moves on; this one gives it seven pages of its own. Both criteria
+      (sequence and ε-δ) also get separate sections, matching the script's §5.3 and Serie 8.4's demand
+      for both. Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-zwischenwertsatz/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-kompakte-intervalle
+  number: 5
+  title: Besonderheiten stetiger Funktionen auf abgeschlossenen, beschränkten Intervallen (§5.5)
+  status: pending
+  objective: Boundedness, attained maximum and minimum, and uniform continuity on a compact interval.
+    Short in the script and heavily used afterwards — several external Klausur tasks are this theorem
+    in disguise.
+  done_when:
+  - 'Reproduce without notes: Boundedness, attained maximum and minimum, and uniform continuity on a compact
+    interval. Short in the script and heavily used afterwards — several external Klausur tasks are this
+    theorem in disguise.'
+  - Work HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice, then
+    the remaining 4, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: HU Serie 08.4, Serie 09 and Hausaufgaben WV1.2 and WV1.4 — the last calibrated practice
+    locator: 'Pd3szO-ana_inf_serie08.pdf: 8.4 Grenzwerte von Funktionen — compute the limits and prove
+      one of them twice, once from Definition 5.5 and once from the Folgenkriterium Satz 5.6. ana_inf_serie09.pdf:
+      9.1 Stetigkeit, 9.2 Eigenschaften von Grenzwerten von Funktionen, 9.3 HA (20 P) Grenzwerte von Funktionen
+      und Stetigkeit. ana_inf_serieWV.pdf: WV1.2 (20 P), parts (a) define continuity at a point, (b) the
+      function that is x on Q and −x elsewhere is continuous only at 0, (c) three limits built on it;
+      WV1.4 (20 P), parts (a) state the Zwischenwertsatz with complete hypotheses, (b) a unique solution
+      exists, (c)-(d) the bisection method and its iteration count'
+    angle: The last current HU material in the script's order, and the two WV Hausaufgaben are the closest
+      thing available to real exam questions on this chapter.
+    angle_detail: Two things in these sheets are worth reading as instructions rather than tasks. Serie
+      8.4(a) asks for one limit proved *both* ways and names the script's Definition 5.5 and Satz 5.6
+      — so the sequence criterion is expected to be usable in both directions, not just recognised. WV1.4
+      asks for the theorem statement first and the application second, and says 'achten Sie insbesondere
+      auf die korrekte und vollständige Angabe der Voraussetzungen' — the hypotheses are separately graded.
+      After Serie 09 and the WV set the local HU material stops; Chapters 6 and 7 have nothing, and that
+      gap has been open since 2026-08-03.
+    vault_path: material://source-analysis-skript/ana_inf_serie09.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: Fritzsche §2.3 Grenzwerte von Funktionen
+    locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
+    angle: Function limits presented as the third step of one continuous argument that began with sequences
+      — the same move the script makes.
+    angle_detail: By placing §2.3 immediately after series in the same chapter, Fritzsche makes the sequence
+      criterion feel like a consequence rather than a new definition. Explained solutions in the Anhang.
+      Its §2.5 'Flächen als Grenzwerte' previews integration and is Chapter 7's business, not this session's.
+    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Solved German Klausur tasks on continuity, IVT and compactness
+    locator: 'Regensburg_...pdf A3 (four quickfire questions on which sets can be the continuous image
+      of [0,1] — IVT and compactness together, with ''Häufige Fehler'' notes), A7 (no continuous f: [0,1]
+      → R≥0 with f(0)=f(1)=0 takes every value exactly twice — Extremwertsatz plus IVT). Marburg_...pdf
+      2. Klausur A9 (for which a is a piecewise function continuous), A10 (exactly one solution of 1 −
+      x² = exp(x−1) on [0,1]), A11 (a maximum exists on [0,∞)), A12 (injectivity, image, and continuity
+      of the inverse); Wiederholungsklausur A9, A10, A12. Paderborn_...pdf A3(a) (show x ↦ e^x + x + 1
+      is bijective), A4(b) (is sin(1/(x−1)) extended by 0 continuous), A4(c) (a function sequence)'
+    angle: The richest chapter in the external bank — and the tasks come in exactly the two shapes the
+      HU WV set uses.
+    angle_detail: 'Sort them into the two shapes before working any: ''is this piecewise function continuous,
+      and for which parameter'' (Marburg 2.A9, WK A9, Paderborn A4(b)) and ''show a solution exists and
+      is unique'' (Marburg 2.A10, WK A10, Paderborn A3(a)) — the second being WV1.4''s shape exactly,
+      IVT for existence plus monotonicity for uniqueness. Regensburg A3 and A7 are a third, rarer shape:
+      reasoning about what continuity forbids. All solved, so spend them on diagnosed gaps; the unsolved
+      papers stay on the transfer unit.'
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Mathe für Nicht-Freaks — Stetigkeit, one section per proof obligation
+    locator: 'MfNF_Analysis-1.pdf ''Stetigkeit von Funktionen'' p. 227: Folgenkriterium p. 228, Epsilon-Delta-Kriterium
+      p. 232, Komposition stetiger Funktionen p. 240, ''Stetigkeit beweisen'' p. 242, ''Unstetigkeit beweisen''
+      p. 249, Zwischenwertsatz p. 257, Satz vom Minimum und Maximum p. 264, Gleichmäßige Stetigkeit p.
+      268. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and
+      scope stay unassessed (CLAUDE.md §4).'
+    angle: Separate German sections for proving continuity and for proving *dis*continuity — and the second
+      is what WV1.2 actually asks for.
+    angle_detail: WV1.2(b) asks to show a function is continuous only at 0, which means one continuity
+      proof and a discontinuity proof for every other point. Almost every text on this menu treats discontinuity
+      as the negation of a definition and moves on; this one gives it seven pages of its own. Both criteria
+      (sequence and ε-δ) also get separate sections, matching the script's §5.3 and Serie 8.4's demand
+      for both. Unassessed against this exam.
+    vault_path: material://source-mfnf-analysis1/MfNF_Analysis-1.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-kompakte-intervalle/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-exponentialfunktion
+  number: 6
+  title: Exponentialfunktion und Logarithmen (§5.6)
+  status: pending
+  objective: 'The exponential series, the functional equation, the logarithm as its inverse and the general
+    power. Kept computational: the laws must be usable, the construction need not be reproduced.'
+  done_when:
+  - 'Reproduce without notes: The exponential series, the functional equation, the logarithm as its inverse
+    and the general power. Kept computational: the laws must be usable, the construction need not be reproduced.'
+  - Work IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus, then the remaining
+    3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-limits-continuity
+  - concept-series
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — Exponentialfunktion und gleichmäßige Konvergenz, worked at length
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.5 ''Die Exponentialfunktion'' p. 6 with Lösung 2.5 p. 28;
+      Aufgabe 1.10 ''Funktionenfolgen und gleichmäßige Konvergenz'' p. 11 with Lösung 2.10 p. 48'
+    angle: The only worked, thought-process-level solution in the drill collection for §5.7.
+    angle_detail: Aufgabe 1.10 matters out of proportion to its size. §5.7 has no HU sheet, two pages
+      of script, and is a standing candidate for the thing that is recognised but not reproducible; this
+      is a full worked treatment with the reasoning shown, from the same author whose supremum and accumulation-point
+      solutions are on Chapters 2 and 3. Aufgabe 1.5 pairs with the script's §5.6 and with Forster §8's
+      exponential series.
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: Strang Ch 2.6-2.7 and Ch 6 — limits, continuity, exp and log
+    locator: mitres_18_001_f17_ch02.pdf §2.6 Limits p. 123, §2.7 Continuous Functions p. 131; mitres_18_001_f17_ch06.pdf
+      Exponentials and Logarithms (§6.2 The Exponential e^x p. 292, §6.4 Logarithms p. 310); matching
+      guide_ch02.pdf and guide_ch06.pdf are secondary
+    angle: 'Applied-first intuition: Strang reaches limits only after using them, which is the opposite
+      of the script''s order and occasionally the more memorable one.'
+    angle_detail: Strang puts limits in §2.6 — after two chapters of derivatives — precisely because he
+      thinks the definition is easier once you have needed it. That makes this a reserve route rather
+      than a parallel text, useful when the formal definition has been read several times without landing.
+      Chapter 6 is the applied account of exp and log for §5.6.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Thomas Ch 2 and §7.1 — limits, continuity, log as an integral
+    locator: Thomas-Calculus_Early-Transcendentals.pdf §2.2 Limit of a Function and Limit Laws p. 80,
+      §2.3 The Precise Definition of a Limit p. 91, §2.4 One-Sided Limits p. 100, §2.5 Continuity p. 107,
+      §2.6 Limits Involving Infinity p. 118; §7.1 The Logarithm Defined as an Integral p. 434. Located
+      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
+      (CLAUDE.md §4).
+    angle: Reserve computational volume, with §2.3 the one section that does attempt the precise definition.
+    angle_detail: '§§2.4 and 2.6 are the closest external match to the script''s §5.2, which is otherwise
+      thinly covered — one-sided limits and limits involving infinity each get a full section with a large
+      exercise set. §2.3 is the ε-δ definition at calculus-course depth: worth knowing it is there, not
+      a substitute for Abbott or the script.'
+    vault_path: material://source-thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Stewart Ch 2 and §1.5 — limits, continuity, inverse functions
+    locator: Stewart.pdf §2.2 The Limit of a Function p. 115, §2.3 Calculating Limits Using the Limit
+      Laws p. 127, §2.4 The Precise Definition of a Limit p. 136, §2.5 Continuity p. 146, §2.6 Limits
+      at Infinity p. 158; §1.5 Inverse Functions and Logarithms p. 87. Located by the 2026-08-03 coverage
+      audit; no contextual evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: The Thomas alternative — same coverage, more worked examples; open one, not both.
+    angle_detail: Interchangeable with Thomas for this chapter. §1.5 covers inverse functions and logarithms
+      together, which is a slightly better fit for the script's §5.4 inverse-function material than Thomas's
+      arrangement.
+    vault_path: material://source-stewart-calculus/Stewart.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-exponentialfunktion/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-m2-analysis-ch05-gleichmaessige-konvergenz
+  number: 7
+  title: Gleichmäßige Konvergenz von Funktionenfolgen (§5.7)
+  status: pending
+  objective: Pointwise versus uniform convergence of a sequence of functions, and what uniform convergence
+    preserves that pointwise does not. Two script pages and no HU sheet, which is exactly why it is easy
+    to arrive at the exam never having practised it.
+  done_when:
+  - 'Reproduce without notes: Pointwise versus uniform convergence of a sequence of functions, and what
+    uniform convergence preserves that pointwise does not. Two script pages and no HU sheet, which is
+    exactly why it is easy to arrive at the exam never having practised it.'
+  - Work IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus, then the remaining
+    3, and record every miss with the step it failed at.
+  exam_critical: true
+  concepts:
+  - concept-sequences-convergence
+  - concept-uniform-convergence
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: unser skript.pdf Kapitel 5 — the scope authority
+    locator: unser skript.pdf Kapitel 5, printed p. 98 (PDF p. 108)–printed p. 136 (PDF p. 146); §5.1
+      Grenzwerte bei Funktionen printed p. 98 (PDF p. 108), §5.2 Uneigentliche und einseitige Grenzwerte
+      printed p. 102 (PDF p. 112), §5.3 Stetige Funktionen printed p. 107 (PDF p. 117), §5.4 Zwischenwertsatz,
+      Umkehrfunktion und Extrempunkte printed p. 111 (PDF p. 121), §5.5 Besonderheiten stetiger Funktionen
+      auf abgeschlossenen, beschränkten Intervallen printed p. 121 (PDF p. 131), §5.6 Exponentialfunktion
+      und Logarithmen printed p. 122 (PDF p. 132), §5.7 Gleichmäßige Konvergenz von Funktionenfolgen printed
+      p. 129 (PDF p. 139). §5.8 is an Exkurs and is not worked here.
+    angle: The chapter whose title says derivatives and whose content is continuity — and the last one
+      with current HU exercises.
+    angle_detail: 'Read §5.1 as the hinge of the whole script: it defines the limit of a function through
+      sequences, which is why Chapter 3 had to come first and why a weak §3.5 shows up here. §§5.4-5.5
+      are the three theorems the external papers ask to be *stated* with complete hypotheses — intermediate
+      value, attained extrema, continuous inverse — and stating them precisely is worth more marks than
+      any calculation in the chapter. §5.7 is two pages with no HU sheet behind it, which makes it the
+      easiest thing in the chapter to arrive at the exam never having practised.'
+    vault_path: material://source-analysis-skript/unser skript.pdf
+    scope_triage: required-now
+  - kind: practise
+    label: IngMath2 Kap. 11 und §12.3 — stetige Funktionen, Exponential und Logarithmus
+    locator: 'IngMath2_Aufgaben.pdf: Kap. 11 Stetige Funktionen p. 75 (§11.1 Motivation und Definition
+      p. 75, §11.2 Eigenschaften stetiger reeller Funktionen p. 85, §11.3 Gleichmäßige Stetigkeit p. 90,
+      §11.4 Grenzwerte von Funktionen p. 92); §12.3 Exponentialfunktion, Logarithmusfunktion p. 118. §12.2
+      Potenzreihen matches the §5.8 Exkurs and is skipped.'
+    angle: Solved computational drill on continuity and the elementary functions, at volume.
+    angle_detail: '§11.3 is worth naming separately: uniform *continuity* (as opposed to uniform convergence)
+      belongs to the script''s §5.5 and is the distinction most likely to be confused with §5.7. Having
+      a section of exercises that isolates it is useful. Engineering-style throughout — fluency, not insight.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: AS-Ana1 — Exponentialfunktion und gleichmäßige Konvergenz, worked at length
+    locator: 'AS-Ana1.pdf (53 pp): Aufgabe 1.5 ''Die Exponentialfunktion'' p. 6 with Lösung 2.5 p. 28;
+      Aufgabe 1.10 ''Funktionenfolgen und gleichmäßige Konvergenz'' p. 11 with Lösung 2.10 p. 48'
+    angle: The only worked, thought-process-level solution in the drill collection for §5.7.
+    angle_detail: Aufgabe 1.10 matters out of proportion to its size. §5.7 has no HU sheet, two pages
+      of script, and is a standing candidate for the thing that is recognised but not reproducible; this
+      is a full worked treatment with the reasoning shown, from the same author whose supremum and accumulation-point
+      solutions are on Chapters 2 and 3. Aufgabe 1.5 pairs with the script's §5.6 and with Forster §8's
+      exponential series.
+    scope_triage: helpful-now
+  - kind: read
+    label: TUM Ferienkurs Kap. 4 Stetigkeit und Kap. 7 Funktionenfolgen
+    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 4 Stetigkeit PDF p. 33 (§4.1 Stetigkeit von
+      Funktionen, §4.2 Funktionsgrenzwerte PDF p. 36), Übungsaufgaben PDF p. 38; Kap. 7 Funktionenfolgen
+      PDF p. 62, Übungsaufgaben PDF p. 65'
+    angle: A five-page compressed version of the chapter plus a separate short chapter and exercise set
+      for §5.7.
+    angle_detail: Its Kap. 7 is the third exercise set available for uniform convergence, after Forster
+      §21 and Deitmar §7.1 — for a two-page script section with no HU sheet, that is now adequate cover
+      rather than a hole. Revision pace, not first exposure.
+    scope_triage: helpful-now
+  - kind: read
+    label: MIT 18.100A — function limits, the sequence criterion, min/max and IVT, uniform convergence
+    locator: 'mit18_100af20_lec_full2.pdf: ''Limits of Functions'' p. 47, ''Limits of Functions in Terms
+      of Sequences and Continuity'' p. 50, ''The Continuity of Sine and Cosine and the Many Discontinuities
+      of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
+      p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
+      Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
+      Interchanging Limits'' p. 84'
+    angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
+      that are the whole of §5.7.
+    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
+      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
+      idea at a time.
+    vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Forster/Wessoly §§10-12 und §21 — Stetigkeit, Logarithmus, gleichmäßige Konvergenz
+    locator: forster-wessoly.pdf Aufgaben §10 Funktionen, Stetigkeit p. 33, §11 Sätze über stetige Funktionen
+      p. 35, §12 Logarithmus und allgemeine Potenz p. 37, §21 Gleichmäßige Konvergenz von Funktionenfolgen
+      p. 59; Lösungen §10 p. 124, §11 p. 127, §12 p. 132, §21 p. 192. §§13-14 (komplexe Exponentialfunktion,
+      trigonometrische Funktionen) go past this chapter.
+    angle: The only German exercise book on this menu with a dedicated §21 on uniform convergence — the
+      one section of Chapter 5 with no HU practice at all.
+    angle_detail: '§10 and §11 are the standard continuity drill and map onto §§5.3-5.5. §12 covers the
+      logarithm and general power, matching §5.6. The one to notice is §21: the script''s §5.7 is two
+      pages, has no HU sheet, and is exactly the kind of section that gets read once and never practised
+      — and Forster has a whole exercise section with solutions for it. That makes this the primary route
+      for §5.7, not a reserve one.'
+    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+    scope_triage: helpful-now
+  - kind: practise
+    label: Deitmar Kap. 4 und §7.1 — Funktionen und Stetigkeit, gleichmäßige Konvergenz
+    locator: deitmar.pdf Kap. 4 Funktionen und Stetigkeit p. 31 (§4.1 Stetige Funktionen p. 31, §4.2 Monotone
+      Funktionen p. 34, §4.3 Die Exponentialfunktion p. 35, §4.4 Anwendungen p. 36); Lösungen Kap. 24
+      p. 150. §7.1 Gleichmäßige Konvergenz p. 46; Lösungen Kap. 27 p. 167. §4.5 (komplexe Zahlen) and
+      §7.2-7.3 (Potenzreihen, Fourier) are outside this script.
+    angle: A second solved bank that also carries a §7.1 on uniform convergence — the second of only two
+      on this menu.
+    angle_detail: Deitmar's §4.2 on monotone functions is the direct partner to the script's §5.4 inverse
+      function material, which most references treat only inside a continuity section. Together with Forster
+      §21 it means §5.7 has two independent solved exercise sets, which is more than it looked like having
+      before this pass.
+    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ableitinger §§6.5-6.7, §6.10 und 7.1 — Musterlösungen für Stetigkeit und Funktionsgrenzwerte
+    locator: ableitinger.pdf §6.5 Folgenstetigkeit p. 70, §6.6 Stetigkeit mit Epsilon und Delta p. 73,
+      §6.7 Gleichmäßige Stetigkeit und Lipschitz-Stetigkeit p. 75, §6.10 Funktionenreihen p. 82, §7.1
+      Funktionengrenzwerte p. 85; the 'ausführliche Musterlösungen' for the same topics in §10.2 p. 170
+      and §12.2 p. 243 (Stetigkeit mit Epsilon und Delta, Zwischenwertsatz, Funktionsgrenzwerte ohne l'Hospital,
+      Funktionenfolgen); Lösungsvorschläge §11.2 p. 190
+    angle: Five separate model solutions covering exactly this chapter's proof obligations, each annotated
+      with the decisions behind it.
+    angle_detail: This is the source that gained most from the 2026-08-29 pass. It was routed once, to
+      the transfer unit, with the locator 'One example matching the diagnosed error'; opened, it has section-level
+      model solutions for both continuity criteria, for uniform and Lipschitz continuity, and — in Teil
+      III — full-length worked write-ups of the Zwischenwertsatz and of function limits computed without
+      l'Hospital. Read these after writing your own version, as writing samples rather than as answers.
+    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Abbott Ch 4 — Functional Limits and Continuity, plus §6.2 uniform convergence
+    locator: 'abbott.pdf §4.1 Discussion: Examples of Dirichlet and Thomae p. 122, §4.2 Functional Limits
+      p. 126, §4.3 Continuous Functions p. 133, §4.4 Continuous Functions on Compact Sets p. 140, §4.5
+      The Intermediate Value Theorem p. 147, §4.6 Sets of Discontinuity p. 152; §6.2 Uniform Convergence
+      of a Sequence of Functions p. 183'
+    angle: Its chapter opens on the Dirichlet function — which is the function WV1.2 is built from.
+    angle_detail: The alignment here is unusually direct. WV1.2 sets f(x) = x on Q and −x elsewhere, a
+      Dirichlet-type construction, and asks where it is continuous; Abbott opens Chapter 4 with Dirichlet
+      and Thomae for exactly the purpose of showing what continuity can and cannot look like. §4.4 (compact
+      sets) and §4.5 (IVT) map onto §§5.4-5.5. §6.2 is the uniform-convergence route. One blocked idea
+      at a time, as always.
+    vault_path: material://source-abbott-understanding-analysis/abbott.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Grieser Kap. 10 und Kap. 11 — Exponentialfunktion und Stetigkeit
+    locator: grieser.pdf Kap. 10 'Exponentialfunktion, Logarithmus und allgemeine Potenz' p. 164 (§10.1
+      Eigenschaften p. 165, §10.2 Logarithmus und allgemeine Potenz p. 167, Übungen p. 179); Kap. 11 'Stetigkeit'
+      p. 181 (§11.1 Grenzwerte von Funktionen p. 181, §11.2 Definition und elementare Eigenschaften p.
+      188, §11.3 Die Hauptsätze über stetige Funktionen p. 197, §11.4 Gleichmäßige Stetigkeit p. 207,
+      §11.5 Funktionenfolgen; gleichmäßige Konvergenz p. 210, Übungen p. 216); Lösungen und Hinweise p.
+      329
+    angle: German, and the only reference that gives the exponential function and continuity a chapter
+      each — matching the script's §5.6 and §§5.1-5.5 split.
+    angle_detail: §11.3 is literally titled 'Die Hauptsätze über stetige Funktionen', which is the script's
+      §§5.4-5.5 material under one heading and the material the external papers ask to be stated. §11.5
+      covers §5.7. Exercises carry Hinweise before Lösungen, so a stuck problem has an intermediate step.
+    vault_path: material://source-grieser-analysis1/grieser.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Lebl — Continuous Functions and Sequences of Functions
+    locator: 'realanal.pdf ''Continuous Functions'' p. 113: Limits of functions p. 113, Continuous functions
+      p. 122, Extreme and intermediate value theorems p. 130, Uniform continuity p. 138, Limits at infinity
+      p. 145, Monotone functions and continuity p. 149. ''Sequences of Functions'' p. 227: Pointwise and
+      uniform convergence p. 227, Interchange of limits p. 234'
+    angle: Section for section the closest structural match to §§5.1-5.5 and §5.7 anywhere on this menu.
+    angle_detail: Six subsections that correspond to the script's five, in the same order, plus a separate
+      chapter for uniform convergence whose first section is precisely §5.7 and whose second names what
+      uniform convergence is *for* — interchanging limits. That framing is missing from the script's two
+      pages and is the thing that makes the distinction memorable.
+    vault_path: material://source-lebl-basic-analysis/realanal.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Labs/Schreyer — Stetigkeit, spezielle Funktionen, Konvergenz von Funktionenfolgen
+    locator: Labs-Schreyer_Mathematik-fuer-Informatiker.pdf 'Stetigkeit' p. 143 (Definition und Folgenkriterium
+      p. 143, Der Zwischenwertsatz und Anwendungen p. 147); 'Spezielle Funktionen' p. 171 (Die Exponentialfunktion
+      p. 171, Der Logarithmus p. 173, Trigonometrische Funktionen p. 175); 'Konvergenz von Funktionenfolgen'
+      p. 217 (Gleichmäßige Konvergenz p. 217). Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: 'German and compact: continuity via the sequence criterion, then the IVT with applications,
+      which is the script''s own emphasis.'
+    angle_detail: '''Der Zwischenwertsatz und Anwendungen'' is the section title, and applications is
+      what WV1.4 asks for — the bisection method is an IVT application. Its Spezielle Funktionen chapter
+      collects exp, log and the trigonometric functions in one place, which serves §5.6 here and the §6.4
+      Ausflug on the next chapter.'
+    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+    scope_triage: helpful-now
+  - kind: read
+    label: Ross §§17-20 und §24 — continuity, uniform continuity, function limits
+    locator: Ross_Elementary-Analysis_2ed.pdf §17 Continuous Functions p. 134, §18 Properties of Continuous
+      Functions p. 144, §19 Uniform Continuity p. 150, §20 Limits of Functions p. 164; §24 Uniform Convergence
+      p. 203, §25 More on Uniform Convergence p. 210. Located by the 2026-08-03 coverage audit; no contextual
+      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
+    angle: Continuity before limits — the reverse of the script's order, which is exactly why it is worth
+      one look.
+    angle_detail: Ross defines continuity first and function limits afterwards (§20), where the script
+      does the opposite. Reading a section in the other order is a cheap test of whether the definitions
+      are actually understood or merely sequenced. §19 isolates uniform continuity and §§24-25 cover uniform
+      convergence, so both of Chapter 5's easily-confused 'uniform' notions have their own sections here.
+      Unassessed against this exam.
+    vault_path: material://source-ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf
+    scope_triage: helpful-now
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/stages/stage-m2-analysis-ch05-gleichmaessige-konvergenz/notes.md
+  attachments: []
+  source_feedback: []

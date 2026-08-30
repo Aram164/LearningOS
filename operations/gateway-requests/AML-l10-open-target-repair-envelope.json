@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-aml-l10-open-target-repair-20260830-001",
+  "idempotency_key": "aml-l10-open-target-repair-20260830-001",
+  "capability": "unit.map.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:24cb2fd6e0bac4a255e6ad57941a8a80bb24c9b8f23fee6a4df26fe89b845311",
+  "expected_revisions": {
+    "unit-aml-l10": 4,
+    "study-map-aml-l10": 3
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:0ba1152ae2198b4bbbb07069d471a19cdd91dfaa6cb1c15dfd6f7ef1c545ce62"
+  },
+  "payload": {
+    "unit_id": "unit-aml-l10",
+    "file": "work/active/workspace-aml-exam-prep/outputs/AML-l10-open-target-repair-2026-08-30.yaml",
+    "file_sha256": "sha256:21686aa5e8ced680b056dac6f8fc174ea600941e4cd5ca6cf8d0ea81e48a2677",
+    "replace": true
+  }
+}

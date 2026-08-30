@@ -1344,12 +1344,14 @@ stages:
   - kind: reference
     label: CS229 §4.2 — Naive Bayes event models
     source_id: source-cs229-notes
-    locator: Main notes §4 Generative Learning algorithms — §4.2 Naive Bayes and §4.2.1 Laplace smoothing
+    locator: 'cs229-notes.pdf Part II §4 Generative learning algorithms p. 36: §4.2 Naive Bayes p. 43,
+      §4.2.1 Laplace smoothing p. 46'
     angle: The compact mathematical statement of the classifier L04 builds informally, in about four pages.
-    angle_detail: Where the deck constructs the spam classifier by counting, CS229 writes the generative
-      model, states the conditional-independence assumption formally, and derives the maximum-likelihood
-      parameter estimates. Reading both gives the construction and its justification. The notes are terse
-      and assume comfort with likelihood notation, so this is better after L08 than before it.
+    angle_detail: 'Four pages that state, in one place, the classifier L04 builds informally over a lecture:
+      the conditional-independence assumption written as a product, the maximum-likelihood estimates for
+      the parameters, and Laplace smoothing as the fix for a zero count. It assumes the probability notation
+      of §§1-3 and does not motivate anything — read it as the compact statement to check your own against,
+      after the deck.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md

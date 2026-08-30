@@ -1,0 +1,70 @@
+id: unit-m2-analysis-ch06
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 6 — Differentialrechnung II
+order: 106
+scope: Script Chapter 6 'Differentialrechnung II', printed pp. 137-190 (PDF pp. 147-200). The longest
+  chapter, and the first with no current HU exercise sheet at all — the local HU set stops at §5.5, so
+  every drill on this session is a substitute, recorded as such since the 2026-08-03 audit. §§6.2, 6.6
+  and 6.9 are Exkurse; §6.4 and §6.10 are Ausflüge.
+status: ready
+knowledge_map:
+  summary: 'Chapter 6 builds the derivative from the function limit of Chapter 5 and then spends itself
+    on one theorem — the mean value theorem — and its consequences: monotonicity, extrema, l''Hospital,
+    and finally Taylor approximation with an error bound. The chapter is where the module stops being
+    about existence and starts being about computation, and it is also where the practice evidence gets
+    thinnest.'
+  nodes:
+  - id: knowledge-m2-analysis-ch06-differenzierbarkeit
+    title: Differenzierbarkeit und Ableitungen (§6.1)
+    summary: The derivative as a limit of difference quotients, differentiability implying continuity,
+      and the calculation rules including chain rule and the derivative of an inverse function.
+  - id: knowledge-m2-analysis-ch06-mittelwertsatz
+    title: Mittelwertsatz der Differentialrechnung (§6.3)
+    summary: 'Rolle''s theorem and the mean value theorem, and the corollaries that do the actual work:
+      zero derivative means constant, and the sign of the derivative controls monotonicity.'
+    builds_on:
+    - knowledge-m2-analysis-ch06-differenzierbarkeit
+  - id: knowledge-m2-analysis-ch06-trigonometrie
+    title: Ausflug – Sinus-, Kosinus- und Tangensfunktion (§6.4)
+    summary: The trigonometric functions and their derivatives. Ausflug depth in the script, but they
+      appear as raw material in almost every external limit, derivative and integral task, so they are
+      kept usable rather than skipped.
+    builds_on:
+    - knowledge-m2-analysis-ch06-differenzierbarkeit
+  - id: knowledge-m2-analysis-ch06-hospital
+    title: Regel von l'Hospital (§6.5)
+    summary: L'Hospital's rule, its indeterminate forms, and the hypothesis check that has to precede
+      every application. The commonest way to lose points here is applying it to a form that is not indeterminate.
+    builds_on:
+    - knowledge-m2-analysis-ch06-mittelwertsatz
+  - id: knowledge-m2-analysis-ch06-hoehere-ableitungen
+    title: Höhere Ableitungen (§6.7)
+    summary: Higher derivatives, the C^k classes, and convexity — the vocabulary Taylor's theorem is stated
+      in.
+    builds_on:
+    - knowledge-m2-analysis-ch06-mittelwertsatz
+  - id: knowledge-m2-analysis-ch06-taylor
+    title: Taylorpolynome und Taylorreihen (§6.8)
+    summary: The Taylor polynomial, the Lagrange remainder and the error bound that makes the approximation
+      usable. No HU sheet reaches this section, so the whole practice load is assembled from four named
+      external sets.
+    builds_on:
+    - knowledge-m2-analysis-ch06-hoehere-ableitungen
+  - id: knowledge-m2-analysis-ch06-interpolation
+    title: Ausflug – Einblick in die numerische Interpolation (§6.10)
+    summary: Polynomial interpolation and its error term, the chapter's second Informatik excursion. Ausflug
+      depth — the idea and the error statement, not the algorithms.
+    builds_on:
+    - knowledge-m2-analysis-ch06-taylor
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 6, printed pp. 137-190 (PDF pp. 147-200); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch06

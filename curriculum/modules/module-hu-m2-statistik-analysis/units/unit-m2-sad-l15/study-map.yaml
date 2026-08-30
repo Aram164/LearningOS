@@ -749,15 +749,15 @@ stages:
   - kind: read
     label: MML Ch 5 — vector calculus and backpropagation
     source_id: source-mml
-    locator: Ch 5 Vector Calculus §5.5 gradients of matrices, §5.6 useful identities, §5.7 backpropagation
-      and automatic differentiation
+    locator: 'mml-book.pdf Ch 5 Vector Calculus p. 145: §5.4 Gradients of Matrices p. 161, §5.5 Useful
+      Identities for Computing Gradients p. 164, §5.6 Backpropagation and Automatic Differentiation p.
+      165'
     angle: Supplies the matrix-derivative identities backpropagation uses, which every other L15 route
       assumes you already have.
-    angle_detail: The obstacle in a backpropagation derivation is rarely the chain rule — it is knowing
-      the derivative of a matrix product with respect to a matrix, and keeping the shapes straight. §5.6
-      tabulates exactly those identities, and §5.7 then applies them to a network. If the CS229 notes
-      or Murphy's treatment looked like symbol soup, this is the missing prerequisite rather than an alternative
-      explanation.
+    angle_detail: §5.5 is a page of matrix-derivative identities, and it is the page every other L15 route
+      silently assumes you already have — Nielsen, CS229 and the deck all take these for granted while
+      using them. Read §5.4 and §5.5 as reference rather than as study, and §5.6 only if the computational-graph
+      view of backpropagation is wanted alongside the equation view.
     scope_triage: helpful-now
   - kind: read
     label: MIT 6.036 — neural network units
@@ -813,13 +813,16 @@ stages:
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     source_id: source-cs229-notes
-    locator: Main notes §7 Deep Learning (the neural-network and backpropagation sections)
+    locator: 'cs229-notes.pdf Part III §7 Deep learning p. 82: Neural networks p. 84, Backpropagation
+      p. 93 (one-neuron p. 94, two-layer unpacked p. 95, two-layer in vector notation p. 98, multi-layer
+      p. 100)'
     angle: Backpropagation written out as matrix derivative bookkeeping, in the most compact correct form
       available here.
-    angle_detail: Six pages that state the forward pass, define the loss, and derive the layer-by-layer
-      gradients with explicit shapes. If you already understand the chain rule and want the algorithm
-      precisely, this is faster than any book on the shelf. If you do not yet have the picture, it will
-      be opaque — start with 3Blue1Brown episodes 3-4 and return here.
+    angle_detail: 'The backpropagation section is built as a ladder — one neuron, then a two-layer network
+      written out index by index, then the same network in vector notation, then the general case — which
+      is the most useful ordering available for checking that the matrix shapes are right. Compact and
+      unmotivated by design: it is the reference to verify a derivation against once L15''s own account
+      has been followed.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   - kind: reference
@@ -849,11 +852,15 @@ stages:
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     source_id: source-csc411-notes
-    locator: The neural-network and backpropagation lecture notes (Toronto CSC411/2515 course notes)
+    locator: csc411.pdf §8.3 Artificial Neural Networks (Ch 8 Classification, printed p. 42 onward) with
+      §3.3 Artificial Neural Networks (Ch 3 Nonlinear Regression, printed p. 9 onward) for the regression
+      framing; §9 Gradient Descent printed p. 53
     angle: Compact backprop reference with explicit matrix shapes at every step.
-    angle_detail: Shape errors are the most common failure when reproducing a forward or backward pass,
-      and these notes annotate every quantity's dimensions. That makes them a good checking reference
-      beside the SaD Übungen's parameter-counting exercises, which are the likeliest L15 exam form.
+    angle_detail: 'The network appears twice in these notes, once as nonlinear regression (§3.3) and once
+      as classification (§8.3), and reading both is the point: it is the same architecture with a different
+      output layer and a different loss, which is precisely the pairing L15 asserts. Every step carries
+      explicit matrix shapes, so this is the reference to reach for when a derivation is right in principle
+      and does not conform.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
   - kind: reference
@@ -1063,15 +1070,15 @@ stages:
   - kind: read
     label: MML Ch 5 — vector calculus and backpropagation
     source_id: source-mml
-    locator: Ch 5 Vector Calculus §5.5 gradients of matrices, §5.6 useful identities, §5.7 backpropagation
-      and automatic differentiation
+    locator: 'mml-book.pdf Ch 5 Vector Calculus p. 145: §5.4 Gradients of Matrices p. 161, §5.5 Useful
+      Identities for Computing Gradients p. 164, §5.6 Backpropagation and Automatic Differentiation p.
+      165'
     angle: Supplies the matrix-derivative identities backpropagation uses, which every other L15 route
       assumes you already have.
-    angle_detail: The obstacle in a backpropagation derivation is rarely the chain rule — it is knowing
-      the derivative of a matrix product with respect to a matrix, and keeping the shapes straight. §5.6
-      tabulates exactly those identities, and §5.7 then applies them to a network. If the CS229 notes
-      or Murphy's treatment looked like symbol soup, this is the missing prerequisite rather than an alternative
-      explanation.
+    angle_detail: §5.5 is a page of matrix-derivative identities, and it is the page every other L15 route
+      silently assumes you already have — Nielsen, CS229 and the deck all take these for granted while
+      using them. Read §5.4 and §5.5 as reference rather than as study, and §5.6 only if the computational-graph
+      view of backpropagation is wanted alongside the equation view.
     scope_triage: helpful-now
   - kind: read
     label: MIT 6.036 — neural network units
@@ -1127,13 +1134,16 @@ stages:
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     source_id: source-cs229-notes
-    locator: Main notes §7 Deep Learning (the neural-network and backpropagation sections)
+    locator: 'cs229-notes.pdf Part III §7 Deep learning p. 82: Neural networks p. 84, Backpropagation
+      p. 93 (one-neuron p. 94, two-layer unpacked p. 95, two-layer in vector notation p. 98, multi-layer
+      p. 100)'
     angle: Backpropagation written out as matrix derivative bookkeeping, in the most compact correct form
       available here.
-    angle_detail: Six pages that state the forward pass, define the loss, and derive the layer-by-layer
-      gradients with explicit shapes. If you already understand the chain rule and want the algorithm
-      precisely, this is faster than any book on the shelf. If you do not yet have the picture, it will
-      be opaque — start with 3Blue1Brown episodes 3-4 and return here.
+    angle_detail: 'The backpropagation section is built as a ladder — one neuron, then a two-layer network
+      written out index by index, then the same network in vector notation, then the general case — which
+      is the most useful ordering available for checking that the matrix shapes are right. Compact and
+      unmotivated by design: it is the reference to verify a derivation against once L15''s own account
+      has been followed.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
   - kind: reference
@@ -1163,11 +1173,15 @@ stages:
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     source_id: source-csc411-notes
-    locator: The neural-network and backpropagation lecture notes (Toronto CSC411/2515 course notes)
+    locator: csc411.pdf §8.3 Artificial Neural Networks (Ch 8 Classification, printed p. 42 onward) with
+      §3.3 Artificial Neural Networks (Ch 3 Nonlinear Regression, printed p. 9 onward) for the regression
+      framing; §9 Gradient Descent printed p. 53
     angle: Compact backprop reference with explicit matrix shapes at every step.
-    angle_detail: Shape errors are the most common failure when reproducing a forward or backward pass,
-      and these notes annotate every quantity's dimensions. That makes them a good checking reference
-      beside the SaD Übungen's parameter-counting exercises, which are the likeliest L15 exam form.
+    angle_detail: 'The network appears twice in these notes, once as nonlinear regression (§3.3) and once
+      as classification (§8.3), and reading both is the point: it is the same architecture with a different
+      output layer and a different loss, which is precisely the pairing L15 asserts. Every step carries
+      explicit matrix shapes, so this is the reference to reach for when a derivation is right in principle
+      and does not conform.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
   - kind: reference

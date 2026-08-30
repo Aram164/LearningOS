@@ -1,0 +1,46 @@
+id: unit-m2-analysis-ch07
+type: unit
+module_id: module-hu-m2-statistik-analysis
+component_id: component-m2-analysis
+kind: topic
+title: Analysis Kapitel 7 — Integralrechnung
+order: 107
+scope: Script Chapter 7 'Integralrechnung', printed pp. 191-225 (PDF pp. 201-235). Like Chapter 6 it has
+  no current HU sheet. §7.4 (numerische Integration) is an Exkurs. This is the chapter the external Klausur
+  bank covers best — Regensburg asks the Hauptsatz and partielle Integration to be stated and proved,
+  Paderborn and Ulm both set substitution/parts integrals — so the substitute practice here is stronger
+  than for Chapter 6.
+status: ready
+knowledge_map:
+  summary: Chapter 7 defines the Riemann integral through upper and lower sums, proves that continuous
+    functions on a compact interval are integrable — which is Chapter 5's theorem doing its work — and
+    then hands over the fundamental theorem, which turns integration into antidifferentiation. Substitution
+    and integration by parts are the two techniques, and improper integrals are where convergence returns.
+  nodes:
+  - id: knowledge-m2-analysis-ch07-riemann-integral
+    title: Das Riemann-Integral (§7.1)
+    summary: Partitions, upper and lower sums, the integrability criterion, and the classes of function
+      it covers — continuous and monotone. The definition is asked for in words at least as often as it
+      is computed.
+  - id: knowledge-m2-analysis-ch07-hauptsatz
+    title: Hauptsatz und Integrationsregeln (§7.2)
+    summary: 'Both parts of the fundamental theorem, then substitution and integration by parts as its
+      corollaries. Regensburg''s Aufgabe 4 is exactly this: state the second Hauptsatz, state partielle
+      Integration, then derive the second from the first.'
+    builds_on:
+    - knowledge-m2-analysis-ch07-riemann-integral
+  - id: knowledge-m2-analysis-ch07-uneigentliche-integrale
+    title: Uneigentliche Integrale (§7.3)
+    summary: Integrals over unbounded intervals and of unbounded integrands, defined as limits — so convergence
+      criteria return in an integral costume.
+    builds_on:
+    - knowledge-m2-analysis-ch07-hauptsatz
+scope_sources:
+- source_id: source-analysis-skript
+  authority: brief
+  locator: unser skript.pdf Kapitel 7, printed pp. 191-225 (PDF pp. 201-235); Stand 04.02.2025
+source_selections: []
+artifacts: {}
+workspace_ids:
+- workspace-m2-exam-prep
+current_study_map: study-map-m2-analysis-ch07
