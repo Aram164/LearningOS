@@ -23,10 +23,11 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from materials_manifest import render_manifest
 from yaml.constructor import ConstructorError
 from yaml.nodes import MappingNode
 from yaml.resolver import BaseResolver
+
+from learning_os.material_inventory import render_manifest
 
 MIGRATION_ID = "job-quarantine-collapse-v1"
 CAPTURED = "2026-08-26"
@@ -1135,8 +1136,8 @@ def _plan_material_manifest(
         "bytes": sum(row["size"] for row in files.values()),
     }
     # The inventory has one renderer, and it is not this module's `_dump`.
-    # `materials_manifest.render_manifest` owns both the wrap width and the
-    # key ordering, so `make inventory` and this migration cannot disagree
+    # `learning_os.material_inventory.render_manifest` owns wrap width and key
+    # ordering, so `make inventory` and this migration cannot disagree
     # about the bytes of a file neither one fully owns. It supplies its own
     # header, so the header no longer has to be sliced off the prior text.
     after = render_manifest(manifest)

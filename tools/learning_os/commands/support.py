@@ -4,6 +4,7 @@ the transaction wrapper and its receipt, and the small YAML/Markdown helpers."""
 from __future__ import annotations
 
 import contextlib
+import contextvars
 import fcntl
 import hashlib
 import json
@@ -16,8 +17,11 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.contracts.gateway import current_gateway_request
-from learning_os.fingerprint import canonical_fingerprint
+from learning_os.contracts.gateway import (
+    current_gateway_request,
+    gateway_snapshot_is_verified,
+)
+from learning_os.fingerprint import canonical_fingerprint, source_fingerprint
 from learning_os.genout import (
     build_backlinks,
     build_manifest,
@@ -31,10 +35,14 @@ from learning_os.transactions import (
     TransactionConflict,
     TransactionFailure,
     TransactionService,
+    TransactionSnapshotConflict,
     parse_expected_revisions,
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
+_HELD_OPERATOR_LOCKS: contextvars.ContextVar[frozenset[str]] = (
+    contextvars.ContextVar("learningos_held_operator_locks", default=frozenset())
+)
 
 def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
@@ -43,13 +51,20 @@ def _root(args) -> Path:
 @contextlib.contextmanager
 def _operator_lock(root: Path):
     """Cross-process lock for every write/generation transaction."""
-    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    root_key = str(root.resolve())
+    held = _HELD_OPERATOR_LOCKS.get()
+    if root_key in held:
+        yield
+        return
+    token = hashlib.sha256(root_key.encode("utf-8")).hexdigest()[:16]
     lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
     with lock_path.open("a+", encoding="utf-8") as handle:
         fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        context_token = _HELD_OPERATOR_LOCKS.set(held | {root_key})
         try:
             yield
         finally:
+            _HELD_OPERATOR_LOCKS.reset(context_token)
             fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
@@ -79,6 +94,19 @@ def _atomic_text(path: Path, content: str) -> None:
 def _expected_ok(root: Path, expected: str | None) -> bool:
     if expected is None:
         return True
+    request = current_gateway_request()
+    if request is not None:
+        if request.expected_snapshot != expected:
+            print(
+                "los: handler snapshot does not match the approved gateway intent",
+                file=sys.stderr,
+            )
+            return False
+        # cmd_capability marks this only while it holds the same operator lock
+        # through the complete handler dispatch. Direct service tests and any
+        # future bypass do not inherit the shortcut and must compare normally.
+        if gateway_snapshot_is_verified(root, expected):
+            return True
     if not expected.strip():
         # An empty token is almost always a scripting slip (a command
         # substitution that returned nothing), not a deliberate unguarded
@@ -314,11 +342,13 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             if issue.severity == "E"
         ]
 
-    def publish_validated_state():
+    def publish_validated_state() -> str:
         nonlocal validated_repo
         repo = validated_repo or load_repo(root)
-        validated_repo = None
         _publish_repo(repo)
+        projected_snapshot = f"sha256:{source_fingerprint(repo)}"
+        validated_repo = None
+        return projected_snapshot
 
     try:
         result = service.commit(
@@ -340,6 +370,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                           for artifact, (expected, actual) in exc.conflicts.items()}
         }, ensure_ascii=False), file=sys.stderr)
         return 3, [], {}
+    except TransactionSnapshotConflict:
+        # The V2 gateway owns the typed stale-snapshot response. Let the exact
+        # expected/actual values cross that boundary without being flattened
+        # into a generic transaction failure.
+        raise
     except TransactionFailure as exc:
         # Canonical write refusal is a handled operator error, not an internal
         # process failure. Preserve the gateway's established exit-code 2.

@@ -28,6 +28,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+from . import revisions as revision_store
 from .contracts.gateway import (
     APPROVAL_KINDS,
     GATEWAY_CHANNELS,
@@ -40,12 +41,14 @@ from .contracts.write_scopes import (
     scope_matches,
     write_target,
 )
+from .errors import TransactionFailure
 
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
 # through this module.
 from .fingerprint import canonical_fingerprint
 from .pathing import PathBoundaryError, read_text_inside
+from .revisions import artifact_revision, load_revisions
 
 __all__ = [
     "ReplayEvidenceError",
@@ -53,6 +56,7 @@ __all__ = [
     "TransactionFailure",
     "TransactionIdempotencyConflict",
     "TransactionResult",
+    "TransactionSnapshotConflict",
     "TransactionScopeError",
     "TransactionService",
     "artifact_revision",
@@ -75,16 +79,24 @@ class TransactionConflict(Exception):
         super().__init__(f"artifact revision conflict ({detail})")
 
 
-class TransactionFailure(Exception):
-    """The transaction could not commit and its canonical writes were rolled back."""
-
-
 class TransactionScopeError(TransactionFailure):
     """A transaction target is unsafe or outside its declared capability."""
 
 
 class TransactionIdempotencyConflict(TransactionFailure):
     """An idempotency key was reused for a different approved intent."""
+
+
+class TransactionSnapshotConflict(TransactionFailure):
+    """The approved projection no longer names the canonical state."""
+
+    def __init__(self, expected: str, actual: str):
+        self.expected = expected
+        self.actual = actual
+        super().__init__(
+            "canonical snapshot conflict "
+            f"(expected {expected}, actual {actual})"
+        )
 
 
 class ReplayEvidenceError(TransactionFailure):
@@ -136,64 +148,8 @@ def _sha256_bytes(value: bytes | None) -> str | None:
     return hashlib.sha256(value).hexdigest() if value is not None else None
 
 
-def _revision_ledger_path(root: Path) -> Path:
-    return root / "operations" / "transactions" / "revisions.yaml"
-
-
 def _idempotency_ledger_path(root: Path) -> Path:
     return root / "operations" / "transactions" / "idempotency.yaml"
-
-
-def load_revisions(root: Path) -> dict[str, int]:
-    path = _revision_ledger_path(root)
-    if not path.exists() and not path.is_symlink():
-        return {}
-    try:
-        from .loading.yamlio import UniqueKeySafeLoader
-
-        data = yaml.load(
-            read_text_inside(root, path),
-            Loader=UniqueKeySafeLoader,
-        )
-    except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
-        raise TransactionFailure(
-            f"artifact revision ledger is unreadable: {path}: {exc}"
-        ) from exc
-    if not isinstance(data, dict):
-        raise TransactionFailure("artifact revision ledger must be a mapping")
-    if data.get("schema_version") != 1 \
-            or data.get("type") != "artifact-revision-ledger":
-        raise TransactionFailure(
-            "artifact revision ledger has an unsupported contract"
-        )
-    rows = data.get("revisions")
-    if not isinstance(rows, dict):
-        raise TransactionFailure("artifact revision ledger revisions must be a mapping")
-    revisions: dict[str, int] = {}
-    for artifact, value in rows.items():
-        if not isinstance(artifact, str) or not artifact.strip() \
-                or isinstance(value, bool) or not isinstance(value, int) or value < 0:
-            raise TransactionFailure(
-                f"artifact revision ledger contains an invalid row: {artifact!r}"
-            )
-        revisions[artifact] = value
-    return revisions
-
-
-def artifact_revision(root: Path, artifact_id: str) -> int:
-    return load_revisions(root).get(artifact_id, 0)
-
-
-def _dump_revisions(revisions: Mapping[str, int]) -> str:
-    return yaml.safe_dump(
-        {
-            "schema_version": 1,
-            "type": "artifact-revision-ledger",
-            "revisions": dict(sorted(revisions.items())),
-        },
-        sort_keys=False,
-        allow_unicode=True,
-    )
 
 
 def _load_idempotency_entries(root: Path) -> dict[str, dict]:
@@ -277,8 +233,8 @@ def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
             "delivery evidence to prove its delegated authority"
         )
 
+    from .ai_actions.binding import read_bound_delivery
     from .ai_actions.errors import AIActionError
-    from .ai_actions.service import read_bound_delivery
     from .ai_actions.storage import FilesystemAIActionRepository
 
     # Resolving the id is inside the guard too: the exchange-identifier rule is
@@ -675,11 +631,12 @@ class TransactionService:
         deletes: Iterable[Path] = (),
         expected_revisions: Mapping[str, int] | None = None,
         validate_state: Callable[[], Sequence] | None = None,
-        publish: Callable[[], None] | None = None,
+        publish: Callable[[], str | None] | None = None,
         rollback_publish: Callable[[], None] | None = None,
         touched: Callable[[Iterable[Path]], None] | None = None,
         metadata: Mapping | None = None,
         fingerprint: Callable[[], str] | None = None,
+        expected_snapshot: str | None = None,
         transaction_writes: Callable[[str], Mapping[Path, str | bytes]] | None = None,
         write_authorities: Mapping[Path, str] | None = None,
         gateway_request: GatewayRequestContext | None = None,
@@ -767,9 +724,6 @@ class TransactionService:
             for artifact, wanted in expected.items()
             if revisions_before.get(artifact, 0) != wanted
         }
-        if conflicts:
-            raise TransactionConflict(conflicts)
-
         revisions_after = dict(revisions_before)
         changed_revisions: dict[str, int] = {}
         for artifact in artifacts:
@@ -863,8 +817,12 @@ class TransactionService:
                 "write authorities were supplied without a capability catalogue"
             )
 
-        ledger_path, _ledger_relative = target(_revision_ledger_path(self.root))
-        normalized_writes[ledger_path] = _dump_revisions(revisions_after).encode("utf-8")
+        ledger_path, _ledger_relative = target(
+            revision_store.revision_ledger_path(self.root)
+        )
+        normalized_writes[ledger_path] = revision_store.dump_revisions(
+            revisions_after
+        ).encode("utf-8")
 
         idempotency_path: Path | None = None
         idempotency_entries: dict[str, dict] | None = None
@@ -886,6 +844,26 @@ class TransactionService:
         # digest over the artifacts they actually touch.
         take_fingerprint = fingerprint or (lambda: canonical_fingerprint(self.root))
         snapshot_before = take_fingerprint()
+        snapshot_before_id = f"sha256:{snapshot_before}"
+        approved_snapshot = expected_snapshot
+        if request is not None:
+            if approved_snapshot is not None \
+                    and request.expected_snapshot is not None \
+                    and approved_snapshot != request.expected_snapshot:
+                raise TransactionFailure(
+                    "transaction expected snapshot does not match its gateway approval"
+                )
+            approved_snapshot = approved_snapshot or request.expected_snapshot
+        if approved_snapshot is not None and approved_snapshot != snapshot_before_id:
+            raise TransactionSnapshotConflict(
+                approved_snapshot,
+                snapshot_before_id,
+            )
+        # Snapshot staleness is the broader approved-state conflict and keeps
+        # its historical precedence when the same concurrent write also moved
+        # an artifact revision.
+        if conflicts:
+            raise TransactionConflict(conflicts)
 
         def rollback() -> list[str]:
             failures: list[str] = []
@@ -924,12 +902,16 @@ class TransactionService:
                     raise TransactionFailure(
                         f"transaction failed canonical validation: {preview}"
                     )
-            if publish is not None:
-                publish()
+            projected_snapshot = publish() if publish is not None else None
 
             snapshot_after = take_fingerprint()
-            snapshot_before_id = f"sha256:{snapshot_before}"
             snapshot_after_id = f"sha256:{snapshot_after}"
+            if projected_snapshot is not None \
+                    and projected_snapshot != snapshot_after_id:
+                raise TransactionFailure(
+                    "canonical state changed during projection publication "
+                    f"(projected {projected_snapshot}, actual {snapshot_after_id})"
+                )
             if request is not None and idempotency_path is not None \
                     and idempotency_entries is not None:
                 idempotency_entries[request.idempotency_key] = {

@@ -17,9 +17,13 @@ from __future__ import annotations
 
 import json
 
+import yaml
+from test_curriculum_v2 import _add_material_overview, add_curriculum
+
 from learning_os.genout import generate_all
 from learning_os.genout.projection import module_lifecycle
 from learning_os.loader import load_repo
+from learning_os.rules import validate
 
 
 def _academic(status: str) -> dict:
@@ -97,3 +101,35 @@ def test_the_raw_authored_status_is_still_published(mini_repo):
     """Deriving must not remove the field anything else may legitimately read."""
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     assert all("status" in module for module in manifest["modules"])
+
+
+def test_archived_module_route_debt_leaves_active_validation(mini_repo):
+    """Archiving preserves imperfect routes without treating them as live debt."""
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["status"] = "archived"
+    module_path.write_text(
+        yaml.safe_dump(module, sort_keys=False, allow_unicode=True),
+        encoding="utf-8",
+    )
+
+    issues = validate(load_repo(mini_repo))
+
+    assert not [
+        issue for issue in issues
+        if issue.code in {"LOCATOR-VAGUE", "ROUTE-ANGLE-DETAIL-MISSING"}
+    ]
+
+
+def test_reactivating_module_restores_its_route_debt(mini_repo):
+    """The archive is reversible: unresolved routes re-enter the warning surface."""
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+
+    issues = validate(load_repo(mini_repo))
+    codes = {issue.code for issue in issues}
+
+    assert "LOCATOR-VAGUE" in codes
+    assert "ROUTE-ANGLE-DETAIL-MISSING" in codes

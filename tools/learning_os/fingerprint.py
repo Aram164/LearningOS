@@ -21,9 +21,12 @@ import hashlib
 import os
 import weakref
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from .loader import Repo
 from .pathing import PathBoundaryError, read_bytes_inside
+
+if TYPE_CHECKING:
+    from .loader import Repo
 
 CANONICAL_ROOTS = (
     "knowledge",

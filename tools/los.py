@@ -219,7 +219,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--replay-only", action="store_true",
         help="verify an already committed idempotent receipt without running the handler",
     )
-    p.set_defaults(func=cmd_capability)
+    # Capability dispatch reuses this parser without importing the CLI module
+    # back from the command package. Passing the factory explicitly keeps the
+    # command graph acyclic while retaining one parser as the schema authority.
+    p.set_defaults(func=cmd_capability, _parser_factory=build_parser)
 
     p = sub.add_parser("validate", help="delegate to tools/validate.py")
     p.add_argument("--online", action="store_true", help="also audit external URLs")

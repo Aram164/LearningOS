@@ -16,6 +16,8 @@ from __future__ import annotations
 import ast
 import importlib
 import pkgutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -88,3 +90,36 @@ def test_adapter_registry_falls_back_without_an_adapters_file(tmp_path: Path):
 
     adapters = AdapterRegistry(tmp_path / "does-not-exist.yaml").list()
     assert [a.id for a in adapters] == ["manual-bundle"]
+
+
+def test_read_only_ai_projection_does_not_import_the_write_orchestrator():
+    script = (
+        "import sys; "
+        "import learning_os.ai_actions.projection; "
+        "assert 'learning_os.ai_actions.service' not in sys.modules; "
+        "assert 'learning_os.transactions' not in sys.modules; "
+        "assert 'learning_os.genout' not in sys.modules"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr
+
+
+def test_transaction_import_does_not_initialize_domain_loaders():
+    script = (
+        "import sys; "
+        "import learning_os.transactions; "
+        "assert 'learning_os.loading.curriculum' not in sys.modules; "
+        "assert 'learning_os.loading.knowledge' not in sys.modules"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script],
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 0, result.stderr

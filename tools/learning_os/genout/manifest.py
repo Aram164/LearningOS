@@ -16,7 +16,7 @@ from ..contracts.manifest_contract import (
 from ..fingerprint import source_fingerprint
 from ..garden import project_garden_entries
 from ..loader import Repo
-from ..transactions import load_revisions
+from ..revisions import load_revisions
 from .common import _git_state, _json_header
 from .coordination import adoption_counts
 from .modules_view import _academic_deadlines
@@ -186,8 +186,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     )
 
     # AI action state remains an optional additive subsystem.
-    from learning_os.ai_actions import manifest_ai_projection
-    ai_projection = manifest_ai_projection(repo.root)
+    from learning_os.ai_actions.projection import project_ai_actions
+    ai_projection = project_ai_actions(repo)
     payload = {
         "_generated": generated_meta,
         "records": records,

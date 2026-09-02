@@ -6,8 +6,8 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 
+from ..errors import TransactionFailure
 from ..loader import Repo
-from ..transactions import TransactionFailure
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at

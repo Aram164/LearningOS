@@ -124,6 +124,7 @@ def test_non_object_handler_output_is_a_hard_gateway_failure(
             definition,
             {"request_id": "req-malformed-success", "capability": definition.name},
             {"text": "capture me"},
+            parser_factory=los.build_parser,
         )
 
 
