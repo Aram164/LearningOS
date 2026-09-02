@@ -17,6 +17,7 @@ from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
     intent_sha256,
+    verified_gateway_snapshot,
 )
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
@@ -24,6 +25,7 @@ from learning_os.transactions import (
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionResult,
+    TransactionSnapshotConflict,
     replay_for_request,
 )
 
@@ -87,14 +89,20 @@ def _validate_payload(root: Path, name: str, payload: dict) -> None:
         raise WriteRefused(f"invalid payload for {name}: {detail}")
 
 
-def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[int, dict]:
+def _dispatch(
+    root: Path,
+    definition,
+    envelope: dict,
+    payload: dict,
+    *,
+    parser_factory,
+) -> tuple[int, dict]:
     """Run one capability through the same handler its named CLI command uses.
 
     There is deliberately no second implementation here. The envelope is
     translated into the arguments the command already accepts, so the two
     interfaces cannot diverge in behaviour — only in how they are called.
     """
-    import los  # local: los imports this module, so the cycle must stay lazy
     from learning_os.contracts.payloads import payload_to_namespace, subparsers
 
     if envelope.get("schema_version") == 2 and "approve" in payload:
@@ -109,7 +117,7 @@ def _dispatch(root: Path, definition, envelope: dict, payload: dict) -> tuple[in
             "approval is bound to the exact content"
         )
     _validate_payload(root, definition.name, payload)
-    commands = subparsers(los.build_parser())
+    commands = subparsers(parser_factory())
     command_parser = commands.get(definition.cli_command or "")
     if command_parser is None:
         raise WriteRefused(f"capability {definition.name} declares no CLI command to dispatch to")
@@ -240,6 +248,7 @@ def _context_from_v2(envelope: dict) -> GatewayRequestContext:
         intent_sha256=subject_hash,
         approval_kind=approval["kind"],
         approval_subject_sha256=approval["subject_sha256"],
+        expected_snapshot=envelope["expected_snapshot"],
     )
 
 
@@ -623,31 +632,55 @@ def cmd_capability(args) -> int:
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 2
-        actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
-        if envelope["expected_snapshot"] != actual_snapshot:
+        try:
+            # One lock spans the approved-state comparison and the handler.
+            # Named handlers reuse this lock, so their historical in-lock
+            # preflight remains safe without taking the same digest twice.
+            with _operator_lock(root):
+                actual_snapshot = f"sha256:{canonical_fingerprint(root)}"
+                if envelope["expected_snapshot"] != actual_snapshot:
+                    response = _v2_response(
+                        envelope,
+                        ok=False,
+                        error=_gateway_error(
+                            "STALE_SNAPSHOT",
+                            "canonical state changed since this request was approved",
+                            retryable=True,
+                            details={
+                                "expected": envelope["expected_snapshot"],
+                                "actual": actual_snapshot,
+                            },
+                        ),
+                    )
+                    _validate_capability_envelope(root, response, kind="result")
+                    print(json.dumps(response, indent=2, ensure_ascii=False))
+                    return 3
+                with gateway_request_context(context), verified_gateway_snapshot(
+                    root, actual_snapshot
+                ):
+                    code, result = _dispatch(
+                        root,
+                        definitions[args.name],
+                        envelope,
+                        payload,
+                        parser_factory=args._parser_factory,
+                    )
+        except WriteRefused as exc:
+            code, result = 2, {"error": str(exc)}
+        except TransactionSnapshotConflict as exc:
             response = _v2_response(
                 envelope,
                 ok=False,
                 error=_gateway_error(
                     "STALE_SNAPSHOT",
-                    "canonical state changed since this request was approved",
+                    "canonical state changed before the transaction write window",
                     retryable=True,
-                    details={
-                        "expected": envelope["expected_snapshot"],
-                        "actual": actual_snapshot,
-                    },
+                    details={"expected": exc.expected, "actual": exc.actual},
                 ),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return 3
-        try:
-            with gateway_request_context(context):
-                code, result = _dispatch(
-                    root, definitions[args.name], envelope, payload
-                )
-        except WriteRefused as exc:
-            code, result = 2, {"error": str(exc)}
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
         except ValueError as exc:
@@ -680,7 +713,13 @@ def cmd_capability(args) -> int:
         return code
 
     try:
-        code, result = _dispatch(root, definitions[args.name], envelope, payload)
+        code, result = _dispatch(
+            root,
+            definitions[args.name],
+            envelope,
+            payload,
+            parser_factory=args._parser_factory,
+        )
     except WriteRefused as exc:
         code, result = 2, {"error": str(exc)}
     # The handler folds its own receipt facts into `result`, so the response

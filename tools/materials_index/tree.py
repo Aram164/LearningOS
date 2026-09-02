@@ -87,14 +87,6 @@ def build_tree(sources, flatmap):
             roots.append(node_for(p, None, False, False))
     return roots
 
-
-def empty_domain(name):
-    return {"name": name, "dirs": [], "files": [], "nfiles": 0, "nsupport": 0,
-            "bytes": 0, "ctx": None, "archived": False, "source_id": None,
-            "title": None, "stype": "", "url": "", "org": "", "year": None,
-            "authors": None}
-
-
 def collect_leaves(node, crumb, out):
     ctype = (node["ctx"] or {}).get("type", "") or ""
     cblob = (node["ctx"] or {}).get("blob", "") or ""

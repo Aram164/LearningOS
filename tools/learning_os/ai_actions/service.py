@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import re
 import shutil
 from pathlib import Path
 from typing import Any, cast
@@ -15,9 +14,13 @@ from learning_os.contracts.capability_catalog import (
     domain_capability_definitions,
     load_capability_catalog,
 )
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    current_gateway_request,
+    gateway_snapshot_is_verified,
+)
 from learning_os.contracts.manifest_contract import declared_version
 from learning_os.contracts.write_scopes import WriteScopeError, require_write_scope
+from learning_os.fingerprint import source_fingerprint
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
 from learning_os.material_synthesis import (
@@ -30,10 +33,12 @@ from learning_os.transactions import (
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionService,
+    TransactionSnapshotConflict,
     artifact_revision,
     replay_for_request,
 )
 
+from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
     DeliveryValidationError,
@@ -48,9 +53,7 @@ from .support import (
     _inside,
     _iso,
     _now_utc,
-    _projection,
     _read_yaml,
-    _sha256_bytes,
     _sha256_file,
     _snapshot,
     parse_frontmatter_request_id,
@@ -65,98 +68,6 @@ from .types import (
     RequestStatus,
     ValidatedDelivery,
 )
-
-
-def read_bound_delivery(
-    directory: Path,
-    *,
-    delivery_sha256: str,
-    artifact_sha256: dict[str, Any],
-) -> tuple[DeliveryRecord, dict[str, bytes]]:
-    """Read and verify the exact bytes named by an approved V2 payload.
-
-    A free function (not a method) so replay evidence verification
-    (``transactions.replay_for_request``) can re-derive exactly the same
-    hash-bound delivery evidence a live ``apply_delivery`` call would, without
-    duplicating the binding logic or needing a full ``AIActionService``.
-    """
-    expected_delivery = AIActionService._validated_sha256(
-        delivery_sha256, label="delivery_sha256"
-    )
-    delivery_path = directory / "delivery.yaml"
-    if not delivery_path.is_file() or delivery_path.is_symlink():
-        raise DeliveryValidationError(
-            "approved delivery record is missing or is not a regular file"
-        )
-    try:
-        delivery_bytes = delivery_path.read_bytes()
-    except OSError as exc:
-        raise DeliveryValidationError(
-            f"approved delivery record is unreadable: {exc}"
-        ) from exc
-    if _sha256_bytes(delivery_bytes) != expected_delivery:
-        raise DeliveryValidationError(
-            "approved delivery content hash does not match the imported delivery record"
-        )
-    try:
-        delivery = yaml.safe_load(delivery_bytes.decode("utf-8", errors="strict"))
-    except (UnicodeError, yaml.YAMLError) as exc:
-        raise DeliveryValidationError(
-            f"approved delivery record is unreadable: {exc}"
-        ) from exc
-    if not isinstance(delivery, dict):
-        raise DeliveryValidationError("delivery.yaml must contain a mapping")
-
-    operations = delivery.get("operations")
-    if not isinstance(operations, list):
-        raise DeliveryValidationError("delivery operations must be a list")
-    refs: set[str] = set()
-    for operation in operations:
-        if not isinstance(operation, dict):
-            raise DeliveryValidationError("each delivery operation must be a mapping")
-        artifact_ref = operation.get("artifact_ref")
-        if artifact_ref is not None:
-            if not isinstance(artifact_ref, str) or not artifact_ref:
-                raise DeliveryValidationError(
-                    "delivery artifact_ref must be a non-empty relative path"
-                )
-            refs.add(artifact_ref)
-    if not isinstance(artifact_sha256, dict):
-        raise DeliveryValidationError("artifact_sha256 must be an object")
-    if any(not isinstance(key, str) or not key for key in artifact_sha256):
-        raise DeliveryValidationError(
-            "artifact_sha256 keys must be non-empty artifact_ref strings"
-        )
-    supplied = set(artifact_sha256)
-    if supplied != refs:
-        raise DeliveryValidationError(
-            "approved delivery artifact hashes must bind exactly every artifact_ref "
-            f"(missing={sorted(refs - supplied)}, unexpected={sorted(supplied - refs)})"
-        )
-    artifacts: dict[str, bytes] = {}
-    for artifact_ref in sorted(refs):
-        expected = AIActionService._validated_sha256(
-            artifact_sha256[artifact_ref],
-            label=f"artifact_sha256[{artifact_ref}]",
-        )
-        artifact = _inside(directory, artifact_ref)
-        if not artifact.is_file() or artifact.is_symlink():
-            raise DeliveryValidationError(
-                f"approved delivery artifact is missing or is not a regular file: {artifact_ref}"
-            )
-        try:
-            content = artifact.read_bytes()
-        except OSError as exc:
-            raise DeliveryValidationError(
-                f"approved delivery artifact is unreadable: {artifact_ref}: {exc}"
-            ) from exc
-        if _sha256_bytes(content) != expected:
-            raise DeliveryValidationError(
-                "approved delivery artifact content hash does not match "
-                f"the imported bytes: {artifact_ref}"
-            )
-        artifacts[artifact_ref] = content
-    return cast(DeliveryRecord, delivery), artifacts
 
 
 class AIActionService:
@@ -211,16 +122,6 @@ class AIActionService:
             raise DeliveryValidationError(
                 f"{exc} (declared scope: {', '.join(allowed)})"
             ) from exc
-
-    @staticmethod
-    def _validated_sha256(value: Any, *, label: str) -> str:
-        if not isinstance(value, str) or not re.fullmatch(
-            r"sha256:[a-f0-9]{64}", value
-        ):
-            raise DeliveryValidationError(
-                f"{label} must be sha256 followed by 64 lowercase hexadecimal digits"
-            )
-        return value
 
     def _bound_delivery_content(
         self,
@@ -557,15 +458,16 @@ class AIActionService:
         if replay is not None:
             return self._apply_result(replay, touched_paths=[])
 
-        expected_snapshot = self._validated_sha256(
+        expected_snapshot = validated_sha256(
             expected_snapshot, label="expected_snapshot"
         )
-        actual_snapshot = _snapshot(self.root)
-        if expected_snapshot != actual_snapshot:
-            raise StaleDeliveryError(
-                "approved delivery snapshot conflict "
-                f"(expected {expected_snapshot}, actual {actual_snapshot})"
-            )
+        if not gateway_snapshot_is_verified(self.root, expected_snapshot):
+            actual_snapshot = _snapshot(self.root)
+            if expected_snapshot != actual_snapshot:
+                raise StaleDeliveryError(
+                    "approved delivery snapshot conflict "
+                    f"(expected {expected_snapshot}, actual {actual_snapshot})"
+                )
         # Validation already read the delivery, the request and the target; reuse
         # them rather than parsing the same three files a second time.
         outcome = self._validate(delivery, directory)
@@ -745,13 +647,6 @@ class AIActionService:
             raise DeliveryValidationError(
                 "approved delivery bytes changed while application was being prepared"
             )
-        actual_snapshot = _snapshot(self.root)
-        if expected_snapshot != actual_snapshot:
-            raise StaleDeliveryError(
-                "approved delivery snapshot changed before commit "
-                f"(expected {expected_snapshot}, actual {actual_snapshot})"
-            )
-
         def request_write(transaction_id: str) -> dict[Path, str]:
             completed = dict(request)
             completed["status"] = "completed"
@@ -770,13 +665,15 @@ class AIActionService:
                 if issue.severity == "E"
             ]
 
-        def publish() -> None:
+        def publish() -> str:
             nonlocal validated_repo
             from learning_os.genout import generate_all, write_outputs
 
             repo = validated_repo or load_repo(self.root)
-            validated_repo = None
             write_outputs(repo, generate_all(repo))
+            projected_snapshot = f"sha256:{source_fingerprint(repo)}"
+            validated_repo = None
+            return projected_snapshot
 
         def rollback_publish() -> None:
             from learning_os.genout import generate_all, write_outputs
@@ -815,6 +712,7 @@ class AIActionService:
                 publish=publish,
                 rollback_publish=rollback_publish,
                 metadata=metadata,
+                expected_snapshot=expected_snapshot,
                 transaction_writes=request_write,
                 write_authorities={
                     **{
@@ -825,6 +723,8 @@ class AIActionService:
                 },
             )
         except TransactionConflict as exc:
+            raise StaleDeliveryError(str(exc)) from exc
+        except TransactionSnapshotConflict as exc:
             raise StaleDeliveryError(str(exc)) from exc
         except TransactionIdempotencyConflict as exc:
             raise DeliveryValidationError(f"delivery idempotency conflict: {exc}") from exc
@@ -853,9 +753,9 @@ class AIActionService:
         }
 
     def manifest_projection(self) -> dict[str, Any]:
-        return _projection(
-            garden_entries=self.list_garden_targets(),
-            available=self.list_actions(),
-            adapters=[a.project() for a in self.adapters.list()],
-            requests=self.repository.request_projections(),
-        )
+        # Compatibility method for callers that already hold a service. The
+        # read model itself lives in the dependency-light projection module so
+        # manifest generation never imports this write orchestrator.
+        from .projection import manifest_ai_projection
+
+        return manifest_ai_projection(self.root)

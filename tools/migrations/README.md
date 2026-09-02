@@ -1,5 +1,8 @@
 # Migration lifecycle
 
+The per-file current/retired status is indexed in `tools/README.md`; this file
+defines the lifecycle rule shared by every migration.
+
 A migration is a bridge from one declared stored-record generation to the next.
 It is not a permanent alternative writer for the live repository.
 

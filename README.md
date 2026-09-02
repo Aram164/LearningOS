@@ -114,6 +114,7 @@ make status     # one-screen repository state
 make inventory  # rebuild the materials manifest (see "Materials durability")
 make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
 make test       # complete suite, including full-repository integration checks
+make code-check # static reachability/layer/cycle gate; reads code only
 make system-check # Core lint/validation/tests + the sibling UI's complete check
 make stress     # deliberate deep audit: release pair + production/fuzz/concurrency + URLs
 make            # list the one-word commands
@@ -145,9 +146,10 @@ hit on a clean macOS install. Every later `make` target and the Core Git hooks u
 (Equivalent direct calls once the venv exists: `.venv/bin/python tools/validate.py`
 [`--online` adds the URL audit], `.venv/bin/python tools/generate.py`,
 `.venv/bin/python -m pytest -m "not full_repo"`, `.venv/bin/python -m pytest`.)
-Requires Python 3.12+, `pyyaml`, `jsonschema>=4`,
-`pytest` — the tools fail fast with the exact fix if a dependency is missing or
-too old.
+Python 3.12+ is required. The package version and exact runtime/development
+dependencies are declared only in `pyproject.toml`; the tools fail fast with
+the setup command if a dependency is missing or too old. Tool ownership and
+lifecycle status are indexed in `tools/README.md`.
 
 Three Git hooks (canonical copies in `tools/hooks/`, installed by `make setup`):
 **pre-commit** blocks any commit while the validator reports errors (warnings

@@ -7,12 +7,14 @@ from pathlib import Path
 import pytest
 import yaml
 
+import learning_os.ai_actions.projection as ai_projection
 import learning_os.commands.support as command_support
 import learning_os.fingerprint as fingerprint_module
 import learning_os.transactions as transaction_module
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
+    verified_gateway_snapshot,
 )
 from learning_os.contracts.json_schema import (
     ContractValidationError,
@@ -25,6 +27,7 @@ from learning_os.transactions import (
     TransactionConflict,
     TransactionFailure,
     TransactionService,
+    TransactionSnapshotConflict,
     artifact_revision,
     canonical_fingerprint,
 )
@@ -149,6 +152,13 @@ def test_validation_and_publication_share_one_loaded_repository(
         return original(root)
 
     monkeypatch.setattr(command_support, "load_repo", counted)
+
+    def unexpected_projection_load(_root: Path):
+        raise AssertionError(
+            "manifest projection must reuse the repository loaded for validation"
+        )
+
+    monkeypatch.setattr(ai_projection, "load_repo", unexpected_projection_load)
     artifact = "capture-test:one-load"
     with gateway_request_context(_gateway_context("capture.create", "one-load")):
         code, errors, confirmation = command_support._write_transaction(
@@ -162,6 +172,151 @@ def test_validation_and_publication_share_one_loaded_repository(
     assert (code, errors) == (0, [])
     assert confirmation["transaction_id"]
     assert loads == 1
+
+
+def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    """Keep entry/final/projection safety while removing the handler duplicate."""
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+    base = _gateway_context("capture.create", "bounded-fingerprints")
+    context = GatewayRequestContext(
+        request_id=base.request_id,
+        idempotency_key=base.idempotency_key,
+        capability=base.capability,
+        channel=base.channel,
+        intent_sha256=base.intent_sha256,
+        approval_kind=base.approval_kind,
+        approval_subject_sha256=base.approval_subject_sha256,
+        expected_snapshot=expected,
+    )
+    calls = 0
+    original = fingerprint_module.canonical_fingerprint
+
+    def counted(root: Path) -> str:
+        nonlocal calls
+        calls += 1
+        return original(root)
+
+    monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
+    monkeypatch.setattr(command_support, "canonical_fingerprint", counted)
+    monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted)
+    target = mini_repo / "work/inbox/bounded-fingerprints.md"
+    artifact = "capture-test:bounded-fingerprints"
+
+    with command_support._operator_lock(mini_repo):
+        with gateway_request_context(context), verified_gateway_snapshot(
+            mini_repo, expected
+        ):
+            # cmd_capability owns the locked entry comparison. This assertion
+            # represents the named handler's former duplicate and must not scan.
+            assert command_support._expected_ok(mini_repo, expected) is True
+            code, errors, confirmation = command_support._write_transaction(
+                mini_repo,
+                {target: "bounded\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
+
+    assert (code, errors) == (0, [])
+    assert confirmation["snapshot_after"].startswith("sha256:")
+    assert calls == 3, (
+        "the transaction needs a final pre-write scan, the projected identity, "
+        "and a fresh post-publication scan"
+    )
+
+
+def test_operator_lock_is_reentrant_in_one_dispatch(
+        tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    calls: list[int] = []
+    monkeypatch.setattr(
+        command_support.fcntl,
+        "flock",
+        lambda _fd, operation: calls.append(operation),
+    )
+
+    with command_support._operator_lock(tmp_path):
+        with command_support._operator_lock(tmp_path):
+            assert calls == [command_support.fcntl.LOCK_EX]
+
+    assert calls == [command_support.fcntl.LOCK_EX, command_support.fcntl.LOCK_UN]
+
+
+def test_projection_publication_refuses_a_changed_canonical_snapshot(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    target = mini_repo / "work/inbox/projection-race.md"
+    external = mini_repo / "knowledge/notes/mathematics/external-race.md"
+    original_publish = command_support._publish_repo
+
+    def publish_then_mutate(repo):
+        original_publish(repo)
+        external.write_text("changed outside the transaction\n", encoding="utf-8")
+
+    monkeypatch.setattr(command_support, "_publish_repo", publish_then_mutate)
+    artifact = "capture-test:projection-race"
+    with gateway_request_context(
+        _gateway_context("capture.create", "projection-race")
+    ):
+        code, errors, confirmation = command_support._write_transaction(
+            mini_repo,
+            {target: "transaction content\n"},
+            capability="capture.create",
+            expected_revisions={artifact: 0},
+            artifact_ids=[artifact],
+        )
+
+    assert code == 2
+    assert any("changed during projection publication" in error for error in errors)
+    assert confirmation == {}
+    assert not target.exists()
+    assert external.is_file(), "rollback must not erase an unrelated external edit"
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_transaction_rechecks_approved_snapshot_before_writing(tmp_path: Path):
+    canonical = tmp_path / "knowledge/note.md"
+    canonical.parent.mkdir(parents=True)
+    canonical.write_text("approved\n", encoding="utf-8")
+    expected = f"sha256:{canonical_fingerprint(tmp_path)}"
+    canonical.write_text("changed elsewhere\n", encoding="utf-8")
+    target = tmp_path / "projects/registry/project-demo.yaml"
+
+    with pytest.raises(TransactionSnapshotConflict) as refusal:
+        TransactionService(tmp_path).commit(
+            capability="project.create",
+            writes={target: "id: project-demo\n"},
+            artifact_ids=["project-demo"],
+            expected_snapshot=expected,
+        )
+
+    assert refusal.value.expected == expected
+    assert refusal.value.actual == f"sha256:{canonical_fingerprint(tmp_path)}"
+    assert not target.exists()
+    assert not list((tmp_path / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_snapshot_conflict_precedes_a_revision_conflict(tmp_path: Path):
+    canonical = tmp_path / "knowledge/note.md"
+    canonical.parent.mkdir(parents=True)
+    canonical.write_text("approved\n", encoding="utf-8")
+    approved = f"sha256:{canonical_fingerprint(tmp_path)}"
+    canonical.write_text("changed\n", encoding="utf-8")
+    ledger = tmp_path / "operations/transactions/revisions.yaml"
+    ledger.parent.mkdir(parents=True)
+    ledger.write_text(
+        "schema_version: 1\ntype: artifact-revision-ledger\nrevisions:\n"
+        "  project-demo: 1\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(TransactionSnapshotConflict):
+        TransactionService(tmp_path).commit(
+            capability="project.update",
+            writes={tmp_path / "projects/registry/project-demo.yaml": "id: project-demo\n"},
+            artifact_ids=["project-demo"],
+            expected_revisions={"project-demo": 0},
+            expected_snapshot=approved,
+        )
 
 
 def test_snapshot_check_does_not_parse_the_repository(

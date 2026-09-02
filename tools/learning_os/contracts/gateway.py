@@ -8,6 +8,7 @@ import hashlib
 import json
 from collections.abc import Iterator, Mapping
 from dataclasses import dataclass
+from pathlib import Path
 
 GATEWAY_SCHEMA_VERSION = 2
 GATEWAY_CHANNELS = frozenset({"ui", "codex", "operator", "system-task"})
@@ -27,12 +28,6 @@ REQUEST_SCOPED_ARTIFACT_PREFIXES: Mapping[str, str] = {
     "capture.create": "capture-request",
     "garden.seed.create": "garden-request",
 }
-
-
-def is_request_scoped_capability(capability: str) -> bool:
-    """True when the capability guards its request rather than a named file."""
-    return str(capability) in REQUEST_SCOPED_ARTIFACT_PREFIXES
-
 
 def request_artifact_id(capability: str, idempotency_key: str) -> str:
     """Return the one request-scoped artifact id for a dynamically-named write."""
@@ -81,15 +76,37 @@ class GatewayRequestContext:
     intent_sha256: str
     approval_kind: str
     approval_subject_sha256: str
+    # The approved projection identity. Real GatewayEnvelopeV2 requests always
+    # provide it; ``None`` remains available for focused service tests and
+    # historical callers that construct the context directly.
+    expected_snapshot: str | None = None
 
 
 _CURRENT_REQUEST: contextvars.ContextVar[GatewayRequestContext | None] = (
     contextvars.ContextVar("learningos_gateway_request", default=None)
 )
+_VERIFIED_SNAPSHOT: contextvars.ContextVar[tuple[str, str] | None] = (
+    contextvars.ContextVar("learningos_verified_gateway_snapshot", default=None)
+)
 
 
 def current_gateway_request() -> GatewayRequestContext | None:
     return _CURRENT_REQUEST.get()
+
+
+def gateway_snapshot_is_verified(root: Path, snapshot: str) -> bool:
+    """Whether ``snapshot`` was observed while the gateway holds ``root``'s lock."""
+    return _VERIFIED_SNAPSHOT.get() == (str(root.resolve()), snapshot)
+
+
+@contextlib.contextmanager
+def verified_gateway_snapshot(root: Path, snapshot: str) -> Iterator[None]:
+    """Mark one locked V2 dispatch as already compared with canonical state."""
+    token = _VERIFIED_SNAPSHOT.set((str(root.resolve()), snapshot))
+    try:
+        yield
+    finally:
+        _VERIFIED_SNAPSHOT.reset(token)
 
 
 @contextlib.contextmanager

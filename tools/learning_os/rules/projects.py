@@ -4,7 +4,8 @@ from __future__ import annotations
 
 import time
 
-from ..transactions import TransactionFailure, load_revisions
+from ..errors import TransactionFailure
+from ..revisions import load_revisions
 from .common import REQUIRED_WORKSPACE_SECTIONS
 
 
