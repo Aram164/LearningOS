@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-aml-resource-target-p5-20260901-001",
+  "idempotency_key": "aml-resource-target-p5-20260901-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:cc0ecee119ee8a5c042ea01831d1baf576f515908c62cafd3723857587b3c7af",
+  "expected_revisions": {
+    "module-hu-aml": 9,
+    "unit-aml-l01": 3,
+    "unit-aml-l02": 3
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:fa8da8191c7be951199ce5372fc7b1fdf8698ab842e72b7c66814ba2fc438b02"
+  },
+  "payload": {
+    "module_id": "module-hu-aml",
+    "file": "work/active/workspace-aml-exam-prep/outputs/AML-resource-target-plan-P5.yaml",
+    "file_sha256": "sha256:35ce48711795d1f8790aee6bc167d7259bb942f7ac531b27e89b37eb7f94adf5"
+  }
+}

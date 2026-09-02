@@ -50,6 +50,7 @@ def rebuild_study_maps(sm, unit_ids):
     tools_dir = REPO / "tools"
     sys.path.insert(0, str(tools_dir))
     import assemble_lecture_study_maps as assembler
+    from learning_os.genout.materials import _project_material_resource
     from learning_os.loader import load_repo
 
     repo = load_repo(REPO)
@@ -60,10 +61,15 @@ def rebuild_study_maps(sm, unit_ids):
     routes_by_unit = {}
     for source_entry in sm["sources"]:
         sid = source_entry["source_id"]
-        material = repo.sources[sid].get("material")
         for route in source_entry.get("unit_routes") or []:
             planned = {**route, "source_id": sid}
-            material_uri = route.get("vault_path") or material
+            # Use the same fail-closed locator projection as generated views.
+            # A source-level material may be a directory.  Copying it directly
+            # makes a stage open the folder rather than the exact file named by
+            # the route, and multi-file locators must remain non-openable until
+            # a single target is selected.
+            projected = _project_material_resource(repo, planned)
+            material_uri = projected.get("material_uri")
             if material_uri:
                 planned["material_uri"] = material_uri
             routes_by_unit.setdefault(route["unit_id"], []).append(planned)
@@ -72,6 +78,18 @@ def rebuild_study_maps(sm, unit_ids):
     for unit_id in sorted(unit_ids):
         unit = projected_units[unit_id]
         module_id = unit["module_id"]
+        if unit.get("kind") == "exam-block":
+            # Exam execution maps are operator-authored rather than generated
+            # from one concept per stage.  Carry the current governed record in
+            # the atomic package; the route-backed source selections are synced
+            # separately above, while the authored stage sequence stays intact.
+            unit_record = repo.units[unit_id].data
+            study_map_id = unit_record["current_study_map"]
+            entries.append({
+                "unit": unit_record,
+                "study_map": repo.study_maps[study_map_id].data,
+            })
+            continue
         study_map = assembler.build(
             unit,
             module_id,

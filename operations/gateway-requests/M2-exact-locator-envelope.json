@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "request_id": "request-m2-exact-locator-20260901-001",
+  "idempotency_key": "m2-exact-locator-20260901-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:ac77447ca0a289dcfd40aafae4da7a0236c1036d23bc1351892deaaa2865bcc3",
+  "expected_revisions": {
+    "module-hu-m2-statistik-analysis": 10,
+    "unit-m2-analysis-ch03": 2,
+    "unit-m2-analysis-ch04": 2,
+    "unit-m2-analysis-ch05": 2,
+    "unit-m2-analysis-ch06": 2,
+    "unit-m2-analysis-ch07": 2,
+    "unit-m2-sad-l02": 3,
+    "unit-m2-sad-l03": 7,
+    "unit-m2-sad-l04": 7,
+    "unit-m2-sad-l05": 3,
+    "unit-m2-sad-l06": 7,
+    "unit-m2-sad-l07": 4,
+    "unit-m2-sad-l08": 3,
+    "unit-m2-sad-l09": 3,
+    "unit-m2-sad-l10": 3,
+    "unit-m2-sad-l11": 3,
+    "unit-m2-sad-l12": 3,
+    "unit-m2-sad-l13": 3,
+    "unit-m2-sad-l14": 7,
+    "unit-m2-sad-l15": 7
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:cbea5d68079faaef2fde1606977b7e5f7acd7f0084ef3507be5ef2220694d8dc"
+  },
+  "payload": {
+    "module_id": "module-hu-m2-statistik-analysis",
+    "file": "work/active/workspace-m2-exam-prep/outputs/M2-exact-locator-plan-2026-09-01.yaml",
+    "file_sha256": "sha256:c6643483a146b75e2ec1102dba2a69bca5a01e0bad0fef3cd3c6ee068dba5ac7"
+  }
+}

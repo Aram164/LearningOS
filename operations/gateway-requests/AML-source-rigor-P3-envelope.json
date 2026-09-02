@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-aml-source-rigor-p3-20260831-001",
+  "idempotency_key": "aml-source-rigor-p3-20260831-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:fc127d004138ed1de59440b8c474722ae70be38f55c63c3fc6f23bec347e8db6",
+  "expected_revisions": {
+    "module-hu-aml": 7,
+    "unit-aml-exam-prep": 5,
+    "unit-aml-l07": 2
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:7a424ca3602b1a39c5916e62215194d8d7296ef7e4b14c0f25885246fc3da414"
+  },
+  "payload": {
+    "module_id": "module-hu-aml",
+    "file": "work/active/workspace-aml-exam-prep/outputs/AML-source-rigor-plan-P3.yaml",
+    "file_sha256": "sha256:07733200923615577344c1c4121ae86c6a7b1d9a49c2369245d0fe1170b8d00e"
+  }
+}

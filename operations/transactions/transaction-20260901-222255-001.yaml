@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260901-222255-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-01T22:22:55+02:00'
+snapshot_before: sha256:e7a1cfa243cbcc0f1f87df0711165f82df77ee273aee2c89d881e06e7eb308f3
+snapshot_after: sha256:e05e6813bb6d31a06844f2dbf06bdc356b10ae545c3ab7c168e024feaa886d16
+expected_revisions:
+  unit-job-engineering-tools-fluency: 1
+  study-map-job-engineering-tools-fluency: 1
+artifact_revisions:
+  study-map-job-engineering-tools-fluency:
+    before: 1
+    after: 2
+  unit-job-engineering-tools-fluency:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/study-map.yaml
+  sha256_before: ab053a5628c298397369f222de8dcb5a2bb5f68c57a4295de20874cc103c06dc
+  sha256_after: 267e55f48c38d100840494ff2840986d904bc9e98b9b68450b9a66dedaa80602
+  created: false
+- path: curriculum/modules/module-job-engineering-tools/units/unit-job-engineering-tools-fluency/unit.yaml
+  sha256_before: d3fcc30f4b67a3e61eb43262db145c28e09b2ec523abea22b39c79298f4ed470
+  sha256_after: d3fcc30f4b67a3e61eb43262db145c28e09b2ec523abea22b39c79298f4ed470
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: codex
+  request_id: request-job-engineering-tools-url-repair-20260901-001
+  idempotency_key: job-engineering-tools-url-repair-20260901-001
+  intent_sha256: sha256:bb7169029689aef1d458f4e5c4365e487ecb90a3981b5f45eb31472004535366
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:bb7169029689aef1d458f4e5c4365e487ecb90a3981b5f45eb31472004535366

@@ -1,0 +1,31 @@
+{
+  "schema_version": 2,
+  "request_id": "request-aml-resource-target-p6-20260901-001",
+  "idempotency_key": "aml-resource-target-p6-20260901-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:57ff6192fe83164337efb47a682251ead81309ac3c09f9bab32dd7acd301113a",
+  "expected_revisions": {
+    "module-hu-aml": 10,
+    "unit-aml-l01": 4,
+    "unit-aml-l02": 4,
+    "unit-aml-l03": 3,
+    "unit-aml-l04": 3,
+    "unit-aml-l05": 3,
+    "unit-aml-l06": 3,
+    "unit-aml-l07": 4,
+    "unit-aml-l08": 3,
+    "unit-aml-l09": 3,
+    "unit-aml-l10": 6,
+    "unit-aml-l11": 5
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:2674350a8763c126c169f71403f9de7c6a88bfce892f770ea8728c5d301698d7"
+  },
+  "payload": {
+    "module_id": "module-hu-aml",
+    "file": "work/active/workspace-aml-exam-prep/outputs/AML-resource-target-plan-P6.yaml",
+    "file_sha256": "sha256:0bf41441d92b75d36767b404766f4bc557fa575b0603d7a077d72328833ad430"
+  }
+}
