@@ -98,7 +98,7 @@ source_selections:
   - stage-aml-linear-optimization-repair
   - stage-aml-neural-transformer-loop
 - source_id: source-jurafsky-slp3
-  locator: Chapter 8 — Transformers (January 6, 2026 draft)
+  locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
   route_id: route-913d0ca70d700148f5f1d69c
   purpose: Conditional L11 derivation fallback because it is the deck's own named further reading; use
     only if the current deck, bank and mock leave an attention or block gap.

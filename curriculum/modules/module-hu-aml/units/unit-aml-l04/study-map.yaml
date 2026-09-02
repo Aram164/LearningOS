@@ -19,8 +19,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Multiple predictors, augmented design matrices, vectorized prediction, gradients,
     and dimensions.'
-  - Work Übung 04 — nonlinear regression and regularization, then the remaining 2, and record every miss with
-    the step it failed at.
+  - Work Übung 04 — nonlinear regression and regularization, then the remaining 2, and record every miss
+    with the step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -30,53 +30,119 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: practise
     label: Übung 04 — nonlinear regression and regularization
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 04.pdf
+    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage,
+      and the second exercise sheet in one current tutorial deck.
+    angle_detail: 'Contribution: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Übung 04 — nonlinear regression and
+      regularization'' over ''Current L04 lecture deck'' when you need this contribution; the neighboring
+      route instead contributes: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Course boundary: This
+      is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 04.pdf
     scope_triage: required-now
-    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
-      the second exercise sheet in one current tutorial deck.
   - kind: practise
     label: Bonusblatt 02 — multivariate-regression task
     source_id: source-aml-ss26-lectures
     locator: bonus-exercises/zusatz-blatt02.pdf
-    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
-    scope_triage: required-now
     angle: Interpreting a fitted multivariate equation and changing categorical predictors; the classification
       task on the same sheet is a preview of L05.
+    angle_detail: 'Contribution: Interpreting a fitted multivariate equation and changing categorical
+      predictors; the classification task on the same sheet is a preview of L05. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Bonusblatt 02 — multivariate-regression
+      task'' over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution;
+      the neighboring route instead contributes: Worked regression, polynomial features, overfitting,
+      Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current tutorial
+      deck. Course boundary: This is current course evidence and may calibrate examined notation, but
+      the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
   - kind: read
     label: ISLP polynomial regression, Ridge, and Lasso
     source_id: source-islp
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
+    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry;
+      skip splines/subset selection because they exceed the lecture.
+    angle_detail: 'Contribution: A gentle route from multiple regression to polynomial basis functions
+      and shrinkage geometry; skip splines/subset selection because they exceed the lecture. Depth and
+      prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make the
+      mechanism explainable before formal derivation. Discriminator: choose ''ISLP polynomial regression,
+      Ridge, and Lasso'' over ''Übung 04 — nonlinear regression and regularization'' when you need this
+      contribution; the neighboring route instead contributes: Worked regression, polynomial features,
+      overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current
+      tutorial deck. Course boundary: It complements the current deck but cannot override the deck''s
+      notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
-      splines/subset selection because they exceed the lecture.
   - kind: read
     label: Murphy basis functions and regularized regression
     source_id: source-murphy-pml1
-    locator: Chapter 11 regression and regularization selections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3 Ridge regression,
+      pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
+    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections,
+      and regularization.
+    angle_detail: 'Contribution: A derivation-first account of multivariate linear models, basis expansion,
+      Ridge/MAP connections, and regularization. Depth and prerequisites: It assumes comfort with the
+      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''Murphy basis functions and regularized regression'' over ''Übung 04
+      — nonlinear regression and regularization'' when you need this contribution; the neighboring route
+      instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections, and
-      regularization.
   - kind: read
     label: MML multivariate regression and MAP/Ridge bridge
     source_id: source-mml
-    locator: Chapter 9 selected sections
-    scope_triage: helpful-now
+    locator: 'Official PDF, Ch 9 ''Linear Regression'': §9.2.2 ''Maximum A Posteriori Estimation'' PDF
+      pp. 306-308 and §9.4 ''Maximum Likelihood as Orthogonal Projection'' PDF pp. 319-320'
     angle: Shows the matrix solution and how a Gaussian prior produces Ridge-style regularization.
+    angle_detail: 'Contribution: Shows the matrix solution and how a Gaussian prior produces Ridge-style
+      regularization. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
+      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''MML multivariate regression and MAP/Ridge bridge'' over ''Current L04 lecture deck'' when
+      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It is optional depth: open it for the named gap,
+      then return to the current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: practise
     label: Cornell CS4780 HW6 — Ridge and regression
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 selected problems and solutions
-    scope_triage: helpful-now
+    locator: '2018Fall/HW6/hw6.tex and hw6_solution.tex: Problem 1 ''Regularization Mitigates Overfitting''
+      (ridge) and Problem 2 ''Bias and Variance in KNN'''
     angle: Solution-backed multivariate regression, gradient, and Ridge problems; select only lecture-aligned
       parts.
+    angle_detail: 'Contribution: Solution-backed multivariate regression, gradient, and Ridge problems;
+      select only lecture-aligned parts. Depth and prerequisites: It assumes the relevant rule or algorithm
+      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
+      Discriminator: choose ''Cornell CS4780 HW6 — Ridge and regression'' over ''Current L04 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It complements the current deck but cannot override
+      the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-multivariate/notes.md
   attachments: []
   source_feedback: []
@@ -84,12 +150,13 @@ stages:
   number: 2
   title: Normal equation
   status: pending
-  objective: The matrix closed form, invertibility and singularity, and when direct solution differs from iterative
-    optimization.
+  objective: The matrix closed form, invertibility and singularity, and when direct solution differs from
+    iterative optimization.
   done_when:
   - 'Reproduce without notes: The matrix closed form, invertibility and singularity, and when direct solution
     differs from iterative optimization.'
-  - Work Cornell CS4780 HW6 — Ridge and regression, and record every miss with the step it failed at.
+  - Work Cornell CS4780 HW6 — Ridge and regression, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-normal-equation
@@ -99,23 +166,71 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: read
     label: MML multivariate regression and MAP/Ridge bridge
     source_id: source-mml
-    locator: Chapter 9 selected sections
-    scope_triage: helpful-now
+    locator: 'Official PDF, Ch 9 ''Linear Regression'': §9.2.2 ''Maximum A Posteriori Estimation'' PDF
+      pp. 306-308 and §9.4 ''Maximum Likelihood as Orthogonal Projection'' PDF pp. 319-320'
     angle: Shows the matrix solution and how a Gaussian prior produces Ridge-style regularization.
+    angle_detail: 'Contribution: Shows the matrix solution and how a Gaussian prior produces Ridge-style
+      regularization. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
+      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''MML multivariate regression and MAP/Ridge bridge'' over ''Current L04 lecture deck'' when
+      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It is optional depth: open it for the named gap,
+      then return to the current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: practise
     label: Cornell CS4780 HW6 — Ridge and regression
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 selected problems and solutions
-    scope_triage: helpful-now
+    locator: '2018Fall/HW6/hw6.tex and hw6_solution.tex: Problem 1 ''Regularization Mitigates Overfitting''
+      (ridge) and Problem 2 ''Bias and Variance in KNN'''
     angle: Solution-backed multivariate regression, gradient, and Ridge problems; select only lecture-aligned
       parts.
+    angle_detail: 'Contribution: Solution-backed multivariate regression, gradient, and Ridge problems;
+      select only lecture-aligned parts. Depth and prerequisites: It assumes the relevant rule or algorithm
+      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
+      Discriminator: choose ''Cornell CS4780 HW6 — Ridge and regression'' over ''Current L04 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It complements the current deck but cannot override
+      the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS229 practice midterm — MAP as regularized least squares
+    source_id: source-cs229-problem-sets
+    locator: Autumn 2010 Practice Midterm Solutions, Question 2, equations (1)-(3), PDF pp. 2-3
+    angle: Makes the Gaussian-prior/ridge equivalence emerge from a complete derivation rather than a
+      stated analogy.
+    angle_detail: 'Re-read the same solved derivation with L04''s lens: identify the penalty coefficient
+      and the shifted normal equation. The cross-unit reuse is intentional; L03 owns the probability derivation
+      and L04 owns the regularization interpretation.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Bendersky — normal-equation assumptions
+    source_id: source-bendersky-normal-equation
+    locator: Article 'Derivation of the Normal Equation for linear regression', final derivative and invertibility
+      paragraphs
+    angle: Provides a clean baseline derivation against which ridge's shifted system and guaranteed invertibility
+      can be compared.
+    angle_detail: Revisit only the final equations and mark where the unregularized proof assumes XᵀX
+      invertible. L04's distinct task is to explain how adding λI changes that condition; the article
+      itself does not derive ridge.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-normal-equation/notes.md
   attachments: []
   source_feedback: []
@@ -123,11 +238,13 @@ stages:
   number: 3
   title: Polynomial basis expansion
   status: pending
-  objective: Nonlinear functions learned by transforming inputs while retaining a model linear in its parameters.
+  objective: Nonlinear functions learned by transforming inputs while retaining a model linear in its
+    parameters.
   done_when:
-  - 'Reproduce without notes: Nonlinear functions learned by transforming inputs while retaining a model linear
-    in its parameters.'
-  - Work Übung 04 — nonlinear regression and regularization, and record every miss with the step it failed at.
+  - 'Reproduce without notes: Nonlinear functions learned by transforming inputs while retaining a model
+    linear in its parameters.'
+  - Work Übung 04 — nonlinear regression and regularization, and record every miss with the step it failed
+    at.
   exam_critical: true
   concepts:
   - concept-basis-functions
@@ -137,86 +254,200 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: practise
     label: Übung 04 — nonlinear regression and regularization
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 04.pdf
+    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage,
+      and the second exercise sheet in one current tutorial deck.
+    angle_detail: 'Contribution: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Übung 04 — nonlinear regression and
+      regularization'' over ''Current L04 lecture deck'' when you need this contribution; the neighboring
+      route instead contributes: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Course boundary: This
+      is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 04.pdf
     scope_triage: required-now
-    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
-      the second exercise sheet in one current tutorial deck.
   - kind: reference
     label: Older L04 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
+    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison
+      only.
+    angle_detail: 'Contribution: Prior-year second telling of polynomial regression and regularization,
+      preserved for comparison only. Depth and prerequisites: It assumes the lecture treatment is already
+      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L04 lecture variant'' over ''Übung 04 — nonlinear regression and regularization''
+      when you need this contribution; the neighboring route instead contributes: Worked regression, polynomial
+      features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in
+      one current tutorial deck. Course boundary: This is prior-year evidence: use it only for a second
+      explanation, and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
     scope_triage: reference-only
-    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison only.
   - kind: read
     label: ISLP polynomial regression, Ridge, and Lasso
     source_id: source-islp
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
+    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry;
+      skip splines/subset selection because they exceed the lecture.
+    angle_detail: 'Contribution: A gentle route from multiple regression to polynomial basis functions
+      and shrinkage geometry; skip splines/subset selection because they exceed the lecture. Depth and
+      prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make the
+      mechanism explainable before formal derivation. Discriminator: choose ''ISLP polynomial regression,
+      Ridge, and Lasso'' over ''Übung 04 — nonlinear regression and regularization'' when you need this
+      contribution; the neighboring route instead contributes: Worked regression, polynomial features,
+      overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current
+      tutorial deck. Course boundary: It complements the current deck but cannot override the deck''s
+      notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
-      splines/subset selection because they exceed the lecture.
   - kind: read
     label: Murphy basis functions and regularized regression
     source_id: source-murphy-pml1
-    locator: Chapter 11 regression and regularization selections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3 Ridge regression,
+      pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
+    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections,
+      and regularization.
+    angle_detail: 'Contribution: A derivation-first account of multivariate linear models, basis expansion,
+      Ridge/MAP connections, and regularization. Depth and prerequisites: It assumes comfort with the
+      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''Murphy basis functions and regularized regression'' over ''Übung 04
+      — nonlinear regression and regularization'' when you need this contribution; the neighboring route
+      instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections, and
-      regularization.
   - kind: reference
     label: CSC411 nonlinear regression and regularization
     source_id: source-csc411-notes
-    locator: Chapter 3 selected sections
+    locator: csc411.pdf §3.1 Basis function regression, pdf pp. 14-15; §3.2 Overfitting and Regularization,
+      pdf pp. 16-18
+    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting,
+      then regularization.'
+    angle_detail: 'Contribution: The closest compact notes match to the lecture sequence: nonlinear features,
+      overfitting, then regularization. Depth and prerequisites: It assumes the prerequisites declared
+      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
+      choose ''CSC411 nonlinear regression and regularization'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting, then regularization.'
   - kind: reference
     label: Kroese nonlinear and regularized regression
     source_id: source-kroese-dsml
-    locator: Regression and regularization selections
+    locator: kroese.pdf Linear Regression, pdf pp. 187-205; Nonlinear Regression Models, pdf pp. 206-208;
+      Regularization, pdf pp. 234-238
+    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve
+      a specific derivation gap.
+    angle_detail: 'Contribution: A dense statistical reference for feature expansion and coefficient control,
+      best used to resolve a specific derivation gap. Depth and prerequisites: It assumes the lecture
+      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
+      or second derivation. Discriminator: choose ''Kroese nonlinear and regularized regression'' over
+      ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve a
-      specific derivation gap.
   - kind: reference
     label: CS229 feature maps and regularization
     source_id: source-cs229-notes
-    locator: §§5.1–5.2 and §9.1
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Feature maps', pdf p. 50; 'LMS with features' and 'LMS with the kernel trick',
+      pdf pp. 51-54; 'Regularization', pdf pp. 126-127
     angle: Connects polynomial basis expansion to general feature maps and gives a clean penalty/weight-decay
       derivation.
+    angle_detail: 'Contribution: Connects polynomial basis expansion to general feature maps and gives
+      a clean penalty/weight-decay derivation. Depth and prerequisites: It assumes comfort with the unit''s
+      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''CS229 feature maps and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 feature maps and regularization lectures
     source_id: source-cs229-2022-videos
-    locator: Feature-map/model-selection segments
-    scope_triage: reference-only
+    locator: Spring 2022 playlist, Lecture 10 'Bias/Variance, Regularization, and Model Selection'
     angle: University-lecture depth on basis functions, model complexity, and regularization; select segments
       rather than watching the course linearly.
+    angle_detail: 'Contribution: University-lecture depth on basis functions, model complexity, and regularization;
+      select segments rather than watching the course linearly. Depth and prerequisites: It assumes the
+      lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
+      reference or second derivation. Discriminator: choose ''CS229 feature maps and regularization lectures''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
+    scope_triage: reference-only
   - kind: read
     label: MIT 6.036 features and regularization unit
     source_id: source-mit-6036
-    locator: Features and regularization units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 4 'Features' — feature maps and regularization exercises
     angle: Structured exercises for polynomial feature transformations, overfitting, and model selection.
+    angle_detail: 'Contribution: Structured exercises for polynomial feature transformations, overfitting,
+      and model selection. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 features and regularization unit'' over ''Übung 04 — nonlinear regression and
+      regularization'' when you need this contribution; the neighboring route instead contributes: Worked
+      regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the
+      second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: read
     label: Géron polynomial regression and regularization
     source_id: source-geron-handson
-    locator: Chapter 4 polynomial and regularized-regression sections
+    locator: geron-copy2.pdf Ch 4 'Polynomial Regression', pdf pp. 216-217; 'Learning Curves', pdf pp.
+      218-222; 'Regularized Linear Models', pdf pp. 223-231
+    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso,
+      and Elastic Net.
+    angle_detail: 'Contribution: Applied scikit-learn implementations of polynomial features, learning
+      curves, Ridge, Lasso, and Elastic Net. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron polynomial regression and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
     scope_triage: helpful-now
-    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso, and Elastic
-      Net.
   - kind: read
     label: Ng features, polynomial regression, and regularization
     source_id: source-ng-coursera
-    locator: Features/Polynomial Regression and Regularization lessons
+    locator: Machine Learning Specialization, Course 1, Week 2 'Multiple linear regression' and 'Feature
+      scaling', then Week 3 'The problem of overfitting'
+    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization
+      at exactly the right introductory level.
+    angle_detail: 'Contribution: The canonical gentle just-add-x-squared explanation, followed by overfitting
+      and regularization at exactly the right introductory level. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Ng features, polynomial regression, and regularization''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
     scope_triage: helpful-now
-    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization at
-      exactly the right introductory level.
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-basis/notes.md
   attachments: []
   source_feedback: []
@@ -224,12 +455,13 @@ stages:
   number: 4
   title: Complexity and overfitting
   status: pending
-  objective: Flexible polynomial features, train/test behaviour, bias-variance, and validation-based model choice.
+  objective: Flexible polynomial features, train/test behaviour, bias-variance, and validation-based model
+    choice.
   done_when:
   - 'Reproduce without notes: Flexible polynomial features, train/test behaviour, bias-variance, and validation-based
     model choice.'
-  - Work Übung 04 — nonlinear regression and regularization, then the remaining 1, and record every miss with
-    the step it failed at.
+  - Work Übung 04 — nonlinear regression and regularization, then the remaining 2, and record every miss
+    with the step it failed at.
   exam_critical: true
   concepts:
   - concept-basis-functions
@@ -240,93 +472,226 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: practise
     label: Übung 04 — nonlinear regression and regularization
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 04.pdf
+    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage,
+      and the second exercise sheet in one current tutorial deck.
+    angle_detail: 'Contribution: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Übung 04 — nonlinear regression and
+      regularization'' over ''Current L04 lecture deck'' when you need this contribution; the neighboring
+      route instead contributes: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Course boundary: This
+      is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 04.pdf
     scope_triage: required-now
-    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
-      the second exercise sheet in one current tutorial deck.
   - kind: read
     label: ISLP polynomial regression, Ridge, and Lasso
     source_id: source-islp
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
+    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry;
+      skip splines/subset selection because they exceed the lecture.
+    angle_detail: 'Contribution: A gentle route from multiple regression to polynomial basis functions
+      and shrinkage geometry; skip splines/subset selection because they exceed the lecture. Depth and
+      prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make the
+      mechanism explainable before formal derivation. Discriminator: choose ''ISLP polynomial regression,
+      Ridge, and Lasso'' over ''Übung 04 — nonlinear regression and regularization'' when you need this
+      contribution; the neighboring route instead contributes: Worked regression, polynomial features,
+      overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current
+      tutorial deck. Course boundary: It complements the current deck but cannot override the deck''s
+      notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
-      splines/subset selection because they exceed the lecture.
   - kind: read
     label: ESL Ridge and Lasso depth
     source_id: source-esl
-    locator: §§3.4.1–3.4.3
-    scope_triage: helpful-now
+    locator: esl.pdf §3.4.1 Ridge Regression, pdf pp. 80-86; §3.4.2 The Lasso, pdf p. 87; §3.4.3 Discussion,
+      pdf pp. 88-91 (stop before §3.4.4 Least Angle Regression p. 92)
     angle: 'The strongest advanced explanation of shrinkage: SVD geometry for Ridge, constrained optimization,
       and why Lasso creates sparsity.'
+    angle_detail: 'Contribution: The strongest advanced explanation of shrinkage: SVD geometry for Ridge,
+      constrained optimization, and why Lasso creates sparsity. Depth and prerequisites: It assumes comfort
+      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
+      merely recognize them. Discriminator: choose ''ESL Ridge and Lasso depth'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It is optional depth: open
+      it for the named gap, then return to the current deck rather than importing the source''s wider
+      syllabus.'
+    scope_triage: helpful-now
   - kind: reference
     label: CSC411 nonlinear regression and regularization
     source_id: source-csc411-notes
-    locator: Chapter 3 selected sections
+    locator: csc411.pdf §3.1 Basis function regression, pdf pp. 14-15; §3.2 Overfitting and Regularization,
+      pdf pp. 16-18
+    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting,
+      then regularization.'
+    angle_detail: 'Contribution: The closest compact notes match to the lecture sequence: nonlinear features,
+      overfitting, then regularization. Depth and prerequisites: It assumes the prerequisites declared
+      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
+      choose ''CSC411 nonlinear regression and regularization'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting, then regularization.'
   - kind: reference
     label: CS229 feature maps and regularization
     source_id: source-cs229-notes
-    locator: §§5.1–5.2 and §9.1
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Feature maps', pdf p. 50; 'LMS with features' and 'LMS with the kernel trick',
+      pdf pp. 51-54; 'Regularization', pdf pp. 126-127
     angle: Connects polynomial basis expansion to general feature maps and gives a clean penalty/weight-decay
       derivation.
+    angle_detail: 'Contribution: Connects polynomial basis expansion to general feature maps and gives
+      a clean penalty/weight-decay derivation. Depth and prerequisites: It assumes comfort with the unit''s
+      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''CS229 feature maps and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 feature maps and regularization lectures
     source_id: source-cs229-2022-videos
-    locator: Feature-map/model-selection segments
-    scope_triage: reference-only
+    locator: Spring 2022 playlist, Lecture 10 'Bias/Variance, Regularization, and Model Selection'
     angle: University-lecture depth on basis functions, model complexity, and regularization; select segments
       rather than watching the course linearly.
+    angle_detail: 'Contribution: University-lecture depth on basis functions, model complexity, and regularization;
+      select segments rather than watching the course linearly. Depth and prerequisites: It assumes the
+      lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
+      reference or second derivation. Discriminator: choose ''CS229 feature maps and regularization lectures''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
+    scope_triage: reference-only
   - kind: read
     label: MIT 6.036 features and regularization unit
     source_id: source-mit-6036
-    locator: Features and regularization units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 4 'Features' — feature maps and regularization exercises
     angle: Structured exercises for polynomial feature transformations, overfitting, and model selection.
+    angle_detail: 'Contribution: Structured exercises for polynomial feature transformations, overfitting,
+      and model selection. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 features and regularization unit'' over ''Übung 04 — nonlinear regression and
+      regularization'' when you need this contribution; the neighboring route instead contributes: Worked
+      regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the
+      second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest Ridge and Lasso trilogy
     source_id: source-statquest
-    locator: Ridge Regression; Lasso Regression; Elastic Net
+    locator: StatQuest episodes 'Ridge Regression, Clearly Explained', 'Lasso Regression, Clearly Explained',
+      and 'Elastic Net, Clearly Explained'
+    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their
+      geometric difference.
+    angle_detail: 'Contribution: The best short visual entry to coefficient shrinkage, L1 sparsity, L2
+      shrinkage, and their geometric difference. Depth and prerequisites: It assumes the unit vocabulary
+      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
+      Discriminator: choose ''StatQuest Ridge and Lasso trilogy'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their geometric
-      difference.
   - kind: read
     label: Géron polynomial regression and regularization
     source_id: source-geron-handson
-    locator: Chapter 4 polynomial and regularized-regression sections
+    locator: geron-copy2.pdf Ch 4 'Polynomial Regression', pdf pp. 216-217; 'Learning Curves', pdf pp.
+      218-222; 'Regularized Linear Models', pdf pp. 223-231
+    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso,
+      and Elastic Net.
+    angle_detail: 'Contribution: Applied scikit-learn implementations of polynomial features, learning
+      curves, Ridge, Lasso, and Elastic Net. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron polynomial regression and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
     scope_triage: helpful-now
-    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso, and Elastic
-      Net.
   - kind: practise
     label: Caltech overfitting and regularization problems
     source_id: source-caltech-lfd
-    locator: HW4 and HW6 selected problems
+    locator: Homework table links 'Homework 4'/'Solution to Homework 4' and 'Homework 6'/'Solution to
+      Homework 6' — regularization and validation problems
+    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested
+      reasoning beyond implementation.
+    angle_detail: 'Contribution: Solved model-complexity, validation, and regularization questions that
+      add pressure-tested reasoning beyond implementation. Depth and prerequisites: It assumes the relevant
+      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
+      with feedback. Discriminator: choose ''Caltech overfitting and regularization problems'' over ''Übung
+      04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested reasoning
-      beyond implementation.
   - kind: read
     label: Ng features, polynomial regression, and regularization
     source_id: source-ng-coursera
-    locator: Features/Polynomial Regression and Regularization lessons
+    locator: Machine Learning Specialization, Course 1, Week 2 'Multiple linear regression' and 'Feature
+      scaling', then Week 3 'The problem of overfitting'
+    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization
+      at exactly the right introductory level.
+    angle_detail: 'Contribution: The canonical gentle just-add-x-squared explanation, followed by overfitting
+      and regularization at exactly the right introductory level. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Ng features, polynomial regression, and regularization''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
     scope_triage: helpful-now
-    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization at
-      exactly the right introductory level.
   - kind: read
     label: Domingos — overfitting and model-complexity perspective
     source_id: source-domingos-useful-things
-    locator: Sections on overfitting and feature engineering
+    locator: CACM PDF pp. 4-7, sections 'Overfitting Has Many Faces' and 'Feature Engineering Is The Key'
+    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering
+      to complement the Ridge/Lasso mathematics.
+    angle_detail: 'Contribution: A compact conceptual account of overfitting, regularization, data scale,
+      and feature engineering to complement the Ridge/Lasso mathematics. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Domingos — overfitting and model-complexity perspective''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering to
-      complement the Ridge/Lasso mathematics.
+  - kind: practise
+    label: CS189 solved calibration — ridge and lasso
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, Question 1(iv)-(v), PDF pp. 3-4; Spring 2024 Final Solutions,
+      Question 1(o), PDF p. 5
+    angle: Separates the algebraic guarantee of ridge from lasso sparsity and closed-form misconceptions.
+    angle_detail: 'Use these two bounded official items as a misconception check: ridge guarantees uniqueness
+      while lasso promotes zeros but has no general closed form. They add exam discrimination, not another
+      regularization explanation.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-overfitting/notes.md
   attachments: []
   source_feedback: []
@@ -334,12 +699,13 @@ stages:
   number: 5
   title: Ridge and L2 regularization
   status: pending
-  objective: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the closed-form Ridge solution.
+  objective: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the closed-form Ridge
+    solution.
   done_when:
-  - 'Reproduce without notes: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the closed-form
-    Ridge solution.'
-  - Work Übung 04 — nonlinear regression and regularization, then the remaining 2, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: Penalized MSE, lambda, coefficient shrinkage, intercept treatment, and the
+    closed-form Ridge solution.'
+  - Work Übung 04 — nonlinear regression and regularization, then the remaining 4, and record every miss
+    with the step it failed at.
   exam_critical: true
   concepts:
   - concept-regularization
@@ -349,127 +715,328 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: practise
     label: Übung 04 — nonlinear regression and regularization
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 04.pdf
+    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage,
+      and the second exercise sheet in one current tutorial deck.
+    angle_detail: 'Contribution: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Übung 04 — nonlinear regression and
+      regularization'' over ''Current L04 lecture deck'' when you need this contribution; the neighboring
+      route instead contributes: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Course boundary: This
+      is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 04.pdf
     scope_triage: required-now
-    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
-      the second exercise sheet in one current tutorial deck.
   - kind: reference
     label: Older L04 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
+    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison
+      only.
+    angle_detail: 'Contribution: Prior-year second telling of polynomial regression and regularization,
+      preserved for comparison only. Depth and prerequisites: It assumes the lecture treatment is already
+      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L04 lecture variant'' over ''Übung 04 — nonlinear regression and regularization''
+      when you need this contribution; the neighboring route instead contributes: Worked regression, polynomial
+      features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in
+      one current tutorial deck. Course boundary: This is prior-year evidence: use it only for a second
+      explanation, and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
     scope_triage: reference-only
-    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison only.
   - kind: read
     label: ISLP polynomial regression, Ridge, and Lasso
     source_id: source-islp
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
+    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry;
+      skip splines/subset selection because they exceed the lecture.
+    angle_detail: 'Contribution: A gentle route from multiple regression to polynomial basis functions
+      and shrinkage geometry; skip splines/subset selection because they exceed the lecture. Depth and
+      prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make the
+      mechanism explainable before formal derivation. Discriminator: choose ''ISLP polynomial regression,
+      Ridge, and Lasso'' over ''Übung 04 — nonlinear regression and regularization'' when you need this
+      contribution; the neighboring route instead contributes: Worked regression, polynomial features,
+      overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current
+      tutorial deck. Course boundary: It complements the current deck but cannot override the deck''s
+      notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
-      splines/subset selection because they exceed the lecture.
   - kind: read
     label: ESL Ridge and Lasso depth
     source_id: source-esl
-    locator: §§3.4.1–3.4.3
-    scope_triage: helpful-now
+    locator: esl.pdf §3.4.1 Ridge Regression, pdf pp. 80-86; §3.4.2 The Lasso, pdf p. 87; §3.4.3 Discussion,
+      pdf pp. 88-91 (stop before §3.4.4 Least Angle Regression p. 92)
     angle: 'The strongest advanced explanation of shrinkage: SVD geometry for Ridge, constrained optimization,
       and why Lasso creates sparsity.'
+    angle_detail: 'Contribution: The strongest advanced explanation of shrinkage: SVD geometry for Ridge,
+      constrained optimization, and why Lasso creates sparsity. Depth and prerequisites: It assumes comfort
+      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
+      merely recognize them. Discriminator: choose ''ESL Ridge and Lasso depth'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It is optional depth: open
+      it for the named gap, then return to the current deck rather than importing the source''s wider
+      syllabus.'
+    scope_triage: helpful-now
   - kind: read
     label: Murphy basis functions and regularized regression
     source_id: source-murphy-pml1
-    locator: Chapter 11 regression and regularization selections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3 Ridge regression,
+      pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
+    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections,
+      and regularization.
+    angle_detail: 'Contribution: A derivation-first account of multivariate linear models, basis expansion,
+      Ridge/MAP connections, and regularization. Depth and prerequisites: It assumes comfort with the
+      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''Murphy basis functions and regularized regression'' over ''Übung 04
+      — nonlinear regression and regularization'' when you need this contribution; the neighboring route
+      instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections, and
-      regularization.
   - kind: reference
     label: CSC411 nonlinear regression and regularization
     source_id: source-csc411-notes
-    locator: Chapter 3 selected sections
+    locator: csc411.pdf §3.1 Basis function regression, pdf pp. 14-15; §3.2 Overfitting and Regularization,
+      pdf pp. 16-18
+    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting,
+      then regularization.'
+    angle_detail: 'Contribution: The closest compact notes match to the lecture sequence: nonlinear features,
+      overfitting, then regularization. Depth and prerequisites: It assumes the prerequisites declared
+      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
+      choose ''CSC411 nonlinear regression and regularization'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting, then regularization.'
   - kind: reference
     label: Kroese nonlinear and regularized regression
     source_id: source-kroese-dsml
-    locator: Regression and regularization selections
+    locator: kroese.pdf Linear Regression, pdf pp. 187-205; Nonlinear Regression Models, pdf pp. 206-208;
+      Regularization, pdf pp. 234-238
+    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve
+      a specific derivation gap.
+    angle_detail: 'Contribution: A dense statistical reference for feature expansion and coefficient control,
+      best used to resolve a specific derivation gap. Depth and prerequisites: It assumes the lecture
+      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
+      or second derivation. Discriminator: choose ''Kroese nonlinear and regularized regression'' over
+      ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve a
-      specific derivation gap.
   - kind: read
     label: MML multivariate regression and MAP/Ridge bridge
     source_id: source-mml
-    locator: Chapter 9 selected sections
-    scope_triage: helpful-now
+    locator: 'Official PDF, Ch 9 ''Linear Regression'': §9.2.2 ''Maximum A Posteriori Estimation'' PDF
+      pp. 306-308 and §9.4 ''Maximum Likelihood as Orthogonal Projection'' PDF pp. 319-320'
     angle: Shows the matrix solution and how a Gaussian prior produces Ridge-style regularization.
+    angle_detail: 'Contribution: Shows the matrix solution and how a Gaussian prior produces Ridge-style
+      regularization. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
+      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''MML multivariate regression and MAP/Ridge bridge'' over ''Current L04 lecture deck'' when
+      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It is optional depth: open it for the named gap,
+      then return to the current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 feature maps and regularization
     source_id: source-cs229-notes
-    locator: §§5.1–5.2 and §9.1
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Feature maps', pdf p. 50; 'LMS with features' and 'LMS with the kernel trick',
+      pdf pp. 51-54; 'Regularization', pdf pp. 126-127
     angle: Connects polynomial basis expansion to general feature maps and gives a clean penalty/weight-decay
       derivation.
+    angle_detail: 'Contribution: Connects polynomial basis expansion to general feature maps and gives
+      a clean penalty/weight-decay derivation. Depth and prerequisites: It assumes comfort with the unit''s
+      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''CS229 feature maps and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 feature maps and regularization lectures
     source_id: source-cs229-2022-videos
-    locator: Feature-map/model-selection segments
-    scope_triage: reference-only
+    locator: Spring 2022 playlist, Lecture 10 'Bias/Variance, Regularization, and Model Selection'
     angle: University-lecture depth on basis functions, model complexity, and regularization; select segments
       rather than watching the course linearly.
+    angle_detail: 'Contribution: University-lecture depth on basis functions, model complexity, and regularization;
+      select segments rather than watching the course linearly. Depth and prerequisites: It assumes the
+      lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
+      reference or second derivation. Discriminator: choose ''CS229 feature maps and regularization lectures''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
+    scope_triage: reference-only
   - kind: read
     label: MIT 6.036 features and regularization unit
     source_id: source-mit-6036
-    locator: Features and regularization units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 4 'Features' — feature maps and regularization exercises
     angle: Structured exercises for polynomial feature transformations, overfitting, and model selection.
+    angle_detail: 'Contribution: Structured exercises for polynomial feature transformations, overfitting,
+      and model selection. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 features and regularization unit'' over ''Übung 04 — nonlinear regression and
+      regularization'' when you need this contribution; the neighboring route instead contributes: Worked
+      regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the
+      second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest Ridge and Lasso trilogy
     source_id: source-statquest
-    locator: Ridge Regression; Lasso Regression; Elastic Net
+    locator: StatQuest episodes 'Ridge Regression, Clearly Explained', 'Lasso Regression, Clearly Explained',
+      and 'Elastic Net, Clearly Explained'
+    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their
+      geometric difference.
+    angle_detail: 'Contribution: The best short visual entry to coefficient shrinkage, L1 sparsity, L2
+      shrinkage, and their geometric difference. Depth and prerequisites: It assumes the unit vocabulary
+      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
+      Discriminator: choose ''StatQuest Ridge and Lasso trilogy'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their geometric
-      difference.
   - kind: read
     label: Géron polynomial regression and regularization
     source_id: source-geron-handson
-    locator: Chapter 4 polynomial and regularized-regression sections
+    locator: geron-copy2.pdf Ch 4 'Polynomial Regression', pdf pp. 216-217; 'Learning Curves', pdf pp.
+      218-222; 'Regularized Linear Models', pdf pp. 223-231
+    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso,
+      and Elastic Net.
+    angle_detail: 'Contribution: Applied scikit-learn implementations of polynomial features, learning
+      curves, Ridge, Lasso, and Elastic Net. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron polynomial regression and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
     scope_triage: helpful-now
-    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso, and Elastic
-      Net.
   - kind: practise
     label: Caltech overfitting and regularization problems
     source_id: source-caltech-lfd
-    locator: HW4 and HW6 selected problems
+    locator: Homework table links 'Homework 4'/'Solution to Homework 4' and 'Homework 6'/'Solution to
+      Homework 6' — regularization and validation problems
+    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested
+      reasoning beyond implementation.
+    angle_detail: 'Contribution: Solved model-complexity, validation, and regularization questions that
+      add pressure-tested reasoning beyond implementation. Depth and prerequisites: It assumes the relevant
+      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
+      with feedback. Discriminator: choose ''Caltech overfitting and regularization problems'' over ''Übung
+      04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested reasoning
-      beyond implementation.
   - kind: read
     label: Ng features, polynomial regression, and regularization
     source_id: source-ng-coursera
-    locator: Features/Polynomial Regression and Regularization lessons
+    locator: Machine Learning Specialization, Course 1, Week 2 'Multiple linear regression' and 'Feature
+      scaling', then Week 3 'The problem of overfitting'
+    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization
+      at exactly the right introductory level.
+    angle_detail: 'Contribution: The canonical gentle just-add-x-squared explanation, followed by overfitting
+      and regularization at exactly the right introductory level. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Ng features, polynomial regression, and regularization''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
     scope_triage: helpful-now
-    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization at
-      exactly the right introductory level.
   - kind: practise
     label: Cornell CS4780 HW6 — Ridge and regression
     source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 selected problems and solutions
-    scope_triage: helpful-now
+    locator: '2018Fall/HW6/hw6.tex and hw6_solution.tex: Problem 1 ''Regularization Mitigates Overfitting''
+      (ridge) and Problem 2 ''Bias and Variance in KNN'''
     angle: Solution-backed multivariate regression, gradient, and Ridge problems; select only lecture-aligned
       parts.
+    angle_detail: 'Contribution: Solution-backed multivariate regression, gradient, and Ridge problems;
+      select only lecture-aligned parts. Depth and prerequisites: It assumes the relevant rule or algorithm
+      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
+      Discriminator: choose ''Cornell CS4780 HW6 — Ridge and regression'' over ''Current L04 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
+      for multivariate/design-matrix regression, polynomial basis expansion, overfitting, Ridge, Lasso,
+      and their geometric comparison. Course boundary: It complements the current deck but cannot override
+      the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: read
     label: Domingos — overfitting and model-complexity perspective
     source_id: source-domingos-useful-things
-    locator: Sections on overfitting and feature engineering
+    locator: CACM PDF pp. 4-7, sections 'Overfitting Has Many Faces' and 'Feature Engineering Is The Key'
+    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering
+      to complement the Ridge/Lasso mathematics.
+    angle_detail: 'Contribution: A compact conceptual account of overfitting, regularization, data scale,
+      and feature engineering to complement the Ridge/Lasso mathematics. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Domingos — overfitting and model-complexity perspective''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering to
-      complement the Ridge/Lasso mathematics.
+  - kind: practise
+    label: CS189 solved calibration — ridge and lasso
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, Question 1(iv)-(v), PDF pp. 3-4; Spring 2024 Final Solutions,
+      Question 1(o), PDF p. 5
+    angle: Separates the algebraic guarantee of ridge from lasso sparsity and closed-form misconceptions.
+    angle_detail: 'Use these two bounded official items as a misconception check: ridge guarantees uniqueness
+      while lasso promotes zeros but has no general closed form. They add exam discrimination, not another
+      regularization explanation.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS229 practice midterm — MAP as regularized least squares
+    source_id: source-cs229-problem-sets
+    locator: Autumn 2010 Practice Midterm Solutions, Question 2, equations (1)-(3), PDF pp. 2-3
+    angle: Makes the Gaussian-prior/ridge equivalence emerge from a complete derivation rather than a
+      stated analogy.
+    angle_detail: 'Re-read the same solved derivation with L04''s lens: identify the penalty coefficient
+      and the shifted normal equation. The cross-unit reuse is intentional; L03 owns the probability derivation
+      and L04 owns the regularization interpretation.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Bendersky — normal-equation assumptions
+    source_id: source-bendersky-normal-equation
+    locator: Article 'Derivation of the Normal Equation for linear regression', final derivative and invertibility
+      paragraphs
+    angle: Provides a clean baseline derivation against which ridge's shifted system and guaranteed invertibility
+      can be compared.
+    angle_detail: Revisit only the final equations and mark where the unregularized proof assumes XᵀX
+      invertible. L04's distinct task is to explain how adding λI changes that condition; the article
+      itself does not derive ridge.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-ridge/notes.md
   attachments: []
   source_feedback: []
@@ -479,10 +1046,10 @@ stages:
   status: pending
   objective: L1 geometry, sparse coefficients, feature selection behaviour, and comparison with Ridge.
   done_when:
-  - 'Reproduce without notes: L1 geometry, sparse coefficients, feature selection behaviour, and comparison with
-    Ridge.'
-  - Work Übung 04 — nonlinear regression and regularization, then the remaining 1, and record every miss with
-    the step it failed at.
+  - 'Reproduce without notes: L1 geometry, sparse coefficients, feature selection behaviour, and comparison
+    with Ridge.'
+  - Work Übung 04 — nonlinear regression and regularization, then the remaining 2, and record every miss
+    with the step it failed at.
   exam_critical: true
   concepts:
   - concept-regularization
@@ -492,108 +1059,246 @@ stages:
     label: Current L04 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 04-non-linear-regression.pdf
+    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion,
+      overfitting, Ridge, Lasso, and their geometric comparison.
+    angle_detail: 'Contribution: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L04 lecture deck'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: This is current course
+      evidence and may calibrate examined notation, but the route''s stated locator—not the rest of the
+      source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 04-non-linear-regression.pdf
     scope_triage: required-now
-    angle: The 2026 scope authority for multivariate/design-matrix regression, polynomial basis expansion, overfitting,
-      Ridge, Lasso, and their geometric comparison.
   - kind: practise
     label: Übung 04 — nonlinear regression and regularization
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 04.pdf
+    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage,
+      and the second exercise sheet in one current tutorial deck.
+    angle_detail: 'Contribution: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Depth and prerequisites:
+      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
+      trace, or calculation with feedback. Discriminator: choose ''Übung 04 — nonlinear regression and
+      regularization'' over ''Current L04 lecture deck'' when you need this contribution; the neighboring
+      route instead contributes: The 2026 scope authority for multivariate/design-matrix regression, polynomial
+      basis expansion, overfitting, Ridge, Lasso, and their geometric comparison. Course boundary: This
+      is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 04.pdf
     scope_triage: required-now
-    angle: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
-      the second exercise sheet in one current tutorial deck.
   - kind: reference
     label: Older L04 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
+    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison
+      only.
+    angle_detail: 'Contribution: Prior-year second telling of polynomial regression and regularization,
+      preserved for comparison only. Depth and prerequisites: It assumes the lecture treatment is already
+      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L04 lecture variant'' over ''Übung 04 — nonlinear regression and regularization''
+      when you need this contribution; the neighboring route instead contributes: Worked regression, polynomial
+      features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in
+      one current tutorial deck. Course boundary: This is prior-year evidence: use it only for a second
+      explanation, and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/04-non-linear-regression_f01865dbaea9965d2929caa52276ba7a.pdf
     scope_triage: reference-only
-    angle: Prior-year second telling of polynomial regression and regularization, preserved for comparison only.
   - kind: read
     label: ISLP polynomial regression, Ridge, and Lasso
     source_id: source-islp
-    locator: §3.2; §7.1 only; §2.2.2; §§6.2.1–6.2.2
+    locator: islp.pdf §3.2 Multiple Linear Regression, pdf pp. 89-99; §2.2.2 The Bias-Variance Trade-Off,
+      pdf pp. 41-43; §§6.2.1-6.2.2 Ridge Regression and the Lasso, pdf pp. 248-259; §7.1 Polynomial Regression
+      and Step Functions, pdf pp. 298-313
+    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry;
+      skip splines/subset selection because they exceed the lecture.
+    angle_detail: 'Contribution: A gentle route from multiple regression to polynomial basis functions
+      and shrinkage geometry; skip splines/subset selection because they exceed the lecture. Depth and
+      prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make the
+      mechanism explainable before formal derivation. Discriminator: choose ''ISLP polynomial regression,
+      Ridge, and Lasso'' over ''Übung 04 — nonlinear regression and regularization'' when you need this
+      contribution; the neighboring route instead contributes: Worked regression, polynomial features,
+      overfitting, Ridge/Lasso geometry, scikit-learn usage, and the second exercise sheet in one current
+      tutorial deck. Course boundary: It complements the current deck but cannot override the deck''s
+      notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A gentle route from multiple regression to polynomial basis functions and shrinkage geometry; skip
-      splines/subset selection because they exceed the lecture.
   - kind: read
     label: ESL Ridge and Lasso depth
     source_id: source-esl
-    locator: §§3.4.1–3.4.3
-    scope_triage: helpful-now
+    locator: esl.pdf §3.4.1 Ridge Regression, pdf pp. 80-86; §3.4.2 The Lasso, pdf p. 87; §3.4.3 Discussion,
+      pdf pp. 88-91 (stop before §3.4.4 Least Angle Regression p. 92)
     angle: 'The strongest advanced explanation of shrinkage: SVD geometry for Ridge, constrained optimization,
       and why Lasso creates sparsity.'
+    angle_detail: 'Contribution: The strongest advanced explanation of shrinkage: SVD geometry for Ridge,
+      constrained optimization, and why Lasso creates sparsity. Depth and prerequisites: It assumes comfort
+      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
+      merely recognize them. Discriminator: choose ''ESL Ridge and Lasso depth'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It is optional depth: open
+      it for the named gap, then return to the current deck rather than importing the source''s wider
+      syllabus.'
+    scope_triage: helpful-now
   - kind: read
     label: Murphy basis functions and regularized regression
     source_id: source-murphy-pml1
-    locator: Chapter 11 regression and regularization selections
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3 Ridge regression,
+      pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
+    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections,
+      and regularization.
+    angle_detail: 'Contribution: A derivation-first account of multivariate linear models, basis expansion,
+      Ridge/MAP connections, and regularization. Depth and prerequisites: It assumes comfort with the
+      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''Murphy basis functions and regularized regression'' over ''Übung 04
+      — nonlinear regression and regularization'' when you need this contribution; the neighboring route
+      instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A derivation-first account of multivariate linear models, basis expansion, Ridge/MAP connections, and
-      regularization.
-  - kind: reference
-    label: CSC411 nonlinear regression and regularization
-    source_id: source-csc411-notes
-    locator: Chapter 3 selected sections
-    scope_triage: helpful-now
-    angle: 'The closest compact notes match to the lecture sequence: nonlinear features, overfitting, then regularization.'
   - kind: reference
     label: Kroese nonlinear and regularized regression
     source_id: source-kroese-dsml
-    locator: Regression and regularization selections
+    locator: kroese.pdf Linear Regression, pdf pp. 187-205; Nonlinear Regression Models, pdf pp. 206-208;
+      Regularization, pdf pp. 234-238
+    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve
+      a specific derivation gap.
+    angle_detail: 'Contribution: A dense statistical reference for feature expansion and coefficient control,
+      best used to resolve a specific derivation gap. Depth and prerequisites: It assumes the lecture
+      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
+      or second derivation. Discriminator: choose ''Kroese nonlinear and regularized regression'' over
+      ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A dense statistical reference for feature expansion and coefficient control, best used to resolve a
-      specific derivation gap.
   - kind: reference
     label: CS229 feature maps and regularization
     source_id: source-cs229-notes
-    locator: §§5.1–5.2 and §9.1
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Feature maps', pdf p. 50; 'LMS with features' and 'LMS with the kernel trick',
+      pdf pp. 51-54; 'Regularization', pdf pp. 126-127
     angle: Connects polynomial basis expansion to general feature maps and gives a clean penalty/weight-decay
       derivation.
+    angle_detail: 'Contribution: Connects polynomial basis expansion to general feature maps and gives
+      a clean penalty/weight-decay derivation. Depth and prerequisites: It assumes comfort with the unit''s
+      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
+      them. Discriminator: choose ''CS229 feature maps and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: reference
     label: CS229 feature maps and regularization lectures
     source_id: source-cs229-2022-videos
-    locator: Feature-map/model-selection segments
-    scope_triage: reference-only
+    locator: Spring 2022 playlist, Lecture 10 'Bias/Variance, Regularization, and Model Selection'
     angle: University-lecture depth on basis functions, model complexity, and regularization; select segments
       rather than watching the course linearly.
+    angle_detail: 'Contribution: University-lecture depth on basis functions, model complexity, and regularization;
+      select segments rather than watching the course linearly. Depth and prerequisites: It assumes the
+      lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
+      reference or second derivation. Discriminator: choose ''CS229 feature maps and regularization lectures''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
+    scope_triage: reference-only
   - kind: watch
     label: StatQuest Ridge and Lasso trilogy
     source_id: source-statquest
-    locator: Ridge Regression; Lasso Regression; Elastic Net
+    locator: StatQuest episodes 'Ridge Regression, Clearly Explained', 'Lasso Regression, Clearly Explained',
+      and 'Elastic Net, Clearly Explained'
+    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their
+      geometric difference.
+    angle_detail: 'Contribution: The best short visual entry to coefficient shrinkage, L1 sparsity, L2
+      shrinkage, and their geometric difference. Depth and prerequisites: It assumes the unit vocabulary
+      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
+      Discriminator: choose ''StatQuest Ridge and Lasso trilogy'' over ''Übung 04 — nonlinear regression
+      and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The best short visual entry to coefficient shrinkage, L1 sparsity, L2 shrinkage, and their geometric
-      difference.
   - kind: read
     label: Géron polynomial regression and regularization
     source_id: source-geron-handson
-    locator: Chapter 4 polynomial and regularized-regression sections
+    locator: geron-copy2.pdf Ch 4 'Polynomial Regression', pdf pp. 216-217; 'Learning Curves', pdf pp.
+      218-222; 'Regularized Linear Models', pdf pp. 223-231
+    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso,
+      and Elastic Net.
+    angle_detail: 'Contribution: Applied scikit-learn implementations of polynomial features, learning
+      curves, Ridge, Lasso, and Elastic Net. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron polynomial regression and regularization'' over ''Übung 04 — nonlinear
+      regression and regularization'' when you need this contribution; the neighboring route instead contributes:
+      Worked regression, polynomial features, overfitting, Ridge/Lasso geometry, scikit-learn usage, and
+      the second exercise sheet in one current tutorial deck. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
     scope_triage: helpful-now
-    angle: Applied scikit-learn implementations of polynomial features, learning curves, Ridge, Lasso, and Elastic
-      Net.
   - kind: practise
     label: Caltech overfitting and regularization problems
     source_id: source-caltech-lfd
-    locator: HW4 and HW6 selected problems
+    locator: Homework table links 'Homework 4'/'Solution to Homework 4' and 'Homework 6'/'Solution to
+      Homework 6' — regularization and validation problems
+    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested
+      reasoning beyond implementation.
+    angle_detail: 'Contribution: Solved model-complexity, validation, and regularization questions that
+      add pressure-tested reasoning beyond implementation. Depth and prerequisites: It assumes the relevant
+      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
+      with feedback. Discriminator: choose ''Caltech overfitting and regularization problems'' over ''Übung
+      04 — nonlinear regression and regularization'' when you need this contribution; the neighboring
+      route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso geometry,
+      scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
+      It is optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: Solved model-complexity, validation, and regularization questions that add pressure-tested reasoning
-      beyond implementation.
   - kind: read
     label: Ng features, polynomial regression, and regularization
     source_id: source-ng-coursera
-    locator: Features/Polynomial Regression and Regularization lessons
+    locator: Machine Learning Specialization, Course 1, Week 2 'Multiple linear regression' and 'Feature
+      scaling', then Week 3 'The problem of overfitting'
+    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization
+      at exactly the right introductory level.
+    angle_detail: 'Contribution: The canonical gentle just-add-x-squared explanation, followed by overfitting
+      and regularization at exactly the right introductory level. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Ng features, polynomial regression, and regularization''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
     scope_triage: helpful-now
-    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization at
-      exactly the right introductory level.
   - kind: read
     label: Domingos — overfitting and model-complexity perspective
     source_id: source-domingos-useful-things
-    locator: Sections on overfitting and feature engineering
+    locator: CACM PDF pp. 4-7, sections 'Overfitting Has Many Faces' and 'Feature Engineering Is The Key'
+    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering
+      to complement the Ridge/Lasso mathematics.
+    angle_detail: 'Contribution: A compact conceptual account of overfitting, regularization, data scale,
+      and feature engineering to complement the Ridge/Lasso mathematics. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''Domingos — overfitting and model-complexity perspective''
+      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
+      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
+      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
+      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
+      than importing the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: A compact conceptual account of overfitting, regularization, data scale, and feature engineering to
-      complement the Ridge/Lasso mathematics.
+  - kind: practise
+    label: CS189 solved calibration — ridge and lasso
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, Question 1(iv)-(v), PDF pp. 3-4; Spring 2024 Final Solutions,
+      Question 1(o), PDF p. 5
+    angle: Separates the algebraic guarantee of ridge from lasso sparsity and closed-form misconceptions.
+    angle_detail: 'Use these two bounded official items as a misconception check: ridge guarantees uniqueness
+      while lasso promotes zeros but has no general closed form. They add exam discrimination, not another
+      regularization explanation.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l04/stages/stage-aml-l04-lasso/notes.md
   attachments: []
   source_feedback: []

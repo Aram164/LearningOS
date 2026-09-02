@@ -2,7 +2,7 @@ id: module-hu-algo2
 institution: HU Berlin
 title: Algorithmen und Datenstrukturen II (Algo 2)
 semester: sose-2026
-status: enrolled
+status: archived
 examination:
   type: muendlich
   sittings:
@@ -23,7 +23,7 @@ type: module
 kind: academic
 area_id: program-bachelors
 thematic_group_ids:
-  - thematic-group-algorithms
+- thematic-group-algorithms
 source_map: source-map.yaml
 unit_order:
 - unit-algo2-exam-prep

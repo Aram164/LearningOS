@@ -1,0 +1,68 @@
+schema_version: 2
+id: transaction-20260901-120117-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-01T12:01:17+02:00'
+snapshot_before: sha256:cc0ecee119ee8a5c042ea01831d1baf576f515908c62cafd3723857587b3c7af
+snapshot_after: sha256:e1c2af87cf30946761bea8a20d865e3af9d7ebd8c8f01e8afc7bcef80346fd26
+expected_revisions:
+  module-hu-aml: 9
+  unit-aml-l01: 3
+  unit-aml-l02: 3
+artifact_revisions:
+  module-hu-aml:
+    before: 9
+    after: 10
+  unit-aml-l01:
+    before: 3
+    after: 4
+  unit-aml-l02:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 03304020181847b57026ce73051dea2acb2f7b38a730f7b5dcacb08ae7d92450
+  sha256_after: 03304020181847b57026ce73051dea2acb2f7b38a730f7b5dcacb08ae7d92450
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+  sha256_before: f2fa10eb94ba3ced03b11779e02948043972facd3c65e256f47fe2bc5dabf211
+  sha256_after: 715092d6ecd8cb2d5ba2d3a89b33ea99bf9cb445cb5dabc4cee8372ee3bad091
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/unit.yaml
+  sha256_before: 75a16102de5f64a7e348d742cc9d82b8f5b2284c410e532b5c2ed5439499cc36
+  sha256_after: 75a16102de5f64a7e348d742cc9d82b8f5b2284c410e532b5c2ed5439499cc36
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml
+  sha256_before: b02fb4cfa3734ccb80d6109102b6af4c525e0516c4f4f412cd389087628a7159
+  sha256_after: c17506330d8db679f1d43676372abc079b55ed0a61eeebcd766fbed1894e94b0
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l02/unit.yaml
+  sha256_before: 231e3a1362fa693c6e51c21ba312277a3b47480c7a8ffdf0035a2eadb1e460c1
+  sha256_after: 231e3a1362fa693c6e51c21ba312277a3b47480c7a8ffdf0035a2eadb1e460c1
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: codex
+  request_id: request-aml-resource-target-p5-20260901-001
+  idempotency_key: aml-resource-target-p5-20260901-001
+  intent_sha256: sha256:fa8da8191c7be951199ce5372fc7b1fdf8698ab842e72b7c66814ba2fc438b02
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:fa8da8191c7be951199ce5372fc7b1fdf8698ab842e72b7c66814ba2fc438b02

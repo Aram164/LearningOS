@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Positive/negative classes, discrete outputs, and why ordinary linear regression
     plus a threshold is unstable.'
-  - Work Übung 05 — logistic-regression geometry, then the remaining 1, and record every miss with the step it
-    failed at.
+  - Work Übung 05 — logistic-regression geometry, then the remaining 2, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -31,53 +31,127 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: practise
     label: Übung 05 — logistic-regression geometry
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 05.pdf
+    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The
+      archive's TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning
+      object.
+    angle_detail: 'Contribution: Decision-boundary parameterization, scale invariance, and the first logistic
+      exercise. The archive''s TÜbung 04 file is byte-identical and is therefore one duplicate, not a
+      second learning object. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Übung 05 — logistic-regression geometry'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
     scope_triage: required-now
-    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The archive's
-      TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning object.
   - kind: practise
     label: Bonusblatt 02 — classification task
     source_id: source-aml-ss26-lectures
     locator: bonus-exercises/zusatz-blatt02.pdf
-    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
-    scope_triage: required-now
     angle: A compact alien sentiment-classification problem for turning words/features into a binary prediction
       setup.
+    angle_detail: 'Contribution: A compact alien sentiment-classification problem for turning words/features
+      into a binary prediction setup. Depth and prerequisites: It assumes the relevant rule or algorithm
+      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
+      Discriminator: choose ''Bonusblatt 02 — classification task'' over ''Übung 05 — logistic-regression
+      geometry'' when you need this contribution; the neighboring route instead contributes: Decision-boundary
+      parameterization, scale invariance, and the first logistic exercise. The archive''s TÜbung 04 file
+      is byte-identical and is therefore one duplicate, not a second learning object. Course boundary:
+      This is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
   - kind: read
     label: ISLP logistic-regression sections
     source_id: source-islp
-    locator: §4.3, especially §§4.3.1 and 4.3.4
+    locator: islp.pdf §4.3 Logistic Regression, pdf pp. 147-155 (logistic model §4.3.1 p. 148; multiple
+      logistic regression §4.3.4 p. 151)
+    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting;
+      lighter on the full vectorized cross-entropy derivation than the deck.
+    angle_detail: 'Contribution: A gentle interpretation through probabilities, odds, and log-odds, with
+      MLE coefficient fitting; lighter on the full vectorized cross-entropy derivation than the deck.
+      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
+      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP logistic-regression
+      sections'' over ''Current L05 lecture deck'' when you need this contribution; the neighboring route
+      instead contributes: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It
+      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting; lighter
-      on the full vectorized cross-entropy derivation than the deck.
   - kind: reference
     label: CSC411 classification and logistic loss
     source_id: source-csc411-notes
-    locator: Classification selections
+    locator: csc411.pdf §8.2 Logistic Regression, pdf pp. 49-50; §8.6 Classification by LS Regression,
+      pdf pp. 53-54
+    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic
+      scoring fixes it.
+    angle_detail: 'Contribution: A concise explanation of why linear regression is unsuitable for classification
+      and how logistic scoring fixes it. Depth and prerequisites: It assumes no derivation beyond the
+      current unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose
+      ''CSC411 classification and logistic loss'' over ''Übung 05 — logistic-regression geometry'' when
+      you need this contribution; the neighboring route instead contributes: Decision-boundary parameterization,
+      scale invariance, and the first logistic exercise. The archive''s TÜbung 04 file is byte-identical
+      and is therefore one duplicate, not a second learning object. Course boundary: It complements the
+      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic scoring
-      fixes it.
   - kind: read
     label: MIT 6.036 classification unit
     source_id: source-mit-6036
-    locator: Linear classification units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 5 'Logistic Regression' and its exercises
     angle: Practice-oriented binary-classification and logistic-model work with immediate feedback.
+    angle_detail: 'Contribution: Practice-oriented binary-classification and logistic-model work with
+      immediate feedback. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 classification unit'' over ''Current L05 lecture deck'' when you need this contribution;
+      the neighboring route instead contributes: The 2026 scope authority, including the full separator-to-sigmoid
+      construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
+    scope_triage: helpful-now
   - kind: read
     label: Ng logistic regression and regularization
     source_id: source-ng-coursera
-    locator: Logistic Regression lessons
-    scope_triage: helpful-now
+    locator: Machine Learning Specialization, Course 1, Week 3 'Classification with logistic regression'
+      and 'Cost function for logistic regression'
     angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
       regression.
+    angle_detail: 'Contribution: Gentle construction of sigmoid classification, decision boundaries, cost,
+      and regularized logistic regression. Depth and prerequisites: It assumes the unit vocabulary but
+      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
+      choose ''Ng logistic regression and regularization'' over ''Current L05 lecture deck'' when you
+      need this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS189 solved calibration — generative versus discriminative
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, 'Generative vs. Discriminative Models', Question (a)-(c),
+      PDF pp. 16-19
+    angle: Makes logistic regression compete directly with LDA/QDA, exposing which assumptions produce
+      the same linear log-odds form.
+    angle_detail: Solve the classification question after the lecture's likelihood derivation. Its distinctive
+      value is assumption checking across LDA, QDA, and logistic regression; it does not replace the cross-entropy
+      gradient route.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-classification/notes.md
   attachments: []
   source_feedback: []
@@ -87,10 +161,10 @@ stages:
   status: pending
   objective: The separator w·x=0, score signs, threshold geometry, and basis expansion for curved boundaries.
   done_when:
-  - 'Reproduce without notes: The separator w·x=0, score signs, threshold geometry, and basis expansion for curved
-    boundaries.'
-  - Work Übung 05 — logistic-regression geometry, then the remaining 2, and record every miss with the step it
-    failed at.
+  - 'Reproduce without notes: The separator w·x=0, score signs, threshold geometry, and basis expansion
+    for curved boundaries.'
+  - Work Übung 05 — logistic-regression geometry, then the remaining 3, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-basis-functions
@@ -101,61 +175,145 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: practise
     label: Übung 05 — logistic-regression geometry
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 05.pdf
+    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The
+      archive's TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning
+      object.
+    angle_detail: 'Contribution: Decision-boundary parameterization, scale invariance, and the first logistic
+      exercise. The archive''s TÜbung 04 file is byte-identical and is therefore one duplicate, not a
+      second learning object. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Übung 05 — logistic-regression geometry'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
     scope_triage: required-now
-    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The archive's
-      TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning object.
   - kind: practise
     label: Übung 06 — logistic loss and fitted classifier
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf
+    locator: exercise-slides/Übung 06 .pdf, slides 3-10 (logistic model, loss, and gradient), 16-21 (sigmoid
+      and overfitting), and 23-27 (decision-boundary exercise)
+    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation,
+      and regularized logistic regression; it also begins the L06 optimizer bridge.
+    angle_detail: 'Contribution: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn
+      fitting, evaluation, and regularized logistic regression; it also begins the L06 optimizer bridge.
+      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
+      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
+      06 — logistic loss and fitted classifier'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
-    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation, and
-      regularized logistic regression; it also begins the L06 optimizer bridge.
   - kind: practise
     label: Bonusblatt 02 — classification task
     source_id: source-aml-ss26-lectures
     locator: bonus-exercises/zusatz-blatt02.pdf
-    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
-    scope_triage: required-now
     angle: A compact alien sentiment-classification problem for turning words/features into a binary prediction
       setup.
+    angle_detail: 'Contribution: A compact alien sentiment-classification problem for turning words/features
+      into a binary prediction setup. Depth and prerequisites: It assumes the relevant rule or algorithm
+      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
+      Discriminator: choose ''Bonusblatt 02 — classification task'' over ''Übung 05 — logistic-regression
+      geometry'' when you need this contribution; the neighboring route instead contributes: Decision-boundary
+      parameterization, scale invariance, and the first logistic exercise. The archive''s TÜbung 04 file
+      is byte-identical and is therefore one duplicate, not a second learning object. Course boundary:
+      This is current course evidence and may calibrate examined notation, but the route''s stated locator—not
+      the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
+    scope_triage: required-now
   - kind: reference
     label: CSC411 classification and logistic loss
     source_id: source-csc411-notes
-    locator: Classification selections
+    locator: csc411.pdf §8.2 Logistic Regression, pdf pp. 49-50; §8.6 Classification by LS Regression,
+      pdf pp. 53-54
+    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic
+      scoring fixes it.
+    angle_detail: 'Contribution: A concise explanation of why linear regression is unsuitable for classification
+      and how logistic scoring fixes it. Depth and prerequisites: It assumes no derivation beyond the
+      current unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose
+      ''CSC411 classification and logistic loss'' over ''Übung 05 — logistic-regression geometry'' when
+      you need this contribution; the neighboring route instead contributes: Decision-boundary parameterization,
+      scale invariance, and the first logistic exercise. The archive''s TÜbung 04 file is byte-identical
+      and is therefore one duplicate, not a second learning object. Course boundary: It complements the
+      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic scoring
-      fixes it.
   - kind: read
     label: MIT 6.036 classification unit
     source_id: source-mit-6036
-    locator: Linear classification units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 5 'Logistic Regression' and its exercises
     angle: Practice-oriented binary-classification and logistic-model work with immediate feedback.
+    angle_detail: 'Contribution: Practice-oriented binary-classification and logistic-model work with
+      immediate feedback. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 classification unit'' over ''Current L05 lecture deck'' when you need this contribution;
+      the neighboring route instead contributes: The 2026 scope authority, including the full separator-to-sigmoid
+      construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
+    scope_triage: helpful-now
   - kind: read
     label: Géron logistic and softmax regression
     source_id: source-geron-handson
-    locator: Chapter 4 logistic/softmax sections
-    scope_triage: helpful-now
+    locator: geron-copy2.pdf Ch 4 'Logistic Regression', pdf pp. 232-242 (training and cost p. 234; decision
+      boundaries p. 235; softmax p. 238)
     angle: Implementation-focused binary and multiclass logistic models, decision boundaries, and probability
       outputs.
+    angle_detail: 'Contribution: Implementation-focused binary and multiclass logistic models, decision
+      boundaries, and probability outputs. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron logistic and softmax regression'' over ''Current L05 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority,
+      including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized
+      cross-entropy derivation. Course boundary: It complements the current deck but cannot override the
+      deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Ng logistic regression and regularization
     source_id: source-ng-coursera
-    locator: Logistic Regression lessons
-    scope_triage: helpful-now
+    locator: Machine Learning Specialization, Course 1, Week 3 'Classification with logistic regression'
+      and 'Cost function for logistic regression'
     angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
       regression.
+    angle_detail: 'Contribution: Gentle construction of sigmoid classification, decision boundaries, cost,
+      and regularized logistic regression. Depth and prerequisites: It assumes the unit vocabulary but
+      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
+      choose ''Ng logistic regression and regularization'' over ''Current L05 lecture deck'' when you
+      need this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS189 solved calibration — generative versus discriminative
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, 'Generative vs. Discriminative Models', Question (a)-(c),
+      PDF pp. 16-19
+    angle: Makes logistic regression compete directly with LDA/QDA, exposing which assumptions produce
+      the same linear log-odds form.
+    angle_detail: Solve the classification question after the lecture's likelihood derivation. Its distinctive
+      value is assumption checking across LDA, QDA, and logistic regression; it does not replace the cross-entropy
+      gradient route.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-boundary/notes.md
   attachments: []
   source_feedback: []
@@ -165,9 +323,10 @@ stages:
   status: pending
   objective: Squashing linear scores to [0,1], probabilistic interpretation, thresholds, odds, and logits.
   done_when:
-  - 'Reproduce without notes: Squashing linear scores to [0,1], probabilistic interpretation, thresholds, odds,
-    and logits.'
-  - Work Übung 05 — logistic-regression geometry, and record every miss with the step it failed at.
+  - 'Reproduce without notes: Squashing linear scores to [0,1], probabilistic interpretation, thresholds,
+    odds, and logits.'
+  - Work Übung 05 — logistic-regression geometry, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-probability
@@ -177,99 +336,236 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: practise
     label: Übung 05 — logistic-regression geometry
     source_id: source-aml-ss26-lectures
     locator: exercise-slides/Übung 05.pdf
+    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The
+      archive's TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning
+      object.
+    angle_detail: 'Contribution: Decision-boundary parameterization, scale invariance, and the first logistic
+      exercise. The archive''s TÜbung 04 file is byte-identical and is therefore one duplicate, not a
+      second learning object. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Übung 05 — logistic-regression geometry'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 05.pdf
     scope_triage: required-now
-    angle: Decision-boundary parameterization, scale invariance, and the first logistic exercise. The archive's
-      TÜbung 04 file is byte-identical and is therefore one duplicate, not a second learning object.
   - kind: reference
     label: Older L05 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs
+      a second telling.
+    angle_detail: 'Contribution: Prior-year alternate examples; use only when the current MLE/cross-entropy
+      derivation needs a second telling. Depth and prerequisites: It assumes the lecture treatment is
+      already secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L05 lecture variant'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is prior-year evidence: use it only for a second explanation,
+      and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
     scope_triage: reference-only
-    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs a second
-      telling.
   - kind: read
     label: ISLP logistic-regression sections
     source_id: source-islp
-    locator: §4.3, especially §§4.3.1 and 4.3.4
+    locator: islp.pdf §4.3 Logistic Regression, pdf pp. 147-155 (logistic model §4.3.1 p. 148; multiple
+      logistic regression §4.3.4 p. 151)
+    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting;
+      lighter on the full vectorized cross-entropy derivation than the deck.
+    angle_detail: 'Contribution: A gentle interpretation through probabilities, odds, and log-odds, with
+      MLE coefficient fitting; lighter on the full vectorized cross-entropy derivation than the deck.
+      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
+      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP logistic-regression
+      sections'' over ''Current L05 lecture deck'' when you need this contribution; the neighboring route
+      instead contributes: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It
+      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting; lighter
-      on the full vectorized cross-entropy derivation than the deck.
   - kind: reference
     label: ESL logistic-regression depth
     source_id: source-esl
-    locator: §4.4, especially §§4.4.1 and 4.4.4
+    locator: esl.pdf §4.4 Logistic Regression, pdf pp. 138-147 (fitting by Newton-Raphson/IRLS §4.4.1
+      p. 139; L1-regularized logistic regression §4.4.4 p. 144)
+    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown
+      through Newton/IRLS rather than the L06 gradient-descent route.
+    angle_detail: 'Contribution: A graduate-level likelihood treatment and logistic-versus-LDA comparison;
+      fitting is shown through Newton/IRLS rather than the L06 gradient-descent route. Depth and prerequisites:
+      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
+      for a precise reference or second derivation. Discriminator: choose ''ESL logistic-regression depth''
+      over ''Current L05 lecture deck'' when you need this contribution; the neighboring route instead
+      contributes: The 2026 scope authority, including the full separator-to-sigmoid construction and
+      the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It is
+      optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown through
-      Newton/IRLS rather than the L06 gradient-descent route.
   - kind: read
     label: Murphy logistic regression end to end
     source_id: source-murphy-pml1
-    locator: Chapter 10, especially §§10.2.3–10.2.5
+    locator: pml1.pdf §10.2.3 Maximum likelihood estimation, pdf pp. 372-374; §10.2.4 Stochastic gradient
+      descent, pdf p. 375; §10.2.5 Perceptron algorithm, pdf p. 376
+    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06.
+    angle_detail: 'Contribution: The cleanest print arc from Bernoulli likelihood through cross-entropy
+      and its gradient, directly joining L05 to L06. Depth and prerequisites: It assumes comfort with
+      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
+      recognize them. Discriminator: choose ''Murphy logistic regression end to end'' over ''Current L05
+      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
+      scope authority, including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli
+      MLE to vectorized cross-entropy derivation. Course boundary: It complements the current deck but
+      cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly joining
-      L05 to L06.
   - kind: reference
     label: CSC411 classification and logistic loss
     source_id: source-csc411-notes
-    locator: Classification selections
+    locator: csc411.pdf §8.2 Logistic Regression, pdf pp. 49-50; §8.6 Classification by LS Regression,
+      pdf pp. 53-54
+    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic
+      scoring fixes it.
+    angle_detail: 'Contribution: A concise explanation of why linear regression is unsuitable for classification
+      and how logistic scoring fixes it. Depth and prerequisites: It assumes no derivation beyond the
+      current unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose
+      ''CSC411 classification and logistic loss'' over ''Übung 05 — logistic-regression geometry'' when
+      you need this contribution; the neighboring route instead contributes: Decision-boundary parameterization,
+      scale invariance, and the first logistic exercise. The archive''s TÜbung 04 file is byte-identical
+      and is therefore one duplicate, not a second learning object. Course boundary: It complements the
+      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic scoring
-      fixes it.
   - kind: read
     label: Kroese logistic and softmax models
     source_id: source-kroese-dsml
-    locator: §7.5
+    locator: kroese.pdf Logistic Regression and Softmax Classification, pdf p. 284
+    angle: Connects binary logistic regression to its multiclass softmax generalization and evaluation
+      language.
+    angle_detail: 'Contribution: Connects binary logistic regression to its multiclass softmax generalization
+      and evaluation language. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''Kroese logistic and softmax models'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It is optional depth: open it for the named gap, then return to the
+      current deck rather than importing the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: Connects binary logistic regression to its multiclass softmax generalization and evaluation language.
   - kind: reference
     label: CS229 logistic and GLM derivations
     source_id: source-cs229-notes
-    locator: §2.1 and §3.2.2; optional §2.3 Newton
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Logistic regression', pdf pp. 21-23; 'Another algorithm for maximizing l(theta)'
+      (Newton), pdf pp. 25-26; 'Constructing GLMs', pdf pp. 29-35
     angle: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli outputs imply a sigmoid.
+    angle_detail: 'Contribution: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli
+      outputs imply a sigmoid. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic and GLM derivations'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: CS229 logistic-regression lecture
     source_id: source-cs229-2022-videos
     locator: Lecture 3 — Logistic Regression
-    scope_triage: helpful-now
     angle: A rigorous lecture alternative for sigmoid classification, likelihood, and the logistic gradient.
+    angle_detail: 'Contribution: A rigorous lecture alternative for sigmoid classification, likelihood,
+      and the logistic gradient. Depth and prerequisites: It assumes comfort with the unit''s notation
+      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic-regression lecture'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It is optional depth: open it for the named gap, then return to the
+      current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: read
     label: MIT 6.036 classification unit
     source_id: source-mit-6036
-    locator: Linear classification units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 5 'Logistic Regression' and its exercises
     angle: Practice-oriented binary-classification and logistic-model work with immediate feedback.
+    angle_detail: 'Contribution: Practice-oriented binary-classification and logistic-model work with
+      immediate feedback. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 classification unit'' over ''Current L05 lecture deck'' when you need this contribution;
+      the neighboring route instead contributes: The 2026 scope authority, including the full separator-to-sigmoid
+      construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest logistic regression and MLE videos
     source_id: source-statquest
-    locator: Logistic Regression; Maximum Likelihood
+    locator: StatQuest episodes 'Logistic Regression', 'Maximum Likelihood, Clearly Explained', and 'Cross
+      Entropy for Classification'
+    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli
+      labels before the cross-entropy derivation.
+    angle_detail: 'Contribution: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit
+      MLE with Bernoulli labels before the cross-entropy derivation. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''StatQuest logistic regression and MLE videos'' over ''Current
+      L05 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
+      2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
+      Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli labels before
-      the cross-entropy derivation.
   - kind: read
     label: Géron logistic and softmax regression
     source_id: source-geron-handson
-    locator: Chapter 4 logistic/softmax sections
-    scope_triage: helpful-now
+    locator: geron-copy2.pdf Ch 4 'Logistic Regression', pdf pp. 232-242 (training and cost p. 234; decision
+      boundaries p. 235; softmax p. 238)
     angle: Implementation-focused binary and multiclass logistic models, decision boundaries, and probability
       outputs.
+    angle_detail: 'Contribution: Implementation-focused binary and multiclass logistic models, decision
+      boundaries, and probability outputs. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron logistic and softmax regression'' over ''Current L05 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority,
+      including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized
+      cross-entropy derivation. Course boundary: It complements the current deck but cannot override the
+      deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Ng logistic regression and regularization
     source_id: source-ng-coursera
-    locator: Logistic Regression lessons
-    scope_triage: helpful-now
+    locator: Machine Learning Specialization, Course 1, Week 3 'Classification with logistic regression'
+      and 'Cost function for logistic regression'
     angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
       regression.
+    angle_detail: 'Contribution: Gentle construction of sigmoid classification, decision boundaries, cost,
+      and regularized logistic regression. Depth and prerequisites: It assumes the unit vocabulary but
+      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
+      choose ''Ng logistic regression and regularization'' over ''Current L05 lecture deck'' when you
+      need this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS189 solved calibration — generative versus discriminative
+    source_id: source-berkeley-cs189
+    locator: Spring 2026 Midterm Solutions, 'Generative vs. Discriminative Models', Question (a)-(c),
+      PDF pp. 16-19
+    angle: Makes logistic regression compete directly with LDA/QDA, exposing which assumptions produce
+      the same linear log-odds form.
+    angle_detail: Solve the classification question after the lecture's likelihood derivation. Its distinctive
+      value is assumption checking across LDA, QDA, and logistic regression; it does not replace the cross-entropy
+      gradient route.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-sigmoid/notes.md
   attachments: []
   source_feedback: []
@@ -277,11 +573,13 @@ stages:
   number: 4
   title: Bernoulli likelihood
   status: pending
-  objective: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood estimation.
+  objective: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood
+    estimation.
   done_when:
-  - 'Reproduce without notes: Probability of observed labels, products over examples, log-likelihood, and maximum-likelihood
-    estimation.'
-  - Work Cornell CS4780 HW4 — logistic likelihood, and record every miss with the step it failed at.
+  - 'Reproduce without notes: Probability of observed labels, products over examples, log-likelihood,
+    and maximum-likelihood estimation.'
+  - Work Cornell CS4780 HW4 — logistic likelihood, then the remaining 1, and record every miss with the
+    step it failed at.
   exam_critical: true
   concepts:
   - concept-maximum-likelihood
@@ -291,64 +589,152 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: reference
     label: Older L05 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs
+      a second telling.
+    angle_detail: 'Contribution: Prior-year alternate examples; use only when the current MLE/cross-entropy
+      derivation needs a second telling. Depth and prerequisites: It assumes the lecture treatment is
+      already secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L05 lecture variant'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is prior-year evidence: use it only for a second explanation,
+      and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
     scope_triage: reference-only
-    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs a second
-      telling.
   - kind: read
     label: ISLP logistic-regression sections
     source_id: source-islp
-    locator: §4.3, especially §§4.3.1 and 4.3.4
+    locator: islp.pdf §4.3 Logistic Regression, pdf pp. 147-155 (logistic model §4.3.1 p. 148; multiple
+      logistic regression §4.3.4 p. 151)
+    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting;
+      lighter on the full vectorized cross-entropy derivation than the deck.
+    angle_detail: 'Contribution: A gentle interpretation through probabilities, odds, and log-odds, with
+      MLE coefficient fitting; lighter on the full vectorized cross-entropy derivation than the deck.
+      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
+      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP logistic-regression
+      sections'' over ''Current L05 lecture deck'' when you need this contribution; the neighboring route
+      instead contributes: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It
+      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
+      emphasis.'
     scope_triage: helpful-now
-    angle: A gentle interpretation through probabilities, odds, and log-odds, with MLE coefficient fitting; lighter
-      on the full vectorized cross-entropy derivation than the deck.
   - kind: reference
     label: ESL logistic-regression depth
     source_id: source-esl
-    locator: §4.4, especially §§4.4.1 and 4.4.4
+    locator: esl.pdf §4.4 Logistic Regression, pdf pp. 138-147 (fitting by Newton-Raphson/IRLS §4.4.1
+      p. 139; L1-regularized logistic regression §4.4.4 p. 144)
+    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown
+      through Newton/IRLS rather than the L06 gradient-descent route.
+    angle_detail: 'Contribution: A graduate-level likelihood treatment and logistic-versus-LDA comparison;
+      fitting is shown through Newton/IRLS rather than the L06 gradient-descent route. Depth and prerequisites:
+      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
+      for a precise reference or second derivation. Discriminator: choose ''ESL logistic-regression depth''
+      over ''Current L05 lecture deck'' when you need this contribution; the neighboring route instead
+      contributes: The 2026 scope authority, including the full separator-to-sigmoid construction and
+      the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It is
+      optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown through
-      Newton/IRLS rather than the L06 gradient-descent route.
   - kind: read
     label: Murphy logistic regression end to end
     source_id: source-murphy-pml1
-    locator: Chapter 10, especially §§10.2.3–10.2.5
+    locator: pml1.pdf §10.2.3 Maximum likelihood estimation, pdf pp. 372-374; §10.2.4 Stochastic gradient
+      descent, pdf p. 375; §10.2.5 Perceptron algorithm, pdf p. 376
+    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06.
+    angle_detail: 'Contribution: The cleanest print arc from Bernoulli likelihood through cross-entropy
+      and its gradient, directly joining L05 to L06. Depth and prerequisites: It assumes comfort with
+      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
+      recognize them. Discriminator: choose ''Murphy logistic regression end to end'' over ''Current L05
+      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
+      scope authority, including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli
+      MLE to vectorized cross-entropy derivation. Course boundary: It complements the current deck but
+      cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly joining
-      L05 to L06.
   - kind: reference
     label: CS229 logistic and GLM derivations
     source_id: source-cs229-notes
-    locator: §2.1 and §3.2.2; optional §2.3 Newton
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Logistic regression', pdf pp. 21-23; 'Another algorithm for maximizing l(theta)'
+      (Newton), pdf pp. 25-26; 'Constructing GLMs', pdf pp. 29-35
     angle: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli outputs imply a sigmoid.
+    angle_detail: 'Contribution: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli
+      outputs imply a sigmoid. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic and GLM derivations'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: CS229 logistic-regression lecture
     source_id: source-cs229-2022-videos
     locator: Lecture 3 — Logistic Regression
-    scope_triage: helpful-now
     angle: A rigorous lecture alternative for sigmoid classification, likelihood, and the logistic gradient.
+    angle_detail: 'Contribution: A rigorous lecture alternative for sigmoid classification, likelihood,
+      and the logistic gradient. Depth and prerequisites: It assumes comfort with the unit''s notation
+      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic-regression lecture'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It is optional depth: open it for the named gap, then return to the
+      current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest logistic regression and MLE videos
     source_id: source-statquest
-    locator: Logistic Regression; Maximum Likelihood
+    locator: StatQuest episodes 'Logistic Regression', 'Maximum Likelihood, Clearly Explained', and 'Cross
+      Entropy for Classification'
+    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli
+      labels before the cross-entropy derivation.
+    angle_detail: 'Contribution: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit
+      MLE with Bernoulli labels before the cross-entropy derivation. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''StatQuest logistic regression and MLE videos'' over ''Current
+      L05 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
+      2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
+      Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli labels before
-      the cross-entropy derivation.
   - kind: practise
     label: Cornell CS4780 HW4 — logistic likelihood
     source_id: source-cs4780-homeworks
     locator: 2018 Fall HW4 Problem 3 and solutions
-    scope_triage: helpful-now
     angle: The local gradient-of-logistic-log-likelihood problem is an exact derivation drill for L05.
+    angle_detail: 'Contribution: The local gradient-of-logistic-log-likelihood problem is an exact derivation
+      drill for L05. Depth and prerequisites: It assumes the relevant rule or algorithm has already been
+      introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Cornell CS4780 HW4 — logistic likelihood'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS229 practice midterm — GLM likelihood curvature
+    source_id: source-cs229-problem-sets
+    locator: Autumn 2010 Practice Midterm Solutions, Question 1 'Generalized Linear Models', PDF pp. 1-2
+    angle: Checks concavity of an exponential-family log-likelihood through its Hessian.
+    angle_detail: Attempt this only after deriving logistic likelihood with the course notation. It generalizes
+      beyond Bernoulli logistic regression, so use it to test curvature reasoning and then return to the
+      lecture for examinable scope.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -358,10 +744,10 @@ stages:
   status: pending
   objective: Negative log-likelihood, the combined binary loss, why MSE is unsuitable here, and vectorization.
   done_when:
-  - 'Reproduce without notes: Negative log-likelihood, the combined binary loss, why MSE is unsuitable here, and
-    vectorization.'
-  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 1, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: Negative log-likelihood, the combined binary loss, why MSE is unsuitable
+    here, and vectorization.'
+  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 1, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-cross-entropy
@@ -371,92 +757,192 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: practise
     label: Übung 06 — logistic loss and fitted classifier
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf
+    locator: exercise-slides/Übung 06 .pdf, slides 3-10 (logistic model, loss, and gradient), 16-21 (sigmoid
+      and overfitting), and 23-27 (decision-boundary exercise)
+    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation,
+      and regularized logistic regression; it also begins the L06 optimizer bridge.
+    angle_detail: 'Contribution: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn
+      fitting, evaluation, and regularized logistic regression; it also begins the L06 optimizer bridge.
+      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
+      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
+      06 — logistic loss and fitted classifier'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
-    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation, and
-      regularized logistic regression; it also begins the L06 optimizer bridge.
   - kind: reference
     label: Older L05 lecture variant
     source_id: source-aml-ss26-lectures
     locator: older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
+    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs
+      a second telling.
+    angle_detail: 'Contribution: Prior-year alternate examples; use only when the current MLE/cross-entropy
+      derivation needs a second telling. Depth and prerequisites: It assumes the lecture treatment is
+      already secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
+      Discriminator: choose ''Older L05 lecture variant'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is prior-year evidence: use it only for a second explanation,
+      and let the current deck win wherever examples, notation, or scope differ.'
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/05-logistic-regression_4ac14c69ff062ee3ef12b73ab67aba58.pdf
     scope_triage: reference-only
-    angle: Prior-year alternate examples; use only when the current MLE/cross-entropy derivation needs a second
-      telling.
   - kind: reference
     label: ESL logistic-regression depth
     source_id: source-esl
-    locator: §4.4, especially §§4.4.1 and 4.4.4
+    locator: esl.pdf §4.4 Logistic Regression, pdf pp. 138-147 (fitting by Newton-Raphson/IRLS §4.4.1
+      p. 139; L1-regularized logistic regression §4.4.4 p. 144)
+    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown
+      through Newton/IRLS rather than the L06 gradient-descent route.
+    angle_detail: 'Contribution: A graduate-level likelihood treatment and logistic-versus-LDA comparison;
+      fitting is shown through Newton/IRLS rather than the L06 gradient-descent route. Depth and prerequisites:
+      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
+      for a precise reference or second derivation. Discriminator: choose ''ESL logistic-regression depth''
+      over ''Current L05 lecture deck'' when you need this contribution; the neighboring route instead
+      contributes: The 2026 scope authority, including the full separator-to-sigmoid construction and
+      the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It is
+      optional depth: open it for the named gap, then return to the current deck rather than importing
+      the source''s wider syllabus.'
     scope_triage: reference-only
-    angle: A graduate-level likelihood treatment and logistic-versus-LDA comparison; fitting is shown through
-      Newton/IRLS rather than the L06 gradient-descent route.
   - kind: read
     label: Murphy logistic regression end to end
     source_id: source-murphy-pml1
-    locator: Chapter 10, especially §§10.2.3–10.2.5
+    locator: pml1.pdf §10.2.3 Maximum likelihood estimation, pdf pp. 372-374; §10.2.4 Stochastic gradient
+      descent, pdf p. 375; §10.2.5 Perceptron algorithm, pdf p. 376
+    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06.
+    angle_detail: 'Contribution: The cleanest print arc from Bernoulli likelihood through cross-entropy
+      and its gradient, directly joining L05 to L06. Depth and prerequisites: It assumes comfort with
+      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
+      recognize them. Discriminator: choose ''Murphy logistic regression end to end'' over ''Current L05
+      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
+      scope authority, including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli
+      MLE to vectorized cross-entropy derivation. Course boundary: It complements the current deck but
+      cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly joining
-      L05 to L06.
-  - kind: reference
-    label: CSC411 classification and logistic loss
-    source_id: source-csc411-notes
-    locator: Classification selections
-    scope_triage: helpful-now
-    angle: A concise explanation of why linear regression is unsuitable for classification and how logistic scoring
-      fixes it.
   - kind: read
     label: Kroese logistic and softmax models
     source_id: source-kroese-dsml
-    locator: §7.5
+    locator: kroese.pdf Logistic Regression and Softmax Classification, pdf p. 284
+    angle: Connects binary logistic regression to its multiclass softmax generalization and evaluation
+      language.
+    angle_detail: 'Contribution: Connects binary logistic regression to its multiclass softmax generalization
+      and evaluation language. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''Kroese logistic and softmax models'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It is optional depth: open it for the named gap, then return to the
+      current deck rather than importing the source''s wider syllabus.'
     scope_triage: helpful-now
-    angle: Connects binary logistic regression to its multiclass softmax generalization and evaluation language.
   - kind: reference
     label: CS229 logistic and GLM derivations
     source_id: source-cs229-notes
-    locator: §2.1 and §3.2.2; optional §2.3 Newton
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Logistic regression', pdf pp. 21-23; 'Another algorithm for maximizing l(theta)'
+      (Newton), pdf pp. 25-26; 'Constructing GLMs', pdf pp. 29-35
     angle: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli outputs imply a sigmoid.
+    angle_detail: 'Contribution: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli
+      outputs imply a sigmoid. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic and GLM derivations'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: read
     label: MIT 6.036 classification unit
     source_id: source-mit-6036
-    locator: Linear classification units
-    scope_triage: helpful-now
+    locator: Fall 2020 OCW, Unit 5 'Logistic Regression' and its exercises
     angle: Practice-oriented binary-classification and logistic-model work with immediate feedback.
+    angle_detail: 'Contribution: Practice-oriented binary-classification and logistic-model work with
+      immediate feedback. Depth and prerequisites: It assumes the relevant rule or algorithm has already
+      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''MIT 6.036 classification unit'' over ''Current L05 lecture deck'' when you need this contribution;
+      the neighboring route instead contributes: The 2026 scope authority, including the full separator-to-sigmoid
+      construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Course
+      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
+      or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: StatQuest logistic regression and MLE videos
     source_id: source-statquest
-    locator: Logistic Regression; Maximum Likelihood
+    locator: StatQuest episodes 'Logistic Regression', 'Maximum Likelihood, Clearly Explained', and 'Cross
+      Entropy for Classification'
+    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli
+      labels before the cross-entropy derivation.
+    angle_detail: 'Contribution: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit
+      MLE with Bernoulli labels before the cross-entropy derivation. Depth and prerequisites: It assumes
+      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
+      formal derivation. Discriminator: choose ''StatQuest logistic regression and MLE videos'' over ''Current
+      L05 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
+      2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
+      Bernoulli MLE to vectorized cross-entropy derivation. Course boundary: It complements the current
+      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: Intuitive sigmoid/log-odds and maximum-likelihood explanations; revisit MLE with Bernoulli labels before
-      the cross-entropy derivation.
   - kind: read
     label: Géron logistic and softmax regression
     source_id: source-geron-handson
-    locator: Chapter 4 logistic/softmax sections
-    scope_triage: helpful-now
+    locator: geron-copy2.pdf Ch 4 'Logistic Regression', pdf pp. 232-242 (training and cost p. 234; decision
+      boundaries p. 235; softmax p. 238)
     angle: Implementation-focused binary and multiclass logistic models, decision boundaries, and probability
       outputs.
+    angle_detail: 'Contribution: Implementation-focused binary and multiclass logistic models, decision
+      boundaries, and probability outputs. Depth and prerequisites: It assumes the mathematical object
+      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
+      Discriminator: choose ''Géron logistic and softmax regression'' over ''Current L05 lecture deck''
+      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority,
+      including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized
+      cross-entropy derivation. Course boundary: It complements the current deck but cannot override the
+      deck''s notation, topic boundary, or examination emphasis.'
+    vault_path: material://source-geron-handson/geron-copy2.pdf
+    scope_triage: helpful-now
   - kind: read
     label: Ng logistic regression and regularization
     source_id: source-ng-coursera
-    locator: Logistic Regression lessons
-    scope_triage: helpful-now
+    locator: Machine Learning Specialization, Course 1, Week 3 'Classification with logistic regression'
+      and 'Cost function for logistic regression'
     angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
       regression.
+    angle_detail: 'Contribution: Gentle construction of sigmoid classification, decision boundaries, cost,
+      and regularized logistic regression. Depth and prerequisites: It assumes the unit vocabulary but
+      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
+      choose ''Ng logistic regression and regularization'' over ''Current L05 lecture deck'' when you
+      need this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: practise
     label: Cornell CS4780 HW4 — logistic likelihood
     source_id: source-cs4780-homeworks
     locator: 2018 Fall HW4 Problem 3 and solutions
-    scope_triage: helpful-now
     angle: The local gradient-of-logistic-log-likelihood problem is an exact derivation drill for L05.
+    angle_detail: 'Contribution: The local gradient-of-logistic-log-likelihood problem is an exact derivation
+      drill for L05. Depth and prerequisites: It assumes the relevant rule or algorithm has already been
+      introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Cornell CS4780 HW4 — logistic likelihood'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-cross-entropy/notes.md
   attachments: []
   source_feedback: []
@@ -466,9 +952,10 @@ stages:
   status: pending
   objective: dL/dw = Xᵀ(σ(Xw)-y)/m, convexity, no closed form, and the bridge to gradient descent.
   done_when:
-  - 'Reproduce without notes: dL/dw = Xᵀ(σ(Xw)-y)/m, convexity, no closed form, and the bridge to gradient descent.'
-  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 1, and record every miss with the
-    step it failed at.
+  - 'Reproduce without notes: dL/dw = Xᵀ(σ(Xw)-y)/m, convexity, no closed form, and the bridge to gradient
+    descent.'
+  - Work Übung 06 — logistic loss and fitted classifier, then the remaining 2, and record every miss with
+    the step it failed at.
   exam_critical: true
   concepts:
   - concept-gradient-descent
@@ -478,43 +965,104 @@ stages:
     label: Current L05 lecture deck
     source_id: source-aml-ss26-lectures
     locator: lecture-slides/VL 05-logistic-regression.pdf
-    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
-    scope_triage: required-now
     angle: The 2026 scope authority, including the full separator-to-sigmoid construction and the slide-by-slide
       Bernoulli MLE to vectorized cross-entropy derivation.
+    angle_detail: 'Contribution: The 2026 scope authority, including the full separator-to-sigmoid construction
+      and the slide-by-slide Bernoulli MLE to vectorized cross-entropy derivation. Depth and prerequisites:
+      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
+      used by the HU course. Discriminator: choose ''Current L05 lecture deck'' over ''Murphy logistic
+      regression end to end'' when you need this contribution; the neighboring route instead contributes:
+      The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06. Course boundary: This is current course evidence and may calibrate examined
+      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+    vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 05-logistic-regression.pdf
+    scope_triage: required-now
   - kind: practise
     label: Übung 06 — logistic loss and fitted classifier
     source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf
+    locator: exercise-slides/Übung 06 .pdf, slides 3-10 (logistic model, loss, and gradient), 16-21 (sigmoid
+      and overfitting), and 23-27 (decision-boundary exercise)
+    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation,
+      and regularized logistic regression; it also begins the L06 optimizer bridge.
+    angle_detail: 'Contribution: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn
+      fitting, evaluation, and regularized logistic regression; it also begins the L06 optimizer bridge.
+      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
+      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
+      06 — logistic loss and fitted classifier'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: This is current course evidence and may calibrate examined notation,
+      but the route''s stated locator—not the rest of the source—defines its scope.'
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
     scope_triage: required-now
-    angle: Cross-entropy, vectorized gradient, decision boundaries, SciPy/scikit-learn fitting, evaluation, and
-      regularized logistic regression; it also begins the L06 optimizer bridge.
   - kind: read
     label: Murphy logistic regression end to end
     source_id: source-murphy-pml1
-    locator: Chapter 10, especially §§10.2.3–10.2.5
+    locator: pml1.pdf §10.2.3 Maximum likelihood estimation, pdf pp. 372-374; §10.2.4 Stochastic gradient
+      descent, pdf p. 375; §10.2.5 Perceptron algorithm, pdf p. 376
+    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly
+      joining L05 to L06.
+    angle_detail: 'Contribution: The cleanest print arc from Bernoulli likelihood through cross-entropy
+      and its gradient, directly joining L05 to L06. Depth and prerequisites: It assumes comfort with
+      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
+      recognize them. Discriminator: choose ''Murphy logistic regression end to end'' over ''Current L05
+      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
+      scope authority, including the full separator-to-sigmoid construction and the slide-by-slide Bernoulli
+      MLE to vectorized cross-entropy derivation. Course boundary: It complements the current deck but
+      cannot override the deck''s notation, topic boundary, or examination emphasis.'
     scope_triage: helpful-now
-    angle: The cleanest print arc from Bernoulli likelihood through cross-entropy and its gradient, directly joining
-      L05 to L06.
   - kind: reference
     label: CS229 logistic and GLM derivations
     source_id: source-cs229-notes
-    locator: §2.1 and §3.2.2; optional §2.3 Newton
-    scope_triage: helpful-now
+    locator: cs229-notes.pdf 'Logistic regression', pdf pp. 21-23; 'Another algorithm for maximizing l(theta)'
+      (Newton), pdf pp. 25-26; 'Constructing GLMs', pdf pp. 29-35
     angle: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli outputs imply a sigmoid.
+    angle_detail: 'Contribution: Compact log-likelihood gradient plus the GLM explanation of why Bernoulli
+      outputs imply a sigmoid. Depth and prerequisites: It assumes comfort with the unit''s notation and
+      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic and GLM derivations'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
   - kind: watch
     label: CS229 logistic-regression lecture
     source_id: source-cs229-2022-videos
     locator: Lecture 3 — Logistic Regression
-    scope_triage: helpful-now
     angle: A rigorous lecture alternative for sigmoid classification, likelihood, and the logistic gradient.
+    angle_detail: 'Contribution: A rigorous lecture alternative for sigmoid classification, likelihood,
+      and the logistic gradient. Depth and prerequisites: It assumes comfort with the unit''s notation
+      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
+      choose ''CS229 logistic-regression lecture'' over ''Current L05 lecture deck'' when you need this
+      contribution; the neighboring route instead contributes: The 2026 scope authority, including the
+      full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It is optional depth: open it for the named gap, then return to the
+      current deck rather than importing the source''s wider syllabus.'
+    scope_triage: helpful-now
   - kind: practise
     label: Cornell CS4780 HW4 — logistic likelihood
     source_id: source-cs4780-homeworks
     locator: 2018 Fall HW4 Problem 3 and solutions
-    scope_triage: helpful-now
     angle: The local gradient-of-logistic-log-likelihood problem is an exact derivation drill for L05.
+    angle_detail: 'Contribution: The local gradient-of-logistic-log-likelihood problem is an exact derivation
+      drill for L05. Depth and prerequisites: It assumes the relevant rule or algorithm has already been
+      introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
+      choose ''Cornell CS4780 HW4 — logistic likelihood'' over ''Current L05 lecture deck'' when you need
+      this contribution; the neighboring route instead contributes: The 2026 scope authority, including
+      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
+      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
+      topic boundary, or examination emphasis.'
+    scope_triage: helpful-now
+  - kind: practise
+    label: CS229 practice midterm — GLM likelihood curvature
+    source_id: source-cs229-problem-sets
+    locator: Autumn 2010 Practice Midterm Solutions, Question 1 'Generalized Linear Models', PDF pp. 1-2
+    angle: Checks concavity of an exponential-family log-likelihood through its Hessian.
+    angle_detail: Attempt this only after deriving logistic likelihood with the course notation. It generalizes
+      beyond Bernoulli logistic regression, so use it to test curvature reasoning and then return to the
+      lecture for examinable scope.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l05/stages/stage-aml-l05-gradient/notes.md
   attachments: []
   source_feedback: []

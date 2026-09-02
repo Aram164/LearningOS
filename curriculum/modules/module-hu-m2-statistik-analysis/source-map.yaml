@@ -932,9 +932,7 @@ sources:
     - knowledge-m2-analysis-ch03-rechenregeln
     depth: intuition
     scope: complementary
-    locator: 'Professor Leonard, Calculus 2: the sequences block (sequences, convergence, monotone and
-      bounded). Topic-matched selection from the source record''s own list; no local copy, so the selection
-      is by topic rather than by timestamp.'
+    locator: 'Calculus 2 Lecture 9.1: ''Convergence and Divergence of Sequences'''
   - id: route-an-ch04-professorleonard
     unit_id: unit-m2-analysis-ch04
     title: Professor Leonard — Calculus 2, series and convergence tests
@@ -951,9 +949,8 @@ sources:
     - knowledge-m2-analysis-ch04-absolute-konvergenz
     depth: intuition
     scope: complementary
-    locator: 'Professor Leonard, Calculus 2: the series block (series, convergence tests, alternating
-      series). Topic-matched selection from the source record''s own list; no local copy, so the selection
-      is by topic rather than by timestamp.'
+    locator: 'Calculus 2 Lecture 9.3: ''Using the Integral Test for Convergence/Divergence of Series,
+      P-Series'''
   - id: route-an-ch05-professorleonard
     unit_id: unit-m2-analysis-ch05
     title: Professor Leonard — Calculus 1, limits and continuity
@@ -970,8 +967,7 @@ sources:
     - knowledge-m2-analysis-ch05-stetigkeit
     depth: intuition
     scope: complementary
-    locator: 'Professor Leonard, Calculus 1: the limits and continuity block. Topic-matched selection
-      from the source record''s own list; no local copy, so the selection is by topic rather than by timestamp.'
+    locator: 'Calculus 1 Lecture 1.1: ''An Introduction to Limits'''
   - id: route-an-ch06-professorleonard
     unit_id: unit-m2-analysis-ch06
     title: Professor Leonard — Calculus 1 derivative and Mittelwertsatz, Calculus 2 Taylor
@@ -992,9 +988,8 @@ sources:
     - knowledge-m2-analysis-ch06-interpolation
     depth: intuition
     scope: complementary
-    locator: 'Professor Leonard, Calculus 1: the derivative, the Mittelwertsatz, l''Hospital. Calculus
-      2: Taylor and power series. Topic-matched selection from the source record''s own list; no local
-      copy, so the selection is by topic rather than by timestamp.'
+    locator: 'Calculus 1 Lecture 2.1: ''An Introduction to the Derivative''; Calculus 2 Lecture 10.10:
+      ''Taylor and Maclaurin Series'''
   - id: route-an-ch07-professorleonard
     unit_id: unit-m2-analysis-ch07
     title: Professor Leonard — Calculus 1 definite integral and FTC, Calculus 2 techniques and improper
@@ -1012,9 +1007,8 @@ sources:
     - knowledge-m2-analysis-ch07-uneigentliche-integrale
     depth: intuition
     scope: complementary
-    locator: 'Professor Leonard, Calculus 1: the definite integral and the fundamental theorem. Calculus
-      2: integration techniques, improper integrals. Topic-matched selection from the source record''s
-      own list; no local copy, so the selection is by topic rather than by timestamp.'
+    locator: 'Calculus 1 Lecture 4.5: ''The Fundamental Theorem of Calculus''; Calculus 2 Lecture 7.1:
+      ''Integration By Parts'''
 - source_id: source-sad-uebungen
   role: practice
   why: Current Blatt/UE decks are the closest available guide to expected computations and German wording.
@@ -1833,9 +1827,7 @@ sources:
     - knowledge-m2-analysis-ch05-einseitige-grenzwerte
     depth: intuition
     scope: complementary
-    locator: 'Essence of Calculus: the limits episode (which also introduces l''Hôpital). Topic-matched
-      selection from the source record''s own list; no local copy, so the selection is by topic rather
-      than by timestamp.'
+    locator: 'Chapter 7, Essence of calculus: ''Limits, L''Hôpital''s rule, and epsilon delta definitions'''
   - id: route-an-ch06-3b1bessenceofcalculus
     unit_id: unit-m2-analysis-ch06
     title: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
@@ -1856,9 +1848,8 @@ sources:
     - knowledge-m2-analysis-ch06-interpolation
     depth: intuition
     scope: complementary
-    locator: 'Essence of Calculus: the derivative and chain-rule episodes; the l''Hôpital half of the
-      limits episode; the Taylor series episode. Topic-matched selection from the source record''s own
-      list; no local copy, so the selection is by topic rather than by timestamp.'
+    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
+      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
   - id: route-an-ch07-3b1bessenceofcalculus
     unit_id: unit-m2-analysis-ch07
     title: 3Blue1Brown — integration and the fundamental theorem
@@ -1875,9 +1866,7 @@ sources:
     - knowledge-m2-analysis-ch07-uneigentliche-integrale
     depth: intuition
     scope: complementary
-    locator: 'Essence of Calculus: the integration and fundamental-theorem episode (and the following
-      one on areas). Topic-matched selection from the source record''s own list; no local copy, so the
-      selection is by topic rather than by timestamp.'
+    locator: 'Chapter 8, Essence of calculus: ''Integration and the fundamental theorem of calculus'''
 - source_id: source-sad-2025-recordings
   role: reference
   why: Same-course older decks and UE1–UE7 are used only where topic alignment was verified; numbering
@@ -3237,8 +3226,7 @@ sources:
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Ch 4 Conditional Probability §§4.1-4.3 (discrete conditional probability, continuous conditional
-      probability, paradoxes), with the chapter exercises
+    locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
@@ -3257,8 +3245,7 @@ sources:
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Ch 3 Combinatorics §3.1 permutations, §3.2 combinations, §3.3 card shuffling, with the chapter
-      exercises
+    locator: Official PDF, Ch 3 'Combinatorics', §§3.1-3.3, PDF pp. 83-140
     covers:
     - knowledge-sad-l05-permutations
     - knowledge-sad-l05-variations
@@ -3277,8 +3264,7 @@ sources:
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Ch 6 Expected Value and Variance §6.1 expected value of discrete random variables, §6.2 variance
-      of discrete random variables, §6.3 continuous random variables
+    locator: Official PDF, Ch 6 'Expected Value and Variance', §§6.1-6.3, PDF pp. 233-292
     covers:
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
@@ -3295,8 +3281,7 @@ sources:
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Ch 5 Distributions and Densities §5.1 important distributions (discrete), §5.2 important
-      densities, with the chapter exercises
+    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
     covers:
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-hypergeometric
@@ -3315,8 +3300,8 @@ sources:
     format: book
     depth: derivation
     scope: complementary
-    locator: Ch 8 Law of Large Numbers §§8.1-8.2 and Ch 9 Central Limit Theorem §§9.1-9.3, with the chapter
-      exercises
+    locator: Official PDF, Ch 8 'Law of Large Numbers', PDF pp. 313-332, and Ch 9 'Central Limit Theorem',
+      PDF pp. 333-372
     covers:
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
@@ -4112,12 +4097,12 @@ sources:
   unit_routes:
   - id: route-878acd203c5603b70539868d
     unit_id: unit-m2-sad-l04
-    title: Jurafsky & Martin Ch 4 — naive Bayes for text classification
-    format: book
+    title: Jurafsky & Martin Appendix B — naive Bayes classification
+    format: website
     depth: course-aligned
     scope: complementary
-    locator: Ch 4 'Naive Bayes, Text Classification, and Sentiment' §§4.1-4.3 (the naive Bayes classifier,
-      training, and a worked example)
+    locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': classifier, training,
+      and worked-example sections'
     covers:
     - knowledge-sad-l04-naive-bayes
     - knowledge-sad-l04-independence
@@ -4130,12 +4115,12 @@ sources:
       handful of documents. Free draft PDF from Stanford.
   - id: route-c6ef21e8e56052473f0d7cef
     unit_id: unit-m2-sad-l14
-    title: Jurafsky & Martin Ch 4 §§4.4-4.7 — smoothing, unknown words and evaluation
-    format: book
+    title: Jurafsky & Martin Appendix B — smoothing and evaluation
+    format: website
     depth: course-aligned
     scope: complementary
-    locator: Ch 4 §4.4 optimizing for sentiment analysis, §4.5 naive Bayes as a language model, §4.7 evaluation
-      (precision, recall, F-measure), plus the add-one smoothing treatment in §4.2
+    locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': add-one smoothing, text
+      event model, and evaluation sections'
     covers:
     - knowledge-sad-l14-smoothing
     - knowledge-sad-l14-multinomial
@@ -4180,11 +4165,11 @@ sources:
   - id: route-bbf99a1908887e14e567f182
     unit_id: unit-m2-sad-l15
     title: Nielsen Ch 1-2 — one network, built and then differentiated
-    format: book
+    format: website
     depth: derivation
     scope: complementary
-    locator: Ch 1 'Using neural nets to recognize handwritten digits' and Ch 2 'How the backpropagation
-      algorithm works' (the four fundamental equations of backpropagation)
+    locator: Neural Networks and Deep Learning, Ch 1 'Using neural nets to recognize handwritten digits'
+      and Ch 2 'How the backpropagation algorithm works'
     covers:
     - knowledge-sad-l15-neuron
     - knowledge-sad-l15-activation
@@ -4201,11 +4186,11 @@ sources:
   - id: route-04c9e37880237050c4ac3b25
     unit_id: unit-m2-sad-l15
     title: Nielsen Ch 4 — the visual proof of universal approximation
-    format: book
+    format: website
     depth: intuition
     scope: complementary
-    locator: Ch 4 'A visual proof that neural nets can compute any function' (complete chapter, interactive
-      figures)
+    locator: Neural Networks and Deep Learning, Ch 4 'A visual proof that neural nets can compute any
+      function'
     covers:
     - knowledge-sad-l15-universality
     - knowledge-sad-l15-activation
@@ -4253,8 +4238,7 @@ sources:
     format: exam
     depth: practice
     scope: complementary
-    locator: The published midterm and final papers with solutions — the bias-variance, cross-validation
-      and evaluation-metric questions
+    locator: Spring 2026 Midterm Solutions, Question 1(ii)-(v), PDF pp. 3-4
     covers:
     - knowledge-sad-l11-generalization
     - knowledge-sad-l11-resampling
@@ -4271,8 +4255,7 @@ sources:
     format: exam
     depth: practice
     scope: complementary
-    locator: The published midterm and final papers with solutions — the decision-tree, bagging and boosting
-      questions
+    locator: Fall 2024 Final Solutions, decision-tree and random-forest problem, PDF p. 9
     covers:
     - knowledge-sad-l12-entropy-id3
     - knowledge-sad-l12-pruning
@@ -4342,11 +4325,11 @@ sources:
   - id: route-b252f1f176fedf4bbd32e974
     unit_id: unit-m2-sad-l15
     title: D2L — multilayer perceptrons and forward/backward propagation
-    format: book
+    format: website
     depth: implementation
     scope: complementary
-    locator: 'The ''Multilayer Perceptrons'' chapter: the MLP section, the implementation-from-scratch
-      section, and ''Forward Propagation, Backward Propagation, and Computational Graphs'''
+    locator: Dive into Deep Learning, 'Multilayer Perceptrons', 'Implementation of Multilayer Perceptrons',
+      and 'Forward Propagation, Backward Propagation, and Computational Graphs'
     covers:
     - knowledge-sad-l15-forward
     - knowledge-sad-l15-backprop
@@ -4410,8 +4393,8 @@ sources:
     format: course
     depth: course-aligned
     scope: complementary
-    locator: The limit-theorems lectures (weak law of large numbers; central limit theorem) with their
-      recitations
+    locator: MIT 6.041SC Unit IV, Lecture 19 'Weak Law of Large Numbers', Lecture 20 'Central Limit Theorem',
+      and recitation 'Using the Central Limit Theorem'
     covers:
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
@@ -4850,8 +4833,8 @@ sources:
     format: exercise
     depth: practice
     scope: complementary
-    locator: The problem set containing the Naive Bayes spam-classification problem, plus the generative-model
-      questions on the practice midterms, with their published solutions
+    locator: 'CS229 Problem Set #2, Problem 2 ''Spam classification'', especially part 2(b) multinomial
+      Naive Bayes with Laplace smoothing; official ps2-sol.pdf'
     covers:
     - knowledge-sad-l14-nb-recap
     - knowledge-sad-l14-smoothing
@@ -5132,8 +5115,8 @@ sources:
     format: course
     depth: course-aligned
     scope: complementary
-    locator: The feature-representation and nearest-neighbour units on the Open Learning Library, with
-      their auto-graded exercises
+    locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
+      methods'
     covers:
     - knowledge-sad-l13-neighbors
     - knowledge-sad-l13-minkowski
@@ -5149,8 +5132,8 @@ sources:
     format: course
     depth: course-aligned
     scope: complementary
-    locator: The neural-network units on the Open Learning Library (forward pass, loss, backpropagation),
-      with their auto-graded exercises
+    locator: MIT 6.036 Fall 2020 OCW, Unit 7 'Neural Networks' and Unit 8 'Backpropagation', with their
+      exercises
     covers:
     - knowledge-sad-l15-neuron
     - knowledge-sad-l15-forward
@@ -5174,8 +5157,9 @@ sources:
     format: course
     depth: intuition
     scope: complementary
-    locator: 'Week 1-2: the linear regression with one variable and multiple variables lectures (cost
-      function, gradient descent, learning rate, feature scaling)'
+    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
+      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Multiple linear regression'',
+      ''Feature scaling'', and ''Choosing the learning rate'''
     covers:
     - knowledge-sad-l03-gradient-descent
     - knowledge-sad-l03-scaling-weights
@@ -5214,11 +5198,11 @@ sources:
   - id: route-652350e4a873de885cb7f5bd
     unit_id: unit-m2-sad-l15
     title: Prince Ch 3-4 — shallow and deep networks, illustrated
-    format: book
+    format: website
     depth: course-aligned
     scope: complementary
-    locator: Ch 3 'Shallow neural networks' and Ch 4 'Deep neural networks' (the piecewise-linear region
-      figures), with the chapter problems
+    locator: Understanding Deep Learning, Ch 3 'Shallow Neural Networks' and Ch 4 'Deep Neural Networks',
+      including the linked chapter notebooks
     covers:
     - knowledge-sad-l15-neuron
     - knowledge-sad-l15-activation
@@ -5243,8 +5227,8 @@ sources:
     format: video
     depth: intuition
     scope: complementary
-    locator: The descriptive-statistics videos (measures of centre, measures of spread, types of data),
-      ≈10-15 min each
+    locator: 'Z Statistics ''Descriptive Statistics'': ''The Mean'', ''The Median'', ''The Mode'', ''Range
+      and IQR (Interquartile Range)'', and ''Variance and Standard deviation'''
     covers:
     - knowledge-sad-l02-scales
     - knowledge-sad-l02-location
@@ -5261,8 +5245,7 @@ sources:
     format: video
     depth: intuition
     scope: complementary
-    locator: The confidence-interval videos (interpretation, construction, and the t-distribution), ≈15-20
-      min each
+    locator: zedstatistics video 'What are confidence intervals? Actually.'
     covers:
     - knowledge-sad-l09-standard-error
     - knowledge-sad-l09-z-interval
@@ -5279,7 +5262,7 @@ sources:
     format: video
     depth: intuition
     scope: complementary
-    locator: The hypothesis-testing and p-value videos, ≈15-25 min each
+    locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
     covers:
     - knowledge-sad-l10-test-model
     - knowledge-sad-l10-tails-pvalue
@@ -5301,8 +5284,8 @@ sources:
     format: book
     depth: advanced-reference
     scope: complementary
-    locator: Ch 8 'Graphical Models' §8.1 Bayesian networks, §8.2 conditional independence (including
-      d-separation), §8.3.6 the Markov blanket
+    locator: 'Official Bishop PDF, Ch 8 ''Graphical Models'', PDF pp. 379-438: §8.1 ''Bayesian Networks''
+      p. 380, §8.2 ''Conditional Independence'' p. 392, and §8.2.2 ''D-separation'' p. 398'
     covers:
     - knowledge-sad-l14-bayes-net
     - knowledge-sad-l14-markov
@@ -5322,11 +5305,11 @@ sources:
   - id: route-24a20095c2e04038e9907ea0
     unit_id: unit-m2-sad-l15
     title: Goodfellow Ch 6 — deep feedforward networks
-    format: book
+    format: website
     depth: advanced-reference
     scope: complementary
-    locator: Ch 6 'Deep Feedforward Networks' §6.1 the XOR example, §6.2 gradient-based learning and cost
-      functions, §6.3 hidden units, §6.5 back-propagation and other differentiation algorithms
+    locator: 'Deep Learning online book, Ch 6 ''Deep Feedforward Networks'': §6.1 XOR, §6.2 gradient-based
+      learning, §6.3 hidden units, and §6.5 back-propagation'
     covers:
     - knowledge-sad-l15-activation
     - knowledge-sad-l15-output
@@ -5351,8 +5334,8 @@ sources:
     format: solutions
     depth: practice
     scope: complementary
-    locator: The Ch 2 (statistical learning) and Ch 5 (resampling methods) solution notebooks in the botlnec
-      / a-martyn / applied-on-ISLP repositories
+    locator: 'ISLP community solution notebooks: Ch 2 Exercise 1 ''statistical learning and bias-variance''
+      and Ch 5 Exercise 3 ''k-fold cross-validation'' in the botlnec, a-martyn, and applied-on-ISLP repositories'
     covers:
     - knowledge-sad-l11-generalization
     - knowledge-sad-l11-resampling
@@ -5521,9 +5504,8 @@ sources:
     - knowledge-sad-exam-transfer
     depth: practice
     scope: optional
-    locator: 'MIT 18.05 Introduction to Probability and Statistics: the published exams and practice exams
-      with solutions; one unused probability or inference question, chosen to match the diagnosed gap.
-      No local copy; the set is addressed by exam and question number on the OCW course page.'
+    locator: MIT 18.05 Spring 2022 'Final Exam' (mit18_05_s22_exam_final.pdf) and 'Final Exam Solutions'
+      (mit18_05_s22_exam_final_sol.pdf)
     angle_detail: Explicitly a replacement of last resort rather than a route to work through. The German
       sources hold wording authority for this exam, so an English question is used only to supply a fresh
       instance of a topic — a confidence interval, a test decision — when every German equivalent has
@@ -5811,6 +5793,7 @@ sources:
   why: The L01 slides name Teschl & Teschl, but no reachable local material or verified URL exists; keep
     visible and do not block study on it.
   priority: 10
+  unit_routes: []
 - source_id: source-analysis-grundlagen-handouts
   role: reference
   why: Sets, relations, and proof notes are prerequisite repair only because Chapters 1-2 remain the course
@@ -6865,8 +6848,8 @@ sources:
     - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
-    locator: Lectures 2-4 (conditional probability, Bayes' rule, independence) with the matching sections
-      of the Stat 110 strategic-practice sheets and their solutions
+    locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
+      independence''; Strategic Practice 2 with solutions'
     angle_detail: 'This is the video companion to Blitzstein & Hwang, so choosing between them is a format
       decision rather than a content decision: the definitions, notation and examples line up section
       by section. The lectures add the thing the book cannot — hearing which step he considers the difficult
@@ -8998,8 +8981,7 @@ sources:
     - knowledge-sad-l12-boosting
     depth: advanced-reference
     scope: complementary
-    locator: The 2022 lecture covering decision trees and ensemble methods (identify by title on the playlist;
-      roughly the mid-course tree lecture)
+    locator: Spring 2022 playlist, Lecture 11 'Decision Trees' and Lecture 12 'Boosting'
     angle_detail: 'The useful part is the framing: where trees sit relative to everything else in the
       course, what they are good at (heterogeneous tabular features, interpretability) and what they are
       bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
@@ -9015,7 +8997,7 @@ sources:
     - knowledge-sad-l14-multinomial
     depth: advanced-reference
     scope: complementary
-    locator: The 2022 lecture on generative learning algorithms (GDA and Naive Bayes)
+    locator: Spring 2022 playlist, Lecture 5 'Gaussian Discriminant Analysis and Naive Bayes'
     angle_detail: Modelling P(x|y) and P(y) and inverting with Bayes, versus modelling P(y|x) directly,
       is the single most clarifying distinction in classification — it explains why Naive Bayes needs
       smoothing and logistic regression does not, and why Naive Bayes can be trained on less data. L14
@@ -9032,7 +9014,7 @@ sources:
     - knowledge-sad-l15-training
     depth: advanced-reference
     scope: complementary
-    locator: The 2022 neural-networks lecture (the first of the deep-learning lectures on the playlist)
+    locator: Spring 2022 playlist, Lecture 8 'Neural Networks I'
     angle_detail: The lecture spends real time on the representational question — what functions are and
       are not reachable — which is L15's universality node treated as a question rather than a stated
       theorem. Also useful for hearing how a practitioner describes the training loop, which the deck
@@ -9378,8 +9360,7 @@ sources:
     - knowledge-sad-l12-tree-model
     depth: practice
     scope: complementary
-    locator: The published 6.034 quizzes and finals — the ID3 / decision-tree tracing questions, with
-      the official solutions
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part B 'ID Trees', PDF pp. 4-5
     angle_detail: MIT 6.034's quizzes are unusually procedural — they ask you to execute the algorithm
       and show the intermediate state, which is precisely the L12 exam form. Because the solutions are
       official and complete, a wrong answer can be diagnosed to the exact split. The archive spans many
@@ -9396,8 +9377,8 @@ sources:
     - knowledge-sad-l13-minkowski
     depth: practice
     scope: complementary
-    locator: The published 6.034 quizzes and finals — the nearest-neighbour and decision-boundary questions,
-      with solutions
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part A 'Nearest Neighbors', PDF pp.
+      2-3
     angle_detail: Sketching the boundary for k=1 and k=3 on a small labelled scatter is a compact test
       of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes
       have many such questions with drawn solutions, which is not available anywhere else on the shelf.
@@ -9412,8 +9393,7 @@ sources:
     - knowledge-sad-l15-forward
     depth: practice
     scope: complementary
-    locator: The published 6.034 quizzes and finals — the neural-network forward/backward tracing questions,
-      with solutions
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2 Parts A-C 'Neural Networks'
     angle_detail: 'The same procedural virtue as the tree questions: execute the computation, show the
       state. For L15 that means a forward pass with given weights, a loss, and one update step — which
       is the realistic scope of a neural-network exam question in a combined three-hour paper.'
@@ -9428,9 +9408,8 @@ sources:
     - knowledge-sad-exam-neural
     depth: practice
     scope: complementary
-    locator: MIT 6.034 published quizzes and finals with official solutions — the ID3 / decision-tree
-      tracing questions and the neural-network forward/backward tracing questions. No local copy; the
-      papers are addressed by quiz number on the OCW course page.
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Parts A-B and Problem 2 Parts A-C,
+      with the corresponding official solution
     angle_detail: Trees and neural networks are the two SaD topics the current Blätter never ask you to
       trace by hand, and tracing is exactly what a written exam can ask for. These quizzes do it in the
       right size — a small table or a two-layer network, worked in minutes — with official solutions to
@@ -10142,33 +10121,4 @@ sources:
   role: reference
   why: Too proof-dense for this exam plan and explicitly not selected; retained for future depth.
   priority: 99
-- source_id: source-swanson-principles-probability
-  role: reference
-  why: Despite its title, this is a formal-logic/measure-theory text and is not selected for the SaD probability
-    syllabus.
-  priority: 99
-  unit_routes:
-  - id: route-f80f5a51cfd87b7a1d954a88
-    unit_id: unit-m2-sad-l06
-    title: Swanson — the measure-theoretic definition behind the random-variable language
-    format: book
-    depth: advanced-reference
-    scope: out-of-scope
-    locator: The Principles of Probability (LNM 2384), the chapters defining sigma-algebras, measurable
-      functions and the abstract expectation integral
-    covers:
-    - knowledge-sad-l06-random-variable
-    - knowledge-sad-l06-expectation
-    - knowledge-sad-l06-distribution-functions
-    angle: Says what a random variable formally is — a measurable function — which every course-level
-      source deliberately avoids.
-    angle_detail: '⚠ Held for review, 2026-08-29, and not repaired in this pass. The route''s angle says
-      this book ''says what a random variable formally is — a measurable function''. Opened, LNM 2384
-      is a monograph on inductive and probabilistic logic: Ch 2 Background carries Boolean Algebras p.
-      47 and a four-page §2.3 Measure Spaces p. 48, and the body is propositional calculus (Ch 3 p. 56),
-      propositional models (Ch 4 p. 103) and predicate logic (Ch 5 p. 147), where §5.4 ''Predicate Models
-      and Random Variables'' p. 182 treats random variables inside predicate logic rather than as measurable
-      functions. The address is therefore not merely vague — the judgment describes a different book.
-      Changing a contextual source evaluation needs review (CLAUDE.md §4), so the angle is left standing
-      and the mismatch is recorded here and in the audit for Aram to settle.'
-    vault_path: material://source-swanson-principles-probability/Swanson_Principles-of-Probability_LNM2384.pdf
+  unit_routes: []

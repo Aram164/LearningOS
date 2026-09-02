@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "request_id": "request-algo2-safe-shelve-20260831-001",
+  "idempotency_key": "algo2-safe-shelve-20260831-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:0c9b4079939e2c00f2cf229e39f15c10ccf4c6d8920f4ac7dffc296c96f12bdc",
+  "expected_revisions": {
+    "module-hu-algo2": 1
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:4f32bcc5a97d09ba3fbd87cfc54e6d2ed78648ba87e5f6a49a95a5781d84be45"
+  },
+  "payload": {
+    "module_id": "module-hu-algo2",
+    "file": "work/active/workspace-algo2-exam-prep/outputs/algo2-safe-shelve-2026-08-31.yaml",
+    "file_sha256": "sha256:08cc4743c2fd332545dd9737af71d353f1644fb1db0e3ba30e6a1623302a19b9"
+  }
+}

@@ -1,0 +1,23 @@
+module_id: module-hu-algo2
+
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-algo2-exam-prep/outputs/algo2-resource-coverage-audit-2026-08-16.md
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+module_patch:
+  status: archived
+  unit_order:
+    - unit-algo2-exam-prep
+
+source_patches: []
+units: []
+workspace_updates: []

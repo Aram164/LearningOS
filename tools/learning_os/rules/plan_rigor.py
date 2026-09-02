@@ -45,6 +45,16 @@ _HEDGE_RE = re.compile(
     r"\b(?:selections?|selected|topic-matched|relevant|appropriate|matching"
     r"|as needed|assorted|various|related)\b", re.IGNORECASE)
 
+# A hedge word inside a quoted title is part of the material's exact identity,
+# not an instruction to the learner.  In particular, lecture titles such as
+# "Bias/Variance, Regularization, and Model Selection" must not be confused
+# with vague locators such as "selected chapters".
+_QUOTED_TEXT_RE = re.compile(r"(['\"“”„]).*?\1")
+
+
+def _has_unquoted_hedge(locator: str) -> bool:
+    return bool(_HEDGE_RE.search(_QUOTED_TEXT_RE.sub("", locator)))
+
 # Formats whose locator must reach a page, not merely a chapter.
 _PAGED_FORMATS = {"book", "paper"}
 # Formats where a numbered division alone is a usable address.
@@ -85,6 +95,13 @@ class ChecksPlanRigor:
     def _check_route_rigor(self) -> None:
         r = self.repo
         for mid, source_map in r.module_source_maps.items():
+            module = r.modules.get(mid)
+            if module is not None and module.get("status") == "archived":
+                # Archived modules remain canonical so they can be restored,
+                # but their source maps are historical rather than active
+                # learning surfaces.  Re-activation makes the same warnings
+                # visible again because the source bytes are left untouched.
+                continue
             where = self._rel(r.module_source_map_origins[mid])
             for entry in source_map.get("sources", []) or []:
                 sid = entry.get("source_id") if isinstance(entry, dict) else None
@@ -122,10 +139,10 @@ class ChecksPlanRigor:
                     f"('{locator[:60]}') — give the chapter AND its PDF pages",
                     where,
                 )
-            elif fmt in _ADDRESSED_FORMATS and (_HEDGE_RE.search(locator)
+            elif fmt in _ADDRESSED_FORMATS and (_has_unquoted_hedge(locator)
                                                 or not has_address):
                 reason = ("hedges instead of naming the material"
-                          if _HEDGE_RE.search(locator)
+                          if _has_unquoted_hedge(locator)
                           else "names no numbered division or titled item")
                 self.warn(
                     "LOCATOR-VAGUE",

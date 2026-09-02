@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-job-engineering-tools-url-repair-20260901-001",
+  "idempotency_key": "job-engineering-tools-url-repair-20260901-001",
+  "capability": "unit.map.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:e7a1cfa243cbcc0f1f87df0711165f82df77ee273aee2c89d881e06e7eb308f3",
+  "expected_revisions": {
+    "unit-job-engineering-tools-fluency": 1,
+    "study-map-job-engineering-tools-fluency": 1
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:bb7169029689aef1d458f4e5c4365e487ecb90a3981b5f45eb31472004535366"
+  },
+  "payload": {
+    "unit_id": "unit-job-engineering-tools-fluency",
+    "file": "operations/gateway-requests/job-engineering-tools-url-repair-map-2026-09-01.yaml",
+    "file_sha256": "sha256:267e55f48c38d100840494ff2840986d904bc9e98b9b68450b9a66dedaa80602",
+    "replace": true
+  }
+}
