@@ -152,10 +152,10 @@ def test_a_retired_document_cannot_be_binding(tmp_path):
 def test_a_retired_document_must_say_so_in_its_own_text(tmp_path):
     """The audit CRITIQUE-POINTS §3 said the review owed, made executable."""
     root = _corpus(tmp_path, [
-        _entry("system/adr/ADR-013-new-2026-08-26.md",
-               supersedes=["system/adr/ADR-010-old-2026-08-14.md"]),
         _entry("system/adr/ADR-010-old-2026-08-14.md",
                status="superseded", authority="historical"),
+        _entry("system/adr/ADR-013-new-2026-08-26.md",
+               supersedes=["system/adr/ADR-010-old-2026-08-14.md"]),
         _entry("system/OPERATOR.md"),
     ], entrypoint="system/OPERATOR.md", files={
         "system/adr/ADR-013-new-2026-08-26.md": "# ADR-013\n\nSupersedes ADR-010.\n",
@@ -169,10 +169,10 @@ def test_a_retired_document_must_say_so_in_its_own_text(tmp_path):
 
 def test_a_notice_naming_the_successor_clears_it(tmp_path):
     root = _corpus(tmp_path, [
-        _entry("system/adr/ADR-013-new-2026-08-26.md",
-               supersedes=["system/adr/ADR-010-old-2026-08-14.md"]),
         _entry("system/adr/ADR-010-old-2026-08-14.md",
                status="superseded", authority="historical"),
+        _entry("system/adr/ADR-013-new-2026-08-26.md",
+               supersedes=["system/adr/ADR-010-old-2026-08-14.md"]),
         _entry("system/OPERATOR.md"),
     ], entrypoint="system/OPERATOR.md", files={
         "system/adr/ADR-013-new-2026-08-26.md": "# ADR-013\n",
@@ -200,9 +200,9 @@ def test_an_amendment_also_requires_a_notice(tmp_path):
 def test_an_amended_document_may_stay_current_and_binding(tmp_path):
     """Partial retirement is not retirement — ADR-012 is the live example."""
     root = _corpus(tmp_path, [
+        _entry("system/adr/ADR-012-part-2026-08-19.md"),
         _entry("system/adr/ADR-013-new-2026-08-26.md",
                amends=["system/adr/ADR-012-part-2026-08-19.md"]),
-        _entry("system/adr/ADR-012-part-2026-08-19.md"),
         _entry("system/OPERATOR.md"),
     ], entrypoint="system/OPERATOR.md", files={
         "system/adr/ADR-013-new-2026-08-26.md": "# ADR-013\n",
@@ -243,6 +243,62 @@ def test_a_repository_with_no_prose_has_no_corpus_to_check(tmp_path):
 def test_an_index_violating_its_schema_is_an_error(tmp_path):
     root = _corpus(tmp_path, [_entry("system/OPERATOR.md", status="retired-ish")])
     assert "UNREADABLE" in _codes(nc.check(root))
+
+
+def test_an_adr_indexed_before_its_predecessor_is_an_error(tmp_path):
+    """The 2026-09-03 audit's finding: ADR-015 stood above ADR-014."""
+    root = _corpus(tmp_path, [
+        _entry("system/OPERATOR.md"),
+        _entry("system/adr/ADR-015-later-2026-08-28.md"),
+        _entry("system/adr/ADR-014-earlier-2026-08-27.md"),
+    ])
+    issues = nc.check(root)
+    assert "ORDER" in _codes(issues)
+    assert any(i.path.endswith("ADR-014-earlier-2026-08-27.md")
+               for i in issues if i.code == "ORDER")
+
+
+def test_dated_reviews_out_of_chronological_order_are_an_error(tmp_path):
+    root = _corpus(tmp_path, [
+        _entry("system/OPERATOR.md"),
+        _entry("system/adr/engineering-audit-2026-08-08.md"),
+        _entry("system/adr/external-review-2026-07-16.md"),
+    ])
+    assert "ORDER" in _codes(nc.check(root))
+
+
+def test_prose_that_declares_no_ordinal_keeps_its_authored_order(tmp_path):
+    """The check must not become a sort. OPERATOR before PHILOSOPHY is a
+    judgement somebody made; alphabetising the index would reverse it."""
+    root = _corpus(tmp_path, [
+        _entry("system/OPERATOR.md"),
+        _entry("system/CLAUDE.md"),
+        _entry("system/ARCHITECTURE.md"),
+        _entry("system/PHILOSOPHY.md", authority="informative"),
+    ])
+    assert "ORDER" not in _codes(nc.check(root))
+
+
+def test_families_do_not_constrain_each_other(tmp_path):
+    """A numbered ADR and a dated review are separate sequences."""
+    root = _corpus(tmp_path, [
+        _entry("system/OPERATOR.md"),
+        _entry("system/adr/critical-review-2026-08-19.md"),
+        _entry("system/adr/ADR-001-first-2026-07-17.md"),
+    ])
+    assert "ORDER" not in _codes(nc.check(root))
+
+
+def test_one_displaced_entry_is_reported_once(tmp_path):
+    """A cascade would bury the one fact the reader needs."""
+    root = _corpus(tmp_path, [
+        _entry("system/OPERATOR.md"),
+        _entry("system/adr/ADR-009-x-2026-08-08.md"),
+        _entry("system/adr/ADR-001-y-2026-07-17.md"),
+        _entry("system/adr/ADR-010-z-2026-08-14.md"),
+        _entry("system/adr/ADR-011-w-2026-08-15.md"),
+    ])
+    assert len([i for i in nc.check(root) if i.code == "ORDER"]) == 1
 
 
 # ---- the live half ---------------------------------------------------------
@@ -287,3 +343,13 @@ def test_no_frozen_or_superseded_document_claims_to_bind():
     for doc in nc.load(ROOT).documents:
         if doc.status in nc.RETIRED_STATUSES:
             assert doc.authority != "binding", doc.path
+
+
+@pytest.mark.full_repo
+def test_the_live_index_follows_the_order_its_filenames_declare():
+    numbers = [
+        int(nc._ordinal(doc.path)[1])
+        for doc in nc.load(ROOT).documents
+        if (nc._ordinal(doc.path) or ("", ""))[0] == "adr"
+    ]
+    assert numbers == sorted(numbers), numbers

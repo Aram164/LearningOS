@@ -83,6 +83,7 @@ rule as current, which is indistinguishable from the rule being wrong.
 
 - **E** No duplicate relation edges (same from/type/to).
 - **E** Relation `type` is one of the eight supported types (no `related-to`).
+- **E** No cycle among `requires` / `builds-on` edges. Semantic relation types may cycle; only the strict subgraph defines learning order.
 - **W** Alias collision: one alias maps to multiple concepts.
 - **W** Two source records share title+author or identical URL/identifier (duplicate candidates).
 - **E** Concept records contain no body/explanation fields beyond short description.

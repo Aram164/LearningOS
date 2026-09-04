@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 
-from ..loader import RELATION_TYPES
+from ..loader import PREREQUISITE_RELATIONS, RELATION_TYPES
 from .common import (
     CANONICAL_TREES,
     COORDINATION_SECTIONS,
@@ -29,6 +29,7 @@ class ChecksRegistries:
             if edge in seen_edges:
                 self.err("REL-DUP", f"duplicate relation edge {edge}", "knowledge/concept-relations.yaml")
             seen_edges.add(edge)
+        self._prerequisite_cycle()
         # Alias collisions. Normalize with strip().casefold() so that stray
         # whitespace or case ('Erwartungswert', ' erwartungswert ') still
         # collides; empty keys are ignored rather than colliding vacuously.
@@ -64,6 +65,61 @@ class ChecksRegistries:
                 if url in seen_url:
                     self.warn("SOURCE-DUP", f"sources '{seen_url[url]}' and '{sid}' share URL {url}")
                 seen_url.setdefault(url, sid)
+
+    def _prerequisite_cycle(self):
+        """No cycle among `requires` / `builds-on` (ADR-016 decision 4).
+
+        Only the strict subgraph defines learning order, so only the strict
+        subgraph has to be acyclic. Semantic relations may cycle freely — two
+        concepts can motivate each other without either coming first.
+
+        The report is deterministic on purpose. Concepts are walked in sorted
+        order and neighbours in sorted order, and the first cycle found is the
+        one reported, so the same repository always yields the same message. A
+        cycle error that names a different path on each run is one nobody can
+        act on, and reporting every cycle would bury the shortest.
+
+        Runs after `check_references`, which resolves endpoints: a cycle walk
+        over an unresolvable `to` reports nonsense.
+        """
+        r = self.repo
+        prereqs: dict[str, set[str]] = {}
+        for rel in r.relations:
+            if str(rel.get("type")) not in PREREQUISITE_RELATIONS:
+                continue
+            frm, to = str(rel.get("from", "")), str(rel.get("to", ""))
+            if frm in r.concepts and to in r.concepts:
+                prereqs.setdefault(frm, set()).add(to)
+
+        WHITE, GREY, BLACK = 0, 1, 2
+        colour: dict[str, int] = {}
+
+        def walk(node: str, stack: list[str]) -> list[str] | None:
+            colour[node] = GREY
+            stack.append(node)
+            for nxt in sorted(prereqs.get(node, ())):
+                state = colour.get(nxt, WHITE)
+                if state == GREY:
+                    return stack[stack.index(nxt):] + [nxt]
+                if state == WHITE:
+                    found = walk(nxt, stack)
+                    if found:
+                        return found
+            stack.pop()
+            colour[node] = BLACK
+            return None
+
+        for start in sorted(prereqs):
+            if colour.get(start, WHITE) != WHITE:
+                continue
+            cycle = walk(start, [])
+            if cycle:
+                self.err(
+                    "REL-PREREQ-CYCLE",
+                    "prerequisite cycle: " + " -> ".join(cycle),
+                    "knowledge/concept-relations.yaml",
+                )
+                return
 
     def check_collections(self):
         """Collections (sources/collections/*.yaml) are curated lists OVER the

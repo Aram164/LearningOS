@@ -1,10 +1,11 @@
 """The bindingness and supersession index over the normative corpus.
 
 CRITIQUE-POINTS §3 diagnosed the failure precisely: the rules do not
-contradict each other, but nothing says which of them are rules. ~7,800 lines
-of prose under ``system/`` carry contracts, adapters, procedures, reasoning,
-frozen history and dated reviews in one undifferentiated pile, so every agent
-reads a different subset and returns a different picture.
+contradict each other, but nothing says which of them are rules. The prose
+under ``system/`` carries contracts, adapters, procedures, reasoning, frozen
+history and dated reviews in one undifferentiated pile, so every agent reads a
+different subset and returns a different picture. ``summary()`` reports how
+much there is; no count is written down here, because a written count drifts.
 
 ``system/contracts/normative-corpus.yaml`` is that missing statement. This
 module makes it executable, which is the whole difference between an index and
@@ -29,6 +30,12 @@ What is enforced, and why each check exists
                  unmeasured. It is measured here, on every run, because an
                  agent that opens the file directly never sees this index.
 ``ENTRYPOINT``   the declared entry point missing, retired, or non-binding.
+``ORDER``        an entry indexed out of the order its own path declares. ADR
+                 numbers and trailing ISO dates are ordinals the filename
+                 already carries; when the index contradicts one, the reader
+                 loses the only affordance a flat list of forty documents has.
+                 Prose whose path declares no ordinal keeps its authored
+                 reading order, which is the point of the section comments.
 
 Edge direction follows the repository's own convention for canonical notes
 (ARCHITECTURE, note identity): the forward edge is authored on the successor
@@ -216,9 +223,10 @@ def check(root: Path) -> list[CorpusIssue]:
     A repository with no normative prose at all has no corpus to govern, and
     the check does not apply. That is a synthetic fixture — the mini-repos the
     test suite and `module.plan.import --check` build to validate a proposed
-    change in isolation — never the system: the real repository carries 35
-    documents, and `test_every_system_document_on_disk_is_classified` pins
-    that it is not silently in the empty state.
+    change in isolation — never the system:
+    `test_every_system_document_on_disk_is_classified` pins that the real
+    repository is not silently in the empty state, and `summary()` is where
+    its size is read from rather than declared.
     """
     if not corpus_files(root):
         return []
@@ -271,6 +279,7 @@ def check(root: Path) -> list[CorpusIssue]:
                         "CYCLE", f"{edge_name} itself", doc.path))
 
     issues.extend(_cycles(corpus))
+    issues.extend(_order(corpus))
 
     for doc in corpus.documents:
         retired_by = corpus.superseded_by.get(doc.path, ())
@@ -330,6 +339,59 @@ def check(root: Path) -> list[CorpusIssue]:
                 entry.path,
             ))
 
+    return issues
+
+
+#: A filename that carries its own ordinal — an ADR number, or the ISO date a
+#: dated review is named for. Where one exists the index may not contradict it;
+#: where none does, the authored reading order stands untouched.
+_ADR_ORDINAL = re.compile(r"^ADR-(\d+)")
+_DATE_ORDINAL = re.compile(r"(\d{4}-\d{2}-\d{2})$")
+
+
+def _ordinal(path: str) -> tuple[str, object] | None:
+    """The family and ordinal ``path`` declares, or None if it declares none."""
+    stem = Path(path).stem
+    adr = _ADR_ORDINAL.match(stem)
+    if adr:
+        return ("adr", int(adr.group(1)))
+    dated = _DATE_ORDINAL.search(stem)
+    if dated:
+        return ("dated", dated.group(1))
+    return None
+
+
+def _order(corpus: Corpus) -> list[CorpusIssue]:
+    """Within each family, the index must not contradict the declared ordinal.
+
+    Families are compared as independent subsequences, so a numbered ADR and a
+    dated review never constrain each other, and prose that declares no ordinal
+    — the binding spine, in the reading order somebody chose — constrains
+    nothing at all. Sorting the whole list instead would be simpler and wrong:
+    it would put PHILOSOPHY before OPERATOR and call that an improvement.
+
+    A displaced entry is reported once. The last in-order entry stays the
+    comparison point, so one document in the wrong place does not cascade into
+    an error for every document after it.
+    """
+    issues: list[CorpusIssue] = []
+    previous: dict[str, tuple[object, str]] = {}
+    for doc in corpus.documents:
+        declared = _ordinal(doc.path)
+        if declared is None:
+            continue
+        family, ordinal = declared
+        prior = previous.get(family)
+        if prior is not None and ordinal < prior[0]:
+            issues.append(CorpusIssue(
+                "ORDER",
+                f"indexed after '{prior[1]}', which its own filename orders it "
+                "before; reading order is the only affordance a flat index of "
+                "this length has",
+                doc.path,
+            ))
+            continue
+        previous[family] = (ordinal, doc.path)
     return issues
 
 

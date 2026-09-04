@@ -25,6 +25,43 @@ _CANVAS_GAP_X = 200
 _CANVAS_GAP_Y = 40
 
 
+def canvas_edge(a: str, b: str, t: str) -> dict:
+    """One relation `a --t--> b` as a Canvas edge, in study order.
+
+    The canonical sentence reads subject to object — *a requires b* — but the
+    useful arrow points the other way: b is what you learn first. Concepts are
+    already laid out with x = prerequisite depth, so the prerequisite is
+    already to the left, and the arrow has to leave it rightward.
+
+    Four properties, and three of them are easy to get wrong:
+
+    1. **Endpoints** flip for strict types only. Semantic relations are not a
+       learning order and their arrows do not move.
+    2. **Sides flip with them.** Leave the sides alone and the line exits the
+       prerequisite's *left* edge and loops back around to the dependent's
+       *right* — endpoints correct, drawing still wrong.
+    3. **Identity is preserved.** The id keeps the canonical `a--t--b`
+       spelling, so this reads as a direction fix rather than as every edge in
+       the file being replaced.
+    4. **The label agrees with the arrow.** `requires` on a reversed arrow
+       reads backwards, so strict labels are prefixed. Semantic labels stay the
+       bare type.
+
+    Resolved in one named function so the strict/semantic split is one readable
+    place and the tests can call it directly (ADR-016 decision 3).
+    """
+    strict = t in PREREQ_TYPES
+    return {
+        "id": f"{a}--{t}--{b}",
+        "fromNode": b if strict else a,
+        "fromSide": "right" if strict else "left",
+        "toNode": a if strict else b,
+        "toSide": "left" if strict else "right",
+        "label": f"prerequisite for ({t})" if strict else t,
+        "color": CANVAS_EDGE_COLORS.get(t, "4"),
+    }
+
+
 def _concept_depths(relations: list[dict], involved: set[str]) -> dict[str, int]:
     """Longest-prerequisite-path depth over requires/builds-on edges (the same
     edge set as the Mermaid concept map). Cycles fall back to depth 0."""
@@ -101,12 +138,7 @@ def build_concept_canvas(repo: Repo, generated_at: str) -> dict:
         a, b, t = str(r.get("from")), str(r.get("to")), str(r.get("type"))
         if a not in involved or b not in involved:
             continue
-        edges.append({
-            "id": f"{a}--{t}--{b}",
-            "fromNode": a, "fromSide": "left",
-            "toNode": b, "toSide": "right",
-            "label": t, "color": CANVAS_EDGE_COLORS.get(t, "4"),
-        })
+        edges.append(canvas_edge(a, b, t))
     edges.sort(key=lambda e: e["id"])
 
     return {"_generated": _json_header(generated_at), "nodes": nodes, "edges": edges}

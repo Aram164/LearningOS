@@ -8,6 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import yaml
 from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
 
 from learning_os.genout import adoption_counts, generate_all
@@ -146,16 +147,65 @@ def test_concept_canvas_is_valid_json_canvas(mini_repo):
     assert node_ids == {"concept-expected-value", "concept-variance"}
     for n in data["nodes"]:
         assert {"id", "type", "text", "x", "y", "width", "height"} <= set(n)
+    # Study order, not the canonical sentence (ADR-016 decision 3). The
+    # relation reads "variance builds on expected value"; the arrow has to point
+    # at what you learn second.
     [edge] = data["edges"]
-    assert edge["fromNode"] == "concept-variance"
-    assert edge["toNode"] == "concept-expected-value"
-    assert edge["label"] == "builds-on"
+    assert edge["fromNode"] == "concept-expected-value"
+    assert edge["fromSide"] == "right"
+    assert edge["toNode"] == "concept-variance"
+    assert edge["toSide"] == "left"
+    assert edge["label"] == "prerequisite for (builds-on)"
+    # Identity is canonical and unchanged, so this is a direction fix rather
+    # than a rewrite of every edge in the file.
+    assert edge["id"] == "concept-variance--builds-on--concept-expected-value"
     # prerequisite-depth layout: the dependent sits one layer right of its prereq
     xs = {n["id"]: n["x"] for n in data["nodes"]}
     assert xs["concept-variance"] > xs["concept-expected-value"]
     # note links rendered on the concept card
     ev = next(n for n in data["nodes"] if n["id"] == "concept-expected-value")
     assert "note-demo" in ev["text"]
+
+
+def test_a_semantic_canvas_edge_keeps_its_canonical_direction(mini_repo):
+    """Only the strict subgraph is a learning order, so only it is redrawn.
+
+    A semantic arrow that flipped would assert an order the relation does not
+    carry — the exact confusion ADR-016 decision 2 exists to prevent.
+    """
+    f = mini_repo / "knowledge" / "concept-relations.yaml"
+    f.write_text(yaml.safe_dump({"relations": [
+        {"from": "concept-variance", "type": "applies-in",
+         "to": "concept-expected-value"},
+    ]}))
+    outputs = generate_all(load_repo(mini_repo), generated_at="T1")
+    [edge] = json.loads(outputs["concept-canvas.canvas"])["edges"]
+    assert edge["fromNode"] == "concept-variance"
+    assert edge["fromSide"] == "left"
+    assert edge["toNode"] == "concept-expected-value"
+    assert edge["toSide"] == "right"
+    assert edge["label"] == "applies-in"
+
+
+def test_the_canvas_and_the_mermaid_map_agree_on_study_direction(mini_repo):
+    """Both are generated from one relation set. A test that asserts one and
+    not the other proves nothing — and until 2026-09-04 they disagreed."""
+    outputs = generate_all(load_repo(mini_repo), generated_at="T1")
+    [edge] = json.loads(outputs["concept-canvas.canvas"])["edges"]
+    concept_map = outputs["concept-map.md"]
+
+    # The map says so in its own header, and draws `requires` solid and
+    # `builds-on` dotted. Either way the prerequisite is on the left.
+    assert "Arrows point from prerequisite to dependent" in concept_map
+    [arrow] = [ln for ln in concept_map.splitlines()
+               if "-->" in ln or "-.->" in ln]
+    left, right = arrow.split("->")
+    assert "concept_expected_value" in left
+    assert "concept_variance" in right
+
+    # The canvas edge runs between the same two concepts in the same order.
+    assert edge["fromNode"] == "concept-expected-value"
+    assert edge["toNode"] == "concept-variance"
 
 
 def test_adoption_counts_flag_drift_past_review(mini_repo):
