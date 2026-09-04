@@ -1,0 +1,188 @@
+# The register of declared sets — every machine-checked declaration in this
+# repository, and what enforces it.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# The repository already knows the pattern: a declared set, a discovered set,
+# and an executable comparison that fails closed. `data-contract.yaml` applies
+# it to the stored record schemas; `normative-corpus.yaml` applies it to the
+# normative prose. Both hold exactly where they are applied.
+#
+# What nothing applied it to was the register of declarations itself. Before
+# this file, a contract could be added to `system/contracts/` with no checker
+# and nothing noticed — which is how the 2026-09-03 audit found three
+# declarations here enforced only at their point of use, with no statement
+# anywhere that this was the arrangement. The gap was never a decision; it was
+# the absence of one.
+#
+# Deny by default: a `.yaml` under `system/contracts/` that is neither listed
+# below nor exempt fails `tests/test_contract_register.py`.
+#
+# HOW A ROW IS PROVED
+# -------------------
+# `enforced_by: validator` — the checker is wired into `Validator.run()`. The
+#   test asserts the method exists, that `run()` actually calls it (a method
+#   nobody calls is the exact failure this register is for), and that an
+#   `error` row's checker calls `self.err` rather than `self.warn`, so a silent
+#   downgrade cannot hide inside a green run.
+#
+# `enforced_by: runtime` — the declaration is enforced where it is used, not on
+#   every `make check`. This is legitimate: a capability catalogue is enforced
+#   when a capability is dispatched, and validating it on a pre-commit hook
+#   would prove less than the dispatch path already does. It is recorded rather
+#   than assumed, and each such row must name a test, so "enforced elsewhere"
+#   can never mean "enforced nowhere".
+#
+# Adding a contract without adding its row here is a test failure, by design.
+
+register_version: 1
+
+contracts:
+
+  # ---- enforced by the validator, on every `make check` --------------------
+
+  - declaration: system/contracts/data-contract.yaml
+    governs: >-
+      The fingerprint of the 35 stored record schemas under system/schema/. A
+      schema edit that does not bump the contract fails closed.
+    enforced_by: validator
+    checker: learning_os.contracts.data_contract
+    validator_method: check_data_contract
+    severity: error
+    test: tests/test_format_fixtures.py
+
+  - declaration: system/contracts/manifest-contract.yaml
+    governs: >-
+      The declared shape and version of the published projection. This check is
+      deliberately shallow — that the declaration parses and has a version.
+      Whether the manifest still MATCHES it is proved by `build_manifest`,
+      which refuses to publish a drifted shape; that is the real gate, and it
+      runs on every generate rather than on every commit.
+    enforced_by: validator
+    checker: learning_os.contracts.manifest_contract
+    validator_method: check_manifest_contract
+    severity: error
+    test: tests/test_manifest_contract.py
+
+  - declaration: system/contracts/normative-corpus.yaml
+    governs: >-
+      Which documents under system/ bind, which are retired, and where an
+      operator enters. Set-identical against the corpus globs; supersession
+      edges, retirement notices and index order all checked.
+    enforced_by: validator
+    checker: learning_os.contracts.normative_corpus
+    validator_method: check_normative_corpus
+    severity: error
+    test: tests/test_normative_corpus.py
+
+  - declaration: system/contracts/perimeter.yaml
+    governs: >-
+      What may exist at the two levels above repository/ — the wrapper root and
+      the LearningOS umbrella. Deny by default, read from disk rather than git,
+      because the wrapper ignores LearningOS/ wholly and *.pdf globally and so
+      sees none of what this governs. Silent outside the real tree, by a
+      declared anchor set rather than a hardcoded guess.
+    enforced_by: validator
+    checker: learning_os.contracts.perimeter
+    validator_method: check_perimeter
+    severity: error
+    test: tests/test_perimeter.py
+
+  - declaration: system/contracts/tree-contract.yaml
+    governs: >-
+      The directory skeleton of repository/, and ARCHITECTURE.md §3.2, which is
+      a projection of it rather than a second authored copy. Deny by default;
+      depth is per-entry, so a declared directory with no children has an
+      unchecked interior. Hidden entries are split into tracked configuration
+      and ephemeral caches, the latter cross-checked against git.
+    enforced_by: validator
+    checker: learning_os.contracts.tree_contract
+    validator_method: check_tree_contract
+    severity: error
+    test: tests/test_tree_contract.py
+
+  # ---- enforced where they are used ----------------------------------------
+  #
+  # Recorded, not excused. Each names the module that enforces it and a test
+  # that exercises that path.
+
+  - declaration: system/contracts/capabilities.yaml
+    governs: >-
+      The gateway capability catalogue — handler, CLI command, write scopes and
+      invariants per capability. Enforced when a capability is loaded and
+      dispatched; an undeclared capability or an out-of-scope write is refused
+      there, which proves more than parsing it on a pre-commit hook would.
+    enforced_by: runtime
+    checker: learning_os.contracts.capability_catalog
+    test: tests/test_capability_catalog.py
+
+  - declaration: system/contracts/ai-adapters.yaml
+    governs: >-
+      The AI adapters an action may be routed through. Read by AdapterRegistry
+      when an AI action is prepared; an unknown adapter is refused there.
+    enforced_by: runtime
+    checker: learning_os.ai_actions.service
+    test: tests/test_module_surface.py
+
+  - declaration: system/contracts/backup-roots.yaml
+    governs: >-
+      The roots the backup manifest covers, and the `learningos-backup-roots`
+      contract marker it must carry. Read when a backup manifest is built.
+    enforced_by: runtime
+    checker: learning_os.backup_manifest
+    test: tests/test_vnext_boundaries.py
+
+  - declaration: system/contracts/ai-actions/garden.shelve.yaml
+    governs: >-
+      One AI action specification — target kinds, interaction mode, approval,
+      and the capabilities it may and may not reach. Loaded by ActionRegistry;
+      a capability outside `allowed_capabilities` is refused at dispatch.
+    enforced_by: runtime
+    checker: learning_os.ai_actions.registry
+    test: tests/test_ai_actions.py
+
+  - declaration: system/contracts/ai-actions/unit.compare-materials.yaml
+    governs: >-
+      The material-comparison action: prepares the complete local material menu
+      and may publish only a whole approved unit dossier
+      (`unit.material-synthesis.publish`). External repository access and
+      source upload are forbidden by the specification itself.
+    enforced_by: runtime
+    checker: learning_os.ai_actions.registry
+    test: tests/test_ai_actions.py
+
+exempt:
+
+  - path: system/contracts/normative-corpus.schema.json
+    reason: >-
+      The shape of a listed declaration, validated by that declaration's own
+      checker on every load.
+
+  - path: system/contracts/validation-warning-baseline.schema.json
+    reason: >-
+      The shape of operations/validation-warning-baseline.yaml, which is a
+      recorded measurement rather than a declaration. Its gate is
+      `tools/warning_baseline.py --check`.
+
+  - path: system/contracts/release-pair-receipt.schema.json
+    reason: >-
+      The shape of a release artifact produced per release, not a standing
+      declaration. Enforced by tools/release_pair_receipt.py at generate and
+      verify time.
+
+  - path: system/contracts/manifest-v6.schema.json
+    reason: superseded projection schema, retained so an older artifact stays readable.
+
+  - path: system/contracts/manifest-v7.schema.json
+    reason: superseded projection schema, retained so an older artifact stays readable.
+
+  - path: system/contracts/manifest-v8.schema.json
+    reason: >-
+      The current projection schema. Named by manifest-contract.yaml and
+      enforced through it at build time, so it is not separately registered.
+
+  - path: system/contracts/contract-register.yaml
+    reason: >-
+      This file. It declares the register rather than being registered by it;
+      tests/test_contract_register.py is what proves it complete, and a row
+      pointing at itself would only look like coverage.

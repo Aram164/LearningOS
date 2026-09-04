@@ -104,18 +104,27 @@ Produced by the operator through reasoning, never canonical: study plans, source
 
 ### 3.1 Root
 
+<!-- root-tree:begin — GENERATED from system/contracts/perimeter.yaml.
+     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+
 ```text
 semestercontext/
-├── LearningOS/
-│   ├── repository/     ← authored repository; operator default search space
-│   ├── obsidian-ui/    ← independent interface repository
-│   ├── materials/      ← books, slides, videos, PDFs, datasets
-│   ├── projects/       ← active LearningOS-owned code repositories
-│   ├── workbench/      ← disposable audits, strategy, and scratch tooling
-│   ├── legacy/         ← frozen pre-v3 tree and preserved former Job source
-│   └── archive/        ← retired, recoverable non-active artifacts
-└── Stratum/            ← independent external Git repository
+├── AGENTS.md         role division for Codex and other agents
+├── LearningOS/       the umbrella for every LearningOS component (ADR-014)
+│   ├── repository/   the authored repository of record
+│   ├── obsidian-ui/  the independent interface repository
+│   ├── materials/    books, slides, videos, datasets — addressable as material://
+│   ├── projects/     active LearningOS-owned code repositories
+│   ├── workbench/    disposable audits, strategy and scratch tooling (ADR-014)
+│   ├── archive/      retired, recoverable, non-active artifacts
+│   ├── legacy/       the frozen pre-v3 tree and the preserved former Job source (ADR-014)
+│   ├── README.md
+│   ├── CLAUDE.md     the Claude adapter, reachable from the umbrella
+│   └── Plans
+└── Stratum/          independent external Git repository; never traversed
 ```
+
+<!-- root-tree:end -->
 
 > **Placement update (2026-08-27, ADR-014):** `semestercontext/` has two visible
 > roots: `LearningOS/` and `Stratum/`. The frozen pre-v3 tree is
@@ -141,84 +150,55 @@ authored repository and interface as independent Git repositories.
 
 ### 3.2 Authored repository
 
+<!-- tree:begin — GENERATED from system/contracts/tree-contract.yaml.
+     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+
 ```text
 repository/
-├── README.md
-├── CLAUDE.md
-├── .gitignore                  ← ignores generated/*
-│
-├── system/
-│   ├── PHILOSOPHY.md           ← user's intent document — read first, tiebreaker for ambiguity
-│   ├── WHY-REDESIGN.md
-│   ├── ARCHITECTURE.md
-│   ├── VALIDATION.md
-│   ├── WORKFLOWS.md
-│   ├── MIGRATION.md
-│   ├── ACCEPTANCE-TESTS.md
-│   ├── BUILD-SPEC.md
-│   ├── schema/                 ← JSON Schemas (canonical structure contracts)
-│   └── adr/
-│
-├── knowledge/
-│   ├── notes/
-│   │   ├── mathematics/
-│   │   ├── machine-learning/
-│   │   ├── algorithms/         ← CS theory: algorithms, data structures, complexity
-│   │   ├── data-systems/
-│   │   ├── programming/
-│   │   ├── systems/
-│   │   └── cross-domain/
-│   ├── attachments/            ← handwritten originals & images, one folder per note
-│   ├── concepts.yaml
-│   └── concept-relations.yaml
-│
-├── curriculum/
-│   ├── thematic-groups.yaml      ← stable UI routing neighborhoods
-│   ├── programs/                 ← active areas and quarantine boundaries
-│   ├── resume.yaml               ← convenience pointer only
-│   ├── modules/<module-id>/
-│   │   ├── module.yaml           ← one administrative/module owner
-│   │   ├── source-map.yaml       ← roles in this module
-│   │   └── units/<unit-id>/
-│   │       ├── unit.yaml         ← scope and artifact references
-│   │       ├── study-map.yaml    ← one current script
-│   │       └── stages/<stage-id>/{notes.md,attachments/}
-│   └── quarantine/               ← excluded content, boundary index only
-├── records/
-│   └── modules.yaml               ← frozen migration compatibility input
-│
-├── sources/
-│   ├── sources.yaml
-│   └── collections/
-│
-├── work/
-│   ├── COORDINATION.md
-│   ├── inbox/
-│   └── active/
-│
-├── generated/                  ← gitignored, fully rebuildable
-│   ├── manifest.json
-│   ├── concept-index.md
-│   ├── source-index.md
-│   ├── library.md
-│   ├── collections/*.md
-│   ├── domain-atlas.md
-│   ├── reading-room.md
-│   ├── nebula.md
-│   ├── module-view.md
-│   ├── coordination-view.md
-│   ├── dependency-report.md
-│   ├── concept-map.md
-│   ├── concept-canvas.canvas
-│   ├── backlinks.json
-│   └── reports/
-│
-├── archive/
-│   └── workspaces/<year>/
-│
-├── tools/
-└── tests/
+├── system/                normative prose, contracts, schemas, skills and templates
+│   ├── *.md               15 documents — indexed in system/contracts/normative-corpus.yaml
+│   ├── adr/               decision records — indexed in the same file
+│   ├── contracts/         machine-checked declarations — see contract-register.yaml
+│   ├── schema/            stored-record schemas — fingerprinted by data-contract.yaml
+│   ├── skills/            agent procedures, one SKILL.md per skill
+│   └── templates/         authoring forms — deliberately outside the normative corpus
+├── knowledge/             canonical notes and the concept registries
+│   ├── notes/             one folder per domain; buckets grow with authoring
+│   ├── attachments/       handwritten originals and images, one folder per note
+│   └── garden/            the exploratory layer (ADR-002); no schema, never canonical
+├── curriculum/            programs, modules, units, study maps and stages
+│   ├── programs/          active areas and quarantine boundaries
+│   ├── modules/           module.yaml, source-map.yaml and units/<unit-id>/ beneath each
+│   └── quarantine/        excluded content, boundary index only
+├── records/               frozen compatibility inputs and the materials manifest
+├── sources/               the source registry and its collections
+│   ├── registry/          partitioned source records
+│   └── collections/       shelves and topic packs
+├── projects/              first-class Projects — registry and relations
+│   ├── registry/          one record per project
+│   └── relations/         project-to-record relations, authored not inferred
+├── operations/            the transaction ledger and everything the gateway writes
+│   ├── transactions/      one receipt per applied transaction
+│   ├── gateway-requests/  request envelopes
+│   ├── ai-actions/        AI action state; requests and deliveries are gitignored
+│   └── migrations/        applied-migration provenance
+├── migration/             migration state, preserved originals and reports
+│   ├── backups/           pre-migration copies, retained
+│   ├── reports/           what each migration did
+│   ├── adr-007/           originals preserved through the ADR-007 library retaxonomy
+│   └── curriculum-v2/     the module-first conversion — map, report and originals
+├── work/                  the coordination layer and its queues
+│   ├── inbox/             the drop-anything home; the operator routes what lands here
+│   └── active/            one folder per active workspace, each with a CONTEXT.md
+├── archive/               completed workspaces, retained and never deleted
+│   └── workspaces/        one folder per year
+├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml
+├── bases/                 installed Obsidian Bases shelves (ADR-006); gitignored
+├── tools/                 the operator CLI and the learning_os package; see tools/README.md
+└── tests/                 the test suite and its frozen format fixtures
 ```
+
+<!-- tree:end -->
 
 ### 3.3 File-saving conventions
 

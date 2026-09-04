@@ -23,6 +23,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `warning_baseline.py` | supported gate | No-new-warning policy. |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
+| `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |
 | `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change. |
 | `release_pair_receipt.py` | supported release tool | Produces or verifies exact Core/UI release evidence. |

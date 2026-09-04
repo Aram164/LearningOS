@@ -141,6 +141,8 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_data_contract()
         self.check_manifest_contract()
         self.check_normative_corpus()
+        self.check_perimeter()
+        self.check_tree_contract()
         self.check_contract_documentation()
         self.check_schemas()
         self.check_identity()

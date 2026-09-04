@@ -89,6 +89,49 @@ class ChecksContract:
             self.err("MANIFEST-CONTRACT-UNREADABLE", str(exc).replace("\n", " "),
                      "system/contracts/manifest-contract.yaml")
 
+    def check_perimeter(self):
+        """What may exist at the two levels above this repository.
+
+        ADR-014 declared the umbrella's shape; nothing enforced it, and the
+        level is in no git index, so three loose books accumulated there
+        unseen. Severity comes from the checker rather than being fixed here:
+        an undeclared path is an error, while a stray already recorded in
+        `pending_disposition` is a warning — the umbrella has no version
+        control, so every disposition there is irreversible and belongs to the
+        operator, not to a validation run.
+        """
+        from ..contracts import perimeter
+
+        for issue in perimeter.check(self.repo.root):
+            code = f"PERIMETER-{issue.code}"
+            # Written as two explicit calls rather than one through a bound
+            # name. `tests/test_contract_register.py` reads this source to
+            # prove an `error` contract still reports errors, and a checker
+            # whose severity is only decidable at runtime cannot be checked
+            # that way — which would quietly reopen the hole this register was
+            # built to close.
+            if issue.severity == "E":
+                self.err(code, issue.message, issue.path)
+            else:
+                self.warn(code, issue.message, issue.path)
+
+    def check_tree_contract(self):
+        """The directory skeleton on disk, and the prose that renders it.
+
+        ARCHITECTURE §3.2 is a projection of the contract, so a documented tree
+        that disagrees with disk is not a thing that can be true here — the
+        block is generated. What remains checkable is the other direction: a
+        directory nobody declared, and a block somebody hand-edited.
+        """
+        from ..contracts import tree_contract
+
+        for issue in tree_contract.check(self.repo.root):
+            code = f"TREE-{issue.code}"
+            if issue.severity == "E":
+                self.err(code, issue.message, issue.path)
+            else:
+                self.warn(code, issue.message, issue.path)
+
     def check_normative_corpus(self):
         """Every document under system/ is classified, and retirement is visible.
 
