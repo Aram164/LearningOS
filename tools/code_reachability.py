@@ -43,6 +43,7 @@ ENTRYPOINTS = (
     "release_pair_receipt.py",
     "schema_contract.py",
     "stress_check.py",
+    "tree_contract.py",
     "validate.py",
     "warning_baseline.py",
 )

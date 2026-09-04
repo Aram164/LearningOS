@@ -1,0 +1,208 @@
+# The declared shape of repository/.
+#
+# WHY THIS FILE EXISTS
+# --------------------
+# ARCHITECTURE.md calls itself "the single architectural authority" and renders
+# the physical tree, and nothing ever compared that rendering to disk. By the
+# 2026-09-03 audit it had drifted badly: four top-level directories missing
+# (`bases/`, `migration/`, `operations/`, `projects/`), three `system/` children
+# missing, seven of fifteen `system/*.md` documents missing, `knowledge/garden/`
+# missing, and eight hidden entries governed by nothing.
+#
+# THE RULE THAT KEEPS IT FROM ROTTING AGAIN
+# -----------------------------------------
+# The ARCHITECTURE block is GENERATED from this file. Run
+# `python tools/tree_contract.py --write`; never hand-edit the block. Because
+# the prose is derived, "the documented tree disagrees with disk" stops being a
+# thing that can be true — rather than a thing a checker nags about.
+#
+# AND THE RULE THAT KEEPS *THIS* FILE SHORT
+# -----------------------------------------
+# A tree block never lists files that another contract already indexes. It
+# names the contract instead. §3.2 rotted precisely because it hand-listed
+# `system/*.md` (owned by normative-corpus.yaml) and `generated/*` (owned by
+# manifest-contract.yaml) — regenerating those lists would only automate a
+# duplication. Counts in the rendered block are computed at render time, never
+# written down.
+#
+# DEPTH IS PER-ENTRY
+# ------------------
+# An entry with no `children:` has an unchecked interior. That is deliberate:
+# `knowledge/notes/<domain>/` buckets and `curriculum/modules/<id>/` trees grow
+# with ordinary authoring and are governed by their own schemas and rules. This
+# contract governs the skeleton, not the contents.
+
+tree_version: 1
+
+# The check applies only where all of these are present.
+#
+# A synthetic mini-repo copies `system/contracts/` wholesale, so THIS FILE is
+# there while almost nothing it declares is — and without this gate the checker
+# raises a MISSING for every row and fails a third of the test suite. The same
+# guard the perimeter contract carries, for the same reason, declared rather
+# than hardcoded so the discriminator is visible.
+applies_when_present:
+  - system/ARCHITECTURE.md
+  - system/adr
+  - tools/learning_os
+
+directories:
+
+  - path: system
+    owner: system
+    purpose: normative prose, contracts, schemas, skills and templates
+    children:
+      - glob: system/*.md
+        label: "*.md"
+        purpose: documents — indexed in system/contracts/normative-corpus.yaml
+      - path: system/adr
+        purpose: decision records — indexed in the same file
+      - path: system/contracts
+        purpose: machine-checked declarations — see contract-register.yaml
+      - path: system/schema
+        purpose: stored-record schemas — fingerprinted by data-contract.yaml
+      - path: system/skills
+        purpose: agent procedures, one SKILL.md per skill
+      - path: system/templates
+        purpose: authoring forms — deliberately outside the normative corpus
+
+  - path: knowledge
+    owner: knowledge
+    purpose: canonical notes and the concept registries
+    children:
+      - path: knowledge/notes
+        purpose: one folder per domain; buckets grow with authoring
+      - path: knowledge/attachments
+        purpose: handwritten originals and images, one folder per note
+      - path: knowledge/garden
+        purpose: the exploratory layer (ADR-002); no schema, never canonical
+
+  - path: curriculum
+    owner: curriculum
+    purpose: programs, modules, units, study maps and stages
+    children:
+      - path: curriculum/programs
+        purpose: active areas and quarantine boundaries
+      - path: curriculum/modules
+        purpose: module.yaml, source-map.yaml and units/<unit-id>/ beneath each
+      - path: curriculum/quarantine
+        purpose: excluded content, boundary index only
+
+  - path: records
+    owner: records
+    purpose: frozen compatibility inputs and the materials manifest
+
+  - path: sources
+    owner: sources
+    purpose: the source registry and its collections
+    children:
+      - path: sources/registry
+        purpose: partitioned source records
+      - path: sources/collections
+        purpose: shelves and topic packs
+
+  - path: projects
+    owner: projects
+    purpose: first-class Projects — registry and relations
+    children:
+      - path: projects/registry
+        purpose: one record per project
+      - path: projects/relations
+        purpose: project-to-record relations, authored not inferred
+
+  - path: operations
+    owner: operations
+    purpose: the transaction ledger and everything the gateway writes
+    children:
+      - path: operations/transactions
+        purpose: one receipt per applied transaction
+      - path: operations/gateway-requests
+        purpose: request envelopes
+      - path: operations/ai-actions
+        purpose: AI action state; requests and deliveries are gitignored
+      - path: operations/migrations
+        purpose: applied-migration provenance
+
+  - path: migration
+    owner: migration
+    purpose: migration state, preserved originals and reports
+    children:
+      - path: migration/backups
+        purpose: pre-migration copies, retained
+      - path: migration/reports
+        purpose: what each migration did
+      - path: migration/adr-007
+        purpose: originals preserved through the ADR-007 library retaxonomy
+      - path: migration/curriculum-v2
+        purpose: the module-first conversion — map, report and originals
+
+  - path: work
+    owner: work
+    purpose: the coordination layer and its queues
+    children:
+      - path: work/inbox
+        purpose: the drop-anything home; the operator routes what lands here
+      - path: work/active
+        purpose: one folder per active workspace, each with a CONTEXT.md
+
+  - path: archive
+    owner: archive
+    purpose: completed workspaces, retained and never deleted
+    children:
+      - path: archive/workspaces
+        purpose: one folder per year
+
+  - path: generated
+    owner: generated
+    purpose: gitignored, rebuildable; shape declared by manifest-contract.yaml
+
+  - path: bases
+    owner: interface
+    purpose: installed Obsidian Bases shelves (ADR-006); gitignored
+
+  - path: tools
+    owner: tools
+    purpose: the operator CLI and the learning_os package; see tools/README.md
+
+  - path: tests
+    owner: tests
+    purpose: the test suite and its frozen format fixtures
+
+# Hidden entries. Without this section the checker meets eight dotted
+# directories on its first run and the item is unlandable.
+#
+# The split is the one that matters: configuration that is part of the
+# repository, versus caches that belong to whoever ran a tool. Every ephemeral
+# entry is cross-checked against git — one that stops being ignored is an
+# error, because that is how a cache ends up committed.
+hidden:
+
+  tracked:
+    - path: .github
+      purpose: CI workflows
+    - path: .claude
+      purpose: Claude Code project configuration
+    - path: .codex
+      purpose: Codex project configuration
+    - path: .gitignore
+      purpose: ignores generated/*, bases/, and the local environment
+
+  ephemeral:
+    - path: .git
+      purpose: the git directory itself
+      must_be_ignored: false
+    - path: .venv
+      purpose: local Python environment, created by `make setup`
+    - path: .pytest_cache
+      purpose: >-
+        pytest cache. Ignored by a nested .gitignore that pytest writes itself,
+        not by the repository's — so the check probes inside the directory.
+    - path: .ruff_cache
+      purpose: ruff cache, self-ignoring in the same way
+    - path: .obsidian
+      purpose: Obsidian workspace state — interface layer, never core (ADR-006)
+
+# Directory names that are never declared anywhere, at any depth, because they
+# are build residue rather than structure.
+residue: ["__pycache__", ".ipynb_checkpoints"]
+residue_suffixes: [".egg-info"]
