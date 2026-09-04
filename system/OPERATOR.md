@@ -11,7 +11,7 @@ that is not both current and binding.
 
 ## What binds, and what does not
 
-`system/` holds roughly 7,800 lines of prose. Not all of it is rules. The
+`system/` holds several thousand lines of prose. Not all of it is rules. The
 index at `system/contracts/normative-corpus.yaml` classifies every
 `system/*.md` and `system/adr/*.md` file exactly once — class, status,
 authority, owner, and its supersession edges — and `make check` fails if a
