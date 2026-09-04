@@ -261,6 +261,29 @@ it *can* — the planner is still reachable and reported `ready` after the
 2026-08-28 attachment repair — and a single accidental apply would produce a
 3,400-line diff that looks like material loss and is not.
 
+### Evidence added — 2026-09-04 (operator; point remains open)
+
+Rule 3 permits measurements under an open point. What landed since it was
+written, verified in the working tree rather than taken from the commit message:
+
+- `4f12646` — the two renderers became one. `learning_os.material_inventory
+  .render_manifest` owns wrap width and key ordering;
+  `tools/migrations/job_quarantine_collapse.py:30` imports it and calls it at
+  `:1143`, so the planner and `make inventory` can no longer disagree about the
+  bytes of a file neither a schema nor a contract covers.
+- The unification went **toward** `width=100`, not away from it. `_dump` at
+  `:269` still renders at that width, and still should: it also writes the five
+  job modules, both registries and the provenance document, all already on disk
+  at that width. Re-rendering those to match the manifest would have traded one
+  cosmetic 3,400-line diff for several.
+
+What this point still names and nothing yet measures: **no validation rule
+notices the disagreement.** The repair removed the second writer; it did not
+make a third one impossible. That is the half of the *Blast radius* still
+outstanding.
+
+Status unchanged: open. Closing it is Aram's.
+
 ---
 
 ## 3. The normative corpus has no bindingness index, so every agent reads a different subset and returns a different picture of the rules
@@ -325,3 +348,33 @@ designed safety net. The reviewable question is not whether it duplicates, but
 whether the fallback ever fires: if bootstrap reliably reaches `OPERATOR.md`,
 the block is paying context in every session for a path never taken. That is
 measurable and should be measured before anything is cut.
+
+### Evidence added — 2026-09-04 (operator; point remains open)
+
+Rule 3 permits measurements under an open point. What landed since it was
+written, re-measured today rather than cited:
+
+- `e83231f` — `system/contracts/normative-corpus.yaml` now classifies every
+  document under the corpus globs exactly once, with class, status, authority,
+  owner and its supersession edges. Enforced at **error** severity through
+  `learning_os.contracts.normative_corpus` → `Validator.check_normative_corpus`.
+- Measured 2026-09-04: **36 documents on disk, 36 indexed, set-identical.**
+  22 binding · 3 informative · 11 historical; 25 current · 10 frozen · 1
+  superseded. `test_every_system_document_on_disk_is_classified` pins the set
+  equality, and `test_reverse_edges_are_derived_and_not_stored` pins that the
+  reverse links are derived.
+- `NORMATIVE-CORPUS-ORDER` was added 2026-09-04. The index had grown to forty
+  rows with ADR-015 standing above ADR-014, and reading order is the only
+  affordance a flat list that long has. The check compares each entry against
+  the ordinal its own filename declares — ADR number, or trailing ISO date —
+  and leaves prose that declares no ordinal in its authored order.
+
+Still outstanding against this point's own *Blast radius*, which named the
+entry points explicitly: `CORPUS_GLOBS` is `system/*.md` and `system/adr/*.md`,
+so **`AGENTS.md` (both of them), `.opencode`, `obsidian-ui/CLAUDE.md`,
+`repository/README.md` and the three `system/skills/*/SKILL.md` procedures are
+still classified by nothing** — and two of those skills state rules in the
+imperative. The index answers "what binds" for the documents it reaches; the
+documents an agent reads *first* are not among them.
+
+Status unchanged: open. Closing it is Aram's.
