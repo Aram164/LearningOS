@@ -117,6 +117,70 @@ def test_duplicate_relation_edge_is_error(mini_repo):
     assert "REL-DUP" in codes(run(mini_repo), "E")
 
 
+def _relations(mini_repo, rows):
+    """Replace the relation registry with exactly ``rows``."""
+    f = mini_repo / "knowledge" / "concept-relations.yaml"
+    f.write_text(yaml.safe_dump({"relations": rows}))
+    return f
+
+
+def test_the_mini_repo_prerequisite_graph_is_acyclic(mini_repo):
+    assert "REL-PREREQ-CYCLE" not in codes(run(mini_repo), "E")
+
+
+def test_a_two_node_prerequisite_cycle_is_error(mini_repo):
+    _relations(mini_repo, [
+        {"from": "concept-variance", "type": "builds-on", "to": "concept-expected-value"},
+        {"from": "concept-expected-value", "type": "requires", "to": "concept-variance"},
+    ])
+    issues = run(mini_repo)
+    assert "REL-PREREQ-CYCLE" in codes(issues, "E")
+
+
+def test_the_reported_cycle_is_stable_across_runs(mini_repo):
+    """A cycle error that names a different path each run is one nobody can act
+    on, so the walk is sorted and the first cycle found is the one reported."""
+    _relations(mini_repo, [
+        {"from": "concept-variance", "type": "builds-on", "to": "concept-expected-value"},
+        {"from": "concept-expected-value", "type": "requires", "to": "concept-variance"},
+    ])
+    messages = {
+        next(i.message for i in run(mini_repo) if i.code == "REL-PREREQ-CYCLE")
+        for _ in range(3)
+    }
+    assert len(messages) == 1
+    assert "->" in messages.pop()
+
+
+def test_a_self_edge_is_reported_as_self_not_as_a_cycle(mini_repo):
+    """REL-SELF already owns this case; the cycle rule must not double-report."""
+    _relations(mini_repo, [
+        {"from": "concept-variance", "type": "requires", "to": "concept-variance"},
+    ])
+    issues = codes(run(mini_repo), "E")
+    assert "REL-SELF" in issues
+
+
+def test_a_semantic_cycle_is_allowed(mini_repo):
+    """Two concepts may motivate each other. Only the strict subgraph is an
+    order, and only an order can be violated by a cycle."""
+    _relations(mini_repo, [
+        {"from": "concept-variance", "type": "motivates", "to": "concept-expected-value"},
+        {"from": "concept-expected-value", "type": "motivates", "to": "concept-variance"},
+    ])
+    assert "REL-PREREQ-CYCLE" not in codes(run(mini_repo), "E")
+
+
+def test_a_semantic_edge_does_not_close_a_strict_cycle(mini_repo):
+    """The layers do not mix: a semantic edge back to a prerequisite is context,
+    never a contradiction of the order."""
+    _relations(mini_repo, [
+        {"from": "concept-variance", "type": "requires", "to": "concept-expected-value"},
+        {"from": "concept-expected-value", "type": "applies-in", "to": "concept-variance"},
+    ])
+    assert "REL-PREREQ-CYCLE" not in codes(run(mini_repo), "E")
+
+
 # ----------------------------------------------------------------- ownership
 def test_exam_date_duplication_in_coordination_is_error(mini_repo):
     f = mini_repo / "work" / "COORDINATION.md"

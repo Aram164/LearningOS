@@ -5,6 +5,13 @@
 **Supersedes nothing. Extends:** ADR-005 (domain atlas), ADR-006 (interface
 boundary — the projection is Core's, the rendering is the UI's).
 
+> **Amended by ADR-016 (2026-09-04):** decision 5 below is retired. The Atlas
+> opens on search and recently visited concepts, not on the concepts carried by
+> more than one module; the crossing becomes the Cross-module bridges lens,
+> one control away. Decisions 1-4 — edges rather than tables, evidence
+> licensing every cell, the four indexes derived from the edges, and no sixth
+> Atlas view — all remain in force.
+
 ## Context
 
 The domain atlas (ADR-005) answers *what is in this domain*. It exists because
