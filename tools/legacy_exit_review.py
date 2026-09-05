@@ -28,7 +28,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 LEARNING_OS_ROOT = ROOT.parent
-DEFAULT_LEGACY_ROOT = ROOT.parents[1] / "legacy"
+DEFAULT_LEGACY_ROOT = ROOT.parent.parent / "legacy"
 
 IGNORED_NAMES = {".DS_Store"}
 IGNORED_PREFIXES = (".fuse_hidden",)

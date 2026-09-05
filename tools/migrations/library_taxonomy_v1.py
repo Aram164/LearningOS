@@ -30,7 +30,7 @@ import argparse
 import re
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parent.parent.parent
 G = "thematic-group-"
 
 RENAMES = {f"{G}cs-theory": f"{G}algorithms",
