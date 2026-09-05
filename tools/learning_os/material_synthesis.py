@@ -14,14 +14,14 @@ from pathlib import Path
 from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
-from learning_os.genout.materials import (
-    _MATERIAL_SUFFIX_TOKEN,
-    _material_location,
-    _material_uri_authority,
-    _project_material_resource,
-    _safe_material_locator,
-)
 from learning_os.loader import load_repo
+from learning_os.materials_resolution import (
+    MATERIAL_SUFFIX_TOKEN,
+    material_location,
+    material_uri_authority,
+    project_material_resource,
+    safe_material_locator,
+)
 from learning_os.transactions import artifact_revision
 
 
@@ -33,8 +33,22 @@ def _sha256_bytes(value: bytes) -> str:
     return "sha256:" + hashlib.sha256(value).hexdigest()
 
 
-def _sha256_file(path: Path) -> str:
-    return _sha256_bytes(path.read_bytes())
+def _sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
+    """Hash one material file, at most once per build.
+
+    Routes deliberately share files — a lecture deck reached by four routes is
+    one deck — and every route hashed it again. The memo is created per build
+    and never outlives it, so a file that changes between builds is still
+    rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
+    """
+    if cache is None:
+        return _sha256_bytes(path.read_bytes())
+    key = Path(path).resolve()
+    checksum = cache.get(key)
+    if checksum is None:
+        checksum = _sha256_bytes(path.read_bytes())
+        cache[key] = checksum
+    return checksum
 
 
 def _stable_checksum(value: Any) -> str:
@@ -71,7 +85,7 @@ def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]
     every semicolon-delimited part must name exactly one safe existing file,
     otherwise no partial byte-coverage claim is made.
     """
-    projected = _project_material_resource(repo, {
+    projected = project_material_resource(repo, {
         "source_id": route.get("source_id"),
         "locator": route.get("locator"),
         "vault_path": route.get("vault_path"),
@@ -87,16 +101,16 @@ def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]
     locator = route.get("locator")
     source = repo.sources.get(route.get("source_id"))
     source_material = source.get("material") if isinstance(source, dict) else None
-    authority = _material_uri_authority(source_material)
+    authority = material_uri_authority(source_material)
     if not isinstance(locator, str) or ";" not in locator or not authority:
         return []
 
     candidates: list[str] = []
     for part in locator.split(";"):
-        matches = list(_MATERIAL_SUFFIX_TOKEN.finditer(part))
+        matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
         if len(matches) != 1:
             return []
-        candidate = _safe_material_locator(part[:matches[0].end()].strip())
+        candidate = safe_material_locator(part[:matches[0].end()].strip())
         if candidate is None:
             return []
         candidates.append(candidate)
@@ -106,7 +120,7 @@ def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]
     files: list[tuple[str, Path]] = []
     for candidate in candidates:
         uri = f"material://{authority}/{candidate}"
-        location = _material_location(repo, uri)
+        location = material_location(repo, uri)
         relative = location.get("material_path")
         if not isinstance(relative, str) or not location.get("material_exists"):
             return []
@@ -117,7 +131,8 @@ def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]
     return files
 
 
-def _route_material_checksum(repo, route: dict[str, Any]) -> str:
+def _route_material_checksum(repo, route: dict[str, Any],
+                             cache: dict[Path, str] | None = None) -> str:
     """Hash local material bytes when resolvable; otherwise hash the exact route.
 
     Remote and deliberately unavailable resources still need a stable freshness
@@ -126,10 +141,10 @@ def _route_material_checksum(repo, route: dict[str, Any]) -> str:
     """
     files = _route_material_files(repo, route)
     if len(files) == 1:
-        return _sha256_file(files[0][1])
+        return _sha256_file(files[0][1], cache)
     if files:
         return _stable_checksum([
-            {"material_uri": uri, "sha256": _sha256_file(path)}
+            {"material_uri": uri, "sha256": _sha256_file(path, cache)}
             for uri, path in sorted(files, key=lambda row: row[0])
         ])
     return _stable_checksum({
@@ -138,8 +153,22 @@ def _route_material_checksum(repo, route: dict[str, Any]) -> str:
     })
 
 
-def current_unit_material_basis(root: Path, unit_id: str) -> dict[str, Any]:
-    repo = load_repo(root)
+def current_unit_material_basis(
+    root: Path,
+    unit_id: str,
+    *,
+    repo=None,
+    cache: dict[Path, str] | None = None,
+) -> dict[str, Any]:
+    """Derive one unit's current material basis.
+
+    ``repo`` lets a caller that has already loaded the repository — a manifest
+    build projecting many dossiers — reuse it instead of paying a full load per
+    dossier per derived field. Omitting it keeps the standalone contract.
+    """
+    repo = load_repo(root) if repo is None else repo
+    if cache is None:
+        cache = {}
     unit = repo.units.get(unit_id)
     if unit is None:
         raise MaterialSynthesisError(f"unit not found: {unit_id}")
@@ -165,10 +194,10 @@ def current_unit_material_basis(root: Path, unit_id: str) -> dict[str, Any]:
         # checksum: either a coordinated module-plan change or an out-of-band
         # byte change makes a reviewed dossier stale.
         "source_map_revision": artifact_revision(root, unit.module_id),
-        "source_map_checksum": _sha256_file(source_map_path),
+        "source_map_checksum": _sha256_file(source_map_path, cache),
         "route_set_checksum": _stable_checksum(route_rows),
         "material_checksums": {
-            str(route["id"]): _route_material_checksum(repo, route)
+            str(route["id"]): _route_material_checksum(repo, route, cache)
             for route in route_rows
         },
         "policy": "tiered-v1",
@@ -291,11 +320,18 @@ def validate_unit_material_synthesis(
     return value
 
 
-def material_synthesis_freshness(root: Path, unit_id: str, value: dict[str, Any]) -> dict[str, Any]:
+def material_synthesis_freshness(
+    root: Path,
+    unit_id: str,
+    value: dict[str, Any],
+    *,
+    repo=None,
+    cache: dict[Path, str] | None = None,
+) -> dict[str, Any]:
     """Return derived freshness without trusting a stored status flag."""
     reasons: list[str] = []
     try:
-        current = current_unit_material_basis(root, unit_id)
+        current = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
     except Exception:
         # A published historical dossier remains useful evidence even when its
         # current basis can no longer be resolved.  Keep the projection
@@ -314,6 +350,8 @@ def material_synthesis_completeness(
     root: Path,
     unit_id: str,
     value: dict[str, Any],
+    *,
+    repo=None,
 ) -> dict[str, Any]:
     """Derive current route coverage while retaining every historical row.
 
@@ -323,7 +361,7 @@ def material_synthesis_completeness(
     used as a publication filter.
     """
     try:
-        repo = load_repo(root)
+        repo = load_repo(root) if repo is None else repo
         current_route_ids = sorted(
             str(route["id"])
             for route in _rich_routes(repo, unit_id)

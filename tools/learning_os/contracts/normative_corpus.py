@@ -55,9 +55,16 @@ from jsonschema import Draft202012Validator
 CORPUS_RELATIVE = "system/contracts/normative-corpus.yaml"
 SCHEMA_RELATIVE = "system/contracts/normative-corpus.schema.json"
 
-#: The two globs that define the corpus. A document under ``system/`` outside
-#: these is not normative prose (schemas, templates, skills, contracts).
-CORPUS_GLOBS = ("system/*.md", "system/adr/*.md")
+#: The globs that define the corpus. A document under ``system/`` outside these
+#: is not normative prose (schemas, templates, contracts).
+#:
+#: Operator skills joined the corpus after the 2026-09-05 audit (F14). They are
+#: runbooks an operator follows instead of the spine, and being unclassified is
+#: exactly how one came to call a non-entrypoint "the operating contract",
+#: demand a warning gate the contract does not set, and drop the qualification
+#: on which units owe a study map. Covering only the top-level documents left
+#: the drift where nothing was looking.
+CORPUS_GLOBS = ("system/*.md", "system/adr/*.md", "system/skills/*/SKILL.md")
 
 RETIRED_STATUSES = frozenset({"superseded", "frozen"})
 

@@ -10,6 +10,9 @@
     "unit_id"
   ],
   "properties": {
+    "check": {
+      "type": "boolean"
+    },
     "file": {
       "type": "string"
     },
@@ -17,8 +20,23 @@
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
+    "intentional_reorder": {
+      "type": "string"
+    },
+    "intentional_state_reset": {
+      "type": "string"
+    },
     "replace": {
       "type": "boolean"
+    },
+    "retire_reason": {
+      "type": "string"
+    },
+    "retire_stage": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     },
     "unit_id": {
       "type": "string"

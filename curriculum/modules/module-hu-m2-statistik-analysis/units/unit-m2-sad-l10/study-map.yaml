@@ -39,6 +39,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
     locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
@@ -76,6 +78,8 @@ stages:
       what significance means, 2026 around the testing procedure. Reading both gives two framings of the
       same material, which is useful for a topic this conceptually slippery.'
     scope_triage: reference-only
+    route_id: route-b51a9ce76538f13c02e94238
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -271,6 +275,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
     locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
@@ -308,6 +314,8 @@ stages:
       what significance means, 2026 around the testing procedure. Reading both gives two framings of the
       same material, which is useful for a topic this conceptually slippery.'
     scope_triage: reference-only
+    route_id: route-b51a9ce76538f13c02e94238
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -492,6 +500,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
     locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
@@ -520,6 +530,8 @@ stages:
       what significance means, 2026 around the testing procedure. Reading both gives two framings of the
       same material, which is useful for a topic this conceptually slippery.'
     scope_triage: reference-only
+    route_id: route-b51a9ce76538f13c02e94238
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -621,6 +633,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
     locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
@@ -835,6 +849,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -885,6 +901,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -1023,6 +1041,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
     locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
@@ -1120,6 +1140,8 @@ stages:
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
       deck.
     scope_triage: required-now
+    route_id: route-37b273e6be586546e32355cb
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: ISLP Ch 13 - the multiple-testing slide worked out with labs and exercises
     locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni

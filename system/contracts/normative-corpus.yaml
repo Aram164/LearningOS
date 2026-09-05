@@ -132,6 +132,43 @@ documents:
       The acceptance criteria the rebuild is measured against; producer-owned
       contracts outrank any version named here.
 
+  # ---- operator skills ------------------------------------------------------
+  #
+  # A skill is a runbook an operator follows instead of reading the spine, so
+  # an unclassified one drifts exactly where nobody is looking: the 2026-09-05
+  # audit (F14) found one calling a non-entrypoint "the operating contract",
+  # demanding a warning gate OPERATOR does not set, and dropping the
+  # qualification on which units owe a study map. They are adapters: they may
+  # add mechanics and must never weaken the contract.
+
+  - path: system/skills/lecture-unit-builder/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: plan-authoring
+    summary: >-
+      Builds one lecture unit under WORKFLOWS §23 — knowledge map, complete
+      material menu, and the three durable notes. Owns only what is specific to
+      that task; the procedure and the acceptance gate live in the spine.
+
+  - path: system/skills/promotion-ritual/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The ritual for promoting reviewed planning work into the ordinary
+      curriculum, under the gateway capabilities the contract declares.
+
+  - path: system/skills/semester-kickoff/SKILL.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      The start-of-semester sequence over existing capabilities: enrolment
+      facts, module records, workspaces, and the units they owe.
+
   # ---- standing logs and reasoning ----------------------------------------
 
   - path: system/CRITIQUE-POINTS.md

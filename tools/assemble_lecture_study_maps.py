@@ -408,6 +408,15 @@ def _done_when(node: dict, routes: list[dict]) -> list[str]:
 
 def _resource(route: dict) -> dict:
     row: dict = {"kind": _kind(route), "label": str(route.get("title") or "").strip()}
+    # The route id is the stage's only stable pointer back to the material it
+    # came from. Without it a stage resource is matched downstream by source id
+    # plus title, which fails closed on any ambiguity — so a stage displays a
+    # required lecture with no way to open it even though the route resolves a
+    # real file (2026-09-05 audit, F01). Titles are prose and may be edited;
+    # the id survives that.
+    route_id = str(route.get("id") or "").strip()
+    if route_id.startswith("route-"):
+        row["route_id"] = route_id
     if route.get("source_id"):
         row["source_id"] = route["source_id"]
     # The angle is why this material is on this stage rather than another. It
@@ -427,6 +436,11 @@ def _resource(route: dict) -> dict:
         row["angle_detail"] = angle_detail
     if route.get("material_uri"):
         row["vault_path"] = route["material_uri"]
+    # A web route's only openable target is its URL; dropping it here is how a
+    # required web material reached a stage with no Open action at all.
+    url = str(route.get("url") or "").strip()
+    if url:
+        row["url"] = url
     row["scope_triage"] = _triage(route)
     return row
 
@@ -543,6 +557,22 @@ def assembly_problems(unit: dict, routes: list[dict], record: dict) -> list[str]
     problems.extend(
         f"{unit.get('id')} stage has no concept coverage: {stage_id}"
         for stage_id in untagged
+    )
+    # Every row this assembler writes came from a route, so every row must
+    # carry that route's id. A row that lost it can only be matched downstream
+    # by source id plus title, and that match fails closed on any duplicate —
+    # which is how required materials reached stages with no Open action.
+    unbound = [
+        f"{stage.get('id')}/{resource.get('label')}"
+        for stage in record.get("stages", []) or []
+        if isinstance(stage, dict)
+        for resource in stage.get("resources", []) or []
+        if isinstance(resource, dict)
+        and not str(resource.get("route_id") or "").startswith("route-")
+    ]
+    problems.extend(
+        f"{unit.get('id')} stage resource has no route identity: {row}"
+        for row in unbound
     )
     return problems
 

@@ -37,6 +37,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
@@ -110,6 +112,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
@@ -207,6 +211,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
@@ -292,6 +298,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
@@ -462,6 +470,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
@@ -557,6 +567,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 3 — multiclass evaluation metrics
     locator: exercise-slides/blatt-05.pdf, p. 4, Aufgabe 3(a)-(d)
@@ -719,6 +731,8 @@ stages:
       Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
       L01''s confusion matrix rather than re-deriving it.'
     scope_triage: required-now
+    route_id: route-739f3af86a81ba6168a13cda
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing

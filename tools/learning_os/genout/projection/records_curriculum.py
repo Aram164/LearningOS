@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import json
-import re
 from collections.abc import Callable
 from pathlib import Path
 
@@ -14,6 +12,7 @@ from ...routes import (
     iter_route_references,
     route_with_identity,
 )
+from ...unit_notes import unit_note_sections as parse_unit_note_sections
 from ..common import _first_para, _git_last_commit
 from ..materials import _project_material_resource
 from .grouping import ordered_thematic_group_ids
@@ -22,34 +21,14 @@ from .stages import project_stages
 
 Revision = Callable[..., int]
 
-_UNIT_NOTE_MARKER = re.compile(r"^<!-- learningos:unit-note (\{.*\}) -->\s*$", re.MULTILINE)
 
 
 def unit_note_sections(text: str) -> list[dict]:
     """Project session sections so interfaces never parse unit-note Markdown."""
-    matches = list(_UNIT_NOTE_MARKER.finditer(text or ""))
-    sections: list[dict] = []
-    for index, match in enumerate(matches):
-        try:
-            metadata = json.loads(match.group(1))
-        except json.JSONDecodeError:
-            continue
-        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
-        body = text[match.end():end].strip()
-        heading = ""
-        lines = body.splitlines()
-        if lines and lines[0].startswith("## "):
-            heading = lines[0][3:].strip()
-            body = "\n".join(lines[1:]).strip()
-        sections.append({
-            "recorded_at": metadata.get("recorded_at"),
-            "title": metadata.get("title") or heading or "Learning session note",
-            "stage_ids": list(metadata.get("stage_ids") or []),
-            "attachments": list(metadata.get("attachments") or []),
-            "text": body,
-            "summary": _first_para(body)[:400],
-        })
-    return sections
+    return [
+        {**section, "summary": _first_para(section["text"])[:400]}
+        for section in parse_unit_note_sections(text)
+    ]
 
 
 def project_programs(repo: Repo, revision: Revision) -> list[dict]:
@@ -240,15 +219,22 @@ def project_study_maps(repo: Repo, revision: Revision) -> list[dict]:
 
 
 def project_unit_material_syntheses(repo: Repo) -> list[dict]:
-    """Retain approved evidence and derive its current projection status."""
+    """Retain approved evidence and derive its current projection status.
+
+    The already-loaded repository and one per-build material-hash memo are
+    passed into both derivations. Each dossier previously triggered two more
+    full repository loads and rehashed every route's file, including the routes
+    sharing one deck (2026-09-05 audit, F13).
+    """
 
     # Local import avoids a package-initialization cycle: the synthesis module
-    # uses material projection helpers from ``genout`` itself.
+    # is a domain service and this is a projection of its output.
     from ...material_synthesis import (
         material_synthesis_completeness,
         material_synthesis_freshness,
     )
 
+    cache: dict = {}
     return [
         {
             **dict(repo.unit_material_syntheses[synthesis_id]),
@@ -256,11 +242,14 @@ def project_unit_material_syntheses(repo: Repo) -> list[dict]:
                 repo.root,
                 str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
                 repo.unit_material_syntheses[synthesis_id],
+                repo=repo,
+                cache=cache,
             ),
             "completeness": material_synthesis_completeness(
                 repo.root,
                 str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
                 repo.unit_material_syntheses[synthesis_id],
+                repo=repo,
             ),
         }
         for synthesis_id in sorted(repo.unit_material_syntheses)

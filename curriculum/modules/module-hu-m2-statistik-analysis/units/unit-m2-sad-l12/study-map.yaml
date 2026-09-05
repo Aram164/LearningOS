@@ -37,6 +37,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
@@ -194,6 +196,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
@@ -316,6 +320,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
@@ -395,6 +401,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
@@ -518,6 +526,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
@@ -669,6 +679,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
     locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
@@ -831,6 +843,8 @@ stages:
       comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
       they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
     scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity

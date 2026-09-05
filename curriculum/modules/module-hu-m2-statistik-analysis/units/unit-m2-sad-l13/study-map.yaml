@@ -38,6 +38,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -47,6 +49,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
@@ -176,6 +180,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -185,6 +191,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
@@ -290,6 +298,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE7, slides 32-75 — similarity, distance and clustering bridge
     locator: exercise-slides/UE7.pdf, slides 32-75
@@ -310,6 +320,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
@@ -387,6 +399,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE7, slides 32-75 — similarity, distance and clustering bridge
     locator: exercise-slides/UE7.pdf, slides 32-75
@@ -407,6 +421,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
@@ -515,6 +531,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE7, slides 32-75 — similarity, distance and clustering bridge
     locator: exercise-slides/UE7.pdf, slides 32-75
@@ -535,6 +553,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
@@ -592,6 +612,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -601,6 +623,8 @@ stages:
       here rather than a redundancy. Note it is 'part 3' of a longer 2025 treatment; the earlier parts
       cover the distance-measure material that 2026 compresses.
     scope_triage: reference-only
+    route_id: route-29f9b98724b103877b374b0c
+    source_id: source-sad-2025-recordings
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
     locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
@@ -655,6 +679,8 @@ stages:
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
       to read closely rather than supplement.'
     scope_triage: required-now
+    route_id: route-a4bd194a5656658f42243df6
+    source_id: source-sad-ss26-lectures
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md
   attachments: []
   source_feedback: []

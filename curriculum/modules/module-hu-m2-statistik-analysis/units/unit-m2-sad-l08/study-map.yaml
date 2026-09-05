@@ -38,6 +38,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
@@ -74,6 +76,8 @@ stages:
     angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples
       and the different ordering. Lower priority than the annotated 2025 files.
     scope_triage: reference-only
+    route_id: route-e574e054435be2cb7eb76dcd
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7
@@ -233,6 +237,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
@@ -269,6 +275,8 @@ stages:
     angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples
       and the different ordering. Lower priority than the annotated 2025 files.
     scope_triage: reference-only
+    route_id: route-e574e054435be2cb7eb76dcd
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7
@@ -427,6 +435,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
@@ -575,6 +585,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
@@ -611,6 +623,8 @@ stages:
     angle_detail: No spoken notes in this file, so its value is limited to the alternative worked examples
       and the different ordering. Lower priority than the annotated 2025 files.
     scope_triage: reference-only
+    route_id: route-e574e054435be2cb7eb76dcd
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7
@@ -865,6 +879,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgaben 1 and 3 — Normal calculations and CLT simulation
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
@@ -1070,6 +1086,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: MIT 18.650 Lectures 4–5 — maximum likelihood
     locator: Lectures 4-5 (maximum likelihood estimation, the method of moments); graduate-level treatment,
@@ -1122,6 +1140,8 @@ stages:
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
       both halves in the same notation.
     scope_triage: required-now
+    route_id: route-a82f4016ebbdab30e0351c91
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: MIT 18.650 Lectures 4–5 — maximum likelihood
     locator: Lectures 4-5 (maximum likelihood estimation, the method of moments); graduate-level treatment,

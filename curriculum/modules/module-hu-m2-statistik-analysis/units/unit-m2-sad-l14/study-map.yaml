@@ -38,6 +38,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE4, slides 9-12 — categorical Naive Bayes worked example
     locator: exercise-slides/UE4.pdf, slides 9-12
@@ -244,6 +246,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE4, slides 9-12 — categorical Naive Bayes worked example
     locator: exercise-slides/UE4.pdf, slides 9-12
@@ -366,6 +370,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
@@ -445,6 +451,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
@@ -577,6 +585,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Jurafsky & Martin Appendix B — smoothing and evaluation
     locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': add-one smoothing, text
@@ -698,6 +708,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: Bishop Ch 8 — graphical models and conditional independence
     locator: 'Official Bishop PDF, Ch 8 ''Graphical Models'', PDF pp. 379-438: §8.1 ''Bayesian Networks''
@@ -751,6 +763,8 @@ stages:
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
       Ch 16 is the only route here that treats the network half at comparable length.
     scope_triage: required-now
+    route_id: route-004fedb8926613a0d638fd20
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: Bishop Ch 8 — graphical models and conditional independence
     locator: 'Official Bishop PDF, Ch 8 ''Graphical Models'', PDF pp. 379-438: §8.1 ''Bayesian Networks''

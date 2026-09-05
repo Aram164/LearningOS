@@ -37,6 +37,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
   attachments: []
   source_feedback: []
@@ -68,6 +70,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
@@ -96,6 +100,8 @@ stages:
       a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
       know what was said around it. Check every claim against the 2026 deck before relying on it.
     scope_triage: reference-only
+    route_id: route-0afeba6c2e9a73159d6ad420
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — probability foundations
     locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
@@ -189,6 +195,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
@@ -217,6 +225,8 @@ stages:
       a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
       know what was said around it. Check every claim against the 2026 deck before relying on it.
     scope_triage: reference-only
+    route_id: route-0afeba6c2e9a73159d6ad420
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — probability foundations
     locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
@@ -366,6 +376,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
@@ -403,6 +415,8 @@ stages:
       a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
       know what was said around it. Check every claim against the 2026 deck before relying on it.
     scope_triage: reference-only
+    route_id: route-0afeba6c2e9a73159d6ad420
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — probability foundations
     locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
@@ -621,6 +635,9 @@ stages:
       the order wastes both. Neither video covers total probability as a separate result — for that, Fahrmeir
       §4.6.'
     scope_triage: helpful-now
+    route_id: route-361d03e96b7b4416138c8def
+    source_id: source-3b1b-bayes-theorem
+    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
   attachments: []
   source_feedback: []
@@ -653,6 +670,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
@@ -690,6 +709,8 @@ stages:
       a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
       know what was said around it. Check every claim against the 2026 deck before relying on it.
     scope_triage: reference-only
+    route_id: route-0afeba6c2e9a73159d6ad420
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — probability foundations
     locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
@@ -908,6 +929,9 @@ stages:
       the order wastes both. Neither video covers total probability as a separate result — for that, Fahrmeir
       §4.6.'
     scope_triage: helpful-now
+    route_id: route-361d03e96b7b4416138c8def
+    source_id: source-3b1b-bayes-theorem
+    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
   attachments: []
   source_feedback: []
@@ -940,6 +964,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
@@ -968,6 +994,8 @@ stages:
       a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
       know what was said around it. Check every claim against the 2026 deck before relying on it.
     scope_triage: reference-only
+    route_id: route-0afeba6c2e9a73159d6ad420
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — probability foundations
     locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
@@ -1194,6 +1222,8 @@ stages:
       proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
       is authoritative for it.'
     scope_triage: required-now
+    route_id: route-1d4c3d5164052df9c540d079
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
