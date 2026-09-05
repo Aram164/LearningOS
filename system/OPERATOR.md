@@ -51,8 +51,15 @@ Do not recursively discover the repository. Begin with:
 
 ```bash
 python tools/los.py capabilities --json
-python tools/los.py bootstrap
+python tools/los.py bootstrap --compact
 ```
+
+Compact startup preserves complete material access through `inspect ID`.
+Continue a summary page with its returned offset and snapshot. Read saved
+reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
+search beyond note summaries with `search QUERY --type note --content`.
+Continuation reads require the previous response's `--expected-snapshot`;
+changed content is a restart, never a silently mixed result.
 
 The stable read contract is the single atomic `generated/manifest.json`. Its
 current version is declared in `system/contracts/manifest-contract.yaml` and

@@ -238,6 +238,11 @@ pending_disposition:
     target: LearningOS/workbench/Atlas.implementation.plan.md
     precondition: fix the filename typo (plam → plan) in the same move.
 
+  - path: LearningOS-ARCHITECTURE-AND-ATLAS-EXECUTION-PLAN-2026-09-05.md
+    disposition: move
+    target: LearningOS/workbench/
+    precondition: preserve the user-facing execution-plan link until the execution closes.
+
   - path: LEARNINGOS-CRITICAL-SYSTEM-AUDIT-FINDINGS-2026-08-29.md
     disposition: move
     target: LearningOS/workbench/

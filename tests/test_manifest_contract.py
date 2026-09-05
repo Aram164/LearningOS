@@ -191,12 +191,22 @@ def test_bump_selects_and_hashes_the_new_versions_schema(mini_repo):
 
 
 def test_bump_refuses_to_activate_a_version_without_its_schema(mini_repo):
+    """The successor's schema is authored first; a bump never inherits one.
+
+    The version is read from the contract rather than written in, because the
+    literal is only ever correct until the next real bump — this test named v9
+    and went red the day the projection actually reached v9.
+    """
+    contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
+    missing = contract["contract_version"] + 1
+    schema = mini_repo / f"system/contracts/manifest-v{missing}.schema.json"
+    assert not schema.exists(), "the successor's schema must be absent for this test"
     manifest = _manifest(mini_repo, enforce_contract=False)
 
     with pytest.raises(ManifestContractError) as excinfo:
-        bump(manifest, mini_repo, "missing v9 schema")
+        bump(manifest, mini_repo, f"missing v{missing} schema")
 
-    assert "manifest-v9.schema.json does not exist" in str(excinfo.value)
+    assert f"manifest-v{missing}.schema.json does not exist" in str(excinfo.value)
 
 
 def test_missing_contract_is_a_clear_failure_not_a_silent_pass(mini_repo):

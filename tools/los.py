@@ -41,6 +41,11 @@ from learning_os.commands.ai import (  # noqa: E402
     cmd_ai_action_status,
     cmd_ai_action_validate_delivery,
 )
+from learning_os.commands.atlas import (  # noqa: E402
+    cmd_atlas_context,
+    cmd_atlas_question_save,
+    cmd_concept_relations_change,
+)
 from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
@@ -69,6 +74,7 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_status,
     cmd_validate,
 )
+from learning_os.commands.reads import cmd_note_read  # noqa: E402
 from learning_os.commands.review import (  # noqa: E402
     cmd_session_end,
     cmd_shelving_apply,
@@ -134,13 +140,27 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_capabilities)
 
     p = sub.add_parser("bootstrap", help="machine bootstrap with active learning paths")
+    p.add_argument("--compact", action="store_true", help="bounded startup summaries; details stay available through inspect")
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--limit", type=int, default=20)
+    p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_bootstrap)
 
     p = sub.add_parser("search", help="search the complete fresh projection")
     p.add_argument("query")
     p.add_argument("--type", default=None, help="optional record type")
     p.add_argument("--limit", type=int, default=50)
+    p.add_argument("--content", action="store_true", help="search complete durable note text with exact line snippets")
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_search)
+
+    p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
+    p.add_argument("note_id")
+    p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
+    p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_note_read)
 
     p = sub.add_parser("inspect", help="inspect one record by stable id")
     p.add_argument("id")
@@ -442,6 +462,23 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_garden_seed_create)
+
+    p = sub.add_parser("atlas-context", help="read connection editor guards and personal questions for one concept")
+    p.add_argument("concept_id")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_atlas_context)
+
+    p = sub.add_parser("concept-relations-change", help="apply only explicitly authored relation operations")
+    p.add_argument("--change", required=True, type=json_object)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_concept_relations_change)
+
+    p = sub.add_parser("atlas-question-save", help="save or resolve an explicitly authored personal question")
+    p.add_argument("--question", required=True, type=json_object)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_atlas_question_save)
 
     p = sub.add_parser("unit-map-import",
                        help="create/import the single current study map for a unit")
