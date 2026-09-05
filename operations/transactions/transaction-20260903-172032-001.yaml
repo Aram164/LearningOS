@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260903-172032-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-03T17:20:32+02:00'
+snapshot_before: sha256:b3bea13bb08999890c3294803558a220150ce984b55255899d54329bff471fb1
+snapshot_after: sha256:b7f1ee4b32310e4fab8612dd26437dcc03a37b3501d28807157b4aa1b1cccf9a
+expected_revisions:
+  unit-job-polars-pandas-fluency: 3
+  study-map-job-polars-pandas-fluency: 2
+artifact_revisions:
+  study-map-job-polars-pandas-fluency:
+    before: 2
+    after: 3
+  unit-job-polars-pandas-fluency:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-exercises.md
+  sha256_before: null
+  sha256_after: 588823011a80a0c15aa914b5ed82df62b3907cb097e40cb1386bc010f8209872
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  sha256_before: 1fecb9fa6852592dba00a42b81e447705f2de1d89ae05e5db2c534dcfcb754ca
+  sha256_after: 54979791aa935692d473aea0c9cd41ec0f131003da9150f1e834beda8e1123f2
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-polars-sheet-s01-md-20260903
+  idempotency_key: polars-sheet-s01-md-20260903
+  intent_sha256: sha256:ca7285ac2fe4d62014028c683eb88acb21d97060beefb6b28ebf3bdc0bd13ee5
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ca7285ac2fe4d62014028c683eb88acb21d97060beefb6b28ebf3bdc0bd13ee5

@@ -1,0 +1,53 @@
+id: unit-job-polars-aggregation-windows
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 6 - Aggregation and windows
+order: 6
+scope: Implement grouped reductions and same-cardinality window transforms while preserving flags, shape,
+  order, and missing-value semantics.
+status: ready
+knowledge_map:
+  summary: Implement grouped reductions and same-cardinality window transforms while preserving flags,
+    shape, order, and missing-value semantics.
+  nodes:
+  - id: knowledge-polars-aggregation
+    title: Grouped aggregation
+    summary: Compose reductions, conditional aggregations, and list outputs without Python loops.
+    concept_ids:
+    - concept-aggregation
+    - concept-aggregation-family
+    - concept-map-family
+    - concept-logical-ir
+    - concept-dispatch
+  - id: knowledge-polars-aggregation-flags
+    title: Aggregation flags
+    summary: Retain method-specific pandas options through extraction and lowering.
+    concept_ids:
+    - concept-aggregation
+    - concept-aggregation-family
+    - concept-map-family
+    - concept-logical-ir
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-aggregation
+  - id: knowledge-polars-windows
+    title: Window and transform parity
+    summary: Use Expr.over for same-cardinality grouped operations with explicit ordering.
+    concept_ids:
+    - concept-aggregation
+    - concept-aggregation-family
+    - concept-map-family
+    - concept-logical-ir
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-aggregation-flags
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-aggregation-windows
+artifacts: {}
+workspace_ids: []

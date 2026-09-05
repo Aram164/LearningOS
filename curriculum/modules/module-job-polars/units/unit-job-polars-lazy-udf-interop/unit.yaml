@@ -1,0 +1,60 @@
+id: unit-job-polars-lazy-udf-interop
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 8 - Lazy plans, UDF boundaries, and Arrow interop
+order: 8
+scope: Read optimized plans, keep transformations expression-native, and recognize materialization, UDF,
+  Arrow, chunk, and conversion boundaries that affect a physical backend.
+status: ready
+knowledge_map:
+  summary: Read optimized plans, keep transformations expression-native, and recognize materialization,
+    UDF, Arrow, chunk, and conversion boundaries that affect a physical backend.
+  nodes:
+  - id: knowledge-polars-lazy-plans
+    title: Lazy query plans
+    summary: Locate pushdowns, fusion opportunities, repeated scans, and premature collection.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-operator-fusion
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+  - id: knowledge-polars-udf-boundary
+    title: Native expression versus UDF
+    summary: Rewrite common Python UDF patterns and declare irreducible fallbacks.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-operator-fusion
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-lazy-plans
+  - id: knowledge-polars-arrow-interop
+    title: Arrow and conversion costs
+    summary: Reason about buffers, chunks, copies, and backend boundaries.
+    concept_ids:
+    - concept-logical-ir
+    - concept-op-rewriting
+    - concept-operator-fusion
+    - concept-map-family
+    - concept-dispatch
+    - concept-dataframe-semantics
+    builds_on:
+    - knowledge-polars-udf-boundary
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-stratum-paper
+  authority: reference
+- source_id: source-scalable-dataframe-systems-paper
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-lazy-udf-interop
+artifacts: {}
+workspace_ids: []

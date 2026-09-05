@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s4a-md-20260904",
+  "idempotency_key": "pl-s4a-md-20260904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:127f5a3c72011f09b4669cddcf9201144c97e6104a940ef627e5f0b7b02daf74",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 1,
+    "study-map-job-polars-schema-missing-types": 0
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "stage_id": "stage-polars-03-construction-i-o-schema-and-chunks",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s4a-exercises.md",
+    "label": "Exercise sheet - construction, IO inference, chunks",
+    "file_sha256": "sha256:063dbadede451e3ad93ae5e6a0e83fbd449a162c13e970d354fe8f1bb6ff694d"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:6aabb39ddea772990793d13d21aa1c3621297f6f4144dd87176086fd1283311c"
+  }
+}

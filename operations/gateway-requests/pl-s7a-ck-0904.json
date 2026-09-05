@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7a-ck-0904",
+  "idempotency_key": "pl-s7a-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:0c010634f95fe913e5bc120a285e603979aaf1be66310070abb6a88b2b7af8db",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 2,
+    "study-map-job-polars-joins-reshape": 1
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-12-joins-i-relational-semantics-and-key-cardinality",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7a-check.py",
+    "label": "Answer-key self-check (29 assertions)",
+    "file_sha256": "sha256:67ebbbd002797fe39d2afa777a26cc75fd4d91ad295a5de4fb259dba685540bb"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:ca125c5d240a213141c7d7c48f959d27677dfd94dd7a4a962cfec0394e12c8a4"
+  }
+}

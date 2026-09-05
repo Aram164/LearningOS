@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s3d-md-20260903",
+  "idempotency_key": "polars-sheet-s3d-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:6bea708d2d6628a2e12a202e07803e5aed1cb87c208a07f7e4f55cc6a38d6899",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 7,
+    "study-map-job-polars-selection-backend": 6
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "stage_id": "stage-polars-selection-dropna",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s3d-exercises.md",
+    "label": "Exercise sheet - DROPNA implementation and the NaN policy",
+    "file_sha256": "sha256:74fc92aab480d0de0bbacd6a2db9116164f289d50b18c6f01e41fc9f1bbee88d"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:787dcb8332550985b279db22707efa9291715c113aef8293ca06f4c11d2c25d4"
+  }
+}

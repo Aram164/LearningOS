@@ -2,22 +2,485 @@ type: module-source-map
 module_id: module-job-polars
 sources:
 - source_id: source-polars-definitive-guide
-  role: reference
-  why: Referenced by migrated learning plan job-track-polars.
+  role: spine
+  why: Local Polars-first spine; expression chapters are promoted ahead of I/O and API catalogues.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-polars-definitive-guide-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Polars book - Session 1 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    - knowledge-polars-parity-harness
+    depth: implementation
+    scope: current
+    locator: Chapters 1 and 3, PDF viewer pages 14-51 and 74-102
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s02
+    unit_id: unit-job-polars-expressions
+    title: Polars book - Session 2 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-expr-contexts
+    - knowledge-polars-expr-expansion
+    - knowledge-polars-expr-horizontal
+    - knowledge-polars-expr-lowering
+    depth: implementation
+    scope: current
+    locator: Chapters 7-10, PDF viewer pages 178-306
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s03
+    unit_id: unit-job-polars-selection-backend
+    title: Polars book - Session 3 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-selection-contract
+    - knowledge-polars-runtime-operands
+    - knowledge-polars-selection-methods
+    - knowledge-polars-dropna-lowering
+    depth: implementation
+    scope: current
+    locator: Chapters 10-11 and fold section, PDF viewer pages 279-326 and 387-390
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s04
+    unit_id: unit-job-polars-schema-missing-types
+    title: Polars book - Session 4 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-schema-construction
+    - knowledge-polars-casting
+    - knowledge-polars-missing-model
+    depth: implementation
+    scope: current
+    locator: Chapters 4-6 and 12, PDF viewer pages 103-177 and 327-368
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s05
+    unit_id: unit-job-polars-order-text-time
+    title: Polars book - Session 5 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-ordering
+    - knowledge-polars-text-temporal
+    depth: implementation
+    scope: current
+    locator: Chapters 11-12, PDF viewer pages 307-368
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s06
+    unit_id: unit-job-polars-aggregation-windows
+    title: Polars book - Session 6 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-aggregation
+    - knowledge-polars-aggregation-flags
+    - knowledge-polars-windows
+    depth: implementation
+    scope: current
+    locator: Chapter 13, PDF viewer pages 369-402
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s07
+    unit_id: unit-job-polars-joins-reshape
+    title: Polars book - Session 7 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-join-semantics
+    - knowledge-polars-join-compatibility
+    - knowledge-polars-reshape
+    depth: implementation
+    scope: current
+    locator: Chapters 14-15, PDF viewer pages 403-457
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s08
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Polars book - Session 8 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-lazy-plans
+    - knowledge-polars-udf-boundary
+    - knowledge-polars-arrow-interop
+    depth: implementation
+    scope: current
+    locator: Chapters 5, 17, and 18, PDF viewer pages 122-143 and 503-591
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - id: route-polars-definitive-guide-s10
+    unit_id: unit-job-polars-capstone-transition
+    title: Polars book - Session 10 route
+    format: book
+    angle: Polars-native explanation and worked examples for this session.
+    angle_detail: Read the named viewer pages after predicting the API shape; confirm examples against
+      Polars 1.36.0 because the local book is an early-release edition.
+    covers:
+    - knowledge-polars-capstone
+    - knowledge-polars-property-stress
+    - knowledge-polars-version-transition
+    depth: implementation
+    scope: current
+    locator: Chapter 18 plus relevant operation chapters, PDF viewer pages 537-591 and the capstone's
+      operation route
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
 - source_id: source-pydata-handbook
   role: reference
-  why: Referenced by migrated learning plan job-track-polars.
-  priority: 0
-  unit_routes: []
+  why: Local pandas example corpus used to generate oracle questions; it is too old to define pandas 3.0.2
+    semantics.
+  priority: 2
+  unit_routes:
+  - id: route-pydata-handbook-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Pandas handbook - Session 1 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    - knowledge-polars-parity-harness
+    depth: practice
+    scope: prior-year
+    locator: 03.01-Introducing-Pandas-Objects.ipynb; 03.03-Operations-in-Pandas.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+  - id: route-pydata-handbook-s02
+    unit_id: unit-job-polars-expressions
+    title: Pandas handbook - Session 2 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-expr-contexts
+    - knowledge-polars-expr-expansion
+    - knowledge-polars-expr-horizontal
+    - knowledge-polars-expr-lowering
+    depth: practice
+    scope: prior-year
+    locator: 03.03-Operations-in-Pandas.ipynb - index preservation and alignment sections
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.03-Operations-in-Pandas.ipynb
+  - id: route-pydata-handbook-s03
+    unit_id: unit-job-polars-selection-backend
+    title: Pandas handbook - Session 3 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-selection-contract
+    - knowledge-polars-runtime-operands
+    - knowledge-polars-selection-methods
+    - knowledge-polars-dropna-lowering
+    depth: practice
+    scope: prior-year
+    locator: '''03.02-Data-Indexing-and-Selection.ipynb''; 03.04-Missing-Values.ipynb'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.02-Data-Indexing-and-Selection.ipynb
+  - id: route-pydata-handbook-s04
+    unit_id: unit-job-polars-schema-missing-types
+    title: Pandas handbook - Session 4 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-schema-construction
+    - knowledge-polars-casting
+    - knowledge-polars-missing-model
+    depth: practice
+    scope: prior-year
+    locator: 03.01-Introducing-Pandas-Objects.ipynb; 03.03-Operations-in-Pandas.ipynb; 03.04-Missing-Values.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.04-Missing-Values.ipynb
+  - id: route-pydata-handbook-s05
+    unit_id: unit-job-polars-order-text-time
+    title: Pandas handbook - Session 5 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-ordering
+    - knowledge-polars-text-temporal
+    depth: practice
+    scope: prior-year
+    locator: 03.10-Working-With-Strings.ipynb; 03.11-Working-with-Time-Series.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.10-Working-With-Strings.ipynb
+  - id: route-pydata-handbook-s06
+    unit_id: unit-job-polars-aggregation-windows
+    title: Pandas handbook - Session 6 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-aggregation
+    - knowledge-polars-aggregation-flags
+    - knowledge-polars-windows
+    depth: practice
+    scope: prior-year
+    locator: 03.08-Aggregation-and-Grouping.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+  - id: route-pydata-handbook-s07
+    unit_id: unit-job-polars-joins-reshape
+    title: Pandas handbook - Session 7 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-join-semantics
+    - knowledge-polars-join-compatibility
+    - knowledge-polars-reshape
+    depth: practice
+    scope: prior-year
+    locator: 03.06-Concat-And-Append.ipynb; 03.07-Merge-and-Join.ipynb; 03.09-Pivot-Tables.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+  - id: route-pydata-handbook-s08
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Pandas handbook - Session 8 oracle prompts
+    format: code
+    angle: Concrete pandas examples to convert into pinned executable contracts.
+    angle_detail: The notebooks are old; use them to discover cases and index/alignment assumptions, then
+      verify every relevant result under pandas 3.0.2.
+    covers:
+    - knowledge-polars-lazy-plans
+    - knowledge-polars-udf-boundary
+    - knowledge-polars-arrow-interop
+    depth: practice
+    scope: prior-year
+    locator: 03.12-Performance-Eval-and-Query.ipynb; 01.07-Timing-and-Profiling.ipynb
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
 - source_id: source-python-cheatsheets
   role: reference
-  why: Referenced by migrated learning plan job-track-polars.
-  priority: 0
-  unit_routes: []
+  why: Two-page 2017 pandas operation index; retained for recall and explicitly demoted from semantic
+    authority.
+  priority: 3
+  unit_routes:
+  - id: route-python-cheatsheets-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Pandas cheat sheet - Session 1 operation index
+    format: documentation
+    angle: Quick operation recall before writing the pandas contract from memory.
+    angle_detail: The sheet is from 2017 and omits modern dtype, Copy-on-Write, null, order, and failure
+      behavior; it is never the semantic authority.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    - knowledge-polars-parity-harness
+    depth: orientation
+    scope: prior-year
+    locator: 'Pandas_cheatsheet.pdf, PDF viewer pages 1-2; panels: creating DataFrames, tidy data, and
+      method chaining'
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+  - id: route-python-cheatsheets-s03
+    unit_id: unit-job-polars-selection-backend
+    title: Pandas cheat sheet - Session 3 operation index
+    format: documentation
+    angle: Quick operation recall before writing the pandas contract from memory.
+    angle_detail: The sheet is from 2017 and omits modern dtype, Copy-on-Write, null, order, and failure
+      behavior; it is never the semantic authority.
+    covers:
+    - knowledge-polars-selection-contract
+    - knowledge-polars-runtime-operands
+    - knowledge-polars-selection-methods
+    - knowledge-polars-dropna-lowering
+    depth: orientation
+    scope: prior-year
+    locator: 'Pandas_cheatsheet.pdf, PDF viewer pages 1-2; panels: subset observations, subset variables,
+      and handling missing data'
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+  - id: route-python-cheatsheets-s10
+    unit_id: unit-job-polars-capstone-transition
+    title: Pandas cheat sheet - Session 10 operation index
+    format: documentation
+    angle: Quick operation recall before writing the pandas contract from memory.
+    angle_detail: The sheet is from 2017 and omits modern dtype, Copy-on-Write, null, order, and failure
+      behavior; it is never the semantic authority.
+    covers:
+    - knowledge-polars-capstone
+    - knowledge-polars-property-stress
+    - knowledge-polars-version-transition
+    depth: orientation
+    scope: prior-year
+    locator: 'Pandas_cheatsheet.pdf, PDF viewer pages 1-2; panels: method chaining, subset observations,
+      summarize data, and combine data sets'
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
 - source_id: source-python-depth-drills
-  role: reference
-  why: Referenced by migrated learning plan job-track-polars.
+  role: practice
+  why: Local testing, functions-as-objects, interfaces, and dispatch drills support backend engineering
+    judgment.
+  priority: 2
+  unit_routes:
+  - id: route-python-depth-drills-s09
+    unit_id: unit-job-polars-backend-loop
+    title: Python Depth Drills - Session 9 support route
+    format: exercise
+    angle: Targeted Python mechanics for testable backend dispatch and measurement.
+    angle_detail: Use only the named drills; this source improves implementation technique but does not
+      define pandas or Polars behavior.
+    covers:
+    - knowledge-polars-stratum-lifecycle
+    - knowledge-polars-implementation-decision
+    - knowledge-polars-family-transfer
+    - knowledge-polars-regression-policy
+    depth: practice
+    scope: complementary
+    locator: stage-8-interfaces-and-dispatch.md, Q8.10-Q8.11; SHELF.md, sections 3a 'Testing' and 3c 'Performance'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+  - id: route-python-depth-drills-s10
+    unit_id: unit-job-polars-capstone-transition
+    title: Python Depth Drills - Session 10 support route
+    format: exercise
+    angle: Targeted Python mechanics for testable backend dispatch and measurement.
+    angle_detail: Use only the named drills; this source improves implementation technique but does not
+      define pandas or Polars behavior.
+    covers:
+    - knowledge-polars-capstone
+    - knowledge-polars-property-stress
+    - knowledge-polars-version-transition
+    depth: practice
+    scope: complementary
+    locator: stage-8-interfaces-and-dispatch.md, Q8.10-Q8.11; SHELF.md, sections 3a 'Testing' and 3c 'Performance'
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+- source_id: source-stratum-paper
+  role: implementation
+  why: Authoritative architecture context for declarative DAGs, logical lowering, and late physical operator
+    selection.
   priority: 0
-  unit_routes: []
+  unit_routes:
+  - id: route-stratum-paper-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: stratum paper - Session 1 architecture route
+    format: paper
+    angle: Connects dataframe exercises to Stratum's declarative DAG and late backend selection.
+    angle_detail: Use the paper for architectural intent and verify current class/function details in
+      the checkout; a vision claim is not implementation evidence.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    - knowledge-polars-parity-harness
+    depth: implementation
+    scope: current
+    locator: Sections 4.1-4.3, PDF viewer pages 4-5; Section 1, viewer pages 1-2 for motivation
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+  - id: route-stratum-paper-s08
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: stratum paper - Session 8 architecture route
+    format: paper
+    angle: Connects dataframe exercises to Stratum's declarative DAG and late backend selection.
+    angle_detail: Use the paper for architectural intent and verify current class/function details in
+      the checkout; a vision claim is not implementation evidence.
+    covers:
+    - knowledge-polars-lazy-plans
+    - knowledge-polars-udf-boundary
+    - knowledge-polars-arrow-interop
+    depth: implementation
+    scope: current
+    locator: Sections 4.1-4.3, PDF viewer pages 4-5; Section 1, viewer pages 1-2 for motivation
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+  - id: route-stratum-paper-s09
+    unit_id: unit-job-polars-backend-loop
+    title: stratum paper - Session 9 architecture route
+    format: paper
+    angle: Connects dataframe exercises to Stratum's declarative DAG and late backend selection.
+    angle_detail: Use the paper for architectural intent and verify current class/function details in
+      the checkout; a vision claim is not implementation evidence.
+    covers:
+    - knowledge-polars-stratum-lifecycle
+    - knowledge-polars-implementation-decision
+    - knowledge-polars-family-transfer
+    - knowledge-polars-regression-policy
+    depth: implementation
+    scope: current
+    locator: Sections 4.1-4.3, PDF viewer pages 4-5; Section 1, viewer pages 1-2 for motivation
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+  - id: route-stratum-paper-s10
+    unit_id: unit-job-polars-capstone-transition
+    title: stratum paper - Session 10 architecture route
+    format: paper
+    angle: Connects dataframe exercises to Stratum's declarative DAG and late backend selection.
+    angle_detail: Use the paper for architectural intent and verify current class/function details in
+      the checkout; a vision claim is not implementation evidence.
+    covers:
+    - knowledge-polars-capstone
+    - knowledge-polars-property-stress
+    - knowledge-polars-version-transition
+    depth: implementation
+    scope: current
+    locator: Sections 4.1-4.3, PDF viewer pages 4-5; Section 1, viewer pages 1-2 for motivation
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+- source_id: source-scalable-dataframe-systems-paper
+  role: derivation
+  why: Formal dataframe model and algebra explain why pandas compatibility involves ordering, metadata,
+    and more than relational values.
+  priority: 1
+  unit_routes:
+  - id: route-scalable-dataframe-systems-paper-s01
+    unit_id: unit-job-polars-pandas-fluency
+    title: Scalable dataframe systems - Session 1 theory route
+    format: paper
+    angle: Formalizes dataframe schema, ordering, metadata, and operator algebra behind compatibility
+      decisions.
+    angle_detail: Use the algebra to name semantic dimensions and optimizer constraints; it does not prescribe
+      Stratum's exact supported API surface.
+    covers:
+    - knowledge-polars-version-contract
+    - knowledge-polars-divergence-axes
+    - knowledge-polars-parity-harness
+    depth: derivation
+    scope: complementary
+    locator: Sections 4.2-4.3, PDF viewer pages 5-7; Sections 5.1-5.2.3, viewer pages 10-12
+    vault_path: material://source-scalable-dataframe-systems-paper/Towards Scalable Dataframe Systems.pdf
+  - id: route-scalable-dataframe-systems-paper-s08
+    unit_id: unit-job-polars-lazy-udf-interop
+    title: Scalable dataframe systems - Session 8 theory route
+    format: paper
+    angle: Formalizes dataframe schema, ordering, metadata, and operator algebra behind compatibility
+      decisions.
+    angle_detail: Use the algebra to name semantic dimensions and optimizer constraints; it does not prescribe
+      Stratum's exact supported API surface.
+    covers:
+    - knowledge-polars-lazy-plans
+    - knowledge-polars-udf-boundary
+    - knowledge-polars-arrow-interop
+    depth: derivation
+    scope: complementary
+    locator: Sections 4.2-4.3, PDF viewer pages 5-7; Sections 5.1-5.2.3, viewer pages 10-12
+    vault_path: material://source-scalable-dataframe-systems-paper/Towards Scalable Dataframe Systems.pdf
+  - id: route-scalable-dataframe-systems-paper-s09
+    unit_id: unit-job-polars-backend-loop
+    title: Scalable dataframe systems - Session 9 theory route
+    format: paper
+    angle: Formalizes dataframe schema, ordering, metadata, and operator algebra behind compatibility
+      decisions.
+    angle_detail: Use the algebra to name semantic dimensions and optimizer constraints; it does not prescribe
+      Stratum's exact supported API surface.
+    covers:
+    - knowledge-polars-stratum-lifecycle
+    - knowledge-polars-implementation-decision
+    - knowledge-polars-family-transfer
+    - knowledge-polars-regression-policy
+    depth: derivation
+    scope: complementary
+    locator: Sections 4.2-4.3, PDF viewer pages 5-7; Sections 5.1-5.2.3, viewer pages 10-12
+    vault_path: material://source-scalable-dataframe-systems-paper/Towards Scalable Dataframe Systems.pdf

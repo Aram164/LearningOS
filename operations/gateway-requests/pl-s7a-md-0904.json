@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7a-md-0904",
+  "idempotency_key": "pl-s7a-md-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:d4f314d181c9f5eb92a3522fc808d615ee2518209af5198e246cdc7fe7826ef9",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 1,
+    "study-map-job-polars-joins-reshape": 0
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-12-joins-i-relational-semantics-and-key-cardinality",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7a-exercises.md",
+    "label": "Exercise sheet - join cardinality, null keys, the full join that loses keys",
+    "file_sha256": "sha256:a42bb14881ededef7d5f4427dff02d4b79306cd33827b6247dcc917ddedc1c3e"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:7e11916e641a5007513a4533cc77f3f0e4aabbc703c52d33685057cfb5656213"
+  }
+}

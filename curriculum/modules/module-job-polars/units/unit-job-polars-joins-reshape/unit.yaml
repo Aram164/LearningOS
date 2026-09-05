@@ -1,0 +1,50 @@
+id: unit-job-polars-joins-reshape
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 7 - Joins, concatenation, and reshaping
+order: 7
+scope: Specify key cardinality, null matching, suffixes, coalescing, output order, and shape before lowering
+  joins, concatenation, and reshape operations.
+status: ready
+knowledge_map:
+  summary: Specify key cardinality, null matching, suffixes, coalescing, output order, and shape before
+    lowering joins, concatenation, and reshape operations.
+  nodes:
+  - id: knowledge-polars-join-semantics
+    title: Join semantics
+    summary: Predict cardinality and key/null behavior for each join kind.
+    concept_ids:
+    - concept-join-family
+    - concept-dataframe-semantics
+    - concept-dispatch
+    - concept-projection-family
+  - id: knowledge-polars-join-compatibility
+    title: Join compatibility layer
+    summary: Translate pandas merge/join options into explicit Polars parameters or fallbacks.
+    concept_ids:
+    - concept-join-family
+    - concept-dataframe-semantics
+    - concept-dispatch
+    - concept-projection-family
+    builds_on:
+    - knowledge-polars-join-semantics
+  - id: knowledge-polars-reshape
+    title: Concatenation and reshape
+    summary: Preserve schema, order, and eager/lazy constraints across concat, pivot, and unpivot.
+    concept_ids:
+    - concept-join-family
+    - concept-dataframe-semantics
+    - concept-dispatch
+    - concept-projection-family
+    builds_on:
+    - knowledge-polars-join-compatibility
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-joins-reshape
+artifacts: {}
+workspace_ids: []

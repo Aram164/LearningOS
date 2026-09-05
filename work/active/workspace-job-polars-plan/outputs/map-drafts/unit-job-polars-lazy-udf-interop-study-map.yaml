@@ -1,0 +1,526 @@
+id: study-map-job-polars-lazy-udf-interop
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-lazy-udf-interop
+status: ready
+current_stage: stage-polars-15-lazy-plans-and-optimizer-literacy
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-15-lazy-plans-and-optimizer-literacy
+  number: 1
+  title: Lazy plans and optimizer literacy
+  status: pending
+  objective: 'Read the plan the engine actually runs: make each of the eight documented optimizer passes visible
+    in a query you wrote, turn one off and watch the plan change, profile a query to find where the time really
+    goes, and understand what changes when the default engine becomes streaming.'
+  done_when:
+  - At least five of the eight documented passes demonstrated with a specific plan line, and for any that could
+    not be made visible, a statement of what was tried and what that says about the pass's preconditions.
+  - The claim that a pass fired is backed ONLY by plan text - including checking whether simplify_expression actually
+    removes `col('a') + 0` before saying it does.
+  - 'CSE demonstrated in both directions: the hoisted __POLARS_CSER_ node present by default and absent under QueryOptFlags(comm_subexpr_elim=False),
+    with the shared subtree appearing once versus twice.'
+  - The QueryOptFlags field list enumerated, and the two CSE flags noticed where the documentation lists one.
+  - 'The currency fact recorded: collect(no_optimization=True) is deprecated since 1.30.0 in favour of the optimizations=
+    parameter.'
+  - A query profiled with .profile(), the most expensive node named, and the query then changed to make a different
+    node dominate.
+  - The same query run under engine='in-memory' and engine='streaming' with identical results, plus the 2.0 note
+    on streaming becoming the default and row order no longer being guaranteed.
+  - An eager pandas pipeline and its lazy Polars mirror compared by materializations rather than by benchmark, with
+    at least one intermediate pandas builds that Polars never does.
+  - pandas eval/query correctly characterised as expression-level evaluation rather than query planning.
+  - A two-layer diagram with a rely / duplicate / avoid-interfering decision for each of the eight passes, including
+    at least one 'avoid interfering'.
+  - '`s8a-check.py` passes (22 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-logical-ir
+  - concept-op-rewriting
+  - concept-operator-fusion
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s8a-sheet
+    kind: practise
+    label: Stage exercise sheet - one query per optimizer pass, and one pass switched off
+    locator: attachments/s8a-exercises.md - Part A Tasks A1 and A2
+    angle: Two passes are demonstrated for you so 'proves it' is unambiguous; the rest you find, including the one
+      that disappoints.
+    angle_detail: 'Task A2 is the strongest exercise here: turning `comm_subexpr_elim` off and diffing the plan
+      makes the pass visible as an absence, which is more convincing than seeing it fire. The habit consequence
+      is worth stating — a repeated subexpression is hoisted automatically, so naming an intermediate ''to avoid
+      recomputing it'' is work already done. And the sheet records one pass that does less than its name suggests:
+      `col(''a'') + 0` survives simplify_expression, which is why the acceptance condition is plan text rather than
+      a correct result.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-exercises.md
+  - id: resource-polars-s8a-check
+    kind: practise
+    label: Answer-key self-check - 22 assertions read out of plan text
+    locator: attachments/s8a-check.py
+    angle: Asserts optimizer behaviour by counting occurrences in explain() output, including the CSE on/off pair.
+    angle_detail: It counts how many times the shared addition appears in the plan — once with CSE on, twice with
+      it off — which is a sharper assertion than checking for a marker string. It also pins that QueryOptFlags exposes
+      both comm_subexpr_elim and comm_subplan_elim, so a future consolidation of those flags shows up as a test
+      failure rather than as silently changed behaviour.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — optimizations
+    id: resource-polars-12-05-official-reference-docs-pola-rs-optimi
+    locator: '§''Optimizations'' - all eight named passes: predicate/projection/slice pushdown, common subplan elimination,
+      simplify expressions, join ordering, type coercion, cardinality estimation'
+    url: https://docs.pola.rs/user-guide/lazy/optimizations/
+    scope_triage: required-now
+    angle: 'The authoritative pass list, and the count is the point: most people can name three of the eight.'
+    angle_detail: 'Task A1 asks for one query per pass. This page is the checklist. Two things it does not tell
+      you and the sheet does: which passes are easy to make visible in a small query, and that the runtime flag
+      surface (QueryOptFlags) is finer-grained than this list — there are separate flags for common subexpression
+      and common subplan elimination where the page names one.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — query plan
+    id: resource-polars-12-04-official-reference-docs-pola-rs-query
+    locator: §'Query plan' - explain(), explain(optimized=False), and show_graph
+    url: https://docs.pola.rs/user-guide/lazy/query-plan/
+    scope_triage: reference-only
+    angle: How to read the two plans, which is the whole mechanical skill of this stage.
+    angle_detail: 'The unoptimized/optimized pair is the single most useful diagnostic in Polars: the first is what
+      you wrote, the second is what runs, and the diff is the optimizer''s work made legible. `show_graph` renders
+      it visually if you have graphviz, which is worth having for the two-layer diagram in Part C.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — lazy api
+    id: resource-polars-12-03-official-reference-docs-pola-rs-lazy-a
+    locator: §'Lazy API' - usage, collect, and the schema-resolution discussion
+    url: https://docs.pola.rs/user-guide/concepts/lazy-api/
+    scope_triage: reference-only
+    angle: 'The entry point: what a LazyFrame is and when the work happens.'
+    angle_detail: Short and worth re-reading now rather than in Session 4 where it was first routed. The point that
+      matters here is that building is free and `collect()` is where everything happens, which is what makes `explain()`
+      possible at all — there is a plan sitting there to look at.
+  - id: resource-polars-s8a-birdseye
+    kind: read
+    label: A bird's eye view of Polars - planning, optimizing, execution
+    locator: pola.rs/posts/polars_birds_eye_view - the Query / Query Optimization / Query Execution sections
+    url: https://pola.rs/posts/polars_birds_eye_view
+    angle: Names the internal structures - LogicalPlan, Expr, PhysicalPlan, compute kernels - that make explain()
+      output readable.
+    angle_detail: 'The vocabulary is the payload: once you know that the plan is a LogicalPlan describing intent
+      and that a PhysicalPlan is chosen from it, the two `explain()` outputs stop being decorative. Two limits:
+      it is a January 2024 post so specific algorithm choices may have moved, and it explicitly declines to cover
+      the execution model in depth. It is also the closest published analogue to Stratum''s own logical/physical
+      split, which makes it useful for Part C''s diagram as well as for reading plans.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-12-01-required-core-python-polars-the-defini
+    locator: Ch 18 §Query Optimization pp. 545-550, §Checking Your Expressions pp. 551-555, §Profiling Polars pp.
+      556-558
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The book's internals chapter, and these eleven pages are the closest thing to a written explanation of
+      this stage.
+    angle_detail: 'pp. 545-550 covers the optimizer from the inside, pp. 551-555 the meta namespace for inspecting
+      expressions, and pp. 556-558 profiling. Read the profiling pages before Task A3 so you know what the returned
+      frame means. Early-release caveat matters here more than usual: the optimizer is the fastest-moving part of
+      the library, so treat the pass list in the book as indicative and the routed optimizations page as authoritative.'
+  - kind: reference
+    label: Optional depth — docs.pola.rs — streaming
+    id: resource-polars-12-08-optional-depth-docs-pola-rs-streaming
+    locator: §'Streaming' - the engine, what it supports, and what it does not guarantee
+    url: https://docs.pola.rs/user-guide/concepts/streaming/
+    scope_triage: helpful-now
+    angle: 'Promoted from optional depth: in Polars 2.0 this engine becomes the default for collect().'
+    angle_detail: Read the section on what streaming does not guarantee. Row order for operations that do not inherently
+      require one — group_by, joins, unpivot — is not preserved, and when 2.0 makes streaming the default that stops
+      being an opt-in risk. Anything in your work that depends on incidental ordering from those operations should
+      get an explicit maintain_order now.
+  - id: resource-polars-s8a-expr-talk
+    kind: watch
+    label: Ritchie Vink - 'Polars and a peek into the expression engine' (PyData Amsterdam 2023)
+    locator: pola.rs/posts/talk-pydata-amsterdam-2023 - full talk
+    url: https://pola.rs/posts/talk-pydata-amsterdam-2023
+    angle: The author explaining why the expression design makes these optimizations possible at all.
+    angle_detail: 'Watch after Task A1, not before. Having seen CSE hoist a subtree in your own plan, the talk''s
+      argument about expressions being data rather than calls lands as an explanation rather than a claim. 2023
+      talk: treat any specific API shown as historical and the reasoning as current.'
+    scope_triage: helpful-now
+  - kind: reference
+    label: Official reference — pandas.pydata.org — scale.html
+    id: resource-polars-12-06-official-reference-pandas-pydata-org-s
+    locator: §'Scaling to large datasets' - chunking, column selection, and the categorical advice
+    url: https://pandas.pydata.org/docs/user_guide/scale.html
+    scope_triage: reference-only
+    angle: pandas' recommended manual workarounds, which read as a list of what a planner would do for you.
+    angle_detail: 'Read it as a document about the absence of a planner: every recommendation — load fewer columns,
+      process in chunks, use efficient dtypes — is a manual version of a pass from the optimizations page. That
+      framing is more useful than the advice itself, and it is the honest form of the lazy-versus-eager argument.'
+  - kind: read
+    label: Local material — 03.12-Performance-Eval-and-Query.ipynb
+    id: resource-polars-12-02-local-material-03-12-performance-eval
+    source_id: source-pydata-handbook
+    locator: §'pandas.eval() Function' and §'DataFrame.query() Method' - and the discussion of temporaries
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+    scope_triage: reference-only
+    angle: pandas' own account of why compound expressions allocate, which is the problem a planner solves differently.
+    angle_detail: 'Read for the temporaries argument: it explains that `df.a + df.b + df.c` builds intermediates,
+      and that `eval` avoids some of them. That is a real optimization and a *different kind* from a query plan
+      — it cannot reorder, prune columns or defer. Task B2 asks you to state that distinction, and this is where
+      the pandas half comes from.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-15-99-axis-pass
+    locator: Sheet Part C, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: This stage's deposits are plan assertions rather than value assertions - a different kind of case.
+    angle_detail: 'A test that asserts ''2/3 COLUMNS'' appears in a plan is testing the optimizer, not the data.
+      Those cases are worth having and worth labelling separately: they fail on a Polars upgrade that changes plan
+      formatting even when nothing is wrong, so they need a different triage rule from a value divergence.'
+  - id: resource-polars-15-lazy-plans-and-optimizer-literacy-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-exercises.md
+    label: Exercise sheet - the eight optimizer passes, found in your own plans
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-check.py
+    label: Answer-key self-check (22 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/notes.md
+- id: stage-polars-16-udfs-fallbacks-and-native-expression-rewrites
+  number: 2
+  title: UDF fallbacks and native expression rewrites
+  status: pending
+  objective: 'Treat a UDF as an optimizer problem rather than a Python-speed problem: learn the five rungs from
+    native expression to row-wise callable, measure what each costs, and build the rule that decides when a fallback
+    is correct and still wrong.'
+  done_when:
+  - The same operation implemented at all five rungs - native expression, NumPy ufunc, map_batches, map_elements,
+    map_elements over a struct - with a statement of what each costs and buys.
+  - 'The map_batches length trap confirmed: returning a differently-sized Series silently changes the frame''s height
+    and does not raise.'
+  - PolarsInefficientMapWarning captured, its suggested rewrite read, and the caveat recorded - the suggestion is
+    derived from bytecode and is about shape, not semantic equivalence, particularly around nulls.
+  - 'return_dtype behaviour settled: inference when omitted, and SchemaError when the declared dtype contradicts
+    the returned value.'
+  - 'The optimizer consequence measured rather than repeated: two plans compared, one native and one through map_elements,
+    with a statement of what the optimizer can still do either side of the boundary.'
+  - Five pandas apply/map tasks translated twice each - literal UDF and idiomatic native - with timings on a frame
+    of about a million rows.
+  - The dictionary-lookup case solved with replace_strict, and the grouped-apply case recognised as an over() window
+    rather than a UDF.
+  - An elimination ledger with a SEMANTICS column, not only a speed column.
+  - Ten captured functions classified to a rung or to unsupported, applying the rule that the question is whether
+    the operation has an expression equivalent, not whether Python code appears.
+  - A written condition under which the lowering should refuse rather than fall back, and who decides.
+  - '`s8b-check.py` passes (18 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-map-family
+  - concept-dispatch
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s8b-sheet
+    kind: practise
+    label: Stage exercise sheet - the five rungs, the length trap, and the elimination ledger
+    locator: attachments/s8b-exercises.md - Part A first; Part B's five tasks are the deliverable
+    angle: Reframes UDFs as an optimizer-visibility problem, then makes you measure the claim rather than repeat
+      it.
+    angle_detail: 'The trap in Part A is `map_batches` returning a Series of a different length: the frame''s height
+      changes and nothing raises, because no length contract is enforced. Part B''s five tasks are chosen so the
+      answers differ — a dictionary lookup has a native form most people miss (`replace_strict`), a grouped apply
+      is an `over()` window in disguise, and one of the five is a genuine fallback that should be named as such
+      rather than forced.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-exercises.md
+  - id: resource-polars-s8b-check
+    kind: practise
+    label: Answer-key self-check - 18 assertions across the rungs
+    locator: attachments/s8b-check.py
+    angle: Asserts that the length trap does NOT raise, which is the only way to record an absent error.
+    angle_detail: It captures PolarsInefficientMapWarning and checks that the printed rewrite is the expected native
+      expression, so the library's own linter output is pinned. It also confirms the grouped-apply rewrite against
+      pandas' answer, which is the equivalence claim the elimination ledger depends on.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — user defined python functions
+    id: resource-polars-13-03-official-reference-docs-pola-rs-user-d
+    locator: §'User-defined Python functions' - map_elements vs map_batches, and the 'avoid if possible' guidance
+    url: https://docs.pola.rs/user-guide/expressions/user-defined-python-functions/
+    scope_triage: required-now
+    angle: The maintainers' own ranking of the rungs, including the reasoning this stage is built on.
+    angle_detail: 'The page is unusually direct about not using these functions, and the reason it gives is the
+      one that matters: the engine cannot see inside them. Read that as the optimizer argument rather than the speed
+      argument — Task A4 measures it — because the speed argument alone would suggest a fast UDF is fine, and the
+      optimizer argument says otherwise.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — polars.Expr.map_elements.html
+    id: resource-polars-13-04-official-reference-docs-pola-rs-polars
+    locator: Expr.map_elements - return_dtype, the null-handling note, and the strategy parameter
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.map_elements.html
+    scope_triage: reference-only
+    angle: The parameter that turns a silent inference into a declared contract.
+    angle_detail: 'Read the `return_dtype` entry and the note on how nulls are passed to your function. The second
+      is the one that breaks equivalence: a native expression propagates missingness without calling anything, while
+      a Python callable may be handed None and return something — so a rewrite that looks equivalent on complete
+      data is not equivalent on real data.'
+  - kind: reference
+    label: Optional depth — docs.pola.rs — polars.Expr.map_batches.html
+    id: resource-polars-13-07-optional-depth-docs-pola-rs-polars-exp
+    locator: Expr.map_batches - is_elementwise, returns_scalar, and the absence of a length contract
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/api/polars.Expr.map_batches.html
+    scope_triage: helpful-now
+    angle: 'Promoted: the length trap in Part A is a direct consequence of what this page does not promise.'
+    angle_detail: There is no enforcement that the returned Series has the input's length, which is why returning
+      `x.head(1)` silently reshapes the frame. Read the `is_elementwise` flag too — telling the optimizer that your
+      batch function is elementwise is how you get some of the passes back, and lying about it is how you get a
+      wrong plan.
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-13-01-required-core-python-polars-the-defini
+    locator: Ch 17 §Applying a Function to Elements pp. 504-506, to Series pp. 507-508, to Groups pp. 508-510, to
+      an Expression pp. 511-512
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The book organises UDFs by granularity, which is exactly the rung ladder this stage builds.
+    angle_detail: Four sections, four granularities, in the order the sheet uses them. Read pp. 508-510 on group
+      application carefully and then ask whether the example needs a UDF at all — most grouped applies are `over()`
+      windows, which is Task B1 case 5. Early-release edition; confirm the callable names against 1.36.0, since
+      this area has been renamed before.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — basics.html
+    id: resource-polars-13-05-official-reference-pandas-pydata-org-b
+    locator: §'Function application' - the apply/agg/transform/map split
+    url: https://pandas.pydata.org/docs/user_guide/basics.html#function-application
+    scope_triage: reference-only
+    angle: pandas' four application methods, which map onto Polars' rungs unevenly.
+    angle_detail: Worth one pass to see that pandas' split is by *what is returned* (scalar, same-shape, elementwise)
+      while Polars' is by *what is passed in* (column, batch, element, row). Because the two taxonomies cut the
+      space differently, a per-method translation table is the wrong shape — classify by operation, which is Part
+      C.
+  - kind: read
+    label: Local material — 03.12-Performance-Eval-and-Query.ipynb
+    id: resource-polars-13-02-local-material-03-12-performance-eval
+    source_id: source-pydata-handbook
+    locator: §'When to Use These Functions' - the frame-size discussion
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.12-Performance-Eval-and-Query.ipynb
+    scope_triage: reference-only
+    angle: pandas' own guidance on when its optimizations stop being worth it, which is a template for your ledger.
+    angle_detail: 'The useful part is the framing: the answer is a frame size, not a rule. Your elimination ledger
+      should reach the same shape — below some size, the UDF is fine and the rewrite is not worth the risk of changing
+      semantics. Pre-3.0 numbers; take the method, not the thresholds.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-16-99-axis-pass
+    locator: Sheet Part B Task B2, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: 'The deposits here are equivalence cases: the rewrite must match the UDF on data that includes nulls.'
+    angle_detail: Every native rewrite in the elimination ledger is a claim that two implementations agree. Commit
+      each as a harness case with a null-bearing fixture, since that is precisely where a bytecode-derived suggestion
+      and the original callable diverge.
+  - id: resource-polars-16-udfs-fallbacks-and-native-expression-rewrites-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-exercises.md
+    label: Exercise sheet - the five UDF rungs and the native ladder
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/attachments/s8b-check.py
+    label: Answer-key self-check (18 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-16-udfs-fallbacks-and-native-expression-rewrites/notes.md
+- id: stage-polars-17-arrow-interop-chunks-and-conversion-costs
+  number: 3
+  title: Arrow interop, chunks, and conversion costs
+  status: pending
+  objective: 'Replace the phrase ''zero-copy'' with measurements and assertions: read a Polars frame as Arrow data,
+    prove a conversion is copy-free with allow_copy=False rather than claiming it, and find the default conversion
+    that silently degrades three of five column types.'
+  done_when:
+  - The Arrow type of each of five representative columns recorded, with large_string and large_list explained and
+    the Categorical's index width read off its Arrow type.
+  - Chunking shown to survive the Arrow boundary, and the consequence for rechunk-before-export stated.
+  - Four conversions timed on a million rows, ranked, and the ranking explained by what each has to build - not
+    by what was expected.
+  - 'Zero-copy proved rather than asserted: to_numpy(allow_copy=False) succeeds on a null-free Int64 column and
+    raises RuntimeError once one null is present, with the unguarded call shown to promote to float64.'
+  - 'The default to_pandas() degradation recorded as a harness case: Int64-with-null becomes float64, List and Struct
+    become object, and the round trip does not preserve the schema - while the pyarrow-backed one does.'
+  - 'The residual difference noticed even on the round trip that works: the Categorical''s index width changes from
+    uint32 to int64 through the pandas boundary.'
+  - Three pandas-Polars conversion sites found in the read-only Stratum checkout, each assessed for silent schema
+    degradation, with no edits made to that repository.
+  - A microbenchmark that separates compute time from conversion time, timed repeatedly with a median reported,
+    and the frame size at which conversion stops mattering stated for this machine.
+  - A boundary map where every crossing carries a MEASURED cost, and crossings caused by a UDF fallback are marked
+    as such.
+  - '`s8c-check.py` passes (22 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s8c-sheet
+    kind: practise
+    label: Stage exercise sheet - Arrow types, zero-copy as an assertion, the conversion that degrades
+    locator: attachments/s8c-exercises.md - Fixture F9, then Part A Task A4 and Part B Task B1
+    angle: Replaces the phrase 'zero-copy' with a flag that fails when the claim is false.
+    angle_detail: 'Task A4 is the method worth taking away: `to_numpy(allow_copy=False)` succeeds on a null-free
+      Int64 column and raises RuntimeError the moment one null is present — and the unguarded call quietly returns
+      float64 instead. Part B is the finding: the default `to_pandas()` degrades three of five columns (Int64-with-null
+      to float64, List and Struct to object) and its round trip does not preserve the schema. The pyarrow-backed
+      path does, though even it changes the Categorical''s index width.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-exercises.md
+  - id: resource-polars-s8c-check
+    kind: practise
+    label: Answer-key self-check - 22 assertions including a median-timed ranking
+    locator: attachments/s8c-check.py
+    angle: Asserts the timing RANKING rather than absolute numbers, so it stays meaningful on any machine.
+    angle_detail: Absolute timings are not portable and asserting them produces a flaky test; the ordering is the
+      finding and it is stable. The checker takes a median of repeated runs for the same reason the sheet tells
+      you to — at these speeds a single measurement is mostly allocator noise.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — arrow
+    id: resource-polars-14-03-official-reference-docs-pola-rs-arrow
+    locator: §'Arrow interoperability' - to_arrow/from_arrow and the zero-copy conditions
+    url: https://docs.pola.rs/user-guide/misc/arrow/
+    scope_triage: required-now
+    angle: States the conditions under which a conversion is copy-free, which Task A4 then turns into a test.
+    angle_detail: Read the conditions carefully and notice how narrow they are — a specific dtype, no nulls, one
+      chunk. The sheet's contribution is `allow_copy=False`, which converts each condition from prose into an assertion
+      you can put in a test. A zero-copy claim without that flag is untested.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — pyarrow.html
+    id: resource-polars-14-05-official-reference-pandas-pydata-org-p
+    locator: §'PyArrow Functionality' - the ArrowDtype extension arrays and their construction
+    url: https://pandas.pydata.org/docs/user_guide/pyarrow.html
+    scope_triage: required-now
+    angle: The pandas side of the round trip that actually preserves a schema.
+    angle_detail: '`use_pyarrow_extension_array=True` produces these dtypes, and they are the only pandas representation
+      that survives a Polars round trip intact. Read this before deciding what your backend boundary should emit
+      — the default is faster to type and loses information, and that trade should be made deliberately.'
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-14-01-required-core-python-polars-the-defini
+    locator: Ch 18 §Arrow pp. 539-541, §The String Data Type in Memory pp. 543-544, §ChunkedArrays in Series pp.
+      544-545
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The book's account of the physical layout, which is what makes conversion cost predictable per column.
+    angle_detail: 'Six pages, and they answer the stage''s central question directly: what is actually in memory,
+      and what does a conversion have to build. pp. 543-544 on the string layout explains why Polars uses large_string,
+      and pp. 544-545 on ChunkedArrays is the mechanism behind the chunk-survival result in Task A2.'
+  - id: resource-polars-s8c-cookbook-interop
+    kind: practise
+    label: Polars Cookbook Ch 10 - Interoperability With Other Python Libraries (runnable notebook)
+    locator: github.com/PacktPublishing/Polars-Cookbook - Chapter10/ch10.ipynb, with data/
+    url: https://github.com/PacktPublishing/Polars-Cookbook
+    angle: A current 1.x treatment of exactly this stage's subject, runnable, from a book written after the API
+      settled.
+    angle_detail: Yuki Kakegawa's Polars Cookbook (Packt), foreword by Marco Gorelli of the Polars core team, targets
+      Polars 1.x — so unlike this module's Definitive Guide PDF, which is an early-release edition, its interop
+      chapter is contemporary with your pinned 1.36.0. The repository is MIT-licensed with one notebook per chapter,
+      so the recipes are runnable without buying the book. Run Chapter10 against 1.36.0 and record any cell that
+      has drifted; that drift is free harness material and it also tells you how stable this corner of the API has
+      been. Chapter titles are confirmed from the published contents; the recipe-level detail is not, so check the
+      notebook on first open rather than trusting a mapping.
+    scope_triage: helpful-now
+  - kind: practise
+    label: Find three conversion sites in the read-only Stratum checkout
+    id: resource-polars-14-12-find-three-places-in-the-read-only-str
+    locator: Sheet Part B Task B2 - direction, dtypes crossing, default versus pyarrow-backed path
+    scope_triage: required-now
+    angle: Applies the stage's finding to the actual codebase, read-only, before any of it is changed.
+    angle_detail: 'For each site: which direction, which dtypes cross, and whether the default or the pyarrow-backed
+      path is used. At least one should be assessed as a place a schema could silently degrade — or explicitly cleared.
+      Observation only: LearningOS does not manage that repository and this stage does not edit it.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — data types and structures
+    id: resource-polars-14-04-official-reference-docs-pola-rs-data-t
+    locator: The data-type list, read alongside the Arrow type each maps to
+    url: https://docs.pola.rs/user-guide/concepts/data-types-and-structures/
+    scope_triage: reference-only
+    angle: The mapping table between the two type systems.
+    angle_detail: Reference rather than reading. Its use here is checking your Task A1 answers, particularly the
+      nested types, where the Polars name and the Arrow name diverge most.
+  - kind: read
+    label: Local material — 03.01-Introducing-Pandas-Objects.ipynb
+    id: resource-polars-14-02-local-material-03-01-introducing-panda
+    source_id: source-pydata-handbook
+    locator: §'Pandas Objects' - the NumPy-array-plus-index model
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+    scope_triage: reference-only
+    angle: The representation the default to_pandas() has to construct, which is why it is the slowest of the four.
+    angle_detail: 'Useful for one sentence: a pandas frame is NumPy arrays plus an index, so converting Arrow buffers
+      into it is genuine construction rather than a handover. That is the explanation Task A3 asks for. Pre-3.0
+      notebook, and pandas 3.0''s Arrow-backed options change the picture — which is exactly the alternative path
+      this stage measures.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one harness
+      case per divergence and re-run the whole harness.
+    id: resource-polars-17-99-axis-pass
+    locator: Sheet Part B Task B1, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: 'The conversion cases are round-trip cases: they assert that a frame survives a boundary unchanged.'
+    angle_detail: A round-trip assertion is the cheapest useful interop test and the one most likely to catch a
+      library upgrade changing a default. Commit both directions — default and pyarrow-backed — so the difference
+      between them stays visible rather than becoming folklore.
+  - kind: reference
+    label: Optional depth — arrow.apache.org — Columnar.html
+    id: resource-polars-14-08-optional-depth-arrow-apache-org-column
+    locator: §'Physical memory layout' and §'Validity bitmaps'
+    url: https://arrow.apache.org/docs/format/Columnar.html
+    scope_triage: deferred
+    angle: The layout spec, which closes the loop back to Session 4's missing-value model.
+    angle_detail: 'The validity bitmap you met as a semantic device in Session 4 is a physical buffer here, and
+      seeing it as a buffer explains the Task A4 result: a NumPy array has nowhere to put that second buffer, so
+      a null-bearing column cannot be handed over without building something new.'
+  - kind: reference
+    label: Optional depth — arrow.apache.org — CDataInterface.html
+    id: resource-polars-14-07-optional-depth-arrow-apache-org-cdatai
+    locator: §'C Data Interface' - the struct definitions for schema and array handover
+    url: https://arrow.apache.org/docs/format/CDataInterface.html
+    scope_triage: deferred
+    angle: The mechanism that makes a copy-free handover possible across library boundaries at all.
+    angle_detail: Deferred, and the right depth for the question 'why can two libraries share a buffer without serialising'.
+      Read it when the timings in Task A3 stop feeling plausible; the C Data Interface is why to_arrow can be sub-millisecond
+      on a million rows.
+  - id: resource-polars-17-arrow-interop-chunks-and-conversion-costs-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-exercises.md
+    label: Exercise sheet - Arrow types, zero-copy as an assertion, schema degradation
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-check.py
+    label: Answer-key self-check (22 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/notes.md
+shelving:
+  state: none

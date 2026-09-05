@@ -1,0 +1,334 @@
+id: study-map-job-polars-order-text-time
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-order-text-time
+status: ready
+current_stage: stage-polars-08-ordering-sorting-and-determinism
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-08-ordering-sorting-and-determinism
+  number: 1
+  title: Ordering, sorting, and determinism
+  status: pending
+  objective: Establish which row orders are guaranteed, which are incidental, and which are undefined
+    in each library, so that a parity test never passes or fails for reasons of order alone.
+  done_when:
+  - A sort contract covering ties, nulls, multi-key sorts and descending mixes, stating the pandas default
+    and the Polars default side by side.
+  - A classification of at least ten operations as order-guaranteed, order-incidental, or order-undefined
+    in each library, with the evidence that settled each one.
+  - Every divergence found is classified against the eight axes and has a failing case committed to the
+    parity harness.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-08-01-required-core-polars-guide-sorting
+    locator: Sorting, top-k, and the order guarantees of grouped operations
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Use Sorting, top-k, and the order guarantees of grouped operations to build the native
+      Polars model for Ordering, sorting, and determinism; the book is an early-release edition, so confirm
+      callable names and defaults against the pinned 1.36.0 environment.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — sort_values
+    id: resource-polars-08-02-official-reference-pandas-sort-values
+    locator: kind defaults to quicksort and is unstable; na_position, key, ignore_index
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.sort_values.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read kind defaults to quicksort and is unstable; na_position, key, ignore_index for
+      Ordering, sorting, and determinism and encode the promised behavior in pandas 3.0.2 fixtures; unspecified
+      behavior remains evidence, not a universal contract.
+  - kind: reference
+    label: Official reference — docs.pola.rs — DataFrame.sort
+    id: resource-polars-08-03-official-reference-polars-sort
+    locator: descending, nulls_last, maintain_order, and multi-column sorts
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.sort.html
+    scope_triage: reference-only
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read descending, nulls_last, maintain_order, and multi-column sorts for Ordering, sorting,
+      and determinism, then run the example under Polars 1.36.0 because the live documentation can move
+      ahead of Stratum's lockfile.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — merging
+    id: resource-polars-08-04-official-reference-pandas-merging-order
+    locator: What merge says, and does not say, about the order of its output
+    url: https://pandas.pydata.org/docs/user_guide/merging.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read What merge says, and does not say, about the order of its output for Ordering,
+      sorting, and determinism and encode the promised behavior in pandas 3.0.2 fixtures; unspecified
+      behavior remains evidence, not a universal contract.
+  - kind: practise
+    label: Sort a frame with ties on the sort key in both libraries and determine whether the tie order
+      is stable. Then set kind='stable' and maintain_order and check again.
+    id: resource-polars-08-05-sort-with-ties-and-test-stability
+    locator: Exercise 1
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Sort a column containing nulls in both libraries at both defaults, then force each to the other's
+      behaviour.
+    id: resource-polars-08-06-sort-nulls-at-both-defaults
+    locator: Exercise 2
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 2 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Multi-key sort with mixed ascending/descending. Confirm the argument shapes differ and that
+      both produce the same permutation.
+    id: resource-polars-08-07-multi-key-mixed-direction-sort
+    locator: Exercise 3
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 3 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Classify ten operations — groupby, join, unique, concat, value_counts among them — as order-guaranteed,
+      incidental, or undefined in each library. Prove each verdict with a case rather than the docs.
+    id: resource-polars-08-08-classify-ten-operations-by-order-guarantee
+    locator: Exercise 4
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 4 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: 'Take one order-undefined operation and write the parity test two ways: one that normalizes
+      order and one that does not. Explain which is correct and why.'
+    id: resource-polars-08-09-write-the-parity-test-two-ways
+    locator: Exercise 5
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 5 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: 'Closed-book: name three places a pandas result''s row order is an implementation accident
+      that code in the wild nonetheless depends on.'
+    id: resource-polars-08-10-closed-book-three-accidental-orders
+    locator: Exercise 6
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 6 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-08-99-axis-pass
+    locator: Closing pass, every session
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Closing pass, every session before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - id: resource-polars-08-ordering-sorting-and-determinism-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: Preserves the deeper mental model and traps written for the original stage.
+    angle_detail: Read after the stage objective and before the closed-book drill. The guide remains at
+      its original path as migration evidence while this session owns the active stage.
+    scope_triage: helpful-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-08-ordering-sorting-and-determinism/notes.md
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-08-ordering-sorting-and-determinism/notes.md
+- id: stage-polars-09-strings-datetimes-and-namespace-translation
+  number: 2
+  title: Strings, datetimes, and namespace translation
+  status: pending
+  objective: Implement Strings, datetimes, and namespace translation in both pandas and Polars, explain
+    the semantic differences, and prove parity or document divergence with adversarial tests.
+  done_when:
+  - a namespace conversion table with one counterexample per semantic mismatch.
+  - Every divergence found is classified against the eight axes and has a failing case committed to the
+    parity harness.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-projection-family
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-06-01-required-core-python-polars-the-defini
+    locator: Ch. 12
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Use Ch. 12 to build the native Polars model for Strings, datetimes, and namespace translation;
+      the book is an early-release edition, so confirm callable names and defaults against the pinned
+      1.36.0 environment.
+  - kind: read
+    label: Local material — 03.10-Working-With-Strings.ipynb
+    id: resource-polars-06-02-local-material-03-10-working-with-stri
+    source_id: source-pydata-handbook
+    locator: Pandas strings and time notebooks
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.10-Working-With-Strings.ipynb
+    scope_triage: required-now
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Use Pandas strings and time notebooks to identify pandas behavior relevant to Strings,
+      datetimes, and namespace translation. The notebook predates pandas 3.0.2, so it generates test questions
+      rather than serving as semantic authority.
+  - kind: read
+    label: Local material — 03.11-Working-with-Time-Series.ipynb
+    id: resource-polars-06-03-local-material-03-11-working-with-time
+    source_id: source-pydata-handbook
+    locator: Pandas strings and time notebooks
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.11-Working-with-Time-Series.ipynb
+    scope_triage: required-now
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Use Pandas strings and time notebooks to identify pandas behavior relevant to Strings,
+      datetimes, and namespace translation. The notebook predates pandas 3.0.2, so it generates test questions
+      rather than serving as semantic authority.
+  - kind: reference
+    label: Official reference — docs.pola.rs — strings
+    id: resource-polars-06-04-official-reference-docs-pola-rs-string
+    locator: Polars strings/temporal and pandas text/time series
+    url: https://docs.pola.rs/user-guide/expressions/strings/
+    scope_triage: reference-only
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars strings/temporal and pandas text/time series for Strings, datetimes, and
+      namespace translation, then run the example under Polars 1.36.0 because the live documentation can
+      move ahead of Stratum's lockfile.
+  - kind: reference
+    label: Official reference — docs.pola.rs — time-series parsing
+    id: resource-polars-06-05-official-reference-docs-pola-rs-tempor
+    locator: Polars strings/temporal and pandas text/time series
+    url: https://docs.pola.rs/user-guide/transformations/time-series/parsing/
+    scope_triage: reference-only
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars strings/temporal and pandas text/time series for Strings, datetimes, and
+      namespace translation, then run the example under Polars 1.36.0 because the live documentation can
+      move ahead of Stratum's lockfile.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — text.html
+    id: resource-polars-06-06-official-reference-pandas-pydata-org-t
+    locator: Polars strings/temporal and pandas text/time series
+    url: https://pandas.pydata.org/docs/user_guide/text.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read Polars strings/temporal and pandas text/time series for Strings, datetimes, and
+      namespace translation and encode the promised behavior in pandas 3.0.2 fixtures; unspecified behavior
+      remains evidence, not a universal contract.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — timeseries.html
+    id: resource-polars-06-07-official-reference-pandas-pydata-org-t
+    locator: Polars strings/temporal and pandas text/time series
+    url: https://pandas.pydata.org/docs/user_guide/timeseries.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read Polars strings/temporal and pandas text/time series for Strings, datetimes, and
+      namespace translation and encode the promised behavior in pandas 3.0.2 fixtures; unspecified behavior
+      remains evidence, not a universal contract.
+  - kind: practise
+    label: Guided exercises — Mirror official parsing, extraction, timezone, and invalid-input examples;
+      include Unicode, null, ambiguous time, and format-error cases.
+    id: resource-polars-06-08-guided-exercises-mirror-official-parsi
+    locator: Mirror official parsing, extraction, timezone, and invalid-input examples; include Unicode,
+      null, ambiguous time, and format-error cases.
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Mirror official parsing, extraction, timezone, and invalid-input examples;
+      include Unicode, null, ambiguous time, and format-error cases. before consulting an answer. Record
+      values, dtype/schema, cardinality, row order, missing-value behavior, warnings, and exceptions separately
+      whenever they apply.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — string.html
+    id: resource-polars-06-09-optional-depth-docs-pola-rs-string-htm
+    locator: Polars string namespace API and temporal namespace
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/string.html
+    scope_triage: deferred
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars string namespace API and temporal namespace for Strings, datetimes, and
+      namespace translation, then run the example under Polars 1.36.0 because the live documentation can
+      move ahead of Stratum's lockfile.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — temporal.html
+    id: resource-polars-06-10-optional-depth-docs-pola-rs-temporal-h
+    locator: Polars string namespace API and temporal namespace
+    url: https://docs.pola.rs/api/python/stable/reference/expressions/temporal.html
+    scope_triage: deferred
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars string namespace API and temporal namespace for Strings, datetimes, and
+      namespace translation, then run the example under Polars 1.36.0 because the live documentation can
+      move ahead of Stratum's lockfile.
+  - kind: practise
+    label: Mirror six string-cleaning expressions, including count/contains/extract/split.
+    id: resource-polars-06-11-mirror-six-string-cleaning-expressions
+    locator: Exercise 1
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Parse four mixed date formats under raise/coerce-like behavior.
+    id: resource-polars-06-12-parse-four-mixed-date-formats-under-ra
+    locator: Exercise 2
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 2 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Compare weekday values and write an explicit normalization.
+    id: resource-polars-06-13-compare-weekday-values-and-write-an-ex
+    locator: Exercise 3
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 3 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Test month-end and timezone cases in both libraries.
+    id: resource-polars-06-14-test-month-end-and-timezone-cases-in-b
+    locator: Exercise 4
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 4 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Given eight pandas str/dt calls, decide native Polars translation, mapped name, semantic adjustment,
+      or pandas fallback.
+    id: resource-polars-06-15-given-eight-pandas-str-dt-calls-decide
+    locator: Exercise 5
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 5 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-09-99-axis-pass
+    locator: Closing pass, every session
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Closing pass, every session before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - id: resource-polars-09-strings-datetimes-and-namespace-translation-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: Preserves the deeper mental model and traps written for the original stage.
+    angle_detail: Read after the stage objective and before the closed-book drill. The guide remains at
+      its original path as migration evidence while this session owns the active stage.
+    scope_triage: helpful-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-09-strings-datetimes-and-namespace-translation/notes.md
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/stages/stage-polars-09-strings-datetimes-and-namespace-translation/notes.md
+shelving:
+  state: none

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7b-md-0904",
+  "idempotency_key": "pl-s7b-md-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:848a589f1bf23934214471f3a30748fd406c35e168b8272fd4cb224d6a5587ae",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 3,
+    "study-map-job-polars-joins-reshape": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7b-exercises.md",
+    "label": "Exercise sheet - JoinConfig from blank, 16 parity cases, boundaries",
+    "file_sha256": "sha256:581c2500ba222e54af7c0ef5f46cabc996dda040f657cd16a57bfeb8666127bf"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:a463e05ac6af0cadad79263c38889d60e0faa54280dbf0f76771952ad4b2d807"
+  }
+}

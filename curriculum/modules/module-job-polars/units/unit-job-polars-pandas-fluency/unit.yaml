@@ -2,17 +2,54 @@ id: unit-job-polars-pandas-fluency
 type: unit
 module_id: module-job-polars
 kind: topic
-title: Polars ↔ pandas fluency — one operation, two backends
+title: Session 1 - Backend contracts and parity harness
 order: 1
-scope: Given any pandas operation, predict its exact behaviour — values, dtypes, row order, null handling,
-  and failure mode — write the idiomatic Polars equivalent from memory, and state precisely where the
-  two diverge, which divergences can be closed by construction, and which must be declared unsupported.
-  Fluency is evidenced by a cumulative parity harness whose cases were written before the answers were
-  looked up, plus closed-book retrieval; it is never inferred from reading.
+scope: Specify observable pandas behavior at the operation boundary, target Polars 1.36.0, and create
+  the cumulative executable harness used by every later session.
 status: ready
-scope_sources: []
+knowledge_map:
+  summary: Specify observable pandas behavior at the operation boundary, target Polars 1.36.0, and create
+    the cumulative executable harness used by every later session.
+  nodes:
+  - id: knowledge-polars-version-contract
+    title: Pinned backend contract
+    summary: Separate version facts, documented guarantees, executable observations, and Stratum policy.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-logical-ir
+    - concept-dispatch
+  - id: knowledge-polars-divergence-axes
+    title: Eight divergence axes
+    summary: Classify index, missingness, dtype, ordering, shape, context, key-cardinality, and failure
+      differences.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-logical-ir
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-version-contract
+  - id: knowledge-polars-parity-harness
+    title: Differential parity harness
+    summary: Record comparable values, schemas, order, exceptions, warnings, and justified normalization.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-logical-ir
+    - concept-dispatch
+    builds_on:
+    - knowledge-polars-divergence-axes
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+- source_id: source-python-cheatsheets
+  authority: reference
+- source_id: source-stratum-paper
+  authority: reference
+- source_id: source-scalable-dataframe-systems-paper
+  authority: reference
 source_selections: []
-working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/notes.md
+current_study_map: study-map-job-polars-pandas-fluency
 artifacts: {}
 workspace_ids: []
-current_study_map: study-map-job-polars-pandas-fluency
+working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/notes.md

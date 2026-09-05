@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s3b-md-20260903",
+  "idempotency_key": "polars-sheet-s3b-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:719ca34447ee2aa53f0a1f8ad78ff836d4caa073edc82ccb248b6597efa7f98b",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 3,
+    "study-map-job-polars-selection-backend": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "stage_id": "stage-polars-selection-head-tail-sample",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s3b-exercises.md",
+    "label": "Exercise sheet - HEAD/TAIL/SAMPLE, runtime operands, randomness contract",
+    "file_sha256": "sha256:d53abaecd4016f4597a15b29e6856bb25fd5badf2d84d4a72e707cac1916ed23"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:0b44ac0bb7a70ab4430dff5d1b01bcee445a23ee61adaaa24cadaf992d8204cd"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s8b-ck-0904",
+  "idempotency_key": "pl-s8b-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:e93cb12e1d0882db515e21d0b93c63c28949df738445af5eb0a54070f4ec09ba",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 4,
+    "study-map-job-polars-lazy-udf-interop": 3
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "stage_id": "stage-polars-16-udfs-fallbacks-and-native-expression-rewrites",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s8b-check.py",
+    "label": "Answer-key self-check (18 assertions)",
+    "file_sha256": "sha256:16b633cfc4fa7d660807471feae3f08688142b2f23d446ba92afaf4c5db083f9"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:2262c4a1e6bc9a397b4dbd85f482b6fa42a1bdbc4ec1cea84ae499e56e27dce8"
+  }
+}

@@ -1,0 +1,556 @@
+id: study-map-job-polars-joins-reshape
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-joins-reshape
+status: ready
+current_stage: stage-polars-12-joins-i-relational-semantics-and-key-cardinality
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-12-joins-i-relational-semantics-and-key-cardinality
+  number: 1
+  title: Relational joins and key cardinality
+  status: pending
+  objective: 'Derive join row counts from key multiplicity before writing any join, then establish the
+    four places the two libraries disagree about what a join means: null-key matching, suffix policy,
+    key-column coalescing, and validation errors.'
+  done_when:
+  - Row counts for all seven join kinds predicted from key multiplicity BEFORE running, and each derivation
+    explained - including why semi and anti are filters rather than row-combining operations.
+  - 'The Polars-only kinds exercised: semi, anti, join_asof, join_where, with a statement of what pandas
+    needs extra steps for.'
+  - 'A join plan read: the INNER JOIN node, both PLAN ON sections, and which columns each side''s scan
+    reads.'
+  - The null-key divergence recorded as a harness case - pandas matches null keys by default, Polars does
+    not - with the Polars keyword that switches it named.
+  - 'The contradiction noted and explained: pandas'' merge matches nulls while its element-wise comparison
+    says two nulls are unequal.'
+  - Both suffix rules recorded (Polars suffixes only the right, pandas suffixes both) and a written decision
+    on which naming a compatibility layer produces.
+  - 'The full-join key trap confirmed by execution: without coalesce=True the k column is missing every
+    right-only key, while pandas'' outer merge coalesces by default.'
+  - Both validate=1:1 exception types recorded, with a decision on re-raise versus translate.
+  - Eight pandas merge/join calls normalized to JoinOp fields on paper, with unsupported features named
+    rather than approximated.
+  - '`s7a-check.py` passes (29 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-join-family
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s7a-sheet
+    kind: practise
+    label: Stage exercise sheet - cardinality first, then the four silent divergences
+    locator: attachments/s7a-exercises.md - Part A Task A1 before anything else
+    angle: Lands on the full join whose key column is missing every right-only key - the module's most
+      dangerous default so far.
+    angle_detail: 'Part B works through four divergences that all change results without raising. The
+      one to read twice is B3: `A.join(B, on=''k'', how=''full'')` produces `k` AND `k_right`, and the
+      `k` column holds [''a'',''b'',None] while the real key set is {a,b,c} — the right-only key lives
+      only in `k_right`. pandas'' outer merge coalesces by default, so a translated query silently changes
+      which keys are visible. `coalesce=True` repairs it.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-exercises.md
+  - id: resource-polars-s7a-check
+    kind: practise
+    label: Answer-key self-check - 29 assertions across seven join kinds
+    locator: attachments/s7a-check.py
+    angle: Asserts the full-join trap by column contents, so a shape-based comparison cannot report it
+      clean.
+    angle_detail: It also pins the pandas contradiction — merge matches null keys while `Series == Series`
+      says two nulls are unequal — as two assertions side by side, which is the clearest way to hold a
+      fact that sounds wrong when stated in prose.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-check.py
+  - kind: practise
+    label: Duplicate-key multiplication
+    id: resource-polars-12-90-duplicate-key-multiplication
+    locator: Sheet Part A Task A1 - predict all seven row counts before running
+    scope_triage: required-now
+    angle: The counting discipline that makes every later join finding interpretable.
+    angle_detail: The fixture is built so that the 2x1 and 1x2 products sum to the same number a wrong
+      method would give — so a right answer reached by the wrong route is indistinguishable unless you
+      write the derivation down. Do the arithmetic per key, not per frame.
+  - kind: practise
+    label: Normalize eight pandas merge calls to JoinOp fields, on paper
+    id: resource-polars-09-13-translate-eight-pandas-merge-join-call
+    locator: Sheet Part C Task C1 - on=, left_on/right_on, left_index, outer, suffixes, validate, indicator,
+      dtype mismatch
+    scope_triage: required-now
+    angle: 'Paper-only, deliberately: the point is the field set, and a keyboard turns it into a coding
+      exercise.'
+    angle_detail: Eight calls chosen so that three of them have no clean normalization — `left_index=True`,
+      `indicator=True`, and a merge on keys of different dtypes. Name each of those unsupported rather
+      than approximating it; an approximated field is a field that will be wrong silently, and Stage 2
+      has to build on whatever you decide here.
+  - kind: reference
+    label: Official reference — docs.pola.rs — polars.DataFrame.join.html
+    id: resource-polars-09-04-official-reference-docs-pola-rs-polars
+    locator: 'DataFrame.join parameters: how, on, left_on/right_on, suffix, validate, nulls_equal, coalesce,
+      maintain_order'
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.join.html
+    scope_triage: reference-only
+    angle: The eight parameters that decide everything this stage measures; three of them have no pandas
+      equivalent.
+    angle_detail: '`nulls_equal`, `coalesce` and `maintain_order` are the three to read carefully — each
+      corresponds to a divergence on the sheet. `coalesce` in particular defaults to a value that makes
+      the full join''s key column incomplete, which is defensible and dangerous at once, so read its entry
+      before Task B3 rather than after.'
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-09-01-required-core-python-polars-the-defini
+    locator: Ch 14 §Join Strategies pp. 404-408, §Joining on Multiple Columns pp. 409-410, §Validation
+      pp. 410-411
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The book's join chapter, and its three pages on validation are the only prose treatment you
+      have of that argument.
+    angle_detail: 'pp. 404-408 enumerates the strategies including semi and anti, which is the part worth
+      reading closely — the book presents them as first-class rather than as exotic. pp. 410-411 on validation
+      is short and directly usable. Early-release edition: the `coalesce` and `nulls_equal` parameters
+      in particular should be confirmed against 1.36.0 before you write them into a mapping, since parameter
+      names in this area have moved between releases.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — joins
+    id: resource-polars-09-03-official-reference-docs-pola-rs-joins
+    locator: §'Joins' - the strategy table, then the section on join validation
+    url: https://docs.pola.rs/user-guide/transformations/joins/
+    scope_triage: reference-only
+    angle: The user-guide framing, which names semi/anti as strategies rather than as filters - worth
+      arguing with.
+    angle_detail: Read it after Task A1. The page presents seven strategies as one list; the sheet asks
+      you to notice that two of them do not combine rows at all and therefore belong to a different category.
+      Holding both framings is useful — the docs' one tells you where to find them, yours tells you when
+      to use them.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — merging.html
+    id: resource-polars-09-05-official-reference-pandas-pydata-org-m
+    locator: §'Brief primer on merge methods' and §'Checking for duplicate keys' (the validate argument)
+    url: https://pandas.pydata.org/docs/user_guide/merging.html
+    scope_triage: reference-only
+    angle: pandas' relational vocabulary and its validate semantics, which differ from Polars' in message
+      quality.
+    angle_detail: 'The validate section is the one to read: pandas'' MergeError lists the offending duplicate
+      keys, where Polars'' ComputeError states only that validation failed. If your layer translates the
+      exception, that difference in diagnostic quality is something you can choose to preserve — and it
+      is worth preserving.'
+  - kind: reference
+    label: Optional depth — docs.pola.rs — joins
+    id: resource-polars-09-07-optional-depth-docs-pola-rs-joins
+    locator: §'Asof join' and §'Join where' (non-equi joins)
+    url: https://docs.pola.rs/user-guide/transformations/joins/#non-equi-joins
+    scope_triage: helpful-now
+    angle: Two join forms pandas reaches only through merge_asof or a cross-join-plus-filter.
+    angle_detail: Promoted from optional depth because Part A exercises both. `join_asof` has a pandas
+      counterpart in `merge_asof`; `join_where` does not, and its pandas equivalent is a cross join followed
+      by a filter — which is a different cost profile, not just a different spelling. Worth knowing before
+      you tell a caller that a predicate join is unsupported.
+  - kind: practise
+    label: Polars Cookbook companion notebooks - written against Polars 1.x
+    url: https://github.com/PacktPublishing/Polars-Cookbook
+    angle: The one local-book alternative that targets 1.x rather than an early-release edition, and it
+      is runnable.
+    angle_detail: 'Yuki Kakegawa''s Polars Cookbook (Packt), foreword by Marco Gorelli, a Polars core
+      contributor. The book is ''over 60 practical recipes ... using Python Polars 1.x'' — so unlike the
+      Definitive Guide PDF in this module, which is an early-release edition, its API surface is contemporary
+      with your pinned 1.36.0. The repository is MIT-licensed and carries one notebook per chapter plus
+      a `data/` directory, so you can run the recipes without buying the book. Twelve chapters: 1 getting
+      started, 2 reading/writing, 3 data analysis, 4 data transformation, 5 missing data, 6 strings, 7
+      nested data structures, 8 reshaping and tidying, 9 time series, 10 interoperability, 11 cloud sources,
+      12 testing and debugging. VERIFY on first open which chapter carries the join recipes — the chapter
+      titles are confirmed from the published contents, the recipe-level mapping is not, and this module
+      does not route a locator it has not checked.'
+    scope_triage: helpful-now
+    id: resource-polars-s7-cookbook-repo
+  - kind: read
+    label: Local material — 03.07-Merge-and-Join.ipynb
+    id: resource-polars-09-02-local-material-03-07-merge-and-join-ip
+    source_id: source-pydata-handbook
+    locator: '§''Specification of the Merge Key'' and §''Overlapping Column Names: the suffixes keyword'''
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+    scope_triage: reference-only
+    angle: pandas' own framing of merge as a relational-algebra operation, plus the suffix behaviour this
+      stage compares.
+    angle_detail: 'Read the two named sections only. The suffixes discussion is the pandas half of Task
+      B2 and is worth having in the author''s words, because the both-sides-suffixed behaviour looks arbitrary
+      until you see it presented as symmetric-by-design. Pre-3.0 notebook: use it for the model, not for
+      current defaults.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-12-99-axis-pass
+    locator: Sheet Part B, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: Four join divergences, all silent, all changing results rather than raising.
+    angle_detail: Null-key matching changes the row count; suffixes change the column names; the uncoalesced
+      full join changes a key column's contents; validation changes the exception type. Only the last
+      one is loud. Commit all four, and assert the full-join case on the CONTENTS of the key column rather
+      than on the shape.
+  - id: resource-polars-12-joins-i-relational-semantics-and-key-cardinality-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-exercises.md
+    label: Exercise sheet - join cardinality, null keys, the full join that loses keys
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-check.py
+    label: Answer-key self-check (29 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/notes.md
+- id: stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit
+  number: 2
+  title: Build a pandas-Polars join compatibility layer
+  status: pending
+  objective: Build a standalone pandas-Polars join compatibility layer from blank - config, two executors,
+    and a parity suite - so that every field in it exists because a measured divergence demanded it, and
+    every boundary you decline to support is declined in writing.
+  done_when:
+  - Ten native joins written from intent first, including semi/anti for existence checks, validate for
+    a cardinality contract, and join_asof/join_where.
+  - A JoinConfig defined from blank, importing nothing from Stratum, where every field is justified by
+    a named Stage 1 finding.
+  - At least sixteen parity cases built, covering shared/differing/multiple keys, overlapping columns,
+    duplicate keys on each side, null keys, no matches, empty frames, two dtype-mismatch cases, and every
+    join kind.
+  - The empty-frame case checked for dtypes rather than only row count, since both libraries agree it
+    is empty and can disagree about its schema.
+  - 'The Int64/UInt64 key case decided: the Session 4 supertype rule sends the comparison through Float64,
+    so keys above 2^53 can collide - recorded as unsupported or as a required explicit cast, not silently
+    joined.'
+  - A comparison helper that sorts only for join kinds with no order contract, with the contractual ones
+    named and evidenced.
+  - The suffix/coalesce algorithm reproduced closed-book, including the case where a caller-supplied suffix
+    collides with an existing column.
+  - Seven boundary decisions written - index joins, cross-with-predicate, indicator, validate, non-equi,
+    key dtype mismatch, sort - with no blanks.
+  - '`s7b-check.py` passes (20 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-join-family
+  - concept-dispatch
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s7b-sheet
+    kind: practise
+    label: Stage exercise sheet - JoinConfig from blank, sixteen parity cases, seven boundaries
+    locator: attachments/s7b-exercises.md - Part B Task B1 without opening any Stratum file
+    angle: Requires every config field to be justified by a measured finding, so the layer cannot be copied
+      into existence.
+    angle_detail: 'The two cases that decide the design are 9 and 10. Case 9: an empty frame joined to
+      a non-empty one has a schema, and the two libraries can agree it is empty while disagreeing about
+      its dtypes — a comparison that short-circuits on row count never sees it. Case 10: an Int64 key
+      against a UInt64 key resolves through Float64 by the Session 4 supertype rule, so ids above 2^53
+      can collide. That one should almost certainly be refused rather than joined.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-exercises.md
+  - id: resource-polars-s7b-check
+    kind: practise
+    label: Answer-key self-check - 20 assertions on the corpus
+    locator: attachments/s7b-check.py - after you have built your own suite, not before
+    angle: Includes the colliding-suffix case and a worked indicator column, both of which are decisions
+      rather than defaults.
+    angle_detail: It asserts that a caller-supplied suffix which collides with an existing column raises
+      DuplicateError in Polars and MergeError in pandas — the case neither library documents prominently
+      and every compatibility layer eventually hits. It also builds pandas' `indicator=True` out of a
+      coalesced full join and a when/then chain, which turns a Part C decision from 'unsupported' into
+      a costed choice.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-check.py
+  - kind: practise
+    label: Retrieval - redo three Stage 1 predictions cold
+    id: resource-polars-10-09-retrieval-redo-three-stage-9-semantic
+    locator: 'Before opening either implementation: null-key row count, suffix names, full-join key contents'
+    scope_triage: helpful-now
+    angle: Three specific predictions, chosen because each one silently changes a result.
+    angle_detail: Not a warm-up. If any of the three comes back wrong, that divergence is not yet learned
+      and the compatibility layer you build on it will encode the wrong default. Redo the failed one against
+      the Stage 1 sheet before continuing.
+  - kind: reference
+    label: Official reference — docs.pola.rs — polars.DataFrame.join.html
+    id: resource-polars-10-03-official-reference-docs-pola-rs-polars
+    locator: DataFrame.join - the full parameter list, read as the field set your JoinConfig must cover
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/api/polars.DataFrame.join.html
+    scope_triage: reference-only
+    angle: 'Read as a checklist against your own config: any parameter here you did not model is a gap.'
+    angle_detail: Task B1 asks you to derive the field set rather than copy it. This page is the answer
+      key for that derivation, so read it after you have written your config, and treat each parameter
+      you missed as a question about which divergence you failed to notice in Stage 1.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — pandas.DataFrame.merge.html
+    id: resource-polars-10-04-official-reference-pandas-pydata-org-p
+    locator: DataFrame.merge parameters, especially indicator, validate, sort, and the index-join arguments
+    url: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html
+    scope_triage: reference-only
+    angle: The pandas surface your layer must accept, including three arguments Polars has nothing for.
+    angle_detail: '`indicator=True`, `left_index=True` and `sort=` are the three with no Polars counterpart.
+      Each needs a Part C decision. `indicator` is the interesting one: it is expressible as a `when/then`
+      chain over the null-ness of the joined columns after a coalesced full join, so ''unsupported'' is
+      a choice rather than a necessity — the checker builds it to show that.'
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-10-01-required-core-python-polars-the-defini
+    locator: Ch 14 §Validation pp. 410-411 and §Inexact Joining pp. 412-420
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: Re-read for the two sections a compatibility layer has to decide about, not for the strategies
+      again.
+    angle_detail: You read the strategies in Stage 1. What this stage needs is the validation contract
+      and the inexact-join surface — the latter because `join_asof` and `join_where` are the two boundaries
+      where 'translate the pandas call' stops being possible and the layer has to say so. pp. 417-420's
+      marketing-attribution use case is a good worked example of why an asof join is not a convenience.
+  - kind: read
+    label: Local material — 03.07-Merge-and-Join.ipynb
+    id: resource-polars-10-02-local-material-03-07-merge-and-join-ip
+    source_id: source-pydata-handbook
+    locator: '§''Example: US States Data'' - a realistic multi-key merge with mismatched keys'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.07-Merge-and-Join.ipynb
+    scope_triage: reference-only
+    angle: One worked example with real messiness, useful as a parity corpus rather than as instruction.
+    angle_detail: The states example has differing key names, missing matches and a genuine need for validation,
+      so it converts cleanly into three or four of the sixteen parity cases. Take the data and the shape
+      of the problem; do not take its pandas idioms, which predate 3.0.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-13-99-axis-pass
+    locator: Sheet Part B Task B2, then deposit the whole corpus into the Session 1 harness
+    scope_triage: required-now
+    angle: This stage's output IS a parity corpus; the axis pass is where it stops being local to this
+      stage.
+    angle_detail: Sixteen cases is the largest single deposit in the module. Give each one a name recording
+      the axis and this stage, then re-run the whole harness — a normalization added here to make joins
+      comparable is exactly the kind of change that can silence an earlier session's finding.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — SQL FROM clause
+    id: resource-polars-10-08-optional-depth-docs-pola-rs-from
+    locator: SQL FROM/JOIN clause support in the Polars SQL interface
+    url: https://docs.pola.rs/api/python/stable/reference/sql/clauses.html#from
+    scope_triage: deferred
+    angle: A third opinion on join semantics, useful when pandas and Polars disagree and you need a tiebreak.
+    angle_detail: 'Deferred, and genuinely optional. Its value is as a reference point: SQL''s answers
+      to null-matching and output ordering are the ones the relational tradition settled on, and knowing
+      where both libraries depart from SQL tells you which behaviour will surprise a data engineer reading
+      your layer''s output.'
+  - id: resource-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-exercises.md
+    label: Exercise sheet - JoinConfig from blank, 16 parity cases, boundaries
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-check.py
+    label: Answer-key self-check (20 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/notes.md
+- id: stage-polars-14-concatenation-and-reshaping
+  number: 3
+  title: Concatenation and reshaping
+  status: pending
+  objective: Learn the five Polars concat modes as a set and the reshaping verbs natively, establish where
+    pandas' permissive defaults differ from Polars' strict ones, and carry out an explicit currency pass
+    on the part of the API that is moving fastest in this module.
+  done_when:
+  - All five concat modes run and tabulated, with the pandas-equivalent mode identified and a reason given
+    for why Polars made the strict one the default.
+  - '`align` understood as a join-and-union rather than a concatenation, and named as the thing usually
+    wanted when someone reaches for axis=1.'
+  - Eight reshaping operations written from intent, including unnest and partition_by.
+  - 'The lazy boundary explained: a pivot''s output schema depends on the data, so LazyFrame.pivot requires
+    the output columns declared up front.'
+  - The concat default divergence recorded as a harness case - Polars raises ShapeError naming both columns
+    where pandas silently unions into a wider frame of nulls.
+  - vertical versus vertical_relaxed settled against the Session 4 supertype rule, and pandas identified
+    as the relaxed one.
+  - Horizontal concat run and its 1.36 padding behaviour recorded, together with the note that 2.0 makes
+    it an error and moves padding to how='horizontal_extend'.
+  - pivot on repeated (index, on) pairs run with and without aggregate_function, and mapped onto pandas'
+    pivot/pivot_table split.
+  - The melt deprecation warning captured verbatim, and three 2.0 migration notes written - melt removal,
+    horizontal concat, and the streaming default's effect on row order.
+  - The unpivot custom-naming behaviour pinned in the harness BY COLUMN CONTENT rather than by column
+    name, with a re-check scheduled for the 2.0 move.
+  - '`s7c-check.py` passes (24 assertions).'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-join-family
+  - concept-projection-family
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-s7c-sheet
+    kind: practise
+    label: Stage exercise sheet - five concat modes, reshaping verbs, and a currency pass
+    locator: attachments/s7c-exercises.md - Part A, then Part C in full
+    angle: 'Carries the module''s explicit currency section: three API changes verifiable today, one behaviour
+      to pin rather than explain.'
+    angle_detail: 'Part C is the part that keeps this stage from expiring. It captures the `melt` deprecation
+      warning verbatim, records the three 2.0 changes that reach into your own code, and ends on a result
+      you should pin without explaining: `unpivot(variable_name=''var'', value_name=''val'')` returns
+      columns ordered [''i'',''val'',''var''] in which the column named `val` holds the variable names
+      and the column named `var` holds the values. The default naming is unaffected and pandas'' melt
+      attaches the names as expected. Assert it by content, avoid the two keywords in emitted code, and
+      re-check on the 2.0 move.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-exercises.md
+  - id: resource-polars-s7c-check
+    kind: practise
+    label: Answer-key self-check - 24 assertions including the pinned naming behaviour
+    locator: attachments/s7c-check.py
+    angle: Asserts the unexplained result by column content, which is the only form of that test that
+      stays meaningful.
+    angle_detail: A test asserting the column NAMES would pass whatever the contents were, and a test
+      asserting a hypothesis about why would be a test of the hypothesis. Asserting that the column named
+      `val` contains ['p','p','q','q'] records precisely what was observed and fails the moment it stops
+      being true.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-check.py
+  - kind: reference
+    label: Official reference — docs.pola.rs — concatenation
+    id: resource-polars-11-04-official-reference-docs-pola-rs-concat
+    locator: §'Concatenation' - the how= table covering vertical, horizontal, diagonal and align
+    url: https://docs.pola.rs/user-guide/transformations/concatenation/
+    scope_triage: reference-only
+    angle: The mode table, which is the single most useful page for this stage.
+    angle_detail: 'Read it before Part A and keep it open. The `align` row is the one that repays attention:
+      it joins on common columns, which makes it the answer to a question people usually ask with `axis=1`
+      and then work around when the alignment does not happen.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — transformations
+    id: resource-polars-11-05-official-reference-docs-pola-rs-transf
+    locator: §'Transformations' - pivot and unpivot, including the note on pivot being an eager operation
+    url: https://docs.pola.rs/user-guide/transformations/
+    scope_triage: reference-only
+    angle: States the lazy boundary explicitly, which is the conceptual half of Task A3.
+    angle_detail: The page explains that a pivot's output columns depend on the data, so a lazy plan cannot
+      resolve its schema. That is the general principle — data-dependent schemas are a boundary for any
+      query planner — and it is worth carrying into Session 9, since a Stratum operation with a data-dependent
+      output schema has the same problem.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — polars.concat.html
+    id: resource-polars-11-09-optional-depth-docs-pola-rs-polars-con
+    locator: polars.concat - the full how= enum including horizontal_extend and the relaxed variants
+    url: https://docs.pola.rs/api/python/stable/reference/api/polars.concat.html
+    scope_triage: helpful-now
+    angle: The API reference is where horizontal_extend appears, and it is the 2.0 migration target.
+    angle_detail: Promoted from optional depth because Part C needs it. `horizontal_extend` is the mode
+      that keeps 1.36's padding behaviour after 2.0 makes `horizontal` strict, so any code of yours that
+      relies on the pad should be changed to name it explicitly now rather than after the upgrade breaks
+      it.
+  - id: resource-polars-s7c-upgrade-2
+    kind: read
+    label: Polars 2.0 upgrade guide - the breaking changes that reach this module
+    locator: docs.pola.rs/releases/upgrade/2/ - §Breaking changes, §Casts no longer supported, §API reshapes
+    url: https://docs.pola.rs/releases/upgrade/2/
+    angle: The authoritative list of what breaks, and three of its entries are operations this session
+      teaches.
+    angle_detail: 'Read three sections. §API reshapes: `melt` removed in favour of `unpivot(index=, on=)`,
+      and `concat(how=''horizontal'')` now requires equal heights with padding moved to `horizontal_extend`.
+      §Breaking changes: `collect()` defaults to the streaming engine, which does not guarantee row order
+      for group_by, joins or unpivot — so incidental ordering your tests currently rely on will stop arriving,
+      and the fix is `maintain_order` rather than a re-sorted expectation. §Casts: string-to-temporal
+      casts are removed, which reaches Session 5. This is a release candidate, so it is a forecast rather
+      than today''s contract — it belongs here as migration planning, and Session 10''s transition lab
+      is where it is acted on.'
+    scope_triage: helpful-now
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-11-01-required-core-python-polars-the-defini
+    locator: Ch 14 §Vertical and Horizontal Concatenation pp. 421-431; Ch 15 §Pivot pp. 437-442 and §Unpivot
+      pp. 443-445
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The book enumerates the concat modes in one place, which is the only way to learn them as a
+      set.
+    angle_detail: 'pp. 421-431 walks vertical, horizontal, diagonal, align, relaxed, stacking, appending
+      and extending — eight named operations where pandas has one function and two axis values. Read it
+      as a vocabulary list. IMPORTANT currency caveat: this is the chapter most affected by the 2.0 changes,
+      since `melt` is renamed and horizontal concat''s padding becomes an error. Treat its reshaping API
+      names as 1.x and check each against the upgrade guide routed on this stage.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — reshaping.html
+    id: resource-polars-11-07-official-reference-pandas-pydata-org-r
+    locator: §'Reshaping by melt' and §'Pivot tables' - the parameter names 2.0 aligns Polars toward
+    url: https://pandas.pydata.org/docs/user_guide/reshaping.html
+    scope_triage: reference-only
+    angle: pandas' melt is the naming Polars is converging on, which is why 1.36's melt is deprecated.
+    angle_detail: 'Worth noting the direction of travel: Polars renamed `melt` to `unpivot` and moved
+      to `index`/`on`, so the two libraries'' reshaping vocabularies are diverging in name while converging
+      in concept. A layer written against `melt` today is a layer that breaks on the 2.0 upgrade.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — merging.html
+    id: resource-polars-11-06-official-reference-pandas-pydata-org-m
+    locator: §'Concatenating objects' - the join and ignore_index parameters
+    url: https://pandas.pydata.org/docs/user_guide/merging.html
+    scope_triage: reference-only
+    angle: pandas' concat surface, read for the two parameters that have no Polars analogue.
+    angle_detail: '`join=''inner''` on a concat is pandas expressing what Polars would express by choosing
+      a different `how`. Map the two surfaces onto each other once, in writing; they cover the same ground
+      with different primitives, and a per-call translation without that map produces inconsistent choices.'
+  - kind: read
+    label: Local material — 03.06-Concat-And-Append.ipynb
+    id: resource-polars-11-02-local-material-03-06-concat-and-append
+    source_id: source-pydata-handbook
+    locator: §'Duplicate indices' and §'Concatenation with joins'
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.06-Concat-And-Append.ipynb
+    scope_triage: reference-only
+    angle: pandas' concat as an index operation, which is what makes its permissive default coherent.
+    angle_detail: 'The duplicate-index section explains why pandas'' concat produces what it produces:
+      it is aligning labels, not stacking buffers. That framing makes the divergence predictable rather
+      than arbitrary — and it is also why Polars, with no labels, had to make a different choice.'
+  - kind: read
+    label: Local material — 03.09-Pivot-Tables.ipynb
+    id: resource-polars-11-03-local-material-03-09-pivot-tables-ipyn
+    source_id: source-pydata-handbook
+    locator: §'Pivot Table Syntax' and the aggfunc discussion
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.09-Pivot-Tables.ipynb
+    scope_triage: reference-only
+    angle: The pivot/pivot_table split that Polars collapses into one function plus an argument.
+    angle_detail: 'Read the aggfunc section specifically: it is the pandas concept that maps onto Polars''
+      `aggregate_function`, and understanding that pandas has two functions where Polars has one argument
+      is the whole of the translation. Pre-3.0 notebook; the concept is stable, the defaults are not.'
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-14-99-axis-pass
+    locator: Sheet Part B and Part C, then deposit into the Session 1 harness
+    scope_triage: required-now
+    angle: This stage produces one divergence and one unexplained behaviour; both belong in the harness
+      for different reasons.
+    angle_detail: The concat default is a divergence you understand, so commit it with a normalization
+      decision. The unpivot naming result is a behaviour you do NOT understand, so commit it as a pinned
+      observation asserted by column content — that is exactly what a differential harness is for, and
+      it is how you find out the day it changes.
+  - id: resource-polars-14-concatenation-and-reshaping-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: 'Migration evidence: the pre-split stage guide at its original path.'
+    angle_detail: Retained for traceability; the working content now lives in this stage's exercise sheet.
+    scope_triage: reference-only
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-14-concatenation-and-reshaping/notes.md
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-exercises.md
+    label: Exercise sheet - five concat modes, reshaping, and a 2.0 currency pass
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/attachments/s7c-check.py
+    label: Answer-key self-check (24 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-14-concatenation-and-reshaping/notes.md
+shelving:
+  state: none

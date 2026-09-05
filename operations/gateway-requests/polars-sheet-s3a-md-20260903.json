@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s3a-md-20260903",
+  "idempotency_key": "polars-sheet-s3a-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:700efed8c0ef098b4d9e3a52b96b6cbc2ebd2b53fbbb02c452008eeb0c4df8bb",
+  "expected_revisions": {
+    "unit-job-polars-selection-backend": 1,
+    "study-map-job-polars-selection-backend": 0
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-selection-backend",
+    "stage_id": "stage-polars-04-selection-and-projection-index-logic-versus-expr",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s3a-exercises.md",
+    "label": "Exercise sheet - Polars-first selection, plan reading, pandas contract",
+    "file_sha256": "sha256:85c6a4a56c4fb88a95ca19b56b79412a1dad6c1798d3f6b3630715e2d508e3b5"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:f421fc0eb81daa0fa4990ab3fca11fc8d90612ddbafe8187c45d1cc7b63e8f13"
+  }
+}

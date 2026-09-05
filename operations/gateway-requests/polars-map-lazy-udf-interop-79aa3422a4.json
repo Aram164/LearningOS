@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-map-lazy-udf-interop-79aa3422a4",
+  "idempotency_key": "polars-map-lazy-udf-interop-79aa3422a4",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:9946b253c1a77432411afb143c8403f121ff8586f956a955bbb3d5897d721d00",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 7,
+    "study-map-job-polars-lazy-udf-interop": 6
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "file": "work/active/workspace-job-polars-plan/outputs/map-drafts/unit-job-polars-lazy-udf-interop-study-map.yaml",
+    "file_sha256": "sha256:79aa3422a487e0e7a2ab48556b20201048e139e7cdd050f707d1b388e4148f23",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:c4253c8254d0f6e1fec054d592d2e3365e31a4fc2a40951714fc7d8f2bee779a"
+  }
+}

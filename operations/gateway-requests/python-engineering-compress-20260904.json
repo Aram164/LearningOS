@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-python-engineering-compress-20260904",
+  "idempotency_key": "python-engineering-compress-20260904",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17",
+  "expected_revisions": {
+    "unit-job-python-engineering-fluency": 1,
+    "study-map-job-python-engineering-fluency": 1
+  },
+  "payload": {
+    "unit_id": "unit-job-python-engineering-fluency",
+    "file": "/private/tmp/claude-501/-Users-aramaljanadi-Desktop-semestercontext/3568eb4c-bb15-437e-8454-7a54f37f6280/scratchpad/study-map-python.yaml",
+    "file_sha256": "sha256:17e4bd093af20dabb6799dc126ffecb248bf78c525eede344ec5098a41fe270a",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:6b402c913f720733afda9f6b13b7e39a074d226c7aef795cfbf2bc622c4c1479"
+  }
+}

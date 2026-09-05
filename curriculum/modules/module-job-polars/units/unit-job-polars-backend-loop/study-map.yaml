@@ -1,0 +1,227 @@
+id: study-map-job-polars-backend-loop
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-backend-loop
+status: ready
+current_stage: stage-polars-backend-trace-lifecycle
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-backend-trace-lifecycle
+  number: 1
+  title: Trace capture, logical rewrite, selection, and execution
+  status: pending
+  objective: Follow one pandas call from captured DataOp through specialized logical IR and late physical
+    backend selection, naming the semantic owner at every boundary.
+  done_when:
+  - Produce traces for SelectionOp, AssignMapOp, AggregateOp, and JoinOp using current Stratum files.
+  - For each trace, identify which facts exist at plan time and which require runtime inputs or fit-time
+    schema.
+  - Explain why Stratum's DAG-level laziness and a Polars physical kernel are related but not identical
+    abstractions.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-logical-ir
+  - concept-op-rewriting
+  - concept-dispatch
+  scope_triage: required-now
+  resources:
+  - id: resource-stratum-paper-architecture
+    kind: read
+    label: stratum paper - architecture
+    locator: Sections 4.1-4.3, PDF viewer pages 4-5
+    angle: The authoritative system-level reason for logical operators and late physical selection.
+    angle_detail: Trace the paper's declarative abstraction, operator lowering, and operator selection
+      into the current repository; do not infer unimplemented behavior.
+    scope_triage: required-now
+    vault_path: material://source-stratum-paper/stratum-paper.pdf
+    source_id: source-stratum-paper
+    route_id: route-stratum-paper-s09
+  - id: resource-note-extract-dataframe-op
+    kind: read
+    label: extract_dataframe_op dispatch map
+    locator: Complete frame-like branch dispatch map
+    angle: Shows exactly how generic Python operations become specialized dataframe IR.
+    angle_detail: Reproduce four branches from a blank diagram and verify them against current source.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/note-stratum-extract-dataframe-op.md
+  - id: resource-note-selectionop-loop
+    kind: read
+    label: SelectionOp logical note
+    locator: Complete note
+    angle: First of four repeated implementation-loop anchors.
+    angle_detail: Use the same checklist later for AssignMapOp, AggregateOp, and JoinOp.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-selectionop.md
+  - id: resource-backend-four-traces
+    kind: practise
+    label: Four operator lifecycle traces
+    locator: Exercise 1 - capture -> rewrite -> support -> select -> resolve -> execute -> compare
+    angle: Produces executable evidence instead of familiarity from reading.
+    angle_detail: Each trace names inputs, logical fields, support decision, runtime resolutions, physical
+      kernel, fallback, and parity tests.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-trace-lifecycle/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-backend-decision-loop
+  number: 2
+  title: Apply the backend implementation decision loop
+  status: pending
+  objective: 'Use one repeatable decision procedure for every physical operation: normalize the pandas
+    contract, check support on raw logical fields, resolve runtime operands, choose native/adapt/fallback/unsupported,
+    execute, and compare through the parity harness.'
+  done_when:
+  - Write the decision loop as a review checklist and apply it to four operator families.
+  - Demonstrate one bug caused by resolving too early and one caused by checking support too late.
+  - Every fallback and unsupported case reports a reason tied to an observable contract dimension.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dispatch
+  - concept-logical-ir
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - id: resource-depth-dispatch
+    kind: read
+    label: Python Depth Drills - interfaces and dispatch
+    locator: Stage 8 guide and notebook; especially Q8.10 and Q8.11
+    angle: Practices the mechanism and judgment behind supports/cost registries and subclass dispatch.
+    angle_detail: Use the two-key Selector drill as a miniature physical implementation registry, then
+      compare it with Stratum's current dispatch.
+    scope_triage: required-now
+    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
+    source_id: source-python-depth-drills
+    route_id: route-python-depth-drills-s09
+  - id: resource-note-joinop-loop
+    kind: read
+    label: JoinOp logical note
+    locator: Complete note
+    angle: Exercises the same loop on binary inputs, key flags, and chained joins.
+    angle_detail: Classify every logical field before looking at the physical implementation.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-joinop.md
+  - id: resource-backend-decision-table
+    kind: practise
+    label: Physical backend decision table
+    locator: Exercise 2 - four families x normalize/support/resolve/classify/execute/verify
+    angle: Produces executable evidence instead of familiarity from reading.
+    angle_detail: The table is complete only when each cell cites code or an executable fixture and no
+      capability is inferred from a method name.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-decision-loop/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-backend-family-transfer
+  number: 3
+  title: Transfer the loop across four logical families
+  status: pending
+  objective: Implement or reconstruct one small Polars kernel in Selection, Map/Projection, Aggregation,
+    and Join to prove expression fluency transfers beyond the motivating file.
+  done_when:
+  - Close the implementation and rebuild one bounded kernel per family from the logical contract and tests.
+  - Each kernel has adversarial tests and a declared fallback/unsupported surface.
+  - Review the four implementations for duplicated translation policy and extract only a proven shared
+    helper.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-selection-family
+  - concept-map-family
+  - concept-aggregation-family
+  - concept-join-family
+  - concept-op-rewriting
+  scope_triage: required-now
+  resources:
+  - id: resource-note-assignmapop-loop
+    kind: read
+    label: AssignMapOp logical note
+    locator: Complete note
+    angle: Map-family transfer case for expression construction and fallback.
+    angle_detail: Rebuild a foldable subset without reading the physical kernel, then compare.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-assignmapop.md
+  - id: resource-note-aggregateop-loop
+    kind: read
+    label: AggregateOp logical note
+    locator: Complete note
+    angle: Aggregation-family transfer case for flags, grouping, and output shape.
+    angle_detail: Use the contention probes as the semantic oracle rather than method-name similarity.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-aggregateop.md
+  - id: resource-note-joinop-family-loop
+    kind: read
+    label: JoinOp logical note
+    locator: Complete note
+    angle: Join-family transfer case for binary inputs and cardinality.
+    angle_detail: Make null equality and output order explicit before choosing Polars parameters.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-joinop.md
+  - id: resource-four-family-rebuild
+    kind: practise
+    label: Four-family rebuild-blind lab
+    locator: Exercise 3 - one bounded physical kernel in Selection, Map/Projection, Aggregation, and Join
+    angle: Produces executable evidence instead of familiarity from reading.
+    angle_detail: A kernel counts only after targeted tests pass and its unsupported/fallback surface
+      is documented.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-family-transfer/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-backend-regression-policy
+  number: 4
+  title: Failure policy and regression gate
+  status: pending
+  objective: Turn semantic decisions into maintainable regression tests that distinguish unsupported input,
+    fallback, translation bugs, Polars execution errors, and intentional divergences.
+  done_when:
+  - Define a failure taxonomy and assert exception type/message only where the contract owns them.
+  - Parameter mapping, expression construction, engine execution, and normalized comparison can fail independently
+    in tests.
+  - At least one generated test finds an edge case not present in the handwritten matrix.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  - concept-dispatch
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-parametric-testing
+    kind: read
+    label: Polars parametric testing
+    locator: Strategies for columns, dataframes, dtypes, lists, profiles, and examples
+    angle: Generates adversarial Polars inputs for regression discovery.
+    angle_detail: Treat this API as unstable and pin it with the backend version; shrink failures into
+      permanent hand-written regression cases. The live page may describe a newer release, so execute
+      each claim against Polars 1.36.0 or pandas 3.0.2 before treating it as backend policy.
+    scope_triage: required-now
+    url: https://docs.pola.rs/api/python/stable/reference/testing.html
+  - id: resource-depth-testing
+    kind: read
+    label: Python Depth Drills SHELF - testing
+    locator: 'SHELF.md section 3a: pytest, pytest.raises, Hypothesis, test design'
+    angle: Supplies the Python testing mechanics the dataframe plan previously assumed.
+    angle_detail: Use parametrization for the explicit matrix and Hypothesis only where an invariant can
+      be stated precisely.
+    scope_triage: required-now
+    vault_path: material://source-python-depth-drills/SHELF.md
+    source_id: source-python-depth-drills
+    route_id: route-python-depth-drills-s09
+  - id: resource-regression-generated-case
+    kind: practise
+    label: Generated-edge regression lab
+    locator: Exercise 4 - generate mixed schemas/nulls/sizes, shrink one failure, and promote it to a
+      named case
+    angle: Produces executable evidence instead of familiarity from reading.
+    angle_detail: The permanent case records versions, raw input, pandas observation, Polars observation,
+      classification, and chosen policy.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/stages/stage-polars-backend-regression-policy/notes.md
+  attachments: []
+  source_feedback: []
+shelving:
+  state: none

@@ -1,0 +1,63 @@
+schema_version: 2
+id: transaction-20260904-021125-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-04T02:11:25+02:00'
+snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
+snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+expected_revisions:
+  unit-job-python-engineering-fluency: 1
+  study-map-job-python-engineering-fluency: 1
+artifact_revisions:
+  study-map-job-python-engineering-fluency:
+    before: 1
+    after: 2
+  unit-job-python-engineering-fluency:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-00-mechanism-diagnostic/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-contribution-loop/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-optimizer-theory-and-rewrite-soundness/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-repair-mechanism-gaps/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/stages/stage-python-rewriter-tests-and-benchmark-evidence/notes.md
+  sha256_before: null
+  sha256_after: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  created: true
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/study-map.yaml
+  sha256_before: 59c948c435750aaa95271ad1bb1172e24f0bfd4b7da1b321ade16e9f27e356f4
+  sha256_after: 900fa5a0bccbcd428d4b6a253486fc31bc54306ea6983e4be334456e23c40db4
+  created: false
+- path: curriculum/modules/module-job-python-engineering/units/unit-job-python-engineering-fluency/unit.yaml
+  sha256_before: 60bdc0792ba79cc95fa705065e34eebdc172e84e76c459bc46f1d356f6d7763b
+  sha256_after: 60bdc0792ba79cc95fa705065e34eebdc172e84e76c459bc46f1d356f6d7763b
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-python-engineering-compress-20260904
+  idempotency_key: python-engineering-compress-20260904
+  intent_sha256: sha256:6b402c913f720733afda9f6b13b7e39a074d226c7aef795cfbf2bc622c4c1479
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:6b402c913f720733afda9f6b13b7e39a074d226c7aef795cfbf2bc622c4c1479

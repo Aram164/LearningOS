@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-114005-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T11:40:05+02:00'
+snapshot_before: sha256:4b9bf30fb74ecf09c3e3741e6ff0a7e3373564384b505b64f01a30971a3cc799
+snapshot_after: sha256:b616e983fb601471b97288d7e69dce87af57698212d0c6413b747c6179735aaf
+expected_revisions:
+  unit-job-polars-lazy-udf-interop: 1
+  study-map-job-polars-lazy-udf-interop: 0
+artifact_revisions:
+  study-map-job-polars-lazy-udf-interop:
+    before: 0
+    after: 1
+  unit-job-polars-lazy-udf-interop:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-15-lazy-plans-and-optimizer-literacy/attachments/s8a-exercises.md
+  sha256_before: null
+  sha256_after: dc932081711294fd145642d520e257faa321c64a424888efcf8bfcd8f59964a8
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  sha256_before: 2421e98018dbd7b116a078d745bd9d2f7030096da6656761beae2bf56b96d6e3
+  sha256_after: 9ed553620cfc08b3a79f00d23eb014c068da9583c803c2623c2cb809beaf6400
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s8a-md-0904
+  idempotency_key: pl-s8a-md-0904
+  intent_sha256: sha256:390e6ba0b7f6603d9576982bd34f85738b8ff0fa480a45706fa22fd4fc0c71a3
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:390e6ba0b7f6603d9576982bd34f85738b8ff0fa480a45706fa22fd4fc0c71a3

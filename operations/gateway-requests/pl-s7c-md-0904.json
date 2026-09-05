@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7c-md-0904",
+  "idempotency_key": "pl-s7c-md-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:657a6060678245cb3a82de71aac02ae7dcd4fa9ab11f0f3d423db52ce80b9411",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 5,
+    "study-map-job-polars-joins-reshape": 4
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-14-concatenation-and-reshaping",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7c-exercises.md",
+    "label": "Exercise sheet - five concat modes, reshaping, and a 2.0 currency pass",
+    "file_sha256": "sha256:ed71f876fc8b955d754073df088c2f3a9b56f64992d681230166a607ade1b302"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:22f48c20c36803a0b838f9c6ccf2ac773743d24bd0997010f9e45cd624fbfafd"
+  }
+}
