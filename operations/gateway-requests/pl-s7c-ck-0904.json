@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7c-ck-0904",
+  "idempotency_key": "pl-s7c-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:9624807c1c4678eeba1da9ab2e24477bb5c9f5e933f6a498f976c49af21405a5",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 6,
+    "study-map-job-polars-joins-reshape": 5
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-14-concatenation-and-reshaping",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7c-check.py",
+    "label": "Answer-key self-check (24 assertions)",
+    "file_sha256": "sha256:01ddb6d4c19fbae9f9db4599f25f2867b7e04dbccf44ab72a54e901e29555848"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:5ae57d4f047949f14382b04814f05fbad41bffb03e51bd0bac7f96590048346b"
+  }
+}

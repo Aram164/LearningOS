@@ -1,0 +1,347 @@
+id: study-map-job-polars-pandas-fluency
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-pandas-fluency
+status: ready
+current_stage: stage-polars-01-two-data-models-and-the-eight-divergence-axes
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-01-two-data-models-and-the-eight-divergence-axes
+  number: 1
+  title: Backend contract, version lock, and divergence axes
+  status: pending
+  objective: Pin pandas 3.0.2 and Polars 1.36.0 as the executable oracle pair, then derive the divergence axes from
+    three operations of your own before reading them, so the axis list becomes a checklist you can apply to an unseen
+    operation rather than eight phrases you can recite.
+  done_when:
+  - The version probe runs and prints 3.0.2 / 1.36.0; every later claim on this module is scoped to that pair.
+  - Tasks 1-3 of the stage exercise sheet completed with the observation tables filled in, and `s01-check.py` passing
+    (22 assertions) so the sheet's key is confirmed against your own environment.
+  - 'The Task 4 derivation done cold: your own list of possible divergences for merge / groupby.agg / assign written
+    down BEFORE reading the eight axes, plus a one-line explanation for every axis you did not reach.'
+  - Fifteen API differences classified syntax-only / semantic / performance-only / unsupported, where every syntax-only
+    row carries an executed pair proving values, dtype, cardinality, order and missing-value behaviour all agree
+    — an unproven row stays semantic.
+  - At least one row in that table is a difference you had believed was cosmetic.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  - concept-logical-ir
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-version-lock
+    kind: practise
+    label: Freeze the Stratum backend environment
+    locator: Stratum/pyproject.toml (pandas pin) and Stratum/uv.lock (resolved polars version)
+    angle: The one task that must pass before any other observation on this module means anything.
+    angle_detail: pandas is pinned in pyproject.toml; polars is not, so its version comes from the lockfile and
+      can move under you on the next resolve. Write the probe that prints both and fails loudly on a mismatch, and
+      import it from the harness in Stage 2 — a parity suite that runs against unknown versions produces confident
+      nonsense.
+    scope_triage: required-now
+  - id: resource-polars-01-sheet
+    kind: practise
+    label: Stage exercise sheet - six tasks with fixtures, prediction slots and a verified key
+    locator: attachments/s01-exercises.md - Fixture F1, then Tasks 1-6 in order
+    angle: 'The stage''s actual work: concrete frames, the exact calls, and the observation table each task owes.'
+    angle_detail: Task 1 constructor inference, Task 2 the NaN/null/three-valued truth table, Task 3 alignment in
+      three sub-cases (including the one where the two libraries agree for the wrong reason), Task 4 the cold derivation
+      of the axes, Task 5 the fifteen-difference table with an evidence rule, Task 6 the backfill into Stage 2's
+      harness. Each task states its trap, so a task that feels easy can be checked rather than assumed. Predict
+      before running; the sheet has a slot for it because a prediction you did not record teaches nothing.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-exercises.md
+  - id: resource-polars-01-sheet-check
+    kind: practise
+    label: Answer-key self-check - 22 assertions against the pinned pair
+    locator: attachments/s01-check.py - run after attempting Tasks 1-3
+    angle: Confirms the sheet's key in your environment, so a disagreement is a finding rather than self-doubt.
+    angle_detail: 'Every expected value on the sheet was executed against pandas 3.0.2 / polars 1.36.0 and is re-asserted
+      here. It exits non-zero if the versions differ, because a pass under other builds would prove nothing. Run
+      it after attempting, never before: it is a check on the sheet as much as on you, and reading it first spends
+      Task 4, which is unrepeatable.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-check.py
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-01-01-required-core-python-polars-the-defini
+    locator: Ch 3 'Moving from Pandas to Polars' §Concepts to Unlearn pp. 83-92 and §Syntax to Forget pp. 93-98
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: The only source here written specifically for someone who already thinks in pandas.
+    angle_detail: '§Concepts to Unlearn takes the index, axes, slicing, eagerness and ''relaxedness'' one at a time
+      — the five assumptions that generate most of the eight axes. §Syntax to Forget pp. 94-98 is a side-by-side
+      operation table, which is the fastest way to build the Task 5 list. Its limit: it argues for Polars rather
+      than specifying pandas, so it will not tell you what pandas *promises* — and it is an early-release edition,
+      so confirm every callable against 1.36.0.'
+  - kind: read
+    label: Required core — docs.pola.rs — pandas
+    id: resource-polars-01-02-required-core-docs-pola-rs-pandas
+    locator: Whole page, and specifically the sections on index, 'no multi-indexes', and column assignment
+    url: https://docs.pola.rs/user-guide/migration/pandas/
+    scope_triage: required-now
+    angle: The maintainers' own account of which pandas habits do not transfer — shorter and blunter than the book.
+    angle_detail: Read it after the book chapter, as a checklist against your Task 4 derivation rather than as a
+      first exposure. It is written to persuade a migrating user, so it names the differences it considers improvements
+      and is silent about the ones that are merely different — the silences are where your own axes have to do the
+      work.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — dsintro.html
+    id: resource-polars-01-06-official-reference-pandas-pydata-org-d
+    locator: §'DataFrame' → 'From dict of ndarrays / lists', and the dtype-inference notes
+    url: https://pandas.pydata.org/docs/user_guide/dsintro.html
+    scope_triage: reference-only
+    angle: 'The pandas side of Task 1: what the constructor promises about inferred dtypes.'
+    angle_detail: 'Read it to establish whether the float promotion you observe in Task 1 is documented behaviour
+      or an implementation detail. That distinction decides whether the Stratum contract may rely on it. Note the
+      page is version-current: read the pandas 3.0 string-dtype note, because a pre-3.0 tutorial will tell you the
+      opposite.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — copy_on_write.html
+    id: resource-polars-01-07-official-reference-pandas-pydata-org-c
+    locator: §'Copy-on-Write optimization' and §'Chained assignment'
+    url: https://pandas.pydata.org/docs/user_guide/copy_on_write.html
+    scope_triage: reference-only
+    angle: Explains why pandas 3.0 no longer returns views, which removes one axis from your list.
+    angle_detail: 'Worth reading precisely to *cross something off*: mutation-through-a-view divergences that dominate
+      older pandas/Polars comparisons are gone under CoW, so a note written against pandas 1.x will send you hunting
+      for a class of bug that no longer exists here. Record it as a resolved axis rather than an open one.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — data types and structures
+    id: resource-polars-01-05-official-reference-docs-pola-rs-data-t
+    locator: §'Data types' table and §'Series'/'DataFrame' construction examples
+    url: https://docs.pola.rs/user-guide/concepts/data-types-and-structures/
+    scope_triage: reference-only
+    angle: The dtype vocabulary you need to read a Polars schema out loud, including the sized integer types.
+    angle_detail: 'Its value for this stage is the enumerated type list: it tells you that `UInt32` on a counter
+      is a deliberate index type rather than an accident, which is a question Task 1 raises. It says nothing about
+      the pandas side.'
+  - kind: read
+    label: Local material — 03.01-Introducing-Pandas-Objects.ipynb
+    id: resource-polars-01-03-local-material-03-01-introducing-panda
+    source_id: source-pydata-handbook
+    locator: §'The Pandas Index Object' and §'Data Selection in Series' (notebook 03.01)
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.01-Introducing-Pandas-Objects.ipynb
+    scope_triage: reference-only
+    angle: A pandas-native explanation of the index as a first-class object, which is the premise Polars drops.
+    angle_detail: 'Useful for one thing: seeing the index treated as an aligned, set-like object rather than as
+      row numbers, because that is what makes Task 3 surprising. Demoted to reference-only — the notebook predates
+      pandas 3.0 (its string columns are `object`, yours are `str`), so it generates questions for the oracle and
+      never answers them.'
+  - kind: read
+    label: Local material — Pandas_cheatsheet.pdf
+    id: resource-polars-01-04-local-material-pandas-cheatsheet-pdf
+    source_id: source-python-cheatsheets
+    locator: Both pages; the reshaping and 'combine data sets' panels
+    vault_path: material://source-python-cheatsheets/Pandas_cheatsheet.pdf
+    scope_triage: reference-only
+    angle: Operation-name recall only — the fastest way to remember what a pandas call is called.
+    angle_detail: Dated 2017. Use it to *find* the name of an operation you half-remember for the Task 5 table,
+      then verify every signature against pandas 3.0.2 before writing it down. It cannot establish current semantics
+      and several of its defaults have since changed.
+  - kind: reference
+    label: Optional depth — arrow.apache.org — Columnar.html
+    id: resource-polars-01-09-optional-depth-arrow-apache-org-column
+    locator: §'Validity bitmaps' and §'Physical memory layout'
+    url: https://arrow.apache.org/docs/format/Columnar.html
+    scope_triage: deferred
+    angle: 'The mechanism under Task 2: why null and NaN can be orthogonal at all.'
+    angle_detail: Deferred because you can complete the stage without it. Read it when the three-valued `is_nan()`
+      result stops feeling arbitrary and you want to see why a separate validity buffer makes it inevitable. Session
+      8 returns here for chunk and conversion costs.
+  - id: resource-polars-01-polars-first
+    kind: practise
+    label: Polars-first drill set - five drills, no pandas anywhere
+    locator: attachments/u1-polars-first.md - Drills 1-5; Drill 4 is the one to take away
+    angle: 'The half of Session 1 that is not about pandas: what Polars is, learned from Polars.'
+    angle_detail: 'Session 1''s two stages are about the contract, which teaches Polars as ''the thing that is not
+      pandas''. This is the other half. Drill 3 learns the API by its namespaces rather than its functions — given
+      an unfamiliar task you should be able to name the namespace before searching, which is what actually makes
+      a large API usable. Drill 4 is the deep one: an expression is a value, so it can be stored in a variable,
+      returned by a function and built by a comprehension. Every later capability — selectors, `over`, lazy optimization,
+      the meta namespace — follows from it.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first.md
+  - id: resource-polars-01-polars-first-check
+    kind: practise
+    label: Polars-first drill self-check - 25 assertions
+    locator: attachments/u1-polars-first-check.py
+    angle: Pins the namespace shapes and the chunk behaviour, both of which are version-sensitive.
+    angle_detail: It asserts the exact membership of the `struct` and `meta` namespaces and that concatenation produces
+      two chunks while `rechunk` produces one. Those are the two facts in the drill set most likely to move between
+      releases, which makes them the two worth having a test for.
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check.py
+  - kind: practise
+    label: Book companion repository - runnable notebooks and the book's own datasets
+    locator: github.com/jeroenjanssens/python-polars-the-definitive-guide - ch01.ipynb through ch18.ipynb, plus
+      data/
+    url: https://github.com/jeroenjanssens/python-polars-the-definitive-guide
+    angle: 'Turns the local PDF spine into executable material: the same examples, as notebooks, with the datasets.'
+    angle_detail: The PDF you own is read-only and an early-release edition; this is its official companion, MIT-licensed,
+      with one notebook per chapter and the `data/` directory the book's examples assume. Two uses. First, run a
+      chapter's notebook against the pinned 1.36.0 and record every cell that has drifted from the book's text —
+      that is a free, high-yield source of harness cases and it tells you exactly how far the early-release edition
+      has moved. Second, it gives you realistic frames to work on, so exercises stop being three-row toys. Pin its
+      environment to Stratum's versions rather than its own pyproject, or the drift you measure is the repo's, not
+      the book's.
+    scope_triage: helpful-now
+    source_id: source-polars-definitive-guide
+    id: resource-polars-01-book-repo
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-exercises.md
+    label: Exercise sheet - verified against pandas 3.0.2 / Polars 1.36.0
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/s01-check.py
+    label: Answer-key self-check (22 assertions)
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first.md
+    label: Polars-first drill set - no pandas anywhere
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/attachments/u1-polars-first-check.py
+    label: Polars-first drill self-check (25 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-01-two-data-models-and-the-eight-divergence-axes/notes.md
+- id: stage-polars-02-the-parity-harness-differential-testing-from-day
+  number: 2
+  title: Build the cumulative differential parity harness
+  status: pending
+  objective: Build the differential harness every later session deposits into, with a report that keeps values,
+    dtype/schema, cardinality, row order, missing-value representation, warnings and exceptions as seven separate
+    findings — and with declared null, order and tolerance policies rather than defaults nobody chose.
+  done_when:
+  - '`compare(pandas_fn, polars_fn, case)` returns a report whose seven fields are independently readable, and whose
+    type cannot be used in an `if` — no `__bool__`.'
+  - One side raising produces a populated report naming the side, the exception type and the message; both sides
+    raising records both types, because differing exception types are themselves a finding.
+  - Warnings are captured per side, so a pandas FutureWarning with no Polars analogue is recorded rather than swallowed.
+  - The null policy is a named value passed in, with a written justification covering NaN-vs-null sums, all-null
+    means, and the three-valued `is_nan()` result — plus a statement of which divergence class your default hides.
+  - Row order is normalized only for operations declared to promise none, as data (`ORDER_PROMISE`), each entry
+    backed by an executed pair rather than by the documentation's wording.
+  - All twelve seed cases run, with wrong predictions left in the file as comments; at least four classify as semantic,
+    and case 8 carries a per-case tolerance rather than a global one.
+  - The three deliberate breaks from Task 5 each have a regression case asserting the finding is now reported.
+  - '`s02-check.py` passes (43 assertions), and Stage 1''s Task 5 table is fully backfilled through the deposit
+    protocol so running the harness reproduces every Stage 1 finding.'
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-dataframe-semantics
+  - concept-dispatch
+  scope_triage: required-now
+  resources:
+  - id: resource-polars-02-sheet
+    kind: practise
+    label: Stage exercise sheet - the report contract, three policies, and twelve verified seed cases
+    locator: attachments/s02-exercises.md - Tasks 1-6; the seed table is the deliverable
+    angle: Names the twelve cases the harness must classify correctly on day one, with each divergence executed
+      and recorded.
+    angle_detail: 'The seed cases are not illustrations: they are chosen so four separate axes fire, and the key
+      records what each library actually did. Three cells repay a second reading — `n_unique` counting null as a
+      value (off by one on every column with a missing entry), pandas concatenating strings under `sum` while Polars
+      refuses (the same plan changes its answer on one backend and fails loudly on the other), and the ten-0.1 sum
+      differing in the last bit (which is why tolerance is a per-case declaration, never a global one).'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-exercises.md
+  - id: resource-polars-02-sheet-check
+    kind: practise
+    label: Seed-case self-check - 43 assertions across all twelve cases
+    locator: attachments/s02-check.py - run before you trust a case, and again whenever the lockfile moves
+    angle: 'Turns the seed table into a tripwire: if a library changes, every downstream parity conclusion is on
+      notice.'
+    angle_detail: 'Asserts all twelve divergences plus the null-policy table, and refuses to run outside 3.0.2 /
+      1.36.0. Keep it runnable for the rest of the module: it is the cheapest available answer to ''did the environment
+      move under my conclusions?'', which is the question that otherwise invalidates nine sessions of notes silently.'
+    scope_triage: required-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-check.py
+  - kind: read
+    label: Local material — pandas↔Polars contention probes
+    id: resource-polars-02-05-local-material-contention-probes
+    locator: check_all.py (the three-layer runner) and verify.py (per-claim assertions)
+    vault_path: knowledge/attachments/note-pandas-polars-aggregation-contentions
+    scope_triage: required-now
+    angle: Your own working probe suite - the shape this harness should converge on, already built once.
+    angle_detail: 'Read `check_all.py` first: it refuses to run unless the versions match, runs independent layers,
+      and reports counts per layer instead of one boolean — three properties your harness needs on day one. Then
+      read `verify.py` for how a single semantic claim becomes an assertion with a name. The difference in scope
+      is worth noticing: those probes verify claims in a document, while this harness compares two libraries live,
+      so its report needs the seven fields that a claim-checker does not.'
+  - kind: reference
+    label: Official reference — docs.pola.rs — testing
+    id: resource-polars-02-01-official-reference-polars-testing
+    locator: assert_frame_equal / assert_series_equal parameters, and the parametric `dataframes` strategy
+    url: https://docs.pola.rs/api/python/stable/reference/testing.html
+    scope_triage: reference-only
+    angle: Gives the tolerance and check_* switches your report needs as *fields*, not as its verdict.
+    angle_detail: 'Read it for the parameter list — `check_dtypes`, `check_row_order`, `rtol`/`atol` — and note
+      that each switch you would set corresponds to one field of your own report. Its limit is structural: these
+      are assertions, so they raise on the first difference and discard the rest. Use them inside a field, never
+      as the comparison. The parametric strategies section is what you return to when hand-written cases run out
+      in Session 10.'
+  - kind: reference
+    label: Official reference — pandas.pydata.org — testing
+    id: resource-polars-02-02-official-reference-pandas-testing
+    locator: 'assert_frame_equal parameters: check_dtype, check_like, check_index_type, check_exact, rtol/atol'
+    url: https://pandas.pydata.org/docs/reference/testing.html
+    scope_triage: reference-only
+    angle: The pandas half of the same switch list, and the source of the index-comparison question.
+    angle_detail: '`check_like` and `check_index_type` have no Polars counterpart because there is no index to compare
+      — so deciding what to do with them *is* the normalization policy for Task 3. Build one comparison profile
+      per operation; a single blanket profile is how case 8 and the sort-order divergence both disappear.'
+  - kind: read
+    label: Required core — pytest parametrization
+    id: resource-polars-02-03-required-core-pytest-parametrize
+    locator: §'Parametrizing fixtures and test functions' and §'Basic pytest.mark.parametrize'
+    url: https://docs.pytest.org/en/stable/how-to/parametrize.html
+    scope_triage: required-now
+    angle: How the twelve cases become twelve reported failures instead of one aborted run.
+    angle_detail: 'The mechanical point that matters here: with `parametrize`, a case that raises is one red test
+      and the other eleven still report. Write the case table as data and let the decorator expand it — the harness
+      grows by one row per session for nine more sessions, so the cost of a hand-written test per case compounds.
+      `pytest.param(..., id=...)` is what gives a divergence its stable name for the deposit protocol.'
+  - id: resource-polars-02-book-testing
+    kind: read
+    label: Polars internals - comparing DataFrames and Series
+    locator: Ch 18 §Tests in Polars → 'Comparing DataFrames and Series' pp. 559-561, then §Common Anti-patterns
+      pp. 562-564
+    angle: The book's only treatment of equality testing, and it is on exactly this stage's subject.
+    angle_detail: 'The migration routed Chs. 1/3/4 to Stage 1 and left this stage with no book route at all, which
+      was a gap: pp. 559-561 walk through the assert helpers and the tolerance arguments from the library authors''
+      side. Read the anti-patterns section straight after — ''Using Python Code in your Polars Queries'' is the
+      failure mode your harness will tempt you into when a case is awkward to express as an expression.'
+    scope_triage: helpful-now
+    source_id: source-polars-definitive-guide
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+  - kind: practise
+    label: Closing axis pass - classify this session's divergences and deposit one case each
+    id: resource-polars-02-99-axis-pass
+    locator: Sheet Task 6 (deposit protocol), run at the end of every stage in this module
+    scope_triage: required-now
+    angle: The habit that makes the harness cumulative rather than a Session 1 artifact nobody reruns.
+    angle_detail: 'Three rules, written into the harness README: a divergence found this session becomes a named
+      case this session; the case name records the axis and the finding stage; the whole suite runs at the end of
+      every stage, not just the new case. The third rule is the one that catches a later session''s normalization
+      quietly silencing an earlier finding.'
+  - kind: reference
+    label: Optional depth — Hypothesis quickstart
+    id: resource-polars-02-04-optional-depth-hypothesis-quickstart
+    locator: §'Quick start' and the shrinking example
+    url: https://hypothesis.readthedocs.io/en/latest/quickstart.html
+    scope_triage: deferred
+    angle: Deferred until hand-written cases stop finding anything - which happens in Session 10, not here.
+    angle_detail: Twelve deliberate cases beat generated ones at this stage, because you are still learning what
+      to look at. Read this when a generated fixture would explore dtype/null/size combinations you would not think
+      to write; the shrinking behaviour is the part worth understanding, since a shrunk counterexample is what becomes
+      a named harness case.
+  attachments:
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-exercises.md
+    label: Exercise sheet - twelve seed cases, verified
+  - path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/attachments/s02-check.py
+    label: Seed-case self-check (43 assertions)
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-02-the-parity-harness-differential-testing-from-day/notes.md
+shelving:
+  state: none

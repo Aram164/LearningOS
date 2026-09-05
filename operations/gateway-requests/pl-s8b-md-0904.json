@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s8b-md-0904",
+  "idempotency_key": "pl-s8b-md-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:f12600c74a601eecfd214805ac0310d8532b7976d0c6bb1f56f99592580b3719",
+  "expected_revisions": {
+    "unit-job-polars-lazy-udf-interop": 3,
+    "study-map-job-polars-lazy-udf-interop": 2
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-lazy-udf-interop",
+    "stage_id": "stage-polars-16-udfs-fallbacks-and-native-expression-rewrites",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s8b-exercises.md",
+    "label": "Exercise sheet - the five UDF rungs and the native ladder",
+    "file_sha256": "sha256:645a7ba092c1e3a13b17943c6209737ce0512e321542d87b6608d61812e45d22"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:6de733600da379c8e18fb84495001726742e54579962656377eabae24690d12d"
+  }
+}

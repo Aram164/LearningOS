@@ -1,0 +1,30 @@
+{
+  "schema_version": 2,
+  "request_id": "request-job-polars-session-migration-20260903-001",
+  "idempotency_key": "job-polars-session-migration-20260903-001",
+  "capability": "module.plan.import",
+  "channel": "codex",
+  "expected_snapshot": "sha256:12f30fe43b5f6e65f97f9cc9c1dd1d3206ae2327cdab976e6d627656d836f18b",
+  "expected_revisions": {
+    "module-job-polars": 1,
+    "unit-job-polars-aggregation-windows": 0,
+    "unit-job-polars-backend-loop": 0,
+    "unit-job-polars-capstone-transition": 0,
+    "unit-job-polars-expressions": 0,
+    "unit-job-polars-joins-reshape": 0,
+    "unit-job-polars-lazy-udf-interop": 0,
+    "unit-job-polars-order-text-time": 0,
+    "unit-job-polars-pandas-fluency": 2,
+    "unit-job-polars-schema-missing-types": 0,
+    "unit-job-polars-selection-backend": 0
+  },
+  "approval": {
+    "kind": "direct-user-gesture",
+    "subject_sha256": "sha256:f3277ec2fd787ec5a7d76d083df508ccf7e84d4bc3a4a0291017b4b19732a08a"
+  },
+  "payload": {
+    "module_id": "module-job-polars",
+    "file": "work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml",
+    "file_sha256": "sha256:8620902397c4efb02dec858e6cafe75527eb3a96d2fccfee1749f2be1b69ccb3"
+  }
+}

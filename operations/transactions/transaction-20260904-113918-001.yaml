@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-113918-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T11:39:18+02:00'
+snapshot_before: sha256:848a589f1bf23934214471f3a30748fd406c35e168b8272fd4cb224d6a5587ae
+snapshot_after: sha256:289ab29bd45b38f954ecb3484024b8d17c32ece9b8969b79f2d6c9878898b935
+expected_revisions:
+  unit-job-polars-joins-reshape: 3
+  study-map-job-polars-joins-reshape: 2
+artifact_revisions:
+  study-map-job-polars-joins-reshape:
+    before: 2
+    after: 3
+  unit-job-polars-joins-reshape:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit/attachments/s7b-exercises.md
+  sha256_before: null
+  sha256_after: 581c2500ba222e54af7c0ef5f46cabc996dda040f657cd16a57bfeb8666127bf
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
+  sha256_before: c7b58b91fb8acb4ca0f2cd0e9f3f97697346141bd99e9d4a300834b5c085f5b3
+  sha256_after: d8139a5be29c67ff0140181020bc42bd75f1bec32717bd5f127b5e4532978390
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s7b-md-0904
+  idempotency_key: pl-s7b-md-0904
+  intent_sha256: sha256:a463e05ac6af0cadad79263c38889d60e0faa54280dbf0f76771952ad4b2d807
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a463e05ac6af0cadad79263c38889d60e0faa54280dbf0f76771952ad4b2d807

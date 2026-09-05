@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-pf-u1-ck-20260903",
+  "idempotency_key": "polars-pf-u1-ck-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:4d9c8412ba15487cd8e8ea737a15c3aefaad1cd20d25c8b5919d4dc016fd1425",
+  "expected_revisions": {
+    "unit-job-polars-pandas-fluency": 9,
+    "study-map-job-polars-pandas-fluency": 8
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-pandas-fluency",
+    "stage_id": "stage-polars-01-two-data-models-and-the-eight-divergence-axes",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/u1-polars-first-check.py",
+    "label": "Polars-first drill self-check (25 assertions)",
+    "file_sha256": "sha256:2ddf8c4f2ddcf4b0985ab3326ca1009b48045ce589fe65f9994efc41cc7af219"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:ee94c0e414d8ff6d76146537f1b5313a1ec5eff57dd01997aa676f9ba7499087"
+  }
+}

@@ -2,8 +2,17 @@ id: module-job-polars
 type: module
 kind: skill
 area_id: program-job
-title: Polars and pandas
+title: Polars backend engineering with pandas semantics
 status: active
 source_map: source-map.yaml
 unit_order:
 - unit-job-polars-pandas-fluency
+- unit-job-polars-expressions
+- unit-job-polars-selection-backend
+- unit-job-polars-schema-missing-types
+- unit-job-polars-order-text-time
+- unit-job-polars-aggregation-windows
+- unit-job-polars-joins-reshape
+- unit-job-polars-lazy-udf-interop
+- unit-job-polars-backend-loop
+- unit-job-polars-capstone-transition

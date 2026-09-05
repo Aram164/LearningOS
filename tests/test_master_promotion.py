@@ -555,6 +555,14 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
 
     monkeypatch.setattr(transactions, "_atomic_write_bytes", fail_provenance)
     intent = "sha256:" + "1" * 64
+    # A real GatewayEnvelopeV2 request carries one approved snapshot, and the
+    # handler is dispatched with that same token (capability.py builds both the
+    # context and the handler namespace from envelope["expected_snapshot"]).
+    # _expected_ok enforces that identity, so bind it once here rather than
+    # digesting the fixture twice: two calls straddling any write to the
+    # mini_repo would disagree and refuse the request before the injected
+    # provenance failure this test is actually about.
+    expected_snapshot = f"sha256:{canonical_fingerprint(mini_repo)}"
     context = GatewayRequestContext(
         request_id="request-master-promotion-rollback",
         idempotency_key="master-promotion-rollback-001",
@@ -563,6 +571,7 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
         intent_sha256=intent,
         approval_kind="operator-approval",
         approval_subject_sha256=intent,
+        expected_snapshot=expected_snapshot,
     )
     args = argparse.Namespace(
         root=str(mini_repo),
@@ -572,7 +581,7 @@ def test_promotion_transaction_rolls_back_and_candidates_never_leak(
         package_sha256=plan.package_sha256,
         approve=True,
         check=False,
-        expected_snapshot=f"sha256:{canonical_fingerprint(mini_repo)}",
+        expected_snapshot=expected_snapshot,
         expected_revision=[
             f"{artifact}={revision}"
             for artifact, revision in plan.expected_revisions.items()

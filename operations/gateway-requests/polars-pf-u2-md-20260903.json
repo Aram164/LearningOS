@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-pf-u2-md-20260903",
+  "idempotency_key": "polars-pf-u2-md-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:729f4a933b041242aeab7f5edcce7a4442c2e2c17c262f1976328f4963842cd9",
+  "expected_revisions": {
+    "unit-job-polars-expressions": 10,
+    "study-map-job-polars-expressions": 9
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-expressions",
+    "stage_id": "stage-polars-05-expressions-and-column-creation",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/u2-polars-first.md",
+    "label": "Polars-first drill set - 28 expressions from intent",
+    "file_sha256": "sha256:7acec797063f8bac7226527d0f2914d05d96fe9c051811e0e36bf0ad40c63c4a"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:cc516e7d75b71e773a6e8d67ee7d13275d2c64c26be4eeae2f843f6ebcabc3b9"
+  }
+}

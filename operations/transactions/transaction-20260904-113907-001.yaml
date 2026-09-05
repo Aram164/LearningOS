@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-113907-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T11:39:07+02:00'
+snapshot_before: sha256:0c010634f95fe913e5bc120a285e603979aaf1be66310070abb6a88b2b7af8db
+snapshot_after: sha256:848a589f1bf23934214471f3a30748fd406c35e168b8272fd4cb224d6a5587ae
+expected_revisions:
+  unit-job-polars-joins-reshape: 2
+  study-map-job-polars-joins-reshape: 1
+artifact_revisions:
+  study-map-job-polars-joins-reshape:
+    before: 1
+    after: 2
+  unit-job-polars-joins-reshape:
+    before: 2
+    after: 3
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/stages/stage-polars-12-joins-i-relational-semantics-and-key-cardinality/attachments/s7a-check.py
+  sha256_before: null
+  sha256_after: 67ebbbd002797fe39d2afa777a26cc75fd4d91ad295a5de4fb259dba685540bb
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
+  sha256_before: c7fc3b64b86e709ef342d32354824104b729aac653c13ac4e6cb091822c0cecc
+  sha256_after: c7b58b91fb8acb4ca0f2cd0e9f3f97697346141bd99e9d4a300834b5c085f5b3
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s7a-ck-0904
+  idempotency_key: pl-s7a-ck-0904
+  intent_sha256: sha256:ca125c5d240a213141c7d7c48f959d27677dfd94dd7a4a962cfec0394e12c8a4
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ca125c5d240a213141c7d7c48f959d27677dfd94dd7a4a962cfec0394e12c8a4

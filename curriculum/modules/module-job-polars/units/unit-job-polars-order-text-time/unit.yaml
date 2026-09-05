@@ -1,0 +1,36 @@
+id: unit-job-polars-order-text-time
+type: unit
+module_id: module-job-polars
+kind: topic
+title: Session 5 - Ordering, text, and temporal operations
+order: 5
+scope: Make row order and determinism explicit, then translate string and temporal namespace operations
+  without assuming pandas accessor names or calendar conventions carry over.
+status: ready
+knowledge_map:
+  summary: Make row order and determinism explicit, then translate string and temporal namespace operations
+    without assuming pandas accessor names or calendar conventions carry over.
+  nodes:
+  - id: knowledge-polars-ordering
+    title: Ordering and determinism
+    summary: Specify stable ties, null placement, and operations with undefined order.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-projection-family
+  - id: knowledge-polars-text-temporal
+    title: Text and temporal namespaces
+    summary: Translate accessor methods, parsing options, and calendar conventions.
+    concept_ids:
+    - concept-dataframe-semantics
+    - concept-projection-family
+    builds_on:
+    - knowledge-polars-ordering
+scope_sources:
+- source_id: source-polars-definitive-guide
+  authority: reference
+- source_id: source-pydata-handbook
+  authority: reference
+source_selections: []
+current_study_map: study-map-job-polars-order-text-time
+artifacts: {}
+workspace_ids: []

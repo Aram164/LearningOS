@@ -1,0 +1,421 @@
+id: study-map-job-polars-aggregation-windows
+type: study-map
+plan_template_version: 1
+unit_id: unit-job-polars-aggregation-windows
+status: ready
+current_stage: stage-polars-10-groupby-aggregation-counting-and-de-duplication
+source_plan:
+  path: work/active/workspace-job-polars-plan/outputs/polars-backend-session-migration.yaml
+  provenance: operator
+detours: []
+stages:
+- id: stage-polars-10-groupby-aggregation-counting-and-de-duplication
+  number: 1
+  title: GroupBy aggregation, counting, and de-duplication
+  status: pending
+  objective: Implement GroupBy and aggregation parity in both pandas and Polars, explain the semantic
+    differences, and prove parity or document divergence with adversarial tests.
+  done_when:
+  - groupby/aggregate contract plus 12 executable paired cases in scratch.
+  - Every divergence found is classified against the eight axes and has a failing case committed to the
+    parity harness.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-aggregation
+  - concept-aggregation-family
+  - concept-dataframe-semantics
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-07-01-required-core-python-polars-the-defini
+    locator: Ch. 13
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Use Ch. 13 to build the native Polars model for GroupBy aggregation, counting, and de-duplication;
+      the book is an early-release edition, so confirm callable names and defaults against the pinned
+      1.36.0 environment.
+  - kind: read
+    label: Local material — 03.08-Aggregation-and-Grouping.ipynb
+    id: resource-polars-07-02-local-material-03-08-aggregation-and-g
+    source_id: source-pydata-handbook
+    locator: Pandas grouping notebook
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+    scope_triage: required-now
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Use Pandas grouping notebook to identify pandas behavior relevant to GroupBy aggregation,
+      counting, and de-duplication. The notebook predates pandas 3.0.2, so it generates test questions
+      rather than serving as semantic authority.
+  - kind: reference
+    label: Official reference — docs.pola.rs — aggregation
+    id: resource-polars-07-03-official-reference-docs-pola-rs-aggreg
+    locator: Polars aggregation and pandas groupby
+    url: https://docs.pola.rs/user-guide/expressions/aggregation/
+    scope_triage: reference-only
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars aggregation and pandas groupby for GroupBy aggregation, counting, and de-duplication,
+      then run the example under Polars 1.36.0 because the live documentation can move ahead of Stratum's
+      lockfile.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — groupby.html
+    id: resource-polars-07-04-official-reference-pandas-pydata-org-g
+    locator: Polars aggregation and pandas groupby
+    url: https://pandas.pydata.org/docs/user_guide/groupby.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read Polars aggregation and pandas groupby for GroupBy aggregation, counting, and de-duplication
+      and encode the promised behavior in pandas 3.0.2 fixtures; unspecified behavior remains evidence,
+      not a universal contract.
+  - kind: practise
+    label: Guided exercises — Rebuild official group examples in both libraries and add null keys, categorical
+      keys, empty groups, multiple aggregations, and ordering checks.
+    id: resource-polars-07-05-guided-exercises-rebuild-official-grou
+    locator: Rebuild official group examples in both libraries and add null keys, categorical keys, empty
+      groups, multiple aggregations, and ordering checks.
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Rebuild official group examples in both libraries and add null keys, categorical
+      keys, empty groups, multiple aggregations, and ordering checks. before consulting an answer. Record
+      values, dtype/schema, cardinality, row order, missing-value behavior, warnings, and exceptions separately
+      whenever they apply.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — group_by.html
+    id: resource-polars-07-06-optional-depth-docs-pola-rs-group-by-h
+    locator: Polars GroupBy API
+    url: https://docs.pola.rs/api/python/stable/reference/dataframe/group_by.html
+    scope_triage: deferred
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars GroupBy API for GroupBy aggregation, counting, and de-duplication, then
+      run the example under Polars 1.36.0 because the live documentation can move ahead of Stratum's lockfile.
+  - kind: practise
+    label: Build a 12-case matrix over one/multiple keys, duplicate keys, null keys, categorical keys,
+      and unsorted input.
+    id: resource-polars-07-07-build-a-12-case-matrix-over-one-multip
+    locator: Exercise 1
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Express sum/mean/count/size/nunique in both backends and compare output names/dtypes.
+    id: resource-polars-07-08-express-sum-mean-count-size-nunique-in
+    locator: Exercise 2
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 2 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Translate pandas named aggregation into Polars named expressions.
+    id: resource-polars-07-09-translate-pandas-named-aggregation-int
+    locator: Exercise 3
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 3 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Compare pandas as_index=True/False with Polars key-column output and define normalization.
+    id: resource-polars-07-10-compare-pandas-as-index-true-false-wit
+    locator: Exercise 4
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 4 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Sketch two logical nodes—GroupBy configuration and Aggregate specification—and state what belongs
+      to each.
+    id: resource-polars-07-11-sketch-two-logical-nodes-groupby-confi
+    locator: Exercise 5
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 5 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: read
+    label: Local material — pandas↔Polars aggregation contentions
+    id: resource-polars-10-90-local-material-contention-map-groupby
+    locator: Full contention map
+    vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+    scope_triage: required-now
+    angle: Read it before the docs; it is more specific than either library's documentation about where
+      the two disagree.
+    angle_detail: Use Local material — pandas↔Polars aggregation contentions at Full contention map only
+      for GroupBy aggregation, counting, and de-duplication; validate any library behavior in the pinned
+      environment before it enters the parity policy.
+  - kind: read
+    label: Local material — pandas groupby signature reference
+    id: resource-polars-10-91-local-material-groupby-signatures
+    locator: Your own signature reference — the argument surface you must mirror
+    vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-groupby-signatures.md
+    scope_triage: required-now
+    angle: Supporting explanation or reference for this stage's implementation decision.
+    angle_detail: Use Local material — pandas groupby signature reference at Your own signature reference
+      — the argument surface you must mirror only for GroupBy aggregation, counting, and de-duplication;
+      validate any library behavior in the pinned environment before it enters the parity policy.
+  - kind: practise
+    label: Pick three contentions from your own map that the map records but the harness does not yet
+      cover, and add them.
+    id: resource-polars-10-92-backfill-the-harness-from-your-own-map
+    locator: Exercise — backfill
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise — backfill before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - kind: practise
+    label: 'Add drop_duplicates/unique, value_counts and nlargest to the session: keep semantics, tie
+      handling, null counting, and output ordering.'
+    id: resource-polars-10-93-dedup-value-counts-and-top-k
+    locator: Exercise — counting and de-duplication
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise — counting and de-duplication before consulting an answer. Record
+      values, dtype/schema, cardinality, row order, missing-value behavior, warnings, and exceptions separately
+      whenever they apply.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-10-99-axis-pass
+    locator: Closing pass, every session
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Closing pass, every session before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - id: resource-polars-10-groupby-aggregation-counting-and-de-duplication-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: Preserves the deeper mental model and traps written for the original stage.
+    angle_detail: Read after the stage objective and before the closed-book drill. The guide remains at
+      its original path as migration evidence while this session owns the active stage.
+    scope_triage: helpful-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-10-groupby-aggregation-counting-and-de-duplication/notes.md
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-10-groupby-aggregation-counting-and-de-duplication/notes.md
+- id: stage-polars-aggregation-signature-contract
+  number: 2
+  title: Aggregation signature and flag contract
+  status: pending
+  objective: Preserve method-specific pandas aggregation flags through logical extraction and decide how
+    each lowers to Polars, adapts, or falls back.
+  done_when:
+  - Build a signature matrix across Series, DataFrame, SeriesGroupBy, and DataFrameGroupBy for the operations
+    Stratum captures.
+  - 'For every flag, identify its owner: group construction, aggregation call, result normalization, or
+    unsupported API surface.'
+  - Add at least one executable contention case for null policy, numeric_only, min_count, and result shape.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-aggregation
+  - concept-aggregation-family
+  - concept-logical-ir
+  - concept-dispatch
+  scope_triage: required-now
+  resources:
+  - id: resource-note-pandas-groupby-signatures
+    kind: read
+    label: pandas GroupBy signature reference
+    locator: Complete note; targets pandas 3.0.2
+    angle: Inventory of the per-method flags Stratum's logical record must not erase.
+    angle_detail: Turn the tables into a smaller backend support matrix and keep groupby kwargs distinct
+      from aggregation-call kwargs.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-groupby-signatures.md
+  - id: resource-note-aggregation-contentions
+    kind: read
+    label: pandas-Polars aggregation contention map
+    locator: Complete note plus executable attachments; verified against pandas 3.0.2 and Polars 1.36.0
+    angle: The strongest local semantic evidence for this session.
+    angle_detail: Run the attached probes before changing a contention; distinguish executable observations
+      from architecture decisions.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/dataframe-semantics/note-pandas-polars-aggregation-contentions.md
+  - id: resource-note-aggregateop
+    kind: read
+    label: Stratum AggregateOp note
+    locator: 'Complete note: fused groupby extraction and OperandRef shifting'
+    angle: Connects pandas signatures to the actual logical fields and graph rewrite.
+    angle_detail: Trace a direct method and an agg-spec call through extraction before writing the physical
+      implementation.
+    scope_triage: required-now
+    vault_path: knowledge/notes/data-systems/stratum/dataframe-ops/note-stratum-op-aggregateop.md
+  - id: resource-polars-aggregation-guide
+    kind: read
+    label: Polars aggregation guide
+    locator: Basic aggregations; conditionals; filtering; nested grouping; sorting; parallelization
+    angle: Shows native expression-based grouped aggregation patterns.
+    angle_detail: Prefer expressions over Python iteration and predict whether each expression produces
+      scalars or lists per group. The live page may describe a newer release, so execute each claim against
+      Polars 1.36.0 or pandas 3.0.2 before treating it as backend policy.
+    scope_triage: required-now
+    url: https://docs.pola.rs/user-guide/expressions/aggregation/
+  - id: resource-aggregation-support-matrix
+    kind: practise
+    label: Aggregation backend support matrix
+    locator: Exercise 1 - 20 operation/flag combinations across grouped and ungrouped APIs
+    angle: Produces executable evidence instead of familiarity from reading.
+    angle_detail: Every row records logical fields, pandas 3.0.2 oracle, Polars 1.36.0 lowering, and native/adapt/fallback/unsupported
+      status.
+    scope_triage: required-now
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-aggregation-signature-contract/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-polars-11-windows-and-per-group-transformations
+  number: 3
+  title: Windows and per-group transformations
+  status: pending
+  objective: Implement Windows and per-group transformations in both pandas and Polars, explain the semantic
+    differences, and prove parity or document divergence with adversarial tests.
+  done_when:
+  - a reduction-versus-window decision tree and eight paired tests.
+  - Every divergence found is classified against the eight axes and has a failing case committed to the
+    parity harness.
+  exam_critical: false
+  concepts:
+  - concept-python
+  - concept-aggregation
+  - concept-aggregation-family
+  - concept-map-family
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Required core — python-polars-the-definitive-guide.pdf
+    id: resource-polars-08-01-required-core-python-polars-the-defini
+    locator: Chs. 9, 13
+    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
+    scope_triage: required-now
+    source_id: source-polars-definitive-guide
+    angle: Polars-first explanation and worked examples for this stage.
+    angle_detail: Use Chs. 9, 13 to build the native Polars model for Windows and per-group transformations;
+      the book is an early-release edition, so confirm callable names and defaults against the pinned
+      1.36.0 environment.
+  - kind: read
+    label: Local material — 03.08-Aggregation-and-Grouping.ipynb
+    id: resource-polars-08-02-local-material-03-08-aggregation-and-g
+    source_id: source-pydata-handbook
+    locator: Pandas aggregation baseline
+    vault_path: material://source-pydata-handbook/PythonDataScienceHandbook/notebooks/03.08-Aggregation-and-Grouping.ipynb
+    scope_triage: required-now
+    angle: Historical pandas examples to turn into an explicit compatibility contract.
+    angle_detail: Use Pandas aggregation baseline to identify pandas behavior relevant to Windows and
+      per-group transformations. The notebook predates pandas 3.0.2, so it generates test questions rather
+      than serving as semantic authority.
+  - kind: reference
+    label: Official reference — docs.pola.rs — window functions
+    id: resource-polars-08-03-official-reference-docs-pola-rs-window
+    locator: Polars windows and pandas window/transform
+    url: https://docs.pola.rs/user-guide/expressions/window-functions/
+    scope_triage: reference-only
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars windows and pandas window/transform for Windows and per-group transformations,
+      then run the example under Polars 1.36.0 because the live documentation can move ahead of Stratum's
+      lockfile.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — window.html
+    id: resource-polars-08-04-official-reference-pandas-pydata-org-w
+    locator: Polars windows and pandas window/transform
+    url: https://pandas.pydata.org/docs/user_guide/window.html
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read Polars windows and pandas window/transform for Windows and per-group transformations
+      and encode the promised behavior in pandas 3.0.2 fixtures; unspecified behavior remains evidence,
+      not a universal contract.
+  - kind: reference
+    label: Official reference — pandas.pydata.org — groupby.html
+    id: resource-polars-08-05-official-reference-pandas-pydata-org-g
+    locator: Polars windows and pandas window/transform
+    url: https://pandas.pydata.org/docs/user_guide/groupby.html#transformation
+    scope_triage: reference-only
+    angle: Official pandas reference for the observable oracle contract.
+    angle_detail: Read Polars windows and pandas window/transform for Windows and per-group transformations
+      and encode the promised behavior in pandas 3.0.2 fixtures; unspecified behavior remains evidence,
+      not a universal contract.
+  - kind: practise
+    label: Guided exercises — Run official over/window examples and mirror transform, rank, shift, rolling,
+      group-order, and null-partition behavior.
+    id: resource-polars-08-06-guided-exercises-run-official-over-win
+    locator: Run official over/window examples and mirror transform, rank, shift, rolling, group-order,
+      and null-partition behavior.
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Run official over/window examples and mirror transform, rank, shift, rolling,
+      group-order, and null-partition behavior. before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - kind: reference
+    label: Optional depth — docs.pola.rs — window functions
+    id: resource-polars-08-07-optional-depth-docs-pola-rs-window-fun
+    locator: Polars mapping strategies
+    url: https://docs.pola.rs/user-guide/expressions/window-functions/#mapping-results-to-dataframe-rows
+    scope_triage: deferred
+    angle: Official Polars reference for the native operation.
+    angle_detail: Read Polars mapping strategies for Windows and per-group transformations, then run the
+      example under Polars 1.36.0 because the live documentation can move ahead of Stratum's lockfile.
+  - kind: practise
+    label: Compute within-group z-scores in both libraries.
+    id: resource-polars-08-08-compute-within-group-z-scores-in-both
+    locator: Exercise 1
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 1 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Mirror group rank, lag, cumulative sum, and rolling mean.
+    id: resource-polars-08-09-mirror-group-rank-lag-cumulative-sum-a
+    locator: Exercise 2
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 2 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: For six expressions, predict whether output cardinality equals input cardinality.
+    id: resource-polars-08-10-for-six-expressions-predict-whether-ou
+    locator: Exercise 3
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 3 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Compare ordering requirements by shuffling rows before lag/rolling.
+    id: resource-polars-08-11-compare-ordering-requirements-by-shuff
+    locator: Exercise 4
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 4 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: 'Blind review: re-solve one Session 2 expression task and one Session 6 aggregation task.'
+    id: resource-polars-08-12-blind-review-re-solve-one-session-4-ex
+    locator: Exercise 5
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Exercise 5 before consulting an answer. Record values, dtype/schema, cardinality,
+      row order, missing-value behavior, warnings, and exceptions separately whenever they apply.
+  - kind: practise
+    label: Axis pass — classify every divergence found this session against the eight axes, then add one
+      harness case per divergence and re-run the whole harness.
+    id: resource-polars-11-99-axis-pass
+    locator: Closing pass, every session
+    scope_triage: required-now
+    angle: Active retrieval and implementation evidence for this stage.
+    angle_detail: Complete Closing pass, every session before consulting an answer. Record values, dtype/schema,
+      cardinality, row order, missing-value behavior, warnings, and exceptions separately whenever they
+      apply.
+  - id: resource-polars-11-windows-and-per-group-transformations-migrated-guide
+    kind: read
+    label: Migrated authored stage guide
+    locator: Complete guide retained from the original monolithic plan
+    angle: Preserves the deeper mental model and traps written for the original stage.
+    angle_detail: Read after the stage objective and before the closed-book drill. The guide remains at
+      its original path as migration evidence while this session owns the active stage.
+    scope_triage: helpful-now
+    vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/stages/stage-polars-11-windows-and-per-group-transformations/notes.md
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/stages/stage-polars-11-windows-and-per-group-transformations/notes.md
+shelving:
+  state: none

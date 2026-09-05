@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s7b-ck-0904",
+  "idempotency_key": "pl-s7b-ck-0904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:289ab29bd45b38f954ecb3484024b8d17c32ece9b8969b79f2d6c9878898b935",
+  "expected_revisions": {
+    "unit-job-polars-joins-reshape": 4,
+    "study-map-job-polars-joins-reshape": 3
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-joins-reshape",
+    "stage_id": "stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s7b-check.py",
+    "label": "Answer-key self-check (20 assertions)",
+    "file_sha256": "sha256:63857da0f949a9a558b202d246cec44090ca19594b0de033f7c3539651a7f707"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:19609ab7e9aafe4a7aa1314f8ddf60fc48d22d967479dfb58ad666f532c0123a"
+  }
+}

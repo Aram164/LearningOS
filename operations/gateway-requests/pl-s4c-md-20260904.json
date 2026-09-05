@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s4c-md-20260904",
+  "idempotency_key": "pl-s4c-md-20260904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:07a42e92f0f93aa69b062d752877d182ef78c1c094eeb84fd4ab05c68587da78",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 5,
+    "study-map-job-polars-schema-missing-types": 4
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "stage_id": "stage-polars-06-nulls-nans-and-the-missing-value-model",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s4c-exercises.md",
+    "label": "Exercise sheet - three-valued logic and the flipped defaults",
+    "file_sha256": "sha256:a53d7cc537160ba6362220c4cfb1df0e2e09b5df3008e673d96267ef47837193"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:e6ce429b9d95ef300b938cae53e571c37b2efd9210848bd98dbcc43acd5f8438"
+  }
+}

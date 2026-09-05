@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-polars-sheet-s02-check-20260903",
+  "idempotency_key": "polars-sheet-s02-check-20260903",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:48114c54b048563ac39b6d9d35274451593b32d1e5d3d715fdc355a12e201f88",
+  "expected_revisions": {
+    "unit-job-polars-pandas-fluency": 6,
+    "study-map-job-polars-pandas-fluency": 5
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-pandas-fluency",
+    "stage_id": "stage-polars-02-the-parity-harness-differential-testing-from-day",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s02-check.py",
+    "label": "Seed-case self-check (43 assertions)",
+    "file_sha256": "sha256:b8bb4c439cc0905ea3d5d93d8702170fc24bb6d60c5f000332ed83d67282a2f5"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:66b8d0d7e3f4f07fe864b3dcc5cea3a210718638a518828d02f2c0a09298951c"
+  }
+}

@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260904-114108-001
+type: transaction-receipt
+status: committed
+capability: stage.attachment.add
+committed_at: '2026-09-04T11:41:08+02:00'
+snapshot_before: sha256:0b508594defabd85013df807613dedd1c6fb4feaa2be42e7590ebb1c67bce252
+snapshot_after: sha256:dfc143bbf3c78260f4922dbc7daa1662d64fee53b06ee639caff63b1053ce1e9
+expected_revisions:
+  unit-job-polars-lazy-udf-interop: 5
+  study-map-job-polars-lazy-udf-interop: 4
+artifact_revisions:
+  study-map-job-polars-lazy-udf-interop:
+    before: 4
+    after: 5
+  unit-job-polars-lazy-udf-interop:
+    before: 5
+    after: 6
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/stages/stage-polars-17-arrow-interop-chunks-and-conversion-costs/attachments/s8c-exercises.md
+  sha256_before: null
+  sha256_after: 3be96b3deeb7e6a6067059d37beb53fab49764c455f816800f49ac377fc5590d
+  created: true
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  sha256_before: fd10041a4209c49c32978f2342baa0a31440adccade749df23c851baf79ef82c
+  sha256_after: 70f21d2e62a93279a95c5a58e7ebc7c795e686d7e1664df3d454b03803a18572
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: stage.attachment.add
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-pl-s8c-md-0904
+  idempotency_key: pl-s8c-md-0904
+  intent_sha256: sha256:05df9d22f66b066023fa28b85cb46dcba5037ae48883b8e9326d97a00d81d931
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:05df9d22f66b066023fa28b85cb46dcba5037ae48883b8e9326d97a00d81d931

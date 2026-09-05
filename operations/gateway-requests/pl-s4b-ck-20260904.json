@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s4b-ck-20260904",
+  "idempotency_key": "pl-s4b-ck-20260904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:79ae2c57530b5cf4d3c0cbae4efaaf99cc1203020cf48c6a96379acb548d896f",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 4,
+    "study-map-job-polars-schema-missing-types": 3
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "stage_id": "stage-polars-07-type-promotion-coercion-and-strictness",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s4b-check.py",
+    "label": "Answer-key self-check (27 assertions)",
+    "file_sha256": "sha256:4b0cedc5794b2630e5dff423dbe3de25a5d1a5b2892f9352624a4025f8c41e7c"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:843ca8adbcc187d3af6adf009e78b70a70076bf079fb80d915ab6f9205630089"
+  }
+}

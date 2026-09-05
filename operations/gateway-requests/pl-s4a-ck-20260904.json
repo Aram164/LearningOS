@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "request-pl-s4a-ck-20260904",
+  "idempotency_key": "pl-s4a-ck-20260904",
+  "capability": "stage.attachment.add",
+  "channel": "operator",
+  "expected_snapshot": "sha256:6566db7307cd501b7858cdcaf332b322d2dec33d0bedb751d17e69cccc02014a",
+  "expected_revisions": {
+    "unit-job-polars-schema-missing-types": 2,
+    "study-map-job-polars-schema-missing-types": 1
+  },
+  "payload": {
+    "unit_id": "unit-job-polars-schema-missing-types",
+    "stage_id": "stage-polars-03-construction-i-o-schema-and-chunks",
+    "file": "work/active/workspace-job-polars-plan/outputs/exercise-sheets/s4a-check.py",
+    "label": "Answer-key self-check (26 assertions)",
+    "file_sha256": "sha256:14a5f481a8f9315ea08da9e13349aaa1e51ee65368cde46eccde0f0e32476a3f"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:6a2ec813624cc5235cfa9eab849838627f10cbca1296be0e609397405b83ae48"
+  }
+}
