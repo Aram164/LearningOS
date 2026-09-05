@@ -37,6 +37,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
@@ -275,6 +277,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
@@ -541,6 +545,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
@@ -776,6 +782,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
@@ -959,6 +967,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
@@ -1218,6 +1228,8 @@ stages:
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
       slides are the ones to know cold — the formulas are recoverable, the identification is not.
     scope_triage: required-now
+    route_id: route-66b70c94de7bc040921d186c
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49

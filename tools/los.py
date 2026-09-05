@@ -489,6 +489,26 @@ def build_parser() -> argparse.ArgumentParser:
         help="SHA-256 of the exact study-map file bytes approved for import",
     )
     p.add_argument("--replace", action="store_true")
+    p.add_argument(
+        "--check", action="store_true",
+        help="print the concrete replacement diff and write nothing",
+    )
+    p.add_argument(
+        "--intentional-reorder", default=None, metavar="REASON",
+        help="reviewed reason for changing the relative order of surviving stages",
+    )
+    p.add_argument(
+        "--intentional-state-reset", default=None, metavar="REASON",
+        help="reviewed reason for discarding preserved stage and map state",
+    )
+    p.add_argument(
+        "--retire-stage", action="append", default=None, metavar="STAGE_ID",
+        help="acknowledge one stage this revision removes (repeatable)",
+    )
+    p.add_argument(
+        "--retire-reason", default=None, metavar="REASON",
+        help="reviewed disposition for the evidence of every retired stage",
+    )
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_unit_map_import)

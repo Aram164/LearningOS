@@ -29,6 +29,9 @@ def _unit() -> dict:
 def _routes() -> list[dict]:
     return [
         {
+            # Routes reach the assembler through the projected manifest, which
+            # carries the v13 route id. The assembler must pass it through.
+            "id": "route-demo-course-deck",
             "source_id": "source-demo-book",
             "unit_id": "unit-demo-l01",
             "title": "Course deck",
@@ -40,6 +43,7 @@ def _routes() -> list[dict]:
             "scope": "current",
         },
         {
+            "id": "route-demo-worked-exercises",
             "source_id": "source-demo-practice",
             "unit_id": "unit-demo-l01",
             "title": "Worked exercises",
@@ -84,6 +88,12 @@ def test_assembly_preserves_order_material_angles_and_absent_estimates():
     assert stages[0]["resources"][0]["locator"] == "slides/VL 01.pdf"
     assert all("estimate_minutes" not in stage for stage in stages)
     assert all(stage["concepts"] == ["concept-expected-value"] for stage in stages)
+    # F01 (2026-09-05 audit): the route id reaches the stage resource, so the
+    # stage can resolve its exact material without matching on prose.
+    assert [resource["route_id"] for resource in stages[1]["resources"]] == [
+        "route-demo-course-deck",
+        "route-demo-worked-exercises",
+    ]
     assert assembler.assembly_problems(unit, routes, record) == []
 
 

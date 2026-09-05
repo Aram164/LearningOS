@@ -38,6 +38,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE2, slides 5-18 — feature types and descriptive conventions
     locator: exercise-slides/UE2.pdf, slides 5-18
@@ -99,6 +101,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 1 — frequencies, median, mean and spread
     locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
@@ -205,6 +209,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 1 — frequencies, median, mean and spread
     locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
@@ -336,6 +342,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 1 — frequencies, median, mean and spread
     locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
@@ -476,6 +484,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 1 — frequencies, median, mean and spread
     locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
@@ -615,6 +625,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-simpson/notes.md
   attachments: []
   source_feedback: []
@@ -645,6 +657,8 @@ stages:
       OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
       independently of everything after L03.
     scope_triage: required-now
+    route_id: route-0f03e63079982eab2c3f883b
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE2, slides 5-18 — feature types and descriptive conventions
     locator: exercise-slides/UE2.pdf, slides 5-18

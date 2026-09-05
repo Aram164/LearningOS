@@ -91,8 +91,9 @@ Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
 before drafting. Older plans are evidence about possible coverage, never the
 semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
-`bootstrap`; the actual import requires it. A preflight may run without it, but
-an import may not.
+`bootstrap` **after** the coverage audit and any in-repository draft exist —
+both live under canonical roots and move the fingerprint (Gate 3). The actual
+import requires the id; a preflight may run without it, but an import may not.
 
 ## Gate 1 — build the material inventory before writing stages
 
@@ -196,6 +197,15 @@ plan template, or a schema-invalid map. Review the resulting YAML, then apply it
 through `unit.map.import` (or include it in the module package). This preserves
 the reproducible creation operation without treating a deterministic draft as
 learner-approved pedagogy.
+
+**Where a draft goes, and when the snapshot is taken.** OPERATOR rule 16 owns
+this: a draft is never a canonical curriculum file, and only the gateway writes
+one. `work/` is inside the canonical fingerprint, so writing a draft into a
+workspace's `outputs/` *moves the snapshot*. Capture `snapshot.snapshot_id`
+after the draft and the coverage audit exist, not before — an id taken first is
+already stale by the time the import quotes it. A draft that is scratch rather
+than a reviewed record belongs outside the repository (`LearningOS/workbench/`),
+where it moves nothing.
 
 The package must contain `plan_contract.version: 2`,
 `plan_contract.plan_template_version: 1`, the repository-relative coverage-audit
@@ -357,7 +367,7 @@ an older snapshot.
 Review the final diff against the coverage audit, not only against the package:
 every reviewed material must land in the intended unit menu with the correct
 angle and disposition, chosen material must remain distinguishable from merely
-available material, optional study maps must use only chosen resources, lecture
+available material, a study map must use only chosen resources, lecture
 units must not have collapsed back into a cluster, and unrelated dirty-tree
 changes must remain untouched.
 
@@ -370,7 +380,7 @@ changes must remain untouched.
 | Inventing source roles or malformed YAML scalars | Canonical template, schema enums, and shadow validation. |
 | A source appeared in a stage/workspace but not its source map | Package routing preflight checks both presence and `unit_routes`. |
 | A long source list gave no reason to choose one item | Every rich route carries a lecture-specific angle, depth, scope, and knowledge coverage. |
-| A generated plan silently became the only way to view a lecture | Knowledge maps and complete material menus are permanent; study maps are optional personal projections. |
+| A generated plan silently became the only way to view a lecture | Knowledge maps and complete material menus are permanent; a study map is one ordered projection over them and never replaces or truncates the menu. Whether a unit owes one is OPERATOR rule 6, answered per unit by the producer as `needs_study_map` — not a preference. |
 | YAML anchors changed serialized canonical files | Template forbids anchors and the gateway emits alias-free YAML. |
 | Discovering schema errors only after canonical writes | `--check` validates a shadow repository and writes zero files. |
 | Expanding a plan silently reshuffled existing units or stages | Preflight preserves relative order by default; deliberate reorders require a reasoned declaration. |

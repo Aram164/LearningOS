@@ -37,6 +37,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
@@ -65,6 +67,8 @@ stages:
       — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
       the interval formulas and notation against the 2026 deck first.
     scope_triage: reference-only
+    route_id: route-b2d9fca6647fba5c03976147
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
@@ -143,6 +147,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
@@ -171,6 +177,8 @@ stages:
       — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
       the interval formulas and notation against the 2026 deck first.
     scope_triage: reference-only
+    route_id: route-b2d9fca6647fba5c03976147
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
@@ -265,6 +273,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
@@ -302,6 +312,8 @@ stages:
       — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
       the interval formulas and notation against the 2026 deck first.
     scope_triage: reference-only
+    route_id: route-b2d9fca6647fba5c03976147
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
@@ -472,6 +484,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
@@ -509,6 +523,8 @@ stages:
       — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
       the interval formulas and notation against the 2026 deck first.
     scope_triage: reference-only
+    route_id: route-b2d9fca6647fba5c03976147
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
@@ -668,6 +684,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -686,6 +704,8 @@ stages:
       — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
       the interval formulas and notation against the 2026 deck first.
     scope_triage: reference-only
+    route_id: route-b2d9fca6647fba5c03976147
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 9 — parameter estimation
     locator: Ch 9 §9.1 Punktschätzung, pdf pp. 383-385; §9.2 Eigenschaften von Schätzstatistiken, pdf
@@ -833,6 +853,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
@@ -916,6 +938,8 @@ stages:
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
       appears as a short written question.
     scope_triage: required-now
+    route_id: route-86a1ed6bed9d05cc93b50bad
+    source_id: source-sad-ss26-lectures
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md
   attachments: []
   source_feedback: []

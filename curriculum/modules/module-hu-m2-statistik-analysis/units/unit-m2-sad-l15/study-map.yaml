@@ -38,6 +38,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
     locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
@@ -229,6 +231,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE6, slides 39-68 — neurons, forward pass, softmax and loss
     locator: exercise-slides/UE6.pdf, slides 39-68
@@ -445,6 +449,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
     locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
@@ -575,6 +581,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
     locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
@@ -912,6 +920,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: watch
     label: 3Blue1Brown — the chain rule, which is all backpropagation is
     locator: Essence of Calculus episode 4 ('Visualizing the chain rule and product rule')
@@ -1166,6 +1176,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
     locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
@@ -1361,6 +1373,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -1452,6 +1466,8 @@ stages:
       not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
       The closing outlook slides are context, not exam material.
     scope_triage: required-now
+    route_id: route-5ee4a829346813cea44ac041
+    source_id: source-sad-ss26-lectures
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223

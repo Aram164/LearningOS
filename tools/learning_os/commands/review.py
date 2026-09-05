@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from learning_os.unit_notes import unit_note_sections
+
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -26,12 +28,63 @@ from .support import (
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 
+def _unit_note_packet_sections(root: Path, unit) -> list[dict]:
+    """The learner's saved session reasoning, in the order it was recorded.
+
+    `unit-note` owns session reasoning at the unit's working note; shelving used
+    to traverse only stage-owned notes, so a saved section stayed safely stored
+    and never reached the review packet it was written for (2026-09-05 audit,
+    F06). Both models are read here; neither rewrites the learner's wording.
+    """
+    if unit is None:
+        return []
+    declared = str(unit.data.get("working_note") or "").strip()
+    note = root / declared if declared else unit.path.parent / "notes.md"
+    try:
+        resolved = note.resolve()
+        resolved.relative_to(root.resolve())
+    except (OSError, ValueError):
+        return []
+    if not resolved.is_file():
+        return []
+    try:
+        text = resolved.read_text(encoding="utf-8", errors="replace")
+    except OSError:
+        return []
+    return unit_note_sections(text)
+
+
+def _packet_note_lines(sections: list[dict], stage_titles: dict[str, str]) -> list[str]:
+    lines: list[str] = []
+    for section in sections:
+        stage_ids = [sid for sid in section.get("stage_ids") or [] if sid]
+        context = ", ".join(
+            f"{stage_titles.get(sid, sid)} (`{sid}`)" for sid in stage_ids
+        ) or "no stage named"
+        lines.extend([
+            f"### {section.get('title') or 'Learning session note'}", "",
+            f"*Session note recorded {section.get('recorded_at') or 'at an unrecorded time'}"
+            f" — stage context: {context}.*", "",
+            section.get("text") or "*(Empty section.)*", "",
+        ])
+        attachments = section.get("attachments") or []
+        if attachments:
+            lines.extend([
+                "Attachments: " + ", ".join(
+                    str(item.get("path")) for item in attachments
+                    if isinstance(item, dict) and item.get("path")
+                ),
+                "",
+            ])
+    return lines
+
+
 def cmd_shelving_prepare(args) -> int:
     root = _root(args)
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
             return 3
-        _, _, study_map = _unit_map_or_error(root, args.unit_id)
+        _, unit, study_map = _unit_map_or_error(root, args.unit_id)
         if study_map is None:
             return 2
         data = copy.deepcopy(study_map.data)
@@ -52,16 +105,43 @@ def cmd_shelving_prepare(args) -> int:
                 print("los: shelving items file must contain a JSON list", file=sys.stderr)
                 return 2
         proposal_path = study_map.path.parent / "shelving-proposal.md"
+        stage_titles = {
+            str(stage.get("id")): str(stage.get("title") or stage.get("id"))
+            for stage in data.get("stages", []) or []
+            if isinstance(stage, dict) and stage.get("id")
+        }
+        sections = _unit_note_packet_sections(root, unit)
         lines = ["# Shelving proposal review packet", "",
                  "> Operational proposal only. No canonical change is applied until selected IDs are explicitly approved.", ""]
+        lines.extend(["## Session notes", ""])
+        if sections:
+            lines.extend(_packet_note_lines(sections, stage_titles))
+        else:
+            lines.extend(["*(No session note saved for this unit yet.)*", ""])
+        seen_stage_notes: set[str] = set()
         for stage in data.get("stages", []) or []:
-            lines.extend([f"## {stage.get('title', stage.get('id'))}", ""])
-            note = root / str(stage.get("working_note", ""))
-            lines.append(note.read_text(encoding="utf-8", errors="replace") if note.is_file()
-                         else "*(No stage note yet.)*")
+            note_ref = str(stage.get("working_note", ""))
+            note = root / note_ref if note_ref else None
+            stage_text = (
+                note.read_text(encoding="utf-8", errors="replace")
+                if note is not None and note.is_file() else ""
+            ).strip()
+            attachments = stage.get("attachments") or []
+            # A stage with neither recorded text nor attachments would add an
+            # empty heading between the sections that do carry reasoning.
+            if not stage_text and not attachments:
+                continue
+            if note_ref and note_ref in seen_stage_notes:
+                continue
+            if note_ref:
+                seen_stage_notes.add(note_ref)
+            lines.extend([f"## {stage.get('title', stage.get('id'))}", "",
+                          f"*Stage note `{note_ref}`.*" if note_ref else "*Stage note.*",
+                          ""])
+            lines.append(stage_text or "*(No stage note text; attachments only.)*")
             lines.append("")
-            if stage.get("attachments"):
-                lines.append("Attachments: " + ", ".join(a["path"] for a in stage["attachments"]))
+            if attachments:
+                lines.append("Attachments: " + ", ".join(a["path"] for a in attachments))
                 lines.append("")
         shelving = data.setdefault("shelving", {})
         shelving.update({"state": "proposed" if items else "draft",

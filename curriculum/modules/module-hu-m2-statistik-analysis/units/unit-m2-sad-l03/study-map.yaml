@@ -38,6 +38,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 2 — correlation and simple regression
     locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
@@ -138,6 +140,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 2 — correlation and simple regression
     locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
@@ -276,6 +280,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 2 — correlation and simple regression
     locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
@@ -401,6 +407,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 2 — correlation and simple regression
     locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
@@ -607,6 +615,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 3 — multivariate regression
     locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
@@ -744,6 +754,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgabe 3 — gradient descent and loss curve
     locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
@@ -883,6 +895,8 @@ stages:
       and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
       the routes that repair those two specifically. Everything here is examinable.'
     scope_triage: required-now
+    route_id: route-915c0c30301715706f857321
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 1, Aufgabe 3 — multivariate regression
     locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3

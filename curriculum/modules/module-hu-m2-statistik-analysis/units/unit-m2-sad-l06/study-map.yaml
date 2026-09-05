@@ -38,6 +38,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -55,6 +57,8 @@ stages:
       a section, which makes it a slower and more worked-through treatment of L06's central node. One
       of the more useful prior-year files for that reason.
     scope_triage: reference-only
+    route_id: route-571bc192e073618471ea3070
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -186,6 +190,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
@@ -222,6 +228,8 @@ stages:
       a section, which makes it a slower and more worked-through treatment of L06's central node. One
       of the more useful prior-year files for that reason.
     scope_triage: reference-only
+    route_id: route-571bc192e073618471ea3070
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -401,6 +409,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
@@ -550,6 +560,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
@@ -597,6 +609,8 @@ stages:
       a section, which makes it a slower and more worked-through treatment of L06's central node. One
       of the more useful prior-year files for that reason.
     scope_triage: reference-only
+    route_id: route-571bc192e073618471ea3070
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -837,6 +851,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
@@ -884,6 +900,8 @@ stages:
       a section, which makes it a slower and more worked-through treatment of L06's central node. One
       of the more useful prior-year files for that reason.
     scope_triage: reference-only
+    route_id: route-571bc192e073618471ea3070
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -1114,6 +1132,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
@@ -1176,6 +1196,8 @@ stages:
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
       L08 and are examinable in their own right.
     scope_triage: required-now
+    route_id: route-a2e6fc0559d93d22efbe732a
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)

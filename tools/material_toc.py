@@ -36,26 +36,81 @@ import subprocess
 import sys
 from pathlib import Path
 
+TOOLS = Path(__file__).resolve().parent
+if str(TOOLS) not in sys.path:
+    sys.path.insert(0, str(TOOLS))
+
+from learning_os.materials_resolution import (  # noqa: E402
+    PathBoundaryError,
+    material_uri_authority,
+    resolve_material_target,
+)
+
 REPO = Path(__file__).resolve().parents[1]
 MATERIALS = REPO.parent / "materials"
 
 
+def _resolution_roots() -> tuple[Path, Path]:
+    """Where a ``material://`` payload starts, and the boundary it may not leave.
+
+    ``materials/.flat/`` holds one ``source-<id>`` alias per registered source
+    and is the id-based resolution root when it exists; the physical topic tree
+    is the fallback. This mirrors ``Repo.materials_root`` exactly — the point of
+    this tool is to answer the same question the manifest answers.
+    """
+    flat = MATERIALS / ".flat"
+    root = flat if not flat.is_symlink() and flat.is_dir() else MATERIALS
+    return root, MATERIALS
+
+
 def resolve(ref: str) -> Path:
-    """`material://<source-id>/<rest>` or an ordinary path."""
-    if ref.startswith("material://"):
-        rel = ref[len("material://"):]
-        source_id, _, rest = rel.partition("/")
-        # A material folder is named after the source without its `source-`
-        # prefix, so accept either spelling rather than making the caller know.
-        wanted = {source_id, source_id.removeprefix("source-")}
-        matches = [p for p in MATERIALS.rglob("*")
-                   if p.is_file() and wanted & set(p.parts)
-                   and (not rest or p.name == Path(rest).name)]
-        if not matches:
-            raise SystemExit(f"no material file under {MATERIALS} for {ref}")
-        return sorted(matches)[0]
-    path = Path(ref)
-    return path if path.is_absolute() else (Path.cwd() / path).resolve()
+    """`material://<source-id>/<rest>` or an ordinary path.
+
+    The complete relative path decides which file this is. An earlier version
+    scanned the whole tree and matched the final filename, so a request for
+    ``source-x/b/chapter.pdf`` could be answered with ``source-x/a/chapter.pdf``
+    — and this tool exists to *establish* locator evidence, so that answer
+    looked like a successful verification. Ambiguity and absence now fail
+    closed.
+    """
+    if not ref.startswith("material://"):
+        path = Path(ref)
+        return path if path.is_absolute() else (Path.cwd() / path).resolve()
+
+    if material_uri_authority(ref) is None:
+        raise SystemExit(f"unsafe or malformed material URI: {ref}")
+
+    root, boundary = _resolution_roots()
+    payload = ref[len("material://"):]
+    authority, _, rest = payload.partition("/")
+    # A source folder may be spelled with or without its `source-` prefix.
+    # Both spellings are tried, but two existing candidates are an ambiguity
+    # the caller must resolve — never a silent pick.
+    spellings = [authority]
+    alternative = (authority.removeprefix("source-") if authority.startswith("source-")
+                   else f"source-{authority}")
+    if alternative != authority:
+        spellings.append(alternative)
+
+    found: list[Path] = []
+    failures: list[str] = []
+    for spelling in spellings:
+        candidate = f"material://{spelling}/{rest}" if rest else f"material://{spelling}"
+        try:
+            found.append(resolve_material_target(
+                candidate, resolution_root=root, boundary_root=boundary))
+        except (PathBoundaryError, FileNotFoundError, OSError) as exc:
+            failures.append(str(exc))
+    unique = sorted({path.resolve() for path in found})
+    if len(unique) > 1:
+        listed = ", ".join(str(path) for path in unique)
+        raise SystemExit(f"ambiguous material reference {ref}: {listed}")
+    if not unique:
+        raise SystemExit(
+            f"no material at the exact path named by {ref} under {root}"
+            + (f" ({failures[0]})" if failures else "")
+        )
+    return unique[0]
 
 
 def outline_toc(path: Path, depth: int) -> list[tuple[int, str, int | None]]:

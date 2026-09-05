@@ -37,6 +37,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgabe 1 — counting inside finite probability
     locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
@@ -202,6 +204,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Grinstead & Snell Ch 3 — combinatorics
     locator: Official PDF, Ch 3 'Combinatorics', §§3.1-3.3, PDF pp. 83-140
@@ -291,6 +295,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgabe 1 — counting inside finite probability
     locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
@@ -400,6 +406,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgabe 1 — counting inside finite probability
     locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
@@ -589,6 +597,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Blitzstein Chapter 1 — strategic counting
     locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
@@ -634,6 +644,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 2, Aufgabe 1 — counting inside finite probability
     locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
@@ -663,6 +675,8 @@ stages:
       so the file names cannot be used to align lectures. Compare by topic, never by number. Useful as
       a second explanation, dangerous as a scope guide.
     scope_triage: reference-only
+    route_id: route-15ce623882a5c644af47a3e6
+    source_id: source-sad-2025-recordings
   - kind: read
     label: Fahrmeir Chapter 4 — combinatorics and finite probability
     locator: Ch 4 §4.3 Zufallsstichproben und Kombinatorik, pdf pp. 214-220; Aufgaben pdf pp. 239-241
@@ -858,6 +872,8 @@ stages:
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
       §1.5''s story proofs are where they become memorable rather than memorised.'
     scope_triage: required-now
+    route_id: route-5b6e78353200f05843a1f9a0
+    source_id: source-sad-ss26-lectures
   - kind: read
     label: Grinstead & Snell Ch 3 — combinatorics
     locator: Official PDF, Ch 3 'Combinatorics', §§3.1-3.3, PDF pp. 83-140
