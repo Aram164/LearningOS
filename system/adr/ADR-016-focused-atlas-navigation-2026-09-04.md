@@ -7,6 +7,13 @@ screen opens on. Decisions 1–4 of ADR-015 remain in force and this design
 depends on all four. **Extends:** ADR-005 (domain atlas), ADR-006 (the
 projection is Core's, the rendering is the UI's).
 
+> **Amended by ADR-017 (2026-09-05):** decision 9 below is retired. A governed
+> capability for writing the concept relation registry now exists, so the Atlas
+> gains a real relation editor rather than the wording that said none was
+> available. The standard decision 9 set for such a capability — its own Core
+> command, evidence requirements, preview and receipt — is retained and becomes
+> the acceptance condition. Decisions 1-8 and 10 all remain in force.
+
 ## Context
 
 ADR-015 published `module_concept_edges` and replaced the Domain Atlas screen
