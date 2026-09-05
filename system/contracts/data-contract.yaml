@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 14
-schema_fingerprint: sha256:cb2f787947091adeb10430d6dfe219b39389e131fefda275e3db130155cc4637
+contract_version: 15
+schema_fingerprint: sha256:f95dd49c83aa8c70572b17adc0312852467cb0283bb25ba80ce6292db5292eb6
 record_schemas: 35
 history:
 - version: 1
@@ -125,18 +125,24 @@ history:
   migration: tools/migrations/route_identity_v13.py
   fixture: tests/fixtures/formats/v12/
   fixture_note: 'Corrected 2026-08-28. This entry pointed at tests/fixtures/formats/v13/,
-    which was never frozen — `bump()` writes that path automatically and nothing
-    checked it, so the record claimed a snapshot that does not exist. No v13 shape
-    was frozen because none was needed: the migration persists route and selection
-    ids rather than changing the stored vocabulary, and the v12 fixture still loads
-    against current schemas. v12 is therefore the applicable frozen shape, as v14
-    also records. `tests/test_format_fixtures.py` now asserts every pointer resolves.'
+    which was never frozen — `bump()` writes that path automatically and nothing checked
+    it, so the record claimed a snapshot that does not exist. No v13 shape was frozen
+    because none was needed: the migration persists route and selection ids rather
+    than changing the stored vocabulary, and the v12 fixture still loads against current
+    schemas. v12 is therefore the applicable frozen shape, as v14 also records. `tests/test_format_fixtures.py`
+    now asserts every pointer resolves.'
 - version: 14
   adopted: '2026-08-26'
   note: Remove obsolete Job dashboard and Job plan schemas plus the Job-only stage
     extension from the shared learning-plan vocabulary. Job learning now uses ordinary
     program, module, unit, study-map, and note contracts. These retired schemas did
-    not govern canonical records, so no canonical data migration is required and
-    the v12 compatibility fixture remains the applicable stored shape.
+    not govern canonical records, so no canonical data migration is required and the
+    v12 compatibility fixture remains the applicable stored shape.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 15
+  adopted: '2026-09-05'
+  note: Optional Atlas personal-question metadata on question notes; existing notes
+    remain valid, no record migration.
   migration: null
   fixture: tests/fixtures/formats/v12/

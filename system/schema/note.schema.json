@@ -4,41 +4,237 @@
   "title": "Note frontmatter",
   "description": "Validates the YAML frontmatter of files under knowledge/notes/**/*.md. Note prose is canonical user meaning and is not schema-validated. Path must not determine identity.",
   "type": "object",
-  "required": ["id", "type", "title", "created"],
+  "required": [
+    "id",
+    "type",
+    "title",
+    "created"
+  ],
   "additionalProperties": false,
   "properties": {
-    "id": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" },
-    "type": { "const": "note" },
-    "title": { "type": "string", "minLength": 1 },
-    "created": { "type": "string", "format": "date" },
-    "reviewed": { "type": "string", "format": "date" },
+    "id": {
+      "type": "string",
+      "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "const": "note"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created": {
+      "type": "string",
+      "format": "date"
+    },
+    "reviewed": {
+      "type": "string",
+      "format": "date"
+    },
     "role": {
-      "enum": ["synthesis", "reference", "derivation", "exercise-bank", "mock-exam", "implementation", "question", "crosswalk"],
+      "enum": [
+        "synthesis",
+        "reference",
+        "derivation",
+        "exercise-bank",
+        "mock-exam",
+        "implementation",
+        "question",
+        "crosswalk"
+      ],
       "default": "synthesis"
     },
-    "state": { "enum": ["rough", "evolving", "mature", "deprecated"] },
-    "authorship": {
-      "description": "Who wrote the note body. 'user' is Aram's own synthesis. 'mixed' is his reasoning plus imported material. 'external' is another author's text carried in. 'operator-drafted' is built by the operator from a scope source and NOT yet reasoned through by Aram — a study input, never evidence of understanding; it becomes 'mixed' when he works it and adds his own reasoning.",
-      "enum": ["user", "mixed", "external", "operator-drafted"]
+    "state": {
+      "enum": [
+        "rough",
+        "evolving",
+        "mature",
+        "deprecated"
+      ]
     },
-    "transcription": { "enum": ["none", "manual", "ai-assisted"] },
-    "semantic_review": { "enum": ["unreviewed", "user-reviewed"] },
-    "concepts": { "type": "array", "items": { "type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
-    "sources": { "type": "array", "items": { "type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
-    "attachments": { "type": "array", "items": { "type": "string" } },
-    "contexts": { "type": "array", "items": { "type": "string", "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "authorship": {
+      "description": "Who wrote the note body. 'user' is Aram's own synthesis. 'mixed' is his reasoning plus imported material. 'external' is another author's text carried in. 'operator-drafted' is built by the operator from a scope source and NOT yet reasoned through by Aram \u2014 a study input, never evidence of understanding; it becomes 'mixed' when he works it and adds his own reasoning.",
+      "enum": [
+        "user",
+        "mixed",
+        "external",
+        "operator-drafted"
+      ]
+    },
+    "transcription": {
+      "enum": [
+        "none",
+        "manual",
+        "ai-assisted"
+      ]
+    },
+    "semantic_review": {
+      "enum": [
+        "unreviewed",
+        "user-reviewed"
+      ]
+    },
+    "concepts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "contexts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^workspace-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
     "evidence": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["type", "ref"],
+        "required": [
+          "type",
+          "ref"
+        ],
         "additionalProperties": false,
         "properties": {
-          "type": { "enum": ["derivation", "explanation", "implementation", "exercise", "exam", "external"] },
-          "ref": { "type": "string", "minLength": 1 }
+          "type": {
+            "enum": [
+              "derivation",
+              "explanation",
+              "implementation",
+              "exercise",
+              "exam",
+              "external"
+            ]
+          },
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     },
-    "supersedes": { "type": "array", "items": { "type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$" }, "uniqueItems": true }
-  }
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "uniqueItems": true
+    },
+    "atlas_question": {
+      "type": "object",
+      "required": [
+        "state",
+        "target"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "open",
+            "resolved"
+          ]
+        },
+        "answer_notes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "uniqueItems": true
+        },
+        "target": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "concepts"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "concepts": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  },
+                  "minItems": 1,
+                  "maxItems": 2,
+                  "uniqueItems": true
+                }
+              }
+            },
+            {
+              "type": "object",
+              "required": [
+                "from",
+                "type",
+                "to"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "from": {
+                  "type": "string",
+                  "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                },
+                "type": {
+                  "enum": [
+                    "requires",
+                    "builds-on",
+                    "derives",
+                    "generalizes",
+                    "contrasts-with",
+                    "equivalent-to",
+                    "applies-in",
+                    "motivates"
+                  ]
+                },
+                "to": {
+                  "type": "string",
+                  "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "atlas_question"
+        ]
+      },
+      "then": {
+        "required": [
+          "role"
+        ],
+        "properties": {
+          "role": {
+            "const": "question"
+          }
+        }
+      }
+    }
+  ]
 }

@@ -13,6 +13,7 @@ from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 
+from .reads import compact_bootstrap, content_search
 from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -154,6 +155,8 @@ def cmd_capabilities(args) -> int:
 
 def cmd_bootstrap(args) -> int:
     root = _root(args)
+    if getattr(args, "compact", False):
+        return compact_bootstrap(args)
     manifest = _fresh_manifest(root)
     payload = {
         "capabilities": _capabilities(root),
@@ -172,6 +175,8 @@ def cmd_bootstrap(args) -> int:
 
 
 def cmd_search(args) -> int:
+    if getattr(args, "content", False):
+        return content_search(args)
     manifest = _fresh_manifest(_root(args))
     words = [w for w in args.query.lower().split() if w]
     matches = []

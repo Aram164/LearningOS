@@ -3,6 +3,26 @@ schema_version: 1
 contract_version: 2
 cli_protocol: 6
 queries:
+  atlas.context:
+    handler: atlas_context
+    result: atlas-context
+  operator.bootstrap:
+    handler: bootstrap
+    result: bootstrap
+    invariants:
+    - compact mode returns bounded summary pages with snapshot-bound continuation
+    - full material routes remain available through inspect; no source or angle is removed
+  note.content:
+    handler: note_read
+    result: note-content
+    invariants:
+    - reads only registered durable notes without following symlinks
+    - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
+  note.search:
+    handler: search
+    result: note-content-search
+    invariants:
+    - content mode searches complete registered durable notes and returns bounded line snippets
   plan.template:
     handler: plan_template
     result: plan-template-v1
@@ -57,6 +77,24 @@ queries:
     - reads only the sanitized catalog and approved comparisons
     - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
 commands:
+  concept.relations.change:
+    handler: concept_relations_change
+    cli_command: concept-relations-change
+    writes:
+    - knowledge/concept-relations.yaml
+    - knowledge/concept-relations/**
+    invariants:
+    - only explicitly supplied add, replace or remove operations; no inferred relations
+    - exact previous rows, snapshot and registry revision guard changes
+    - duplicates, unknown endpoints and prerequisite cycles fail atomically
+  atlas.question.save:
+    handler: atlas_question_save
+    cli_command: atlas-question-save
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - learner wording and original target are preserved
+    - open and resolved describe a personal question, never mastery or task completion
   capture.create:
     handler: capture
     cli_command: capture

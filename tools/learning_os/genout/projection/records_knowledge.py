@@ -32,6 +32,12 @@ def project_notes(repo: Repo) -> list[dict]:
             # transcribed note stopped at the repository boundary.
             "transcription": note.meta.get("transcription"),
             "semantic_review": note.meta.get("semantic_review"),
+            # A question Aram has recorded against a concept or an authored
+            # relation (ADR-017). It rides the note it is stored on rather than
+            # becoming a second store, and it is projected for the same reason
+            # the two fields above are: an interface cannot show a question it
+            # never receives, and a question nobody can find is not persisted.
+            "atlas_question": note.meta.get("atlas_question"),
         })
     return records
 

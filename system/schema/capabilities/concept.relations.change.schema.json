@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/concept.relations.change.schema.json",
+  "title": "payload for capability concept.relations.change",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "change"
+  ],
+  "properties": {
+    "change": {
+      "type": "object"
+    }
+  }
+}
