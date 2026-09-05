@@ -346,6 +346,20 @@ documents:
     amends:
       - system/adr/ADR-015-module-concept-atlas-2026-08-28.md
 
+  - path: system/adr/ADR-017-atlas-authoring-2026-09-05.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      The Atlas becomes authorable. A governed capability writes the concept
+      relation registry under the ordinary V2 transaction; Aram authors and the
+      AI only proposes; manual authoring never depends on an AI provider; a
+      personal question is a `role: question` note rather than a new store.
+      Amends ADR-016 decision 9 only — the read-only first release.
+    amends:
+      - system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
+
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md
