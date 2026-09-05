@@ -21,7 +21,7 @@ from pathlib import Path
 
 import yaml
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(__file__).resolve().parent.parent.parent
 
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
 from learning_os.loader import load_repo, parse_frontmatter  # noqa: E402

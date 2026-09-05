@@ -33,7 +33,7 @@ import shutil
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[1]
+REPO = Path(__file__).resolve().parent.parent
 MATERIALS = REPO.parent / "materials"
 
 # slug (= source id without "source-") -> physical parent dir.
