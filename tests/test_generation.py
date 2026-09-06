@@ -359,3 +359,33 @@ def test_malformed_frontmatter_prevents_publication(mini_repo):
     note.path.write_text(original_text, encoding="utf-8")
     repaired_response = run_los(mini_repo, "generate")
     assert repaired_response.returncode == 0
+
+
+def test_tools_generate_malformed_frontmatter_prevents_publication(mini_repo):
+    import subprocess
+    import sys
+
+    generate_script = str(Path(__file__).parent.parent / "tools" / "generate.py")
+    
+    # ensure it is generated first
+    subprocess.run([sys.executable, generate_script, "--root", str(mini_repo)],
+                   cwd=str(mini_repo), check=True)
+    manifest_path = mini_repo / "generated" / "manifest.json"
+    manifest_bytes = manifest_path.read_bytes()
+
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original_text = note.path.read_text(encoding="utf-8")
+
+    # break it
+    broken_text = original_text.replace("id: ", "id: [broken", 1)
+    note.path.write_text(broken_text, encoding="utf-8")
+
+    # try generate via tools/generate.py
+    proc = subprocess.run([sys.executable, generate_script, "--root", str(mini_repo)],
+                          cwd=str(mini_repo), capture_output=True, text=True)
+    assert proc.returncode != 0
+    assert "cannot publish" in proc.stdout or "cannot publish" in proc.stderr
+    assert str(note.path.relative_to(mini_repo)) in proc.stdout or str(note.path.relative_to(mini_repo)) in proc.stderr
+    
+    # the existing manifest must not be overwritten
+    assert manifest_path.read_bytes() == manifest_bytes
