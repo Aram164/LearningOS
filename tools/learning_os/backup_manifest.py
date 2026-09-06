@@ -190,6 +190,43 @@ def _admit_file(authority: Path, path: Path, excluded: set[str]) -> bool:
     return True
 
 
+def _materials_aliases(materials_root: Path, excluded: set[str]) -> dict[str, str]:
+    """Record what `materials/.flat/` means, since no backup can contain it.
+
+    Material URIs are id-shaped (`material://source-<id>/...`) and resolve
+    through a farm of symlinks pointing at each source folder's physical spot in
+    the subject taxonomy. Symlinks are never inventoried and `.flat` is excluded
+    on purpose, so a restore has the folders and no way to address them (#31).
+
+    The mapping cannot be recovered by guessing: a link name is not reliably its
+    target's folder name — `source-scalable-dataframe-systems-paper` points at
+    `data-systems/architecture/scalable-dataframe-systems`. It also cannot be
+    read back from `build_materials_tree.py`, which is not in the backup at all.
+    So it is captured here, as data, and rebuilt on restore from what was
+    captured rather than from a rule about names.
+    """
+    flat = materials_root / ".flat"
+    if _inspect_path(flat) is None:
+        return {}
+    aliases: dict[str, str] = {}
+    for link in sorted(flat.iterdir()):
+        if not link.is_symlink():
+            continue
+        target = link.resolve()
+        if _inspect_path(target) is None:
+            continue
+        try:
+            relative = target.relative_to(materials_root)
+        except ValueError:
+            continue  # an alias out of the materials tree is not ours to restore
+        if not relative.parts or any(part in excluded for part in relative.parts):
+            continue
+        if not target.is_dir():
+            continue
+        aliases[link.name] = relative.as_posix()
+    return aliases
+
+
 def build_backup_manifest(
     root: Path,
     *,
@@ -269,6 +306,7 @@ def build_backup_manifest(
         "generated_at": timestamp.isoformat(),
         "roots": sorted(authorities),
         "entries": rows,
+        "materials_aliases": _materials_aliases(materials_root, excluded),
         "aggregate_sha256": aggregate,
     }
     try:
@@ -386,6 +424,64 @@ def _overlaps(left: Path, right: Path) -> bool:
     return left == right or left in right.parents or right in left.parents
 
 
+def _rebuild_materials_alias_layer(
+    manifest: dict[str, Any], restored_materials: Path, restored_core: Path
+) -> dict[str, Any]:
+    """Recreate `materials/.flat/` in the restore from the recorded mapping.
+
+    Derived state a backup cannot carry is not missing canonical data. Without
+    this every `material://` reference in an intact restore failed to resolve
+    and the report said the canonical data was gone (#31) — the one answer an
+    operator cannot afford to be given wrongly.
+
+    A recorded alias whose folder is not in the restore is the other case, and
+    stays a failure: that is a material actually lost.
+    """
+    aliases: dict[str, str] = manifest.get("materials_aliases") or {}
+    detail: dict[str, Any] = {"recorded": len(aliases)}
+
+    # `Repo.materials_root` resolves material:// URIs at <core>/../materials, so
+    # a restore laid out any other way validates against a tree this never
+    # touches. Saying "rebuilt" about a layer the validation cannot see is the
+    # same kind of confident wrong answer #31 is about.
+    validated = (restored_core.parent / "materials").resolve()
+    if aliases and restored_materials.resolve() != validated:
+        detail["error"] = (
+            f"restored materials must be at {validated} for material:// URIs to "
+            f"resolve; got {restored_materials.resolve()}"
+        )
+        return {"id": "materials-alias-layer", "ok": False, "detail": detail}
+    if not aliases:
+        detail["note"] = (
+            "no alias layer recorded in this manifest; id-shaped material:// URIs "
+            "cannot resolve against the restore"
+        )
+        return {"id": "materials-alias-layer", "ok": True, "detail": detail}
+
+    flat = restored_materials / ".flat"
+    rebuilt: list[str] = []
+    absent: list[str] = []
+    try:
+        flat.mkdir(parents=True, exist_ok=True)
+        for name, relative in sorted(aliases.items()):
+            target = restored_materials / relative
+            if not target.is_dir() or target.is_symlink():
+                absent.append(relative)
+                continue
+            link = flat / name
+            if link.is_symlink() or link.exists():
+                link.unlink()          # verification must be repeatable
+            link.symlink_to(Path("..") / relative, target_is_directory=True)
+            rebuilt.append(name)
+    except OSError as exc:
+        detail.update(rebuilt=len(rebuilt), error=str(exc))
+        return {"id": "materials-alias-layer", "ok": False, "detail": detail}
+
+    detail.update(rebuilt=len(rebuilt), absent_from_restore=sorted(absent)[:20],
+                  absent_count=len(absent))
+    return {"id": "materials-alias-layer", "ok": not absent, "detail": detail}
+
+
 def verify_restored_system(
     root: Path,
     manifest: dict[str, Any],
@@ -431,6 +527,12 @@ def verify_restored_system(
     }]
     if not checksum["ok"]:
         return {"ok": False, "checks": checks, "manual_ui_open_required": True}
+
+    # Before loading: the alias layer is what makes material:// URIs resolvable,
+    # and rebuilding it is not a loading concern — so its own failures are
+    # reported as its own check rather than as "Core restore could not be loaded".
+    checks.append(
+        _rebuild_materials_alias_layer(manifest, restored_materials, restored_core))
 
     try:
         from learning_os.genout import generate_all, write_outputs
