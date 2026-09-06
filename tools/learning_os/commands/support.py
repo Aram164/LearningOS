@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import datetime as _dt
 import fcntl
 import hashlib
 import json
@@ -46,6 +47,38 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[frozenset[str]] = (
 
 def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
+
+
+def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
+    """A destination no existing attachment occupies.
+
+    Attachment bytes are approved canonical content, so the previous holder of a
+    name must never be overwritten. A timestamp was not a uniqueness argument:
+    it is precise to one second and the name it produced was never itself
+    checked, so two uploads of `handwriting.png` within the same second silently
+    replaced the first one's bytes.
+
+    Every candidate is checked now, and the counter guarantees the search ends
+    on a free name. Checking existence is sufficient here — and only here —
+    because every caller allocates while holding the operator lock, so no other
+    process can take the name between this check and the transaction that writes
+    it.
+    """
+    target = attachment_dir / source_name
+    if not target.exists():
+        return target
+
+    stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    target = attachment_dir / f"{stamp}-{source_name}"
+    if not target.exists():
+        return target
+
+    counter = 1
+    while True:
+        target = attachment_dir / f"{stamp}-{counter}-{source_name}"
+        if not target.exists():
+            return target
+        counter += 1
 
 
 @contextlib.contextmanager

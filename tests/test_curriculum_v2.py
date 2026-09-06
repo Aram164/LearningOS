@@ -466,6 +466,98 @@ def test_stage_attachment_copies_the_exact_approved_bytes(mini_repo, tmp_path):
     assert copied.read_bytes() == b"approved-stage-image"
 
 
+def test_stage_attachment_idempotent_and_non_destructive_under_name_collisions(mini_repo, tmp_path, monkeypatch):
+    import textwrap
+
+    from tests import gateway_helpers
+
+    original_run = gateway_helpers.subprocess.run
+
+    wrapper = tmp_path / "frozen_los.py"
+    tools_dir = gateway_helpers.LOS.parent
+    los_py = gateway_helpers.LOS
+    wrapper.write_text(textwrap.dedent(f"""\
+        import sys, datetime as dt
+        from pathlib import Path
+        sys.path.insert(0, {str(tools_dir)!r})
+        class MockDateTime(dt.datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return dt.datetime(2026, 9, 6, 12, 0, 0, tzinfo=tz)
+        import learning_os.commands.support
+        learning_os.commands.support._dt.datetime = MockDateTime
+        import runpy
+        sys.argv[0] = {str(los_py)!r}
+        runpy.run_path(sys.argv[0], run_name="__main__")
+    """), encoding="utf-8")
+
+    def frozen_run(args, **kwargs):
+        if args[0] == sys.executable and "los.py" in str(args[1]):
+            args = [args[0], str(wrapper)] + args[2:]
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(gateway_helpers.subprocess, "run", frozen_run)
+
+    add_curriculum(mini_repo)
+
+    # Upload 1
+    source1 = tmp_path / "handwriting.png"
+    source1.write_bytes(b"approved-stage-image-1")
+    res1 = approved_v2_cli(
+        mini_repo, "stage-attach", "unit-demo-l01", "stage-demo",
+        "--file", str(source1), "--file-sha256", file_sha256(source1),
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="upload-1",
+    )
+    assert res1.returncode == 0
+    path1 = mini_repo / gateway_result(res1)["attachment"]
+
+    # Upload 2 (same filename, different content)
+    source2 = tmp_path / "upload2" / "handwriting.png"
+    source2.parent.mkdir()
+    source2.write_bytes(b"approved-stage-image-2")
+    res2 = approved_v2_cli(
+        mini_repo, "stage-attach", "unit-demo-l01", "stage-demo",
+        "--file", str(source2), "--file-sha256", file_sha256(source2),
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="upload-2",
+    )
+    assert res2.returncode == 0
+    path2 = mini_repo / gateway_result(res2)["attachment"]
+
+    # Upload 3
+    source3 = tmp_path / "upload3" / "handwriting.png"
+    source3.parent.mkdir()
+    source3.write_bytes(b"approved-stage-image-3")
+    env3 = gateway_helpers.approved_v2_envelope(
+        mini_repo,
+        capability="stage.attachment.add",
+        payload={
+            "unit_id": "unit-demo-l01",
+            "stage_id": "stage-demo",
+            "file": str(source3),
+            "file_sha256": gateway_helpers.file_sha256(source3),
+        },
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="upload-3",
+    )
+    res3 = gateway_helpers.run_v2_capability(mini_repo, env3)
+    assert res3.returncode == 0
+    path3 = mini_repo / gateway_result(res3)["attachment"]
+
+    assert path1 != path2
+    assert path1 != path3
+    assert path2 != path3
+
+    assert path1.read_bytes() == b"approved-stage-image-1"
+    assert path2.read_bytes() == b"approved-stage-image-2"
+    assert path3.read_bytes() == b"approved-stage-image-3"
+
+    # Replay third to confirm idempotency (no extra file allocated)
+    res3_replay = gateway_helpers.run_v2_capability(mini_repo, env3)
+    assert res3_replay.returncode == 0
+
+
 def test_unit_map_import_creates_one_current_map(mini_repo, tmp_path):
     add_curriculum(mini_repo)
     module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"

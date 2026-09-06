@@ -9,6 +9,7 @@ import sys
 
 from .support import (
     WriteRefused,
+    _allocate_attachment_path,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -157,10 +158,7 @@ def cmd_stage_attach(args) -> int:
             return 2
         note_path = root / stage["working_note"]
         attachment_dir = note_path.parent / "attachments"
-        target = attachment_dir / source.name
-        if target.exists():
-            stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-            target = attachment_dir / f"{stamp}-{source.name}"
+        target = _allocate_attachment_path(attachment_dir, source.name)
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
         code, errors, confirmation = _write_transaction(
