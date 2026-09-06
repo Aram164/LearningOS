@@ -7,8 +7,9 @@ import subprocess
 from pathlib import Path
 
 from .. import __version__
+from ..errors import TransactionFailure
 from ..fingerprint import CANONICAL_ROOTS
-from ..githistory import last_commit_date
+from ..githistory import GitHistoryError, last_commit_date, read_history
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
@@ -90,7 +91,10 @@ def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
 
 
 def _git_last_commit(root: Path, rel: str) -> str:
-    return last_commit_date(root, rel)
+    try:
+        return last_commit_date(root, rel)
+    except GitHistoryError as exc:
+        raise TransactionFailure(f"failed to read git history: {exc}") from exc
 
 
 def stable_generated_at(root: Path) -> str:
@@ -98,16 +102,14 @@ def stable_generated_at(root: Path) -> str:
 
     Regenerating without new commits yields byte-for-byte identical output
     (improvement: no wall-clock noise in generated files). Falls back to a
-    fixed marker when Git is unavailable (e.g. synthetic test repos).
+    fixed marker for a tree without history (e.g. synthetic test repos).
     """
     try:
-        out = subprocess.run(["git", "log", "-1", "--format=%cI"],
-                             cwd=root, capture_output=True, text=True, timeout=30)
-        ts = out.stdout.strip()
-        if out.returncode == 0 and ts:
+        ts = read_history(root, "-1", "--format=%cI").strip()
+        if ts:
             return f"{ts} (last commit)"
-    except Exception:  # noqa: BLE001
-        pass
+    except GitHistoryError as exc:
+        raise TransactionFailure(f"failed to read git history: {exc}") from exc
     return "(no Git history available)"
 
 

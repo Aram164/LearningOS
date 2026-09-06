@@ -5,6 +5,7 @@ from __future__ import annotations
 import time
 
 from ..errors import TransactionFailure
+from ..githistory import GitHistoryError
 from ..revisions import load_revisions
 from .common import REQUIRED_WORKSPACE_SECTIONS
 
@@ -111,7 +112,11 @@ class ChecksProjects:
                       "archive something first)")
         # Neglect signal: active non-standing workspace untouched (per Git) for 21+ days
         for ws in non_standing:
-            ts = self._git_last_commit_ts(ws.path.parent)
+            try:
+                ts = self._git_last_commit_ts(ws.path.parent)
+            except GitHistoryError as exc:
+                self.err("GIT-HISTORY", f"cannot check workspace neglect: {exc}")
+                break
             if ts is None:
                 continue
             days = (time.time() - ts) / 86400

@@ -16,22 +16,86 @@ transaction never commits mid-run, so a cached map cannot go stale in use.
 
 from __future__ import annotations
 
+import os
 import subprocess
 from functools import lru_cache
 from pathlib import Path
 
 
-def _walk(root: str, fmt: str) -> dict[str, str]:
-    """path -> value of `fmt` for the newest commit touching it."""
+class GitHistoryError(Exception):
+    """Git history could not be read; this is not an empty history."""
+
+
+def _git(
+    root: str, *args: str, git_dir: str | None = None, allowed: tuple[int, ...] = (0,),
+) -> subprocess.CompletedProcess:
     try:
         out = subprocess.run(
-            ["git", "log", f"--format=%x00{fmt}", "--name-only", "--no-renames"],
-            cwd=root, capture_output=True, text=True, timeout=120)
-    except Exception:  # noqa: BLE001
-        return {}
+            ["git", *args],
+            cwd=root, capture_output=True, text=True, timeout=120,
+            env=None if git_dir is None else {**os.environ, "GIT_DIR": git_dir})
+    except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
+        detail = getattr(exc, "stderr", None) or ""
+        if isinstance(detail, bytes):
+            detail = detail.decode(errors="replace")
+        raise GitHistoryError(f"git {' '.join(args)} failed: {exc} {detail}".strip()) from exc
+    if out.returncode not in allowed:
+        raise GitHistoryError(
+            f"git {' '.join(args)} failed (exit {out.returncode}): {out.stderr.strip()}")
+    return out
+
+
+def read_history(root: Path | str, *args: str) -> str:
+    """Read HEAD history, preserving Git's environment and reporting failures.
+
+    The supplied root is a repository boundary: exports without Git metadata
+    must not inherit an enclosing checkout's history. Explicit Git environment
+    overrides still take precedence. An unborn symbolic HEAD is empty only if
+    Git confirms that its target ref is absent, before attempting the log.
+    """
+    root = os.path.abspath(root)
+    git_dir = None
+    try:
+        if not Path(root).is_dir():
+            raise GitHistoryError(f"history root is not a directory: {root}")
+        metadata = False
+        for name in (".git", "HEAD"):  # worktrees (including gitfiles) and bare repos
+            try:
+                (Path(root) / name).lstat()
+            except FileNotFoundError:
+                continue
+            metadata = True
+            git_dir = str(Path(root) / ".git") if name == ".git" else root
+            break
+        if not metadata and not any(
+            name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
+        ):
+            return ""
+    except OSError as exc:
+        raise GitHistoryError(f"cannot inspect Git metadata at {root}: {exc}") from exc
+
+    # Pin discovered metadata so a damaged .git cannot make Git silently walk
+    # up to an enclosing repository. Never replace the caller's GIT_DIR.
+    if "GIT_DIR" in os.environ:
+        git_dir = None
+    head = _git(root, "rev-parse", "--verify", "--quiet", "HEAD",
+                git_dir=git_dir, allowed=(0, 1))
+    if head.returncode == 1:
+        ref = _git(root, "symbolic-ref", "--quiet", "HEAD", git_dir=git_dir).stdout.strip()
+        target = _git(root, "show-ref", "--verify", "--quiet", ref,
+                      git_dir=git_dir, allowed=(0, 1))
+        if target.returncode == 1:
+            return ""
+    return _git(root, "log", *args, git_dir=git_dir).stdout
+
+
+def _walk(root: str, fmt: str) -> dict[str, str]:
+    """path -> value of `fmt` for the newest commit touching it."""
+    stdout = read_history(root, f"--format=%x00{fmt}", "--name-only", "--no-renames")
+
     found: dict[str, str] = {}
     current = ""
-    for line in out.stdout.split("\n"):
+    for line in stdout.split("\n"):
         if line.startswith("\x00"):
             current = line[1:].strip()
         elif line and current:

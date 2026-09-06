@@ -48,7 +48,7 @@ def test_hygiene_findings_are_never_errors(mini_repo):
 # ---------------------------------------------------------------- stale lock
 def test_stale_index_lock_warns(mini_repo):
     lockdir = mini_repo / ".git"
-    lockdir.mkdir()
+    _git(mini_repo, "init", "-q")
     lock = lockdir / "index.lock"
     lock.write_text("", encoding="utf-8")
     old = time.time() - 3600
@@ -58,7 +58,7 @@ def test_stale_index_lock_warns(mini_repo):
 
 def test_fresh_index_lock_does_not_warn(mini_repo):
     lockdir = mini_repo / ".git"
-    lockdir.mkdir()
+    _git(mini_repo, "init", "-q")
     (lockdir / "index.lock").write_text("", encoding="utf-8")
     assert "HYGIENE-LOCK" not in codes(run(mini_repo))
 
