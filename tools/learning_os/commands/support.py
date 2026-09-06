@@ -38,6 +38,7 @@ from learning_os.transactions import (
     TransactionService,
     TransactionSnapshotConflict,
     parse_expected_revisions,
+    reconcile_inflight_transactions,
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
@@ -93,6 +94,7 @@ def _operator_lock(root: Path):
     lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
     with lock_path.open("a+", encoding="utf-8") as handle:
         fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        reconcile_inflight_transactions(root)
         context_token = _HELD_OPERATOR_LOCKS.set(held | {root_key})
         try:
             yield
