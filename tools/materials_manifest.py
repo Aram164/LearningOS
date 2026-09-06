@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Checksummed inventory of the external materials tree.
 
-    python tools/materials_manifest.py --build     # write the manifest
-    python tools/materials_manifest.py             # verify (fast: size + presence)
-    python tools/materials_manifest.py --deep      # verify (sha256 every file)
-    python tools/materials_manifest.py --against /path/to/restored/materials
+    python tools/materials_manifest.py                         # verify live tree (size + presence)
+    python tools/materials_manifest.py --deep                  # verify live tree (sha256)
+    python tools/materials_manifest.py --against PATH          # verify a restored copy (sha256)
+    python tools/materials_manifest.py --against PATH --fast   # size + presence only
 
 WHY THIS EXISTS
 ---------------
@@ -20,7 +20,8 @@ it could not tell the difference between three very different situations:
 
 The manifest is the repository's own durable record of the external tree, so
 those cases become distinguishable and a restored backup can be *proved*
-complete and uncorrupted with ``--against``.
+complete and uncorrupted with ``--against``, which compares recorded checksums.
+``--fast`` answers the weaker question (size + presence only) deliberately.
 
 WHAT IS EXCLUDED
 ----------------
@@ -99,6 +100,21 @@ def build(base: Path) -> dict:
     }
 
 
+def _manifest_label() -> str:
+    """How to name the manifest in a message, wherever it happens to live.
+
+    `relative_to` raises when the manifest is not under ROOT, which turns a
+    print into a traceback. That never happens in normal use — the constant
+    points inside the repository — but it made every test that redirects the
+    manifest depend on the temporary directory happening to sit inside the
+    checkout, which is a property of the machine, not of the code.
+    """
+    try:
+        return str(MANIFEST.relative_to(ROOT))
+    except ValueError:
+        return str(MANIFEST)
+
+
 def load_manifest(path: Path = MANIFEST) -> dict | None:
     if not path.exists():
         return None
@@ -108,8 +124,9 @@ def load_manifest(path: Path = MANIFEST) -> dict | None:
 def verify(manifest: dict, base: Path, deep: bool = False) -> dict:
     """Compare a materials tree against the manifest.
 
-    Returns {missing, changed, unregistered} — all sorted lists of paths.
+    Returns {missing, changed, unregistered, unverifiable} — all sorted lists of paths.
     ``changed`` compares size always, and sha256 additionally when *deep*.
+    ``unverifiable`` tracks paths lacking a recorded sha256 when *deep* is requested.
     """
     recorded = manifest.get("files") or {}
     present = dict(iter_material_files(base))
@@ -117,18 +134,24 @@ def verify(manifest: dict, base: Path, deep: bool = False) -> dict:
     missing = sorted(set(recorded) - set(present))
     unregistered = sorted(set(present) - set(recorded))
     changed = []
+    unverifiable = []
     for rel in sorted(set(recorded) & set(present)):
         want, path = recorded[rel], present[rel]
         if path.stat().st_size != want.get("size"):
             changed.append(rel)
-        elif deep and sha256(path) != want.get("sha256"):
-            changed.append(rel)
-    return {"missing": missing, "changed": changed, "unregistered": unregistered}
+        elif deep:
+            want_sha256 = want.get("sha256")
+            if not isinstance(want_sha256, str):
+                unverifiable.append(rel)
+            elif sha256(path) != want_sha256:
+                changed.append(rel)
+    return {"missing": missing, "changed": changed, "unregistered": unregistered, "unverifiable": unverifiable}
 
 
 def _report(result: dict, base: Path, deep: bool) -> int:
     tiers = (("missing", "recorded but NOT PRESENT"),
              ("changed", "content differs from the manifest"),
+             ("unverifiable", "have no recorded checksums (content could not be checked)"),
              ("unregistered", "present but not in the manifest"))
     worst = 0
     for key, blurb in tiers:
@@ -141,9 +164,18 @@ def _report(result: dict, base: Path, deep: bool) -> int:
             print(f"  {rel}")
         if len(rows) > 20:
             print(f"  … and {len(rows) - 20} more")
-    if not any(result[k] for k, _ in tiers):
-        print(f"OK — {base} matches the manifest"
-              f"{' (sha256 verified)' if deep else ' (size + presence)'}")
+
+    # The summary has to agree with the exit code. An unregistered file is a
+    # report and not a failure, so a run that found only those still succeeded
+    # and must not print FAIL at someone reading the log rather than `$?`.
+    depth = " (sha256 verified)" if deep else " (size + presence)"
+    if worst:
+        print(f"FAIL — {base} does not match the manifest{depth}")
+    elif result["unregistered"]:
+        print(f"OK — {base} holds everything the manifest records{depth}; "
+              f"the {len(result['unregistered'])} unregistered file(s) above are not a failure")
+    else:
+        print(f"OK — {base} matches the manifest{depth}")
     return worst
 
 
@@ -154,9 +186,22 @@ def main() -> int:
                         help="rebuild the manifest from the current tree")
     parser.add_argument("--deep", action="store_true",
                         help="verify sha256 of every file, not just size")
+    parser.add_argument("--fast", action="store_true",
+                        help="verify size and presence only")
     parser.add_argument("--against", default=None, metavar="PATH",
-                        help="verify a restored copy at PATH instead of the live tree")
+                        help="verify a restored copy at PATH instead of the live tree (hashes by default)")
     args = parser.parse_args()
+
+    if args.deep and args.fast:
+        print("cannot specify both --deep and --fast", file=sys.stderr)
+        return 2
+
+    if args.deep:
+        resolved_deep = True
+    elif args.fast:
+        resolved_deep = False
+    else:
+        resolved_deep = bool(args.against)
 
     base = Path(args.against).resolve() if args.against else materials_root()
 
@@ -168,13 +213,13 @@ def main() -> int:
         MANIFEST.parent.mkdir(parents=True, exist_ok=True)
         MANIFEST.write_text(render_manifest(manifest), encoding="utf-8")
         gb = manifest["totals"]["bytes"] / 1024**3
-        print(f"wrote {MANIFEST.relative_to(ROOT)}: "
+        print(f"wrote {_manifest_label()}: "
               f"{manifest['totals']['files']} files, {gb:.2f} GB")
         return 0
 
     manifest = load_manifest()
     if manifest is None:
-        print(f"no manifest at {MANIFEST.relative_to(ROOT)} — "
+        print(f"no manifest at {_manifest_label()} — "
               "run with --build first", file=sys.stderr)
         return 2
     if not base.is_dir():
@@ -186,7 +231,7 @@ def main() -> int:
 
     print(f"manifest captured {manifest.get('captured')} — "
           f"{manifest.get('totals', {}).get('files')} files")
-    return _report(verify(manifest, base, deep=args.deep), base, args.deep)
+    return _report(verify(manifest, base, deep=resolved_deep), base, resolved_deep)
 
 
 if __name__ == "__main__":
