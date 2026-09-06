@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/project.schema.json",
   "title": "First-class LearningOS project",
+  "x-governs": "record",
   "type": "object",
   "additionalProperties": false,
   "required": [

@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/concepts.schema.json",
   "title": "Concept registry",
+  "x-governs": "record",
   "description": "Validates knowledge/concepts.yaml (or partitioned knowledge/concepts/*.yaml — partitioning must not change semantics). Labels are English; other-language terms are aliases. Records never contain full explanations; concept content lives in notes; backlinks are generated.",
   "type": "object",
   "required": ["concepts"],

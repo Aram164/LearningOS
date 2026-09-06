@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/plan-template-v1",
   "title": "LearningOS plan-template query response v1",
+  "x-governs": "record",
   "description": "The answer to `los plan-template curriculum --json`. It carries a freshly generated study-map starting record, never a copy of an existing plan. The record is validated against the study-map schema before this envelope is printed.",
   "type": "object",
   "additionalProperties": false,

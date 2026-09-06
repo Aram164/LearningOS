@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/backup-manifest.schema.json",
   "title": "Allowlisted LearningOS backup inventory",
+  "x-governs": "artifact",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "type", "generated_at", "roots", "entries", "aggregate_sha256"],

@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/capability-envelope.schema.json",
   "title": "LearningOS capability request/result envelope",
+  "x-governs": "record",
   "oneOf": [
     {"$ref": "#/$defs/request"},
     {"$ref": "#/$defs/result"}

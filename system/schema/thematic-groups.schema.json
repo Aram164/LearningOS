@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/thematic-groups.schema.json",
   "title": "Thematic navigation groups",
+  "x-governs": "record",
   "description": "Stable, extensible routing neighborhoods projected to interfaces. They organize Modules, Learning Sources and Topic Packs without becoming a concept ontology.",
   "type": "object",
   "required": [
