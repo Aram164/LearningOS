@@ -61,10 +61,42 @@ def load_baseline(root: Path) -> tuple[Counter, dict]:
     path = Path(root) / BASELINE_RELATIVE
     if not path.is_file():
         return Counter(), {}
-    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    def invalid(message: str) -> ValueError:
+        return ValueError(f"invalid baseline {path}: {message}")
+
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (yaml.YAMLError, UnicodeError, OSError) as exc:
+        raise invalid(str(exc)) from None
+    if not isinstance(data, dict):
+        raise invalid("expected a mapping")
+    rows = data.get("signatures", [])
+    if not isinstance(rows, list):
+        raise invalid("signatures must be a list")
     counter: Counter = Counter()
-    for row in data.get("signatures") or ():
-        counter[(row["code"], row.get("path", ""))] = int(row["count"])
+    for number, row in enumerate(rows, 1):
+        context = f"row {number}"
+        if not isinstance(row, dict):
+            raise invalid(f"{context}: expected a mapping")
+        code = row.get("code")
+        if not isinstance(code, str) or not code:
+            raise invalid(f"{context}: missing or invalid code")
+        path_val = row.get("path", "")
+        if not isinstance(path_val, str):
+            raise invalid(f"{context}: invalid path for {code}")
+        signature = f"{code} at {path_val or '<repository>'}"
+        if "count" not in row:
+            raise invalid(f"{context}: missing count for {signature}")
+        count = row["count"]
+        # int() would truncate fractions and accept booleans and quoted numbers.
+        if type(count) is not int:
+            raise invalid(f"{context}: non-integer count for {signature}")
+        if count < 1:
+            raise invalid(f"{context}: count must be positive for {signature}")
+        key = (code, path_val)
+        if key in counter:
+            raise invalid(f"{context}: duplicate signature {signature}")
+        counter[key] = count
     return counter, data
 
 
