@@ -1,5 +1,16 @@
 schema_version: 1
 contract: learningos-backup-roots
+#
+# This is an allowlist, so anything not named here is silently absent from every
+# backup. That is the point — and it is also how `curriculum/thematic-groups.yaml`
+# went unbacked-up (#30): the list is written by hand and the loader is not.
+#
+# What keeps the two honest is `undeclared_canonical_inputs` in
+# tools/learning_os/backup_manifest.py. It records the files the loader actually
+# reads and names any this contract does not cover, and the core gate fails on a
+# non-empty answer. So a new canonical input is caught when it is introduced
+# rather than during a recovery. If one genuinely belongs outside backups, it
+# needs a stated exemption here, not an absence that looks like an oversight.
 roots:
   core:
     trees:
@@ -15,10 +26,19 @@ roots:
       - operations/legacy
       - system/contracts
       - system/schema
+      # Archived workspaces are canonical operational state, not history: the
+      # loader reads archive/workspaces/*/*/CONTEXT.md on every load. Omitted
+      # here until #30.
+      - archive/workspaces
       - curriculum/quarantine/masters-planning/comparisons
       - curriculum/quarantine/masters-planning/promotions
     files:
       - curriculum/resume.yaml
+      # Explicit canonical metadata that interfaces may never infer from titles,
+      # paths or identifiers — so nothing in a restore can reconstruct it. It was
+      # missing from this list until #30, and a backup silently shipped without
+      # it while reporting success.
+      - curriculum/thematic-groups.yaml
       - curriculum/quarantine/index.yaml
       - curriculum/quarantine/masters-planning/catalog.yaml
   ui:

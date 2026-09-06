@@ -19,6 +19,7 @@ from learning_os.ai_actions import AIActionService
 from learning_os.backup_manifest import (
     BackupManifestError,
     build_backup_manifest,
+    undeclared_canonical_inputs,
     verify_backup_manifest,
     verify_restored_system,
 )
@@ -1474,3 +1475,109 @@ def test_core_asset_reader_stays_in_step_with_paired_installer(tmp_path, repo_ro
             else:
                 decisions.append(True)
         assert decisions[0] == decisions[1], payload
+
+
+# --------------------------------------------------------------------- #30
+#
+# The backup contract is an allowlist a person maintains, and it had drifted
+# from the files the loader actually reads. These cover the omission that was
+# found, and the check that makes the next one fail here rather than during a
+# recovery.
+
+
+def _with_thematic_group(root: Path) -> None:
+    """A repository whose module references a thematic group, as the real one does."""
+    (root / "curriculum").mkdir(exist_ok=True)
+    (root / "curriculum/thematic-groups.yaml").write_text(yaml.safe_dump({
+        "thematic_groups": [
+            {"id": "thematic-group-algorithms", "title": "Algorithms",
+             "summary": "Routing neighbourhood for algorithmic work."},
+        ]}), encoding="utf-8")
+    modules = yaml.safe_load((root / "records/modules.yaml").read_text(encoding="utf-8"))
+    modules["modules"][0]["thematic_group_ids"] = ["thematic-group-algorithms"]
+    (root / "records/modules.yaml").write_text(yaml.safe_dump(modules), encoding="utf-8")
+
+
+def test_backup_inventory_carries_the_thematic_group_registry(mini_repo, tmp_path):
+    _with_thematic_group(mini_repo)
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert any(row["path"] == "curriculum/thematic-groups.yaml"
+               for row in manifest["entries"] if row["root"] == "core")
+
+
+def test_a_restore_still_resolves_the_thematic_groups_its_modules_name(mini_repo, tmp_path):
+    """The consequence, not just the omission: restore from inventory and validate.
+
+    Thematic groups are explicit canonical metadata that nothing may infer, so a
+    restore that dropped the registry leaves its modules pointing at nothing.
+    """
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    _with_thematic_group(mini_repo)
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    errors = [str(issue) for issue in validate(load_repo(restore / "core"), online=False)
+              if issue.severity == "E"]
+    assert not [error for error in errors if "REF-THEMATIC-GROUP" in error]
+
+
+def test_the_contract_covers_every_canonical_input_the_loader_reads(mini_repo):
+    _with_thematic_group(mini_repo)
+    assert undeclared_canonical_inputs(mini_repo) == []
+
+
+def test_a_canonical_input_the_contract_omits_is_named(mini_repo):
+    """The negative control. Without it the check above only proves it is quiet.
+
+    The file stays on disk and the loader keeps reading it; only the declaration
+    goes away — which is exactly the shape of the defect this issue was filed
+    for.
+    """
+    _with_thematic_group(mini_repo)
+    contract_path = mini_repo / "system/contracts/backup-roots.yaml"
+    contract = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    contract["roots"]["core"]["files"] = [
+        value for value in contract["roots"]["core"]["files"]
+        if value != "curriculum/thematic-groups.yaml"
+    ]
+    contract_path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+    assert undeclared_canonical_inputs(mini_repo) == ["curriculum/thematic-groups.yaml"]
+
+
+def test_quarantined_workspaces_stay_out_of_the_inventory(mini_repo, tmp_path):
+    """Widening the allowlist to `curriculum` would fix #30 by breaking this."""
+    sealed = mini_repo / "curriculum/quarantine/masters-planning/workspaces/workspace-sealed"
+    sealed.mkdir(parents=True)
+    (sealed / "CONTEXT.md").write_text("sealed", encoding="utf-8")
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert not [row for row in manifest["entries"] if "workspace-sealed" in row["path"]]
+
+
+@pytest.mark.full_repo
+def test_the_live_contract_covers_every_canonical_input(repo_root):
+    """The check the synthetic fixtures cannot make: run it on the real tree.
+
+    A fixture only reads the canonical inputs the fixture happens to contain, so
+    the omission this issue is about was invisible to every synthetic test. This
+    one names any file the live loader reads and the live contract does not
+    cover — declare it, or record an exemption saying why it stays out.
+    """
+    assert undeclared_canonical_inputs(repo_root) == []
