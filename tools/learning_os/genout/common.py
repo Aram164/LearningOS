@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -114,16 +115,32 @@ def stable_generated_at(root: Path) -> str:
 
 
 def _git_state(root: Path) -> tuple[str | None, bool]:
+    """Publish cleanliness only after successful Git queries.
+
+    An explicit non-repository response is the sole no-history exception.
+    Keep Git diagnostics in English so that exception is independent of locale.
+    """
     try:
+        env = {**os.environ, "LC_ALL": "C"}
         rev = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root,
-                             capture_output=True, text=True, timeout=30)
+                             capture_output=True, text=True, timeout=30, env=env)
+        if rev.returncode != 0:
+            if "fatal: not a git repository" in rev.stderr:
+                return None, False
+            raise TransactionFailure(f"Git failed to read revision:\n{rev.stderr.strip()}")
+        if not rev.stdout.strip():
+            raise TransactionFailure("Git returned an empty revision")
         status = subprocess.run(
             ["git", "status", "--porcelain", "--untracked-files=all", "--",
              *CANONICAL_ROOTS],
-            cwd=root, capture_output=True, text=True, timeout=30)
-        return (rev.stdout.strip() or None, bool(status.stdout.strip()))
-    except Exception:  # noqa: BLE001
-        return None, False
+            cwd=root, capture_output=True, text=True, timeout=30, env=env)
+        if status.returncode != 0:
+            raise TransactionFailure(f"Git failed to check status:\n{status.stderr.strip()}")
+        return rev.stdout.strip(), bool(status.stdout.strip())
+    except subprocess.TimeoutExpired as exc:
+        raise TransactionFailure("Git timed out while checking repository state") from exc
+    except OSError as exc:
+        raise TransactionFailure(f"Git failed to execute: {exc}") from exc
 
 
 def _strip_headings(text: str | None) -> str:

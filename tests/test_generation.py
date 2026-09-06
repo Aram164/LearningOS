@@ -261,3 +261,55 @@ def test_health_reports_wiring_debt(mini_repo):
     assert "concept-wired" in health and "1/2" in health
     assert "**least visible**" in health and "`source-unwired`" in health
     assert "Wire on use" in health
+
+
+
+@pytest.mark.parametrize("failure", ["revision", "status", "revision-timeout", "status-timeout", "missing-git"])
+def test_git_failure_does_not_publish_manifest(mini_repo, monkeypatch, failure):
+    from learning_os.errors import TransactionFailure
+
+    repo = load_repo(mini_repo)
+    manifest_path = mini_repo / "generated/manifest.json"
+    manifest_path.write_text("previous manifest", encoding="utf-8")
+    real_run = subprocess.run
+
+    def run(args, **kwargs):
+        if args[:2] not in (["git", "rev-parse"], ["git", "status"]):
+            return real_run(args, **kwargs)
+        query = "revision" if args[1] == "rev-parse" else "status"
+        if failure == "missing-git":
+            raise FileNotFoundError("git unavailable")
+        if failure == query + "-timeout":
+            raise subprocess.TimeoutExpired(args, 30)
+        if failure == query:
+            return subprocess.CompletedProcess(args, 128, stdout="", stderr="fatal: unable to read index")
+        return subprocess.CompletedProcess(args, 0, stdout="deadbeef" if query == "revision" else "", stderr="")
+
+    monkeypatch.setattr(subprocess, "run", run)
+    message = "timed out" if "timeout" in failure else "unavailable" if failure == "missing-git" else "unable to read index"
+    with pytest.raises(TransactionFailure, match=message):
+        write_outputs(repo, generate_all(repo, generated_at="T1"))
+    assert manifest_path.read_text(encoding="utf-8") == "previous manifest"
+
+
+def test_non_git_tree_generates_with_null_revision(mini_repo, monkeypatch):
+    # Stop Git discovery before the containing checkout; do not mock Git's answer.
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(mini_repo.parent))
+    repo = load_repo(mini_repo)
+    outputs = generate_all(repo)
+    write_outputs(repo, outputs)
+    manifest = json.loads((mini_repo / "generated/manifest.json").read_text())
+    assert manifest["_generated"]["source_revision"] is None
+    assert manifest["_generated"]["source_dirty"] is False
+
+
+@pytest.mark.parametrize("status, dirty", [("", False), (" M knowledge/concepts.yaml\n", True)])
+def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, dirty):
+    from learning_os.genout.common import _git_state
+
+    def run(args, **kwargs):
+        return subprocess.CompletedProcess(args, 0,
+            stdout="deadbeef" if args[1] == "rev-parse" else status, stderr="")
+
+    monkeypatch.setattr(subprocess, "run", run)
+    assert _git_state(tmp_path) == ("deadbeef", dirty)
