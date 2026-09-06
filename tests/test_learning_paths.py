@@ -132,6 +132,103 @@ def test_path_attachment_copies_the_exact_approved_bytes(mini_repo, tmp_path):
     assert copied.read_bytes() == b"approved-path-image"
 
 
+def test_path_attachment_idempotent_and_non_destructive_under_name_collisions(mini_repo, tmp_path, monkeypatch):
+    import json
+    import sys
+    import textwrap
+
+    from tests import gateway_helpers
+
+    original_run = gateway_helpers.subprocess.run
+
+    wrapper = tmp_path / "frozen_los.py"
+    tools_dir = gateway_helpers.Path(__file__).resolve().parent.parent / "tools"
+    wrapper.write_text(textwrap.dedent(f"""\
+        import sys, datetime as dt
+        from pathlib import Path
+        sys.path.insert(0, {str(tools_dir)!r})
+        class MockDateTime(dt.datetime):
+            @classmethod
+            def now(cls, tz=None):
+                return dt.datetime(2026, 9, 6, 12, 0, 0, tzinfo=tz)
+        import learning_os.commands.support
+        learning_os.commands.support._dt.datetime = MockDateTime
+        import runpy
+        sys.argv[0] = {str(tools_dir / 'los.py')!r}
+        runpy.run_path(sys.argv[0], run_name="__main__")
+    """), encoding="utf-8")
+
+    def frozen_run(args, **kwargs):
+        if args[0] == sys.executable and "los.py" in str(args[1]):
+            args = [args[0], str(wrapper)] + args[2:]
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(gateway_helpers.subprocess, "run", frozen_run)
+
+    add_path(mini_repo)
+
+    def add_attachment(source_path, idempotency_key):
+        return gateway_helpers.approved_v2_call(
+            mini_repo,
+            capability="path.attachment.add",
+            payload={
+                "path_id": "path-demo-probability",
+                "stage_id": "stage-one",
+                "file": str(source_path),
+                "file_sha256": gateway_helpers.file_sha256(source_path),
+            },
+            artifact_ids=["path-demo-probability"],
+            idempotency_key=idempotency_key,
+        )
+
+    # Upload 1
+    source1 = tmp_path / "handwriting.png"
+    source1.write_bytes(b"approved-path-image-1")
+    res1 = add_attachment(source1, "upload-1")
+    assert res1.returncode == 0
+    path1 = mini_repo / json.loads(res1.stdout)["result"]["attachment"]
+
+    # Upload 2
+    source2 = tmp_path / "upload2" / "handwriting.png"
+    source2.parent.mkdir()
+    source2.write_bytes(b"approved-path-image-2")
+    res2 = add_attachment(source2, "upload-2")
+    assert res2.returncode == 0
+    path2 = mini_repo / json.loads(res2.stdout)["result"]["attachment"]
+
+    # Upload 3
+    source3 = tmp_path / "upload3" / "handwriting.png"
+    source3.parent.mkdir()
+    source3.write_bytes(b"approved-path-image-3")
+
+    env3 = gateway_helpers.approved_v2_envelope(
+        mini_repo,
+        capability="path.attachment.add",
+        payload={
+            "path_id": "path-demo-probability",
+            "stage_id": "stage-one",
+            "file": str(source3),
+            "file_sha256": gateway_helpers.file_sha256(source3),
+        },
+        artifact_ids=["path-demo-probability"],
+        idempotency_key="upload-3",
+    )
+    res3 = gateway_helpers.run_v2_capability(mini_repo, env3)
+    assert res3.returncode == 0
+    path3 = mini_repo / json.loads(res3.stdout)["result"]["attachment"]
+
+    assert path1 != path2
+    assert path1 != path3
+    assert path2 != path3
+
+    assert path1.read_bytes() == b"approved-path-image-1"
+    assert path2.read_bytes() == b"approved-path-image-2"
+    assert path3.read_bytes() == b"approved-path-image-3"
+
+    # Replay third
+    res3_replay = gateway_helpers.run_v2_capability(mini_repo, env3)
+    assert res3_replay.returncode == 0
+
 def test_path_note_uses_snapshot_guard_and_atomic_projection(mini_repo):
     add_path(mini_repo)
     repo = load_repo(mini_repo)
