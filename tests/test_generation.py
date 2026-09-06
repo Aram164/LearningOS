@@ -327,3 +327,32 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, with_p
     projected = next(row for row in manifest["records"] if row["id"] == "note-demo")
     expected = "Real prose paragraph." if with_prose else "first item continuation second item"
     assert projected["summary"] == expected
+
+
+def test_malformed_frontmatter_prevents_publication(mini_repo):
+    from test_cli import run_los
+    
+    # ensure it is generated first
+    run_los(mini_repo, "generate")
+    manifest_path = mini_repo / "generated" / "manifest.json"
+    manifest_bytes = manifest_path.read_bytes()
+    
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original_text = note.path.read_text(encoding="utf-8")
+    
+    # break it
+    broken_text = original_text.replace("id: ", "id: [broken", 1)
+    note.path.write_text(broken_text, encoding="utf-8")
+    
+    # try generate
+    broken_response = run_los(mini_repo, "generate")
+    assert broken_response.returncode != 0
+    assert "failed to parse" in broken_response.stderr
+    
+    # check that manifest is unchanged
+    assert manifest_path.read_bytes() == manifest_bytes
+    
+    # repair it
+    note.path.write_text(original_text, encoding="utf-8")
+    repaired_response = run_los(mini_repo, "generate")
+    assert repaired_response.returncode == 0
