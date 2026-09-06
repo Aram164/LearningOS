@@ -110,6 +110,7 @@ Produced by the operator through reasoning, never canonical: study plans, source
 ```text
 semestercontext/
 ├── AGENTS.md         role division for Codex and other agents
+├── tools/            engineering orchestration; not a LearningOS product surface
 ├── LearningOS/       the umbrella for every LearningOS component (ADR-014)
 │   ├── repository/   the authored repository of record
 │   ├── obsidian-ui/  the independent interface repository

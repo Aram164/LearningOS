@@ -94,6 +94,19 @@ entries:
       starts from the wrapper root; repository/AGENTS.md names it as a required
       read precisely because an agent starting inside repository/ never sees it.
 
+  - path: tools
+    kind: directory
+    owner: agent-pipeline
+    annotation: engineering orchestration; not a LearningOS product surface
+    purpose: >-
+      The coding-agent pipeline that drives Core and the UI together. It is
+      declared here rather than under repository/tools/ for two reasons: it
+      orchestrates both nested repositories, so it belongs at the level that
+      contains both; and it checks Core out into per-issue worktrees handed to
+      write-capable agents, so living inside Core would place the orchestrator's
+      own configuration inside every sandbox it creates. Not imported by
+      learning_os, not exposed through los.py, never in the manifest.
+
   - path: LearningOS
     kind: directory
     owner: learningos
