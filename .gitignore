@@ -23,3 +23,8 @@ operations/ai-actions/deliveries/*
 # Quarantine for untrusted provider output awaiting validation; a leftover
 # directory here only ever means an import was interrupted.
 operations/ai-actions/incoming/
+
+# Crash-recovery records for an interrupted transaction. They exist only
+# between a process dying mid-write and the next run rolling it back, and hold
+# copies of canonical files — never a thing to commit.
+operations/transactions/.inflight/

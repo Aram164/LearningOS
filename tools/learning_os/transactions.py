@@ -21,6 +21,7 @@ import hashlib
 import json
 import os
 import re
+import shutil
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -63,6 +64,7 @@ __all__ = [
     "canonical_fingerprint",
     "load_revisions",
     "parse_expected_revisions",
+    "reconcile_inflight_transactions",
     "replay_for_request",
 ]
 
@@ -601,6 +603,83 @@ def _receipt_text(receipt: Mapping) -> str:
     return yaml.safe_dump(dict(receipt), sort_keys=False, allow_unicode=True, width=100)
 
 
+def reconcile_inflight_transactions(root: Path) -> None:
+    """Roll back any transaction a dead process left half-applied.
+
+    Runs while the operator lock is held, before the command that acquired it
+    does anything, so a crashed predecessor's partial write is undone before it
+    can be read as canonical state.
+
+    Nothing here is allowed to fail quietly. A recovery that cannot restore a
+    file leaves the repository in exactly the half-applied state it was called
+    to repair, and a caller that proceeds anyway then reads that state as
+    authored truth — the failure this whole mechanism exists to prevent. So
+    every problem is collected and raised, and the record is left on disk for
+    the next attempt rather than deleted.
+
+    Idempotent by construction: restoring a file to bytes it already holds is a
+    no-op, and a record is removed only once its own rollback has fully
+    succeeded, so running twice does the same thing as running once.
+    """
+    inflight_dir = root / "operations" / "transactions" / ".inflight"
+    if not inflight_dir.is_dir():
+        return
+
+    problems: list[str] = []
+    for tx_dir in sorted(inflight_dir.iterdir()):
+        if not tx_dir.is_dir():
+            continue
+        intent_path = tx_dir / "intent.json"
+        if not intent_path.is_file():
+            # The intent is written before the first canonical replacement, so
+            # its absence means the crash happened before anything changed.
+            # Only the staged backups are here, and they describe nothing.
+            shutil.rmtree(tx_dir, ignore_errors=True)
+            continue
+        try:
+            intent = json.loads(intent_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            problems.append(f"{tx_dir.name}: its record of what to undo is unreadable ({exc})")
+            continue
+
+        failures: list[str] = []
+        for row in reversed(intent.get("backups", [])):
+            relative = row.get("path")
+            if not isinstance(relative, str) or not relative:
+                failures.append("a record entry names no path")
+                continue
+            path = (root / relative).resolve()
+            if root.resolve() not in path.parents:
+                failures.append(f"{relative} resolves outside the repository")
+                continue
+            try:
+                if row.get("created"):
+                    # The transaction created this file; undoing means removing it.
+                    path.unlink(missing_ok=True)
+                elif row.get("backup_id"):
+                    backup_file = tx_dir / str(row["backup_id"])
+                    if not backup_file.is_file():
+                        failures.append(f"{relative}: its backup copy is missing")
+                        continue
+                    _atomic_write_bytes(path, backup_file.read_bytes())
+                else:
+                    failures.append(f"{relative}: the record says neither created nor backed up")
+            except OSError as exc:
+                failures.append(f"{relative}: {exc}")
+
+        if failures:
+            problems.append(f"{tx_dir.name}: " + "; ".join(failures))
+            continue
+        shutil.rmtree(tx_dir, ignore_errors=True)
+
+    if problems:
+        raise TransactionFailure(
+            "a previous run was interrupted mid-write and could not be rolled back; "
+            "the repository may hold part of an unfinished change. Resolve these before "
+            "writing again — the rollback records are preserved under "
+            f"operations/transactions/.inflight/: {'; '.join(problems)}")
+
+
 class TransactionService:
     """Commit one validated set of authored writes and one append-only receipt."""
 
@@ -865,6 +944,8 @@ class TransactionService:
         if conflicts:
             raise TransactionConflict(conflicts)
 
+        inflight_dir = self.root / "operations" / "transactions" / ".inflight" / transaction_id
+
         def rollback() -> list[str]:
             failures: list[str] = []
             try:
@@ -886,9 +967,21 @@ class TransactionService:
                     restore_projection()
                 except Exception:
                     failures.append("<projection publication>")
+            shutil.rmtree(inflight_dir, ignore_errors=True)
             return sorted(set(failures))
 
         try:
+            inflight_dir.mkdir(parents=True, exist_ok=True)
+            intent = {"transaction_id": transaction_id, "backups": []}
+            for i, (path, old) in enumerate(backups.items()):
+                row = {"path": _safe_relative(self.root, path), "created": old is None}
+                if old is not None:
+                    backup_id = f"backup-{i}"
+                    row["backup_id"] = backup_id
+                    _atomic_write_bytes(inflight_dir / backup_id, old)
+                intent["backups"].append(row)
+            _atomic_write_bytes(inflight_dir / "intent.json", json.dumps(intent).encode("utf-8"))
+
             for path, content in normalized_writes.items():
                 _atomic_write_bytes(path, content)
             for path in delete_paths:
@@ -1021,6 +1114,7 @@ class TransactionService:
             backups[safe_receipt_path] = None
             if touched is not None:
                 touched([*normalized_writes, *delete_paths, receipt_path])
+            shutil.rmtree(inflight_dir, ignore_errors=True)
             return TransactionResult(
                 transaction_id=transaction_id,
                 receipt_path=receipt_path,
