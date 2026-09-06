@@ -315,11 +315,12 @@ def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, di
     assert _git_state(tmp_path) == ("deadbeef", dirty)
 
 
-@pytest.mark.parametrize("marker", ["-", "*", "+", "1.", "12."])
+@pytest.mark.parametrize("marker", ["-", "*", "+", "1.", "12.", "1)", "12)"])
+@pytest.mark.parametrize("continuation", ["  continuation", "continuation"])
 @pytest.mark.parametrize("with_prose", [True, False])
-def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, with_prose):
+def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, continuation, with_prose):
     note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
-    body = f"# Title\n\n---\n{marker} first item\n  continuation\n{marker} second item\n\n* * *\n"
+    body = f"# Title\n\n---\n{marker} first item\n{continuation}\n{marker} second item\n\n* * *\n"
     if with_prose:
         body += "\nReal prose paragraph."
     note.write_text(note.read_text().replace("Body prose.", body), encoding="utf-8")
