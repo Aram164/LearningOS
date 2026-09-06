@@ -48,6 +48,8 @@ def git(*args: str) -> str:
         ["git", "-C", str(REPO), *args],
         capture_output=True, text=True, check=False,
     )
+    if result.returncode != 0:
+        sys.exit(f"history could not be inspected\n{result.stderr.strip()}")
     return result.stdout.strip()
 
 
