@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
 from collections import Counter
 from pathlib import Path
 
@@ -146,7 +147,7 @@ def test_hygiene_lock_is_visible_but_baseline_exempt(mini_repo):
     import time
 
     lockdir = mini_repo / ".git"
-    lockdir.mkdir()
+    subprocess.run(["git", "init", "-q"], cwd=mini_repo, check=True, capture_output=True)
     lock = lockdir / "index.lock"
     lock.write_text("", encoding="utf-8")
     old = time.time() - 3600

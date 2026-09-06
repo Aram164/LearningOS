@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 
 from ..fingerprint import source_fingerprint
-from ..githistory import last_commit_timestamp
+from ..githistory import GitHistoryError, last_commit_timestamp, read_history
 from .common import STALE_LOCK_AGE_S
 
 
@@ -16,7 +16,14 @@ class ChecksHygiene:
     """Mixed into Validator; see rules/core.py."""
     # ------------------------------------------------------- hygiene (ADR-004)
     def check_hygiene(self):
-        """Self-announcing mess detection. Warnings only — nags, never blocks."""
+        """Self-announcing mess detection.
+
+        Every finding about the repository's contents is a warning: it nags,
+        never blocks. The one error this can raise, `GIT-HISTORY`, says the
+        opposite kind of thing — not that something is wrong with the contents,
+        but that Git could not be read, so the view check reached no conclusion
+        at all (system/VALIDATION.md, "Hygiene sweep").
+        """
         self._hygiene_stale_locks()
         self._hygiene_stale_views()
         self._hygiene_unfiled()
@@ -42,7 +49,12 @@ class ChecksHygiene:
         if not manifest.is_file():
             # Synthetic/portable trees without Git history are valid before
             # their first projection. A real checkout should always publish.
-            if not self._git(["log", "-1", "--format=%H"]).strip():
+            try:
+                history = read_history(self.repo.root, "-1", "--format=%H").strip()
+            except GitHistoryError as exc:
+                self.err("GIT-HISTORY", f"cannot check missing generated views: {exc}")
+                return
+            if not history:
                 return
             self.warn("HYGIENE-VIEWS",
                       "generated/ views absent — run `make views` (they are disposable, "

@@ -198,9 +198,21 @@ limits advisory.
 
 ## Hygiene sweep (ADR-004, 2026-08-03)
 
-All hygiene findings are **W** — they announce mess the moment it exists so it
-never accumulates into an audit session; they nag, never block.
+Every hygiene finding *about the repository's contents* is **W** — they announce
+mess the moment it exists so it never accumulates into an audit session; they
+nag, never block. The exception is `GIT-HISTORY`, which is not a finding about
+the contents but a statement that a check could not be made at all.
 
+- **E** `GIT-HISTORY` — Git history could not be read, so a check that depends
+  on it (`HYGIENE-VIEWS`, `WS-NEGLECT`) reached no conclusion. Raised by
+  `learning_os.githistory`, which distinguishes a tree that genuinely has no
+  history — an export, an unborn branch, an empty repository — from a Git that
+  failed to answer. The first is still an ordinary empty result; only the second
+  is this error. It is an error rather than a warning because the alternative is
+  reporting a clean repository on the strength of a question nobody answered,
+  and it is deliberately **not** in `DYNAMIC_ADVISORY_WARNINGS`: `WS-NEGLECT` is
+  exempt from the warning baseline because it moves with the clock, and a failed
+  read must never inherit that exemption.
 - **W** `HYGIENE-LOCK` — a `.git/index.lock` older than 10 minutes (repository
   or container repo): a crashed git process is silently blocking all commits.
 - **W** `HYGIENE-VIEWS` — `generated/manifest.json` absent or older than the
