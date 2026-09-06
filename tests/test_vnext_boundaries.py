@@ -786,6 +786,7 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
         "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
         "vault_owned": ["data.json"],
     }), encoding="utf-8")
+    _installer_fixture(ui)
     (ui / "node_modules/pkg").mkdir(parents=True)
     (ui / "node_modules/pkg/private.js").write_text("ignored", encoding="utf-8")
     materials = mini_repo.parent / "materials"
@@ -872,6 +873,27 @@ def _unreadable(directory: Path):
         os.chmod(directory, original)
 
 
+def _installer_fixture(ui: Path) -> None:
+    """Synthetic external installer; delegation to the real one is tested separately."""
+    (ui / "bases").mkdir()
+    (ui / "bases/demo.base").write_text("views: []\n", encoding="utf-8")
+    (ui / "install.py").write_text(
+        "import argparse\n"
+        "from pathlib import Path\n"
+        "p = argparse.ArgumentParser()\n"
+        "p.add_argument('--vault', required=True)\n"
+        "p.add_argument('--dry-run', action='store_true', required=True)\n"
+        "p.add_argument('--skip-tests', action='store_true', required=True)\n"
+        "args = p.parse_args()\n"
+        "assert Path(args.vault).is_dir()\n"
+        "assert not list(Path(args.vault).iterdir())\n"
+        "bases = Path(__file__).parent / 'bases'\n"
+        "if not bases.is_dir(): raise SystemExit('bases is missing')\n"
+        "if not list(bases.glob('*.base')): raise SystemExit('nothing matches bases/*.base')\n",
+        encoding="utf-8",
+    )
+
+
 def _ui_fixture(ui: Path, core: Path) -> None:
     """A UI checkout shaped like the real one: a declaration, and what it names."""
     (ui / "plugin").mkdir(parents=True)
@@ -885,6 +907,7 @@ def _ui_fixture(ui: Path, core: Path) -> None:
         "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
         "vault_owned": ["data.json"],
     }), encoding="utf-8")
+    _installer_fixture(ui)
     (ui / "contracts").mkdir()
     contract = yaml.safe_load(
         (core / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8")
@@ -925,16 +948,14 @@ def _manifest_without(manifest, root: str, path: str):
     return trimmed
 
 
-def _assured_for(mini_repo, tmp_path, dropped: str):
+def _assured_for(mini_repo, tmp_path, dropped: str | None):
     ui = tmp_path / "ui"
     _ui_fixture(ui, mini_repo)
     materials = tmp_path / "materials"
     materials.mkdir()
-    manifest = _manifest_without(
-        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials),
-        "ui",
-        dropped,
-    )
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    if dropped is not None:
+        manifest = _manifest_without(manifest, "ui", dropped)
     restore = tmp_path / "restore"
     roots = {
         "core": (mini_repo, restore / "core"),
@@ -1097,3 +1118,359 @@ def test_backup_manifest_refuses_a_shipped_entry_that_escapes_the_plugin_directo
     materials.mkdir()
     with pytest.raises(BackupManifestError, match="bare filename"):
         build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_refuses_an_unreadable_parent_of_an_admitted_tree(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    parent = mini_repo / "operations"
+    tree = parent / "legacy"
+    tree.mkdir(parents=True, exist_ok=True)
+    (tree / "only-copy.txt").write_text("keep me", encoding="utf-8")
+    before = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert any(row["path"] == "operations/legacy/only-copy.txt" for row in before["entries"])
+    # The authority is still readable. Denying the authority would test an
+    # already-working guard instead of the admitted-tree inspection failure.
+    with _unreadable(parent):
+        with pytest.raises(BackupManifestError, match="unreadable"):
+            build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+@pytest.mark.parametrize("operation", ["lstat", "resolve"])
+def test_backup_manifest_refuses_file_inspection_io_errors(mini_repo, tmp_path, monkeypatch, operation):
+    import errno
+
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    only_copy = materials / "only-copy.pdf"
+    only_copy.write_bytes(b"pdf")
+    before = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert any(row["root"] == "materials" and row["path"] == only_copy.name
+               for row in before["entries"])
+    original = getattr(Path, operation)
+
+    def fail_inspection(path, *args, **kwargs):
+        if path == only_copy:
+            raise OSError(errno.EIO, "injected storage failure", str(path))
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, operation, fail_inspection)
+    with pytest.raises(BackupManifestError, match="unreadable.*only-copy.pdf"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_preserves_absence_and_symlink_exclusions(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "private.pdf").write_bytes(b"private")
+    (materials / "linked-tree").symlink_to(outside, target_is_directory=True)
+    (materials / "linked-file.pdf").symlink_to(outside / "private.pdf")
+    # This explicitly declared tree has a genuinely absent parent.
+    contract_path = mini_repo / "system/contracts/backup-roots.yaml"
+    contract = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    contract["roots"]["core"]["trees"].append("absent-parent/absent-tree")
+    contract_path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert not any(row["root"] == "materials" for row in manifest["entries"])
+    assert not any(row["path"].startswith("absent-parent/") for row in manifest["entries"])
+    # Explicit declarations that traverse a symlink retain their refusal.
+    contract["roots"]["materials"]["trees"].append("linked-tree")
+    contract_path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+    with pytest.raises(BackupManifestError, match="traverses a symlink"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+# Mirrors obsidian-ui/install.py: read_plugin_assets' exact MANIFEST_KEYS,
+# _check_names' non-empty array/filename/uniqueness rules for BOTH lists,
+# and read_plugin_assets' disjoint ownership rule. Keep this corpus aligned
+# when those installer rules change; the Core gate uses synthetic fixtures.
+@pytest.mark.parametrize("change,error", [
+    ({"vault_owned": ["main.js"]}, "both shipped and vault-owned"),
+    ({"vault_owned": None}, "vault_owned"),
+    ({"vault_owned": "data.json"}, "vault_owned"),
+    ({"vault_owned": []}, "vault_owned"),
+    ({"vault_owned": [None]}, "vault_owned"),
+    ({"vault_owned": [" "]}, "vault_owned"),
+    ({"vault_owned": ["../data.json"]}, "bare filename"),
+    ({"vault_owned": ["dir\\data.json"]}, "bare filename"),
+    ({"vault_owned": ["."]}, "bare filename"),
+    ({"vault_owned": [".."]}, "bare filename"),
+    ({"vault_owned": ["data.json", "data.json"]}, "repeats"),
+    ({"unexpected": []}, "exactly"),
+])
+def test_backup_manifest_matches_installer_asset_rules(mini_repo, tmp_path, change, error):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    declaration = ui / "plugin-assets.json"
+    parsed = json.loads(declaration.read_text(encoding="utf-8"))
+    parsed.update(change)
+    declaration.write_text(json.dumps(parsed), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    with pytest.raises(BackupManifestError, match=error):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_requires_installer_vault_owned_key(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    declaration = ui / "plugin-assets.json"
+    parsed = json.loads(declaration.read_text(encoding="utf-8"))
+    del parsed["vault_owned"]  # install.py requires exactly MANIFEST_KEYS.
+    declaration.write_text(json.dumps(parsed), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    with pytest.raises(BackupManifestError, match="exactly"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+@pytest.mark.parametrize("vault_owned", [["main.js"], "data.json"])
+def test_restore_reports_installer_asset_contract_failure(mini_repo, tmp_path, vault_owned):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    # Model an older inventory which faithfully captured a bad declaration.
+    # Rebind its bytes so checksum failure cannot hide the missing validation.
+    declaration = ui / "plugin-assets.json"
+    parsed = json.loads(declaration.read_text(encoding="utf-8"))
+    parsed["vault_owned"] = vault_owned
+    declaration.write_text(json.dumps(parsed), encoding="utf-8")
+    data = declaration.read_bytes()
+    for row in manifest["entries"]:
+        if (row["root"], row["path"]) == ("ui", "plugin-assets.json"):
+            row["size"] = len(data)
+            row["sha256"] = "sha256:" + hashlib.sha256(data).hexdigest()
+    manifest["aggregate_sha256"] = "sha256:" + hashlib.sha256(
+        json.dumps(manifest["entries"], ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        .encode("utf-8")
+    ).hexdigest()
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"]
+    assert not assured["ok"]
+    assert not checks["ui-asset-declaration"]["ok"]
+    assert checks["ui-asset-declaration"]["detail"]["error"]
+
+
+@pytest.mark.parametrize("empty_directory", [False, True], ids=["missing-bases", "empty-bases"])
+def test_restore_runs_installer_bases_preflight(mini_repo, tmp_path, empty_directory):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = _manifest_without(
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials),
+        "ui", "bases/demo.base",
+    )
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    if empty_directory:
+        (restore / "ui/bases").mkdir()
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"]
+    assert not assured["ok"]
+    assert not checks["ui-install-preflight"]["ok"]
+    expected = "nothing matches" if empty_directory else "bases is missing"
+    assert expected in checks["ui-install-preflight"]["detail"]["stderr"]
+    for name in ("ui-asset-declaration", "ui-bundle-smoke", "ui-contract-lock"):
+        assert checks[name]["ok"], checks[name]
+
+
+def test_restore_refuses_an_uninventoried_installer(mini_repo, tmp_path):
+    assured = _assured_for(mini_repo, tmp_path, "install.py")
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"]
+    assert not assured["ok"]
+    assert not checks["ui-install-preflight"]["ok"]
+    assert "install.py" in checks["ui-install-preflight"]["detail"]["error"]
+
+
+def test_restore_uses_the_restored_installers_new_requirements(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    # An installer can introduce a requirement unknown to Core. Prove that its
+    # refusal propagates without adding that prerequisite to a second list.
+    with (ui / "install.py").open("a", encoding="utf-8") as stream:
+        stream.write("raise SystemExit('new installer prerequisite is missing')\n")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"]
+    assert not assured["ok"]
+    assert "new installer prerequisite" in checks["ui-install-preflight"]["detail"]["stderr"]
+    assert not (restore / "core/.obsidian").exists()
+    assert not (restore / "core/bases").exists()
+
+
+@pytest.mark.full_repo
+@pytest.mark.parametrize("case", ["valid", "missing-bases", "empty-bases", "indirect-base", "missing-config"])
+def test_restore_preflight_with_current_paired_installer(mini_repo, tmp_path, repo_root, case):
+    # This integration uses the actual paired install.py, not a copied set of
+    # its rules. Core-only CI has no paired UI; the paired checkout runs it.
+    installer = repo_root.parent / "obsidian-ui/install.py"
+    if not installer.is_file():
+        pytest.skip("paired UI installer is not available in this Core-only checkout")
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    shutil.copy2(installer, ui / "install.py")
+    (ui / "vault-config").mkdir()
+    (ui / "vault-config/app.json").write_text('{"userIgnoreFilters": []}', encoding="utf-8")
+    (ui / "vault-config/core-plugins.json").write_text('{}', encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    if case in {"missing-bases", "empty-bases"}:
+        manifest = _manifest_without(manifest, "ui", "bases/demo.base")
+    elif case == "missing-config":
+        manifest = _manifest_without(manifest, "ui", "vault-config/app.json")
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    if case == "empty-bases":
+        (restore / "ui/bases").mkdir()
+    elif case == "indirect-base":
+        (restore / "ui/bases/indirect.base").symlink_to(restore / "ui/bases/demo.base")
+    before_ui = {path.relative_to(restore / "ui"): path.read_bytes()
+                 for path in (restore / "ui").rglob("*") if path.is_file()}
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"], checks
+    assert checks["ui-install-preflight"]["ok"] == (case == "valid"), checks
+    assert assured["ok"] == (case == "valid"), checks
+    assert checks["ui-install-preflight"]["detail"]["vault_unchanged"]
+    assert before_ui == {path.relative_to(restore / "ui"): path.read_bytes()
+                         for path in (restore / "ui").rglob("*") if path.is_file()}
+    assert not (restore / "core/.obsidian").exists()
+    assert not (restore / "core/bases").exists()
+
+
+@pytest.mark.parametrize("failure", ["timeout", "launch-error", "dry-run-wrote"])
+def test_restore_preflight_fails_closed_on_execution_problems(mini_repo, tmp_path, monkeypatch, failure):
+    original = subprocess.run
+
+    def fail_installer(argv, *args, **kwargs):
+        if "--dry-run" not in argv:
+            return original(argv, *args, **kwargs)
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(argv, 30)
+        if failure == "launch-error":
+            raise OSError("installer process could not start")
+        vault = Path(argv[argv.index("--vault") + 1])
+        (vault / "unexpected.txt").write_text("not a dry run", encoding="utf-8")
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(subprocess, "run", fail_installer)
+    # Keep every required input intact: only the injected failure can reject it.
+    assured = _assured_for(mini_repo, tmp_path, None)
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["checksums"]["ok"]
+    assert not checks["ui-install-preflight"]["ok"]
+    assert not assured["ok"]
+    if failure == "dry-run-wrote":
+        assert checks["ui-install-preflight"]["detail"]["vault_unchanged"] is False
+    else:
+        assert checks["ui-install-preflight"]["detail"]["error"]
+
+
+def test_restore_does_not_run_installer_before_checksum_verification(mini_repo, tmp_path, monkeypatch):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    (restore / "ui/install.py").write_text("raise SystemExit('changed')", encoding="utf-8")
+
+    def unexpected_execution(*args, **kwargs):
+        pytest.fail("checksum mismatch must short-circuit every subprocess")
+
+    monkeypatch.setattr(subprocess, "run", unexpected_execution)
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    assert not assured["ok"]
+    assert [check["id"] for check in assured["checks"]] == ["checksums"]
+
+
+@pytest.mark.full_repo
+def test_core_asset_reader_stays_in_step_with_paired_installer(tmp_path, repo_root):
+    import runpy
+
+    from learning_os.backup_manifest import read_shipped_assets
+
+    installer = repo_root.parent / "obsidian-ui/install.py"
+    if not installer.is_file():
+        pytest.skip("paired UI installer is not available in this Core-only checkout")
+    namespace = runpy.run_path(str(installer))
+    base = {"schema_version": 1, "type": "learningos-ui-plugin-assets",
+            "shipped": ["main.js"], "vault_owned": ["data.json"]}
+    cases = [base, {}, {**base, "extra": None}]
+    cases.extend({key: value for key, value in base.items() if key != field} for field in base)
+    for field in ("shipped", "vault_owned"):
+        cases.extend({**base, field: value} for value in (
+            None, {}, True, "data.json", [], [None], [""], [" "], ["."], [".."],
+            ["../x"], ["dir/x"], ["dir\\x"], ["x", "x"], ["main.js"], ["data.json"],
+        ))
+    cases.extend({**base, "schema_version": version} for version in (True, False, 0, 2, "1", None))
+    for payload in cases:
+        (tmp_path / "plugin-assets.json").write_text(json.dumps(payload), encoding="utf-8")
+        decisions = []
+        for reader, error in ((read_shipped_assets, BackupManifestError),
+                              (namespace["read_plugin_assets"], namespace["PluginAssetsError"])):
+            try:
+                reader(tmp_path)
+            except error:
+                decisions.append(False)
+            else:
+                decisions.append(True)
+        assert decisions[0] == decisions[1], payload

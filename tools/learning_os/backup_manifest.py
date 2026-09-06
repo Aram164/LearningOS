@@ -8,6 +8,8 @@ import json
 import os
 import stat
 import subprocess
+import sys
+import tempfile
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -57,6 +59,16 @@ def _safe_relative(value: str) -> PurePosixPath:
     return rel
 
 
+def _inspect_path(path: Path) -> os.stat_result | None:
+    """Distinguish genuine absence from failure to inspect an admitted path."""
+    try:
+        return path.lstat()
+    except FileNotFoundError:
+        return None
+    except OSError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+
+
 def _load_contract(root: Path) -> dict[str, Any]:
     path = root / "system" / "contracts" / "backup-roots.yaml"
     try:
@@ -82,6 +94,25 @@ def _load_contract(root: Path) -> dict[str, Any]:
 
 
 PLUGIN_ASSETS_TYPE = "learningos-ui-plugin-assets"
+PLUGIN_ASSETS_KEYS = {"schema_version", "type", "shipped", "vault_owned"}
+
+
+def _asset_names(values: Any, field: str) -> list[str]:
+    """Mirror the UI installer's `_check_names` for either ownership list."""
+    if not isinstance(values, list) or not values:
+        if field == "shipped":
+            raise BackupManifestError("plugin-assets.json declares no shipped assets")
+        raise BackupManifestError(f"plugin-assets.json {field} must be a non-empty array")
+    for name in values:
+        if not isinstance(name, str) or not name.strip():
+            raise BackupManifestError(f"plugin-assets.json {field} entries must be filenames")
+        if "/" in name or "\\" in name or name in {".", ".."}:
+            raise BackupManifestError(
+                f"plugin-assets.json {field} entry {name!r} is not a bare filename"
+            )
+    if len(set(values)) != len(values):
+        raise BackupManifestError(f"plugin-assets.json repeats a {field} asset")
+    return values
 
 
 def read_shipped_assets(ui_root: Path) -> list[str]:
@@ -100,23 +131,22 @@ def read_shipped_assets(ui_root: Path) -> list[str]:
         raise BackupManifestError(f"plugin-assets.json could not be read: {exc}") from exc
     if not isinstance(parsed, dict):
         raise BackupManifestError("plugin-assets.json is not an object")
+    if set(parsed) != PLUGIN_ASSETS_KEYS:
+        raise BackupManifestError(
+            "plugin-assets.json must carry exactly " + ", ".join(sorted(PLUGIN_ASSETS_KEYS))
+        )
     # bool is a subclass of int, so JSON `true` would otherwise pass as 1.
     if type(parsed.get("schema_version")) is not int or parsed["schema_version"] != 1:
         raise BackupManifestError("plugin-assets.json has an unsupported schema_version")
     if parsed.get("type") != PLUGIN_ASSETS_TYPE:
         raise BackupManifestError("plugin-assets.json has an unsupported type")
-    shipped = parsed.get("shipped")
-    if not isinstance(shipped, list) or not shipped:
-        raise BackupManifestError("plugin-assets.json declares no shipped assets")
-    for name in shipped:
-        if not isinstance(name, str) or not name.strip():
-            raise BackupManifestError("plugin-assets.json shipped entries must be filenames")
-        if "/" in name or "\\" in name or name in {".", ".."}:
-            raise BackupManifestError(
-                f"plugin-assets.json shipped entry {name!r} is not a bare filename"
-            )
-    if len(set(shipped)) != len(shipped):
-        raise BackupManifestError("plugin-assets.json repeats a shipped asset")
+    shipped = _asset_names(parsed["shipped"], "shipped")
+    vault_owned = _asset_names(parsed["vault_owned"], "vault_owned")
+    overlap = sorted(set(shipped) & set(vault_owned))
+    if overlap:
+        raise BackupManifestError(
+            f"plugin-assets.json: {', '.join(overlap)} cannot be both shipped and vault-owned"
+        )
     return shipped
 
 
@@ -146,19 +176,16 @@ def _admit_file(authority: Path, path: Path, excluded: set[str]) -> bool:
         return False
     if any(part in excluded for part in relative.parts):
         return False
-    try:
-        st = path.lstat()
-    except FileNotFoundError:
-        return False
-    except PermissionError as exc:
-        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
-    except OSError:
+    st = _inspect_path(path)
+    if st is None:
         return False
     if stat.S_ISLNK(st.st_mode) or not stat.S_ISREG(st.st_mode):
         return False
     try:
         path.resolve().relative_to(authority.resolve())
-    except (OSError, ValueError):
+    except OSError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+    except ValueError:
         return False
     return True
 
@@ -190,8 +217,11 @@ def build_backup_manifest(
                     "sha256": _sha256_file(path),
                 }
         for relative in declared["trees"]:
+            if any(part in excluded for part in PurePosixPath(relative).parts):
+                continue
             tree = _inside(authority, relative)
-            if not tree.is_dir() or tree.is_symlink():
+            tree_stat = _inspect_path(tree)
+            if tree_stat is None or not stat.S_ISDIR(tree_stat.st_mode):
                 continue
             # `rglob` suppresses the errors raised while descending, so an
             # unreadable directory yielded nothing and raised nothing — the same
@@ -310,11 +340,12 @@ def verify_restored_system(
     restored_ui: Path,
     restored_materials: Path,
 ) -> dict[str, Any]:
-    """Verify hashes, projections, validation, and a restored UI bundle.
+    """Verify hashes, projections, validation, and a trusted restored UI bundle.
 
     This operates only on a separate restore tree.  It intentionally does not
     install the UI into a live vault or open Obsidian; those remain explicit
-    post-restore approval steps.
+    post-restore approval steps. It executes the inventoried installer in
+    dry-run mode: hashes prove integrity, not the trustworthiness of its code.
     """
     live_roots = (root.resolve(), (root.parent / "obsidian-ui").resolve(),
                   (root.parent / "materials").resolve())
@@ -409,6 +440,40 @@ def verify_restored_system(
         ]
         checks.append({"id": "ui-asset-declaration", "ok": not missing,
                        "detail": {"shipped": shipped, "missing": missing}})
+
+    # The restored install.py owns preflight_plugin_directory and all other
+    # install inputs, including bases/*.base. Ask that exact installer, rather
+    # than maintaining a second prerequisite list in Core. --skip-tests avoids
+    # rebuilding a recovered bundle (and needing npm/network); the existing
+    # bundle/contract checks below and above remain independent. A disposable
+    # fresh vault proves source readiness, not compatibility with a live vault.
+    installer = restored_ui / "install.py"
+    installer_row = next((row for row in manifest["entries"]
+                          if (row["root"], row["path"]) == ("ui", "install.py")), None)
+    detail: dict[str, Any] = {
+        "requirement": "restored install.py --dry-run --skip-tests",
+        "scope": "installation inputs for a fresh vault; excludes UI runtime tests and live-vault checks",
+    }
+    if installer_row is None or not installer.is_file() or installer.is_symlink():
+        detail["error"] = "restored install.py must be an inventoried regular file"
+        preflight_ok = False
+    else:
+        detail["installer_sha256"] = installer_row["sha256"]
+        try:
+            with tempfile.TemporaryDirectory(prefix="learningos-install-preflight-") as vault:
+                result = subprocess.run(
+                    [sys.executable, "-I", "-B", str(installer.resolve()),
+                     "--dry-run", "--skip-tests", "--vault", vault],
+                    cwd=restored_ui, capture_output=True, text=True, timeout=30, check=False,
+                )
+                untouched = not any(Path(vault).iterdir())
+                preflight_ok = result.returncode == 0 and untouched
+                detail.update(returncode=result.returncode, stdout=result.stdout.strip()[-4000:],
+                              stderr=result.stderr.strip()[-4000:], vault_unchanged=untouched)
+        except (OSError, subprocess.SubprocessError) as exc:
+            preflight_ok = False
+            detail["error"] = str(exc)
+    checks.append({"id": "ui-install-preflight", "ok": preflight_ok, "detail": detail})
 
     bundle = restored_ui / "plugin" / "main.js"
     if not bundle.is_file() or bundle.is_symlink():
