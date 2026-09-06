@@ -13,6 +13,7 @@ from ..contracts.manifest_contract import (
     declared_version,
     enforce,
 )
+from ..errors import TransactionFailure, unreadable_refusal
 from ..fingerprint import source_fingerprint
 from ..garden import project_garden_entries
 from ..loader import Repo
@@ -69,6 +70,9 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     `exam_spine` key (2026-08-03), and `stages` is the flat by-id index for
     stage lookup while `study_maps[].stages` stays the ordering authority —
     an index plus an ordered list, never two copies of the same access path."""
+    if repo.parse_failures:
+        raise TransactionFailure(unreadable_refusal(repo.root, repo.parse_failures, "publish the manifest"))
+
     all_artifact_revisions = load_revisions(repo.root)
     # The shared revision ledger also protects deliberately opened quarantine
     # transactions. Those tokens are gateway concurrency state, not normal
