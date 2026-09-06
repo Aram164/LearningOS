@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/study-map.schema.json",
   "title": "One current study script for a curriculum unit",
+  "x-governs": "record",
   "type": "object",
   "required": ["id", "type", "unit_id", "status", "current_stage", "source_plan", "stages", "shelving"],
   "additionalProperties": false,

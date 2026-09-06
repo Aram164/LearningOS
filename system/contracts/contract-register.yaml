@@ -43,7 +43,8 @@ contracts:
 
   - declaration: system/contracts/data-contract.yaml
     governs: >-
-      The fingerprint of the 35 stored record schemas under system/schema/. A
+      The fingerprint of the 31 stored record schemas under system/schema/
+      (determined by filtering out schemas declaring x-governs: artifact). A
       schema edit that does not bump the contract fails closed.
     enforced_by: validator
     checker: learning_os.contracts.data_contract

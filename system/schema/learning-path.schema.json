@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/learning-path.schema.json",
   "title": "Workspace-owned learning path",
+  "x-governs": "record",
   "description": "Operational ordered stages for one subtopic. A path is temporary workspace state, never canonical knowledge; shelving proposals require explicit approval before durable notes are created.",
   "type": "object",
   "required": ["id", "type", "title", "workspace_id", "area", "status", "current_stage", "created", "stages"],

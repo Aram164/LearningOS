@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/legacy-archive-lock.schema.json",
   "title": "Reviewed Legacy archive disposition lock",
+  "x-governs": "record",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "id", "type", "created_at", "entries", "excluded", "verification"],
