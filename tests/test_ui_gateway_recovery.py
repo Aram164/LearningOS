@@ -20,6 +20,7 @@ see the `test_the_paired_gate_requires_this_harness` guard below.
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -50,6 +51,7 @@ def _run_harness(repo_root: Path, mini_repo: Path) -> dict:
         capture_output=True,
         text=True,
         timeout=900,
+        env={**os.environ, "TMPDIR": str(mini_repo.parent)},
     )
     assert result.returncode == 0, (
         f"the UI recovery harness failed\n--- stdout ---\n{result.stdout}"
