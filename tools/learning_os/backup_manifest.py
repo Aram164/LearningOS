@@ -63,6 +63,45 @@ def _load_contract(root: Path) -> dict[str, Any]:
     return value
 
 
+PLUGIN_ASSETS_TYPE = "learningos-ui-plugin-assets"
+
+
+def read_shipped_assets(ui_root: Path) -> list[str]:
+    """The UI's own declaration of what it installs into a vault.
+
+    Core cannot import the UI's installer to ask — they are separate
+    repositories, and a restore root is only a directory on disk — so the shape
+    `install.py` enforces is repeated here, deliberately and in one place. The
+    bare-filename rule is not decoration: joining a `..` onto the plugin
+    directory would walk a verification check out of the tree it is verifying.
+    """
+    path = ui_root / "plugin-assets.json"
+    try:
+        parsed = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise BackupManifestError(f"plugin-assets.json could not be read: {exc}") from exc
+    if not isinstance(parsed, dict):
+        raise BackupManifestError("plugin-assets.json is not an object")
+    # bool is a subclass of int, so JSON `true` would otherwise pass as 1.
+    if type(parsed.get("schema_version")) is not int or parsed["schema_version"] != 1:
+        raise BackupManifestError("plugin-assets.json has an unsupported schema_version")
+    if parsed.get("type") != PLUGIN_ASSETS_TYPE:
+        raise BackupManifestError("plugin-assets.json has an unsupported type")
+    shipped = parsed.get("shipped")
+    if not isinstance(shipped, list) or not shipped:
+        raise BackupManifestError("plugin-assets.json declares no shipped assets")
+    for name in shipped:
+        if not isinstance(name, str) or not name.strip():
+            raise BackupManifestError("plugin-assets.json shipped entries must be filenames")
+        if "/" in name or "\\" in name or name in {".", ".."}:
+            raise BackupManifestError(
+                f"plugin-assets.json shipped entry {name!r} is not a bare filename"
+            )
+    if len(set(shipped)) != len(shipped):
+        raise BackupManifestError("plugin-assets.json repeats a shipped asset")
+    return shipped
+
+
 def _inside(authority: Path, relative: str) -> Path:
     rel = _safe_relative(relative)
     authority = authority.resolve()
@@ -135,6 +174,24 @@ def build_backup_manifest(
                         "root": label, "path": rel, "size": path.stat().st_size,
                         "sha256": _sha256_file(path),
                     }
+        if label == "ui":
+            # Derived, not declared: the contract names `plugin-assets.json` and
+            # this reads what that declares, so the shipping inventory has one
+            # author. A declared asset the checkout cannot ship is refused here
+            # rather than quietly left out — `install.py` refuses the same case,
+            # and a backup that omits it would restore a plugin that cannot be
+            # installed.
+            for name in read_shipped_assets(authority):
+                path = _inside(authority, f"plugin/{name}")
+                if not _admit_file(authority, path, excluded):
+                    raise BackupManifestError(
+                        f"declared plugin asset cannot be backed up: plugin/{name}"
+                    )
+                rel = path.relative_to(authority).as_posix()
+                entries[(label, rel)] = {
+                    "root": label, "path": rel, "size": path.stat().st_size,
+                    "sha256": _sha256_file(path),
+                }
     rows = [entries[key] for key in sorted(entries)]
     aggregate = "sha256:" + hashlib.sha256(
         json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -299,10 +356,26 @@ def verify_restored_system(
         checks.append({"id": "ui-contract-lock", "ok": False,
                        "detail": {"error": str(exc)}})
 
+    # Two questions, two answers. "The declaration or an asset it requires is
+    # missing" and "the bundle does not parse" are different recoveries, and a
+    # restore that reported the first as the second sent you to rebuild
+    # something that was never broken.
+    try:
+        shipped = read_shipped_assets(restored_ui)
+    except BackupManifestError as exc:
+        checks.append({"id": "ui-asset-declaration", "ok": False,
+                       "detail": {"error": str(exc)}})
+    else:
+        missing = [
+            name for name in shipped
+            if not (restored_ui / "plugin" / name).is_file()
+            or (restored_ui / "plugin" / name).is_symlink()
+        ]
+        checks.append({"id": "ui-asset-declaration", "ok": not missing,
+                       "detail": {"shipped": shipped, "missing": missing}})
+
     bundle = restored_ui / "plugin" / "main.js"
-    manifest_path = restored_ui / "plugin" / "manifest.json"
-    styles = restored_ui / "plugin" / "styles.css"
-    if not bundle.is_file() or not manifest_path.is_file() or not styles.is_file():
+    if not bundle.is_file() or bundle.is_symlink():
         checks.append({"id": "ui-bundle-smoke", "ok": False,
                        "detail": {"reason": "restored plugin bundle is incomplete"}})
     else:

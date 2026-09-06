@@ -778,6 +778,13 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     (ui / "plugin/main.js").write_text("void 0;\n", encoding="utf-8")
     (ui / "plugin/styles.css").write_text("/* restored */\n", encoding="utf-8")
     (ui / "plugin/manifest.json").write_text("{}\n", encoding="utf-8")
+    (ui / "plugin/build-info.json").write_text("{}\n", encoding="utf-8")
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
     (ui / "node_modules/pkg").mkdir(parents=True)
     (ui / "node_modules/pkg/private.js").write_text("ignored", encoding="utf-8")
     materials = mini_repo.parent / "materials"
@@ -797,9 +804,18 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     restored_core = restore / "core"
     restored_ui = restore / "ui"
     restored_materials = restore / "materials"
-    shutil.copytree(mini_repo, restored_core)
-    shutil.copytree(ui, restored_ui)
-    shutil.copytree(materials, restored_materials)
+    
+    roots_map = {
+        "core": (mini_repo, restored_core),
+        "ui": (ui, restored_ui),
+        "materials": (materials, restored_materials)
+    }
+    for row in manifest["entries"]:
+        src_root, dest_root = roots_map[row["root"]]
+        src_file = src_root / row["path"]
+        dest_file = dest_root / row["path"]
+        dest_file.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_file, dest_file)
     assert verify_backup_manifest(
         mini_repo, manifest,
         restored_core=restored_core,
@@ -830,3 +846,147 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     )
     assert not result["ok"]
     assert any(row["issue"] == "checksum-mismatch" for row in result["issues"])
+
+
+def _ui_fixture(ui: Path, core: Path) -> None:
+    """A UI checkout shaped like the real one: a declaration, and what it names."""
+    (ui / "plugin").mkdir(parents=True)
+    (ui / "plugin/main.js").write_text("void 0;\n", encoding="utf-8")
+    (ui / "plugin/styles.css").write_text("/* restored */\n", encoding="utf-8")
+    (ui / "plugin/manifest.json").write_text("{}\n", encoding="utf-8")
+    (ui / "plugin/build-info.json").write_text("{}\n", encoding="utf-8")
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    (ui / "contracts").mkdir()
+    contract = yaml.safe_load(
+        (core / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8")
+    )
+    lock_name = f"manifest-v{contract['contract_version']}.lock.json"
+    (ui / "contracts" / lock_name).write_text(json.dumps({
+        "contract_version": contract["contract_version"],
+        "schema_sha256": contract["schema_sha256"],
+    }), encoding="utf-8")
+
+
+def _restore_from_inventory(manifest, roots_map) -> None:
+    """Copy exactly what the inventory names — the way a real restore works."""
+    for row in manifest["entries"]:
+        src_root, dest_root = roots_map[row["root"]]
+        dest = dest_root / row["path"]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_root / row["path"], dest)
+
+
+def _manifest_without(manifest, root: str, path: str):
+    """The manifest an older contract would have produced: without `path`.
+
+    Deleting the file from the restore instead would fail the checksum check,
+    which short-circuits before the UI checks run — so it would prove nothing
+    about them. An inventory that never named the file is the real defect.
+    """
+    rows = [
+        row for row in manifest["entries"]
+        if not (row["root"] == root and row["path"] == path)
+    ]
+    assert len(rows) < len(manifest["entries"]), f"{root}:{path} was not inventoried"
+    trimmed = dict(manifest, entries=rows)
+    trimmed["aggregate_sha256"] = "sha256:" + hashlib.sha256(
+        json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        .encode("utf-8")
+    ).hexdigest()
+    return trimmed
+
+
+def _assured_for(mini_repo, tmp_path, dropped: str):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    manifest = _manifest_without(
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials),
+        "ui",
+        dropped,
+    )
+    restore = tmp_path / "restore"
+    roots = {
+        "core": (mini_repo, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    }
+    _restore_from_inventory(manifest, roots)
+    return verify_restored_system(
+        mini_repo, manifest,
+        restored_core=restore / "core",
+        restored_ui=restore / "ui",
+        restored_materials=restore / "materials",
+    )
+
+
+def test_verify_restored_system_detects_a_missing_asset_declaration(mini_repo, tmp_path):
+    assured = _assured_for(mini_repo, tmp_path, "plugin-assets.json")
+    assert not assured["ok"]
+    # The restore is faithful to its inventory; the inventory is the thing that
+    # was wrong. If checksums could fail here the assertion below would be free.
+    checksums = next(c for c in assured["checks"] if c["id"] == "checksums")
+    assert checksums["ok"], checksums
+    declaration = next(c for c in assured["checks"] if c["id"] == "ui-asset-declaration")
+    assert not declaration["ok"]
+    assert "could not be read" in declaration["detail"]["error"]
+
+
+def test_verify_restored_system_detects_a_missing_shipped_asset(mini_repo, tmp_path):
+    assured = _assured_for(mini_repo, tmp_path, "plugin/styles.css")
+    assert not assured["ok"]
+    checksums = next(c for c in assured["checks"] if c["id"] == "checksums")
+    assert checksums["ok"], checksums
+    declaration = next(c for c in assured["checks"] if c["id"] == "ui-asset-declaration")
+    assert not declaration["ok"]
+    assert declaration["detail"]["missing"] == ["styles.css"]
+
+
+def test_backup_manifest_refuses_an_asset_the_checkout_cannot_ship(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    (ui / "plugin/styles.css").unlink()
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    with pytest.raises(BackupManifestError, match="plugin/styles.css"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_refuses_an_empty_asset_declaration(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    # An empty `shipped` list is the shape that reads as "nothing to check" and
+    # certifies a restore holding no plugin at all.
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": [],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    with pytest.raises(BackupManifestError, match="no shipped assets"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_refuses_a_shipped_entry_that_escapes_the_plugin_directory(
+    mini_repo, tmp_path
+):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "../../etc/passwd"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    with pytest.raises(BackupManifestError, match="bare filename"):
+        build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
