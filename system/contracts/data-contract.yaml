@@ -15,8 +15,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 15
-schema_fingerprint: sha256:f95dd49c83aa8c70572b17adc0312852467cb0283bb25ba80ce6292db5292eb6
+contract_version: 16
+schema_fingerprint: sha256:6435589d58e0e85345cc95b64df930d4437f59c50fdf14c56edefe1aa8a86fef
 record_schemas: 35
 history:
 - version: 1
@@ -144,5 +144,13 @@ history:
   adopted: '2026-09-05'
   note: Optional Atlas personal-question metadata on question notes; existing notes
     remain valid, no record migration.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 16
+  adopted: '2026-09-06'
+  note: 'backup-manifest gained an optional materials_aliases map: the meaning of
+    materials/.flat, recorded as data because no backup can contain a symlink farm
+    and a restore cannot recover the mapping by guessing folder names (#31). Additive
+    and backward-compatible; no stored record changes, so no migration.'
   migration: null
   fixture: tests/fixtures/formats/v12/
