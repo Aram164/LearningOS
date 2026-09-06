@@ -38,9 +38,14 @@ roots:
       - build-styles.mjs
       - install.py
       - ecosystem-plugins.json
-      - plugin/manifest.json
-      - plugin/main.js
-      - plugin/styles.css
+      # Recovery preserves the built plugin rather than rebuilding it, so a
+      # restore needs neither npm nor a network. Which files that means is
+      # deliberately not listed here: `plugin-assets.json` is the UI's own
+      # declaration of what it ships, and `build_backup_manifest` admits
+      # `plugin/<name>` for every asset the declaration names. That list was
+      # once kept in three places and they drifted — the reason
+      # `read_plugin_assets` exists — and a copy here would drift the same way.
+      - plugin-assets.json
   materials:
     trees:
       - .
