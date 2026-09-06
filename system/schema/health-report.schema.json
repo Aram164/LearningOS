@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/health-report.schema.json",
   "title": "LearningOS health report",
+  "x-governs": "artifact",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "type", "generated_at", "status", "checks"],

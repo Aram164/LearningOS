@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/modules.schema.json",
   "title": "Backward-compatible monolithic module records",
+  "x-governs": "record",
   "description": "Compatibility input for records/modules.yaml. Curriculum v2 uses partitioned curriculum/modules/<id>/module.yaml records; this contract remains loadable during migration.",
   "type": "object",
   "required": [

@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/masters-planning-dashboard.schema.json",
   "title": "Deliberately opened Future Master's Planning dashboard",
+  "x-governs": "artifact",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "type", "opened_at", "banner", "catalog", "comparisons", "isolation"],

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import datetime as dt
 import hashlib
+import json
 from pathlib import Path
 
 import yaml
@@ -16,9 +17,13 @@ _HEADER = """\
 # The repository's data-format contract.
 #
 # `contract_version` is the format canonical records are written in. The
-# fingerprint is a sha256 over system/schema/*.schema.json — the schemas that
-# govern stored records (capability payload schemas are excluded: they validate
-# requests, not data at rest).
+# fingerprint is a sha256 over the schemas in system/schema/ that govern data at
+# rest. A schema is left out only when it declares `x-governs: artifact` —
+# something a command produces, like a health report or a backup inventory,
+# where an edit redefines no record already written. Anything else counts,
+# including a schema that declares nothing, so forgetting to classify one costs
+# a needless bump rather than a hole in the gate (capability payload schemas
+# stay excluded by living in a subdirectory).
 #
 # `make check` fails when the schemas change and this file does not, so a schema
 # edit cannot silently redefine what "valid" means for data already on disk.
@@ -34,7 +39,25 @@ _HEADER = """\
 
 
 def record_schemas(schema_dir: Path = SCHEMA_DIR) -> list[Path]:
-    return sorted(schema_dir.glob("*.schema.json"))
+    """The schemas that govern data at rest, which is what the fingerprint covers.
+
+    Reads each file rather than globbing them because the answer is declared
+    inside the schema. Only an explicit `x-governs: artifact` is excluded; a
+    schema that is unclassified, oddly classified, or unreadable counts as a
+    record. That direction is deliberate — it costs an unnecessary bump, where
+    the other direction would quietly drop a stored format out of the gate.
+    This never raises: it runs inside `make check` and the pre-commit hook, and
+    `tests/test_format_fixtures.py` is what makes an unclassified schema loud.
+    """
+    records = []
+    for path in sorted(schema_dir.glob("*.schema.json")):
+        try:
+            declared = json.loads(path.read_text(encoding="utf-8")).get("x-governs")
+        except (OSError, ValueError, AttributeError):
+            declared = None
+        if declared != "artifact":
+            records.append(path)
+    return records
 
 
 def fingerprint(schema_dir: Path = SCHEMA_DIR) -> str:

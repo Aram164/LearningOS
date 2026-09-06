@@ -1,9 +1,13 @@
 # The repository's data-format contract.
 #
 # `contract_version` is the format canonical records are written in. The
-# fingerprint is a sha256 over system/schema/*.schema.json — the schemas that
-# govern stored records (capability payload schemas are excluded: they validate
-# requests, not data at rest).
+# fingerprint is a sha256 over the schemas in system/schema/ that govern data at
+# rest. A schema is left out only when it declares `x-governs: artifact` —
+# something a command produces, like a health report or a backup inventory,
+# where an edit redefines no record already written. Anything else counts,
+# including a schema that declares nothing, so forgetting to classify one costs
+# a needless bump rather than a hole in the gate (capability payload schemas
+# stay excluded by living in a subdirectory).
 #
 # `make check` fails when the schemas change and this file does not, so a schema
 # edit cannot silently redefine what "valid" means for data already on disk.
@@ -15,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 16
-schema_fingerprint: sha256:8d0610aecb614063ca83d8efd7177ee2506026252b27fd3e9902bd762b797bc9
-record_schemas: 35
+contract_version: 17
+schema_fingerprint: sha256:cf5dad468aaa5be6e782b1bb839df4cbf1a888836f1ef6cf50efbfc17b116004
+record_schemas: 31
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -152,5 +156,11 @@ history:
     materials/.flat, recorded as data because no backup can contain a symlink farm
     and a restore cannot recover the mapping by guessing folder names (#31). Additive
     and backward-compatible; no stored record changes, so no migration.'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 17
+  adopted: '2026-09-06'
+  note: 'The fingerprint now covers only schemas declaring x-governs: record. Four
+    artifact schemas left the set. No stored record changed, and no migration is required.'
   migration: null
   fixture: tests/fixtures/formats/v12/

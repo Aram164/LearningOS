@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/sources.schema.json",
   "title": "Source registry",
+  "x-governs": "record",
   "description": "Validates sources/sources.yaml (or partitioned sources/registry/*.yaml \u2014 partitioning must not change semantics). A source is an evaluated teaching object. Contextual evaluations recorded here are the canonical home of pedagogical judgments, including those narrated in crosswalk notes. No universal scalar ratings.",
   "type": "object",
   "required": [
