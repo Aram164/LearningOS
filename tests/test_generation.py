@@ -266,6 +266,7 @@ def test_health_reports_wiring_debt(mini_repo):
 
 @pytest.mark.parametrize("failure", ["revision", "status", "revision-timeout", "status-timeout", "missing-git"])
 def test_git_failure_does_not_publish_manifest(mini_repo, monkeypatch, failure):
+    (mini_repo / ".git").mkdir(exist_ok=True)
     from learning_os.errors import TransactionFailure
 
     repo = load_repo(mini_repo)
@@ -305,6 +306,7 @@ def test_non_git_tree_generates_with_null_revision(mini_repo, monkeypatch):
 
 @pytest.mark.parametrize("status, dirty", [("", False), (" M knowledge/concepts.yaml\n", True)])
 def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, dirty):
+    (tmp_path / ".git").mkdir(exist_ok=True)
     from learning_os.genout.common import _git_state
 
     def run(args, **kwargs):
@@ -359,3 +361,44 @@ def test_malformed_frontmatter_prevents_publication(mini_repo):
     note.path.write_text(original_text, encoding="utf-8")
     repaired_response = run_los(mini_repo, "generate")
     assert repaired_response.returncode == 0
+
+def test_unborn_head_generates_with_null_revision(mini_repo):
+    subprocess.run(["git", "init"], cwd=mini_repo, check=True)
+    repo = load_repo(mini_repo)
+    outputs = generate_all(repo)
+    write_outputs(repo, outputs)
+    manifest = json.loads((mini_repo / "generated/manifest.json").read_text())
+    assert manifest["_generated"]["source_revision"] is None
+    # Depending on whether there are untracked files, it might be dirty
+    # But usually a fresh git init in a populated mini_repo is dirty.
+    # Let's just check it doesn't fail.
+    assert manifest["_generated"]["source_revision"] is None
+
+def test_nested_export_boundaries(mini_repo):
+    # mini_repo is an export inside the overall test runner repo
+    repo = load_repo(mini_repo)
+    outputs = generate_all(repo)
+    write_outputs(repo, outputs)
+    manifest = json.loads((mini_repo / "generated/manifest.json").read_text())
+    assert manifest["_generated"]["source_revision"] is None
+
+def test_boundary_functions_agree(mini_repo):
+    from learning_os.genout.common import _git_state, stable_generated_at
+    from learning_os.githistory import read_history
+    rev, dirty = _git_state(mini_repo)
+    assert rev is None
+    
+    assert stable_generated_at(mini_repo) == "(no Git history available)"
+    assert read_history(mini_repo, "-1", "--format=%H") == ""
+
+def test_failing_git_status_refuses(mini_repo):
+    from learning_os.errors import TransactionFailure
+    subprocess.run(["git", "init"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)
+    
+    index_file = mini_repo / ".git/index"
+    index_file.write_bytes(b"corrupted_index_data")
+    
+    repo = load_repo(mini_repo)
+    with pytest.raises(TransactionFailure, match="Git failed to check status|index file smaller than expected"):
+        generate_all(repo)

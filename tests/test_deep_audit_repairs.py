@@ -202,6 +202,12 @@ def test_git_dirty_state_covers_every_canonical_root(
                                stderr="", returncode=0)
 
     monkeypatch.setattr(genout_common.subprocess, "run", run)
+    # The root must carry Git metadata before `_git_state` asks Git anything: a
+    # directory without it is an export, and an export reports no revision
+    # rather than the enclosing checkout's (#23). Mocking `subprocess.run`
+    # cannot stand in for that, because the boundary is settled on the
+    # filesystem before the first Git call is made.
+    (tmp_path / ".git").mkdir()
     assert genout_common._git_state(tmp_path) == ("deadbeef", False)
     status = next(command for command in commands if command[1] == "status")
     for canonical_root in genout_common.CANONICAL_ROOTS:
