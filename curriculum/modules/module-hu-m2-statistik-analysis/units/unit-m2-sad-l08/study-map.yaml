@@ -51,6 +51,8 @@ stages:
       absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-b7f7718273784bbb7843acbd
   - kind: practise
     label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
     locator: exercise-slides/UE5.pdf, slides 20-38
@@ -60,6 +62,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-58469c78c740278168aea71a
   - kind: practise
     label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
     locator: exercise-slides/UE6.pdf, slides 5-20
@@ -69,6 +73,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25e51301ba03eb362122df35
   - kind: reference
     label: 2025 Normal-distribution deck
     locator: 08_normal_distribution_no_notes.pdf
@@ -94,6 +100,8 @@ stages:
       L08 likelihood half use Dekking Ch 21.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-51d0b459da178808c6b7b545
   - kind: read
     label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
     locator: Official PDF, Ch 8 'Law of Large Numbers', PDF pp. 313-332, and Ch 9 'Central Limit Theorem',
@@ -105,6 +113,8 @@ stages:
       then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification,
       which most texts state as a rule.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-c58e4eb43dc4c166ca3c4822
   - kind: read
     label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
     locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch
@@ -120,6 +130,8 @@ stages:
       it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-f6444d2615cac483d2060e85
   - kind: read
     label: OpenIntro Chapter 4 — Normal and sampling distributions
     locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule);
@@ -134,6 +146,8 @@ stages:
       likelihood content and no proof of the CLT — deliberately, since the course does not need one.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-ca94fdcfeca67be1c4c0bc4d
   - kind: read
     label: MIT 18.05 — Normal and CLT notes/exams
     locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large
@@ -147,6 +161,8 @@ stages:
       the same notation. The Exams page then supplies solved questions of both kinds under timed conditions,
       which is the closest thing on the shelf to an English-language SaD mock.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-cdc87014dbc983f542c2d601
   - kind: reference
     label: Pitman — Normal and limit-theorem selections
     locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation
@@ -161,6 +177,8 @@ stages:
       among many.'
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-b255b45da1a3190feb0ed9e8
   - kind: reference
     label: Ross — Normal distribution and limit theorems
     locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the
@@ -176,6 +194,8 @@ stages:
       is still unstable after Dekking Ch 13-14.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-30e6dacfe64cff3a4b173767
   - kind: reference
     label: Harvard Stat 110 Units 5–6 — Normal and CLT
     locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large
@@ -187,6 +207,8 @@ stages:
       separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing
       the book uses in Ch 10.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ab04cdce370d74cb0570a3d6
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
@@ -198,6 +220,8 @@ stages:
       derivation sources.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-1c01e7c903e30083cbe3009f
   - kind: watch
     label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
     locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
@@ -207,6 +231,8 @@ stages:
       lookups against an American table is a small but real mismatch. These videos use the German one
       and read it in both directions. Fahrmeir p. 631 is the same table in print.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-59a625c0ac07d2a63c127f57
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md
   attachments: []
   source_feedback: []
@@ -250,6 +276,8 @@ stages:
       absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-b7f7718273784bbb7843acbd
   - kind: practise
     label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
     locator: exercise-slides/UE5.pdf, slides 20-38
@@ -259,6 +287,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-58469c78c740278168aea71a
   - kind: practise
     label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
     locator: exercise-slides/UE6.pdf, slides 5-20
@@ -268,6 +298,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25e51301ba03eb362122df35
   - kind: reference
     label: 2025 Normal-distribution deck
     locator: 08_normal_distribution_no_notes.pdf
@@ -293,6 +325,8 @@ stages:
       L08 likelihood half use Dekking Ch 21.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-51d0b459da178808c6b7b545
   - kind: practise
     label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
     locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen
@@ -304,6 +338,8 @@ stages:
       approximation items are the ones to prioritise if time is short.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-b40645f2cd94ca740d4201ca
   - kind: read
     label: OpenIntro Chapter 4 — Normal and sampling distributions
     locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule);
@@ -318,6 +354,8 @@ stages:
       likelihood content and no proof of the CLT — deliberately, since the course does not need one.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-ca94fdcfeca67be1c4c0bc4d
   - kind: practise
     label: Dekking — Normal and CLT exercises
     locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp.
@@ -335,6 +373,8 @@ stages:
       the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-8f48d8d7623a4b01aac9348f
   - kind: read
     label: MIT 18.05 — Normal and CLT notes/exams
     locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large
@@ -348,6 +388,8 @@ stages:
       the same notation. The Exams page then supplies solved questions of both kinds under timed conditions,
       which is the closest thing on the shelf to an English-language SaD mock.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-cdc87014dbc983f542c2d601
   - kind: reference
     label: Pitman — Normal and limit-theorem selections
     locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation
@@ -362,6 +404,8 @@ stages:
       among many.'
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-b255b45da1a3190feb0ed9e8
   - kind: practise
     label: Schaum — Normal and CLT drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation
@@ -374,6 +418,8 @@ stages:
       be paired with Dekking Ch 13-14 for the reasoning.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-4b2bb29fc4326732f09f4cb5
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
@@ -385,6 +431,8 @@ stages:
       derivation sources.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-1c01e7c903e30083cbe3009f
   - kind: watch
     label: jbstatistics — Normal, z-scores, and CLT
     locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction
@@ -395,6 +443,8 @@ stages:
       and the one L09's confidence intervals will immediately depend on. The videos work several of each
       direction, which is more repetition than any text here provides in that specific operation.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d7771b00bdbdbb54115a9c8f
   - kind: watch
     label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
     locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
@@ -404,6 +454,8 @@ stages:
       lookups against an American table is a small but real mismatch. These videos use the German one
       and read it in both directions. Fahrmeir p. 631 is the same table in print.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-59a625c0ac07d2a63c127f57
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-standardization/notes.md
   attachments: []
   source_feedback: []
@@ -448,6 +500,8 @@ stages:
       absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-b7f7718273784bbb7843acbd
   - kind: practise
     label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
     locator: exercise-slides/UE5.pdf, slides 20-38
@@ -457,6 +511,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-58469c78c740278168aea71a
   - kind: read
     label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7
@@ -473,6 +529,8 @@ stages:
       L08 likelihood half use Dekking Ch 21.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-51d0b459da178808c6b7b545
   - kind: read
     label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
     locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch
@@ -488,6 +546,8 @@ stages:
       it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-f6444d2615cac483d2060e85
   - kind: practise
     label: Dekking — Normal and CLT exercises
     locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp.
@@ -505,6 +565,8 @@ stages:
       the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-8f48d8d7623a4b01aac9348f
   - kind: reference
     label: Ross — Normal distribution and limit theorems
     locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the
@@ -520,6 +582,8 @@ stages:
       is still unstable after Dekking Ch 13-14.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-30e6dacfe64cff3a4b173767
   - kind: practise
     label: Schaum — Normal and CLT drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation
@@ -532,6 +596,8 @@ stages:
       be paired with Dekking Ch 13-14 for the reasoning.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-4b2bb29fc4326732f09f4cb5
   - kind: reference
     label: Harvard Stat 110 Units 5–6 — Normal and CLT
     locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large
@@ -543,6 +609,8 @@ stages:
       separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing
       the book uses in Ch 10.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ab04cdce370d74cb0570a3d6
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
@@ -554,6 +622,8 @@ stages:
       derivation sources.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-1c01e7c903e30083cbe3009f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-transform-sum/notes.md
   attachments: []
   source_feedback: []
@@ -598,6 +668,8 @@ stages:
       absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-b7f7718273784bbb7843acbd
   - kind: practise
     label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
     locator: exercise-slides/UE5.pdf, slides 20-38
@@ -607,6 +679,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-58469c78c740278168aea71a
   - kind: practise
     label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
     locator: exercise-slides/UE6.pdf, slides 5-20
@@ -616,6 +690,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25e51301ba03eb362122df35
   - kind: reference
     label: 2025 Normal-distribution deck
     locator: 08_normal_distribution_no_notes.pdf
@@ -641,6 +717,8 @@ stages:
       L08 likelihood half use Dekking Ch 21.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-51d0b459da178808c6b7b545
   - kind: practise
     label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
     locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen
@@ -652,6 +730,8 @@ stages:
       approximation items are the ones to prioritise if time is short.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-b40645f2cd94ca740d4201ca
   - kind: read
     label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
     locator: Official PDF, Ch 8 'Law of Large Numbers', PDF pp. 313-332, and Ch 9 'Central Limit Theorem',
@@ -663,6 +743,8 @@ stages:
       then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification,
       which most texts state as a rule.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-c58e4eb43dc4c166ca3c4822
   - kind: read
     label: Blitzstein Chapters 5 and 10 — continuous variables and CLT
     locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch
@@ -678,6 +760,8 @@ stages:
       it. No likelihood content: for L08''s MLE half use Dekking Ch 21.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-f6444d2615cac483d2060e85
   - kind: read
     label: MIT 6.041SC — limit theorems lectures
     locator: MIT 6.041SC Unit IV, Lecture 19 'Weak Law of Large Numbers', Lecture 20 'Central Limit Theorem',
@@ -689,6 +773,8 @@ stages:
       tails at any finite n. Those clarifications prevent the two most common wrong applications. Comes
       with recitations that apply the theorems to concrete approximation problems.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-c4a8afb529925b777fde9628
   - kind: read
     label: OpenIntro Chapter 4 — Normal and sampling distributions
     locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule);
@@ -703,6 +789,8 @@ stages:
       likelihood content and no proof of the CLT — deliberately, since the course does not need one.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-ca94fdcfeca67be1c4c0bc4d
   - kind: practise
     label: Dekking — Normal and CLT exercises
     locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp.
@@ -720,6 +808,8 @@ stages:
       the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-8f48d8d7623a4b01aac9348f
   - kind: read
     label: MIT 18.05 — Normal and CLT notes/exams
     locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large
@@ -733,6 +823,8 @@ stages:
       the same notation. The Exams page then supplies solved questions of both kinds under timed conditions,
       which is the closest thing on the shelf to an English-language SaD mock.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-cdc87014dbc983f542c2d601
   - kind: reference
     label: Pitman — Normal and limit-theorem selections
     locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation
@@ -747,6 +839,8 @@ stages:
       among many.'
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-b255b45da1a3190feb0ed9e8
   - kind: reference
     label: Tijms — LLN and CLT intuition
     locator: Ch 5 Probability and statistics, pdf pp. 153-217 (§5.8 the central limit theorem and random
@@ -760,6 +854,8 @@ stages:
       about the world. No likelihood content.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-da63f6bf53a890934f68330a
   - kind: reference
     label: Ross — Normal distribution and limit theorems
     locator: Ch 5 Continuous Random Variables, pdf pp. 306-378 (§5.4 normal random variables; §5.7 the
@@ -775,6 +871,8 @@ stages:
       is still unstable after Dekking Ch 13-14.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-30e6dacfe64cff3a4b173767
   - kind: practise
     label: Schaum — Normal and CLT drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation
@@ -787,6 +885,8 @@ stages:
       be paired with Dekking Ch 13-14 for the reasoning.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-4b2bb29fc4326732f09f4cb5
   - kind: reference
     label: Harvard Stat 110 Units 5–6 — Normal and CLT
     locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large
@@ -798,6 +898,8 @@ stages:
       separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing
       the book uses in Ch 10.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ab04cdce370d74cb0570a3d6
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
@@ -809,6 +911,8 @@ stages:
       derivation sources.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-1c01e7c903e30083cbe3009f
   - kind: reference
     label: Regensburg-Löh pp. 6-8 — LLN/CLT proof reference
     locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 6-8, convergence tasks
@@ -817,6 +921,8 @@ stages:
       but its proof burden is outside the SaD exam and would be harmful as ordinary preparation.
     vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-0bb4d41d9c7165917c14e2e5
   - kind: watch
     label: StatQuest — CLT, likelihood, and maximum likelihood
     locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum
@@ -829,6 +935,8 @@ stages:
       Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling
       animation OpenIntro describes in text.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42f96974c9b07097dceeb4a8
   - kind: watch
     label: jbstatistics — Normal, z-scores, and CLT
     locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction
@@ -839,6 +947,8 @@ stages:
       and the one L09's confidence intervals will immediately depend on. The videos work several of each
       direction, which is more repetition than any text here provides in that specific operation.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d7771b00bdbdbb54115a9c8f
   - kind: watch
     label: Kurzes Tutorium Statistik — Normalverteilung and ZGS
     locator: '''Normalverteilung''; ''Standardnormalverteilung''; ''Zentraler Grenzwertsatz'''
@@ -848,6 +958,8 @@ stages:
       lookups against an American table is a small but real mismatch. These videos use the German one
       and read it in both directions. Fahrmeir p. 631 is the same table in print.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-59a625c0ac07d2a63c127f57
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md
   attachments: []
   source_feedback: []
@@ -892,6 +1004,8 @@ stages:
       absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-b7f7718273784bbb7843acbd
   - kind: practise
     label: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
     locator: exercise-slides/UE5.pdf, slides 20-38
@@ -901,6 +1015,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-58469c78c740278168aea71a
   - kind: practise
     label: UE6, slides 5-20 — official Blatt 4 Normal/CLT solutions
     locator: exercise-slides/UE6.pdf, slides 5-20
@@ -910,6 +1026,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25e51301ba03eb362122df35
   - kind: read
     label: Fahrmeir Chapters 6–7 — Normal distribution and limit theorems
     locator: Ch 6 §6.3 Spezielle stetige Verteilungsmodelle, pdf pp. 310-322 (Normalverteilung); Ch 7
@@ -926,6 +1044,8 @@ stages:
       L08 likelihood half use Dekking Ch 21.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-51d0b459da178808c6b7b545
   - kind: practise
     label: Arbeitsbuch Chapters 6–7 — Normal and CLT drills
     locator: Ch 6 Aufgaben pdf pp. 124-133, Lösungen pdf pp. 134-157; Ch 7 Aufgaben pdf pp. 158-160, Lösungen
@@ -937,6 +1057,8 @@ stages:
       approximation items are the ones to prioritise if time is short.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-b40645f2cd94ca740d4201ca
   - kind: read
     label: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
     locator: Official PDF, Ch 8 'Law of Large Numbers', PDF pp. 313-332, and Ch 9 'Central Limit Theorem',
@@ -948,6 +1070,8 @@ stages:
       then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification,
       which most texts state as a rule.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-c58e4eb43dc4c166ca3c4822
   - kind: read
     label: MIT 6.041SC — limit theorems lectures
     locator: MIT 6.041SC Unit IV, Lecture 19 'Weak Law of Large Numbers', Lecture 20 'Central Limit Theorem',
@@ -959,6 +1083,8 @@ stages:
       tails at any finite n. Those clarifications prevent the two most common wrong applications. Comes
       with recitations that apply the theorems to concrete approximation problems.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-c4a8afb529925b777fde9628
   - kind: read
     label: OpenIntro Chapter 4 — Normal and sampling distributions
     locator: Ch 4 §4.1 normal distribution, pdf pp. 133-143 (Z-scores, percentiles, 68-95-99.7 rule);
@@ -973,6 +1099,8 @@ stages:
       likelihood content and no proof of the CLT — deliberately, since the course does not need one.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-ca94fdcfeca67be1c4c0bc4d
   - kind: practise
     label: Dekking — Normal and CLT exercises
     locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp.
@@ -990,6 +1118,8 @@ stages:
       the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-8f48d8d7623a4b01aac9348f
   - kind: read
     label: MIT 18.05 — Normal and CLT notes/exams
     locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large
@@ -1003,6 +1133,8 @@ stages:
       the same notation. The Exams page then supplies solved questions of both kinds under timed conditions,
       which is the closest thing on the shelf to an English-language SaD mock.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-cdc87014dbc983f542c2d601
   - kind: reference
     label: Tijms — LLN and CLT intuition
     locator: Ch 5 Probability and statistics, pdf pp. 153-217 (§5.8 the central limit theorem and random
@@ -1016,6 +1148,8 @@ stages:
       about the world. No likelihood content.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-da63f6bf53a890934f68330a
   - kind: practise
     label: Schaum — Normal and CLT drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127 (the Normal approximation
@@ -1028,6 +1162,8 @@ stages:
       be paired with Dekking Ch 13-14 for the reasoning.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-4b2bb29fc4326732f09f4cb5
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — Normal and sampling-distribution items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
@@ -1039,6 +1175,8 @@ stages:
       derivation sources.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-1c01e7c903e30083cbe3009f
   - kind: reference
     label: Regensburg-Löh pp. 6-8 — LLN/CLT proof reference
     locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 6-8, convergence tasks
@@ -1047,6 +1185,8 @@ stages:
       but its proof burden is outside the SaD exam and would be harmful as ordinary preparation.
     vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-0bb4d41d9c7165917c14e2e5
   - kind: watch
     label: jbstatistics — Normal, z-scores, and CLT
     locator: '''The Normal Distribution'', ''Standardizing Normally Distributed Random Variables'', ''Introduction
@@ -1057,6 +1197,8 @@ stages:
       and the one L09's confidence intervals will immediately depend on. The videos work several of each
       direction, which is more repetition than any text here provides in that specific operation.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d7771b00bdbdbb54115a9c8f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-approximation/notes.md
   attachments: []
   source_feedback: []
@@ -1100,6 +1242,8 @@ stages:
       and under what conditions. Reading it will not help with the exam, and it will cost hours. Reference-only
       by design.'
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-1013094b4d04a09a52048f18
   - kind: watch
     label: StatQuest — CLT, likelihood, and maximum likelihood
     locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum
@@ -1112,6 +1256,8 @@ stages:
       Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling
       animation OpenIntro describes in text.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42f96974c9b07097dceeb4a8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -1154,6 +1300,8 @@ stages:
       and under what conditions. Reading it will not help with the exam, and it will cost hours. Reference-only
       by design.'
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-1013094b4d04a09a52048f18
   - kind: watch
     label: StatQuest — CLT, likelihood, and maximum likelihood
     locator: '''The Central Limit Theorem, Clearly Explained''; ''Probability is not Likelihood''; ''Maximum
@@ -1166,6 +1314,8 @@ stages:
       Dekking Ch 21 and the chapter becomes straightforward. The CLT video uses the same repeated-sampling
       animation OpenIntro describes in text.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42f96974c9b07097dceeb4a8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
   attachments: []
   source_feedback: []

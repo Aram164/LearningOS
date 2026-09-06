@@ -51,6 +51,8 @@ stages:
       likelihoods or Bayesian networks.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bccca809087fa5eefd5f492c
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
@@ -64,6 +66,8 @@ stages:
       of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-b3d516335f24f55b1d6ddc00
   - kind: read
     label: ISLP §4.4.4 and lab — Naive Bayes in application
     locator: Ch 4 Classification, pdf pp. 144-208 — §4.4.4 Naive Bayes and the Ch 4 lab (Naive Bayes on
@@ -77,6 +81,8 @@ stages:
       trade-off is observed rather than argued.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-933228d740dc54b3653e1190
   - kind: read
     label: Jurafsky & Martin Appendix B — smoothing and evaluation
     locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': add-one smoothing, text
@@ -89,6 +95,8 @@ stages:
       with a few hundred words the product underflows to zero in floating point. L14''s multinomial node
       mentions log space; this says why it is not optional.'
     scope_triage: helpful-now
+    source_id: source-jurafsky-slp3
+    route_id: route-c6ef21e8e56052473f0d7cef
   - kind: reference
     label: scikit-learn user guide §1.9 — naive Bayes variants
     locator: 'User guide §1.9 ''Naive Bayes'': §1.9.1 Gaussian, §1.9.2 Multinomial, §1.9.3 Complement,
@@ -100,6 +108,8 @@ stages:
       term changes with the feature type. Once that is clear, the variants stop being separate algorithms
       to memorise. The smoothing parameter alpha is documented alongside, with the default and its effect.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-d7cf7c94fb31a1141d0c7aab
   - kind: practise
     label: CS229 problem sets — the Naive Bayes and generative-model problems
     locator: 'CS229 Problem Set #2, Problem 2 ''Spam classification'', especially part 2(b) multinomial
@@ -111,6 +121,8 @@ stages:
       that once explains why the parameter estimates are ratios of counts, and it makes the smoothing
       correction visible as a modification of the estimator rather than an arbitrary +1. Solutions published.
     scope_triage: helpful-now
+    source_id: source-cs229-problem-sets
+    route_id: route-9a418de23be3ffd147750581
   - kind: reference
     label: Bishop Ch 8 — graphical models and conditional independence
     locator: 'Official Bishop PDF, Ch 8 ''Graphical Models'', PDF pp. 379-438: §8.1 ''Bayesian Networks''
@@ -123,6 +135,8 @@ stages:
       a network and being able to use one. §8.3.6 defines the Markov blanket precisely, which L14's last
       slides name. Free PDF from Microsoft Research; reference-level and demanding.
     scope_triage: reference-only
+    source_id: source-bishop-prml
+    route_id: route-9e8924fd776e576177b5fbd1
   - kind: reference
     label: MIT 18.650 Bayesian-statistics lectures — context only
     locator: 'Lectures 17-18 (Bayesian inference: priors, posteriors, and the Bayesian-frequentist contrast);
@@ -133,6 +147,8 @@ stages:
       prior over parameters, a posterior, and prediction by integration — which clarifies exactly how
       much of 'Bayes' the classifier actually uses. Useful for conceptual hygiene, not for the exam.
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-65ec7d8349853c0a323bc4da
   - kind: watch
     label: StatQuest — Naive Bayes and Gaussian Naive Bayes
     locator: '''Naive Bayes, Clearly Explained''; ''Gaussian Naive Bayes, Clearly Explained'' (≈15 min
@@ -145,6 +161,8 @@ stages:
       per feature and reads values off it, which makes the substitution concrete. Watch the categorical
       video first even if you have seen it for L04.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-bd195adc3fd5927a2d5b8428
   - kind: read
     label: Kroese — probability-based classifier selections
     locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
@@ -157,6 +175,8 @@ stages:
       the smoothing and independence assumptions easier to reason about.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-533d07e5753b0285a7d3b5fc
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
@@ -169,6 +189,8 @@ stages:
       an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-accc9d7a034e6648a4e7ee65
   - kind: reference
     label: Stanford CS229 — generative-classifier lecture
     locator: Spring 2022 playlist, Lecture 5 'Gaussian Discriminant Analysis and Naive Bayes'
@@ -179,6 +201,8 @@ stages:
       smoothing and logistic regression does not, and why Naive Bayes can be trained on less data. L14
       works entirely inside the generative branch without saying so. One lecture, high return.
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-c0b5823ea68abe2175956a82
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
@@ -193,6 +217,8 @@ stages:
       what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
+    source_id: source-csc411-notes
+    route_id: route-1fabf5404c63c601fc8c2ef0
   - kind: practise
     label: Cornell CS4780 HW4 - solution-backed Naive Bayes problems
     locator: 2018Fall/HW4 Problem 1 'Intuition for Naive Bayes' (hw4.pdf with hw4_solution.pdf); 2018Spring/HW4
@@ -204,6 +230,8 @@ stages:
       and they are hard to practise from a textbook. Both terms' versions have published solutions; the
       Spring set adds the smoothing computation.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5635dfbf861c3f2486851c09
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     locator: Chapter 6, pp. 226-296
@@ -217,6 +245,8 @@ stages:
       to zero.
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-ff2589997ecc1ae5194a1211
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-nb-recap/notes.md
   attachments: []
   source_feedback: []
@@ -259,6 +289,8 @@ stages:
       likelihoods or Bayesian networks.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bccca809087fa5eefd5f492c
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
@@ -272,6 +304,8 @@ stages:
       of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-b3d516335f24f55b1d6ddc00
   - kind: read
     label: Jurafsky & Martin Appendix B — smoothing and evaluation
     locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': add-one smoothing, text
@@ -284,6 +318,8 @@ stages:
       with a few hundred words the product underflows to zero in floating point. L14''s multinomial node
       mentions log space; this says why it is not optional.'
     scope_triage: helpful-now
+    source_id: source-jurafsky-slp3
+    route_id: route-c6ef21e8e56052473f0d7cef
   - kind: reference
     label: scikit-learn user guide §1.9 — naive Bayes variants
     locator: 'User guide §1.9 ''Naive Bayes'': §1.9.1 Gaussian, §1.9.2 Multinomial, §1.9.3 Complement,
@@ -295,6 +331,8 @@ stages:
       term changes with the feature type. Once that is clear, the variants stop being separate algorithms
       to memorise. The smoothing parameter alpha is documented alongside, with the default and its effect.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-d7cf7c94fb31a1141d0c7aab
   - kind: practise
     label: CS229 problem sets — the Naive Bayes and generative-model problems
     locator: 'CS229 Problem Set #2, Problem 2 ''Spam classification'', especially part 2(b) multinomial
@@ -306,6 +344,8 @@ stages:
       that once explains why the parameter estimates are ratios of counts, and it makes the smoothing
       correction visible as a modification of the estimator rather than an arbitrary +1. Solutions published.
     scope_triage: helpful-now
+    source_id: source-cs229-problem-sets
+    route_id: route-9a418de23be3ffd147750581
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
@@ -318,6 +358,8 @@ stages:
       an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-accc9d7a034e6648a4e7ee65
   - kind: practise
     label: Cornell CS4780 HW4 - solution-backed Naive Bayes problems
     locator: 2018Fall/HW4 Problem 1 'Intuition for Naive Bayes' (hw4.pdf with hw4_solution.pdf); 2018Spring/HW4
@@ -329,6 +371,8 @@ stages:
       and they are hard to practise from a textbook. Both terms' versions have published solutions; the
       Spring set adds the smoothing computation.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5635dfbf861c3f2486851c09
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     locator: Chapter 6, pp. 226-296
@@ -342,6 +386,8 @@ stages:
       to zero.
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-ff2589997ecc1ae5194a1211
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-smoothing/notes.md
   attachments: []
   source_feedback: []
@@ -385,6 +431,8 @@ stages:
       of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-b3d516335f24f55b1d6ddc00
   - kind: reference
     label: scikit-learn user guide §1.9 — naive Bayes variants
     locator: 'User guide §1.9 ''Naive Bayes'': §1.9.1 Gaussian, §1.9.2 Multinomial, §1.9.3 Complement,
@@ -396,6 +444,8 @@ stages:
       term changes with the feature type. Once that is clear, the variants stop being separate algorithms
       to memorise. The smoothing parameter alpha is documented alongside, with the default and its effect.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-d7cf7c94fb31a1141d0c7aab
   - kind: read
     label: Kroese — probability-based classifier selections
     locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
@@ -408,6 +458,8 @@ stages:
       the smoothing and independence assumptions easier to reason about.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-533d07e5753b0285a7d3b5fc
   - kind: read
     label: Zacharski Ch 6 - Naive Bayes with the zero-frequency failure exposed
     locator: Chapter 6, pp. 226-296
@@ -421,6 +473,8 @@ stages:
       to zero.
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-ff2589997ecc1ae5194a1211
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-numeric/notes.md
   attachments: []
   source_feedback: []
@@ -466,6 +520,8 @@ stages:
       of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-b3d516335f24f55b1d6ddc00
   - kind: practise
     label: Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data
     locator: 'Section 6.7 exercises, pp. 344-350 (exercise 3: naive Bayes with normally distributed descriptive
@@ -481,6 +537,8 @@ stages:
       probabilities and the intermediate numbers look wrong the first time.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-1cc15543ed952ee0f7f940d0
   - kind: read
     label: ISLP §4.4.4 and lab — Naive Bayes in application
     locator: Ch 4 Classification, pdf pp. 144-208 — §4.4.4 Naive Bayes and the Ch 4 lab (Naive Bayes on
@@ -494,6 +552,8 @@ stages:
       trade-off is observed rather than argued.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-933228d740dc54b3653e1190
   - kind: reference
     label: scikit-learn user guide §1.9 — naive Bayes variants
     locator: 'User guide §1.9 ''Naive Bayes'': §1.9.1 Gaussian, §1.9.2 Multinomial, §1.9.3 Complement,
@@ -505,6 +565,8 @@ stages:
       term changes with the feature type. Once that is clear, the variants stop being separate algorithms
       to memorise. The smoothing parameter alpha is documented alongside, with the default and its effect.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-d7cf7c94fb31a1141d0c7aab
   - kind: watch
     label: StatQuest — Naive Bayes and Gaussian Naive Bayes
     locator: '''Naive Bayes, Clearly Explained''; ''Gaussian Naive Bayes, Clearly Explained'' (≈15 min
@@ -517,6 +579,8 @@ stages:
       per feature and reads values off it, which makes the substitution concrete. Watch the categorical
       video first even if you have seen it for L04.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-bd195adc3fd5927a2d5b8428
   - kind: read
     label: Kroese — probability-based classifier selections
     locator: Ch 7 Classification, pdf pp. 269-304 (the Bayes classifier and generative classifiers)
@@ -529,6 +593,8 @@ stages:
       the smoothing and independence assumptions easier to reason about.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-533d07e5753b0285a7d3b5fc
   - kind: reference
     label: Murphy §§9.3–9.4 — Gaussian and Multinomial Naive Bayes
     locator: §9.3 Naive Bayes classifiers and §9.4 generative vs discriminative classifiers (Part II Linear
@@ -542,6 +608,8 @@ stages:
       beyond SaD''s.'
     vault_path: material://source-murphy-pml1/pml1.pdf
     scope_triage: reference-only
+    source_id: source-murphy-pml1
+    route_id: route-fe46f2fec8e3b764ed5ee7a6
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
@@ -556,6 +624,8 @@ stages:
       what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
+    source_id: source-csc411-notes
+    route_id: route-1fabf5404c63c601fc8c2ef0
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-gaussian/notes.md
   attachments: []
   source_feedback: []
@@ -599,6 +669,8 @@ stages:
       with a few hundred words the product underflows to zero in floating point. L14''s multinomial node
       mentions log space; this says why it is not optional.'
     scope_triage: helpful-now
+    source_id: source-jurafsky-slp3
+    route_id: route-c6ef21e8e56052473f0d7cef
   - kind: reference
     label: scikit-learn user guide §1.9 — naive Bayes variants
     locator: 'User guide §1.9 ''Naive Bayes'': §1.9.1 Gaussian, §1.9.2 Multinomial, §1.9.3 Complement,
@@ -610,6 +682,8 @@ stages:
       term changes with the feature type. Once that is clear, the variants stop being separate algorithms
       to memorise. The smoothing parameter alpha is documented alongside, with the default and its effect.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-d7cf7c94fb31a1141d0c7aab
   - kind: practise
     label: CS229 problem sets — the Naive Bayes and generative-model problems
     locator: 'CS229 Problem Set #2, Problem 2 ''Spam classification'', especially part 2(b) multinomial
@@ -621,6 +695,8 @@ stages:
       that once explains why the parameter estimates are ratios of counts, and it makes the smoothing
       correction visible as a modification of the estimator rather than an arbitrary +1. Solutions published.
     scope_triage: helpful-now
+    source_id: source-cs229-problem-sets
+    route_id: route-9a418de23be3ffd147750581
   - kind: reference
     label: CS229 §4.2 — Naive Bayes derivation
     locator: cs229-notes.pdf §4.2 Naive Bayes p. 43, §4.2.1 Laplace smoothing p. 46, §4.2.2 Event models
@@ -633,6 +709,8 @@ stages:
       an exam question can turn on.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-accc9d7a034e6648a4e7ee65
   - kind: reference
     label: Stanford CS229 — generative-classifier lecture
     locator: Spring 2022 playlist, Lecture 5 'Gaussian Discriminant Analysis and Naive Bayes'
@@ -643,6 +721,8 @@ stages:
       smoothing and logistic regression does not, and why Naive Bayes can be trained on less data. L14
       works entirely inside the generative branch without saying so. One lecture, high return.
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-c0b5823ea68abe2175956a82
   - kind: reference
     label: Murphy §§9.3–9.4 — Gaussian and Multinomial Naive Bayes
     locator: §9.3 Naive Bayes classifiers and §9.4 generative vs discriminative classifiers (Part II Linear
@@ -656,6 +736,8 @@ stages:
       beyond SaD''s.'
     vault_path: material://source-murphy-pml1/pml1.pdf
     scope_triage: reference-only
+    source_id: source-murphy-pml1
+    route_id: route-fe46f2fec8e3b764ed5ee7a6
   - kind: reference
     label: CSC411 notes — compact Naive Bayes reference
     locator: 'csc411.pdf Ch 8 Classification (printed p. 42): §8.1 Class Conditionals, §8.5 Generative
@@ -670,6 +752,8 @@ stages:
       what explains why Naive Bayes models the features at all.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
+    source_id: source-csc411-notes
+    route_id: route-1fabf5404c63c601fc8c2ef0
   - kind: read
     label: Zacharski Ch 7 - the bag-of-words model behind Multinomial Bayes
     locator: Chapter 7, pp. 297-333
@@ -681,6 +765,8 @@ stages:
       sentiment-classification example end to end.
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-43f41cd16c2b8e288baac925
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-multinomial/notes.md
   attachments: []
   source_feedback: []
@@ -722,6 +808,8 @@ stages:
       a network and being able to use one. §8.3.6 defines the Markov blanket precisely, which L14's last
       slides name. Free PDF from Microsoft Research; reference-level and demanding.
     scope_triage: reference-only
+    source_id: source-bishop-prml
+    route_id: route-9e8924fd776e576177b5fbd1
   - kind: read
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
@@ -735,6 +823,8 @@ stages:
       a node independent of everything else. The deck introduces all three in a handful of slides. Read
       this if the network material is examined conceptually, which the exercises suggest.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-6d3e6411e2da6cfaf960676c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
   attachments: []
   source_feedback: []
@@ -777,6 +867,8 @@ stages:
       a network and being able to use one. §8.3.6 defines the Markov blanket precisely, which L14's last
       slides name. Free PDF from Microsoft Research; reference-level and demanding.
     scope_triage: reference-only
+    source_id: source-bishop-prml
+    route_id: route-9e8924fd776e576177b5fbd1
   - kind: read
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
@@ -790,6 +882,8 @@ stages:
       a node independent of everything else. The deck introduces all three in a handful of slides. Read
       this if the network material is examined conceptually, which the exercises suggest.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-6d3e6411e2da6cfaf960676c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
   attachments: []
   source_feedback: []

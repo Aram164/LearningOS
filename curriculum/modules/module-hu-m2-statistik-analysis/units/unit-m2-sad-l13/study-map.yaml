@@ -64,6 +64,8 @@ stages:
       deck is effectively alone.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-64afd8476744172ae2a50ebd
   - kind: read
     label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
     locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture
@@ -75,6 +77,8 @@ stages:
       'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason
       the deck then spends time on approximate search. The lecture notes are written out and free.
     scope_triage: helpful-now
+    source_id: source-cs4780
+    route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
     locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
@@ -87,6 +91,8 @@ stages:
       at which brute force wins again. That is the practical form of the curse of dimensionality and directly
       supports the deck''s argument for approximate search.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-147346e35bd5be019bdccd69
   - kind: read
     label: MIT 6.036 — nearest-neighbour and feature-representation units
     locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
@@ -97,6 +103,8 @@ stages:
       how many attempts you make. Particularly useful for the feature-scaling questions, where the effect
       on a distance is easy to reason about wrongly and easy to check numerically.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-63f597ce7e7321c8ee2355d3
   - kind: reference
     label: AML L02 — k-NN deepening
     locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
@@ -107,6 +115,8 @@ stages:
       for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging
       to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-d9fc8caf218fc1915ae30149
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
@@ -116,6 +126,8 @@ stages:
       result L13 mentions and never quantifies, and these problems make it concrete. Solutions available
       for all three variants.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-b4b753b2641048dcc267ddc9
   - kind: practise
     label: MIT 6.034 quizzes — nearest-neighbor tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part A 'Nearest Neighbors', PDF pp.
@@ -126,6 +138,8 @@ stages:
       of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes
       have many such questions with drawn solutions, which is not available anywhere else on the shelf.
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-eee4f9463982afe90b504b65
   - kind: read
     label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
     locator: Chapter 5, pp. 184-225
@@ -136,6 +150,8 @@ stages:
       voting; this shows the failure mode those mechanisms exist to fix, with numbers.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-2323018660a94b94e5a0453b
   - kind: reference
     label: ESL Ch 13 - nearest neighbours and the cost of searching them
     locator: Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations,
@@ -150,6 +166,8 @@ stages:
       to it. Reference-only, but the L13 indexing half is otherwise unsupported.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-c3f8a132a0b3033a3af33c8d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-neighbors/notes.md
   attachments: []
   source_feedback: []
@@ -206,6 +224,8 @@ stages:
       deck is effectively alone.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-64afd8476744172ae2a50ebd
   - kind: read
     label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
     locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture
@@ -217,6 +237,8 @@ stages:
       'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason
       the deck then spends time on approximate search. The lecture notes are written out and free.
     scope_triage: helpful-now
+    source_id: source-cs4780
+    route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
     locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
@@ -229,6 +251,8 @@ stages:
       at which brute force wins again. That is the practical form of the curse of dimensionality and directly
       supports the deck''s argument for approximate search.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-147346e35bd5be019bdccd69
   - kind: reference
     label: AML L02 — k-NN deepening
     locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
@@ -239,6 +263,8 @@ stages:
       for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging
       to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-d9fc8caf218fc1915ae30149
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
@@ -248,6 +274,8 @@ stages:
       result L13 mentions and never quantifies, and these problems make it concrete. Solutions available
       for all three variants.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-b4b753b2641048dcc267ddc9
   - kind: practise
     label: MIT 6.034 quizzes — nearest-neighbor tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part A 'Nearest Neighbors', PDF pp.
@@ -258,6 +286,8 @@ stages:
       of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes
       have many such questions with drawn solutions, which is not available anywhere else on the shelf.
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-eee4f9463982afe90b504b65
   - kind: read
     label: Zacharski Ch 5 - k-NN aggregation and imbalance in practice
     locator: Chapter 5, pp. 184-225
@@ -268,6 +298,8 @@ stages:
       voting; this shows the failure mode those mechanisms exist to fix, with numbers.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-2323018660a94b94e5a0453b
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-aggregation/notes.md
   attachments: []
   source_feedback: []
@@ -311,6 +343,8 @@ stages:
       LSH, so those remain an explicit L13 gap.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1e7d9a0c555b0ed171aa83c3
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -335,6 +369,8 @@ stages:
       deck is effectively alone.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-64afd8476744172ae2a50ebd
   - kind: read
     label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
     locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture
@@ -346,6 +382,8 @@ stages:
       'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason
       the deck then spends time on approximate search. The lecture notes are written out and free.
     scope_triage: helpful-now
+    source_id: source-cs4780
+    route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
     locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
@@ -358,6 +396,8 @@ stages:
       at which brute force wins again. That is the practical form of the curse of dimensionality and directly
       supports the deck''s argument for approximate search.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-147346e35bd5be019bdccd69
   - kind: read
     label: MIT 6.036 — nearest-neighbour and feature-representation units
     locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
@@ -368,6 +408,8 @@ stages:
       how many attempts you make. Particularly useful for the feature-scaling questions, where the effect
       on a distance is easy to reason about wrongly and easy to check numerically.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-63f597ce7e7321c8ee2355d3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-metrics/notes.md
   attachments: []
   source_feedback: []
@@ -412,6 +454,8 @@ stages:
       LSH, so those remain an explicit L13 gap.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1e7d9a0c555b0ed171aa83c3
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -436,6 +480,8 @@ stages:
       deck is effectively alone.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-64afd8476744172ae2a50ebd
   - kind: read
     label: Cornell CS4780 — k-NN and the curse of dimensionality lectures
     locator: Lectures 2-3 (k-nearest neighbours; the curse of dimensionality) with the corresponding lecture
@@ -447,6 +493,8 @@ stages:
       'near'. L13 mentions the curse; this is the calculation that makes it alarming, and it is the reason
       the deck then spends time on approximate search. The lecture notes are written out and free.
     scope_triage: helpful-now
+    source_id: source-cs4780
+    route_id: route-96611a9728939c38b2bfef1f
   - kind: read
     label: MIT 6.036 — nearest-neighbour and feature-representation units
     locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
@@ -457,6 +505,8 @@ stages:
       how many attempts you make. Particularly useful for the feature-scaling questions, where the effect
       on a distance is easy to reason about wrongly and easy to check numerically.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-63f597ce7e7321c8ee2355d3
   - kind: reference
     label: AML L02 — k-NN deepening
     locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
@@ -467,6 +517,8 @@ stages:
       for choosing k. Reading it serves both modules at once, which is why it is routed here despite belonging
       to another course. Note the notation differs slightly; SaD's deck is authoritative for the SaD exam.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-d9fc8caf218fc1915ae30149
   - kind: practise
     label: Cornell CS4780 HW1 — k-NN
     locator: 2017Spring/hw1, 2018Fall/HW1 and 2018Spring/HW1 (k-NN), with the published solutions
@@ -476,6 +528,8 @@ stages:
       result L13 mentions and never quantifies, and these problems make it concrete. Solutions available
       for all three variants.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-b4b753b2641048dcc267ddc9
   - kind: practise
     label: MIT 6.034 quizzes — nearest-neighbor tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part A 'Nearest Neighbors', PDF pp.
@@ -486,6 +540,8 @@ stages:
       of whether the algorithm is understood spatially, and it is a plausible exam item. These quizzes
       have many such questions with drawn solutions, which is not available anywhere else on the shelf.
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-eee4f9463982afe90b504b65
   - kind: read
     label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
     locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest
@@ -501,6 +557,8 @@ stages:
       metrics node and is invisible when each measure is defined separately.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-645e5c9462a78bdb854b2949
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-minkowski/notes.md
   attachments: []
   source_feedback: []
@@ -544,6 +602,8 @@ stages:
       LSH, so those remain an explicit L13 gap.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1e7d9a0c555b0ed171aa83c3
   - kind: reference
     label: 2025 instance- and similarity-based pair
     locator: 13_similarity_based_part3.pdf
@@ -568,6 +628,8 @@ stages:
       deck is effectively alone.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-64afd8476744172ae2a50ebd
   - kind: read
     label: Zacharski Ch 2 - the distance measures of L13 computed on real vectors
     locator: Chapter 2, pp. 20-75 (Manhattan p. 23; Euclidean p. 24; Pearson p. 42; cosine p. 51; k-nearest
@@ -583,6 +645,8 @@ stages:
       metrics node and is invisible when each measure is defined separately.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-645e5c9462a78bdb854b2949
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-special-measures/notes.md
   attachments: []
   source_feedback: []
@@ -637,6 +701,8 @@ stages:
       at which brute force wins again. That is the practical form of the curse of dimensionality and directly
       supports the deck''s argument for approximate search.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-147346e35bd5be019bdccd69
   - kind: reference
     label: ESL Ch 13 - nearest neighbours and the cost of searching them
     locator: Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations,
@@ -651,6 +717,8 @@ stages:
       to it. Reference-only, but the L13 indexing half is otherwise unsupported.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-c3f8a132a0b3033a3af33c8d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
   attachments: []
   source_feedback: []

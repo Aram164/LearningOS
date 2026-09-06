@@ -40,6 +40,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: practise
     label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
     source_id: source-sad-uebungen
@@ -50,6 +51,7 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
   - kind: practise
     label: UE2, slides 5-18 — feature and data-type walkthrough
     source_id: source-sad-uebungen
@@ -60,6 +62,7 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    route_id: route-2dcce50c3bcf099f1f475c2b
   - kind: read
     label: OpenIntro Chapters 1–2 — accessible data summaries
     source_id: source-openintro-statistics
@@ -75,6 +78,7 @@ stages:
       so the notation stays constant across the whole statistics half of the course.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-data-questions/notes.md
   attachments: []
   source_feedback: []
@@ -107,6 +111,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: practise
     label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
     source_id: source-sad-uebungen
@@ -117,6 +122,7 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
   - kind: read
     label: Fahrmeir Chapter 2 — descriptive-statistics reference
     source_id: source-fahrmeir-statistik
@@ -131,6 +137,7 @@ stages:
       the Klausur is written in. It assumes no probability at all, so it is safe this early.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
   - kind: practise
     label: Arbeitsbuch Chapter 2 — descriptive warm-ups
     source_id: source-fahrmeir-arbeitsbuch
@@ -145,6 +152,7 @@ stages:
       the SaD Übungen; for timed self-testing use the Klausur bank.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    route_id: route-19d82d10ef563326bb01cfed
   - kind: read
     label: OpenIntro Chapters 1–2 — accessible data summaries
     source_id: source-openintro-statistics
@@ -160,6 +168,7 @@ stages:
       so the notation stays constant across the whole statistics half of the course.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
   - kind: practise
     label: Dekking — descriptive review and answer-backed exercises
     source_id: source-dekking-mips
@@ -176,6 +185,7 @@ stages:
       for the exercises — the framing will not land yet.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
   - kind: watch
     label: Kurzes Tutorium Statistik — Lagemaße und Streuung
     source_id: source-kurzes-tutorium-statistik
@@ -187,6 +197,7 @@ stages:
       slides. These videos are short and use the terms consistently, which is the cheapest way to close
       that gap. Content is at Abitur/first-semester level — use it for language, not for depth.
     scope_triage: helpful-now
+    route_id: route-e7123fb830406d6679364c7f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-location/notes.md
   attachments: []
   source_feedback: []
@@ -219,6 +230,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: read
     label: Fahrmeir Chapter 2 — descriptive-statistics reference
     source_id: source-fahrmeir-statistik
@@ -233,6 +245,7 @@ stages:
       the Klausur is written in. It assumes no probability at all, so it is safe this early.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
   - kind: practise
     label: Arbeitsbuch Chapter 2 — descriptive warm-ups
     source_id: source-fahrmeir-arbeitsbuch
@@ -247,6 +260,7 @@ stages:
       the SaD Übungen; for timed self-testing use the Klausur bank.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    route_id: route-19d82d10ef563326bb01cfed
   - kind: read
     label: OpenIntro Chapters 1–2 — accessible data summaries
     source_id: source-openintro-statistics
@@ -262,6 +276,7 @@ stages:
       so the notation stays constant across the whole statistics half of the course.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
   - kind: practise
     label: Dekking — descriptive review and answer-backed exercises
     source_id: source-dekking-mips
@@ -278,6 +293,7 @@ stages:
       for the exercises — the framing will not land yet.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-distributions/notes.md
   attachments: []
   source_feedback: []
@@ -311,6 +327,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: practise
     label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
     source_id: source-sad-uebungen
@@ -321,6 +338,7 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    route_id: route-e4fe4b297a44d7835827d2e7
   - kind: practise
     label: UE2, slides 5-18 — feature and data-type walkthrough
     source_id: source-sad-uebungen
@@ -331,6 +349,7 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    route_id: route-2dcce50c3bcf099f1f475c2b
   - kind: read
     label: Fahrmeir Chapter 2 — descriptive-statistics reference
     source_id: source-fahrmeir-statistik
@@ -345,6 +364,7 @@ stages:
       the Klausur is written in. It assumes no probability at all, so it is safe this early.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    route_id: route-0c68f75d11118a811949ead0
   - kind: read
     label: OpenIntro Chapters 1–2 — accessible data summaries
     source_id: source-openintro-statistics
@@ -360,6 +380,7 @@ stages:
       so the notation stays constant across the whole statistics half of the course.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    route_id: route-079024df32c7918f47655dfd
   - kind: practise
     label: Dekking — descriptive review and answer-backed exercises
     source_id: source-dekking-mips
@@ -376,6 +397,7 @@ stages:
       for the exercises — the framing will not land yet.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    route_id: route-f081f68ca3fa4261de929984
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-sampling-context/notes.md
   attachments: []
   source_feedback: []
@@ -408,6 +430,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: practise
     label: FAU pp. 4 and 22 — origin/base-rate table with solution
     source_id: source-fau-klausur-ws1415
@@ -418,6 +441,7 @@ stages:
       mistakes visible. It is a calibration item after L01, not a new explanation of Bayes.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    route_id: route-66d61878473ae7da314c77a8
   - kind: watch
     label: StatQuest — confusion matrix, sensitivity, and specificity
     source_id: source-statquest
@@ -431,6 +455,7 @@ stages:
       written treatment, because the written ones assume you will not transpose it. Stop after these two;
       the channel's ROC video belongs to L11.
     scope_triage: helpful-now
+    route_id: route-e97efca7d5fa214453f7b0d0
   - kind: watch
     label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
     source_id: source-3b1b-bayes-theorem
@@ -444,6 +469,7 @@ stages:
       which is a genuinely different representation from the lecture's. Watch before the algebra in L04,
       not after.
     scope_triage: helpful-now
+    route_id: route-989d14e47fcce3d89ecc119e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md
   attachments: []
   source_feedback: []
@@ -476,6 +502,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   - kind: practise
     label: FAU pp. 4 and 22 — origin/base-rate table with solution
     source_id: source-fau-klausur-ws1415
@@ -486,6 +513,7 @@ stages:
       mistakes visible. It is a calibration item after L01, not a new explanation of Bayes.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    route_id: route-66d61878473ae7da314c77a8
   - kind: watch
     label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
     source_id: source-3b1b-bayes-theorem
@@ -499,6 +527,7 @@ stages:
       which is a genuinely different representation from the lecture's. Watch before the algebra in L04,
       not after.
     scope_triage: helpful-now
+    route_id: route-989d14e47fcce3d89ecc119e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md
   attachments: []
   source_feedback: []
@@ -530,6 +559,7 @@ stages:
       belonging to L01''s own material.'
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
+    route_id: route-7cb7d44175d018bdebbdbd33
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md
   attachments: []
   source_feedback: []

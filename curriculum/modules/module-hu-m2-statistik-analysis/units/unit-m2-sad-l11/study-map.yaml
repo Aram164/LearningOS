@@ -53,6 +53,8 @@ stages:
       — at more length than the deck.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-ef56936eca783d424d37e8f9
   - kind: read
     label: Kroese — data-science workflow and evaluation
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
@@ -66,6 +68,8 @@ stages:
       but real probability notation.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-4bef9e4af486bc5c7c1517db
   - kind: read
     label: Geron Ch 2 - the pipeline executed end to end
     locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
@@ -81,6 +85,8 @@ stages:
       a way no amount of re-reading will.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-a848504ea89949cfbedc08aa
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md
   attachments: []
   source_feedback: []
@@ -128,6 +134,8 @@ stages:
       — at more length than the deck.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-ef56936eca783d424d37e8f9
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
@@ -142,6 +150,8 @@ stages:
       is for.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-15a92bbc0ec66bf68eb86eac
   - kind: read
     label: Google ML Crash Course — framing, generalization and validation modules
     locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
@@ -154,6 +164,8 @@ stages:
       in particular explains why a third split is needed once you start tuning, which the deck states
       without motivating. Shallow by design; it is orientation, not depth.
     scope_triage: helpful-now
+    source_id: source-google-ml-crash-course
+    route_id: route-86eed70f7803c597932af9c1
   - kind: read
     label: Geron Ch 1 - the ML vocabulary with failure cases attached
     locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
@@ -169,6 +181,8 @@ stages:
       has actually landed.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2bdf11076ffaaefabed7412e
   - kind: practise
     label: Geron Ch 1 exercises - the L11 vocabulary tested back
     locator: Chapter 1 exercises, pp. 60-61
@@ -183,6 +197,8 @@ stages:
       Answers are in the book's appendix.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-fa9edc00207a51728087b339
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md
   attachments: []
   source_feedback: []
@@ -227,6 +243,8 @@ stages:
       — at more length than the deck.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-ef56936eca783d424d37e8f9
   - kind: read
     label: Geron Ch 1 - the ML vocabulary with failure cases attached
     locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
@@ -242,6 +260,8 @@ stages:
       has actually landed.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2bdf11076ffaaefabed7412e
   - kind: read
     label: Geron Ch 2 - the pipeline executed end to end
     locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
@@ -257,6 +277,8 @@ stages:
       a way no amount of re-reading will.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-a848504ea89949cfbedc08aa
   - kind: read
     label: Domingos — A Few Useful Things to Know About Machine Learning
     locator: Complete article, 9 pages (CACM 55(10), 2012)
@@ -269,6 +291,8 @@ stages:
       Also the best available preparation for a conceptual exam question, because it is written as argument
       rather than as definition.'
     scope_triage: helpful-now
+    source_id: source-domingos-useful-things
+    route_id: route-b92b4a34896b81806c17af27
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md
   attachments: []
   source_feedback: []
@@ -314,6 +338,8 @@ stages:
       is for.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-15a92bbc0ec66bf68eb86eac
   - kind: read
     label: Berkeley CS189 — past exam questions on evaluation and generalization
     locator: Spring 2026 Midterm Solutions, Question 1(ii)-(v), PDF pp. 3-4
@@ -324,6 +350,8 @@ stages:
       a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
       course covers much that SaD does not.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-3857218e50e782951579fa76
   - kind: read
     label: Caltech LFD — the bias-variance decomposition and generalization lectures
     locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
@@ -337,6 +365,8 @@ stages:
       which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
       level.
     scope_triage: helpful-now
+    source_id: source-caltech-lfd
+    route_id: route-cef1e018f91cbdc4c1a2b8e6
   - kind: reference
     label: scikit-learn user guide §3.1 — cross-validation
     locator: 'User guide §3.1 ''Cross-validation: evaluating estimator performance'' and §3.4 ''Metrics
@@ -348,6 +378,8 @@ stages:
       when observations are not independent, time-series splits when order matters. Knowing that the plain
       version has failure modes is the conceptual content; the diagrams in §3.1 make the differences immediate.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0572fd5f6c01003faa8226d6
   - kind: read
     label: Google ML Crash Course — framing, generalization and validation modules
     locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
@@ -360,6 +392,8 @@ stages:
       in particular explains why a third split is needed once you start tuning, which the deck states
       without motivating. Shallow by design; it is orientation, not depth.
     scope_triage: helpful-now
+    source_id: source-google-ml-crash-course
+    route_id: route-86eed70f7803c597932af9c1
   - kind: read
     label: Ng — bias, variance and the evaluation workflow lectures
     locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
@@ -372,6 +406,8 @@ stages:
       most retainable form of this material and is exactly what a conceptual exam question about the trade-off
       is testing.'
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-3779cdc11dbbbbe4d52b87ee
   - kind: read
     label: ISLP community solutions — Ch 2 and Ch 5 exercises
     locator: 'ISLP community solution notebooks: Ch 2 Exercise 1 ''statistical learning and bias-variance''
@@ -384,6 +420,8 @@ stages:
       the book wins. The Ch 5 notebooks are the most useful here — cross-validation and bootstrap worked
       end to end.'
     scope_triage: helpful-now
+    source_id: source-islp-community-solutions
+    route_id: route-ad19f7b757106baf204564cc
   - kind: read
     label: Kroese — data-science workflow and evaluation
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
@@ -397,6 +435,8 @@ stages:
       but real probability notation.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-4bef9e4af486bc5c7c1517db
   - kind: read
     label: Geron Ch 2 - the pipeline executed end to end
     locator: Chapter 2, pp. 63-111 (create a test set p. 80; feature scaling p. 98; transformation pipelines
@@ -412,6 +452,8 @@ stages:
       a way no amount of re-reading will.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-a848504ea89949cfbedc08aa
   - kind: read
     label: Zacharski Ch 5 - evaluating a classifier by hand
     locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
@@ -427,6 +469,8 @@ stages:
       is the obstacle.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-a09696f8181f3ac06a1f50b3
   - kind: reference
     label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
     locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
@@ -441,6 +485,8 @@ stages:
       in its own right. Graduate level; read the specific sections rather than the chapter.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-073e534292fd209e21e05122
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md
   attachments: []
   source_feedback: []
@@ -486,6 +532,8 @@ stages:
       — at more length than the deck.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-ef56936eca783d424d37e8f9
   - kind: read
     label: ISLP Chapter 2 — statistical-learning workflow
     locator: Ch 2 Statistical Learning, pdf pp. 25-77 (§2.1 what is statistical learning p. 26; §2.2 assessing
@@ -500,6 +548,8 @@ stages:
       is for.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-15a92bbc0ec66bf68eb86eac
   - kind: read
     label: Caltech LFD — the bias-variance decomposition and generalization lectures
     locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
@@ -513,6 +563,8 @@ stages:
       which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
       level.
     scope_triage: helpful-now
+    source_id: source-caltech-lfd
+    route_id: route-cef1e018f91cbdc4c1a2b8e6
   - kind: read
     label: Geron Ch 4 - the loss functions L11 names in one line
     locator: Chapter 4, pp. 139-180 (cross-entropy cost function, equation 4-22, p. 177)
@@ -525,6 +577,8 @@ stages:
       than a new formula, which is worth the detour given how compressed L15 is.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2c0ff06a7bde485d18ff75cf
   - kind: read
     label: Domingos — A Few Useful Things to Know About Machine Learning
     locator: Complete article, 9 pages (CACM 55(10), 2012)
@@ -537,6 +591,8 @@ stages:
       Also the best available preparation for a conceptual exam question, because it is written as argument
       rather than as definition.'
     scope_triage: helpful-now
+    source_id: source-domingos-useful-things
+    route_id: route-b92b4a34896b81806c17af27
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md
   attachments: []
   source_feedback: []
@@ -579,6 +635,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-7727f3ae5952b397465b1a0b
   - kind: practise
     label: UE6, slides 70-82 — classifier evaluation walkthrough
     locator: exercise-slides/UE6.pdf, slides 70-82
@@ -589,6 +647,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c12dd6c50887bfd88572d36f
   - kind: practise
     label: UE7, slides 22-30 — official multiclass-metrics solution
     locator: exercise-slides/UE7.pdf, slides 22-30
@@ -599,6 +659,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-6d40fed8b4e410539a045c51
   - kind: read
     label: Kelleher — predictive-analytics workflow framing
     locator: Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56; Ch 2 Data to Insights
@@ -613,6 +675,8 @@ stages:
       — at more length than the deck.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-ef56936eca783d424d37e8f9
   - kind: read
     label: Berkeley CS189 — past exam questions on evaluation and generalization
     locator: Spring 2026 Midterm Solutions, Question 1(ii)-(v), PDF pp. 3-4
@@ -623,6 +687,8 @@ stages:
       a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
       course covers much that SaD does not.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-3857218e50e782951579fa76
   - kind: reference
     label: scikit-learn user guide §3.1 — cross-validation
     locator: 'User guide §3.1 ''Cross-validation: evaluating estimator performance'' and §3.4 ''Metrics
@@ -634,6 +700,8 @@ stages:
       when observations are not independent, time-series splits when order matters. Knowing that the plain
       version has failure modes is the conceptual content; the diagrams in §3.1 make the differences immediate.'
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0572fd5f6c01003faa8226d6
   - kind: read
     label: Google ML Crash Course — framing, generalization and validation modules
     locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
@@ -646,6 +714,8 @@ stages:
       in particular explains why a third split is needed once you start tuning, which the deck states
       without motivating. Shallow by design; it is orientation, not depth.
     scope_triage: helpful-now
+    source_id: source-google-ml-crash-course
+    route_id: route-86eed70f7803c597932af9c1
   - kind: read
     label: Ng — bias, variance and the evaluation workflow lectures
     locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
@@ -658,6 +728,8 @@ stages:
       most retainable form of this material and is exactly what a conceptual exam question about the trade-off
       is testing.'
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-3779cdc11dbbbbe4d52b87ee
   - kind: read
     label: Kroese — data-science workflow and evaluation
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
@@ -671,6 +743,8 @@ stages:
       but real probability notation.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-4bef9e4af486bc5c7c1517db
   - kind: read
     label: Geron Ch 3 - the evaluation metrics of L11 as drills
     locator: Chapter 3, pp. 113-137 (ROC p. 117; confusion matrix p. 118; precision/recall trade-off p.
@@ -685,6 +759,8 @@ stages:
       which is the conceptual content behind class-imbalance questions.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-081414547c6db9ae902f6ef8
   - kind: read
     label: Zacharski Ch 5 - evaluating a classifier by hand
     locator: Chapter 5, pp. 184-225 (10-fold cross-validation p. 187; confusion matrix p. 193; Kappa p.
@@ -700,6 +776,8 @@ stages:
       is the obstacle.'
     vault_path: material://source-zacharski-data-mining/Zacharski_Programmers-Guide-to-Data-Mining.pdf
     scope_triage: helpful-now
+    source_id: source-zacharski-data-mining
+    route_id: route-a09696f8181f3ac06a1f50b3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
   attachments: []
   source_feedback: []
@@ -747,6 +825,8 @@ stages:
       is for.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-15a92bbc0ec66bf68eb86eac
   - kind: read
     label: Fortmann-Roe — understanding the bias-variance tradeoff
     locator: The complete article 'Understanding the Bias-Variance Tradeoff' (scott.fortmann-roe.com),
@@ -759,6 +839,8 @@ stages:
       interpretable. The appendix gives the algebraic decomposition for readers who want it after the
       picture.'
     scope_triage: helpful-now
+    source_id: source-fortmann-roe-bias-variance
+    route_id: route-5140829c57cb7f682e5d916f
   - kind: read
     label: Berkeley CS189 — past exam questions on evaluation and generalization
     locator: Spring 2026 Midterm Solutions, Question 1(ii)-(v), PDF pp. 3-4
@@ -769,6 +851,8 @@ stages:
       a learning curve implies, why a metric is inappropriate for imbalanced data. Filter by topic — the
       course covers much that SaD does not.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-3857218e50e782951579fa76
   - kind: read
     label: Caltech LFD — the bias-variance decomposition and generalization lectures
     locator: Lecture 8 'Bias-Variance Tradeoff' and Lecture 11 'Overfitting', with the corresponding homework
@@ -782,6 +866,8 @@ stages:
       which is more illuminating than the algebra alone. Homework with solutions; genuinely above SaD
       level.
     scope_triage: helpful-now
+    source_id: source-caltech-lfd
+    route_id: route-cef1e018f91cbdc4c1a2b8e6
   - kind: read
     label: Google ML Crash Course — framing, generalization and validation modules
     locator: The 'Framing', 'Generalization', 'Training and Test Sets', 'Validation Set' and 'Classification'
@@ -794,6 +880,8 @@ stages:
       in particular explains why a third split is needed once you start tuning, which the deck states
       without motivating. Shallow by design; it is orientation, not depth.
     scope_triage: helpful-now
+    source_id: source-google-ml-crash-course
+    route_id: route-86eed70f7803c597932af9c1
   - kind: read
     label: Ng — bias, variance and the evaluation workflow lectures
     locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
@@ -806,6 +894,8 @@ stages:
       most retainable form of this material and is exactly what a conceptual exam question about the trade-off
       is testing.'
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-3779cdc11dbbbbe4d52b87ee
   - kind: read
     label: ISLP community solutions — Ch 2 and Ch 5 exercises
     locator: 'ISLP community solution notebooks: Ch 2 Exercise 1 ''statistical learning and bias-variance''
@@ -818,6 +908,8 @@ stages:
       the book wins. The Ch 5 notebooks are the most useful here — cross-validation and bootstrap worked
       end to end.'
     scope_triage: helpful-now
+    source_id: source-islp-community-solutions
+    route_id: route-ad19f7b757106baf204564cc
   - kind: read
     label: Kroese — data-science workflow and evaluation
     locator: Ch 2 Statistical Learning, pdf pp. 37-84 (risk, loss and the training/test split); Ch 1 Importing,
@@ -831,6 +923,8 @@ stages:
       but real probability notation.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-4bef9e4af486bc5c7c1517db
   - kind: read
     label: Geron Ch 1 - the ML vocabulary with failure cases attached
     locator: Chapter 1, pp. 29-61 (supervised/unsupervised pp. 34-41; overfitting p. 54; underfitting
@@ -846,6 +940,8 @@ stages:
       has actually landed.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2bdf11076ffaaefabed7412e
   - kind: practise
     label: Geron Ch 1 exercises - the L11 vocabulary tested back
     locator: Chapter 1 exercises, pp. 60-61
@@ -860,6 +956,8 @@ stages:
       Answers are in the book's appendix.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-fa9edc00207a51728087b339
   - kind: read
     label: Domingos — A Few Useful Things to Know About Machine Learning
     locator: Complete article, 9 pages (CACM 55(10), 2012)
@@ -872,6 +970,8 @@ stages:
       Also the best available preparation for a conceptual exam question, because it is written as argument
       rather than as definition.'
     scope_triage: helpful-now
+    source_id: source-domingos-useful-things
+    route_id: route-b92b4a34896b81806c17af27
   - kind: reference
     label: ESL Ch 7 - what cross-validation and the bootstrap actually estimate
     locator: Sections 7.2-7.3, pp. 238-247; section 7.10 cross-validation, p. 260; section 7.11 bootstrap
@@ -886,6 +986,8 @@ stages:
       in its own right. Graduate level; read the specific sections rather than the chapter.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-073e534292fd209e21e05122
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
   attachments: []
   source_feedback: []

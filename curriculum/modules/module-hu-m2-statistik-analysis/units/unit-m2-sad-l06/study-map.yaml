@@ -49,6 +49,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: reference
     label: 2025 random-variables and expected-values pair
     locator: 06_expected_values.pptx-1.pdf
@@ -75,6 +77,8 @@ stages:
       großen Zahlen; read it here rather than in an English text if the exam wording matters.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-0374705a29ffc770fc54d9b5
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
@@ -92,6 +96,8 @@ stages:
       in Ch 6 — out of scope.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-a336d6454947c097344796b8
   - kind: read
     label: MIT 6.041SC — random variables, expectation and variance lectures
     locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
@@ -103,6 +109,8 @@ stages:
       manipulations safe, and it is the habit most often missing when students find transformations confusing.
       Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-17d9d905adfee01ec54791b3
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
@@ -115,6 +123,8 @@ stages:
       Dekking for the transformation and concentration nodes.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-bf37d8f974813af543f007f3
   - kind: reference
     label: Ross — random-variable theory
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
@@ -129,6 +139,8 @@ stages:
       rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-72c1b94d7d00068b9f8e041c
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
@@ -142,6 +154,8 @@ stages:
       minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
       to be strong on.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ed70c98ed67d50954e43222f
   - kind: reference
     label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
     locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
@@ -152,6 +166,8 @@ stages:
       question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
     vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-1eef53180bda2e4604a22a8b
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
@@ -160,6 +176,8 @@ stages:
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
       come from here if the exam wording has ever cost you time.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e802263b373da3ed751ef42c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-random-variable/notes.md
   attachments: []
   source_feedback: []
@@ -201,6 +219,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-2da0864f340f4e794158cc61
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -210,6 +230,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: practise
     label: UE5, slides 4-17 — official Blatt 3 solutions
     locator: exercise-slides/UE5.pdf, slides 4-17
@@ -220,6 +242,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-64aa48498fe151c8b1c69305
   - kind: reference
     label: 2025 random-variables and expected-values pair
     locator: 06_expected_values.pptx-1.pdf
@@ -246,6 +270,8 @@ stages:
       großen Zahlen; read it here rather than in an English text if the exam wording matters.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-0374705a29ffc770fc54d9b5
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
@@ -259,6 +285,8 @@ stages:
       marks in this part of the exam.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-dc5505c84e252627c48530c2
   - kind: read
     label: MIT 6.041SC — random variables, expectation and variance lectures
     locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
@@ -270,6 +298,8 @@ stages:
       manipulations safe, and it is the habit most often missing when students find transformations confusing.
       Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-17d9d905adfee01ec54791b3
   - kind: practise
     label: Dekking — random-variable exercises
     locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
@@ -285,6 +315,8 @@ stages:
       with the LLN following immediately in §13.3 so the connection is visible.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-676e8ea98543e3a7b4f466aa
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
@@ -296,6 +328,8 @@ stages:
       remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
       the lecture uses without defining.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-faf05b9239ca317a12713779
   - kind: reference
     label: Pitman — random variables and expectation
     locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
@@ -310,6 +344,8 @@ stages:
       and §3.3 and stop.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-e6e54c18328cf55e09658980
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
@@ -323,6 +359,8 @@ stages:
       gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-6c6e7ac821cf1bae2d53a9a8
   - kind: reference
     label: Ross — random-variable theory
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
@@ -337,6 +375,8 @@ stages:
       rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-72c1b94d7d00068b9f8e041c
   - kind: practise
     label: Schaum — random-variable and moment drills
     locator: Ch 5 Random Variables, pdf pp. 76-106
@@ -348,6 +388,8 @@ stages:
       which supports L06's covariance node.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-50eef5af02021332775370be
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
@@ -358,6 +400,8 @@ stages:
       exercise block.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-e5bf24802d93851f78b83c03
   - kind: reference
     label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
     locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
@@ -368,6 +412,8 @@ stages:
       question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
     vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-1eef53180bda2e4604a22a8b
   - kind: watch
     label: StatQuest — expected values and probability distributions
     locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
@@ -379,6 +425,8 @@ stages:
       them. That animation is the single most useful thing here, because it makes the sum-to-integral
       move a continuous change rather than two unrelated formulas. Watch them in order.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-37cd5e058977f4aa2f38ee19
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-distribution-functions/notes.md
   attachments: []
   source_feedback: []
@@ -420,6 +468,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-2da0864f340f4e794158cc61
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -429,6 +479,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: practise
     label: UE5, slides 4-17 — official Blatt 3 solutions
     locator: exercise-slides/UE5.pdf, slides 4-17
@@ -439,6 +491,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-64aa48498fe151c8b1c69305
   - kind: read
     label: Grinstead & Snell Ch 6 — expected value and variance
     locator: Official PDF, Ch 6 'Expected Value and Variance', §§6.1-6.3, PDF pp. 233-292
@@ -449,6 +503,8 @@ stages:
       chapter's three-section structure gets both — the definitions are stated separately and then compared
       directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-30bde2200182449152e8a76a
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
@@ -466,6 +522,8 @@ stages:
       in Ch 6 — out of scope.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-a336d6454947c097344796b8
   - kind: practise
     label: Dekking — random-variable exercises
     locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
@@ -481,6 +539,8 @@ stages:
       with the LLN following immediately in §13.3 so the connection is visible.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-676e8ea98543e3a7b4f466aa
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
@@ -492,6 +552,8 @@ stages:
       remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
       the lecture uses without defining.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-faf05b9239ca317a12713779
   - kind: reference
     label: Pitman — random variables and expectation
     locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
@@ -506,6 +568,8 @@ stages:
       and §3.3 and stop.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-e6e54c18328cf55e09658980
   - kind: practise
     label: Schaum — random-variable and moment drills
     locator: Ch 5 Random Variables, pdf pp. 76-106
@@ -517,6 +581,8 @@ stages:
       which supports L06's covariance node.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-50eef5af02021332775370be
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
@@ -530,6 +596,8 @@ stages:
       minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
       to be strong on.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ed70c98ed67d50954e43222f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-transformations/notes.md
   attachments: []
   source_feedback: []
@@ -571,6 +639,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-2da0864f340f4e794158cc61
   - kind: practise
     label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
@@ -582,6 +652,8 @@ stages:
       is therefore a worked application, not the first explanation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e7975557941ab093de08152e
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -591,6 +663,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: practise
     label: UE5, slides 4-17 — official Blatt 3 solutions
     locator: exercise-slides/UE5.pdf, slides 4-17
@@ -601,6 +675,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-64aa48498fe151c8b1c69305
   - kind: reference
     label: 2025 random-variables and expected-values pair
     locator: 06_expected_values.pptx-1.pdf
@@ -627,6 +703,8 @@ stages:
       großen Zahlen; read it here rather than in an English text if the exam wording matters.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-0374705a29ffc770fc54d9b5
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
@@ -640,6 +718,8 @@ stages:
       marks in this part of the exam.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-dc5505c84e252627c48530c2
   - kind: read
     label: Grinstead & Snell Ch 6 — expected value and variance
     locator: Official PDF, Ch 6 'Expected Value and Variance', §§6.1-6.3, PDF pp. 233-292
@@ -650,6 +730,8 @@ stages:
       chapter's three-section structure gets both — the definitions are stated separately and then compared
       directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-30bde2200182449152e8a76a
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
@@ -667,6 +749,8 @@ stages:
       in Ch 6 — out of scope.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-a336d6454947c097344796b8
   - kind: read
     label: MIT 6.041SC — random variables, expectation and variance lectures
     locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
@@ -678,6 +762,8 @@ stages:
       manipulations safe, and it is the habit most often missing when students find transformations confusing.
       Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-17d9d905adfee01ec54791b3
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
@@ -690,6 +776,8 @@ stages:
       Dekking for the transformation and concentration nodes.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-bf37d8f974813af543f007f3
   - kind: practise
     label: Dekking — random-variable exercises
     locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
@@ -705,6 +793,8 @@ stages:
       with the LLN following immediately in §13.3 so the connection is visible.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-676e8ea98543e3a7b4f466aa
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
@@ -716,6 +806,8 @@ stages:
       remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
       the lecture uses without defining.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-faf05b9239ca317a12713779
   - kind: reference
     label: Pitman — random variables and expectation
     locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
@@ -730,6 +822,8 @@ stages:
       and §3.3 and stop.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-e6e54c18328cf55e09658980
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
@@ -743,6 +837,8 @@ stages:
       gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-6c6e7ac821cf1bae2d53a9a8
   - kind: reference
     label: Ross — random-variable theory
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
@@ -757,6 +853,8 @@ stages:
       rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-72c1b94d7d00068b9f8e041c
   - kind: practise
     label: Schaum — random-variable and moment drills
     locator: Ch 5 Random Variables, pdf pp. 76-106
@@ -768,6 +866,8 @@ stages:
       which supports L06's covariance node.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-50eef5af02021332775370be
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
@@ -781,6 +881,8 @@ stages:
       minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
       to be strong on.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ed70c98ed67d50954e43222f
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
@@ -791,6 +893,8 @@ stages:
       exercise block.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-e5bf24802d93851f78b83c03
   - kind: watch
     label: StatQuest — expected values and probability distributions
     locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
@@ -802,6 +906,8 @@ stages:
       them. That animation is the single most useful thing here, because it makes the sum-to-integral
       move a continuous change rather than two unrelated formulas. Watch them in order.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-37cd5e058977f4aa2f38ee19
   - kind: watch
     label: jbstatistics — expected value and variance calculations
     locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
@@ -812,6 +918,8 @@ stages:
       exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
       habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-765e4fe569b646edb22ebb28
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
@@ -820,6 +928,8 @@ stages:
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
       come from here if the exam wording has ever cost you time.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e802263b373da3ed751ef42c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-expectation/notes.md
   attachments: []
   source_feedback: []
@@ -862,6 +972,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-2da0864f340f4e794158cc61
   - kind: practise
     label: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
@@ -873,6 +985,8 @@ stages:
       is therefore a worked application, not the first explanation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e7975557941ab093de08152e
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -882,6 +996,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: practise
     label: UE5, slides 4-17 — official Blatt 3 solutions
     locator: exercise-slides/UE5.pdf, slides 4-17
@@ -892,6 +1008,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-64aa48498fe151c8b1c69305
   - kind: reference
     label: 2025 random-variables and expected-values pair
     locator: 06_expected_values.pptx-1.pdf
@@ -918,6 +1036,8 @@ stages:
       großen Zahlen; read it here rather than in an English text if the exam wording matters.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-0374705a29ffc770fc54d9b5
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
@@ -931,6 +1051,8 @@ stages:
       marks in this part of the exam.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-dc5505c84e252627c48530c2
   - kind: read
     label: Grinstead & Snell Ch 6 — expected value and variance
     locator: Official PDF, Ch 6 'Expected Value and Variance', §§6.1-6.3, PDF pp. 233-292
@@ -941,6 +1063,8 @@ stages:
       chapter's three-section structure gets both — the definitions are stated separately and then compared
       directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-30bde2200182449152e8a76a
   - kind: read
     label: Blitzstein Chapters 3–4 and 10 — RVs and expectation
     locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
@@ -958,6 +1082,8 @@ stages:
       in Ch 6 — out of scope.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-a336d6454947c097344796b8
   - kind: read
     label: MIT 6.041SC — random variables, expectation and variance lectures
     locator: Lectures 5-7 (discrete random variables, expectation, multiple random variables) with recitations
@@ -969,6 +1095,8 @@ stages:
       manipulations safe, and it is the habit most often missing when students find transformations confusing.
       Recorded lectures make it easy to see the distinction being applied rather than merely stated.
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-17d9d905adfee01ec54791b3
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
@@ -981,6 +1109,8 @@ stages:
       Dekking for the transformation and concentration nodes.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-bf37d8f974813af543f007f3
   - kind: practise
     label: Dekking — random-variable exercises
     locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
@@ -996,6 +1126,8 @@ stages:
       with the LLN following immediately in §13.3 so the connection is visible.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-676e8ea98543e3a7b4f466aa
   - kind: read
     label: MIT 18.05 — random variables, expectation, and variance
     locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
@@ -1007,6 +1139,8 @@ stages:
       remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
       the lecture uses without defining.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-faf05b9239ca317a12713779
   - kind: reference
     label: Pitman — random variables and expectation
     locator: Ch 3 Random Variables, pdf pp. 148-268 (§3.2 Expectation p. 171; §3.3 Standard Deviation
@@ -1021,6 +1155,8 @@ stages:
       and §3.3 and stop.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-e6e54c18328cf55e09658980
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
@@ -1034,6 +1170,8 @@ stages:
       gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-6c6e7ac821cf1bae2d53a9a8
   - kind: reference
     label: Ross — random-variable theory
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.3 expected value; §4.4 expectation of a function
@@ -1048,6 +1186,8 @@ stages:
       rule that L06's transformations node needs; §4.10 gives the CDF its own properties list.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-72c1b94d7d00068b9f8e041c
   - kind: practise
     label: Schaum — random-variable and moment drills
     locator: Ch 5 Random Variables, pdf pp. 76-106
@@ -1059,6 +1199,8 @@ stages:
       which supports L06's covariance node.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-50eef5af02021332775370be
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — RVs and expectation
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
@@ -1072,6 +1214,8 @@ stages:
       minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
       to be strong on.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-ed70c98ed67d50954e43222f
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — random-variable and moment items
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
@@ -1082,6 +1226,8 @@ stages:
       exercise block.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-e5bf24802d93851f78b83c03
   - kind: watch
     label: jbstatistics — expected value and variance calculations
     locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
@@ -1092,6 +1238,8 @@ stages:
       exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
       habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-765e4fe569b646edb22ebb28
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
@@ -1100,6 +1248,8 @@ stages:
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
       come from here if the exam wording has ever cost you time.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e802263b373da3ed751ef42c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-variance-covariance/notes.md
   attachments: []
   source_feedback: []
@@ -1145,6 +1295,8 @@ stages:
       is therefore a worked application, not the first explanation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e7975557941ab093de08152e
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -1154,6 +1306,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: read
     label: OpenIntro Chapter 4 — distribution bridge
     locator: Ch 3 §3.4 random variables, pdf pp. 115-124; §3.5 continuous distributions, pdf pp. 125-130
@@ -1166,6 +1320,8 @@ stages:
       Dekking for the transformation and concentration nodes.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-bf37d8f974813af543f007f3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-sample-mean/notes.md
   attachments: []
   source_feedback: []
@@ -1209,6 +1365,8 @@ stages:
       is therefore a worked application, not the first explanation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e7975557941ab093de08152e
   - kind: practise
     label: UE4, slides 18-34 — random variables, moments and LLN
     locator: exercise-slides/UE4.pdf, slides 18-34
@@ -1218,6 +1376,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-25ae05c5bd133243f7bf98aa
   - kind: practise
     label: UE5, slides 4-17 — official Blatt 3 solutions
     locator: exercise-slides/UE5.pdf, slides 4-17
@@ -1228,6 +1388,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-64aa48498fe151c8b1c69305
   - kind: read
     label: Fahrmeir Chapters 5–7 — random variables and moments
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -1244,6 +1406,8 @@ stages:
       großen Zahlen; read it here rather than in an English text if the exam wording matters.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-0374705a29ffc770fc54d9b5
   - kind: practise
     label: Arbeitsbuch Chapters 5–7 — RV and moment drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123; Ch 6 Aufgaben pdf pp. 124-133, Lösungen
@@ -1257,6 +1421,8 @@ stages:
       marks in this part of the exam.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-dc5505c84e252627c48530c2
   - kind: reference
     label: Tijms — random variables by experiment and simulation
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 10 §§10.1-10.3 Continuous
@@ -1270,6 +1436,8 @@ stages:
       gives covariance with the correlation coefficient bounded in [-1,1] and proved.'
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-6c6e7ac821cf1bae2d53a9a8
   - kind: reference
     label: Regensburg-Löh pp. 2-5 — rigorous probability-space reference
     locator: Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf, pp. 2-5, Aufgaben 1-2
@@ -1280,6 +1448,8 @@ stages:
       question, but it should never displace Fahrmeir, Blitzstein or the current exercises.'
     vault_path: material://source-sad-klausuren-extern/Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-1eef53180bda2e4604a22a8b
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md
   attachments: []
   source_feedback: []

@@ -49,6 +49,8 @@ stages:
       the PDF itself has no recoverable sheet number.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1396da832b2294453043b59b
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -59,6 +61,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: reference
     label: 2025 point and interval estimation deck
     locator: 09_point_interval_estimation (1).pdf
@@ -85,6 +89,8 @@ stages:
       'erwartungstreu', not 'unbiased'.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-7847d85f81696a1bf1a87cf2
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
@@ -97,6 +103,8 @@ stages:
       separates the frequentist confidence interval from the Bayesian probability interval explicitly,
       which prevents the most common interpretation error.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-b574283601c1e7562e4f5071
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
@@ -108,6 +116,8 @@ stages:
       attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
       in the M2 exam requires it. Come here only if the comparative statement bothered you.'
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-5a05efab3330c3386d0d3498
   - kind: practise
     label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
@@ -118,6 +128,8 @@ stages:
       the correct interval, but it does not cover the bootstrap.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-7e7b3a34bfd217be831561d1
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
   attachments: []
   source_feedback: []
@@ -159,6 +171,8 @@ stages:
       the PDF itself has no recoverable sheet number.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1396da832b2294453043b59b
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -169,6 +183,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: reference
     label: 2025 point and interval estimation deck
     locator: 09_point_interval_estimation (1).pdf
@@ -195,6 +211,8 @@ stages:
       'erwartungstreu', not 'unbiased'.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-7847d85f81696a1bf1a87cf2
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
@@ -206,6 +224,8 @@ stages:
       items, which the lecture treats lightly but which are cheap marks when they appear.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-2d7de4d5907b92c4b2068e88
   - kind: practise
     label: Dekking — estimation exercises
     locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
@@ -223,6 +243,8 @@ stages:
       unbiasedness from efficiency, which the lecture presents together.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-4ad419aeb16ac96209d55e97
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
@@ -234,6 +256,8 @@ stages:
       attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
       in the M2 exam requires it. Come here only if the comparative statement bothered you.'
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-5a05efab3330c3386d0d3498
   - kind: practise
     label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
@@ -244,6 +268,8 @@ stages:
       the correct interval, but it does not cover the bootstrap.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-7e7b3a34bfd217be831561d1
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md
   attachments: []
   source_feedback: []
@@ -285,6 +311,8 @@ stages:
       the PDF itself has no recoverable sheet number.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1396da832b2294453043b59b
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -295,6 +323,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: practise
     label: UE6, slides 10-13 — official bootstrap confidence-interval solution
     locator: exercise-slides/UE6.pdf, slides 10-13
@@ -304,6 +334,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-cdfc3800327de87be7846b02
   - kind: reference
     label: 2025 point and interval estimation deck
     locator: 09_point_interval_estimation (1).pdf
@@ -330,6 +362,8 @@ stages:
       'erwartungstreu', not 'unbiased'.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-7847d85f81696a1bf1a87cf2
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
@@ -341,6 +375,8 @@ stages:
       items, which the lecture treats lightly but which are cheap marks when they appear.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-2d7de4d5907b92c4b2068e88
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
@@ -355,6 +391,8 @@ stages:
       the classic misinterpretation the exam likes to test.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c53fea2ffaf7c83506f57ba8
   - kind: practise
     label: Dekking — estimation exercises
     locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
@@ -372,6 +410,8 @@ stages:
       unbiasedness from efficiency, which the lecture presents together.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-4ad419aeb16ac96209d55e97
   - kind: watch
     label: zedstatistics — confidence intervals
     locator: zedstatistics video 'What are confidence intervals? Actually.'
@@ -382,6 +422,8 @@ stages:
       shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
       the misinterpretation is the examinable point, attacking it directly is the better route.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-5c3e138d6b1230dcb502e951
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
@@ -394,6 +436,8 @@ stages:
       separates the frequentist confidence interval from the Bayesian probability interval explicitly,
       which prevents the most common interpretation error.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-b574283601c1e7562e4f5071
   - kind: reference
     label: MIT 18.650 Lectures 3–5 — parametric inference
     locator: Lectures 3-5 (parametric estimation, confidence intervals, the delta method); graduate-level,
@@ -405,6 +449,8 @@ stages:
       attaining it is efficient in a precise sense. That is satisfying and entirely optional — nothing
       in the M2 exam requires it. Come here only if the comparative statement bothered you.'
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-5a05efab3330c3386d0d3498
   - kind: practise
     label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
@@ -415,6 +461,8 @@ stages:
       the correct interval, but it does not cover the bootstrap.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-7e7b3a34bfd217be831561d1
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
@@ -427,6 +475,8 @@ stages:
       The bootstrapping video then shows the resampling loop being run, which is the procedural half of
       L09's bootstrap node.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-5abe09f7b3d60cd13d51460c
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
@@ -438,6 +488,8 @@ stages:
       heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
       and much harder to get wrong under pressure.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d2abb9562b9f63820e94a1a4
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
@@ -446,6 +498,8 @@ stages:
       Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
       exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-8d77189ca8ae8b94e0702afa
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
@@ -455,6 +509,8 @@ stages:
       interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
       Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-747ea93b061275149005b318
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
   attachments: []
   source_feedback: []
@@ -496,6 +552,8 @@ stages:
       the PDF itself has no recoverable sheet number.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1396da832b2294453043b59b
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -506,6 +564,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: practise
     label: UE6, slides 10-13 — official bootstrap confidence-interval solution
     locator: exercise-slides/UE6.pdf, slides 10-13
@@ -515,6 +575,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-cdfc3800327de87be7846b02
   - kind: reference
     label: 2025 point and interval estimation deck
     locator: 09_point_interval_estimation (1).pdf
@@ -541,6 +603,8 @@ stages:
       'erwartungstreu', not 'unbiased'.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-7847d85f81696a1bf1a87cf2
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
@@ -552,6 +616,8 @@ stages:
       items, which the lecture treats lightly but which are cheap marks when they appear.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-2d7de4d5907b92c4b2068e88
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
@@ -566,6 +632,8 @@ stages:
       the classic misinterpretation the exam likes to test.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c53fea2ffaf7c83506f57ba8
   - kind: practise
     label: Dekking — estimation exercises
     locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
@@ -583,6 +651,8 @@ stages:
       unbiasedness from efficiency, which the lecture presents together.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-4ad419aeb16ac96209d55e97
   - kind: watch
     label: zedstatistics — confidence intervals
     locator: zedstatistics video 'What are confidence intervals? Actually.'
@@ -593,6 +663,8 @@ stages:
       shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
       the misinterpretation is the examinable point, attacking it directly is the better route.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-5c3e138d6b1230dcb502e951
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
@@ -605,6 +677,8 @@ stages:
       separates the frequentist confidence interval from the Bayesian probability interval explicitly,
       which prevents the most common interpretation error.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-b574283601c1e7562e4f5071
   - kind: practise
     label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
@@ -615,6 +689,8 @@ stages:
       the correct interval, but it does not cover the bootstrap.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-7e7b3a34bfd217be831561d1
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
@@ -627,6 +703,8 @@ stages:
       The bootstrapping video then shows the resampling loop being run, which is the procedural half of
       L09's bootstrap node.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-5abe09f7b3d60cd13d51460c
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
@@ -638,6 +716,8 @@ stages:
       heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
       and much harder to get wrong under pressure.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d2abb9562b9f63820e94a1a4
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
@@ -646,6 +726,8 @@ stages:
       Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
       exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-8d77189ca8ae8b94e0702afa
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
@@ -655,6 +737,8 @@ stages:
       interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
       Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-747ea93b061275149005b318
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md
   attachments: []
   source_feedback: []
@@ -696,6 +780,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: reference
     label: 2025 point and interval estimation deck
     locator: 09_point_interval_estimation (1).pdf
@@ -722,6 +808,8 @@ stages:
       'erwartungstreu', not 'unbiased'.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-7847d85f81696a1bf1a87cf2
   - kind: practise
     label: Arbeitsbuch Chapter 9 — estimation drills
     locator: Ch 9 Aufgaben pdf pp. 180-187, Lösungen pdf pp. 188-199
@@ -733,6 +821,8 @@ stages:
       items, which the lecture treats lightly but which are cheap marks when they appear.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-2d7de4d5907b92c4b2068e88
   - kind: read
     label: OpenIntro Chapter 5 — confidence intervals
     locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
@@ -747,6 +837,8 @@ stages:
       the classic misinterpretation the exam likes to test.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c53fea2ffaf7c83506f57ba8
   - kind: practise
     label: Dekking — estimation exercises
     locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf
@@ -764,6 +856,8 @@ stages:
       unbiasedness from efficiency, which the lecture presents together.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-4ad419aeb16ac96209d55e97
   - kind: watch
     label: zedstatistics — confidence intervals
     locator: zedstatistics video 'What are confidence intervals? Actually.'
@@ -774,6 +868,8 @@ stages:
       shows with repeated sampling why it cannot be right, and only then gives the correct one. Since
       the misinterpretation is the examinable point, attacking it directly is the better route.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-5c3e138d6b1230dcb502e951
   - kind: read
     label: MIT 18.05 — estimation and confidence intervals
     locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
@@ -786,6 +882,8 @@ stages:
       separates the frequentist confidence interval from the Bayesian probability interval explicitly,
       which prevents the most common interpretation error.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-b574283601c1e7562e4f5071
   - kind: practise
     label: Leuphana-Merz pp. 17-27 — estimation and confidence intervals
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 17-27, Aufgabenblätter 3-4
@@ -796,6 +894,8 @@ stages:
       the correct interval, but it does not cover the bootstrap.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-7e7b3a34bfd217be831561d1
   - kind: watch
     label: jbstatistics — t distribution and confidence intervals
     locator: '''Introduction to Confidence Intervals'' and ''Introduction to the t Distribution'', with
@@ -807,6 +907,8 @@ stages:
       heavier tails and thus to the wider interval, which makes the z-versus-t decision a reasoned one
       and much harder to get wrong under pressure.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-d2abb9562b9f63820e94a1a4
   - kind: watch
     label: Kurzes Tutorium Statistik — Konfidenzintervalle
     locator: Die Videos 'Konfidenzintervall' und 'Konfidenzintervall berechnen'
@@ -815,6 +917,8 @@ stages:
       Stichprobenumfang, Konfidenzniveau. Having heard the words used in a worked calculation makes the
       exam phrasing readable at speed. Fahrmeir §9.4 is the print equivalent with more depth.'
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-8d77189ca8ae8b94e0702afa
   - kind: watch
     label: Brandon Foltz — confidence-interval walkthroughs
     locator: '''Confidence Intervals'' parts 1-3 (≈25-30 min each)'
@@ -824,6 +928,8 @@ stages:
       interval') is the most commonly examined conceptual point in L09, and it survives most brief treatments.
       Foltz attacks it directly and at length, with the repeated-sampling picture. Worth the time once.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-747ea93b061275149005b318
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
   attachments: []
   source_feedback: []
@@ -865,6 +971,8 @@ stages:
       the PDF itself has no recoverable sheet number.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-1396da832b2294453043b59b
   - kind: practise
     label: UE5, slides 40-77 — estimation, standard error and bootstrap intervals
     locator: exercise-slides/UE5.pdf, slides 40-77
@@ -875,6 +983,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-23f516ac8b071207600e7094
   - kind: practise
     label: UE6, slides 10-13 — official bootstrap confidence-interval solution
     locator: exercise-slides/UE6.pdf, slides 10-13
@@ -884,6 +994,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-cdfc3800327de87be7846b02
   - kind: read
     label: ISLP 5.2 - the bootstrap as a resampling estimate of standard error
     locator: Section 5.2 the bootstrap, pp. 220-223; lab section 5.3, pp. 223-231; exercises section 5.4,
@@ -898,6 +1010,8 @@ stages:
       Read Dekking Ch 18 first for the principle, then this for the execution.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-24878d8caf588583f067be1c
   - kind: watch
     label: StatQuest — standard error, confidence intervals, and bootstrap
     locator: '''Standard Error, Clearly Explained''; ''Confidence Intervals, Clearly Explained''; ''Bootstrapping,
@@ -910,6 +1024,8 @@ stages:
       The bootstrapping video then shows the resampling loop being run, which is the procedural half of
       L09's bootstrap node.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-5abe09f7b3d60cd13d51460c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []

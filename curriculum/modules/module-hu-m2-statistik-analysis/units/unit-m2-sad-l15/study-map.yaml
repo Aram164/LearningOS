@@ -50,6 +50,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-0da2566fcc8b7596c490b316
   - kind: practise
     label: UE6, slides 39-68 — neurons, forward pass, softmax and loss
     locator: exercise-slides/UE6.pdf, slides 39-68
@@ -60,6 +62,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c4d58a44da44dd50667c670f
   - kind: reference
     label: 2025 neural networks Part 1 — affine models, outputs and SGD
     locator: 14_neural_nets_part1.pdf, slides 8-89
@@ -70,6 +74,8 @@ stages:
       is the problem. It predates the current deck, so it elaborates but never defines 2026 scope.
     vault_path: material://source-sad-2025-recordings/14_neural_nets_part1.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-12b55602b4c303311d439198
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
@@ -82,6 +88,8 @@ stages:
       and not the one a standalone treatment gives.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -95,6 +103,8 @@ stages:
       is brief. Pair with Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-a04a07038b21e44d84b93c0b
   - kind: read
     label: Nielsen Ch 1-2 — one network, built and then differentiated
     locator: Neural Networks and Deep Learning, Ch 1 'Using neural nets to recognize handwritten digits'
@@ -108,6 +118,8 @@ stages:
       abstractions have a referent. Free, and Ch 4's visual proof of universal approximation is the best
       available treatment of L15's universality node.
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-bbf99a1908887e14e567f182
   - kind: read
     label: MIT 6.036 — neural network units
     locator: MIT 6.036 Fall 2020 OCW, Unit 7 'Neural Networks' and Unit 8 'Backpropagation', with their
@@ -119,6 +131,8 @@ stages:
       caught in seconds rather than at the end of a written derivation. Pair with the SaD Übungen, which
       set the same kind of task in the course's own notation.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-f9b2e466618b722b3b41db6a
   - kind: read
     label: Prince Ch 3-4 — shallow and deep networks, illustrated
     locator: Understanding Deep Learning, Ch 3 'Shallow Neural Networks' and Ch 4 'Deep Neural Networks',
@@ -131,6 +145,8 @@ stages:
       for. The illustrations are the best in any book on this shelf, and the PDF is free from the author's
       site.
     scope_triage: helpful-now
+    source_id: source-prince-udl
+    route_id: route-652350e4a873de885cb7f5bd
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
@@ -143,6 +159,8 @@ stages:
       updates one weight at a time with the numbers shown, and the SGD video explains why the gradient
       is estimated on a batch rather than the full data — a practical point L15 lists without motivating.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42d0090fddb4b47c5e23a43d
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2 Parts A-C 'Neural Networks'
@@ -151,6 +169,8 @@ stages:
       state. For L15 that means a forward pass with given weights, a loss, and one update step — which
       is the realistic scope of a neural-network exam question in a combined three-hour paper.'
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-7e22f14226c54dedd0fe872b
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks
@@ -163,6 +183,8 @@ stages:
       L15, because the derivation is bookkeeping once the picture exists. Episode 4 maps directly onto
       the deck''s gradient slides.'
     scope_triage: helpful-now
+    source_id: source-3b1b-neural-networks
+    route_id: route-f05cea7efdaaf0843d93227a
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     locator: Chapter 10, pp. 303-350
@@ -176,6 +198,8 @@ stages:
       exam preparation.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2c917d2dd5af49d5877101be
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
@@ -190,6 +214,8 @@ stages:
       stated with its caveats. Together this is the most complete L15 coverage on the shelf at course
       level.'
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-0958e6d1b97b3d1d030ab6f8
   - kind: read
     label: Brandon Rohrer — friendly neural-network explanation
     locator: The 'How neural networks work' article and companion video on e2eml.school
@@ -199,6 +225,8 @@ stages:
       have become symbol-pushing. The trade-off is that it stops well before anything examinable — follow
       it with 3Blue1Brown episode 4 or Marsland Ch 4.
     scope_triage: helpful-now
+    source_id: source-rohrer-e2eml
+    route_id: route-d7d137ca0c87d35db285b49d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-neuron/notes.md
   attachments: []
   source_feedback: []
@@ -243,6 +271,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c4d58a44da44dd50667c670f
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -254,6 +284,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
@@ -266,6 +298,8 @@ stages:
       and not the one a standalone treatment gives.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -279,6 +313,8 @@ stages:
       is brief. Pair with Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-a04a07038b21e44d84b93c0b
   - kind: read
     label: Nielsen Ch 1-2 — one network, built and then differentiated
     locator: Neural Networks and Deep Learning, Ch 1 'Using neural nets to recognize handwritten digits'
@@ -292,6 +328,8 @@ stages:
       abstractions have a referent. Free, and Ch 4's visual proof of universal approximation is the best
       available treatment of L15's universality node.
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-bbf99a1908887e14e567f182
   - kind: read
     label: Nielsen Ch 4 — the visual proof of universal approximation
     locator: Neural Networks and Deep Learning, Ch 4 'A visual proof that neural nets can compute any
@@ -304,6 +342,8 @@ stages:
       genuinely convincing, and the interactive figures let you set the parameters yourself. The best
       hour available on L15''s universality node.'
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-04c9e37880237050c4ac3b25
   - kind: read
     label: D2L — multilayer perceptrons and forward/backward propagation
     locator: Dive into Deep Learning, 'Multilayer Perceptrons', 'Implementation of Multilayer Perceptrons',
@@ -316,6 +356,8 @@ stages:
       thesis workstream. The forward/backward/computational-graph section draws the graph and annotates
       memory cost, explaining why activations must be stored during the forward pass.
     scope_triage: helpful-now
+    source_id: source-d2l
+    route_id: route-b252f1f176fedf4bbd32e974
   - kind: read
     label: MIT 6.036 — neural network units
     locator: MIT 6.036 Fall 2020 OCW, Unit 7 'Neural Networks' and Unit 8 'Backpropagation', with their
@@ -327,6 +369,8 @@ stages:
       caught in seconds rather than at the end of a written derivation. Pair with the SaD Übungen, which
       set the same kind of task in the course's own notation.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-f9b2e466618b722b3b41db6a
   - kind: read
     label: Prince Ch 3-4 — shallow and deep networks, illustrated
     locator: Understanding Deep Learning, Ch 3 'Shallow Neural Networks' and Ch 4 'Deep Neural Networks',
@@ -339,6 +383,8 @@ stages:
       for. The illustrations are the best in any book on this shelf, and the PDF is free from the author's
       site.
     scope_triage: helpful-now
+    source_id: source-prince-udl
+    route_id: route-652350e4a873de885cb7f5bd
   - kind: reference
     label: Goodfellow Ch 6 — deep feedforward networks
     locator: 'Deep Learning online book, Ch 6 ''Deep Feedforward Networks'': §6.1 XOR, §6.2 gradient-based
@@ -351,6 +397,8 @@ stages:
       the pairings as facts. This also explains the vanishing-gradient problem that arises when the wrong
       pairing is used. Reference-level density; read the section, not the chapter.'
     scope_triage: reference-only
+    source_id: source-goodfellow-dl
+    route_id: route-24a20095c2e04038e9907ea0
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
@@ -362,6 +410,8 @@ stages:
       AML L09 owns the neural-network regularization material and does not cover batch normalization —
       a distinction already recorded in this repository's wiring notes.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-b3e5bcb8f3813cbc477ac799
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
@@ -371,6 +421,8 @@ stages:
       require the bookkeeping. The ReLU problems also make the non-differentiability at zero explicit,
       which the deck passes over.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-cd063de282ab01a8105e0ced
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2 Parts A-C 'Neural Networks'
@@ -379,6 +431,8 @@ stages:
       state. For L15 that means a forward pass with given weights, a loss, and one update step — which
       is the realistic scope of a neural-network exam question in a combined three-hour paper.'
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-7e22f14226c54dedd0fe872b
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks
@@ -391,6 +445,8 @@ stages:
       L15, because the derivation is bookkeeping once the picture exists. Episode 4 maps directly onto
       the deck''s gradient slides.'
     scope_triage: helpful-now
+    source_id: source-3b1b-neural-networks
+    route_id: route-f05cea7efdaaf0843d93227a
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     locator: Chapter 10, pp. 303-350
@@ -404,6 +460,8 @@ stages:
       exam preparation.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2c917d2dd5af49d5877101be
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
@@ -418,6 +476,8 @@ stages:
       stated with its caveats. Together this is the most complete L15 coverage on the shelf at course
       level.'
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-0958e6d1b97b3d1d030ab6f8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-activation/notes.md
   attachments: []
   source_feedback: []
@@ -461,6 +521,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-0da2566fcc8b7596c490b316
   - kind: practise
     label: UE6, slides 39-68 — neurons, forward pass, softmax and loss
     locator: exercise-slides/UE6.pdf, slides 39-68
@@ -471,6 +533,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c4d58a44da44dd50667c670f
   - kind: practise
     label: UE7, slides 17-21 — official neural-network solution
     locator: exercise-slides/UE7.pdf, slides 17-21
@@ -480,6 +544,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-9984975c91ebce32858e5066
   - kind: reference
     label: 2025 neural networks Part 1 — affine models, outputs and SGD
     locator: 14_neural_nets_part1.pdf, slides 8-89
@@ -490,6 +556,8 @@ stages:
       is the problem. It predates the current deck, so it elaborates but never defines 2026 scope.
     vault_path: material://source-sad-2025-recordings/14_neural_nets_part1.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-12b55602b4c303311d439198
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -501,6 +569,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -514,6 +584,8 @@ stages:
       is brief. Pair with Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-a04a07038b21e44d84b93c0b
   - kind: reference
     label: Goodfellow Ch 6 — deep feedforward networks
     locator: 'Deep Learning online book, Ch 6 ''Deep Feedforward Networks'': §6.1 XOR, §6.2 gradient-based
@@ -526,6 +598,8 @@ stages:
       the pairings as facts. This also explains the vanishing-gradient problem that arises when the wrong
       pairing is used. Reference-level density; read the section, not the chapter.'
     scope_triage: reference-only
+    source_id: source-goodfellow-dl
+    route_id: route-24a20095c2e04038e9907ea0
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
@@ -537,6 +611,8 @@ stages:
       AML L09 owns the neural-network regularization material and does not cover batch normalization —
       a distinction already recorded in this repository's wiring notes.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-b3e5bcb8f3813cbc477ac799
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     locator: Chapter 10, pp. 303-350
@@ -550,6 +626,8 @@ stages:
       exam preparation.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2c917d2dd5af49d5877101be
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-output/notes.md
   attachments: []
   source_feedback: []
@@ -593,6 +671,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-0da2566fcc8b7596c490b316
   - kind: practise
     label: UE6, slides 39-68 — neurons, forward pass, softmax and loss
     locator: exercise-slides/UE6.pdf, slides 39-68
@@ -603,6 +683,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c4d58a44da44dd50667c670f
   - kind: practise
     label: UE7, slides 17-21 — official neural-network solution
     locator: exercise-slides/UE7.pdf, slides 17-21
@@ -612,6 +694,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-9984975c91ebce32858e5066
   - kind: reference
     label: 2025 neural networks Part 1 — affine models, outputs and SGD
     locator: 14_neural_nets_part1.pdf, slides 8-89
@@ -622,6 +706,8 @@ stages:
       is the problem. It predates the current deck, so it elaborates but never defines 2026 scope.
     vault_path: material://source-sad-2025-recordings/14_neural_nets_part1.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-12b55602b4c303311d439198
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -633,6 +719,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
@@ -645,6 +733,8 @@ stages:
       and not the one a standalone treatment gives.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -658,6 +748,8 @@ stages:
       is brief. Pair with Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-a04a07038b21e44d84b93c0b
   - kind: watch
     label: Karpathy — micrograd, backpropagation spelled out
     locator: '''The spelled-out intro to neural networks and backpropagation: building micrograd'' (≈2h25m);
@@ -670,6 +762,8 @@ stages:
       makes L15's derivation feel inevitable rather than intricate. Long, and requires following along
       in code to get the benefit; treat it as an afternoon, not a lookup.
     scope_triage: helpful-now
+    source_id: source-karpathy-micrograd
+    route_id: route-72038ca94d1def42039ebf3e
   - kind: read
     label: Nielsen Ch 1-2 — one network, built and then differentiated
     locator: Neural Networks and Deep Learning, Ch 1 'Using neural nets to recognize handwritten digits'
@@ -683,6 +777,8 @@ stages:
       abstractions have a referent. Free, and Ch 4's visual proof of universal approximation is the best
       available treatment of L15's universality node.
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-bbf99a1908887e14e567f182
   - kind: read
     label: D2L — multilayer perceptrons and forward/backward propagation
     locator: Dive into Deep Learning, 'Multilayer Perceptrons', 'Implementation of Multilayer Perceptrons',
@@ -695,6 +791,8 @@ stages:
       thesis workstream. The forward/backward/computational-graph section draws the graph and annotates
       memory cost, explaining why activations must be stored during the forward pass.
     scope_triage: helpful-now
+    source_id: source-d2l
+    route_id: route-b252f1f176fedf4bbd32e974
   - kind: read
     label: MML Ch 5 — vector calculus and backpropagation
     locator: 'mml-book.pdf Ch 5 Vector Calculus p. 145: §5.4 Gradients of Matrices p. 161, §5.5 Useful
@@ -707,6 +805,8 @@ stages:
       using them. Read §5.4 and §5.5 as reference rather than as study, and §5.6 only if the computational-graph
       view of backpropagation is wanted alongside the equation view.
     scope_triage: helpful-now
+    source_id: source-mml
+    route_id: route-3afec9d94d803b94257c2dfa
   - kind: read
     label: MIT 6.036 — neural network units
     locator: MIT 6.036 Fall 2020 OCW, Unit 7 'Neural Networks' and Unit 8 'Backpropagation', with their
@@ -718,6 +818,8 @@ stages:
       caught in seconds rather than at the end of a written derivation. Pair with the SaD Übungen, which
       set the same kind of task in the course's own notation.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-f9b2e466618b722b3b41db6a
   - kind: read
     label: Prince Ch 3-4 — shallow and deep networks, illustrated
     locator: Understanding Deep Learning, Ch 3 'Shallow Neural Networks' and Ch 4 'Deep Neural Networks',
@@ -730,6 +832,8 @@ stages:
       for. The illustrations are the best in any book on this shelf, and the PDF is free from the author's
       site.
     scope_triage: helpful-now
+    source_id: source-prince-udl
+    route_id: route-652350e4a873de885cb7f5bd
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
@@ -742,6 +846,8 @@ stages:
       updates one weight at a time with the numbers shown, and the SGD video explains why the gradient
       is estimated on a batch rather than the full data — a practical point L15 lists without motivating.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42d0090fddb4b47c5e23a43d
   - kind: read
     label: Kroese — neural-network reference
     locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization,
@@ -754,6 +860,8 @@ stages:
       than the deck requires; useful if the derivation is what you want.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-407fecf00c9736189282c28a
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     locator: 'cs229-notes.pdf Part III §7 Deep learning p. 82: Neural networks p. 84, Backpropagation
@@ -768,6 +876,8 @@ stages:
       has been followed.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-ce599e1e41abe030047befab
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     locator: Spring 2022 playlist, Lecture 8 'Neural Networks I'
@@ -778,6 +888,8 @@ stages:
       theorem. Also useful for hearing how a practitioner describes the training loop, which the deck
       lists as practical choices.
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-808f7b40861516f88124d45b
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf
@@ -790,6 +902,8 @@ stages:
       does is worth having, especially given the thesis workstream. Well beyond exam scope.
     vault_path: material://source-murphy-pml1/pml1.pdf
     scope_triage: reference-only
+    source_id: source-murphy-pml1
+    route_id: route-0e40ebef08584b95092d66e7
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     locator: csc411.pdf §8.3 Artificial Neural Networks (Ch 8 Classification, printed p. 42 onward) with
@@ -803,6 +917,8 @@ stages:
       and does not conform.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
+    source_id: source-csc411-notes
+    route_id: route-0d655a34bc389bac4233fa9a
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
@@ -814,6 +930,8 @@ stages:
       AML L09 owns the neural-network regularization material and does not cover batch normalization —
       a distinction already recorded in this repository's wiring notes.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-b3e5bcb8f3813cbc477ac799
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
@@ -823,6 +941,8 @@ stages:
       require the bookkeeping. The ReLU problems also make the non-differentiability at zero explicit,
       which the deck passes over.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-cd063de282ab01a8105e0ced
   - kind: practise
     label: MIT 6.034 quizzes — neural-network tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2 Parts A-C 'Neural Networks'
@@ -831,6 +951,8 @@ stages:
       state. For L15 that means a forward pass with given weights, a loss, and one update step — which
       is the realistic scope of a neural-network exam question in a combined three-hour paper.'
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-7e22f14226c54dedd0fe872b
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks
@@ -843,6 +965,8 @@ stages:
       L15, because the derivation is bookkeeping once the picture exists. Episode 4 maps directly onto
       the deck''s gradient slides.'
     scope_triage: helpful-now
+    source_id: source-3b1b-neural-networks
+    route_id: route-f05cea7efdaaf0843d93227a
   - kind: read
     label: Geron Ch 10 - MLP shapes and outputs made concrete
     locator: Chapter 10, pp. 303-350
@@ -856,6 +980,8 @@ stages:
       exam preparation.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-2c917d2dd5af49d5877101be
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan
@@ -866,6 +992,8 @@ stages:
       to a concrete graph is the step between L15''s hand derivation and understanding what a framework
       does. Beyond SaD scope, and directly useful for AML and the thesis workstream.'
     scope_triage: reference-only
+    source_id: source-eecs498
+    route_id: route-f83d6fa3f35068422cce50fa
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
@@ -880,6 +1008,8 @@ stages:
       stated with its caveats. Together this is the most complete L15 coverage on the shelf at course
       level.'
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-0958e6d1b97b3d1d030ab6f8
   - kind: read
     label: Brandon Rohrer — friendly neural-network explanation
     locator: The 'How neural networks work' article and companion video on e2eml.school
@@ -889,6 +1019,8 @@ stages:
       have become symbol-pushing. The trade-off is that it stops well before anything examinable — follow
       it with 3Blue1Brown episode 4 or Marsland Ch 4.
     scope_triage: helpful-now
+    source_id: source-rohrer-e2eml
+    route_id: route-d7d137ca0c87d35db285b49d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-forward/notes.md
   attachments: []
   source_feedback: []
@@ -932,6 +1064,8 @@ stages:
       the derivation cannot mean anything. This episode fixes that in fifteen minutes, and it is the natural
       companion to the neural-network playlist's episode 4, which assumes it.
     scope_triage: helpful-now
+    source_id: source-3b1b-essence-of-calculus
+    route_id: route-dd5f555433ae41e4cd19802b
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -943,6 +1077,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
@@ -955,6 +1091,8 @@ stages:
       and not the one a standalone treatment gives.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-53e4963eac07776c8fbfef06
   - kind: watch
     label: Karpathy — micrograd, backpropagation spelled out
     locator: '''The spelled-out intro to neural networks and backpropagation: building micrograd'' (≈2h25m);
@@ -967,6 +1105,8 @@ stages:
       makes L15's derivation feel inevitable rather than intricate. Long, and requires following along
       in code to get the benefit; treat it as an afternoon, not a lookup.
     scope_triage: helpful-now
+    source_id: source-karpathy-micrograd
+    route_id: route-72038ca94d1def42039ebf3e
   - kind: read
     label: Nielsen Ch 1-2 — one network, built and then differentiated
     locator: Neural Networks and Deep Learning, Ch 1 'Using neural nets to recognize handwritten digits'
@@ -980,6 +1120,8 @@ stages:
       abstractions have a referent. Free, and Ch 4's visual proof of universal approximation is the best
       available treatment of L15's universality node.
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-bbf99a1908887e14e567f182
   - kind: read
     label: D2L — multilayer perceptrons and forward/backward propagation
     locator: Dive into Deep Learning, 'Multilayer Perceptrons', 'Implementation of Multilayer Perceptrons',
@@ -992,6 +1134,8 @@ stages:
       thesis workstream. The forward/backward/computational-graph section draws the graph and annotates
       memory cost, explaining why activations must be stored during the forward pass.
     scope_triage: helpful-now
+    source_id: source-d2l
+    route_id: route-b252f1f176fedf4bbd32e974
   - kind: read
     label: MML Ch 5 — vector calculus and backpropagation
     locator: 'mml-book.pdf Ch 5 Vector Calculus p. 145: §5.4 Gradients of Matrices p. 161, §5.5 Useful
@@ -1004,6 +1148,8 @@ stages:
       using them. Read §5.4 and §5.5 as reference rather than as study, and §5.6 only if the computational-graph
       view of backpropagation is wanted alongside the equation view.
     scope_triage: helpful-now
+    source_id: source-mml
+    route_id: route-3afec9d94d803b94257c2dfa
   - kind: read
     label: MIT 6.036 — neural network units
     locator: MIT 6.036 Fall 2020 OCW, Unit 7 'Neural Networks' and Unit 8 'Backpropagation', with their
@@ -1015,6 +1161,8 @@ stages:
       caught in seconds rather than at the end of a written derivation. Pair with the SaD Übungen, which
       set the same kind of task in the course's own notation.
     scope_triage: helpful-now
+    source_id: source-mit-6036
+    route_id: route-f9b2e466618b722b3b41db6a
   - kind: reference
     label: Goodfellow Ch 6 — deep feedforward networks
     locator: 'Deep Learning online book, Ch 6 ''Deep Feedforward Networks'': §6.1 XOR, §6.2 gradient-based
@@ -1027,6 +1175,8 @@ stages:
       the pairings as facts. This also explains the vanishing-gradient problem that arises when the wrong
       pairing is used. Reference-level density; read the section, not the chapter.'
     scope_triage: reference-only
+    source_id: source-goodfellow-dl
+    route_id: route-24a20095c2e04038e9907ea0
   - kind: watch
     label: StatQuest — neural networks and backpropagation
     locator: '''Neural Networks Part 1 — Inside the Black Box''; ''Backpropagation Main Ideas''; ''Stochastic
@@ -1039,6 +1189,8 @@ stages:
       updates one weight at a time with the numbers shown, and the SGD video explains why the gradient
       is estimated on a batch rather than the full data — a practical point L15 lists without motivating.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-42d0090fddb4b47c5e23a43d
   - kind: read
     label: Kroese — neural-network reference
     locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization,
@@ -1051,6 +1203,8 @@ stages:
       than the deck requires; useful if the derivation is what you want.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-407fecf00c9736189282c28a
   - kind: reference
     label: CS229 §7 — compact neural-network derivation
     locator: 'cs229-notes.pdf Part III §7 Deep learning p. 82: Neural networks p. 84, Backpropagation
@@ -1065,6 +1219,8 @@ stages:
       has been followed.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-ce599e1e41abe030047befab
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     locator: Spring 2022 playlist, Lecture 8 'Neural Networks I'
@@ -1075,6 +1231,8 @@ stages:
       theorem. Also useful for hearing how a practitioner describes the training loop, which the deck
       lists as practical choices.
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-808f7b40861516f88124d45b
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf
@@ -1087,6 +1245,8 @@ stages:
       does is worth having, especially given the thesis workstream. Well beyond exam scope.
     vault_path: material://source-murphy-pml1/pml1.pdf
     scope_triage: reference-only
+    source_id: source-murphy-pml1
+    route_id: route-0e40ebef08584b95092d66e7
   - kind: reference
     label: CSC411 notes — compact neural-network reference
     locator: csc411.pdf §8.3 Artificial Neural Networks (Ch 8 Classification, printed p. 42 onward) with
@@ -1100,6 +1260,8 @@ stages:
       and does not conform.'
     vault_path: material://source-csc411-notes/csc411.pdf
     scope_triage: reference-only
+    source_id: source-csc411-notes
+    route_id: route-0d655a34bc389bac4233fa9a
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
@@ -1111,6 +1273,8 @@ stages:
       AML L09 owns the neural-network regularization material and does not cover batch normalization —
       a distinction already recorded in this repository's wiring notes.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-b3e5bcb8f3813cbc477ac799
   - kind: practise
     label: Cornell CS4780 HW9 — neural networks and ReLU
     locator: 2018Fall/HW9 and 2018Spring/HW9 (neural networks and ReLU), with the published solutions
@@ -1120,6 +1284,8 @@ stages:
       require the bookkeeping. The ReLU problems also make the non-differentiability at zero explicit,
       which the deck passes over.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-cd063de282ab01a8105e0ced
   - kind: watch
     label: 3Blue1Brown — Neural Networks playlist
     locator: 'Episodes 1-4: ''But what is a neural network?'', ''Gradient descent, how neural networks
@@ -1132,6 +1298,8 @@ stages:
       L15, because the derivation is bookkeeping once the picture exists. Episode 4 maps directly onto
       the deck''s gradient slides.'
     scope_triage: helpful-now
+    source_id: source-3b1b-neural-networks
+    route_id: route-f05cea7efdaaf0843d93227a
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
@@ -1146,6 +1314,8 @@ stages:
       stated with its caveats. Together this is the most complete L15 coverage on the shelf at course
       level.'
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-0958e6d1b97b3d1d030ab6f8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-backprop/notes.md
   attachments: []
   source_feedback: []
@@ -1188,6 +1358,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-0da2566fcc8b7596c490b316
   - kind: practise
     label: UE6, slides 39-68 — neurons, forward pass, softmax and loss
     locator: exercise-slides/UE6.pdf, slides 39-68
@@ -1198,6 +1370,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c4d58a44da44dd50667c670f
   - kind: practise
     label: UE7, slides 17-21 — official neural-network solution
     locator: exercise-slides/UE7.pdf, slides 17-21
@@ -1207,6 +1381,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-9984975c91ebce32858e5066
   - kind: reference
     label: 2025 neural networks Part 1 — affine models, outputs and SGD
     locator: 14_neural_nets_part1.pdf, slides 8-89
@@ -1217,6 +1393,8 @@ stages:
       is the problem. It predates the current deck, so it elaborates but never defines 2026 scope.
     vault_path: material://source-sad-2025-recordings/14_neural_nets_part1.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-12b55602b4c303311d439198
   - kind: reference
     label: 2025 neural networks Part 2 — loss landscape, gradients and depth
     locator: 15_neural_nets_part2.pdf, slides 2-223
@@ -1228,6 +1406,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: Kelleher Chapter 7 — error-based learning and neural networks
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
@@ -1240,6 +1420,8 @@ stages:
       and not the one a standalone treatment gives.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -1253,6 +1435,8 @@ stages:
       is brief. Pair with Marsland Ch 4 or Nielsen Ch 2 for the gradient work.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-a04a07038b21e44d84b93c0b
   - kind: watch
     label: Karpathy — micrograd, backpropagation spelled out
     locator: '''The spelled-out intro to neural networks and backpropagation: building micrograd'' (≈2h25m);
@@ -1265,6 +1449,8 @@ stages:
       makes L15's derivation feel inevitable rather than intricate. Long, and requires following along
       in code to get the benefit; treat it as an afternoon, not a lookup.
     scope_triage: helpful-now
+    source_id: source-karpathy-micrograd
+    route_id: route-72038ca94d1def42039ebf3e
   - kind: read
     label: D2L — multilayer perceptrons and forward/backward propagation
     locator: Dive into Deep Learning, 'Multilayer Perceptrons', 'Implementation of Multilayer Perceptrons',
@@ -1277,6 +1463,8 @@ stages:
       thesis workstream. The forward/backward/computational-graph section draws the graph and annotates
       memory cost, explaining why activations must be stored during the forward pass.
     scope_triage: helpful-now
+    source_id: source-d2l
+    route_id: route-b252f1f176fedf4bbd32e974
   - kind: read
     label: Kroese — neural-network reference
     locator: Ch 9 Deep Learning, pdf pp. 341-372; App B Multivariate Differentiation and Optimization,
@@ -1289,6 +1477,8 @@ stages:
       than the deck requires; useful if the derivation is what you want.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-407fecf00c9736189282c28a
   - kind: reference
     label: Stanford CS229 — neural-network lecture
     locator: Spring 2022 playlist, Lecture 8 'Neural Networks I'
@@ -1299,6 +1489,8 @@ stages:
       theorem. Also useful for hearing how a practitioner describes the training loop, which the deck
       lists as practical choices.
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-808f7b40861516f88124d45b
   - kind: reference
     label: Murphy §§13.2–13.3 — neural-network depth
     locator: §§13.2-13.3 multilayer perceptrons and backpropagation (Part III Deep Neural Networks, pdf
@@ -1311,6 +1503,8 @@ stages:
       does is worth having, especially given the thesis workstream. Well beyond exam scope.
     vault_path: material://source-murphy-pml1/pml1.pdf
     scope_triage: reference-only
+    source_id: source-murphy-pml1
+    route_id: route-0e40ebef08584b95092d66e7
   - kind: reference
     label: AML L08–L09 — feedforward networks and training
     locator: lecture-slides/VL 08-feedforward-neural-network.pdf and VL 09-training-neural-networks.pdf
@@ -1322,6 +1516,8 @@ stages:
       AML L09 owns the neural-network regularization material and does not cover batch normalization —
       a distinction already recorded in this repository's wiring notes.
     scope_triage: reference-only
+    source_id: source-aml-ss26-lectures
+    route_id: route-b3e5bcb8f3813cbc477ac799
   - kind: read
     label: Geron Ch 11 - the training choices L15 lists as tricks
     locator: Chapter 11, pp. 351-392
@@ -1335,6 +1531,8 @@ stages:
       the terms and being able to justify a choice.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-ad3786dcb831f567e01bc525
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan
@@ -1345,6 +1543,8 @@ stages:
       to a concrete graph is the step between L15''s hand derivation and understanding what a framework
       does. Beyond SaD scope, and directly useful for AML and the thesis workstream.'
     scope_triage: reference-only
+    source_id: source-eecs498
+    route_id: route-f83d6fa3f35068422cce50fa
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-training/notes.md
   attachments: []
   source_feedback: []
@@ -1386,6 +1586,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
     label: Nielsen Ch 4 — the visual proof of universal approximation
     locator: Neural Networks and Deep Learning, Ch 4 'A visual proof that neural nets can compute any
@@ -1398,6 +1600,8 @@ stages:
       genuinely convincing, and the interactive figures let you set the parameters yourself. The best
       hour available on L15''s universality node.'
     scope_triage: helpful-now
+    source_id: source-nielsen-nndl
+    route_id: route-04c9e37880237050c4ac3b25
   - kind: read
     label: Prince Ch 3-4 — shallow and deep networks, illustrated
     locator: Understanding Deep Learning, Ch 3 'Shallow Neural Networks' and Ch 4 'Deep Neural Networks',
@@ -1410,6 +1614,8 @@ stages:
       for. The illustrations are the best in any book on this shelf, and the PDF is free from the author's
       site.
     scope_triage: helpful-now
+    source_id: source-prince-udl
+    route_id: route-652350e4a873de885cb7f5bd
   - kind: reference
     label: Goodfellow Ch 6 — deep feedforward networks
     locator: 'Deep Learning online book, Ch 6 ''Deep Feedforward Networks'': §6.1 XOR, §6.2 gradient-based
@@ -1422,6 +1628,8 @@ stages:
       the pairings as facts. This also explains the vanishing-gradient problem that arises when the wrong
       pairing is used. Reference-level density; read the section, not the chapter.'
     scope_triage: reference-only
+    source_id: source-goodfellow-dl
+    route_id: route-24a20095c2e04038e9907ea0
   - kind: read
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
@@ -1436,6 +1644,8 @@ stages:
       stated with its caveats. Together this is the most complete L15 coverage on the shelf at course
       level.'
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-0958e6d1b97b3d1d030ab6f8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-universality/notes.md
   attachments: []
   source_feedback: []
@@ -1479,6 +1689,8 @@ stages:
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-37563c3b8ff1e0463522c15c
   - kind: reference
     label: UMich EECS 498 — fully connected and architecture depth
     locator: Lectures on fully connected networks and backpropagation (roughly lectures 4-6 of the Michigan
@@ -1489,6 +1701,8 @@ stages:
       to a concrete graph is the step between L15''s hand derivation and understanding what a framework
       does. Beyond SaD scope, and directly useful for AML and the thesis workstream.'
     scope_triage: reference-only
+    source_id: source-eecs498
+    route_id: route-f83d6fa3f35068422cce50fa
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/stages/stage-sad-l15-outlook/notes.md
   attachments: []
   source_feedback: []
