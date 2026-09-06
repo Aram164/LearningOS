@@ -559,7 +559,7 @@ def test_failed_transaction_removes_new_binary_files(tmp_path: Path):
     assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
 
 
-def test_post_commit_bookkeeping_failure_rolls_back_receipt_and_state(tmp_path: Path):
+def test_post_commit_bookkeeping_failure_preserves_commit_and_raises(tmp_path: Path):
     root = tmp_path
     target = root / "projects/registry/project-demo.yaml"
     target.parent.mkdir(parents=True)
@@ -568,7 +568,7 @@ def test_post_commit_bookkeeping_failure_rolls_back_receipt_and_state(tmp_path: 
     def fail_bookkeeping(_paths):
         raise RuntimeError("forced touched-ledger failure")
 
-    with pytest.raises(TransactionFailure):
+    with pytest.raises(TransactionFailure, match="transaction committed but post-commit hooks failed: forced touched-ledger failure"):
         TransactionService(root).commit(
             capability="project.update",
             writes={target: "new\n"},
@@ -576,9 +576,9 @@ def test_post_commit_bookkeeping_failure_rolls_back_receipt_and_state(tmp_path: 
             touched=fail_bookkeeping,
         )
 
-    assert target.read_text(encoding="utf-8") == "old\n"
-    assert artifact_revision(root, "project-demo") == 0
-    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert target.read_text(encoding="utf-8") == "new\n"
+    assert artifact_revision(root, "project-demo") == 1
+    assert list((root / "operations/transactions").glob("transaction-*.yaml"))
 
 
 def test_transaction_owned_writes_share_the_receipt_identity(tmp_path: Path):
@@ -647,7 +647,7 @@ TOOLS_DIR = Path(__file__).parent.parent.parent / "tools"
 sys.path.insert(0, str(TOOLS_DIR))
 
 from learning_os import transactions
-import learning_os.commands.capability
+import los
 
 original_write = transactions._atomic_write_bytes
 call_count = 0
@@ -662,22 +662,24 @@ def crashing_write(path, content):
 
 transactions._atomic_write_bytes = crashing_write
 
-sys.argv = sys.argv[2:]
-learning_os.commands.capability.main(sys.argv[1:])
+sys.argv = [sys.argv[0]] + sys.argv[2:]
+los.main()
     """)
 
     envelope = approved_v2_envelope(
         root,
         capability="stage.progress.update",
         payload={
-            "unit": "unit-demo-l01",
-            "stage": "stage-demo",
+            "unit_id": "unit-demo-l01",
+            "stage_id": "stage-demo",
             "status": "complete",
         },
-        artifact_ids=["unit-demo-l01"],
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
         idempotency_key="test-crash",
     )
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
     
+    crashes_reached = 0
     for crash_after in [1, 2, 3, 4, 5]:
         root_run = tmp_path / f"repo_run_{crash_after}"
         import shutil
@@ -695,19 +697,20 @@ learning_os.commands.capability.main(sys.argv[1:])
             sys.executable,
             str(wrapper),
             str(crash_after),
-            "capability",
             "--root", str(root_run),
+            "capability",
             "stage.progress.update",
             "--payload-file", str(env_file),
         ], capture_output=True, text=True)
         
         if proc.returncode != 77:
+            print(f"Skipping {crash_after} - rc={proc.returncode} stdout={proc.stdout} stderr={proc.stderr}")
             continue
             
         # Re-run properly to trigger reconciliation and successful commit/idempotent check
         proc2 = subprocess.run([
             sys.executable,
-            str(wrapper.parent.parent.parent / "tools" / "los.py"),
+            str(TOOLS / "los.py"),
             "--root", str(root_run),
             "capability",
             "stage.progress.update",
@@ -715,7 +718,9 @@ learning_os.commands.capability.main(sys.argv[1:])
         ], capture_output=True, text=True)
         
         assert proc2.returncode == 0, f"Replay failed after crash {crash_after}: {proc2.stderr}"
-
+        crashes_reached += 1
+        
+    assert crashes_reached > 0, "The test never reached the transaction crash points"
 
 def test_a_rollback_that_cannot_finish_refuses_instead_of_continuing(mini_repo: Path):
     """Recovery must not report success it did not achieve.
@@ -767,3 +772,63 @@ def test_reconciliation_restores_the_previous_bytes_and_is_idempotent(mini_repo:
     # Running again is a no-op rather than a second, different outcome.
     transaction_module.reconcile_inflight_transactions(mini_repo)
     assert target.read_bytes() == original
+
+
+def test_rollback_discards_a_projection_describing_the_undone_state(mini_repo: Path):
+    """A restored tree must not be described by the manifest of the reverted write.
+
+    The projection is published through a callback the committing process owns,
+    so a crash between publication and the receipt leaves `generated/` newer than
+    the canonical files recovery just restored — and the UI reads that manifest
+    as current.
+    """
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    manifest = mini_repo / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(json.dumps(
+        {"_generated": {"source_fingerprint": "0" * 64}, "records": []}), encoding="utf-8")
+
+    target.write_bytes(b"half-applied\n")
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
+    record.mkdir(parents=True)
+    (record / "backup-0").write_bytes(original)
+    (record / "intent.json").write_text(json.dumps({
+        "transaction_id": "tx-crashed",
+        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
+                     "backup_id": "backup-0"}],
+    }), encoding="utf-8")
+
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+
+    assert target.read_bytes() == original
+    assert not manifest.exists(), "the manifest still describes the transaction that was undone"
+
+
+def test_rollback_keeps_a_projection_that_still_matches(mini_repo: Path):
+    """Only a stale projection is discarded; a current one is left alone."""
+    manifest = mini_repo / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    target.write_bytes(b"half-applied\n")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
+    record.mkdir(parents=True)
+    (record / "backup-0").write_bytes(original)
+    (record / "intent.json").write_text(json.dumps({
+        "transaction_id": "tx-crashed",
+        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
+                     "backup_id": "backup-0"}],
+    }), encoding="utf-8")
+
+    # Written to match the state rollback is about to restore.
+    target_restored = original
+    target.write_bytes(target_restored)
+    manifest.write_text(json.dumps({
+        "_generated": {"source_fingerprint": transaction_module.canonical_fingerprint(mini_repo)},
+        "records": []}), encoding="utf-8")
+    target.write_bytes(b"half-applied\n")
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
+    assert manifest.exists(), "a projection matching canonical state must survive"
