@@ -51,6 +51,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-73776780d8ed70192944e3bf
   - kind: practise
     label: UE6, slides 23-38 — permutation and two-sample t tests
     locator: exercise-slides/UE6.pdf, slides 23-38
@@ -61,6 +63,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-8c08056418ec7b86504f8e93
   - kind: practise
     label: UE7, slides 12-16 — official Blatt 5 testing solution
     locator: exercise-slides/UE7.pdf, slides 12-16
@@ -70,6 +74,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bb0d30a8ac2386c642c3679c
   - kind: reference
     label: 2025 statistical-significance deck
     locator: 10_statistical_significance.pdf
@@ -96,6 +102,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
@@ -109,6 +117,8 @@ stages:
       first and only reach Ch 11 if the exercises show those tests are in scope.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-a5f4d77def369d34f2f8fe23
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
@@ -125,6 +135,8 @@ stages:
       variants that L10 names.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-335f1041911c33391d4a59b8
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
@@ -142,6 +154,8 @@ stages:
       case.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-ef9dc248b7aa19966667451e
   - kind: watch
     label: zedstatistics — hypothesis testing and p-values
     locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
@@ -152,6 +166,8 @@ stages:
       videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
       effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-9bba0280753490bc6058ad4e
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
@@ -164,6 +180,8 @@ stages:
       the difference between reciting the false-discovery definition and understanding why the topic is
       in the lecture at all. Solved timed questions on the Exams page.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-717bb9971de6075d51ba7e35
   - kind: practise
     label: FAU pp. 20/45 and 25/50 — one-sided correlation test
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
@@ -175,6 +193,8 @@ stages:
       the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-9a9796659ebc716709622867
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
@@ -186,6 +206,8 @@ stages:
       are they the best available — by showing that the likelihood ratio is the optimal test statistic
       for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-dde627c3d62ef1533c906370
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -195,6 +217,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   - kind: read
     label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
@@ -204,6 +228,8 @@ stages:
       and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-311488decc0768464dd8385e
   - kind: watch
     label: StatQuest — hypothesis tests and p-values
     locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to
@@ -216,6 +242,8 @@ stages:
       alternative. The one-or-two-tailed video in particular addresses the decision the exam most often
       penalises.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-8b2188b37fd35d9a0cee57d3
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
@@ -226,6 +254,8 @@ stages:
       the hypotheses formally, in symbols, before touching the data. German exam marking awards points
       for that step independently of the arithmetic, so the habit converts directly into marks.'
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-1a6b3340ecdac05103e2a7a7
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
@@ -235,6 +265,8 @@ stages:
       in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
       build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e6ea4c3f70f7709c51290280
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
@@ -244,6 +276,8 @@ stages:
       as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
       does not skip those. Long; use as a repair route rather than a first pass.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
   attachments: []
   source_feedback: []
@@ -287,6 +321,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-73776780d8ed70192944e3bf
   - kind: practise
     label: UE6, slides 23-38 — permutation and two-sample t tests
     locator: exercise-slides/UE6.pdf, slides 23-38
@@ -297,6 +333,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-8c08056418ec7b86504f8e93
   - kind: practise
     label: UE7, slides 12-16 — official Blatt 5 testing solution
     locator: exercise-slides/UE7.pdf, slides 12-16
@@ -306,6 +344,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bb0d30a8ac2386c642c3679c
   - kind: reference
     label: 2025 statistical-significance deck
     locator: 10_statistical_significance.pdf
@@ -332,6 +372,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
@@ -345,6 +387,8 @@ stages:
       first and only reach Ch 11 if the exercises show those tests are in scope.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-a5f4d77def369d34f2f8fe23
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
@@ -361,6 +405,8 @@ stages:
       variants that L10 names.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-335f1041911c33391d4a59b8
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
@@ -378,6 +424,8 @@ stages:
       case.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-ef9dc248b7aa19966667451e
   - kind: watch
     label: zedstatistics — hypothesis testing and p-values
     locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
@@ -388,6 +436,8 @@ stages:
       videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
       effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-9bba0280753490bc6058ad4e
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
@@ -400,6 +450,8 @@ stages:
       the difference between reciting the false-discovery definition and understanding why the topic is
       in the lecture at all. Solved timed questions on the Exams page.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-717bb9971de6075d51ba7e35
   - kind: practise
     label: FAU pp. 20/45 and 25/50 — one-sided correlation test
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
@@ -411,6 +463,8 @@ stages:
       the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-9a9796659ebc716709622867
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -420,6 +474,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   - kind: read
     label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
@@ -429,6 +485,8 @@ stages:
       and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-311488decc0768464dd8385e
   - kind: watch
     label: StatQuest — hypothesis tests and p-values
     locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to
@@ -441,6 +499,8 @@ stages:
       alternative. The one-or-two-tailed video in particular addresses the decision the exam most often
       penalises.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-8b2188b37fd35d9a0cee57d3
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
@@ -451,6 +511,8 @@ stages:
       the hypotheses formally, in symbols, before touching the data. German exam marking awards points
       for that step independently of the arithmetic, so the habit converts directly into marks.'
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-1a6b3340ecdac05103e2a7a7
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
@@ -460,6 +522,8 @@ stages:
       in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
       build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e6ea4c3f70f7709c51290280
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
@@ -469,6 +533,8 @@ stages:
       as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
       does not skip those. Long; use as a repair route rather than a first pass.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
   attachments: []
   source_feedback: []
@@ -512,6 +578,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-73776780d8ed70192944e3bf
   - kind: practise
     label: UE6, slides 23-38 — permutation and two-sample t tests
     locator: exercise-slides/UE6.pdf, slides 23-38
@@ -522,6 +590,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-8c08056418ec7b86504f8e93
   - kind: reference
     label: 2025 statistical-significance deck
     locator: 10_statistical_significance.pdf
@@ -548,6 +618,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: watch
     label: zedstatistics — hypothesis testing and p-values
     locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
@@ -558,6 +630,8 @@ stages:
       videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
       effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
     scope_triage: helpful-now
+    source_id: source-zedstatistics
+    route_id: route-9bba0280753490bc6058ad4e
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
@@ -570,6 +644,8 @@ stages:
       the difference between reciting the false-discovery definition and understanding why the topic is
       in the lecture at all. Solved timed questions on the Exams page.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-717bb9971de6075d51ba7e35
   - kind: practise
     label: FAU pp. 20/45 and 25/50 — one-sided correlation test
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
@@ -581,6 +657,8 @@ stages:
       the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-9a9796659ebc716709622867
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
@@ -592,6 +670,8 @@ stages:
       are they the best available — by showing that the likelihood ratio is the optimal test statistic
       for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-dde627c3d62ef1533c906370
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -601,6 +681,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
   attachments: []
   source_feedback: []
@@ -645,6 +727,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-73776780d8ed70192944e3bf
   - kind: practise
     label: UE6, slides 23-38 — permutation and two-sample t tests
     locator: exercise-slides/UE6.pdf, slides 23-38
@@ -655,6 +739,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-8c08056418ec7b86504f8e93
   - kind: practise
     label: UE7, slides 12-16 — official Blatt 5 testing solution
     locator: exercise-slides/UE7.pdf, slides 12-16
@@ -664,6 +750,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bb0d30a8ac2386c642c3679c
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -680,6 +768,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
@@ -693,6 +783,8 @@ stages:
       first and only reach Ch 11 if the exercises show those tests are in scope.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-a5f4d77def369d34f2f8fe23
   - kind: read
     label: Blitzstein §10.4 — where the t and chi-square distributions come from
     locator: Ch 10 §10.4 Chi-Square and Student-t, pdf pp. 494-496
@@ -705,6 +797,8 @@ stages:
       Background, not exam-bearing — read it once.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-be1fde2be811fcad5b16c694
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
@@ -721,6 +815,8 @@ stages:
       variants that L10 names.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-335f1041911c33391d4a59b8
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
@@ -738,6 +834,8 @@ stages:
       case.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-ef9dc248b7aa19966667451e
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
@@ -750,6 +848,8 @@ stages:
       the difference between reciting the false-discovery definition and understanding why the topic is
       in the lecture at all. Solved timed questions on the Exams page.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-717bb9971de6075d51ba7e35
   - kind: practise
     label: FAU pp. 20/45 and 25/50 — one-sided correlation test
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
@@ -761,6 +861,8 @@ stages:
       the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-9a9796659ebc716709622867
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
@@ -772,6 +874,8 @@ stages:
       are they the best available — by showing that the likelihood ratio is the optimal test statistic
       for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-dde627c3d62ef1533c906370
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -781,6 +885,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   - kind: read
     label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
@@ -790,6 +896,8 @@ stages:
       and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-311488decc0768464dd8385e
   - kind: watch
     label: jbstatistics — hypothesis-testing calculations
     locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
@@ -800,6 +908,8 @@ stages:
       the hypotheses formally, in symbols, before touching the data. German exam marking awards points
       for that step independently of the arithmetic, so the habit converts directly into marks.'
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-1a6b3340ecdac05103e2a7a7
   - kind: watch
     label: Kurzes Tutorium Statistik — Hypothesentests
     locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
@@ -809,6 +919,8 @@ stages:
       in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
       build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-e6ea4c3f70f7709c51290280
   - kind: watch
     label: Brandon Foltz — hypothesis-testing walkthroughs
     locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
@@ -818,6 +930,8 @@ stages:
       as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
       does not skip those. Long; use as a repair route rather than a first pass.
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
   attachments: []
   source_feedback: []
@@ -860,6 +974,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   - kind: read
     label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
@@ -869,6 +985,8 @@ stages:
       and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-311488decc0768464dd8385e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
   attachments: []
   source_feedback: []
@@ -919,6 +1037,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
@@ -932,6 +1052,8 @@ stages:
       first and only reach Ch 11 if the exercises show those tests are in scope.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-a5f4d77def369d34f2f8fe23
   - kind: read
     label: Blitzstein §10.4 — where the t and chi-square distributions come from
     locator: Ch 10 §10.4 Chi-Square and Student-t, pdf pp. 494-496
@@ -944,6 +1066,8 @@ stages:
       Background, not exam-bearing — read it once.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-be1fde2be811fcad5b16c694
   - kind: read
     label: OpenIntro Chapters 5–7 — tests by data type
     locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
@@ -960,6 +1084,8 @@ stages:
       variants that L10 names.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-335f1041911c33391d4a59b8
   - kind: practise
     label: Dekking — hypothesis-testing exercises
     locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
@@ -977,6 +1103,8 @@ stages:
       case.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-ef9dc248b7aa19966667451e
   - kind: read
     label: MIT 18.05 — hypothesis-testing notes and solved exams
     locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
@@ -989,6 +1117,8 @@ stages:
       the difference between reciting the false-discovery definition and understanding why the topic is
       in the lecture at all. Solved timed questions on the Exams page.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-717bb9971de6075d51ba7e35
   - kind: reference
     label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
     locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
@@ -1000,6 +1130,8 @@ stages:
       are they the best available — by showing that the likelihood ratio is the optimal test statistic
       for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
     scope_triage: reference-only
+    source_id: source-mit-18650
+    route_id: route-dde627c3d62ef1533c906370
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -1009,6 +1141,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
   attachments: []
   source_feedback: []
@@ -1053,6 +1187,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-73776780d8ed70192944e3bf
   - kind: practise
     label: UE6, slides 23-38 — permutation and two-sample t tests
     locator: exercise-slides/UE6.pdf, slides 23-38
@@ -1063,6 +1199,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-8c08056418ec7b86504f8e93
   - kind: practise
     label: UE7, slides 12-16 — official Blatt 5 testing solution
     locator: exercise-slides/UE7.pdf, slides 12-16
@@ -1072,6 +1210,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-bb0d30a8ac2386c642c3679c
   - kind: read
     label: Fahrmeir Chapters 10–11 — hypothesis tests
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -1088,6 +1228,8 @@ stages:
       than ISLP Ch 13.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - kind: practise
     label: Arbeitsbuch Chapters 10–11 — testing drills
     locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
@@ -1101,6 +1243,8 @@ stages:
       first and only reach Ch 11 if the exercises show those tests are in scope.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-a5f4d77def369d34f2f8fe23
   - kind: practise
     label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
@@ -1110,6 +1254,8 @@ stages:
       not named in the 2026 L10 deck.'
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
   attachments: []
   source_feedback: []
@@ -1158,6 +1304,8 @@ stages:
       at p. 599.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-da4850b15834791b4688a767
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
   attachments: []
   source_feedback: []

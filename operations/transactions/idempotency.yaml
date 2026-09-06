@@ -1316,6 +1316,186 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  sad-identity-recovery-unit-m2-sad-clustering-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-clustering-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:a5799aa41e7f58e367fa4e99af3c2a3dcdcf8b2b81999437ea8f31c77b421f88
+    transaction_id: transaction-20260907-010759-001
+    receipt_path: operations/transactions/transaction-20260907-010759-001.yaml
+    revisions:
+      study-map-m2-sad-clustering: 3
+      unit-m2-sad-clustering: 7
+    snapshot_before: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
+    snapshot_after: sha256:563201defc982c25af465db0a31e5ee0c85fe0fce080ebf498ea81a7e50670be
+  sad-identity-recovery-unit-m2-sad-l01-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l01-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:8003021fbfa5636f39c77787f4448c9e94ae4e2d9c96a22127aa7aa26b95c473
+    transaction_id: transaction-20260907-010811-001
+    receipt_path: operations/transactions/transaction-20260907-010811-001.yaml
+    revisions:
+      study-map-m2-sad-l01: 3
+      unit-m2-sad-l01: 4
+    snapshot_before: sha256:563201defc982c25af465db0a31e5ee0c85fe0fce080ebf498ea81a7e50670be
+    snapshot_after: sha256:faea9050ee3fac5bf993d8dd81ae5d53667ae8a664ee603f0d1e572e9c62f2c9
+  sad-identity-recovery-unit-m2-sad-l02-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l02-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:a87ca0872bcea9ff173adb783e5ceee7989d3d869c62a51881c2a8ae2cea207f
+    transaction_id: transaction-20260907-010822-001
+    receipt_path: operations/transactions/transaction-20260907-010822-001.yaml
+    revisions:
+      study-map-m2-sad-l02: 4
+      unit-m2-sad-l02: 6
+    snapshot_before: sha256:faea9050ee3fac5bf993d8dd81ae5d53667ae8a664ee603f0d1e572e9c62f2c9
+    snapshot_after: sha256:a726ea8d101640043d1129af5629ed468c78cc232099ab5f29b04c01d0745bae
+  sad-identity-recovery-unit-m2-sad-l03-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l03-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:971e59d65db08d04072dcfe4dce41cdd0cac7ce5fc637ac4ea3eba7b24e1043b
+    transaction_id: transaction-20260907-010833-001
+    receipt_path: operations/transactions/transaction-20260907-010833-001.yaml
+    revisions:
+      study-map-m2-sad-l03: 4
+      unit-m2-sad-l03: 10
+    snapshot_before: sha256:a726ea8d101640043d1129af5629ed468c78cc232099ab5f29b04c01d0745bae
+    snapshot_after: sha256:abe7878c476d0131e84891577d200dce1af4b195273103a35ce4e9d8e220925c
+  sad-identity-recovery-unit-m2-sad-l04-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l04-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:ed051720bac6f18eb92c022a8faa07b3da31b0d87081167bf100532f5029e536
+    transaction_id: transaction-20260907-010845-001
+    receipt_path: operations/transactions/transaction-20260907-010845-001.yaml
+    revisions:
+      study-map-m2-sad-l04: 4
+      unit-m2-sad-l04: 10
+    snapshot_before: sha256:abe7878c476d0131e84891577d200dce1af4b195273103a35ce4e9d8e220925c
+    snapshot_after: sha256:2da93ca4b7202f72f73149e0acc03c517b42025a706cf414e68d7f9316dce36e
+  sad-identity-recovery-unit-m2-sad-l06-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l06-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:ec37cdf661d67b6be87997c86911b35497e754a93231511bf8c3d25e091c20fa
+    transaction_id: transaction-20260907-010856-001
+    receipt_path: operations/transactions/transaction-20260907-010856-001.yaml
+    revisions:
+      study-map-m2-sad-l06: 4
+      unit-m2-sad-l06: 10
+    snapshot_before: sha256:2da93ca4b7202f72f73149e0acc03c517b42025a706cf414e68d7f9316dce36e
+    snapshot_after: sha256:77fdcbf33af9decd6171300f520d7592e49aecb1a8e05d337768a90b121d9c71
+  sad-identity-recovery-unit-m2-sad-l07-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l07-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:190f83403cdd15f7847bd8ac38fc128a134c38dd4bc9e4a156dd761bc8e9de3c
+    transaction_id: transaction-20260907-010907-001
+    receipt_path: operations/transactions/transaction-20260907-010907-001.yaml
+    revisions:
+      study-map-m2-sad-l07: 5
+      unit-m2-sad-l07: 7
+    snapshot_before: sha256:77fdcbf33af9decd6171300f520d7592e49aecb1a8e05d337768a90b121d9c71
+    snapshot_after: sha256:bd247934da9cc1c760104dd7cdf278e86c9b1c6794718abdaff01f563c80d8f8
+  sad-identity-recovery-unit-m2-sad-l08-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l08-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:cec855ae4361b5e3a074664fa1ae6bda693cd39c9d0ef5d35ad2aa71d429571f
+    transaction_id: transaction-20260907-010919-001
+    receipt_path: operations/transactions/transaction-20260907-010919-001.yaml
+    revisions:
+      study-map-m2-sad-l08: 4
+      unit-m2-sad-l08: 6
+    snapshot_before: sha256:bd247934da9cc1c760104dd7cdf278e86c9b1c6794718abdaff01f563c80d8f8
+    snapshot_after: sha256:31b1b087a2cf8ba8e55c7b244cc464316941d46de471cb62345e8644beaf17e7
+  sad-identity-recovery-unit-m2-sad-l09-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l09-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:284b639cac3e015ec0fc781ea2ef9eaf0dd43373e7e723089f6420cf9f11dcbc
+    transaction_id: transaction-20260907-010930-001
+    receipt_path: operations/transactions/transaction-20260907-010930-001.yaml
+    revisions:
+      study-map-m2-sad-l09: 4
+      unit-m2-sad-l09: 6
+    snapshot_before: sha256:31b1b087a2cf8ba8e55c7b244cc464316941d46de471cb62345e8644beaf17e7
+    snapshot_after: sha256:0235632fe719a46be728c4997e94c07bffae60f4d05642a1364e8048a56c9f18
+  sad-identity-recovery-unit-m2-sad-l10-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l10-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:ece675ff67b182f2e05c3ab411723d0dd13e433da9c42399c23c0917b19be243
+    transaction_id: transaction-20260907-010942-001
+    receipt_path: operations/transactions/transaction-20260907-010942-001.yaml
+    revisions:
+      study-map-m2-sad-l10: 4
+      unit-m2-sad-l10: 6
+    snapshot_before: sha256:0235632fe719a46be728c4997e94c07bffae60f4d05642a1364e8048a56c9f18
+    snapshot_after: sha256:da5e4d1d4f014903af96534210cb5286617738e011794ba5cb14fa6cb3b0ab69
+  sad-identity-recovery-unit-m2-sad-l11-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l11-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:ceb287ec409b3ebbcf103ffadfbb3b1189b9c943e688657bec0250c2da45d9b9
+    transaction_id: transaction-20260907-010953-001
+    receipt_path: operations/transactions/transaction-20260907-010953-001.yaml
+    revisions:
+      study-map-m2-sad-l11: 4
+      unit-m2-sad-l11: 6
+    snapshot_before: sha256:da5e4d1d4f014903af96534210cb5286617738e011794ba5cb14fa6cb3b0ab69
+    snapshot_after: sha256:06a512d34e800724c6e400b3475374e84073114a631d264e7b2424af5b031e40
+  sad-identity-recovery-unit-m2-sad-l12-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l12-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:1dd2302859d2afd1a031e0a3e1b17ffded3c37d524a7418c5f1ae5049ae106a1
+    transaction_id: transaction-20260907-011005-001
+    receipt_path: operations/transactions/transaction-20260907-011005-001.yaml
+    revisions:
+      study-map-m2-sad-l12: 4
+      unit-m2-sad-l12: 6
+    snapshot_before: sha256:06a512d34e800724c6e400b3475374e84073114a631d264e7b2424af5b031e40
+    snapshot_after: sha256:20869d3bd4e88c99640c6123867871ffbfa847aa80f584c07c59185c07804919
+  sad-identity-recovery-unit-m2-sad-l13-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l13-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:d02d5451b37060ec50f12bf7bf8a3ec01ba76b5814158c0ad1efad642f64dbdd
+    transaction_id: transaction-20260907-011017-001
+    receipt_path: operations/transactions/transaction-20260907-011017-001.yaml
+    revisions:
+      study-map-m2-sad-l13: 4
+      unit-m2-sad-l13: 6
+    snapshot_before: sha256:20869d3bd4e88c99640c6123867871ffbfa847aa80f584c07c59185c07804919
+    snapshot_after: sha256:0da56c288c4ebf09e33f9c2693ee5d3789c3af6869fdd45909ac4e22a67f4c31
+  sad-identity-recovery-unit-m2-sad-l14-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l14-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:776dde3b77c6fe50a541482d41f2c32ccbeab8771d6b5b9d5febbe2fa064b016
+    transaction_id: transaction-20260907-011028-001
+    receipt_path: operations/transactions/transaction-20260907-011028-001.yaml
+    revisions:
+      study-map-m2-sad-l14: 4
+      unit-m2-sad-l14: 10
+    snapshot_before: sha256:0da56c288c4ebf09e33f9c2693ee5d3789c3af6869fdd45909ac4e22a67f4c31
+    snapshot_after: sha256:7fb78603646240bc0028caa06b36ea22b615b4850665ab56d407e02412d225aa
+  sad-identity-recovery-unit-m2-sad-l15-20260907:
+    request_id: request-sad-identity-recovery-unit-m2-sad-l15-20260907
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:5aaecec99f0720fc9478020fe882c993e8a9ec2265352cba48258d591944507e
+    transaction_id: transaction-20260907-011040-001
+    receipt_path: operations/transactions/transaction-20260907-011040-001.yaml
+    revisions:
+      study-map-m2-sad-l15: 4
+      unit-m2-sad-l15: 10
+    snapshot_before: sha256:7fb78603646240bc0028caa06b36ea22b615b4850665ab56d407e02412d225aa
+    snapshot_after: sha256:f027a6bc13087e73e8061d27462c5f4ef5231795e31e2e3c4ccfb50fe2a83347
   source-navigation-l05-20260907:
     request_id: request-source-navigation-l05-20260907
     capability: unit.map.import

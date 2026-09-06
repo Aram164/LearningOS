@@ -53,6 +53,8 @@ stages:
       the deck mentions in passing.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-9892260cc9d0dbf2da2b165c
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
@@ -66,6 +68,8 @@ stages:
       explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-6b5698803acbdbd638a146b6
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
@@ -77,6 +81,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: watch
     label: StatQuest — decision trees and random forests
     locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
@@ -89,6 +95,8 @@ stages:
       evaluation falling out for free. Separating those two changes is what stops 'random forest' from
       being a black box. The AdaBoost video handles the reweighting visually.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-f13a1bb3e87f67e51c110dad
   - kind: read
     label: Kroese Chapter 8 — tree methods
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
@@ -100,6 +108,8 @@ stages:
       — it gives the variance-reduction argument for bagging in algebra rather than in words.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-8b4580c36cbf51ee7807a23e
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     locator: Spring 2022 playlist, Lecture 11 'Decision Trees' and Lecture 12 'Boosting'
@@ -110,6 +120,8 @@ stages:
       bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
       question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-0f4dd7d42e4f26f7e9730a91
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
@@ -121,6 +133,8 @@ stages:
       are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
       test, not as the baseline.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part B 'ID Trees', PDF pp. 4-5
@@ -131,6 +145,8 @@ stages:
       official and complete, a wrong answer can be diagnosed to the exact split. The archive spans many
       years, so there is enough material to practise repeatedly.
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-8fec57420f21e471d11c0a87
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     locator: Chapter 6, pp. 203-216
@@ -144,6 +160,8 @@ stages:
       which is the motivation for the ensembles in the next chapter.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-f9377aee01af8b15edbf8705
   - kind: read
     label: Brandon Rohrer — friendly decision-tree explanation
     locator: The 'How decision trees work' article and its companion video on e2eml.school
@@ -153,6 +171,8 @@ stages:
       has become an obstacle to seeing what a tree does, twenty minutes here restores the picture and
       the formal treatment becomes readable again. Not sufficient for the exam on its own.'
     scope_triage: helpful-now
+    source_id: source-rohrer-e2eml
+    route_id: route-fcd3c263bfe17bebb07f49c3
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
@@ -167,6 +187,8 @@ stages:
       — this is not a first-pass reading and each section assumes the ones before it.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-1f6f29865621dc40da790e50
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md
   attachments: []
   source_feedback: []
@@ -212,6 +234,8 @@ stages:
       the deck mentions in passing.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-9892260cc9d0dbf2da2b165c
   - kind: read
     label: Berkeley CS189 — past exam questions on trees and ensembles
     locator: Fall 2024 Final Solutions, decision-tree and random-forest problem, PDF p. 9
@@ -221,6 +245,8 @@ stages:
       a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
       summary slides set up, and having model answers calibrates how much to write.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-cd624eec2c74722433fa56ea
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
@@ -232,6 +258,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: reference
     label: CS229 — decision-tree and boosting derivations
     locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note
@@ -244,6 +272,8 @@ stages:
       rule looked arbitrary.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-2ecd41a999e0fd49db64c0c0
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
@@ -255,6 +285,8 @@ stages:
       are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
       test, not as the baseline.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part B 'ID Trees', PDF pp. 4-5
@@ -265,6 +297,8 @@ stages:
       official and complete, a wrong answer can be diagnosed to the exact split. The archive spans many
       years, so there is enough material to practise repeatedly.
     scope_triage: helpful-now
+    source_id: source-mit-6034-quizzes
+    route_id: route-8fec57420f21e471d11c0a87
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     locator: Chapter 6, pp. 203-216
@@ -278,6 +312,8 @@ stages:
       which is the motivation for the ensembles in the next chapter.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-f9377aee01af8b15edbf8705
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
@@ -293,6 +329,8 @@ stages:
       296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
       at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-775c3bffd9b1dda61f65be0d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md
   attachments: []
   source_feedback: []
@@ -335,6 +373,8 @@ stages:
       explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-6b5698803acbdbd638a146b6
   - kind: read
     label: Kroese Chapter 8 — tree methods
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
@@ -346,6 +386,8 @@ stages:
       — it gives the variance-reduction argument for bagging in algebra rather than in words.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-8b4580c36cbf51ee7807a23e
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     locator: Chapter 6, pp. 203-216
@@ -359,6 +401,8 @@ stages:
       which is the motivation for the ensembles in the next chapter.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-f9377aee01af8b15edbf8705
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
@@ -374,6 +418,8 @@ stages:
       296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
       at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-775c3bffd9b1dda61f65be0d
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
   attachments: []
   source_feedback: []
@@ -417,6 +463,8 @@ stages:
       the deck mentions in passing.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-9892260cc9d0dbf2da2b165c
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
@@ -430,6 +478,8 @@ stages:
       explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-6b5698803acbdbd638a146b6
   - kind: read
     label: Berkeley CS189 — past exam questions on trees and ensembles
     locator: Fall 2024 Final Solutions, decision-tree and random-forest problem, PDF p. 9
@@ -439,6 +489,8 @@ stages:
       a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
       summary slides set up, and having model answers calibrates how much to write.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-cd624eec2c74722433fa56ea
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
@@ -450,6 +502,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: watch
     label: StatQuest — decision trees and random forests
     locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
@@ -462,6 +516,8 @@ stages:
       evaluation falling out for free. Separating those two changes is what stops 'random forest' from
       being a black box. The AdaBoost video handles the reweighting visually.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-f13a1bb3e87f67e51c110dad
   - kind: read
     label: Geron Ch 6 - trees you can grow and prune
     locator: Chapter 6, pp. 203-216
@@ -475,6 +531,8 @@ stages:
       which is the motivation for the ensembles in the next chapter.
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-f9377aee01af8b15edbf8705
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
@@ -490,6 +548,8 @@ stages:
       296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
       at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-775c3bffd9b1dda61f65be0d
   - kind: read
     label: Brandon Rohrer — friendly decision-tree explanation
     locator: The 'How decision trees work' article and its companion video on e2eml.school
@@ -499,6 +559,8 @@ stages:
       has become an obstacle to seeing what a tree does, twenty minutes here restores the picture and
       the formal treatment becomes readable again. Not sufficient for the exam on its own.'
     scope_triage: helpful-now
+    source_id: source-rohrer-e2eml
+    route_id: route-fcd3c263bfe17bebb07f49c3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
   attachments: []
   source_feedback: []
@@ -542,6 +604,8 @@ stages:
       the deck mentions in passing.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-9892260cc9d0dbf2da2b165c
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
@@ -555,6 +619,8 @@ stages:
       explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-6b5698803acbdbd638a146b6
   - kind: read
     label: Berkeley CS189 — past exam questions on trees and ensembles
     locator: Fall 2024 Final Solutions, decision-tree and random-forest problem, PDF p. 9
@@ -564,6 +630,8 @@ stages:
       a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
       summary slides set up, and having model answers calibrates how much to write.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-cd624eec2c74722433fa56ea
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
@@ -575,6 +643,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: watch
     label: StatQuest — decision trees and random forests
     locator: '''Decision Trees, Clearly Explained''; ''Regression Trees, Clearly Explained''; ''Random
@@ -587,6 +657,8 @@ stages:
       evaluation falling out for free. Separating those two changes is what stops 'random forest' from
       being a black box. The AdaBoost video handles the reweighting visually.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-f13a1bb3e87f67e51c110dad
   - kind: read
     label: Kroese Chapter 8 — tree methods
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
@@ -598,6 +670,8 @@ stages:
       — it gives the variance-reduction argument for bagging in algebra rather than in words.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-8b4580c36cbf51ee7807a23e
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     locator: Spring 2022 playlist, Lecture 11 'Decision Trees' and Lecture 12 'Boosting'
@@ -608,6 +682,8 @@ stages:
       bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
       question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-0f4dd7d42e4f26f7e9730a91
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
@@ -622,6 +698,8 @@ stages:
       evaluation in particular is a neat idea the deck mentions in passing.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
@@ -637,6 +715,8 @@ stages:
       296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
       at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-775c3bffd9b1dda61f65be0d
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
@@ -651,6 +731,8 @@ stages:
       — this is not a first-pass reading and each section assumes the ones before it.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-1f6f29865621dc40da790e50
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md
   attachments: []
   source_feedback: []
@@ -695,6 +777,8 @@ stages:
       the deck mentions in passing.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-9892260cc9d0dbf2da2b165c
   - kind: read
     label: ISLP §§8.1–8.2 — trees and ensembles
     locator: Ch 8 Tree-Based Methods, pdf pp. 338-372 (§8.1 the basics of decision trees p. 339; §8.2
@@ -708,6 +792,8 @@ stages:
       explains why random forests decorrelate by restricting the feature subset, which the deck asserts.'
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-6b5698803acbdbd638a146b6
   - kind: read
     label: Berkeley CS189 — past exam questions on trees and ensembles
     locator: Fall 2024 Final Solutions, decision-tree and random-forest problem, PDF p. 9
@@ -717,6 +803,8 @@ stages:
       a random forest decorrelate trees, when would boosting overfit. Those are the conceptual items L12''s
       summary slides set up, and having model answers calibrates how much to write.'
     scope_triage: helpful-now
+    source_id: source-berkeley-cs189
+    route_id: route-cd624eec2c74722433fa56ea
   - kind: reference
     label: scikit-learn user guide §1.10 and §1.11 — trees and ensembles
     locator: 'User guide §1.10 ''Decision Trees'' (including §1.10.7 mathematical formulation of the impurity
@@ -728,6 +816,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: read
     label: Kroese Chapter 8 — tree methods
     locator: Ch 8 Decision Trees and Ensemble Methods, pdf pp. 305-340
@@ -739,6 +829,8 @@ stages:
       — it gives the variance-reduction argument for bagging in algebra rather than in words.
     vault_path: material://source-kroese-dsml/kroese.pdf
     scope_triage: helpful-now
+    source_id: source-kroese-dsml
+    route_id: route-8b4580c36cbf51ee7807a23e
   - kind: reference
     label: CS229 — decision-tree and boosting derivations
     locator: The decision-trees and boosting notes (the separate 'Decision Trees' and 'Boosting' note
@@ -751,6 +843,8 @@ stages:
       rule looked arbitrary.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-2ecd41a999e0fd49db64c0c0
   - kind: reference
     label: Stanford CS229 — tree/ensemble lecture selections
     locator: Spring 2022 playlist, Lecture 11 'Decision Trees' and Lecture 12 'Boosting'
@@ -761,6 +855,8 @@ stages:
       bad at. That judgment is hard to get from a textbook and is the kind of thing a conceptual exam
       question rewards. The technical content is above SaD''s level in places; watch for the framing.'
     scope_triage: reference-only
+    source_id: source-cs229-2022-videos
+    route_id: route-0f4dd7d42e4f26f7e9730a91
   - kind: practise
     label: Cornell CS4780 HW8 — trees and AdaBoost
     locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
@@ -772,6 +868,8 @@ stages:
       are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
       test, not as the baseline.
     scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
@@ -786,6 +884,8 @@ stages:
       evaluation in particular is a neat idea the deck mentions in passing.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
   - kind: read
     label: Marsland Ch 12-13 - ID3 and the ensembles as algorithms
     locator: Chapter 12, pp. 270-287 (ID3 p. 271; entropy, information gain and Gini p. 272; pruning p.
@@ -801,6 +901,8 @@ stages:
       296), so the ensembles are also code rather than description. Pruning at p. 278 and the CART variant
       at p. 281 complete the deck's tree scope.
     scope_triage: helpful-now
+    source_id: source-marsland-ml-algorithmic
+    route_id: route-775c3bffd9b1dda61f65be0d
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
@@ -815,6 +917,8 @@ stages:
       — this is not a first-pass reading and each section assumes the ones before it.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-1f6f29865621dc40da790e50
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md
   attachments: []
   source_feedback: []
@@ -856,6 +960,8 @@ stages:
       does to the resulting tree. That mapping from concept to parameter is a strong memory aid, and §1.11
       does the same for all four ensemble families L12 names — including stacking, which most books skip.
     scope_triage: helpful-now
+    source_id: source-sklearn-user-guide
+    route_id: route-0f00ed6b65da6c9fdd94757f
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
@@ -870,6 +976,8 @@ stages:
       evaluation in particular is a neat idea the deck mentions in passing.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
   - kind: reference
     label: ESL - the ensemble chapters behind the L12 summary slide
     locator: Section 9.2 tree-based methods, p. 324; section 8.8 model averaging and stacking, p. 307;
@@ -884,6 +992,8 @@ stages:
       — this is not a first-pass reading and each section assumes the ones before it.
     vault_path: material://source-esl/esl.pdf
     scope_triage: reference-only
+    source_id: source-esl
+    route_id: route-1f6f29865621dc40da790e50
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md
   attachments: []
   source_feedback: []

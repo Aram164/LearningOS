@@ -48,6 +48,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-475a87b6ec22bf8e77f9de71
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
@@ -58,6 +60,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: practise
     label: UE5, slides 8-11 — official discrete-distribution solutions
     locator: exercise-slides/UE5.pdf, slides 8-11
@@ -67,6 +71,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f827266eae5a106a6154442a
   - kind: reference
     label: 2025 discrete-distributions deck
     locator: 07_discrete_distributions.pptx (1).pdf
@@ -75,6 +81,8 @@ stages:
       of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
       the formulas against the current deck; notation drifts year to year.
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
   - kind: read
     label: Fahrmeir Chapter 5 — discrete distributions
     locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
@@ -90,6 +98,8 @@ stages:
       table for this lecture on the shelf.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-3e560269a42e146f88512ee4
   - kind: practise
     label: Arbeitsbuch Chapter 5 — distribution drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
@@ -102,6 +112,8 @@ stages:
       nothing about identification.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-488f203b03208f7a1ae5eaff
   - kind: read
     label: Grinstead & Snell Ch 5 — important distributions
     locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
@@ -112,6 +124,8 @@ stages:
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-58f13d47b87582e36563f616
   - kind: read
     label: Blitzstein Chapters 3–4 — distribution-generating stories
     locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
@@ -128,6 +142,8 @@ stages:
       most reliable way to get the model-selection node right under time pressure.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-6522f11efe3a4956621f2692
   - kind: read
     label: OpenIntro Chapter 4 — common distributions
     locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
@@ -141,6 +157,8 @@ stages:
       §5.3 or Blitzstein §3.4 covers it properly.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-64c6506fd426173a5b124d5a
   - kind: practise
     label: Dekking — discrete-distribution exercises
     locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
@@ -154,6 +172,8 @@ stages:
       than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-9e9215f1bace1b2b1a269f02
   - kind: read
     label: MIT 18.05 — discrete-distribution problems
     locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
@@ -165,6 +185,8 @@ stages:
       practising, and it also means the model-selection question can be tested empirically: simulate the
       described situation, compare the histogram with the candidate PMF.'
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-e325141b8971b65116e08790
   - kind: practise
     label: FAU pp. 5 and 22 — Binomial model and quantile
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
@@ -174,6 +196,8 @@ stages:
       model identification. It is best used after mixed-distribution tasks, as a speed check.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-a9a926efa0d8512eca388e80
   - kind: reference
     label: Tijms — discrete-distribution modeling examples
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
@@ -186,6 +210,8 @@ stages:
       Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-3d9cb15592efe429e13918f5
   - kind: practise
     label: Schaum — discrete-distribution drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
@@ -197,6 +223,8 @@ stages:
       and binomial-to-Poisson approximation problems that L08 also needs.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-3d403c071c84fe621ef510a3
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — discrete distributions
     locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
@@ -209,6 +237,8 @@ stages:
       better use of an hour than learning the five PMFs, because the PMF follows from the story and the
       identification does not. The published distribution-summary sheet tabulates all of them with moments.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-1e3e247b8c6240fbc08376a9
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -218,6 +248,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   - kind: watch
     label: StatQuest — Binomial distribution and sampling
     locator: '''The Binomial Distribution in 30 Seconds''; ''Sampling from a Distribution, Clearly Explained'''
@@ -227,6 +259,8 @@ stages:
       more substantial and explains what ''drawing from a distribution'' means operationally, which matters
       for L11''s resampling material later.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-124b1de843b9b317287c58d2
   - kind: watch
     label: jbstatistics — discrete distributions
     locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
@@ -238,6 +272,8 @@ stages:
       node requires. Watching them back to back is more useful than watching any one of them, because
       the differences between the condition lists are the actual content.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-48c6ad5e78bcb005c5a15885
   - kind: watch
     label: Kurzes Tutorium Statistik — discrete distributions
     locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
@@ -248,6 +284,8 @@ stages:
       phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
       is not available in any of the English sources.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md
   attachments: []
   source_feedback: []
@@ -288,6 +326,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-475a87b6ec22bf8e77f9de71
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
@@ -298,6 +338,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: practise
     label: UE5, slides 8-11 — official discrete-distribution solutions
     locator: exercise-slides/UE5.pdf, slides 8-11
@@ -307,6 +349,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f827266eae5a106a6154442a
   - kind: reference
     label: 2025 discrete-distributions deck
     locator: 07_discrete_distributions.pptx (1).pdf
@@ -315,6 +359,8 @@ stages:
       of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
       the formulas against the current deck; notation drifts year to year.
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
   - kind: read
     label: Fahrmeir Chapter 5 — discrete distributions
     locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
@@ -330,6 +376,8 @@ stages:
       table for this lecture on the shelf.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-3e560269a42e146f88512ee4
   - kind: practise
     label: Arbeitsbuch Chapter 5 — distribution drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
@@ -342,6 +390,8 @@ stages:
       nothing about identification.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-488f203b03208f7a1ae5eaff
   - kind: read
     label: Grinstead & Snell Ch 5 — important distributions
     locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
@@ -352,6 +402,8 @@ stages:
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-58f13d47b87582e36563f616
   - kind: read
     label: Blitzstein Chapters 3–4 — distribution-generating stories
     locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
@@ -368,6 +420,8 @@ stages:
       most reliable way to get the model-selection node right under time pressure.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-6522f11efe3a4956621f2692
   - kind: read
     label: OpenIntro Chapter 4 — common distributions
     locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
@@ -381,6 +435,8 @@ stages:
       §5.3 or Blitzstein §3.4 covers it properly.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-64c6506fd426173a5b124d5a
   - kind: practise
     label: Dekking — discrete-distribution exercises
     locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
@@ -394,6 +450,8 @@ stages:
       than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-9e9215f1bace1b2b1a269f02
   - kind: read
     label: MIT 18.05 — discrete-distribution problems
     locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
@@ -405,6 +463,8 @@ stages:
       practising, and it also means the model-selection question can be tested empirically: simulate the
       described situation, compare the histogram with the candidate PMF.'
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-e325141b8971b65116e08790
   - kind: practise
     label: FAU pp. 5 and 22 — Binomial model and quantile
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
@@ -414,6 +474,8 @@ stages:
       model identification. It is best used after mixed-distribution tasks, as a speed check.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-a9a926efa0d8512eca388e80
   - kind: reference
     label: Pitman Chapters 2–3 — discrete distributions
     locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
@@ -428,6 +490,8 @@ stages:
       families with a comparison of their shapes.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-ebf16644b4d589e5cfa9dc54
   - kind: reference
     label: Tijms — discrete-distribution modeling examples
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
@@ -440,6 +504,8 @@ stages:
       Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-3d9cb15592efe429e13918f5
   - kind: reference
     label: Ross — named discrete distributions
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
@@ -454,6 +520,8 @@ stages:
       forms that appear in software.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-3bd7fda1a5087e4bff5edfbb
   - kind: practise
     label: Schaum — discrete-distribution drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
@@ -465,6 +533,8 @@ stages:
       and binomial-to-Poisson approximation problems that L08 also needs.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-3d403c071c84fe621ef510a3
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — discrete distributions
     locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
@@ -477,6 +547,8 @@ stages:
       better use of an hour than learning the five PMFs, because the PMF follows from the story and the
       identification does not. The published distribution-summary sheet tabulates all of them with moments.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-1e3e247b8c6240fbc08376a9
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -486,6 +558,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   - kind: watch
     label: StatQuest — Binomial distribution and sampling
     locator: '''The Binomial Distribution in 30 Seconds''; ''Sampling from a Distribution, Clearly Explained'''
@@ -495,6 +569,8 @@ stages:
       more substantial and explains what ''drawing from a distribution'' means operationally, which matters
       for L11''s resampling material later.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-124b1de843b9b317287c58d2
   - kind: watch
     label: jbstatistics — discrete distributions
     locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
@@ -506,6 +582,8 @@ stages:
       node requires. Watching them back to back is more useful than watching any one of them, because
       the differences between the condition lists are the actual content.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-48c6ad5e78bcb005c5a15885
   - kind: watch
     label: Kurzes Tutorium Statistik — discrete distributions
     locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
@@ -516,6 +594,8 @@ stages:
       phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
       is not available in any of the English sources.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md
   attachments: []
   source_feedback: []
@@ -556,6 +636,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-475a87b6ec22bf8e77f9de71
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
@@ -566,6 +648,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: practise
     label: UE5, slides 8-11 — official discrete-distribution solutions
     locator: exercise-slides/UE5.pdf, slides 8-11
@@ -575,6 +659,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f827266eae5a106a6154442a
   - kind: reference
     label: 2025 discrete-distributions deck
     locator: 07_discrete_distributions.pptx (1).pdf
@@ -583,6 +669,8 @@ stages:
       of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
       the formulas against the current deck; notation drifts year to year.
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
   - kind: read
     label: Fahrmeir Chapter 5 — discrete distributions
     locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
@@ -598,6 +686,8 @@ stages:
       table for this lecture on the shelf.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-3e560269a42e146f88512ee4
   - kind: practise
     label: Arbeitsbuch Chapter 5 — distribution drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
@@ -610,6 +700,8 @@ stages:
       nothing about identification.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-488f203b03208f7a1ae5eaff
   - kind: read
     label: Grinstead & Snell Ch 5 — important distributions
     locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
@@ -620,6 +712,8 @@ stages:
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-58f13d47b87582e36563f616
   - kind: read
     label: Blitzstein Chapters 3–4 — distribution-generating stories
     locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
@@ -636,6 +730,8 @@ stages:
       most reliable way to get the model-selection node right under time pressure.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-6522f11efe3a4956621f2692
   - kind: practise
     label: Dekking — discrete-distribution exercises
     locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
@@ -649,6 +745,8 @@ stages:
       than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-9e9215f1bace1b2b1a269f02
   - kind: read
     label: MIT 18.05 — discrete-distribution problems
     locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
@@ -660,6 +758,8 @@ stages:
       practising, and it also means the model-selection question can be tested empirically: simulate the
       described situation, compare the histogram with the candidate PMF.'
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-e325141b8971b65116e08790
   - kind: reference
     label: Pitman Chapters 2–3 — discrete distributions
     locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
@@ -674,6 +774,8 @@ stages:
       families with a comparison of their shapes.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-ebf16644b4d589e5cfa9dc54
   - kind: reference
     label: Tijms — discrete-distribution modeling examples
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
@@ -686,6 +788,8 @@ stages:
       Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-3d9cb15592efe429e13918f5
   - kind: reference
     label: Ross — named discrete distributions
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
@@ -700,6 +804,8 @@ stages:
       forms that appear in software.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-3bd7fda1a5087e4bff5edfbb
   - kind: practise
     label: Schaum — discrete-distribution drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
@@ -711,6 +817,8 @@ stages:
       and binomial-to-Poisson approximation problems that L08 also needs.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-3d403c071c84fe621ef510a3
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — discrete distributions
     locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
@@ -723,6 +831,8 @@ stages:
       better use of an hour than learning the five PMFs, because the PMF follows from the story and the
       identification does not. The published distribution-summary sheet tabulates all of them with moments.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-1e3e247b8c6240fbc08376a9
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -732,6 +842,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   - kind: watch
     label: jbstatistics — discrete distributions
     locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
@@ -743,6 +855,8 @@ stages:
       node requires. Watching them back to back is more useful than watching any one of them, because
       the differences between the condition lists are the actual content.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-48c6ad5e78bcb005c5a15885
   - kind: watch
     label: Kurzes Tutorium Statistik — discrete distributions
     locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
@@ -753,6 +867,8 @@ stages:
       phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
       is not available in any of the English sources.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md
   attachments: []
   source_feedback: []
@@ -793,6 +909,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-475a87b6ec22bf8e77f9de71
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
@@ -803,6 +921,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: read
     label: Fahrmeir Chapter 5 — discrete distributions
     locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
@@ -818,6 +938,8 @@ stages:
       table for this lecture on the shelf.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-3e560269a42e146f88512ee4
   - kind: read
     label: Grinstead & Snell Ch 5 — important distributions
     locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
@@ -828,6 +950,8 @@ stages:
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-58f13d47b87582e36563f616
   - kind: read
     label: Blitzstein Chapters 3–4 — distribution-generating stories
     locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
@@ -844,6 +968,8 @@ stages:
       most reliable way to get the model-selection node right under time pressure.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-6522f11efe3a4956621f2692
   - kind: read
     label: MIT 18.05 — discrete-distribution problems
     locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
@@ -855,6 +981,8 @@ stages:
       practising, and it also means the model-selection question can be tested empirically: simulate the
       described situation, compare the histogram with the candidate PMF.'
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-e325141b8971b65116e08790
   - kind: reference
     label: Pitman Chapters 2–3 — discrete distributions
     locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
@@ -869,6 +997,8 @@ stages:
       families with a comparison of their shapes.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-ebf16644b4d589e5cfa9dc54
   - kind: reference
     label: Tijms — discrete-distribution modeling examples
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
@@ -881,6 +1011,8 @@ stages:
       Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-3d9cb15592efe429e13918f5
   - kind: reference
     label: Ross — named discrete distributions
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
@@ -895,6 +1027,8 @@ stages:
       forms that appear in software.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-3bd7fda1a5087e4bff5edfbb
   - kind: practise
     label: Schaum — discrete-distribution drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
@@ -906,6 +1040,8 @@ stages:
       and binomial-to-Poisson approximation problems that L08 also needs.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-3d403c071c84fe621ef510a3
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — discrete distributions
     locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
@@ -918,6 +1054,8 @@ stages:
       better use of an hour than learning the five PMFs, because the PMF follows from the story and the
       identification does not. The published distribution-summary sheet tabulates all of them with moments.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-1e3e247b8c6240fbc08376a9
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -927,6 +1065,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   - kind: watch
     label: jbstatistics — discrete distributions
     locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
@@ -938,6 +1078,8 @@ stages:
       node requires. Watching them back to back is more useful than watching any one of them, because
       the differences between the condition lists are the actual content.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-48c6ad5e78bcb005c5a15885
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
   attachments: []
   source_feedback: []
@@ -978,6 +1120,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-475a87b6ec22bf8e77f9de71
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
@@ -988,6 +1132,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: practise
     label: UE5, slides 8-11 — official discrete-distribution solutions
     locator: exercise-slides/UE5.pdf, slides 8-11
@@ -997,6 +1143,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f827266eae5a106a6154442a
   - kind: reference
     label: 2025 discrete-distributions deck
     locator: 07_discrete_distributions.pptx (1).pdf
@@ -1005,6 +1153,8 @@ stages:
       of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
       the formulas against the current deck; notation drifts year to year.
     scope_triage: reference-only
+    source_id: source-sad-2025-recordings
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
   - kind: read
     label: Fahrmeir Chapter 5 — discrete distributions
     locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
@@ -1020,6 +1170,8 @@ stages:
       table for this lecture on the shelf.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-3e560269a42e146f88512ee4
   - kind: practise
     label: Arbeitsbuch Chapter 5 — distribution drills
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
@@ -1032,6 +1184,8 @@ stages:
       nothing about identification.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-488f203b03208f7a1ae5eaff
   - kind: read
     label: Grinstead & Snell Ch 5 — important distributions
     locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
@@ -1042,6 +1196,8 @@ stages:
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-58f13d47b87582e36563f616
   - kind: read
     label: Blitzstein Chapters 3–4 — distribution-generating stories
     locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
@@ -1058,6 +1214,8 @@ stages:
       most reliable way to get the model-selection node right under time pressure.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-6522f11efe3a4956621f2692
   - kind: read
     label: OpenIntro Chapter 4 — common distributions
     locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
@@ -1071,6 +1229,8 @@ stages:
       §5.3 or Blitzstein §3.4 covers it properly.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-64c6506fd426173a5b124d5a
   - kind: practise
     label: Dekking — discrete-distribution exercises
     locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
@@ -1084,6 +1244,8 @@ stages:
       than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-9e9215f1bace1b2b1a269f02
   - kind: read
     label: MIT 18.05 — discrete-distribution problems
     locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
@@ -1095,6 +1257,8 @@ stages:
       practising, and it also means the model-selection question can be tested empirically: simulate the
       described situation, compare the histogram with the candidate PMF.'
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-e325141b8971b65116e08790
   - kind: reference
     label: Pitman Chapters 2–3 — discrete distributions
     locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
@@ -1109,6 +1273,8 @@ stages:
       families with a comparison of their shapes.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-ebf16644b4d589e5cfa9dc54
   - kind: reference
     label: Tijms — discrete-distribution modeling examples
     locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
@@ -1121,6 +1287,8 @@ stages:
       Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-3d9cb15592efe429e13918f5
   - kind: reference
     label: Ross — named discrete distributions
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
@@ -1135,6 +1303,8 @@ stages:
       forms that appear in software.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-3bd7fda1a5087e4bff5edfbb
   - kind: practise
     label: Schaum — discrete-distribution drills
     locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
@@ -1146,6 +1316,8 @@ stages:
       and binomial-to-Poisson approximation problems that L08 also needs.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-3d403c071c84fe621ef510a3
   - kind: reference
     label: Harvard Stat 110 Units 3–4 — discrete distributions
     locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
@@ -1158,6 +1330,8 @@ stages:
       better use of an hour than learning the five PMFs, because the PMF follows from the story and the
       identification does not. The published distribution-summary sheet tabulates all of them with moments.
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-1e3e247b8c6240fbc08376a9
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -1167,6 +1341,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   - kind: watch
     label: jbstatistics — discrete distributions
     locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
@@ -1178,6 +1354,8 @@ stages:
       node requires. Watching them back to back is more useful than watching any one of them, because
       the differences between the condition lists are the actual content.
     scope_triage: helpful-now
+    source_id: source-jbstatistics
+    route_id: route-48c6ad5e78bcb005c5a15885
   - kind: watch
     label: Kurzes Tutorium Statistik — discrete distributions
     locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
@@ -1188,6 +1366,8 @@ stages:
       phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
       is not available in any of the English sources.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-4d9c809542ca696a1f19fd49
   - kind: watch
     label: Brandon Foltz — Poisson distribution walkthrough
     locator: '''Introduction to the Poisson Distribution'' (≈25 min)'
@@ -1197,6 +1377,8 @@ stages:
       arithmetic. Routed here as the fallback route for L07''s hardest single distribution — if the short
       explanations have already landed, skip it, because the length is real.'
     scope_triage: helpful-now
+    source_id: source-brandon-foltz
+    route_id: route-dfa420ce94420caba7422260
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md
   attachments: []
   source_feedback: []
@@ -1240,6 +1422,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-52083707f01a014c3e2c267b
   - kind: practise
     label: UE5, slides 8-11 — official discrete-distribution solutions
     locator: exercise-slides/UE5.pdf, slides 8-11
@@ -1249,6 +1433,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f827266eae5a106a6154442a
   - kind: practise
     label: FAU pp. 5 and 22 — Binomial model and quantile
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
@@ -1258,6 +1444,8 @@ stages:
       model identification. It is best used after mixed-distribution tasks, as a speed check.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-a9a926efa0d8512eca388e80
   - kind: reference
     label: Ross — named discrete distributions
     locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
@@ -1272,6 +1460,8 @@ stages:
       forms that appear in software.
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-3bd7fda1a5087e4bff5edfbb
   - kind: practise
     label: Leuphana-Merz pp. 11-16 — discrete distribution selection
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
@@ -1281,6 +1471,8 @@ stages:
       varies across German courses.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-4e47b0154d49ac739ff3c23e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md
   attachments: []
   source_feedback: []

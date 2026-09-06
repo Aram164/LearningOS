@@ -50,6 +50,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e958371305abdd06a667a4e2
   - kind: practise
     label: UE2, slides 20-28 — covariance and Pearson correlation
     locator: exercise-slides/UE2.pdf, slides 20-28
@@ -59,6 +61,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f7249a8bba66bc3ac7724629
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
@@ -73,6 +77,8 @@ stages:
       gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-8c971b3609d60d48474a7e65
   - kind: read
     label: Setosa — ordinary least squares, interactive
     locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
@@ -85,6 +91,8 @@ stages:
       node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
       way no derivation does.
     scope_triage: helpful-now
+    source_id: source-setosa-ols
+    route_id: route-bf71c1ee8aee769abb6dd6d0
   - kind: read
     label: OpenIntro — correlation and linear regression
     locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
@@ -100,6 +108,8 @@ stages:
       leave it until then.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c36a55ce03e709469e710d7e
   - kind: practise
     label: HS Harz pp. 6-7 — Kendall association and linear regression
     locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
@@ -110,6 +120,8 @@ stages:
       section in full.
     vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-bc80e5a45b7923d64981001e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md
   attachments: []
   source_feedback: []
@@ -152,6 +164,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e958371305abdd06a667a4e2
   - kind: practise
     label: UE2, slides 20-28 — covariance and Pearson correlation
     locator: exercise-slides/UE2.pdf, slides 20-28
@@ -161,6 +175,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f7249a8bba66bc3ac7724629
   - kind: practise
     label: UE3, slides 5-14 — Blatt 1 regression solutions
     locator: exercise-slides/UE3.pdf, slides 5-14
@@ -171,6 +187,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-adde7a7fe7cf2ed16214142c
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
@@ -185,6 +203,8 @@ stages:
       gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-8c971b3609d60d48474a7e65
   - kind: practise
     label: Arbeitsbuch Chapter 3 — correlation and regression drills
     locator: Ch 3 Aufgaben pdf pp. 57-66, Lösungen pdf pp. 67-82
@@ -197,6 +217,8 @@ stages:
       as optional unless a past paper shows otherwise.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-3d874eb98ed79f75cbf88ef7
   - kind: read
     label: OpenIntro — correlation and linear regression
     locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
@@ -212,6 +234,8 @@ stages:
       leave it until then.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c36a55ce03e709469e710d7e
   - kind: practise
     label: Dekking — correlation and regression exercises
     locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
@@ -227,6 +251,8 @@ stages:
       to set beside L03's descriptive one.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-1d5ebe1552e3c9bdb2923b53
   - kind: practise
     label: FAU pp. 35 and 48 — covariance/correlation formula completion
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 35 Aufgabe 2(8), solution p.
@@ -238,6 +264,8 @@ stages:
       recall; it does not practise scatterplot interpretation or a regression fit.'
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-bce0d0f7e70cdad184b8cfe4
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
     locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
@@ -250,6 +278,8 @@ stages:
       too large does, which is the intuition behind every later discussion of step size. The correlation
       video is the one to watch if the difference between covariance and correlation is what is unclear.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-13f3ebff8cc9534c96100502
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-covariance/notes.md
   attachments: []
   source_feedback: []
@@ -292,6 +322,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e958371305abdd06a667a4e2
   - kind: practise
     label: UE2, slides 20-28 — covariance and Pearson correlation
     locator: exercise-slides/UE2.pdf, slides 20-28
@@ -301,6 +333,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-f7249a8bba66bc3ac7724629
   - kind: practise
     label: UE3, slides 5-14 — Blatt 1 regression solutions
     locator: exercise-slides/UE3.pdf, slides 5-14
@@ -311,6 +345,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-adde7a7fe7cf2ed16214142c
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
@@ -325,6 +361,8 @@ stages:
       gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-8c971b3609d60d48474a7e65
   - kind: read
     label: Setosa — ordinary least squares, interactive
     locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
@@ -337,6 +375,8 @@ stages:
       node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
       way no derivation does.
     scope_triage: helpful-now
+    source_id: source-setosa-ols
+    route_id: route-bf71c1ee8aee769abb6dd6d0
   - kind: read
     label: OpenIntro — correlation and linear regression
     locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
@@ -352,6 +392,8 @@ stages:
       leave it until then.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c36a55ce03e709469e710d7e
   - kind: practise
     label: Dekking — correlation and regression exercises
     locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
@@ -367,6 +409,8 @@ stages:
       to set beside L03's descriptive one.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-1d5ebe1552e3c9bdb2923b53
   - kind: practise
     label: HS Harz pp. 6-7 — Kendall association and linear regression
     locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
@@ -377,6 +421,8 @@ stages:
       section in full.
     vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-bc80e5a45b7923d64981001e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md
   attachments: []
   source_feedback: []
@@ -419,6 +465,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-e958371305abdd06a667a4e2
   - kind: practise
     label: UE2, slides 30-35 — regression prediction and RMSE
     locator: exercise-slides/UE2.pdf, slides 30-35
@@ -428,6 +476,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-3331bd0f1465151518d0d323
   - kind: practise
     label: UE3, slides 5-14 — Blatt 1 regression solutions
     locator: exercise-slides/UE3.pdf, slides 5-14
@@ -438,6 +488,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-adde7a7fe7cf2ed16214142c
   - kind: read
     label: Fahrmeir Chapter 3 — multivariate description and regression
     locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
@@ -452,6 +504,8 @@ stages:
       gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-8c971b3609d60d48474a7e65
   - kind: practise
     label: Arbeitsbuch Chapter 3 — correlation and regression drills
     locator: Ch 3 Aufgaben pdf pp. 57-66, Lösungen pdf pp. 67-82
@@ -464,6 +518,8 @@ stages:
       as optional unless a past paper shows otherwise.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-3d874eb98ed79f75cbf88ef7
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
@@ -479,6 +535,8 @@ stages:
       ISLP sections correspond to which SaD slides.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-340dd98b7e8f177fce11b9f5
   - kind: read
     label: Bendersky — derivation of the normal equation
     locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
@@ -492,6 +550,8 @@ stages:
       justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
       is shaky.'
     scope_triage: helpful-now
+    source_id: source-bendersky-normal-equation
+    route_id: route-869eeded8dda6eb8ab78ff9a
   - kind: read
     label: Setosa — ordinary least squares, interactive
     locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
@@ -504,6 +564,8 @@ stages:
       node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
       way no derivation does.
     scope_triage: helpful-now
+    source_id: source-setosa-ols
+    route_id: route-bf71c1ee8aee769abb6dd6d0
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
@@ -518,6 +580,8 @@ stages:
       on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
       with.'
     scope_triage: helpful-now
+    source_id: source-mml
+    route_id: route-43b3f03133fe9a8c6bc71a8a
   - kind: read
     label: OpenIntro — correlation and linear regression
     locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
@@ -533,6 +597,8 @@ stages:
       leave it until then.
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-c36a55ce03e709469e710d7e
   - kind: practise
     label: Dekking — correlation and regression exercises
     locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
@@ -548,6 +614,8 @@ stages:
       to set beside L03's descriptive one.
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-1d5ebe1552e3c9bdb2923b53
   - kind: read
     label: Ng — linear regression and gradient descent lectures
     locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
@@ -561,6 +629,8 @@ stages:
       make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
       node.
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-b2cb82ed2840a70e81bfbaa5
   - kind: practise
     label: HS Harz pp. 6-7 — Kendall association and linear regression
     locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
@@ -571,6 +641,8 @@ stages:
       section in full.
     vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-bc80e5a45b7923d64981001e
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
     locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
@@ -583,6 +655,8 @@ stages:
       too large does, which is the intuition behind every later discussion of step size. The correlation
       video is the one to watch if the difference between covariance and correlation is what is unclear.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-13f3ebff8cc9534c96100502
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-simple-regression/notes.md
   attachments: []
   source_feedback: []
@@ -626,6 +700,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-6b78db21b974a13178ff0860
   - kind: practise
     label: UE2, slides 30-35 — regression prediction and RMSE
     locator: exercise-slides/UE2.pdf, slides 30-35
@@ -635,6 +711,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-3331bd0f1465151518d0d323
   - kind: practise
     label: UE3, slides 5-14 — Blatt 1 regression solutions
     locator: exercise-slides/UE3.pdf, slides 5-14
@@ -645,6 +723,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-adde7a7fe7cf2ed16214142c
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
@@ -660,6 +740,8 @@ stages:
       ISLP sections correspond to which SaD slides.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-340dd98b7e8f177fce11b9f5
   - kind: read
     label: Bendersky — derivation of the normal equation
     locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
@@ -673,6 +755,8 @@ stages:
       justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
       is shaky.'
     scope_triage: helpful-now
+    source_id: source-bendersky-normal-equation
+    route_id: route-869eeded8dda6eb8ab78ff9a
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
@@ -687,6 +771,8 @@ stages:
       on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
       with.'
     scope_triage: helpful-now
+    source_id: source-mml
+    route_id: route-43b3f03133fe9a8c6bc71a8a
   - kind: reference
     label: University of Cologne pp. 7-8 — multivariate regression interpretation
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(c)-(d)
@@ -697,6 +783,8 @@ stages:
       which require L10; they are deliberately excluded from the L03 task.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-31ee3e63a209ca409054dda3
   - kind: read
     label: Geron Ch 4 - the normal equation and gradient descent side by side
     locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
@@ -712,6 +800,8 @@ stages:
       contour plots, with the descent paths drawn on them.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-8535a338657698b9de4791a8
   - kind: watch
     label: 3Blue1Brown — vectors, dot products, and matrix transformations
     locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations,
@@ -724,6 +814,8 @@ stages:
       multiplication as composition, the dot product as projection. The projection reading of the dot
       product in episode 9 is what later makes least squares recognisable as an orthogonal projection.
     scope_triage: helpful-now
+    source_id: source-3b1b-linear-algebra
+    route_id: route-a4e1a4e84bb805c906d73d1f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-multivariate/notes.md
   attachments: []
   source_feedback: []
@@ -766,6 +858,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-aa8a395d2936e94fd38796e0
   - kind: practise
     label: UE3, slides 40-45 — gradient descent and normalization walkthrough
     locator: exercise-slides/UE3.pdf, slides 40-45
@@ -775,6 +869,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-9858d63c791d015034a2641f
   - kind: watch
     label: 3Blue1Brown — what a derivative is, before gradient descent uses one
     locator: Essence of Calculus episodes 2 ('The paradox of the derivative') and 3 ('Derivative formulas
@@ -786,6 +882,8 @@ stages:
       you once memorised. Two episodes restore the picture. Routed as a prerequisite rather than a supplement:
       if the derivative is solid, skip it entirely.'
     scope_triage: helpful-now
+    source_id: source-3b1b-essence-of-calculus
+    route_id: route-ced0625bb9bbca4add20f4f3
   - kind: read
     label: Kelleher Chapter 7 — error surfaces and gradient descent
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the error surface and gradient-descent sections)
@@ -798,6 +896,8 @@ stages:
       weights consistently with the deck's notation.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-62f0ce97ea80883abf322143
   - kind: read
     label: MML Ch 9 — linear regression from the mathematical side
     locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
@@ -812,6 +912,8 @@ stages:
       on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
       with.'
     scope_triage: helpful-now
+    source_id: source-mml
+    route_id: route-43b3f03133fe9a8c6bc71a8a
   - kind: read
     label: Ng — linear regression and gradient descent lectures
     locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
@@ -825,6 +927,8 @@ stages:
       make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
       node.
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-b2cb82ed2840a70e81bfbaa5
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
     locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
@@ -837,6 +941,8 @@ stages:
       too large does, which is the intuition behind every later discussion of step size. The correlation
       video is the one to watch if the difference between covariance and correlation is what is unclear.
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-13f3ebff8cc9534c96100502
   - kind: read
     label: Geron Ch 4 - the normal equation and gradient descent side by side
     locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
@@ -852,6 +958,8 @@ stages:
       contour plots, with the descent paths drawn on them.'
     vault_path: material://source-geron-handson/geron.pdf
     scope_triage: helpful-now
+    source_id: source-geron-handson
+    route_id: route-8535a338657698b9de4791a8
   - kind: watch
     label: 3Blue1Brown — vectors, dot products, and matrix transformations
     locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations,
@@ -864,6 +972,8 @@ stages:
       multiplication as composition, the dot product as projection. The projection reading of the dot
       product in episode 9 is what later makes least squares recognisable as an orthogonal projection.
     scope_triage: helpful-now
+    source_id: source-3b1b-linear-algebra
+    route_id: route-a4e1a4e84bb805c906d73d1f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-gradient-descent/notes.md
   attachments: []
   source_feedback: []
@@ -906,6 +1016,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-6b78db21b974a13178ff0860
   - kind: practise
     label: UE2, slides 30-35 — regression prediction and RMSE
     locator: exercise-slides/UE2.pdf, slides 30-35
@@ -915,6 +1027,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-3331bd0f1465151518d0d323
   - kind: practise
     label: Blatt 2, Aufgabe 3 — gradient descent and loss curve
     locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
@@ -925,6 +1039,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-aa8a395d2936e94fd38796e0
   - kind: practise
     label: UE3, slides 40-45 — gradient descent and normalization walkthrough
     locator: exercise-slides/UE3.pdf, slides 40-45
@@ -934,6 +1050,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-9858d63c791d015034a2641f
   - kind: read
     label: Kelleher Chapter 7 — error surfaces and gradient descent
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the error surface and gradient-descent sections)
@@ -946,6 +1064,8 @@ stages:
       weights consistently with the deck's notation.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
+    source_id: source-kelleher-fmlpda
+    route_id: route-62f0ce97ea80883abf322143
   - kind: read
     label: ISLP Chapter 3 — statistical regression bridge
     locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
@@ -961,6 +1081,8 @@ stages:
       ISLP sections correspond to which SaD slides.
     vault_path: material://source-islp/islp.pdf
     scope_triage: helpful-now
+    source_id: source-islp
+    route_id: route-340dd98b7e8f177fce11b9f5
   - kind: read
     label: Ng — linear regression and gradient descent lectures
     locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
@@ -974,6 +1096,8 @@ stages:
       make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
       node.
     scope_triage: helpful-now
+    source_id: source-ng-coursera
+    route_id: route-b2cb82ed2840a70e81bfbaa5
   - kind: reference
     label: University of Cologne pp. 7-8 — multivariate regression interpretation
     locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(c)-(d)
@@ -984,6 +1108,8 @@ stages:
       which require L10; they are deliberately excluded from the L03 task.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
     scope_triage: reference-only
+    source_id: source-sad-klausuren-extern
+    route_id: route-31ee3e63a209ca409054dda3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md
   attachments: []
   source_feedback: []

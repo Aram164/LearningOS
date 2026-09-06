@@ -41,6 +41,7 @@ stages:
       — what is being learned when there are no labels, and what ''correct'' can even mean — then work
       UE7. Nothing here is a method.'
     scope_triage: helpful-now
+    route_id: route-56679bcd3c703dc9d18a9cd9
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
@@ -53,6 +54,7 @@ stages:
       a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
       what is on these slides; none of it extends the examinable boundary.'
     scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
@@ -65,6 +67,7 @@ stages:
       evidence (the current course covers clustering only through UE7); and its number collides with the
       current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
     scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
@@ -79,6 +82,7 @@ stages:
       question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
       the framing.'
     scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
   attachments: []
   source_feedback: []
@@ -111,6 +115,7 @@ stages:
       a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
       what is on these slides; none of it extends the examinable boundary.'
     scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
@@ -123,6 +128,7 @@ stages:
       evidence (the current course covers clustering only through UE7); and its number collides with the
       current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
     scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
   - kind: reference
     label: ISLP §12.4 — clustering algorithms and validation
     source_id: source-islp
@@ -138,6 +144,7 @@ stages:
       implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
       at a gentler level than ESL, and the lab at p. 541 runs them.'
     scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
@@ -152,6 +159,7 @@ stages:
       density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
       heavier than Géron, lighter than ESL.
     scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
@@ -167,6 +175,7 @@ stages:
       answers, with the plots that make the difference between them visible. It is Python-first and assumes
       scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
     scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
@@ -181,6 +190,7 @@ stages:
       question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
       the framing.'
     scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
   - kind: reference
     label: ESL 14.3 - cluster analysis as an objective, not an algorithm
     source_id: source-esl
@@ -193,6 +203,7 @@ stages:
       It is the most demanding route on this stage and assumes comfort with the notation; twenty-six pages,
       of which the first six carry the framing that matters here.
     scope_triage: reference-only
+    route_id: route-98f4476be143898c5a500b3f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md
   attachments: []
   source_feedback: []
@@ -225,6 +236,7 @@ stages:
       a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
       what is on these slides; none of it extends the examinable boundary.'
     scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
@@ -237,6 +249,7 @@ stages:
       evidence (the current course covers clustering only through UE7); and its number collides with the
       current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
     scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
   - kind: reference
     label: ISLP §12.4 — clustering algorithms and validation
     source_id: source-islp
@@ -252,6 +265,7 @@ stages:
       implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
       at a gentler level than ESL, and the lab at p. 541 runs them.'
     scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
@@ -266,6 +280,7 @@ stages:
       density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
       heavier than Géron, lighter than ESL.
     scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
@@ -281,6 +296,7 @@ stages:
       answers, with the plots that make the difference between them visible. It is Python-first and assumes
       scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
     scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
@@ -295,6 +311,7 @@ stages:
       question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
       the framing.'
     scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
   - kind: read
     label: Marsland Ch 14 - k-means as competitive learning
     source_id: source-marsland-ml-algorithmic
@@ -309,6 +326,7 @@ stages:
       data, and where they start determines what they can ever win. Chapter 14 is short; the surrounding
       chapters are outside this topic.
     scope_triage: helpful-now
+    route_id: route-98b8fba3bc0fa33805b7c050
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
   attachments: []
   source_feedback: []
@@ -341,6 +359,7 @@ stages:
       a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
       what is on these slides; none of it extends the examinable boundary.'
     scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
@@ -353,6 +372,7 @@ stages:
       evidence (the current course covers clustering only through UE7); and its number collides with the
       current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
     scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
   - kind: reference
     label: ISLP §12.4 — clustering algorithms and validation
     source_id: source-islp
@@ -368,6 +388,7 @@ stages:
       implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
       at a gentler level than ESL, and the lab at p. 541 runs them.'
     scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
@@ -383,6 +404,7 @@ stages:
       answers, with the plots that make the difference between them visible. It is Python-first and assumes
       scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
     scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
   - kind: read
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
@@ -397,6 +419,7 @@ stages:
       question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
       the framing.'
     scope_triage: helpful-now
+    route_id: route-3bcffbb0094d3c764dd01e18
   - kind: read
     label: Marsland Ch 14 - k-means as competitive learning
     source_id: source-marsland-ml-algorithmic
@@ -411,6 +434,7 @@ stages:
       data, and where they start determines what they can ever win. Chapter 14 is short; the surrounding
       chapters are outside this topic.
     scope_triage: helpful-now
+    route_id: route-98b8fba3bc0fa33805b7c050
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md
   attachments: []
   source_feedback: []
@@ -443,6 +467,7 @@ stages:
       a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
       what is on these slides; none of it extends the examinable boundary.'
     scope_triage: required-now
+    route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
     label: 2025 L12 clustering deck
     source_id: source-sad-2025-recordings
@@ -455,6 +480,7 @@ stages:
       evidence (the current course covers clustering only through UE7); and its number collides with the
       current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
     scope_triage: reference-only
+    route_id: route-0d244a0a83df84591c6685a2
   - kind: reference
     label: ISLP §12.4 — clustering algorithms and validation
     source_id: source-islp
@@ -470,6 +496,7 @@ stages:
       implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
       at a gentler level than ESL, and the lab at p. 541 runs them.'
     scope_triage: reference-only
+    route_id: route-1cd59e8e870b504eacfc60a2
   - kind: reference
     label: Kroese — clustering reference
     source_id: source-kroese-dsml
@@ -484,6 +511,7 @@ stages:
       density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
       heavier than Géron, lighter than ESL.
     scope_triage: reference-only
+    route_id: route-883509bbad7e137305f77039
   - kind: read
     label: Geron Ch 9 - k-means plus the density family and cluster evaluation
     source_id: source-geron-handson
@@ -499,6 +527,7 @@ stages:
       answers, with the plots that make the difference between them visible. It is Python-first and assumes
       scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
     scope_triage: helpful-now
+    route_id: route-5c2a22799618a90354f2cdec
   - kind: reference
     label: ESL 14.3 - cluster analysis as an objective, not an algorithm
     source_id: source-esl
@@ -511,6 +540,7 @@ stages:
       It is the most demanding route on this stage and assumes comfort with the notation; twenty-six pages,
       of which the first six carry the framing that matters here.
     scope_triage: reference-only
+    route_id: route-98f4476be143898c5a500b3f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md
   attachments: []
   source_feedback: []

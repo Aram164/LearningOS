@@ -82,6 +82,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE3, slides 15-38 — events, axioms and conditional probability
     locator: exercise-slides/UE3.pdf, slides 15-38
@@ -91,6 +93,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-78ae1df0aa949bb2a8a872dc
   - kind: reference
     label: 2025 probability deck with notes
     locator: 04_probability_with_notes (1).pdf
@@ -118,6 +122,8 @@ stages:
       it exactly.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-e488632c39efaf524b49f243
   - kind: read
     label: OpenIntro — probability foundations
     locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
@@ -131,6 +137,8 @@ stages:
       independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-66691da3faf6c5780cf0b66d
   - kind: read
     label: MIT 18.05 — probability notes and solved problems
     locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
@@ -144,6 +152,8 @@ stages:
       Written for students who have had multivariable calculus, so the register sits above OpenIntro and
       below Ross.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-44431ac89d714785b2bab31b
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
@@ -154,6 +164,8 @@ stages:
       book belong to estimation and testing and are routed separately.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-ac99d1d809345a00721a6f99
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
@@ -164,6 +176,8 @@ stages:
       covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
       own and has no German-language equivalent here.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-9a18c8d3ccfb21c3f023b850
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
   attachments: []
   source_feedback: []
@@ -207,6 +221,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE3, slides 15-38 — events, axioms and conditional probability
     locator: exercise-slides/UE3.pdf, slides 15-38
@@ -216,6 +232,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-78ae1df0aa949bb2a8a872dc
   - kind: reference
     label: 2025 probability deck with notes
     locator: 04_probability_with_notes (1).pdf
@@ -243,6 +261,8 @@ stages:
       it exactly.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-e488632c39efaf524b49f243
   - kind: practise
     label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
@@ -253,6 +273,8 @@ stages:
       Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-87f36cab308f54f199bc3034
   - kind: read
     label: MIT 6.041SC — conditional probability, Bayes and independence lectures
     locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
@@ -265,6 +287,8 @@ stages:
       conditional probability — that three-pass structure is worth more than a better single explanation.
       Free on OCW with all materials.'
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-395d30ff10c3ab149d789c7c
   - kind: practise
     label: Dekking — probability exercise bank
     locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
@@ -280,6 +304,8 @@ stages:
       puzzle L04 uses.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-fa96784fa40036436bf1b2cc
   - kind: reference
     label: Pitman — conditional probability selections
     locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
@@ -295,6 +321,8 @@ stages:
       are harder than SaD needs, so pick rather than sweep.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-510e0c869360f72413e11c13
   - kind: reference
     label: Ross — formal probability foundations
     locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
@@ -310,6 +338,8 @@ stages:
       and continue'' move. Use it to settle a question, not to learn the topic from cold.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-8de21f881a829cb3dec1d55d
   - kind: practise
     label: Schaum — probability and Bayes worked problems
     locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
@@ -324,6 +354,8 @@ stages:
       deck as authoritative where they disagree.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-f99c92614d78638f193ab4d3
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
@@ -334,6 +366,8 @@ stages:
       book belong to estimation and testing and are routed separately.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-ac99d1d809345a00721a6f99
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
@@ -344,6 +378,8 @@ stages:
       covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
       own and has no German-language equivalent here.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-9a18c8d3ccfb21c3f023b850
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md
   attachments: []
   source_feedback: []
@@ -388,6 +424,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE3, slides 15-38 — events, axioms and conditional probability
     locator: exercise-slides/UE3.pdf, slides 15-38
@@ -397,6 +435,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-78ae1df0aa949bb2a8a872dc
   - kind: practise
     label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
     locator: exercise-slides/UE4.pdf, slides 9-12
@@ -406,6 +446,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c355ecc8ea7599015a21abfe
   - kind: reference
     label: 2025 probability deck with notes
     locator: 04_probability_with_notes (1).pdf
@@ -433,6 +475,8 @@ stages:
       it exactly.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-e488632c39efaf524b49f243
   - kind: practise
     label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
@@ -443,6 +487,8 @@ stages:
       Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-87f36cab308f54f199bc3034
   - kind: read
     label: Grinstead & Snell Ch 4 — conditional probability
     locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
@@ -455,6 +501,8 @@ stages:
       at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
       published.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-fe8b4fbc40e7e85daf8ef25b
   - kind: read
     label: Blitzstein Chapter 2 — conditioning and Bayes
     locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
@@ -471,6 +519,8 @@ stages:
       60 exercises, many with published solutions on the book''s site.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-b48ac5af55a8c900d68bb0c9
   - kind: read
     label: MIT 6.041SC — conditional probability, Bayes and independence lectures
     locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
@@ -483,6 +533,8 @@ stages:
       conditional probability — that three-pass structure is worth more than a better single explanation.
       Free on OCW with all materials.'
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-395d30ff10c3ab149d789c7c
   - kind: read
     label: OpenIntro — probability foundations
     locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
@@ -496,6 +548,8 @@ stages:
       independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-66691da3faf6c5780cf0b66d
   - kind: practise
     label: Dekking — probability exercise bank
     locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
@@ -511,6 +565,8 @@ stages:
       puzzle L04 uses.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-fa96784fa40036436bf1b2cc
   - kind: read
     label: MIT 18.05 — probability notes and solved problems
     locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
@@ -524,6 +580,8 @@ stages:
       Written for students who have had multivariable calculus, so the register sits above OpenIntro and
       below Ross.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-44431ac89d714785b2bab31b
   - kind: practise
     label: FAU pp. 4 and 22 — total probability, Bayes and independence
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
@@ -534,6 +592,8 @@ stages:
       the method.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-e3418e502d6ca2dcdf2f2c9d
   - kind: reference
     label: Pitman — conditional probability selections
     locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
@@ -549,6 +609,8 @@ stages:
       are harder than SaD needs, so pick rather than sweep.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-510e0c869360f72413e11c13
   - kind: reference
     label: Tijms — simulation-first probability intuition
     locator: Ch 6 Chance trees and Bayes' rule, pdf pp. 218-234; Ch 8 Conditional probability and Bayes,
@@ -563,6 +625,8 @@ stages:
       here on why intuition fails on these problems, which is what L04's framing node is about.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-8c0f35f6c57e551481433291
   - kind: reference
     label: Ross — formal probability foundations
     locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
@@ -578,6 +642,8 @@ stages:
       and continue'' move. Use it to settle a question, not to learn the topic from cold.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-8de21f881a829cb3dec1d55d
   - kind: practise
     label: Schaum — probability and Bayes worked problems
     locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
@@ -592,6 +658,8 @@ stages:
       deck as authoritative where they disagree.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-f99c92614d78638f193ab4d3
   - kind: reference
     label: Harvard Stat 110 — conditioning and Bayes lectures
     locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
@@ -603,6 +671,8 @@ stages:
       one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
       sheets are graded from routine to hard with full solutions.'
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-de38ce9e78f4dd052d5013b4
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
@@ -613,6 +683,8 @@ stages:
       book belong to estimation and testing and are routed separately.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-ac99d1d809345a00721a6f99
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
@@ -623,6 +695,8 @@ stages:
       covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
       own and has no German-language equivalent here.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-9a18c8d3ccfb21c3f023b850
   - kind: watch
     label: 3Blue1Brown — the geometry behind conditional probability and Bayes
     locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The quick proof of Bayes''
@@ -682,6 +756,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE3, slides 15-38 — events, axioms and conditional probability
     locator: exercise-slides/UE3.pdf, slides 15-38
@@ -691,6 +767,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-78ae1df0aa949bb2a8a872dc
   - kind: practise
     label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
     locator: exercise-slides/UE4.pdf, slides 9-12
@@ -700,6 +778,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c355ecc8ea7599015a21abfe
   - kind: reference
     label: 2025 probability deck with notes
     locator: 04_probability_with_notes (1).pdf
@@ -727,6 +807,8 @@ stages:
       it exactly.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-e488632c39efaf524b49f243
   - kind: practise
     label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
@@ -737,6 +819,8 @@ stages:
       Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-87f36cab308f54f199bc3034
   - kind: read
     label: Grinstead & Snell Ch 4 — conditional probability
     locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
@@ -749,6 +833,8 @@ stages:
       at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
       published.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-fe8b4fbc40e7e85daf8ef25b
   - kind: read
     label: Blitzstein Chapter 2 — conditioning and Bayes
     locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
@@ -765,6 +851,8 @@ stages:
       60 exercises, many with published solutions on the book''s site.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-b48ac5af55a8c900d68bb0c9
   - kind: read
     label: MIT 6.041SC — conditional probability, Bayes and independence lectures
     locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
@@ -777,6 +865,8 @@ stages:
       conditional probability — that three-pass structure is worth more than a better single explanation.
       Free on OCW with all materials.'
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-395d30ff10c3ab149d789c7c
   - kind: read
     label: OpenIntro — probability foundations
     locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
@@ -790,6 +880,8 @@ stages:
       independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-66691da3faf6c5780cf0b66d
   - kind: practise
     label: Dekking — probability exercise bank
     locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
@@ -805,6 +897,8 @@ stages:
       puzzle L04 uses.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-fa96784fa40036436bf1b2cc
   - kind: read
     label: MIT 18.05 — probability notes and solved problems
     locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
@@ -818,6 +912,8 @@ stages:
       Written for students who have had multivariable calculus, so the register sits above OpenIntro and
       below Ross.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-44431ac89d714785b2bab31b
   - kind: practise
     label: FAU pp. 4 and 22 — total probability, Bayes and independence
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
@@ -828,6 +924,8 @@ stages:
       the method.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-e3418e502d6ca2dcdf2f2c9d
   - kind: reference
     label: Pitman — conditional probability selections
     locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
@@ -843,6 +941,8 @@ stages:
       are harder than SaD needs, so pick rather than sweep.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-510e0c869360f72413e11c13
   - kind: reference
     label: Tijms — simulation-first probability intuition
     locator: Ch 6 Chance trees and Bayes' rule, pdf pp. 218-234; Ch 8 Conditional probability and Bayes,
@@ -857,6 +957,8 @@ stages:
       here on why intuition fails on these problems, which is what L04's framing node is about.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
     scope_triage: reference-only
+    source_id: source-tijms-understanding-probability
+    route_id: route-8c0f35f6c57e551481433291
   - kind: reference
     label: Ross — formal probability foundations
     locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
@@ -872,6 +974,8 @@ stages:
       and continue'' move. Use it to settle a question, not to learn the topic from cold.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-8de21f881a829cb3dec1d55d
   - kind: practise
     label: Schaum — probability and Bayes worked problems
     locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
@@ -886,6 +990,8 @@ stages:
       deck as authoritative where they disagree.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-f99c92614d78638f193ab4d3
   - kind: reference
     label: Harvard Stat 110 — conditioning and Bayes lectures
     locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
@@ -897,6 +1003,8 @@ stages:
       one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
       sheets are graded from routine to hard with full solutions.'
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-de38ce9e78f4dd052d5013b4
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
@@ -907,6 +1015,8 @@ stages:
       book belong to estimation and testing and are routed separately.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-ac99d1d809345a00721a6f99
   - kind: watch
     label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
@@ -917,6 +1027,8 @@ stages:
       covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
       own and has no German-language equivalent here.
     scope_triage: helpful-now
+    source_id: source-kurzes-tutorium-statistik
+    route_id: route-9a18c8d3ccfb21c3f023b850
   - kind: watch
     label: 3Blue1Brown — the geometry behind conditional probability and Bayes
     locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The quick proof of Bayes''
@@ -976,6 +1088,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE3, slides 15-38 — events, axioms and conditional probability
     locator: exercise-slides/UE3.pdf, slides 15-38
@@ -985,6 +1099,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-78ae1df0aa949bb2a8a872dc
   - kind: reference
     label: 2025 probability deck with notes
     locator: 04_probability_with_notes (1).pdf
@@ -1012,6 +1128,8 @@ stages:
       it exactly.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-statistik
+    route_id: route-e488632c39efaf524b49f243
   - kind: practise
     label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
     locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
@@ -1022,6 +1140,8 @@ stages:
       Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
     scope_triage: helpful-now
+    source_id: source-fahrmeir-arbeitsbuch
+    route_id: route-87f36cab308f54f199bc3034
   - kind: read
     label: Grinstead & Snell Ch 4 — conditional probability
     locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
@@ -1034,6 +1154,8 @@ stages:
       at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
       published.
     scope_triage: helpful-now
+    source_id: source-grinstead-snell
+    route_id: route-fe8b4fbc40e7e85daf8ef25b
   - kind: read
     label: Blitzstein Chapter 2 — conditioning and Bayes
     locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
@@ -1050,6 +1172,8 @@ stages:
       60 exercises, many with published solutions on the book''s site.'
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
     scope_triage: helpful-now
+    source_id: source-blitzstein-hwang
+    route_id: route-b48ac5af55a8c900d68bb0c9
   - kind: read
     label: Jurafsky & Martin Appendix B — naive Bayes classification
     locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': classifier, training,
@@ -1062,6 +1186,8 @@ stages:
       assumption stated separately, which the deck merges. §4.3 works a complete numeric example on a
       handful of documents. Free draft PDF from Stanford.
     scope_triage: helpful-now
+    source_id: source-jurafsky-slp3
+    route_id: route-878acd203c5603b70539868d
   - kind: read
     label: MIT 6.041SC — conditional probability, Bayes and independence lectures
     locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
@@ -1074,6 +1200,8 @@ stages:
       conditional probability — that three-pass structure is worth more than a better single explanation.
       Free on OCW with all materials.'
     scope_triage: helpful-now
+    source_id: source-mit-6041sc
+    route_id: route-395d30ff10c3ab149d789c7c
   - kind: read
     label: OpenIntro — probability foundations
     locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
@@ -1087,6 +1215,8 @@ stages:
       independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
     vault_path: material://source-openintro-statistics/openintro.pdf
     scope_triage: helpful-now
+    source_id: source-openintro-statistics
+    route_id: route-66691da3faf6c5780cf0b66d
   - kind: practise
     label: Dekking — probability exercise bank
     locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
@@ -1102,6 +1232,8 @@ stages:
       puzzle L04 uses.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
+    source_id: source-dekking-mips
+    route_id: route-fa96784fa40036436bf1b2cc
   - kind: read
     label: MIT 18.05 — probability notes and solved problems
     locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
@@ -1115,6 +1247,8 @@ stages:
       Written for students who have had multivariable calculus, so the register sits above OpenIntro and
       below Ross.
     scope_triage: helpful-now
+    source_id: source-mit-1805
+    route_id: route-44431ac89d714785b2bab31b
   - kind: practise
     label: FAU pp. 4 and 22 — total probability, Bayes and independence
     locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
@@ -1125,6 +1259,8 @@ stages:
       the method.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
     scope_triage: helpful-now
+    source_id: source-fau-klausur-ws1415
+    route_id: route-e3418e502d6ca2dcdf2f2c9d
   - kind: reference
     label: Pitman — conditional probability selections
     locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
@@ -1140,6 +1276,8 @@ stages:
       are harder than SaD needs, so pick rather than sweep.
     vault_path: material://source-pitman-probability/pitman.pdf
     scope_triage: reference-only
+    source_id: source-pitman-probability
+    route_id: route-510e0c869360f72413e11c13
   - kind: reference
     label: Ross — formal probability foundations
     locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
@@ -1155,6 +1293,8 @@ stages:
       and continue'' move. Use it to settle a question, not to learn the topic from cold.'
     vault_path: material://source-ross-first-course/ross.pdf
     scope_triage: reference-only
+    source_id: source-ross-first-course
+    route_id: route-8de21f881a829cb3dec1d55d
   - kind: practise
     label: Schaum — probability and Bayes worked problems
     locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
@@ -1169,6 +1309,8 @@ stages:
       deck as authoritative where they disagree.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
     scope_triage: helpful-now
+    source_id: source-schaums-probability
+    route_id: route-f99c92614d78638f193ab4d3
   - kind: reference
     label: Harvard Stat 110 — conditioning and Bayes lectures
     locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
@@ -1180,6 +1322,8 @@ stages:
       one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
       sheets are graded from routine to hard with full solutions.'
     scope_triage: reference-only
+    source_id: source-stat110
+    route_id: route-de38ce9e78f4dd052d5013b4
   - kind: practise
     label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
@@ -1190,6 +1334,8 @@ stages:
       book belong to estimation and testing and are routed separately.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
     scope_triage: helpful-now
+    source_id: source-sad-klausuren-extern
+    route_id: route-ac99d1d809345a00721a6f99
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
   attachments: []
   source_feedback: []
@@ -1234,6 +1380,8 @@ stages:
       working; it is not a replacement for the lecture derivation.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-a577afe5626f081623095a82
   - kind: practise
     label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
     locator: exercise-slides/UE4.pdf, slides 9-12
@@ -1243,6 +1391,8 @@ stages:
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: required-now
+    source_id: source-sad-uebungen
+    route_id: route-c355ecc8ea7599015a21abfe
   - kind: read
     label: Jurafsky & Martin Appendix B — naive Bayes classification
     locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': classifier, training,
@@ -1255,6 +1405,8 @@ stages:
       assumption stated separately, which the deck merges. §4.3 works a complete numeric example on a
       handful of documents. Free draft PDF from Stanford.
     scope_triage: helpful-now
+    source_id: source-jurafsky-slp3
+    route_id: route-878acd203c5603b70539868d
   - kind: watch
     label: StatQuest — Naive Bayes
     locator: '''Naive Bayes, Clearly Explained'' (≈15 min)'
@@ -1265,6 +1417,8 @@ stages:
       first makes the independence assumption''s role obvious — it is what lets the counts be multiplied.
       Pairs with the deck rather than replacing it; the deck''s notation is what the exam uses.'
     scope_triage: helpful-now
+    source_id: source-statquest
+    route_id: route-37c710174c2a5be9353cb154
   - kind: reference
     label: CS229 §4.2 — Naive Bayes event models
     locator: 'cs229-notes.pdf Part II §4 Generative learning algorithms p. 36: §4.2 Naive Bayes p. 43,
@@ -1277,6 +1431,8 @@ stages:
       after the deck.'
     vault_path: material://source-cs229-notes/cs229-notes.pdf
     scope_triage: reference-only
+    source_id: source-cs229-notes
+    route_id: route-c8fc9d587448ab88b808180a
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
   attachments: []
   source_feedback: []
