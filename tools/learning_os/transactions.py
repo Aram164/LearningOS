@@ -603,12 +603,52 @@ def _receipt_text(receipt: Mapping) -> str:
     return yaml.safe_dump(dict(receipt), sort_keys=False, allow_unicode=True, width=100)
 
 
+def _discard_stale_projection(root: Path, problems: list[str]) -> None:
+    """Drop a published projection that describes the state a rollback just undid.
+
+    The projection is published through a callback the committing process owns,
+    so a crash between publication and the receipt leaves `generated/` describing
+    a transaction that no longer happened — canonical files restored, manifest
+    still newer. Recovery runs in a later process and has no way to call that
+    callback back.
+
+    Deleting is the honest move rather than a gap: `generated/` is disposable by
+    contract and rebuilt by `make views`, an absent manifest is an ordinary
+    pre-projection state the hygiene rule already names, and a stale one is read
+    by the UI as current. The digest decides — a projection that still matches
+    canonical state is left exactly where it is.
+    """
+    manifest = root / "generated" / "manifest.json"
+    if not manifest.is_file():
+        return
+    try:
+        stored = json.loads(manifest.read_text(encoding="utf-8"))
+        published = (stored.get("_generated") or {}).get("source_fingerprint")
+        if published and published == canonical_fingerprint(root):
+            return
+        manifest.unlink()
+    except (OSError, ValueError) as exc:
+        problems.append(
+            f"a rolled-back transaction left generated/manifest.json describing the "
+            f"undone state, and it could not be discarded ({exc}); run `make views`")
+
+
 def reconcile_inflight_transactions(root: Path) -> None:
     """Roll back any transaction a dead process left half-applied.
 
     Runs while the operator lock is held, before the command that acquired it
     does anything, so a crashed predecessor's partial write is undone before it
     can be read as canonical state.
+
+    CRASH RECOVERY BOUNDARY:
+    Recovery restores a transaction, not a set of files. The commit boundary
+    is exactly the successful writing of the transaction receipt file.
+    - If a crash happens BEFORE the receipt is written, the transaction is
+      uncommitted. Recovery uses intent.json backups to roll back all canonical
+      files to their pre-transaction state.
+    - If a crash happens AFTER the receipt is written, the transaction is
+      committed. Recovery preserves the canonical files and the receipt, and
+      simply cleans up the .inflight journal. An acknowledged commit is never undone.
 
     Nothing here is allowed to fail quietly. A recovery that cannot restore a
     file leaves the repository in exactly the half-applied state it was called
@@ -626,6 +666,7 @@ def reconcile_inflight_transactions(root: Path) -> None:
         return
 
     problems: list[str] = []
+    rolled_back = False
     for tx_dir in sorted(inflight_dir.iterdir()):
         if not tx_dir.is_dir():
             continue
@@ -641,6 +682,16 @@ def reconcile_inflight_transactions(root: Path) -> None:
         except (OSError, ValueError) as exc:
             problems.append(f"{tx_dir.name}: its record of what to undo is unreadable ({exc})")
             continue
+
+        receipt_relative = intent.get("receipt_path")
+        if isinstance(receipt_relative, str) and receipt_relative:
+            receipt_file = (root / receipt_relative).resolve()
+            if root.resolve() in receipt_file.parents and receipt_file.is_file():
+                try:
+                    shutil.rmtree(tx_dir)
+                except OSError as exc:
+                    problems.append(f"{tx_dir.name}: cleanup of committed transaction failed: {exc}")
+                continue
 
         failures: list[str] = []
         for row in reversed(intent.get("backups", [])):
@@ -670,7 +721,11 @@ def reconcile_inflight_transactions(root: Path) -> None:
         if failures:
             problems.append(f"{tx_dir.name}: " + "; ".join(failures))
             continue
+        rolled_back = True
         shutil.rmtree(tx_dir, ignore_errors=True)
+
+    if rolled_back:
+        _discard_stale_projection(root, problems)
 
     if problems:
         raise TransactionFailure(
@@ -967,12 +1022,18 @@ class TransactionService:
                     restore_projection()
                 except Exception:
                     failures.append("<projection publication>")
-            shutil.rmtree(inflight_dir, ignore_errors=True)
+            if not failures:
+                shutil.rmtree(inflight_dir, ignore_errors=True)
             return sorted(set(failures))
 
         try:
+            commit_reached = False
             inflight_dir.mkdir(parents=True, exist_ok=True)
-            intent = {"transaction_id": transaction_id, "backups": []}
+            intent = {
+                "transaction_id": transaction_id, 
+                "receipt_path": _safe_relative(self.root, receipt_path),
+                "backups": []
+            }
             for i, (path, old) in enumerate(backups.items()):
                 row = {"path": _safe_relative(self.root, path), "created": old is None}
                 if old is not None:
@@ -1107,6 +1168,8 @@ class TransactionService:
             if receipt_path.exists():
                 raise TransactionFailure(f"receipt path already exists: {receipt_path}")
             _atomic_write_bytes(receipt_path, _receipt_text(receipt).encode("utf-8"))
+            commit_reached = True
+
             # Bookkeeping is part of the commit boundary. If it fails, remove
             # the newly-created receipt together with the canonical writes so
             # transaction history can never claim a rolled-back change.
@@ -1114,7 +1177,12 @@ class TransactionService:
             backups[safe_receipt_path] = None
             if touched is not None:
                 touched([*normalized_writes, *delete_paths, receipt_path])
-            shutil.rmtree(inflight_dir, ignore_errors=True)
+
+            try:
+                shutil.rmtree(inflight_dir)
+            except OSError as exc:
+                raise TransactionFailure(f"transaction committed successfully but inflight journal cleanup failed: {exc}") from exc
+
             return TransactionResult(
                 transaction_id=transaction_id,
                 receipt_path=receipt_path,
@@ -1123,6 +1191,9 @@ class TransactionService:
                 snapshot_after=snapshot_after_id,
             )
         except Exception as exc:
+            if commit_reached:
+                raise TransactionFailure(f"transaction committed but post-commit hooks failed: {exc}") from exc
+
             rollback_failures = rollback()
             if rollback_failures:
                 raise TransactionFailure(
