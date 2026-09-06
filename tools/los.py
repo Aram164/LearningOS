@@ -409,7 +409,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
     p.set_defaults(func=cmd_health_report)
 
-    p = sub.add_parser("backup-manifest", help="hash the explicit LearningOS backup allowlist")
+    desc = (
+        "A backup carries Core's canonical data and the UI checkout in full. "
+        "Core's own code is deliberately not included. Recovery pairs the restored data "
+        "with a Core checkout at the commit the manifest records."
+    )
+    p = sub.add_parser(
+        "backup-manifest",
+        help="hash the explicit LearningOS backup allowlist",
+        description=desc,
+    )
     p.add_argument("--ui-root", default=None)
     p.add_argument("--materials-root", default=None)
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
@@ -418,7 +427,10 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser(
         "backup-verify", help="verify a trusted restore against a backup manifest",
         description="Full verification runs the restored installer in dry-run mode against a "
-        "temporary vault. Use --checksums-only to check integrity without executing restored code.",
+        "temporary vault. Use --checksums-only to check integrity without executing restored code. "
+        "A backup carries Core's canonical data and the UI checkout in full. "
+        "Core's own code is deliberately not included. Recovery pairs the restored data "
+        "with a Core checkout at the commit the manifest records.",
     )
     p.add_argument("--manifest", required=True)
     p.add_argument("--restored-core", required=True)

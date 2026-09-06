@@ -6,6 +6,7 @@ import contextlib
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -1695,3 +1696,147 @@ def test_verifying_the_same_restore_twice_gives_the_same_answer(mini_repo, tmp_p
     for left, right in zip(first["checks"], second["checks"], strict=True):
         assert left["id"] == right["id"]
         assert left["ok"] == right["ok"], (left["id"], left["detail"], right["detail"])
+
+def test_backup_provenance_is_recorded(mini_repo, tmp_path, monkeypatch):
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
+    subprocess.run(["git", "init"], cwd=mini_repo, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=mini_repo, check=True)
+    
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    
+    subprocess.run(["git", "init"], cwd=ui, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=ui, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=ui, check=True)
+    subprocess.run(["git", "add", "."], cwd=ui, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=ui, check=True)
+    
+    from learning_os.contracts.data_contract import load_contract
+    version = load_contract(mini_repo / "system" / "contracts" / "data-contract.yaml").get("contract_version")
+    
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    
+    prov = manifest["provenance"]
+    assert re.match(r"^[0-9a-f]{40}$", prov["core"]["commit"])
+    assert isinstance(prov["core"]["dirty"], bool)
+    assert not prov["core"]["dirty"]
+    assert prov["data_contract_version"] == version
+
+
+def test_backup_manifest_checkout_without_git_still_inventories(mini_repo, tmp_path, monkeypatch):
+    monkeypatch.setenv("GIT_CEILING_DIRECTORIES", str(tmp_path))
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    
+    shutil.rmtree(mini_repo / ".git", ignore_errors=True)
+    shutil.rmtree(ui / ".git", ignore_errors=True)
+    
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    
+    prov = manifest["provenance"]
+    assert prov["core"] == {"commit": None, "dirty": None}
+
+
+def test_backup_verify_older_data_judged_by_newer_code_is_refused(mini_repo, tmp_path):
+    manifest, restore = _restored_materials_case(mini_repo, tmp_path)
+    
+    restored_core = restore / "core"
+    contract_file = restored_core / "system" / "contracts" / "data-contract.yaml"
+    content = contract_file.read_text()
+    data = yaml.safe_load(content)
+    old_version = data["contract_version"] - 1
+    content = content.replace(f"contract_version: {data["contract_version"]}", f"contract_version: {old_version}")
+    contract_file.write_text(content)
+    
+    new_sha = "sha256:" + hashlib.sha256(content.encode()).hexdigest()
+    new_size = len(content.encode())
+    
+    for row in manifest["entries"]:
+        if row["path"] == "system/contracts/data-contract.yaml" and row["root"] == "core":
+            row["sha256"] = new_sha
+            row["size"] = new_size
+            
+    manifest["aggregate_sha256"] = "sha256:" + hashlib.sha256(
+        json.dumps(manifest["entries"], ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    ).hexdigest()
+    
+    manifest["provenance"]["data_contract_version"] = old_version
+    
+    roots = {"restored_core": restored_core, "restored_ui": restore / "ui", "restored_materials": restore / "materials"}
+    result = verify_restored_system(mini_repo, manifest, **roots)
+    
+    assert not result["ok"]
+    check = next(c for c in result["checks"] if c["id"] == "restore-provenance")
+    assert not check["ok"]
+    assert str(old_version) in check["detail"]["error"]
+    assert str(data["contract_version"]) in check["detail"]["error"]
+
+
+def test_backup_verify_manifest_without_provenance_is_not_a_failure(mini_repo, tmp_path):
+    manifest, restore = _restored_materials_case(mini_repo, tmp_path)
+    del manifest["provenance"]
+    
+    roots = {"restored_core": restore / "core", "restored_ui": restore / "ui", "restored_materials": restore / "materials"}
+    result = verify_restored_system(mini_repo, manifest, **roots)
+    
+    check = next(c for c in result["checks"] if c["id"] == "restore-provenance")
+    assert check["ok"]
+    assert "note" in check["detail"]
+    assert "predates provenance capture" in check["detail"]["note"]
+    # The pairing is unverifiable, but the format comparison needs only the
+    # restored tree and the running code, so it must still have happened.
+    assert check["detail"]["restored_version"] is not None
+    assert check["detail"]["running_version"] is not None
+
+
+def test_backup_verify_inventory_and_data_must_agree(mini_repo, tmp_path):
+    manifest, restore = _restored_materials_case(mini_repo, tmp_path)
+    manifest["provenance"]["data_contract_version"] += 99
+    
+    roots = {"restored_core": restore / "core", "restored_ui": restore / "ui", "restored_materials": restore / "materials"}
+    result = verify_restored_system(mini_repo, manifest, **roots)
+    
+    assert not result["ok"]
+    check = next(c for c in result["checks"] if c["id"] == "restore-provenance")
+    assert not check["ok"]
+    assert "manifest recorded data_contract_version" in check["detail"]["error"]
+    assert str(manifest["provenance"]["data_contract_version"]) in check["detail"]["error"]
+
+
+def test_backup_provenance_never_calls_a_checkout_clean_it_could_not_read(
+    mini_repo, tmp_path, monkeypatch
+):
+    """`git status` failing is not evidence of a clean tree.
+
+    rev-parse can succeed while status does not — a locked index, or a timeout
+    on a large tree, since status is much the slower of the two. Recording
+    `dirty: false` there would put a claim in the inventory that nothing
+    established.
+    """
+    from learning_os import backup_manifest as module
+
+    real_run = subprocess.run
+
+    def status_fails(argv, **kwargs):
+        if isinstance(argv, list) and "status" in argv:
+            return subprocess.CompletedProcess(argv, 1, stdout="", stderr="index locked")
+        return real_run(argv, **kwargs)
+
+    subprocess.run(["git", "init"], cwd=mini_repo, check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
+    subprocess.run(["git", "commit", "-m", "init"], cwd=mini_repo, check=True)
+
+    monkeypatch.setattr(module.subprocess, "run", status_fails)
+    provenance = module._git_provenance(mini_repo)
+
+    assert provenance["commit"] is not None, "the commit was readable and must be recorded"
+    assert provenance["dirty"] is None, "an unreadable status is unknown, not clean"

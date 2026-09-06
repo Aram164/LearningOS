@@ -12,6 +12,10 @@ contract: learningos-backup-roots
 # rather than during a recovery. If one genuinely belongs outside backups, it
 # needs a stated exemption here, not an absence that looks like an oversight.
 roots:
+  # Core's code is versioned in Git, and copying it into a backup would put an
+  # unversioned second copy of the code beside the data it has to match, so the
+  # inventory records the commit instead. The UI is declared as a full checkout
+  # on purpose, so the asymmetry reads as a choice rather than an omission.
   core:
     trees:
       - knowledge
