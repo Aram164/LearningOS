@@ -124,20 +124,40 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
         return None, False
 
 
+LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+\.)\s+")
+
+
 def _strip_headings(text: str | None) -> str:
-    """Drop headings, blockquote callouts and list bullets so `_first_para`
-    lands on actual prose. Used for the manifest's `summary` fields."""
+    """Prefer prose after dropping headings, callouts, tables and rules.
+
+    Skip list items and indented continuations when prose exists. For list-only
+    notes, retain item text without markers so summaries remain useful.
+    """
     if not text:
         return ""
     keep = []
+    fallback = []
+    in_list = False
     for line in text.split("\n"):
         stripped = line.strip()
         if (stripped.startswith("#") or stripped.startswith(">")
                 or stripped.startswith("|") or stripped.startswith("```")
-                or set(stripped) <= {"-", "*", "_"} and len(stripped) >= 3):
+                or re.fullmatch(r"(?:[-*_]\s*){3,}", stripped)):
             continue
-        keep.append(line)
-    return "\n".join(keep)
+        marker = LIST_MARKER.match(line)
+        if marker:
+            in_list = True
+            fallback.append(line[marker.end():])
+        elif in_list and stripped and line[0].isspace():
+            fallback.append(stripped)
+        else:
+            keep.append(line)
+            if stripped:
+                in_list = False
+            else:
+                fallback.append("")
+    prose = "\n".join(keep)
+    return prose if prose.strip() else "\n".join(fallback)
 
 
 def _first_para(text: str | None) -> str:
