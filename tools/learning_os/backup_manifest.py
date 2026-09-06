@@ -5,6 +5,8 @@ from __future__ import annotations
 import datetime as dt
 import hashlib
 import json
+import os
+import stat
 import subprocess
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -20,7 +22,23 @@ class BackupManifestError(ValueError):
 
 
 def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    try:
+        data = path.read_bytes()
+    except OSError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+    return "sha256:" + hashlib.sha256(data).hexdigest()
+
+
+def _refuse_unreadable(exc: OSError) -> None:
+    """`os.walk` error callback: refuse the inventory rather than skip silently.
+
+    Only admitted directories reach this. Excluded names are pruned before the
+    walk descends into them, so anything that fails here is a tree the contract
+    asked for and we could not read — which is a backup that would omit it.
+    """
+    raise BackupManifestError(
+        f"backup path is unreadable: {exc.filename or '<unknown path>'}"
+    ) from exc
 
 
 def _safe_relative(value: str) -> PurePosixPath:
@@ -89,7 +107,15 @@ def _admit_file(authority: Path, path: Path, excluded: set[str]) -> bool:
         return False
     if any(part in excluded for part in relative.parts):
         return False
-    if path.is_symlink() or not path.is_file():
+    try:
+        st = path.lstat()
+    except FileNotFoundError:
+        return False
+    except PermissionError as exc:
+        raise BackupManifestError(f"backup path is unreadable: {path}") from exc
+    except OSError:
+        return False
+    if stat.S_ISLNK(st.st_mode) or not stat.S_ISREG(st.st_mode):
         return False
     try:
         path.resolve().relative_to(authority.resolve())
@@ -128,13 +154,23 @@ def build_backup_manifest(
             tree = _inside(authority, relative)
             if not tree.is_dir() or tree.is_symlink():
                 continue
-            for path in tree.rglob("*"):
-                if _admit_file(authority, path, excluded):
-                    rel = path.relative_to(authority).as_posix()
-                    entries[(label, rel)] = {
-                        "root": label, "path": rel, "size": path.stat().st_size,
-                        "sha256": _sha256_file(path),
-                    }
+            # `rglob` suppresses the errors raised while descending, so an
+            # unreadable directory yielded nothing and raised nothing — the same
+            # answer as an empty one, and its contents left the inventory
+            # without a trace (#25). `os.walk` reports those failures instead.
+            # `excluded` is applied to directory names *before* descending, so a
+            # tree the contract deliberately skips is never read, never fails,
+            # and is never confused with one that could not be read.
+            for parent, dirs, files in os.walk(tree, onerror=_refuse_unreadable):
+                dirs[:] = [name for name in dirs if name not in excluded]
+                for name in files:
+                    path = Path(parent) / name
+                    if _admit_file(authority, path, excluded):
+                        rel = path.relative_to(authority).as_posix()
+                        entries[(label, rel)] = {
+                            "root": label, "path": rel, "size": path.stat().st_size,
+                            "sha256": _sha256_file(path),
+                        }
     rows = [entries[key] for key in sorted(entries)]
     aggregate = "sha256:" + hashlib.sha256(
         json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
