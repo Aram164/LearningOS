@@ -1,4 +1,7 @@
 # Codex-Defaults fuer LearningOS/repository.
 # Wird nur geladen, wenn das Projekt in ~/.codex/config.toml als trusted steht.
-model = "gpt-5.6-sol"
-model_reasoning_effort = "ultra"
+# Gueltige Werte fuer model_reasoning_effort: none, minimal, low, medium, high,
+# xhigh, max. Ein ungueltiger Wert (z. B. das frueher hier gesetzte "ultra")
+# wird still normalisiert statt abgelehnt.
+model = "gpt-6-astra"
+model_reasoning_effort = "high"
