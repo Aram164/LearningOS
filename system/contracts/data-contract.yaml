@@ -16,7 +16,7 @@
 #
 # Rebuild with: python tools/schema_contract.py --bump
 contract_version: 16
-schema_fingerprint: sha256:6435589d58e0e85345cc95b64df930d4437f59c50fdf14c56edefe1aa8a86fef
+schema_fingerprint: sha256:8d0610aecb614063ca83d8efd7177ee2506026252b27fd3e9902bd762b797bc9
 record_schemas: 35
 history:
 - version: 1
