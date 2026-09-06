@@ -45,6 +45,23 @@ def _git(
     return out
 
 
+def discover_git_dir(root: Path | str) -> str | None:
+    """Find the Git metadata directory for root without walking up."""
+    root = os.path.abspath(root)
+    try:
+        if not Path(root).is_dir():
+            raise GitHistoryError(f"history root is not a directory: {root}")
+        for name in (".git", "HEAD"):  # worktrees (including gitfiles) and bare repos
+            try:
+                (Path(root) / name).lstat()
+            except FileNotFoundError:
+                continue
+            return str(Path(root) / ".git") if name == ".git" else root
+        return None
+    except OSError as exc:
+        raise GitHistoryError(f"cannot inspect Git metadata at {root}: {exc}") from exc
+
+
 def read_history(root: Path | str, *args: str) -> str:
     """Read HEAD history, preserving Git's environment and reporting failures.
 
@@ -54,25 +71,11 @@ def read_history(root: Path | str, *args: str) -> str:
     Git confirms that its target ref is absent, before attempting the log.
     """
     root = os.path.abspath(root)
-    git_dir = None
-    try:
-        if not Path(root).is_dir():
-            raise GitHistoryError(f"history root is not a directory: {root}")
-        metadata = False
-        for name in (".git", "HEAD"):  # worktrees (including gitfiles) and bare repos
-            try:
-                (Path(root) / name).lstat()
-            except FileNotFoundError:
-                continue
-            metadata = True
-            git_dir = str(Path(root) / ".git") if name == ".git" else root
-            break
-        if not metadata and not any(
-            name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
-        ):
-            return ""
-    except OSError as exc:
-        raise GitHistoryError(f"cannot inspect Git metadata at {root}: {exc}") from exc
+    git_dir = discover_git_dir(root)
+    if git_dir is None and not any(
+        name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
+    ):
+        return ""
 
     # Pin discovered metadata so a damaged .git cannot make Git silently walk
     # up to an enclosing repository. Never replace the caller's GIT_DIR.

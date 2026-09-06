@@ -120,23 +120,43 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
     An explicit non-repository response is the sole no-history exception.
     Keep Git diagnostics in English so that exception is independent of locale.
     """
+    from ..githistory import discover_git_dir
+
+    git_dir = discover_git_dir(root)
+    if git_dir is None and not any(
+        name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
+    ):
+        return None, False
+
     try:
         env = {**os.environ, "LC_ALL": "C"}
-        rev = subprocess.run(["git", "rev-parse", "HEAD"], cwd=root,
+        if git_dir and "GIT_DIR" not in env:
+            env["GIT_DIR"] = git_dir
+
+        rev = subprocess.run(["git", "rev-parse", "--verify", "--quiet", "HEAD"], cwd=root,
                              capture_output=True, text=True, timeout=30, env=env)
-        if rev.returncode != 0:
+        
+        if rev.returncode == 1:
+            rev_str = None
+        elif rev.returncode != 0:
             if "fatal: not a git repository" in rev.stderr:
                 return None, False
             raise TransactionFailure(f"Git failed to read revision:\n{rev.stderr.strip()}")
-        if not rev.stdout.strip():
-            raise TransactionFailure("Git returned an empty revision")
+        else:
+            rev_str = rev.stdout.strip()
+            if not rev_str:
+                raise TransactionFailure("Git returned an empty revision")
+                
         status = subprocess.run(
             ["git", "status", "--porcelain", "--untracked-files=all", "--",
              *CANONICAL_ROOTS],
             cwd=root, capture_output=True, text=True, timeout=30, env=env)
         if status.returncode != 0:
+            if "fatal: not a git repository" in status.stderr:
+                return None, False
             raise TransactionFailure(f"Git failed to check status:\n{status.stderr.strip()}")
-        return rev.stdout.strip(), bool(status.stdout.strip())
+            
+        return rev_str, bool(status.stdout.strip())
     except subprocess.TimeoutExpired as exc:
         raise TransactionFailure("Git timed out while checking repository state") from exc
     except OSError as exc:
