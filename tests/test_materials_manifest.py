@@ -8,7 +8,9 @@ and never read the real 1.9 GB tree.
 
 from __future__ import annotations
 
+import sys
 import textwrap
+from unittest.mock import patch
 
 import materials_manifest as mm
 import pytest
@@ -93,10 +95,111 @@ def test_verify_proves_a_restored_copy_is_complete(tmp_path):
 
     good = make_tree(tmp_path / "restored-good", {"x/a.pdf": "alpha", "b.pdf": "beta"})
     assert mm.verify(manifest, good, deep=True) == {
-        "missing": [], "changed": [], "unregistered": []}
+        "missing": [], "changed": [], "unregistered": [], "unverifiable": []}
 
     truncated = make_tree(tmp_path / "restored-bad", {"b.pdf": "beta"})
     assert mm.verify(manifest, truncated, deep=True)["missing"] == ["x/a.pdf"]
+
+
+def test_main_documented_proof_catches_corruption(tmp_path, monkeypatch, capsys):
+    """1. Size-preserving corruption is caught by the documented command."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy)]):
+        assert mm.main() != 0
+        
+    out, err = capsys.readouterr()
+    assert "a.pdf" in out
+
+
+def test_main_fast_answers_weaker_question(tmp_path, monkeypatch, capsys):
+    """2. --against --fast still answers the weaker question."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    copy = make_tree(tmp_path / "restored", {"a.pdf": "ALPHA"})
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--against", str(copy), "--fast"]):
+        assert mm.main() == 0
+        
+    out, err = capsys.readouterr()
+    assert "size + presence" in out
+
+
+def test_main_local_default_did_not_change(tmp_path, monkeypatch, capsys):
+    """3. The local default did not change (size-preserving corruption returns 0)."""
+    original = make_tree(tmp_path / "materials", {"a.pdf": "alpha"})
+    manifest_file = tmp_path / "records" / "materials-manifest.yaml"
+    monkeypatch.setattr(mm, "MANIFEST", manifest_file)
+    monkeypatch.setattr(mm, "materials_root", lambda: original)
+    
+    def mock_load_manifest(path=None):
+        path = path or mm.MANIFEST
+        if not path.exists():
+            return None
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(mm, "load_manifest", mock_load_manifest)
+    
+    with patch.object(sys, "argv", ["materials_manifest.py", "--build"]):
+        assert mm.main() == 0
+
+    (original / "a.pdf").write_text("ALPHA", encoding="utf-8")
+    
+    with patch.object(sys, "argv", ["materials_manifest.py"]):
+        assert mm.main() == 0
+
+
+def test_main_deep_and_fast_refused(monkeypatch, capsys):
+    """4. --deep --fast is refused."""
+    with patch.object(sys, "argv", ["materials_manifest.py", "--deep", "--fast"]):
+        assert mm.main() == 2
+        
+    out, err = capsys.readouterr()
+    assert "--deep" in err
+    assert "--fast" in err
+
+
+def test_verify_missing_checksum_is_unverifiable(tmp_path):
+    """5. A missing recorded checksum is unverifiable, not corrupt."""
+    base = make_tree(tmp_path / "materials", {"a.pdf": "alpha", "b.pdf": "beta"})
+    manifest = mm.build(base)
+    del manifest["files"]["a.pdf"]["sha256"]
+    
+    res_deep = mm.verify(manifest, base, deep=True)
+    assert "a.pdf" in res_deep["unverifiable"]
+    assert "a.pdf" not in res_deep["changed"]
+    assert mm._report(res_deep, base, deep=True) != 0
+    
+    res_fast = mm.verify(manifest, base, deep=False)
+    assert res_fast["unverifiable"] == []
+    assert mm._report(res_fast, base, deep=False) == 0
 
 
 # ----------------------------------------------------------------- URI sweep
@@ -261,3 +364,33 @@ def test_one_filename_in_two_normal_forms_is_one_filename():
     assert decomposed != composed, "the fixture must actually differ, or it proves nothing"
     assert _nfc(decomposed) == _nfc(composed)
     assert {_nfc(composed)} - {_nfc(decomposed)} == set()
+
+
+def test_report_summary_agrees_with_the_exit_code(tmp_path, capsys):
+    """An unregistered file is a report, so the run succeeded and must say so.
+
+    A summary that reads FAIL beside a zero exit tells the person watching the
+    log and the script reading `$?` two different things, which is the split
+    this tool exists to close.
+    """
+    base = tmp_path / "materials"
+    base.mkdir()
+    (base / "a.pdf").write_bytes(b"hello")
+    manifest = mm.build(base)
+    (base / "extra.pdf").write_bytes(b"surprise")
+
+    result = mm.verify(manifest, base, deep=True)
+    assert result["unregistered"] == ["extra.pdf"]
+    code = mm._report(result, base, deep=True)
+    out = capsys.readouterr().out
+
+    assert code == 0
+    assert "FAIL" not in out
+    assert "not a failure" in out
+
+    (base / "a.pdf").write_bytes(b"HELLO")  # same length, different bytes
+    failing = mm.verify(manifest, base, deep=True)
+    code = mm._report(failing, base, deep=True)
+    out = capsys.readouterr().out
+    assert code != 0
+    assert "FAIL" in out
