@@ -143,20 +143,23 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
         raise TransactionFailure(f"Git failed to execute: {exc}") from exc
 
 
-LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+\.)\s+")
+LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
 def _strip_headings(text: str | None) -> str:
     """Prefer prose after dropping headings, callouts, tables and rules.
 
-    Skip list items and indented continuations when prose exists. For list-only
-    notes, retain item text without markers so summaries remain useful.
+    Recognised list forms: -, *, +, 1. and 1) (with or without indentation).
+    Skip list items and their continuations (indented or unindented) when prose exists. 
+    Unindented continuations are only valid if no blank line has occurred since the list item.
+    For list-only notes, retain item text without markers so summaries remain useful.
     """
     if not text:
         return ""
     keep = []
     fallback = []
     in_list = False
+    saw_blank = False
     for line in text.split("\n"):
         stripped = line.strip()
         if (stripped.startswith("#") or stripped.startswith(">")
@@ -166,14 +169,21 @@ def _strip_headings(text: str | None) -> str:
         marker = LIST_MARKER.match(line)
         if marker:
             in_list = True
+            saw_blank = False
             fallback.append(line[marker.end():])
-        elif in_list and stripped and line[0].isspace():
-            fallback.append(stripped)
+        elif in_list and stripped:
+            if saw_blank and not line[0].isspace():
+                in_list = False
+                keep.append(line)
+            else:
+                fallback.append(stripped)
+                saw_blank = False
         else:
             keep.append(line)
             if stripped:
                 in_list = False
             else:
+                saw_blank = True
                 fallback.append("")
     prose = "\n".join(keep)
     return prose if prose.strip() else "\n".join(fallback)
