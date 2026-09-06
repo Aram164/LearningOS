@@ -278,6 +278,60 @@ def build_backup_manifest(
     return manifest
 
 
+def undeclared_canonical_inputs(root: Path) -> list[str]:
+    """Canonical files the loader reads that the backup contract does not cover.
+
+    The contract is an allowlist a person maintains, and #30 was an entry that
+    person never added: `curriculum/thematic-groups.yaml` is read on every load
+    and named in no declaration, so a backup completed while dropping it and
+    said nothing. Keeping a second list of canonical inputs here to compare
+    against would be that same defect one file further out — two lists that must
+    agree, which is what already failed.
+
+    So this observes the reads instead of describing them. `loading/yamlio.py`
+    states it is the one place every domain loader gets its bytes, and it takes
+    them from `read_text_inside`; recording that call during a load is the whole
+    instrument. A path this reports is a file the system could not be rebuilt
+    without and a backup would not contain.
+    """
+    from learning_os.loader import load_repo
+    from learning_os.loading import yamlio
+
+    root = root.resolve()
+    contract = _load_contract(root)
+    declared = contract["roots"]["core"]
+    trees = [_safe_relative(value).as_posix() for value in declared["trees"]]
+    files = {_safe_relative(value).as_posix() for value in declared["files"]}
+    excluded = set(contract.get("excluded_names") or [])
+
+    seen: set[str] = set()
+    original = yamlio.read_text_inside
+
+    def record(inside: Path, path: Path, **kwargs: Any) -> str:
+        try:
+            seen.add(Path(path).resolve().relative_to(root).as_posix())
+        except (OSError, ValueError):
+            pass  # a read outside the repository is not this contract's business
+        return original(inside, path, **kwargs)
+
+    yamlio.read_text_inside = record
+    try:
+        load_repo(root)
+    finally:
+        yamlio.read_text_inside = original
+
+    undeclared = []
+    for relative in sorted(seen):
+        if any(part in excluded for part in PurePosixPath(relative).parts):
+            continue
+        if relative in files:
+            continue
+        if any(relative == tree or relative.startswith(tree + "/") for tree in trees):
+            continue
+        undeclared.append(relative)
+    return undeclared
+
+
 def verify_backup_manifest(
     root: Path,
     manifest: dict[str, Any],
