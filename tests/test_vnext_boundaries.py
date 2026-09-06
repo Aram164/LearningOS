@@ -1581,3 +1581,117 @@ def test_the_live_contract_covers_every_canonical_input(repo_root):
     cover — declare it, or record an exemption saying why it stays out.
     """
     assert undeclared_canonical_inputs(repo_root) == []
+
+
+# --------------------------------------------------------------------- #31
+#
+# `materials/.flat/` is derived state no backup can carry: symlinks are never
+# inventoried and `.flat` is excluded. Without it every id-shaped material://
+# URI in an intact restore failed to resolve, and verification reported the
+# canonical data as gone.
+
+
+def _materials_with_alias(core: Path, materials: Path, *, slug: str, folder: str) -> str:
+    """A materials tree shaped like the real one: subject taxonomy plus aliases.
+
+    `folder` differs from `slug` on purpose. The live tree carries exactly one
+    such link — `source-scalable-dataframe-systems-paper` points at
+    `data-systems/architecture/scalable-dataframe-systems` — and it is the case
+    that defeats rebuilding the layer by matching names instead of recording it.
+    """
+    physical = materials / "subject" / folder
+    physical.mkdir(parents=True)
+    (physical / "paper.pdf").write_bytes(b"pdf")
+    flat = materials / ".flat"
+    flat.mkdir(exist_ok=True)
+    (flat / f"source-{slug}").symlink_to(Path("..") / "subject" / folder,
+                                        target_is_directory=True)
+    sources_file = core / "sources/sources.yaml"
+    data = yaml.safe_load(sources_file.read_text(encoding="utf-8"))
+    data["sources"].append({
+        "id": f"source-{slug}", "title": "Aliased Paper", "type": "other",
+        "material": f"material://source-{slug}/paper.pdf",
+    })
+    sources_file.write_text(yaml.safe_dump(data), encoding="utf-8")
+    (core / "records/materials-manifest.yaml").write_text(yaml.safe_dump({
+        "schema_version": 1, "captured": "2026-09-06",
+        "totals": {"files": 1, "bytes": 3},
+        "files": {f"subject/{folder}/paper.pdf": {"size": 3, "sha256": "sha256:" + "0" * 64}},
+    }), encoding="utf-8")
+    return f"subject/{folder}/paper.pdf"
+
+
+def _restored_materials_case(core, tmp_path, *, lose: str | None = None):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, core)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    _materials_with_alias(core, materials, slug="aliased-paper", folder="aliased")
+    manifest = build_backup_manifest(core, ui_root=ui, materials_root=materials)
+    if lose is not None:
+        # An inventory that never named the file, not a deletion from the
+        # restore: deleting it would fail checksums and short-circuit.
+        manifest = _manifest_without(manifest, "materials", lose)
+    restore = tmp_path / "restore"
+    _restore_from_inventory(manifest, {
+        "core": (core, restore / "core"),
+        "ui": (ui, restore / "ui"),
+        "materials": (materials, restore / "materials"),
+    })
+    return manifest, restore
+
+
+def test_the_alias_layer_is_never_inventoried(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    _ui_fixture(ui, mini_repo)
+    materials = tmp_path / "materials"
+    materials.mkdir()
+    _materials_with_alias(mini_repo, materials, slug="aliased-paper", folder="aliased")
+    manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+    assert not [row for row in manifest["entries"] if ".flat" in row["path"]]
+    # It is recorded as data instead, which is what a restore rebuilds from.
+    assert manifest["materials_aliases"] == {"source-aliased-paper": "subject/aliased"}
+
+
+def test_a_restore_rebuilds_the_alias_layer_and_resolves_its_materials(mini_repo, tmp_path):
+    manifest, restore = _restored_materials_case(mini_repo, tmp_path)
+    assert not (restore / "materials/.flat").exists()
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert checks["materials-alias-layer"]["ok"], checks["materials-alias-layer"]["detail"]
+    assert checks["materials-alias-layer"]["detail"]["rebuilt"] == 1
+    link = restore / "materials/.flat/source-aliased-paper"
+    assert link.is_symlink() and link.is_dir()
+    assert not [error for error in checks["canonical-validation"]["detail"].get("errors", [])
+                if "MATERIAL-MISSING" in error]
+
+
+def test_a_material_absent_from_the_restore_still_fails_and_is_named(mini_repo, tmp_path):
+    """The other half: derived state is rebuilt, real loss is still a failure."""
+    manifest, restore = _restored_materials_case(
+        mini_repo, tmp_path, lose="subject/aliased/paper.pdf")
+    assured = verify_restored_system(
+        mini_repo, manifest, restored_core=restore / "core",
+        restored_ui=restore / "ui", restored_materials=restore / "materials",
+    )
+    checks = {check["id"]: check for check in assured["checks"]}
+    assert not assured["ok"]
+    alias = checks["materials-alias-layer"]
+    assert not alias["ok"]
+    assert alias["detail"]["absent_from_restore"] == ["subject/aliased"]
+
+
+def test_verifying_the_same_restore_twice_gives_the_same_answer(mini_repo, tmp_path):
+    """The rebuild writes into the restore, so it has to be repeatable."""
+    manifest, restore = _restored_materials_case(mini_repo, tmp_path)
+    roots = {"restored_core": restore / "core", "restored_ui": restore / "ui",
+             "restored_materials": restore / "materials"}
+    first = verify_restored_system(mini_repo, manifest, **roots)
+    second = verify_restored_system(mini_repo, manifest, **roots)
+    assert first["ok"] == second["ok"]
+    for left, right in zip(first["checks"], second["checks"], strict=True):
+        assert left["id"] == right["id"]
+        assert left["ok"] == right["ok"], (left["id"], left["detail"], right["detail"])
