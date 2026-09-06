@@ -7,6 +7,7 @@ import json
 import re
 import sys
 
+from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 
@@ -15,7 +16,6 @@ from .support import (
     _fresh_manifest,
     _operator_lock,
     _root,
-    _unreadable_refusal,
 )
 
 
@@ -125,12 +125,19 @@ def content_search(args) -> int:
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
-            if repo.parse_failures:
-                # Refusing rather than answering: the issue allows either a
-                # refusal or a declared incompleteness flag, and the bounded-read
-                # envelope is a closed contract, so a partial answer here would
-                # have to lie about being total.
-                raise WriteRefused(_unreadable_refusal(repo, "search"))
+            # A read refuses when the failures bear on the answer it is about to
+            # give, and this search is over notes: an unreadable note may be a
+            # hit that never appears, while an unreadable project cannot be.
+            # Refusal rather than a partial answer, because the bounded-read
+            # envelope is a closed contract — a short answer here would have to
+            # report itself as total.
+            note_dir = root / "knowledge" / "notes"
+            note_failures = [
+                (path, message) for path, message in repo.parse_failures
+                if path.is_relative_to(note_dir)
+            ]
+            if note_failures:
+                raise WriteRefused(unreadable_refusal(root, note_failures, "search"))
             matches = []
             for note in sorted(repo.notes.values(), key=lambda row: row.id):
                 raw = _note_bytes(root, note)

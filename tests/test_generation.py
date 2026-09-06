@@ -369,11 +369,11 @@ def test_unborn_head_generates_with_null_revision(mini_repo):
     outputs = generate_all(repo)
     write_outputs(repo, outputs)
     manifest = json.loads((mini_repo / "generated/manifest.json").read_text())
+    # An unborn HEAD is empty history, not a failure: generation publishes with
+    # no revision to name, and still reports the working tree honestly rather
+    # than defaulting the flag (#10).
     assert manifest["_generated"]["source_revision"] is None
-    # Depending on whether there are untracked files, it might be dirty
-    # But usually a fresh git init in a populated mini_repo is dirty.
-    # Let's just check it doesn't fail.
-    assert manifest["_generated"]["source_revision"] is None
+    assert manifest["_generated"]["source_dirty"] is True
 
 def test_nested_export_boundaries(mini_repo):
     # mini_repo is an export inside the overall test runner repo
@@ -403,3 +403,32 @@ def test_failing_git_status_refuses(mini_repo):
     repo = load_repo(mini_repo)
     with pytest.raises(TransactionFailure, match="Git failed to check status|index file smaller than expected"):
         generate_all(repo)
+
+def test_tools_generate_malformed_frontmatter_prevents_publication(mini_repo):
+    import subprocess
+    import sys
+
+    generate_script = str(Path(__file__).parent.parent / "tools" / "generate.py")
+    
+    # ensure it is generated first
+    subprocess.run([sys.executable, generate_script, "--root", str(mini_repo)],
+                   cwd=str(mini_repo), check=True)
+    manifest_path = mini_repo / "generated" / "manifest.json"
+    manifest_bytes = manifest_path.read_bytes()
+
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original_text = note.path.read_text(encoding="utf-8")
+
+    # break it
+    broken_text = original_text.replace("id: ", "id: [broken", 1)
+    note.path.write_text(broken_text, encoding="utf-8")
+
+    # try generate via tools/generate.py
+    proc = subprocess.run([sys.executable, generate_script, "--root", str(mini_repo)],
+                          cwd=str(mini_repo), capture_output=True, text=True)
+    assert proc.returncode != 0
+    assert "cannot publish" in proc.stdout or "cannot publish" in proc.stderr
+    assert str(note.path.relative_to(mini_repo)) in proc.stdout or str(note.path.relative_to(mini_repo)) in proc.stderr
+    
+    # the existing manifest must not be overwritten
+    assert manifest_path.read_bytes() == manifest_bytes
