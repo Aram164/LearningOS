@@ -92,7 +92,11 @@ def main() -> int:
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     current, errors = collect(root)
-    baseline, meta = load_baseline(root)
+    try:
+        baseline, meta = load_baseline(root)
+    except ValueError as exc:
+        print(f"warning-baseline: {exc}", file=sys.stderr)
+        return 2
 
     if args.update:
         if not args.note:

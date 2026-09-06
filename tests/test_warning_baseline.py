@@ -102,6 +102,79 @@ def test_a_missing_baseline_reads_as_empty_not_as_a_pass(tmp_path):
     assert regressions
 
 
+@pytest.mark.parametrize("counts", [(3, 1), (1, 3)])
+def test_duplicate_signature_is_refused(tmp_path, counts):
+    path = tmp_path / wb.BASELINE_RELATIVE
+    path.parent.mkdir(parents=True)
+    path.write_text(yaml.safe_dump({"signatures": [
+        {"code": "LOCATOR-VAGUE", "path": "a.md", "count": count} for count in counts
+    ]}), encoding="utf-8")
+    with pytest.raises(ValueError, match="duplicate signature LOCATOR-VAGUE at a.md") as exc:
+        wb.load_baseline(tmp_path)
+    assert str(path) in str(exc.value)
+
+
+@pytest.mark.parametrize("row, message", [
+    ({"code": "W"}, "missing count"),
+    ({"count": 1}, "missing or invalid code"),
+    *[({"code": "W", "count": count}, "non-integer count")
+      for count in ("many", "3", 1.5, True, None, float("inf"))],
+    ({"code": "W", "count": 0}, "count must be positive"),
+    ({"code": ["W"], "count": 1}, "missing or invalid code"),
+    ({"code": "W", "path": [], "count": 1}, "invalid path"),
+    ("row", "expected a mapping"),
+])
+def test_malformed_row_is_refused(tmp_path, row, message):
+    path = tmp_path / wb.BASELINE_RELATIVE
+    path.parent.mkdir(parents=True)
+    path.write_text(yaml.safe_dump({"signatures": [row]}), encoding="utf-8")
+    with pytest.raises(ValueError, match=message) as exc:
+        wb.load_baseline(tmp_path)
+    assert str(path) in str(exc.value)
+
+
+@pytest.mark.parametrize("content", ["[", "[]", "signatures: false", "signatures: {}"])
+def test_malformed_document_is_named(tmp_path, content):
+    path = tmp_path / wb.BASELINE_RELATIVE
+    path.parent.mkdir(parents=True)
+    path.write_text(content, encoding="utf-8")
+    with pytest.raises(ValueError) as exc:
+        wb.load_baseline(tmp_path)
+    assert str(path) in str(exc.value)
+
+
+@pytest.mark.parametrize("mode", ["--check", "--show"])
+@pytest.mark.parametrize("rows", [
+    [{"code": "W", "count": 3}, {"code": "W", "count": 1}],
+    [{"code": "W", "count": 1.5}],
+])
+def test_cli_and_plan_preflight_report_same_refusal(mini_repo, monkeypatch, capsys, mode, rows):
+    import sys
+
+    from learning_os.commands.module import _module_plan_validation_errors
+
+    path = mini_repo / wb.BASELINE_RELATIVE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump({"signatures": rows}), encoding="utf-8")
+    with pytest.raises(ValueError) as exc:
+        _module_plan_validation_errors(mini_repo, {})
+    assert str(path) in str(exc.value)
+    monkeypatch.setattr(sys, "argv", ["warning_baseline.py", "--root", str(mini_repo), mode])
+    assert wb.main() == 2
+    output = capsys.readouterr()
+    assert str(exc.value) in output.err
+    assert "Traceback" not in output.err
+
+
+def test_checked_in_baseline_loads_unchanged():
+    path = ROOT / wb.BASELINE_RELATIVE
+    before = path.read_bytes()
+    counts, meta = wb.load_baseline(ROOT)
+    assert sum(counts.values()) == meta["total"]
+    assert len(counts) == meta["distinct_signatures"]
+    assert path.read_bytes() == before
+
+
 def test_environmental_warnings_are_excluded_by_name():
     """They describe the machine, not the content, and differ per checkout."""
     from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
