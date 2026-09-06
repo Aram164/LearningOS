@@ -4,26 +4,79 @@
   "title": "Allowlisted LearningOS backup inventory",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "type", "generated_at", "roots", "entries", "aggregate_sha256"],
+  "required": [
+    "schema_version",
+    "type",
+    "generated_at",
+    "roots",
+    "entries",
+    "aggregate_sha256"
+  ],
   "properties": {
-    "schema_version": {"const": 1},
-    "type": {"const": "backup-manifest"},
-    "generated_at": {"type": "string", "format": "date-time"},
-    "roots": {"const": ["core", "materials", "ui"]},
+    "schema_version": {
+      "const": 1
+    },
+    "type": {
+      "const": "backup-manifest"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "roots": {
+      "const": [
+        "core",
+        "materials",
+        "ui"
+      ]
+    },
     "entries": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["root", "path", "size", "sha256"],
+        "required": [
+          "root",
+          "path",
+          "size",
+          "sha256"
+        ],
         "properties": {
-          "root": {"enum": ["core", "materials", "ui"]},
-          "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"},
-          "size": {"type": "integer", "minimum": 0},
-          "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+          "root": {
+            "enum": [
+              "core",
+              "materials",
+              "ui"
+            ]
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
         }
       }
     },
-    "aggregate_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+    "aggregate_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "materials_aliases": {
+      "type": "object",
+      "description": "materials/.flat alias name -> path of its source folder, relative to the materials root. Derived state no backup can contain as files; recorded so a restore can rebuild it exactly.",
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+      }
+    }
   }
 }
