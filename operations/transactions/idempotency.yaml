@@ -1316,3 +1316,15 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  source-navigation-l05-20260907:
+    request_id: request-source-navigation-l05-20260907
+    capability: unit.map.import
+    channel: codex
+    intent_sha256: sha256:b50fa5a21618e6e36273a59cc4af3fc46aff6fdea890dc41d918d9817f9f79d9
+    transaction_id: transaction-20260907-002509-001
+    receipt_path: operations/transactions/transaction-20260907-002509-001.yaml
+    revisions:
+      study-map-m2-sad-l05: 4
+      unit-m2-sad-l05: 6
+    snapshot_before: sha256:c0a6199c8c48eb0e1c9b5c7427dfba9a2b644a6673742cf79190d3fc24101917
+    snapshot_after: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
