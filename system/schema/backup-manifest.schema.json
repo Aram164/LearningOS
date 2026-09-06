@@ -30,6 +30,28 @@
       "description": "materials/.flat alias name -> its source folder, relative to the materials root. Derived state no backup can hold as files; recorded so a restore rebuilds it exactly.",
       "additionalProperties": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"}
     },
+    "provenance": {
+      "type": "object",
+      "description": "What wrote this inventory: each checkout's commit and cleanliness, and the data-format version in force. Recorded because a restore carries Core's data but not Core's code.",
+      "additionalProperties": false,
+      "required": ["core", "ui", "data_contract_version"],
+      "properties": {
+        "core": {"$ref": "#/$defs/checkout"},
+        "ui": {"$ref": "#/$defs/checkout"},
+        "data_contract_version": {"type": ["integer", "null"], "minimum": 1}
+      }
+    },
     "aggregate_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+  },
+  "$defs": {
+    "checkout": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commit", "dirty"],
+      "properties": {
+        "commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+        "dirty": {"type": ["boolean", "null"]}
+      }
+    }
   }
 }
