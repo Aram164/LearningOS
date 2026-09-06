@@ -10,6 +10,7 @@ import yaml
 
 from .support import (
     WriteRefused,
+    _allocate_attachment_path,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
@@ -151,10 +152,7 @@ def cmd_path_attach(args) -> int:
         workspace = learning_path.path.parent.parent
         attachment_dir = workspace / "scratch" / "paths" / learning_path.id \
             / "attachments" / stage["id"]
-        target = attachment_dir / source.name
-        if target.exists():
-            stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
-            target = attachment_dir / f"{stamp}-{source.name}"
+        target = _allocate_attachment_path(attachment_dir, source.name)
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({
             "path": rel, "label": args.label or source.stem})
