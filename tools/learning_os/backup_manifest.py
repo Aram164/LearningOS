@@ -6,6 +6,7 @@ import datetime as dt
 import hashlib
 import json
 import os
+import re
 import stat
 import subprocess
 import sys
@@ -227,6 +228,54 @@ def _materials_aliases(materials_root: Path, excluded: set[str]) -> dict[str, st
     return aliases
 
 
+def _git_provenance(root: Path) -> dict[str, Any]:
+    """The commit this checkout was at, and whether it was clean.
+
+    `None` is the answer whenever Git could not tell us — no repository, no
+    `git`, a timeout, a locked index. `dirty` in particular is never guessed:
+    reporting a checkout clean because `git status` failed would be the kind of
+    confident wrong answer this inventory exists to avoid.
+    """
+    def _git(*args: str) -> subprocess.CompletedProcess | None:
+        try:
+            return subprocess.run(
+                ["git", "-C", str(root), *args],
+                capture_output=True, text=True, check=False, timeout=10,
+            )
+        except (OSError, subprocess.SubprocessError):
+            return None
+
+    rev = _git("rev-parse", "HEAD")
+    if rev is None or rev.returncode != 0:
+        return {"commit": None, "dirty": None}
+    commit = rev.stdout.strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", commit):
+        return {"commit": None, "dirty": None}
+
+    status = _git("status", "--porcelain")
+    if status is None or status.returncode != 0:
+        return {"commit": commit, "dirty": None}
+    return {"commit": commit, "dirty": bool(status.stdout.strip())}
+
+
+def _declared_contract_version(root: Path) -> int | None:
+    """The data format the tree under *root* declares, or None if it says nothing.
+
+    Takes the root it is given rather than the module-level CONTRACT, which is
+    bound to the running checkout — reading that for both sides of a comparison
+    compares a file with itself and can never disagree.
+    """
+    from learning_os.contracts.data_contract import load_contract
+    try:
+        contract = load_contract(root / "system" / "contracts" / "data-contract.yaml")
+    except (OSError, ValueError):
+        return None
+    declared = (contract or {}).get("contract_version")
+    if isinstance(declared, int) and not isinstance(declared, bool):
+        return declared
+    return None
+
+
 def build_backup_manifest(
     root: Path,
     *,
@@ -307,6 +356,11 @@ def build_backup_manifest(
         "roots": sorted(authorities),
         "entries": rows,
         "materials_aliases": _materials_aliases(materials_root, excluded),
+        "provenance": {
+            "core": _git_provenance(root),
+            "ui": _git_provenance(ui_root),
+            "data_contract_version": _declared_contract_version(root),
+        },
         "aggregate_sha256": aggregate,
     }
     try:
@@ -482,6 +536,47 @@ def _rebuild_materials_alias_layer(
     return {"id": "materials-alias-layer", "ok": not absent, "detail": detail}
 
 
+def _restore_provenance(manifest: dict[str, Any], restored_core: Path, root: Path) -> dict[str, Any]:
+    recorded = manifest.get("provenance") or {}
+    restored = _declared_contract_version(restored_core)
+    running = _declared_contract_version(root)
+
+    scope = "Core is restored as data only (rebuilding requires a Core checkout at recorded commit); UI is restored in full"
+
+    check: dict[str, Any] = {
+        "id": "restore-provenance",
+        "ok": True,
+        "detail": {
+            "recorded": recorded,
+            "restored_version": restored,
+            "running_version": running,
+            "scope": scope,
+        }
+    }
+
+    if restored is None:
+        check["ok"] = False
+        check["detail"]["error"] = "restored tree declares no data format; pairing cannot be established"
+        return check
+
+    if recorded and recorded.get("data_contract_version") is not None:
+        rec_ver = recorded["data_contract_version"]
+        if rec_ver != restored:
+            check["ok"] = False
+            check["detail"]["error"] = f"manifest recorded data_contract_version {rec_ver} but restored data declares {restored}"
+            return check
+
+    if running is not None and restored != running:
+        check["ok"] = False
+        check["detail"]["error"] = f"restored data was written in format {restored} but verifying code declares {running}; a migration under tools/migrations/ may be required"
+        return check
+
+    if not recorded:
+        check["detail"]["note"] = "manifest predates provenance capture; commit pairing is unverifiable"
+
+    return check
+
+
 def verify_restored_system(
     root: Path,
     manifest: dict[str, Any],
@@ -527,6 +622,8 @@ def verify_restored_system(
     }]
     if not checksum["ok"]:
         return {"ok": False, "checks": checks, "manual_ui_open_required": True}
+
+    checks.append(_restore_provenance(manifest, restored_core, root))
 
     # Before loading: the alias layer is what makes material:// URIs resolvable,
     # and rebuilding it is not a loading concern — so its own failures are
