@@ -22,7 +22,7 @@ class LoaderError(Exception):
     """Raised when a file cannot be parsed at all (structural failure)."""
 
 
-class UniqueKeySafeLoader(yaml.SafeLoader):
+class UniqueKeySafeLoader(getattr(yaml, "CSafeLoader", yaml.SafeLoader)):
     """SafeLoader that rejects duplicate explicit keys at every depth.
 
     Merge keys remain supported: an explicit key may intentionally override a
