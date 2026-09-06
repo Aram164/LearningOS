@@ -89,3 +89,23 @@ def test_search_refuses_malformed_note_and_returns_after_repair(mini_repo):
     note.path.write_text(original_text + "\nNeedleUnfindable explanation.\n", encoding="utf-8")
     repaired_response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
     assert repaired_response.returncode == 0
+
+def test_search_succeeds_despite_malformed_project(mini_repo):
+    # A read refuses only when the failures actually affect the answer it is about to give.
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    with note.path.open("a", encoding="utf-8") as f:
+        f.write("\nNeedleUnfindable explanation.\n")
+    
+    # Break a non-note file (modules)
+    module_path = mini_repo / "records" / "modules.yaml"
+    original_module_text = module_path.read_text(encoding="utf-8")
+    broken_module_text = original_module_text.replace("modules:", "modules: [broken")
+    module_path.write_text(broken_module_text, encoding="utf-8")
+    
+    try:
+        response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+        assert response.returncode == 0, response.stderr
+        payload = json.loads(response.stdout)
+        assert len(payload.get("items", [])) > 0
+    finally:
+        module_path.write_text(original_module_text, encoding="utf-8")
