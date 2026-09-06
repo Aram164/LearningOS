@@ -72,6 +72,28 @@ class WriteRefused(Exception):
     """A canonical write could not be performed; nothing was changed."""
 
 
+def _unreadable_refusal(repo, action: str) -> str:
+    """Why a command will not answer, naming the files it could not read.
+
+    A count is not a diagnosis. The operator's next move is to open the file
+    that failed and repair its frontmatter, and they cannot find it from
+    "3 records failed to parse" — so the refusal names the paths and what the
+    loader actually said about each, the way every other refusal here does.
+    """
+    failures = repo.parse_failures
+
+    def where(path) -> str:
+        try:
+            return str(Path(path).relative_to(repo.root))
+        except (ValueError, TypeError):
+            return str(path)
+
+    shown = "; ".join(f"{where(path)}: {message}" for path, message in failures[:5])
+    more = f"; and {len(failures) - 5} more" if len(failures) > 5 else ""
+    return (f"cannot {action}: {len(failures)} file(s) could not be read, so the answer "
+            f"would silently omit them — {shown}{more}")
+
+
 def _atomic_text(path: Path, content: str) -> None:
     """Temp file + os.replace, cleaning up after any failure.
 
@@ -128,10 +150,14 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
 
 def _publish(root: Path) -> None:
     repo = load_repo(root)
+    if repo.parse_failures:
+        raise WriteRefused(_unreadable_refusal(repo, "publish"))
     write_outputs(repo, generate_all(repo))
 
 
 def _publish_repo(repo) -> None:
+    if repo.parse_failures:
+        raise WriteRefused(_unreadable_refusal(repo, "publish"))
     write_outputs(repo, generate_all(repo))
 
 
@@ -146,6 +172,8 @@ def _path_or_error(root: Path, path_id: str):
 
 def _fresh_manifest(root: Path) -> dict:
     repo = load_repo(root)
+    if repo.parse_failures:
+        raise WriteRefused(_unreadable_refusal(repo, "generate the manifest"))
     generated_at = stable_generated_at(root)
     backlinks = build_backlinks(repo, generated_at)
     return build_manifest(repo, generated_at, backlinks)

@@ -66,3 +66,24 @@ def test_bounded_reads_reject_bad_windows_and_unknown_ids(mini_repo):
         result = run_los(mini_repo, *args)
         assert result.returncode != 0
         assert not result.stdout
+
+
+def test_search_refuses_malformed_note_and_returns_after_repair(mini_repo):
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    original_text = note.path.read_text(encoding="utf-8")
+    with note.path.open("a", encoding="utf-8") as f:
+        f.write("\nNeedleUnfindable explanation.\n")
+    
+    response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert response.returncode == 0
+    
+    broken_text = note.path.read_text(encoding="utf-8").replace("id: ", "id: [broken", 1)
+    note.path.write_text(broken_text, encoding="utf-8")
+    
+    broken_response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert broken_response.returncode != 0
+    assert "parse failure" in broken_response.stderr
+    
+    note.path.write_text(original_text + "\nNeedleUnfindable explanation.\n", encoding="utf-8")
+    repaired_response = run_los(mini_repo, "search", "NeedleUnfindable", "--type", "note", "--content")
+    assert repaired_response.returncode == 0

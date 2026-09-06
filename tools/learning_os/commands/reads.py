@@ -10,7 +10,13 @@ import sys
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 
-from .support import WriteRefused, _fresh_manifest, _operator_lock, _root
+from .support import (
+    WriteRefused,
+    _fresh_manifest,
+    _operator_lock,
+    _root,
+    _unreadable_refusal,
+)
 
 
 def _window(args, maximum: int) -> tuple[int, int]:
@@ -119,6 +125,12 @@ def content_search(args) -> int:
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
+            if repo.parse_failures:
+                # Refusing rather than answering: the issue allows either a
+                # refusal or a declared incompleteness flag, and the bounded-read
+                # envelope is a closed contract, so a partial answer here would
+                # have to lie about being total.
+                raise WriteRefused(_unreadable_refusal(repo, "search"))
             matches = []
             for note in sorted(repo.notes.values(), key=lambda row: row.id):
                 raw = _note_bytes(root, note)
