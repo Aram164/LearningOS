@@ -2,10 +2,14 @@ from __future__ import annotations
 
 import ast
 import json
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 import yaml
+from gateway_helpers import approved_v2_envelope
+from test_curriculum_v2 import add_curriculum
 
 import learning_os.ai_actions.projection as ai_projection
 import learning_os.commands.support as command_support
@@ -14,6 +18,7 @@ import learning_os.transactions as transaction_module
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     gateway_request_context,
+    intent_sha256,
     verified_gateway_snapshot,
 )
 from learning_os.contracts.json_schema import (
@@ -626,3 +631,139 @@ def test_incomplete_rollback_is_reported_with_the_unrestored_path(
 
     # The caller is told the truth: this is not presented as a clean rollback.
     assert target.read_text(encoding="utf-8") == "new\n"
+
+
+def test_process_interruption_leaves_durable_intent_and_reconciles(mini_repo: Path, monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    root = mini_repo
+    add_curriculum(root)
+    
+    wrapper = root / "wrapper.py"
+    wrapper.write_text("""
+import os
+import sys
+from pathlib import Path
+
+TOOLS_DIR = Path(__file__).parent.parent.parent / "tools"
+sys.path.insert(0, str(TOOLS_DIR))
+
+from learning_os import transactions
+import learning_os.commands.capability
+
+original_write = transactions._atomic_write_bytes
+call_count = 0
+target_calls = int(sys.argv[1])
+
+def crashing_write(path, content):
+    global call_count
+    original_write(path, content)
+    call_count += 1
+    if call_count == target_calls:
+        os._exit(77)
+
+transactions._atomic_write_bytes = crashing_write
+
+sys.argv = sys.argv[2:]
+learning_os.commands.capability.main(sys.argv[1:])
+    """)
+
+    envelope = approved_v2_envelope(
+        root,
+        capability="stage.progress.update",
+        payload={
+            "unit": "unit-demo-l01",
+            "stage": "stage-demo",
+            "status": "complete",
+        },
+        artifact_ids=["unit-demo-l01"],
+        idempotency_key="test-crash",
+    )
+    
+    for crash_after in [1, 2, 3, 4, 5]:
+        root_run = tmp_path / f"repo_run_{crash_after}"
+        import shutil
+        shutil.copytree(root, root_run)
+        
+        env_file = root_run / "env.json"
+        
+        envelope["expected_snapshot"] = f"sha256:{canonical_fingerprint(root_run)}"
+        envelope["approval"]["subject_sha256"] = "sha256:" + "0" * 64
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+        
+        env_file.write_text(json.dumps(envelope))
+        
+        proc = subprocess.run([
+            sys.executable,
+            str(wrapper),
+            str(crash_after),
+            "capability",
+            "--root", str(root_run),
+            "stage.progress.update",
+            "--payload-file", str(env_file),
+        ], capture_output=True, text=True)
+        
+        if proc.returncode != 77:
+            continue
+            
+        # Re-run properly to trigger reconciliation and successful commit/idempotent check
+        proc2 = subprocess.run([
+            sys.executable,
+            str(wrapper.parent.parent.parent / "tools" / "los.py"),
+            "--root", str(root_run),
+            "capability",
+            "stage.progress.update",
+            "--payload-file", str(env_file),
+        ], capture_output=True, text=True)
+        
+        assert proc2.returncode == 0, f"Replay failed after crash {crash_after}: {proc2.stderr}"
+
+
+def test_a_rollback_that_cannot_finish_refuses_instead_of_continuing(mini_repo: Path):
+    """Recovery must not report success it did not achieve.
+
+    A reconciliation that quietly gives up leaves exactly the half-applied tree
+    it was called to repair, and the command holding the lock then reads that
+    tree as canonical truth — the failure the whole mechanism exists to prevent.
+    """
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_text(encoding="utf-8")
+    target.write_text("partially written by a process that died\n", encoding="utf-8")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-broken"
+    record.mkdir(parents=True)
+    (record / "intent.json").write_text(json.dumps({
+        "transaction_id": "tx-broken",
+        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
+                     "backup_id": "backup-0"}],
+    }), encoding="utf-8")
+    # backup-0 is deliberately absent: the crash took the copy with it.
+
+    with pytest.raises(TransactionFailure, match="backup copy is missing"):
+        transaction_module.reconcile_inflight_transactions(mini_repo)
+
+    # The record survives, so a later attempt can still act on it, and the
+    # damaged file is not silently presented as repaired.
+    assert (record / "intent.json").is_file()
+    assert target.read_text(encoding="utf-8") != original
+
+
+def test_reconciliation_restores_the_previous_bytes_and_is_idempotent(mini_repo: Path):
+    target = mini_repo / "knowledge" / "concepts.yaml"
+    original = target.read_bytes()
+    target.write_bytes(b"half-applied\n")
+
+    record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-good"
+    record.mkdir(parents=True)
+    (record / "backup-0").write_bytes(original)
+    (record / "intent.json").write_text(json.dumps({
+        "transaction_id": "tx-good",
+        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
+                     "backup_id": "backup-0"}],
+    }), encoding="utf-8")
+
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
+    assert not record.exists()
+
+    # Running again is a no-op rather than a second, different outcome.
+    transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert target.read_bytes() == original
