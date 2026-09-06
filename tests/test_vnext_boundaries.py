@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import os
@@ -830,3 +831,109 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     )
     assert not result["ok"]
     assert any(row["issue"] == "checksum-mismatch" for row in result["issues"])
+
+
+@contextlib.contextmanager
+def _unreadable(directory: Path):
+    """Deny enumeration of `directory`, restoring its mode even on failure.
+
+    The denial is proven before the test leans on it: root can still read a
+    mode-000 directory, and a test that silently stops testing anything is
+    worse than one that says why it did not run.
+    """
+    original = directory.stat().st_mode
+    os.chmod(directory, 0o000)
+    try:
+        try:
+            with os.scandir(directory) as entries:
+                next(entries, None)
+        except PermissionError:
+            pass
+        else:
+            pytest.skip("this user can still enumerate a mode-000 directory")
+        yield
+    finally:
+        os.chmod(directory, original)
+
+
+def test_backup_manifest_refuses_an_unreadable_directory_inside_an_admitted_tree(
+    mini_repo, tmp_path
+):
+    ui = tmp_path / "ui"
+    ui.mkdir()
+    materials = mini_repo.parent / "materials"
+    restricted = materials / "restricted"
+    restricted.mkdir(parents=True)
+    (restricted / "only-copy.pdf").write_bytes(b"pdf")
+
+    def inventory():
+        return {
+            row["path"]
+            for row in build_backup_manifest(
+                mini_repo, ui_root=ui, materials_root=materials
+            )["entries"]
+            if row["root"] == "materials"
+        }
+
+    assert "restricted/only-copy.pdf" in inventory()
+
+    # Every authority exists, so an "unavailable authority" refusal cannot stand
+    # in for the traversal failure this is actually testing.
+    with _unreadable(restricted):
+        with pytest.raises(BackupManifestError, match="unreadable"):
+            build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+    assert "restricted/only-copy.pdf" in inventory()
+
+
+def test_backup_manifest_refuses_an_unreadable_declared_file(mini_repo, tmp_path):
+    contract_path = mini_repo / "system/contracts/backup-roots.yaml"
+    contract = yaml.safe_load(contract_path.read_text(encoding="utf-8"))
+    contract["roots"]["core"]["files"].append("nested/declared.txt")
+    contract_path.write_text(yaml.safe_dump(contract), encoding="utf-8")
+    nested = mini_repo / "nested"
+    nested.mkdir()
+    (nested / "declared.txt").write_text("content", encoding="utf-8")
+
+    ui = tmp_path / "ui"
+    ui.mkdir()
+    materials = tmp_path / "materials"
+    materials.mkdir()
+
+    def inventory():
+        return {
+            row["path"]
+            for row in build_backup_manifest(
+                mini_repo, ui_root=ui, materials_root=materials
+            )["entries"]
+        }
+
+    assert "nested/declared.txt" in inventory()
+
+    # `nested` is named by no admitted tree, so this exercises the declared-file
+    # path rather than the walk.
+    with _unreadable(nested):
+        with pytest.raises(BackupManifestError, match="unreadable"):
+            build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
+
+
+def test_backup_manifest_ignores_an_unreadable_excluded_directory(mini_repo, tmp_path):
+    ui = tmp_path / "ui"
+    ui.mkdir()
+    # `materials` declares `.`, so an excluded directory here really is inside an
+    # admitted tree — which is what makes this a guard rather than a formality.
+    materials = mini_repo.parent / "materials"
+    (materials / "keep").mkdir(parents=True)
+    (materials / "keep/kept.pdf").write_bytes(b"pdf")
+    ignored = materials / "node_modules"
+    ignored.mkdir()
+    (ignored / "private.js").write_text("ignored", encoding="utf-8")
+
+    with _unreadable(ignored):
+        manifest = build_backup_manifest(
+            mini_repo, ui_root=ui, materials_root=materials
+        )
+
+    assert {
+        row["path"] for row in manifest["entries"] if row["root"] == "materials"
+    } == {"keep/kept.pdf"}
