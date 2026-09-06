@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/master-planning-promotion.schema.json",
   "title": "One reviewed Future Master's Planning promotion package",
+  "x-governs": "record",
   "type": "object",
   "additionalProperties": false,
   "required": [

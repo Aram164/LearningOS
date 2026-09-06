@@ -18,6 +18,7 @@ evidence of what the old format was.
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
@@ -137,3 +138,86 @@ def test_fixture_is_data_only(repo_root):
         assert not (fixture / "system").exists(), (
             f"{version} carries its own system/ — it must validate against the "
             "current schemas, not frozen ones")
+
+
+def test_every_schema_is_classified(repo_root):
+    schema_dir = repo_root / "system" / "schema"
+    unclassified = []
+    for path in schema_dir.glob("*.schema.json"):
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("x-governs") not in ("record", "artifact"):
+            unclassified.append(path.name)
+    assert not unclassified, "Unclassified schemas: " + ", ".join(unclassified)
+
+
+def test_nothing_the_validator_applies_to_records_is_an_artifact(
+    repo_root, mini_repo, monkeypatch
+):
+    from learning_os.rules.core import Validator
+
+    applied: set[str] = set()
+    original = Validator._schema_check
+
+    def record_name(self, name, instance, where):
+        applied.add(name)
+        return original(self, name, instance, where)
+
+    monkeypatch.setattr(Validator, "_schema_check", record_name)
+    validate(load_repo(mini_repo), online=False)
+    assert applied, "the fixture exercised no schema at all — this proves nothing"
+
+    schema_dir = repo_root / "system" / "schema"
+    offenders = []
+    for name in applied:
+        path = schema_dir / (name if name.endswith(".schema.json") else f"{name}.schema.json")
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if data.get("x-governs") != "record":
+            offenders.append(name)
+    assert not offenders, "Validator applied non-record schemas: " + ", ".join(offenders)
+
+
+def test_classification_decides_the_fingerprint(repo_root, tmp_path):
+    from learning_os.contracts.data_contract import fingerprint
+
+    schema_dir = tmp_path / "schema"
+    shutil.copytree(repo_root / "system" / "schema", schema_dir)
+
+    base_fingerprint = fingerprint(schema_dir)
+
+    artifact_schema = None
+    for path in schema_dir.glob("*.schema.json"):
+        if json.loads(path.read_text(encoding="utf-8")).get("x-governs") == "artifact":
+            artifact_schema = path
+            break
+    assert artifact_schema is not None
+
+    data = json.loads(artifact_schema.read_text(encoding="utf-8"))
+    data["title"] += " edited"
+    artifact_schema.write_text(json.dumps(data), encoding="utf-8")
+
+    assert fingerprint(schema_dir) == base_fingerprint, "Editing an artifact schema should leave the fingerprint unchanged"
+
+    record_schema = None
+    for path in schema_dir.glob("*.schema.json"):
+        if json.loads(path.read_text(encoding="utf-8")).get("x-governs") == "record":
+            record_schema = path
+            break
+    assert record_schema is not None
+
+    data = json.loads(record_schema.read_text(encoding="utf-8"))
+    data["title"] += " edited"
+    record_schema.write_text(json.dumps(data), encoding="utf-8")
+
+    assert fingerprint(schema_dir) != base_fingerprint, "Editing a record schema should change the fingerprint"
+
+
+def test_unclassified_schema_still_counts_as_record(repo_root, tmp_path):
+    from learning_os.contracts.data_contract import record_schemas
+
+    schema_dir = tmp_path / "schema"
+    schema_dir.mkdir()
+    new_schema = schema_dir / "test.schema.json"
+    new_schema.write_text(json.dumps({"title": "Test"}), encoding="utf-8")
+
+    schemas = record_schemas(schema_dir)
+    assert new_schema in schemas, "Unclassified schema should count as a record"

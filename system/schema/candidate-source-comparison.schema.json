@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/candidate-source-comparison.schema.json",
   "title": "Approved prospective source comparison",
+  "x-governs": "record",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "id", "type", "candidate_module_id", "status", "basis", "source_assessments", "comparisons"],

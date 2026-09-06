@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/collections.schema.json",
   "title": "Source collection (reading list)",
+  "x-governs": "record",
   "description": "Validates one sources/collections/<name>.yaml file (ARCHITECTURE \u00a73.3: kebab-case filename = collection identity). A collection is a curated, ordered reading/watching list over registered sources \u2014 it owns ordering, grouping, and the one-line role of each entry IN THIS LIST. Pedagogical judgments about the source itself stay canonical in the source record's evaluations; collections reference, never re-own. Generated views render each collection as generated/collections/<name>.md.",
   "type": "object",
   "required": [

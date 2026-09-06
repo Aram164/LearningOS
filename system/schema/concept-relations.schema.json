@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "learning-os/concept-relations.schema.json",
   "title": "Concept relation registry",
+  "x-governs": "record",
   "description": "Validates knowledge/concept-relations.yaml (or partitioned files). Only concept-to-concept semantic edges; note-to-concept and note-to-source links live on notes. There is deliberately no related-to type: use the narrowest applicable type, or keep the relationship in note prose. Duplicate edges and unresolvable endpoints are validator errors.",
   "type": "object",
   "required": ["relations"],

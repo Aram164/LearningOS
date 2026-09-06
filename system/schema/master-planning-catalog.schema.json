@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learningos.local/schema/master-planning-catalog.schema.json",
   "title": "Sanitized prospective Master's Planning catalog",
+  "x-governs": "record",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "id", "type", "revision", "updated_at", "candidate_modules", "candidate_sources", "comparison_ids"],
