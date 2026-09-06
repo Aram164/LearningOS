@@ -198,7 +198,8 @@ def test_git_dirty_state_covers_every_canonical_root(
 
     def run(command, **_kwargs):
         commands.append(list(command))
-        return SimpleNamespace(stdout="deadbeef\n" if command[1] == "rev-parse" else "")
+        return SimpleNamespace(stdout="deadbeef\n" if command[1] == "rev-parse" else "",
+                               stderr="", returncode=0)
 
     monkeypatch.setattr(genout_common.subprocess, "run", run)
     assert genout_common._git_state(tmp_path) == ("deadbeef", False)
