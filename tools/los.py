@@ -415,14 +415,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
     p.set_defaults(func=cmd_backup_manifest)
 
-    p = sub.add_parser("backup-verify", help="verify a restore against a backup manifest")
+    p = sub.add_parser(
+        "backup-verify", help="verify a trusted restore against a backup manifest",
+        description="Full verification runs the restored installer in dry-run mode against a "
+        "temporary vault. Use --checksums-only to check integrity without executing restored code.",
+    )
     p.add_argument("--manifest", required=True)
     p.add_argument("--restored-core", required=True)
     p.add_argument("--restored-ui", required=True)
     p.add_argument("--restored-materials", required=True)
     p.add_argument(
         "--checksums-only", action="store_true",
-        help="skip projection, validation, and restored UI bundle smoke checks",
+        help="skip projection, validation, installer dry-run, and restored UI bundle smoke checks",
     )
     p.set_defaults(func=cmd_backup_verify)
 
