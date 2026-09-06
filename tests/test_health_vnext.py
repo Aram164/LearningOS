@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime as dt
+import json
 from types import SimpleNamespace
 
 from learning_os import health
@@ -79,3 +80,47 @@ def test_backup_health_does_not_infer_encryption_from_a_field_name(monkeypatch):
 
     assert row["status"] == "warning"
     assert row["details"]["encryption_proven"] is False
+
+
+
+def test_projection_check_requires_matching_payload(mini_repo):
+    from learning_os.genout import generate_all
+    from learning_os.loader import load_repo
+    repo = load_repo(mini_repo)
+    from learning_os.genout.outputs import write_outputs
+    outputs = generate_all(repo)
+    write_outputs(repo, outputs)
+
+    manifest_path = mini_repo / "generated" / "manifest.json"
+    original = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    report = health.build_health_report(mini_repo)
+    proj_check = next(c for c in report["checks"] if c["id"] == "projection-state")
+    assert proj_check["status"] == "ok"
+
+    altered = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for rec in altered.get("records", []):
+        if "title" in rec:
+            rec["title"] = "Invented title never authored"
+            break
+    manifest_path.write_text(json.dumps(altered), encoding="utf-8")
+
+    report2 = health.build_health_report(mini_repo)
+    proj_check2 = next(c for c in report2["checks"] if c["id"] == "projection-state")
+    assert proj_check2["status"] == "warning"
+    # The report has to name the section that is wrong. "something differs" is
+    # the same non-answer as "ok" — neither tells the operator what to distrust.
+    mismatches = proj_check2["details"]["mismatches"]
+    assert "records" in mismatches, mismatches
+    assert mismatches["records"]["first_difference_at"] == 0
+    # …without quoting the manifest itself into a health report.
+    assert "Invented title never authored" not in json.dumps(mismatches)
+
+    header_only = {"_generated": original["_generated"]}
+    manifest_path.write_text(json.dumps(header_only), encoding="utf-8")
+
+    report3 = health.build_health_report(mini_repo)
+    proj_check3 = next(c for c in report3["checks"] if c["id"] == "projection-state")
+    assert proj_check3["status"] == "error"
+    assert "contract validation" in proj_check3["summary"].lower()
+

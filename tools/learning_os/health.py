@@ -157,6 +157,28 @@ def _core_ui_lock_check(root: Path) -> dict[str, Any]:
     )
 
 
+def _payload_difference(expected: Any, stored: Any) -> dict[str, Any]:
+    """How one top-level manifest section differs, without printing the manifest.
+
+    `records` is thousands of rows; quoting both copies into a health report
+    helps nobody. What the operator needs is which section is wrong and how far
+    off it is, so a collection reports its size and the first differing entry,
+    and a scalar reports both values.
+    """
+    if isinstance(expected, list) and isinstance(stored, list):
+        first = next((index for index, (left, right)
+                      in enumerate(zip(expected, stored, strict=False)) if left != right),
+                     min(len(expected), len(stored)))
+        return {"expected": f"{len(expected)} entries", "stored": f"{len(stored)} entries",
+                "first_difference_at": first}
+    if isinstance(expected, dict) and isinstance(stored, dict):
+        keys = sorted(key for key in set(expected) | set(stored)
+                      if expected.get(key) != stored.get(key))
+        return {"expected": f"{len(expected)} keys", "stored": f"{len(stored)} keys",
+                "differing_keys": keys[:10]}
+    return {"expected": expected, "stored": stored}
+
+
 def _projection_check(root: Path, expected: dict[str, Any]) -> dict[str, Any]:
     path = root / "generated" / "manifest.json"
     if not path.is_file() or path.is_symlink():
@@ -166,6 +188,14 @@ def _projection_check(root: Path, expected: dict[str, Any]) -> dict[str, Any]:
         )
     try:
         stored = json.loads(path.read_text(encoding="utf-8"))
+
+        contract_ok, contract_message = check_manifest_contract(stored, root)
+        if not contract_ok:
+            return _check(
+                "projection-state", "error", f"The stored manifest fails contract validation: {contract_message}",
+                "core", "Regenerate projections from validated canonical files.",
+            )
+
         expected_generated = expected.get("_generated") or {}
         stored_generated = stored.get("_generated") if isinstance(stored, dict) else {}
         fields = ("contract_version", "schema_sha256", "source_fingerprint", "snapshot_id")
@@ -178,6 +208,40 @@ def _projection_check(root: Path, expected: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(stored_generated, dict)
             or stored_generated.get(field) != expected_generated.get(field)
         }
+
+        if not mismatches:
+            # Identifiers matching is a claim about the file, not a fact about
+            # its contents: a manifest whose records were replaced keeps its
+            # header intact. So the payload itself is compared.
+            #
+            # Four `_generated` fields are exempt because they move without the
+            # projection being wrong: `generated_at` advances on every run;
+            # `source_revision` and `source_dirty` describe the checkout at the
+            # moment of generation, not the canonical content (a later commit or
+            # an unrelated edit changes both); `generator` and `warning` are
+            # provenance strings whose compatibility-bearing counterparts —
+            # `contract_version` and `schema_sha256` — are compared above.
+            exempt_fields = ("generated_at", "source_revision", "source_dirty",
+                             "generator", "warning")
+
+            stored_payload = {k: v for k, v in stored.items() if k != "_generated"}
+            expected_payload = {k: v for k, v in expected.items() if k != "_generated"}
+            stored_meta = {k: v for k, v in stored_generated.items() if k not in exempt_fields}
+            expected_meta = {k: v for k, v in expected_generated.items()
+                             if k not in exempt_fields}
+
+            # Name what actually differs. "differs" tells the operator only that
+            # something is wrong, which is the same failure as reporting `ok`:
+            # neither says which part of the projection to distrust.
+            for key in sorted(set(stored_payload) | set(expected_payload)):
+                if stored_payload.get(key) != expected_payload.get(key):
+                    mismatches[key] = _payload_difference(
+                        expected_payload.get(key), stored_payload.get(key))
+            for key in sorted(set(stored_meta) | set(expected_meta)):
+                if stored_meta.get(key) != expected_meta.get(key):
+                    mismatches[f"_generated.{key}"] = {
+                        "expected": expected_meta.get(key), "stored": stored_meta.get(key)}
+
     except (OSError, ValueError, json.JSONDecodeError) as exc:
         return _check(
             "projection-state", "error", f"The generated manifest is unreadable: {exc}",
