@@ -32,11 +32,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -202,11 +203,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -451,11 +453,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -622,11 +625,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -955,11 +959,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -1276,11 +1281,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -1346,11 +1352,12 @@ stages:
     locator: lecture-slides/06_random_variables.pdf, 60 slides
     angle: The scope authority for random-variable language, and the deck that introduces PMF, density
       and CDF in a single pass.
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
+    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
       expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
       single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
       them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures

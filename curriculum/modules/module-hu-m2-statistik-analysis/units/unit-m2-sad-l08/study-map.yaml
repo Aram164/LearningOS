@@ -32,11 +32,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -257,11 +258,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -368,9 +370,9 @@ stages:
     angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
       covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
       separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation
-      explicitly and explains why maximising the log is legitimate, which is the step where students lose
-      the thread when they meet the Gaussian-error derivation.'
+      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
+      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
+      step where students lose the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
     source_id: source-dekking-mips
@@ -481,11 +483,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -560,9 +563,9 @@ stages:
     angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
       covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
       separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation
-      explicitly and explains why maximising the log is legitimate, which is the step where students lose
-      the thread when they meet the Gaussian-error derivation.'
+      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
+      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
+      step where students lose the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
     source_id: source-dekking-mips
@@ -649,11 +652,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -803,9 +807,9 @@ stages:
     angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
       covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
       separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation
-      explicitly and explains why maximising the log is legitimate, which is the step where students lose
-      the thread when they meet the Gaussian-error derivation.'
+      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
+      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
+      step where students lose the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
     source_id: source-dekking-mips
@@ -985,11 +989,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -1113,9 +1118,9 @@ stages:
     angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
       covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
       separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation
-      explicitly and explains why maximising the log is legitimate, which is the step where students lose
-      the thread when they meet the Gaussian-error derivation.'
+      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
+      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
+      step where students lose the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
     scope_triage: helpful-now
     source_id: source-dekking-mips
@@ -1222,11 +1227,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -1258,6 +1264,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-42f96974c9b07097dceeb4a8
+  - id: resource-dekking-stage-sad-l08-likelihood
+    route_id: route-8f48d8d7623a4b01aac9348f
+    kind: read
+    label: Dekking Ch 21
+    source_id: source-dekking-mips
+    locator: Ch 21 pdf pp. 317-331, §22.3 pp. 338-339
+    angle: Provides Likelihood and loglikelihood.
+    angle_detail: Provides fuller explanation.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -1280,11 +1295,12 @@ stages:
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
     angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
       that turns maximum likelihood into least squares.'
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
+    angle_detail: 'The Gaussian-error derivation at the end is the intellectual centre of the statistics
+      half — it is where L03''s least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
       slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      both halves in the same notation. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
     source_id: source-sad-ss26-lectures
@@ -1316,6 +1332,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-42f96974c9b07097dceeb4a8
+  - id: resource-dekking-stage-sad-l08-mle
+    route_id: route-8f48d8d7623a4b01aac9348f
+    kind: read
+    label: Dekking Ch 21
+    source_id: source-dekking-mips
+    locator: Ch 21 pdf pp. 317-331, §22.3 pp. 338-339
+    angle: Provides Likelihood and loglikelihood.
+    angle_detail: Provides fuller explanation.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
   attachments: []
   source_feedback: []

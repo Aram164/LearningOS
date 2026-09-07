@@ -581,8 +581,8 @@ sources:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.'
   - id: route-1d4c3d5164052df9c540d079
     unit_id: unit-m2-sad-l04
     title: Current L04 probability and Naive Bayes deck
@@ -603,9 +603,9 @@ sources:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it.'
   - id: route-5b6e78353200f05843a1f9a0
     unit_id: unit-m2-sad-l05
     title: Current L05 combinatorics deck
@@ -730,12 +730,12 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/10_testing.pdf, 65 slides
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Note explicit z-statistic erratum on printed slide 28: z formula missing sqrt(n).'
   - id: route-739f3af86a81ba6168a13cda
     unit_id: unit-m2-sad-l11
     title: Current L11 data-science introduction deck
@@ -2546,18 +2546,18 @@ sources:
     unit_id: unit-m2-sad-l13
     title: Kelleher Chapter 5 — similarity-based learning
     format: book
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
+    angle: Includes kd-tree exact indexing in §5.4.2; LSH is mentioned but not fully covered.
     covers:
     - knowledge-sad-l13-neighbors
     - knowledge-sad-l13-aggregation
     - knowledge-sad-l13-metrics
     - knowledge-sad-l13-minkowski
     - knowledge-sad-l13-special-measures
+    - knowledge-sad-l13-exact-indexing
     depth: course-aligned
     scope: complementary
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
       that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
       as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
@@ -2568,16 +2568,17 @@ sources:
     unit_id: unit-m2-sad-l14
     title: Kelleher Chapter 6 — probability-based learning
     format: book
-    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
-      network rather than a separate method.
+    angle: Retains genuine connection between networks and Naive Bayes.
     covers:
     - knowledge-sad-l14-nb-recap
     - knowledge-sad-l14-smoothing
     - knowledge-sad-l14-numeric
     - knowledge-sad-l14-gaussian
+    - knowledge-sad-l14-bayes-net
+    - knowledge-sad-l14-markov
     depth: course-aligned
     scope: complementary
-    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
     angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
       between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
@@ -2589,22 +2590,14 @@ sources:
     unit_id: unit-m2-sad-l15
     title: Kelleher Chapter 7 — error-based learning and neural networks
     format: book
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
+    angle: Provides regression and optimization prerequisite concepts without artificial neural networks.
     covers:
-    - knowledge-sad-l15-neuron
-    - knowledge-sad-l15-activation
-    - knowledge-sad-l15-forward
-    - knowledge-sad-l15-backprop
     - knowledge-sad-l15-training
     depth: course-aligned
     scope: complementary
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
+    locator: Ch 7 Error-based Learning (regression and optimization, pdf pp. 351-416)
+    angle_detail: Chapter 7 covers regression, gradient descent, logistic regression and SVMs. It does
+      not cover multilayer networks or backpropagation.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-fabc07c65cb1dee886db114f
     unit_id: unit-m2-sad-exam-prep
@@ -2649,7 +2642,8 @@ sources:
       worked numeric-attribute case L14 needs and the chapter body only sketches: fit a Normal per class
       per feature, evaluate the densities at the query point, multiply, compare. Having the full solution
       means the arithmetic can be checked step by step, which matters because the density values are not
-      probabilities and the intermediate numbers look wrong the first time.'
+      probabilities and the intermediate numbers look wrong the first time. Access to the full solution
+      is unresolved; the solutions manual was not found.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
@@ -3948,6 +3942,7 @@ sources:
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-repetition
     - knowledge-sad-l05-counting-probability
+    - knowledge-sad-l05-identities
     depth: intuition
     scope: complementary
     locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
@@ -4490,10 +4485,11 @@ sources:
     - knowledge-sad-l02-location
     - knowledge-sad-l02-dispersion
     - knowledge-sad-l02-sampling
+    - knowledge-sad-l02-simpson
     depth: orientation
     scope: complementary
-    locator: Ch 1 §1.2 data basics, pdf pp. 14-21; §1.3 sampling principles and strategies, pdf pp. 21-30;
-      Ch 2 §2.1 examining numerical data, pdf pp. 40-59; §2.2 considering categorical data, pdf pp. 60-69
+    locator: Ch 1 §1.2 data basics, pdf pp. 14-21; §1.3 sampling principles and strategies, pdf pp. 22-30;
+      Ch 2 §2.1 examining numerical data, pdf pp. 40-59; §2.2 considering categorical data, pdf pp. 61-69
     angle_detail: §1.3 names and distinguishes the sampling schemes — simple random, stratified, cluster,
       convenience — and works through what each does to representativeness, plus non-response and voluntary-response
       bias. L02's sampling node is one slide; the exam question 'why is this sample not representative'
@@ -5013,6 +5009,8 @@ sources:
     - knowledge-sad-l08-transform-sum
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: practice
     scope: complementary
     locator: Ch 5 §5.5 the normal distribution, pdf pp. 74-75; Ch 13 the law of large numbers, pdf pp.
@@ -5023,9 +5021,9 @@ sources:
     angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
       covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
       separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — works the loglikelihood transformation
-      explicitly and explains why maximising the log is legitimate, which is the step where students lose
-      the thread when they meet the Gaussian-error derivation.'
+      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
+      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
+      step where students lose the thread when they meet the Gaussian-error derivation.'
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-4ad419aeb16ac96209d55e97
     unit_id: unit-m2-sad-l09
@@ -5038,6 +5036,7 @@ sources:
     - knowledge-sad-l09-standard-error
     - knowledge-sad-l09-z-interval
     - knowledge-sad-l09-t-interval
+    - knowledge-sad-l09-bootstrap
     depth: practice
     scope: complementary
     locator: Ch 19 unbiased estimators, pdf pp. 291-303; Ch 20 efficiency and mean squared error, pdf

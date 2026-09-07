@@ -33,9 +33,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -66,9 +67,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -205,9 +207,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -408,9 +411,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -740,9 +744,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -1072,9 +1077,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -1364,9 +1370,10 @@ stages:
     angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
       axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
       which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is invisible — Fahrmeir §4.6 supplies it and a repository note records the
-      proof. The Naive Bayes construction at the end has no exact equivalent in any book here; the deck
-      is authoritative for it.'
+      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
+      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
+      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
+      keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures

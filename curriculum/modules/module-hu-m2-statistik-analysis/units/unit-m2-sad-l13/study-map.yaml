@@ -36,7 +36,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -196,7 +197,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -328,7 +330,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -439,7 +442,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -587,7 +591,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -674,7 +679,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -719,6 +725,15 @@ stages:
     scope_triage: reference-only
     source_id: source-esl
     route_id: route-c3f8a132a0b3033a3af33c8d
+  - id: resource-kelleher-l13-indexing
+    route_id: route-64afd8476744172ae2a50ebd
+    kind: read
+    label: Kelleher §5.4.2
+    source_id: source-kelleher-fmlpda
+    locator: §5.4.2 pdf pp. 234-241
+    angle: Constructing and searching a kd-tree.
+    angle_detail: Includes indexing.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
   attachments: []
   source_feedback: []
@@ -745,7 +760,8 @@ stages:
       half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
       topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
       LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
+      whole-deck route for now.'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures

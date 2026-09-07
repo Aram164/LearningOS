@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: A neuron computes an affine weighted sum followed by an activation; with
     the identity activation, a one-layer network is multivariate linear regression.'
-  - Work Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy, then the remaining 2, and record
-    every miss with the step it failed at.
+  - Work Blatt 5, Aufgabe 2(a) — affine forward pass only; defer softmax, cross-entropy and interpretation
+    to later stages.
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -32,22 +32,24 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
-    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
-    angle: 'The current by-hand neural-network task: matrix multiply, normalize outputs, calculate loss
-      and interpret the decision rule.'
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    label: Blatt 5, Aufgabe 2(a) — affine forward pass
+    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)
+    angle: Part (a) fits this stage's affine-neuron scope; later parts require softmax and loss from subsequent
+      stages.
+    angle_detail: 'This is a current assessed sheet. At this stage, work only part (a): the matrix multiply
+      / affine forward pass. Parts (b) softmax, (c) cross-entropy loss, and (d) decision interpretation
+      depend on concepts introduced in later stages. Attempt the full problem after completing the output
+      and forward-pass stages.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -76,20 +78,6 @@ stages:
     scope_triage: reference-only
     source_id: source-sad-2025-recordings
     route_id: route-12b55602b4c303311d439198
-  - kind: read
-    label: Kelleher Chapter 7 — error-based learning and neural networks
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
-    scope_triage: helpful-now
-    source_id: source-kelleher-fmlpda
-    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -253,11 +241,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -286,20 +275,6 @@ stages:
     scope_triage: reference-only
     source_id: source-sad-2025-recordings
     route_id: route-37563c3b8ff1e0463522c15c
-  - kind: read
-    label: Kelleher Chapter 7 — error-based learning and neural networks
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
-    scope_triage: helpful-now
-    source_id: source-kelleher-fmlpda
-    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -503,11 +478,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -653,11 +629,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -721,20 +698,6 @@ stages:
     scope_triage: reference-only
     source_id: source-sad-2025-recordings
     route_id: route-37563c3b8ff1e0463522c15c
-  - kind: read
-    label: Kelleher Chapter 7 — error-based learning and neural networks
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
-    scope_triage: helpful-now
-    source_id: source-kelleher-fmlpda
-    route_id: route-53e4963eac07776c8fbfef06
   - kind: read
     label: ISLP §§10.1–10.2 — gentle neural-network introduction
     locator: Ch 10 Deep Learning, pdf pp. 406-462 (§10.1 single layer neural networks p. 407; §10.2 multilayer
@@ -1046,11 +1009,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -1079,20 +1043,6 @@ stages:
     scope_triage: reference-only
     source_id: source-sad-2025-recordings
     route_id: route-37563c3b8ff1e0463522c15c
-  - kind: read
-    label: Kelleher Chapter 7 — error-based learning and neural networks
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
-    scope_triage: helpful-now
-    source_id: source-kelleher-fmlpda
-    route_id: route-53e4963eac07776c8fbfef06
   - kind: watch
     label: Karpathy — micrograd, backpropagation spelled out
     locator: '''The spelled-out intro to neural networks and backpropagation: building micrograd'' (≈2h25m);
@@ -1340,11 +1290,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -1567,11 +1518,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -1670,11 +1622,12 @@ stages:
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
     angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
       that connects SaD to AML.
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
+      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
+      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
+      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
+      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
+      not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures

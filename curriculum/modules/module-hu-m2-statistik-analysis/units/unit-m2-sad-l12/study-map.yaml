@@ -32,10 +32,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -213,10 +215,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -353,10 +357,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -442,10 +448,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -583,10 +591,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -756,10 +766,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -942,10 +954,12 @@ stages:
     locator: lecture-slides/12_tree_based.pdf, 36 slides
     angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
       pruning, and the four ensemble families.'
-    angle_detail: Compact but complete — the deck covers what many courses spread over two lectures. ID3's
-      information-gain computation is the examinable calculation; the ensemble section is mostly conceptual
-      comparison. Because bagging, random forests, boosting and stacking all arrive on the last slides,
-      they are easy to blur; Géron Ch 7 treats each as a separate technique with its own reason to exist.
+    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
+      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
+      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
+      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
+      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
+      now.'
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures

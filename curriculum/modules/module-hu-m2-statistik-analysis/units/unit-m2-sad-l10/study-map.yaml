@@ -32,12 +32,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -285,8 +285,10 @@ stages:
   number: 2
   title: Tails, critical regions, and p-values
   status: pending
-  objective: The alternative determines one- versus two-sided evidence; a p-value is the null probability
-    of a result at least as extreme, not the probability that the null is true.
+  objective: 'The alternative determines one- versus two-sided evidence; a p-value is the null probability
+    of a result at least as extreme, not the probability that the null is true. Note: printed slide 28
+    contains an explicit z-statistic erratum — the z formula is missing a √n factor. The correct statistic
+    for the stated values (n=10, σ²=4, x̄=98.9, μ₀=100) is approximately −1.74, not the printed −0.55.'
   done_when:
   - 'Reproduce without notes: The alternative determines one- versus two-sided evidence; a p-value is
     the null probability of a result at least as extreme, not the probability that the null is true.'
@@ -302,12 +304,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -559,12 +561,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -690,8 +692,10 @@ stages:
   number: 4
   title: z and t tests for means
   status: pending
-  objective: Standardized mean differences use z when variance assumptions justify it and t when variance
-    is estimated; paired and independent designs require different standard errors.
+  objective: 'Standardized mean differences use z when variance assumptions justify it and t when variance
+    is estimated; paired and independent designs require different standard errors. Note: printed slide
+    28 contains an explicit z-statistic erratum — the z formula is missing a √n factor. The correct statistic
+    for the stated values (n=10, σ²=4, x̄=98.9, μ₀=100) is approximately −1.74, not the printed −0.55.'
   done_when:
   - 'Reproduce without notes: Standardized mean differences use z when variance assumptions justify it
     and t when variance is estimated; paired and independent designs require different standard errors.'
@@ -708,12 +712,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -956,12 +960,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1012,12 +1016,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1168,12 +1172,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1279,12 +1283,12 @@ stages:
     locator: lecture-slides/10_testing.pdf, 65 slides
     angle: The largest deck in the module and the complete course logic of testing, from null models to
       multiple testing.
-    angle_detail: Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
+    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
       reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking's
+      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
       two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
       in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck.
+      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures

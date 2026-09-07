@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Correlation is defined on corresponding measurements; scatterplots reveal
     direction, form, outliers, and nonlinearity before any coefficient is calculated.'
-  - Work Blatt 1, Aufgabe 2 — correlation and simple regression, then the remaining 2, and record every
-    miss with the step it failed at.
+  - Work Blatt 1, Aufgabe 2 scatterplot interpretation only at this stage; defer the coefficient calculation
+    and regression line to stages 2 and 4.
   exam_critical: true
   concepts:
   - concept-correlation
@@ -35,19 +35,21 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 1, Aufgabe 2 — correlation and simple regression
-    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    label: Blatt 1, Aufgabe 2(a)-(b) — scatterplot and interpretation
+    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2(a)-(b)
     angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
       exam-style L03 task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: This is a current assessed sheet. At this stage, work only the scatterplot description
+      and verbal interpretation of the relationship. The covariance/Pearson coefficient calculation (stage
+      2) and the derived regression line (stage 4) require concepts introduced later. Attempt the full
+      problem after completing those stages.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -149,8 +151,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -307,8 +310,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -450,8 +454,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -686,8 +691,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -843,8 +849,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -1002,8 +1009,9 @@ stages:
     angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
       simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
       optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (stated, not run). Géron Ch 4 and 3Blue1Brown''s linear-algebra episodes are
-      the routes that repair those two specifically. Everything here is examinable.'
+      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
+      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
+      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
