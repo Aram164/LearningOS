@@ -1,0 +1,13 @@
+id: voq-evidence-trails-complete
+split: example
+class: evidence
+question: "Does one typed trail make a note's evidence complete?"
+procedure:
+  predicate: EvidenceComplete
+  inputs:
+    entries:
+      - type: derivation
+        ref: material://demo/mle-derivation.pdf
+expected:
+  is_true: true
+notes: "Phase 1 bar: present, well-formed, append-only. Role-specific bars belong to lineage review."

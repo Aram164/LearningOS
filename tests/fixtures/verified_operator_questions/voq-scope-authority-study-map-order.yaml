@@ -1,0 +1,13 @@
+id: voq-scope-authority-study-map-order
+split: example
+class: scope-authority
+question: "Where does the L01 study order live authoritatively?"
+procedure:
+  predicate: ScopeAuthority
+  inputs:
+    fact_kind: study_map_order
+    module_id: module-hu-aml
+    unit_id: unit-aml-l01
+expected:
+  equals: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+notes: "Ordering is a study-map fact, not a knowledge-map or menu fact."

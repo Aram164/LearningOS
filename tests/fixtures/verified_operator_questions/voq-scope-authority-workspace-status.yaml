@@ -1,0 +1,12 @@
+id: voq-scope-authority-workspace-status
+split: example
+class: scope-authority
+question: "Where does the AML exam-prep workspace state live authoritatively?"
+procedure:
+  predicate: ScopeAuthority
+  inputs:
+    fact_kind: workspace_status
+    workspace_id: workspace-aml-exam-prep
+expected:
+  equals: work/active/workspace-aml-exam-prep/CONTEXT.md
+notes: "Workspace state is owned by workspace frontmatter; COORDINATION.md must not restate it."

@@ -1,0 +1,12 @@
+id: voq-scope-authority-exam-date
+split: example
+class: scope-authority
+question: "Where does the AML Klausur date live authoritatively?"
+procedure:
+  predicate: ScopeAuthority
+  inputs:
+    fact_kind: exam_date
+    module_id: module-hu-aml
+expected:
+  equals: curriculum/modules/module-hu-aml/module.yaml
+notes: "OPERATOR.md boundary 5: sittings live in the owning module.yaml, never in COORDINATION.md or records/."

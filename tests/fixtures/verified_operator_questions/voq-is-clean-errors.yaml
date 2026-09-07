@@ -1,0 +1,12 @@
+id: voq-is-clean-errors
+split: example
+class: is-clean
+question: "Is the repository clean while one validator error stands?"
+procedure:
+  predicate: RepoClean
+  inputs:
+    error_count: 1
+    new_or_grown_warnings: 0
+expected:
+  is_false: true
+notes: "One error is not clean, however green everything else reads."

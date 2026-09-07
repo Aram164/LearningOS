@@ -1,0 +1,13 @@
+id: voq-evidence-untyped-incomplete
+split: example
+class: evidence
+question: "Does a bare-path trail without a URI scheme count as evidence?"
+procedure:
+  predicate: EvidenceComplete
+  inputs:
+    entries:
+      - type: derivation
+        ref: knowledge/attachments/derivation.md
+expected:
+  is_false: true
+notes: "A bare path breaks when the file moves; the validator refuses it with the allowed vocabulary."
