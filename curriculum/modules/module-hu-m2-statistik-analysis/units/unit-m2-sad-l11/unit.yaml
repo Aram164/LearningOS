@@ -45,7 +45,8 @@ knowledge_map:
   - id: knowledge-sad-l11-evaluation
     title: Evaluation metrics and class imbalance
     summary: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses
-      answer different questions; metric choice follows costs, prevalence, and deployment context.
+      answer different questions; metric choice follows costs, prevalence, and deployment context. Compare
+      threshold curves and distinguish ROC-AUC from precision-recall AUC.
     builds_on:
     - knowledge-sad-l11-resampling
   - id: knowledge-sad-l11-generalization

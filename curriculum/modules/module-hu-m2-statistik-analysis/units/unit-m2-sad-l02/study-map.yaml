@@ -29,15 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 10-13
+    angle: The current lecture's focused reading for population, sample, object, feature, and realization.
+    angle_detail: Read physical PDF pages 10-13 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -99,15 +95,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 13-15
+    angle: The current lecture's focused reading for feature types and measurement scales.
+    angle_detail: Read physical PDF pages 13-15 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -222,15 +214,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 16-18
+    angle: The current lecture's focused reading for frequency distributions and histograms.
+    angle_detail: Read physical PDF pages 16-18 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -374,15 +362,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 22-27
+    angle: The current lecture's focused reading for location, quantiles, and boxplots.
+    angle_detail: Read physical PDF pages 22-27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -537,15 +521,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 29-31
+    angle: The current lecture's focused reading for range, variance, standard deviation, and divisors.
+    angle_detail: Read physical PDF pages 29-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -699,15 +679,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 19-20
+    angle: The current lecture's focused reading for aggregation and simpson's paradox.
+    angle_detail: Read physical PDF pages 19-20 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
@@ -716,9 +692,10 @@ stages:
     kind: read
     label: OpenIntro §2.2
     source_id: source-openintro-statistics
-    locator: §2.2 pdf pp. 61-69
-    angle: Contingency table scaffolding for Simpson reversal.
-    angle_detail: Contingency tables and row/column proportions.
+    locator: §2.2, PDF pp. 61-69
+    angle: Contingency-table and conditional-proportion preparation for Simpson’s paradox.
+    angle_detail: This is scaffolding, not a verified worked Simpson reversal; use L02 PDF pp. 19-20 for
+      the reversal itself.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-simpson/notes.md
   attachments: []
@@ -741,15 +718,11 @@ stages:
   resources:
   - kind: read
     label: Current L02 basic-concepts deck
-    locator: lecture-slides/02_basics.pdf, 39 slides
-    angle: Fixes the exact vocabulary and calculation conventions the rest of the course and the exam
-      use.
-    angle_detail: 'This is the deck to check whenever a definition is in dispute — including the variance
-      divisor, which differs between textbooks and is settled here for this course. The Simpson''s-paradox
-      and sampling-bias slides at the end are conceptually the most demanding part and get the least time;
-      OpenIntro §1.3 and §2.2 are the elaboration. Nothing in L02 requires probability, so it can be revised
-      independently of everything after L03. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/02_basics.pdf, PDF pp. 33-39
+    angle: The current lecture's focused reading for representative samples and sampling bias.
+    angle_detail: Read physical PDF pages 33-39 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures

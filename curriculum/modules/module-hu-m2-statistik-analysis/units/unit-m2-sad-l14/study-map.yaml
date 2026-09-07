@@ -30,14 +30,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 4-6
+    angle: The current lecture's focused reading for naive bayes decision rule.
+    angle_detail: Read physical PDF pages 4-6 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -58,13 +55,11 @@ stages:
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
       and continuous-feature sections)
-    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
-      network rather than a separate method.
-    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
-      between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
-      as the network in which every feature depends only on the class — at which point the 'naive' assumption
-      is a graph statement rather than an algebraic convenience. That is the cleanest available account
-      of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
+    angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
+    angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
+      (p. 324 onward). The Markov blanket is explained on p. 328. This connects the conditional-independence
+      classifier to graphical dependency models; the book does not teach networks before deriving Naive
+      Bayes.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -269,14 +264,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 7-11
+    angle: The current lecture's focused reading for zero counts and laplace smoothing.
+    angle_detail: Read physical PDF pages 7-11 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -297,13 +289,11 @@ stages:
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
       and continuous-feature sections)
-    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
-      network rather than a separate method.
-    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
-      between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
-      as the network in which every feature depends only on the class — at which point the 'naive' assumption
-      is a graph statement rather than an algebraic convenience. That is the cleanest available account
-      of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
+    angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
+    angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
+      (p. 324 onward). The Markov blanket is explained on p. 328. This connects the conditional-independence
+      classifier to graphical dependency models; the book does not teach networks before deriving Naive
+      Bayes.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -410,14 +400,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 13-14
+    angle: The current lecture's focused reading for numerical attributes and discretization.
+    angle_detail: Read physical PDF pages 13-14 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -425,13 +412,11 @@ stages:
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
       and continuous-feature sections)
-    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
-      network rather than a separate method.
-    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
-      between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
-      as the network in which every feature depends only on the class — at which point the 'naive' assumption
-      is a graph statement rather than an algebraic convenience. That is the cleanest available account
-      of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
+    angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
+    angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
+      (p. 324 onward). The Markov blanket is explained on p. 328. This connects the conditional-independence
+      classifier to graphical dependency models; the book does not teach networks before deriving Naive
+      Bayes.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -500,14 +485,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 15-17
+    angle: The current lecture's focused reading for gaussian naive bayes.
+    angle_detail: Read physical PDF pages 15-17 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -515,30 +497,24 @@ stages:
     label: Kelleher Chapter 6 — probability-based learning
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
       and continuous-feature sections)
-    angle: Covers Naive Bayes and Bayesian networks in one chapter, so the classifier is visibly the simplest
-      network rather than a separate method.
-    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
-      between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
-      as the network in which every feature depends only on the class — at which point the 'naive' assumption
-      is a graph statement rather than an algebraic convenience. That is the cleanest available account
-      of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
+    angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
+    angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
+      (p. 324 onward). The Markov blanket is explained on p. 328. This connects the conditional-independence
+      classifier to graphical dependency models; the book does not teach networks before deriving Naive
+      Bayes.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
     route_id: route-b3d516335f24f55b1d6ddc00
   - kind: practise
-    label: Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data
+    label: Kelleher §6.7 exercise 3 — Gaussian Naive Bayes task
     locator: 'Section 6.7 exercises, pp. 344-350 (exercise 3: naive Bayes with normally distributed descriptive
       features)'
-    angle: L14 slides 14-18 introduce continuous features and density estimation but the current UE6 sheet
-      stops at the discrete classifier; exercise 3 asks for a naive Bayes model that uses probability
-      density functions with normally distributed features and then a prediction from it, which is the
-      only registered drill for the Gaussian variant.
-    angle_detail: 'The Gaussian Naive Bayes exercise on pp. 344-350 — exercise 3 in particular — is the
-      worked numeric-attribute case L14 needs and the chapter body only sketches: fit a Normal per class
-      per feature, evaluate the densities at the query point, multiply, compare. Having the full solution
-      means the arithmetic can be checked step by step, which matters because the density values are not
-      probabilities and the intermediate numbers look wrong the first time.'
+    angle: An unsolved Gaussian Naive Bayes exercise using normally distributed descriptive features.
+    angle_detail: Exercise 3 asks for a density-based Naive Bayes model and a prediction. Fit class-feature
+      means and variances, evaluate densities and compare class scores. The assigned PDF contains the
+      question, not a verified complete worked solution. Solution access remains unresolved; do not treat
+      this resource as a step-by-step answer key.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -651,14 +627,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 19-22
+    angle: The current lecture's focused reading for multinomial naive bayes and log space.
+    angle_detail: Read physical PDF pages 19-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -791,14 +764,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 24-27
+    angle: The current lecture's focused reading for bayesian networks and factorization.
+    angle_detail: Read physical PDF pages 24-27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -820,14 +790,10 @@ stages:
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
       blanket p. 349)
-    angle: L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation and
-      the Markov blanket, and no other registered source covered them; this chapter derives the factorisation
-      from the graph and defines the blanket as the locally sufficient set.
-    angle_detail: The only route on this stage that treats L14's last third — Bayesian networks — at real
-      length. Conditional independence (p. 342) is developed as a graph property, networks (p. 343) as
-      factorisations of a joint distribution, and the Markov blanket (p. 349) as the set that renders
-      a node independent of everything else. The deck introduces all three in a handful of slides. Read
-      this if the network material is examined conceptually, which the exercises suggest.
+    angle: A complementary chapter on conditional independence, Bayesian networks and Markov blankets.
+    angle_detail: The chapter's graph-based account complements L14's short network section. It is one
+      available treatment, alongside Kelleher §6.4.4 and other registered graphical-model sources; claims
+      that it is the only available explanation or that it determines exam format are unsupported.
     scope_triage: helpful-now
     source_id: source-marsland-ml-algorithmic
     route_id: route-6d3e6411e2da6cfaf960676c
@@ -836,9 +802,10 @@ stages:
     kind: read
     label: Kelleher §6.4.4
     source_id: source-kelleher-fmlpda
-    locator: §6.4.4 pdf pp. 324-328
-    angle: Markov blanket explicitly explained.
-    angle_detail: Networks and blanket.
+    locator: §6.4.4, PDF pp. 324-328
+    angle: Relate a dependency graph to its joint-distribution factorization.
+    angle_detail: Start from the graph and list the parents for each factor; identify Naive Bayes as a
+      restricted dependency structure.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
   attachments: []
@@ -860,14 +827,11 @@ stages:
   resources:
   - kind: read
     label: Current L14 probability-based learning deck
-    locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
-      variants, then opens Bayesian networks.
-    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/14_probability_based.pdf, PDF pp. 28-29
+    angle: The current lecture's focused reading for conditional independence and markov blankets.
+    angle_detail: Read physical PDF pages 28-29 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -889,14 +853,10 @@ stages:
     label: Marsland Ch 16 - Bayesian networks and the Markov blanket
     locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
       blanket p. 349)
-    angle: L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation and
-      the Markov blanket, and no other registered source covered them; this chapter derives the factorisation
-      from the graph and defines the blanket as the locally sufficient set.
-    angle_detail: The only route on this stage that treats L14's last third — Bayesian networks — at real
-      length. Conditional independence (p. 342) is developed as a graph property, networks (p. 343) as
-      factorisations of a joint distribution, and the Markov blanket (p. 349) as the set that renders
-      a node independent of everything else. The deck introduces all three in a handful of slides. Read
-      this if the network material is examined conceptually, which the exercises suggest.
+    angle: A complementary chapter on conditional independence, Bayesian networks and Markov blankets.
+    angle_detail: The chapter's graph-based account complements L14's short network section. It is one
+      available treatment, alongside Kelleher §6.4.4 and other registered graphical-model sources; claims
+      that it is the only available explanation or that it determines exam format are unsupported.
     scope_triage: helpful-now
     source_id: source-marsland-ml-algorithmic
     route_id: route-6d3e6411e2da6cfaf960676c
@@ -905,9 +865,9 @@ stages:
     kind: read
     label: Kelleher §6.4.4
     source_id: source-kelleher-fmlpda
-    locator: §6.4.4 pdf pp. 324-328
-    angle: Markov blanket explicitly explained.
-    angle_detail: Networks and blanket.
+    locator: §6.4.4, PDF p. 328
+    angle: Identify parents, children and co-parents in the Markov blanket.
+    angle_detail: Use the book diagram to distinguish a blanket from only the parent set.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
   attachments: []

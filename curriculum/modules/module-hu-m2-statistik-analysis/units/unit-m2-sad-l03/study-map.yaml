@@ -20,8 +20,9 @@ stages:
   done_when:
   - 'Reproduce without notes: Correlation is defined on corresponding measurements; scatterplots reveal
     direction, form, outliers, and nonlinearity before any coefficient is calculated.'
-  - Work Blatt 1, Aufgabe 2 scatterplot interpretation only at this stage; defer the coefficient calculation
-    and regression line to stages 2 and 4.
+  - 'Plan-authored warm-up using Blatt 1 PDF p. 3, Tabelle 2: plot the paired gold/silver values and describe
+    direction and outliers. The sheet itself asks for covariance and regression, not this scatterplot.
+    Defer Aufgabe 2(a) to covariance and 2(b)-(c) to simple regression.'
   exam_critical: true
   concepts:
   - concept-correlation
@@ -29,27 +30,21 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 3-4
+    angle: The current lecture's focused reading for paired data and scatterplots.
+    angle_detail: Read physical PDF pages 3-4 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 1, Aufgabe 2(a)-(b) — scatterplot and interpretation
-    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2(a)-(b)
-    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
-      exam-style L03 task.
-    angle_detail: This is a current assessed sheet. At this stage, work only the scatterplot description
-      and verbal interpretation of the relationship. The covariance/Pearson coefficient calculation (stage
-      2) and the derived regression line (stage 4) require concepts introduced later. Attempt the full
-      problem after completing those stages.
+    label: Blatt 1 Tabelle 2 — plan-authored scatterplot warm-up
+    locator: exercise-slides/Blatt1.pdf, PDF p. 3, Tabelle 2 only
+    angle: Inspect paired observations before computing coefficients.
+    angle_detail: 'Plan-authored warm-up using Blatt 1 PDF p. 3, Tabelle 2: plot the paired gold/silver
+      values and describe direction and outliers. The sheet itself asks for covariance and regression,
+      not this scatterplot. Defer Aufgabe 2(a) to covariance and 2(b)-(c) to simple regression.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -145,21 +140,17 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 5-9
+    angle: The current lecture's focused reading for covariance and pearson correlation.
+    angle_detail: Read physical PDF pages 5-9 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 1, Aufgabe 2 — correlation and simple regression
-    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    label: Blatt 1 Aufgabe 2(a)
+    locator: exercise-slides/Blatt1.pdf, PDF p. 3, Aufgabe 2(a)
     angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
       exam-style L03 task.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
@@ -304,15 +295,11 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 16,47-48
+    angle: The current lecture's focused reading for correlation is not causation.
+    angle_detail: Read physical PDF pages 16,47-48 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -448,21 +435,17 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 11-15
+    angle: The current lecture's focused reading for simple linear regression and least squares.
+    angle_detail: Read physical PDF pages 11-15 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 1, Aufgabe 2 — correlation and simple regression
-    locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
+    label: Blatt 1 Aufgabe 2(b)-(c)
+    locator: exercise-slides/Blatt1.pdf, PDF p. 3, Aufgabe 2(b)-(c)
     angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
       exam-style L03 task.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
@@ -685,15 +668,11 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 18-27
+    angle: The current lecture's focused reading for multivariate linear regression and the design matrix.
+    angle_detail: Read physical PDF pages 18-27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -703,7 +682,12 @@ stages:
     angle: Moves from the scalar line to a real feature matrix and prediction problem.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+      working; it is not a replacement for the lecture derivation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -843,15 +827,11 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 29-43
+    angle: The current lecture's focused reading for gradient descent as an alternative optimizer.
+    angle_detail: Read physical PDF pages 29-43 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -1003,15 +983,11 @@ stages:
   resources:
   - kind: read
     label: Current L03 correlation and regression deck
-    locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle: The course's own path from a scatterplot to the normal equation and gradient descent, in one
-      sitting.
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.
-      Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 27,43,45-48
+    angle: The current lecture's focused reading for scaling, coefficient interpretation, and model limits.
+    angle_detail: Read physical PDF pages 27,43,45-48 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -1021,7 +997,12 @@ stages:
     angle: Moves from the scalar line to a real feature matrix and prediction problem.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+      working; it is not a replacement for the lecture derivation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen

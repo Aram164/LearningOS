@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: An estimator is a rule applied to random samples and is therefore random;
     an estimate is its realized numerical value for one observed sample.'
-  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 2, and record
-    every miss with the step it failed at.
+  - 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population parameter,
+    estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval yet.'
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -29,25 +29,22 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 5-9,16
+    angle: The current lecture's focused reading for statistics, estimators, and estimates.
+    angle_detail: Read physical PDF pages 5-9,16 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle: 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population parameter,
+      estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval yet.'
+    angle_detail: 'Plan-authored warm-up from Blatt 4 Aufgabe 2 opening paragraph: identify the population
+      parameter, estimator and observed estimate 6 for S=(4,5,6,7,8). Do not attempt the bootstrap interval
+      yet.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -143,8 +140,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Good estimators trade systematic error and variability; MSE decomposes into
     variance plus squared bias, while consistency describes large-sample convergence.'
-  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 4, and record
-    every miss with the step it failed at.
+  - 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias, consistency
+    or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
   exam_critical: true
   concepts:
   - concept-mean-squared-error
@@ -152,25 +149,21 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 16-23
+    angle: The current lecture's focused reading for bias, consistency, efficiency, and mean squared error.
+    angle_detail: Read physical PDF pages 16-23 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle: 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias, consistency
+      or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
+    angle_detail: 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias,
+      consistency or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -284,8 +277,8 @@ stages:
   done_when:
   - 'Reproduce without notes: The standard error is the standard deviation of an estimator''s sampling
     distribution and usually shrinks with sample size; it is not the spread of the raw data.'
-  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 5, and record
-    every miss with the step it failed at.
+  - 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the estimator. Defer
+    bootstrap calculation in (a) to the bootstrap stage.'
   exam_critical: true
   concepts:
   - concept-variance
@@ -293,25 +286,21 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 25-28,33-34
+    angle: The current lecture's focused reading for sampling distributions and standard errors.
+    angle_detail: Read physical PDF pages 25-28,33-34 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle: 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the estimator.
+      Defer bootstrap calculation in (a) to the bootstrap stage.'
+    angle_detail: 'Work Blatt 4 Aufgabe 2(c): distinguish spread of raw measurements from spread of the
+      estimator. Defer bootstrap calculation in (a) to the bootstrap stage.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -526,8 +515,8 @@ stages:
   done_when:
   - 'Reproduce without notes: With known population variance or an adequate Normal approximation, estimate
     plus/minus a z quantile times standard error gives a repeated-sampling coverage procedure.'
-  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 5, and record
-    every miss with the step it failed at.
+  - Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b) is a bootstrap
+    interval, not a z-interval task; reserve it for bootstrap.
   exam_critical: true
   concepts:
   - concept-statistical-estimation
@@ -535,25 +524,21 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 29-38
+    angle: The current lecture's focused reading for z confidence intervals.
+    angle_detail: Read physical PDF pages 29-38 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle: Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b) is a bootstrap
+      interval, not a z-interval task; reserve it for bootstrap.
+    angle_detail: Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b)
+      is a bootstrap interval, not a z-interval task; reserve it for bootstrap.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -764,14 +749,11 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 40-44
+    angle: The current lecture's focused reading for t confidence intervals.
+    angle_detail: Read physical PDF pages 40-44 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -947,8 +929,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Resampling observations with replacement approximates an estimator''s sampling
     distribution when a convenient analytic standard error is unavailable.'
-  - Work Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval, then the remaining 2, and record
-    every miss with the step it failed at.
+  - Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error, the 80%
+    interval and the distinction from sample standard deviation.
   exam_critical: true
   concepts:
   - concept-bootstrap
@@ -956,25 +938,21 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 45
+    angle: The current lecture's focused reading for bootstrap estimation.
+    angle_detail: Read physical PDF pages 45 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle: Makes the estimator/standard-error/interval chain concrete in one data-analysis task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle: Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error, the
+      80% interval and the distinction from sample standard deviation.
+    angle_detail: Work Blatt 4 Aufgabe 2(a)-(c) using its ten supplied resamples; calculate standard error,
+      the 80% interval and the distinction from sample standard deviation.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -1037,9 +1015,10 @@ stages:
     kind: read
     label: Dekking Ch 18
     source_id: source-dekking-mips
-    locator: Ch 18 pdf pp. 275-290
-    angle: Bootstrap principle and empirical variants.
-    angle_detail: Bootstrap principle first.
+    locator: Ch 18, PDF pp. 275-290
+    angle: Approximate an estimator distribution by resampling from an estimated distribution.
+    angle_detail: Distinguish observations, resamples and the distribution of the resampled statistic
+      before constructing a standard error or interval.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
@@ -1061,14 +1040,11 @@ stages:
   resources:
   - kind: read
     label: Current L09 estimation deck
-    locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/09_estimating.pdf, PDF pp. 10-14
+    angle: The current lecture's focused reading for statistical uncertainty versus data bias.
+    angle_detail: Read physical PDF pages 10-14 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures

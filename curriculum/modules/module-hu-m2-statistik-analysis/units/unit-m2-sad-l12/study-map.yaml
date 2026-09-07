@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Internal nodes test features, branches partition the instance space, and
     leaves predict; simpler rules encode a generalization preference rather than merely memorizing IDs.'
-  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
-    step it failed at.
+  - Using L12 PDF pp. 5-12, trace one instance from root to leaf and write the corresponding rule. Defer
+    tree induction, pruning and AdaBoost until their stages.
   exam_critical: true
   concepts:
   - concept-decision-trees
@@ -29,15 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 5-14
+    angle: The current lecture's focused reading for decision trees, rules, and preference bias.
+    angle_detail: Read physical PDF pages 5-14 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -124,19 +120,18 @@ stages:
     scope_triage: reference-only
     source_id: source-cs229-2022-videos
     route_id: route-0f4dd7d42e4f26f7e9730a91
-  - kind: practise
-    label: Cornell CS4780 HW8 — trees and AdaBoost
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
-      files
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
-      them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
-      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
-      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
-      test, not as the baseline.
-    scope_triage: helpful-now
+  - kind: reference
+    label: Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization
+    locator: '2018Fall/HW8/hw8.pdf: Problem 1(a), PDF p. 1; Problem 1(b), pp. 1-3; Problem 2, p. 3'
+    angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
+    scope_triage: reference-only
     source_id: source-cs4780-homeworks
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part B 'ID Trees', PDF pp. 4-5
@@ -203,8 +198,9 @@ stages:
   done_when:
   - 'Reproduce without notes: Entropy measures class impurity, information gain measures the reduction
     after a split, and ID3 greedily chooses the feature that produces the largest gain.'
-  - Work Cornell CS4780 HW8 — trees and AdaBoost, then the remaining 1, and record every miss with the
-    step it failed at.
+  - Compute entropy and information gain for the L12 PDF pp. 21-24 dataset, then check the shown split.
+    Use the existing MIT ID-tree question for additional practice; reserve Cornell Fall HW8 for regression
+    trees.
   exam_critical: true
   concepts:
   - concept-information-gain
@@ -212,15 +208,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 15-26
+    angle: The current lecture's focused reading for entropy, information gain, and id3.
+    angle_detail: Read physical PDF pages 15-26 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -278,19 +270,18 @@ stages:
     scope_triage: reference-only
     source_id: source-cs229-notes
     route_id: route-2ecd41a999e0fd49db64c0c0
-  - kind: practise
-    label: Cornell CS4780 HW8 — trees and AdaBoost
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
-      files
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
-      them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
-      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
-      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
-      test, not as the baseline.
-    scope_triage: helpful-now
+  - kind: reference
+    label: Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization
+    locator: '2018Fall/HW8/hw8.pdf: Problem 1(a), PDF p. 1; Problem 1(b), pp. 1-3; Problem 2, p. 3'
+    angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
+    scope_triage: reference-only
     source_id: source-cs4780-homeworks
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   - kind: practise
     label: MIT 6.034 quizzes — ID3/tree tracing
     locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Part B 'ID Trees', PDF pp. 4-5
@@ -347,6 +338,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Numeric targets replace class impurity with within-node squared-error or
     variance reduction while retaining the same recursive partition structure.'
+  - Attempt Cornell Fall 2018 HW8 PDF Problem 1(a); Problem 1(b) solution correspondence remains unresolved
+    because the PDF and TeX differ.
   exam_critical: true
   concepts:
   - concept-variance
@@ -354,15 +347,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 27
+    angle: The current lecture's focused reading for regression trees and variance reduction.
+    angle_detail: Read physical PDF pages 27 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -426,6 +415,18 @@ stages:
     scope_triage: helpful-now
     source_id: source-marsland-ml-algorithmic
     route_id: route-775c3bffd9b1dda61f65be0d
+  - kind: practise
+    label: Cornell Fall 2018 HW8 Problem 1(a)
+    locator: 2018Fall/HW8/hw8.pdf, PDF pp. 1, Problem 1(a)
+    angle: Regression-tree construction and pruning, followed by an AdaBoost normalization proof.
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
+    scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
   attachments: []
   source_feedback: []
@@ -438,6 +439,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Depth, minimum samples, purity thresholds, and post-pruning control complexity;
     an unpruned tree can fit noise and generalize poorly.'
+  - Attempt Cornell Fall 2018 HW8 PDF Problem 1(b); Problem 1(b) solution correspondence remains unresolved
+    because the PDF and TeX differ.
   exam_critical: true
   concepts:
   - concept-decision-trees
@@ -445,15 +448,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 29-30
+    angle: The current lecture's focused reading for tree growth, stopping, and pruning.
+    angle_detail: Read physical PDF pages 29-30 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -569,6 +568,18 @@ stages:
     scope_triage: helpful-now
     source_id: source-rohrer-e2eml
     route_id: route-fcd3c263bfe17bebb07f49c3
+  - kind: practise
+    label: Cornell Fall 2018 HW8 Problem 1(b)
+    locator: 2018Fall/HW8/hw8.pdf, PDF pp. 1-3, Problem 1(b)
+    angle: Regression-tree construction and pruning, followed by an AdaBoost normalization proof.
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
+    scope_triage: helpful-now
+    source_id: source-cs4780-homeworks
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
   attachments: []
   source_feedback: []
@@ -588,15 +599,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 31-33,35-36
+    angle: The current lecture's focused reading for bagging and random forests.
+    angle_detail: Read physical PDF pages 31-33,35-36 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -755,7 +762,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Sequential weak learners focus on residuals or misclassified examples, trading
     a coordinated bias reduction against sensitivity to noise and tuning.'
-  - Work Cornell CS4780 HW8 — trees and AdaBoost, and record every miss with the step it failed at.
+  - Explain the reweighting shown in L12 PDF pp. 34-35; optionally prove normalization in Cornell Fall
+    2018 HW8 Problem 2.
   exam_critical: true
   concepts:
   - concept-random-forest
@@ -763,15 +771,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 34-35
+    angle: The current lecture's focused reading for boosting.
+    angle_detail: Read physical PDF pages 34-35 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
@@ -870,18 +874,18 @@ stages:
     source_id: source-cs229-2022-videos
     route_id: route-0f4dd7d42e4f26f7e9730a91
   - kind: practise
-    label: Cornell CS4780 HW8 — trees and AdaBoost
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
-      files
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
-      them.
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
-      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
-      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
-      test, not as the baseline.
+    label: Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization
+    locator: 2018Fall/HW8/hw8.pdf, PDF p. 3, Problem 2
+    angle: Prove the AdaBoost weight update stays normalized; this is a proof rather than a multi-round
+      numeric trace.
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
     scope_triage: helpful-now
     source_id: source-cs4780-homeworks
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   - kind: read
     label: Geron Ch 7 - the three ensemble families side by side
     locator: Chapter 7, pp. 217-240 (bagging p. 221; out-of-bag p. 223; AdaBoost and gradient boosting
@@ -951,15 +955,11 @@ stages:
   resources:
   - kind: read
     label: Current L12 tree-based learning deck
-    locator: lecture-slides/12_tree_based.pdf, 36 slides
-    angle: 'The only current tree scope: preference bias, entropy/information gain/ID3, regression splitting,
-      pruning, and the four ensemble families.'
-    angle_detail: 'Compact but complete — the deck covers what many courses spread over two lectures.
-      ID3''s information-gain computation is the examinable calculation; the ensemble section is mostly
-      conceptual comparison. Because bagging, random forests, boosting and stacking all arrive on the
-      last slides, they are easy to blur; Géron Ch 7 treats each as a separate technique with its own
-      reason to exist. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for
-      now.'
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 33,35
+    angle: The current lecture's focused reading for stacking and ensemble tradeoffs.
+    angle_detail: Read physical PDF pages 33,35 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures

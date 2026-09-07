@@ -20,8 +20,7 @@ stages:
   done_when:
   - 'Reproduce without notes: A neuron computes an affine weighted sum followed by an activation; with
     the identity activation, a one-layer network is multivariate linear regression.'
-  - Work Blatt 5, Aufgabe 2(a) — affine forward pass only; defer softmax, cross-entropy and interpretation
-    to later stages.
+  - 'Work Blatt 5 Aufgabe 2(a): Calculate only the two affine outputs by matrix multiplication.'
   exam_critical: true
   concepts:
   - concept-linear-regression
@@ -29,27 +28,19 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 2-7
+    angle: The current lecture's focused reading for artificial neurons and linear-model equivalence.
+    angle_detail: Read physical PDF pages 2-7 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 5, Aufgabe 2(a) — affine forward pass
-    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)
-    angle: Part (a) fits this stage's affine-neuron scope; later parts require softmax and loss from subsequent
-      stages.
-    angle_detail: 'This is a current assessed sheet. At this stage, work only part (a): the matrix multiply
-      / affine forward pass. Parts (b) softmax, (c) cross-entropy loss, and (d) decision interpretation
-      depend on concepts introduced in later stages. Attempt the full problem after completing the output
-      and forward-pass stages.'
+    label: Blatt 5 Aufgabe 2(a)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a)
+    angle: Calculate only the two affine outputs by matrix multiplication.
+    angle_detail: Calculate only the two affine outputs by matrix multiplication.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -192,9 +183,8 @@ stages:
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
       p. 95; universal approximation p. 107)
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place
       through the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately
       by the hidden layer that solves it (p. 94). That is L15''s activation node argued rather than asserted.
@@ -238,15 +228,11 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 9-13,22
+    angle: The current lecture's focused reading for nonlinearity, activation functions, and xor.
+    angle_detail: Read physical PDF pages 9-13,22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -441,9 +427,8 @@ stages:
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
       p. 95; universal approximation p. 107)
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place
       through the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately
       by the hidden layer that solves it (p. 94). That is L15''s activation node argued rather than asserted.
@@ -465,8 +450,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Regression and classification require different output parameterizations;
     softmax converts class scores into a normalized categorical distribution.'
-  - Work Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy, then the remaining 2, and record
-    every miss with the step it failed at.
+  - 'Work Blatt 5 Aufgabe 2(a)-(b): Compute the logits, softmax probabilities and classification decisions;
+    reserve cross-entropy for the loss stage.'
   exam_critical: true
   concepts:
   - concept-neural-network
@@ -475,26 +460,21 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 8-9
+    angle: The current lecture's focused reading for one-hot targets, output layers, and softmax.
+    angle_detail: Read physical PDF pages 8-9 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
-    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
-    angle: 'The current by-hand neural-network task: matrix multiply, normalize outputs, calculate loss
-      and interpret the decision rule.'
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    label: Blatt 5 Aufgabe 2(a)-(b)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a)-(b)
+    angle: Compute the logits, softmax probabilities and classification decisions; reserve cross-entropy
+      for the loss stage.
+    angle_detail: Compute the logits, softmax probabilities and classification decisions; reserve cross-entropy
+      for the loss stage.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -616,8 +596,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Matrix multiplication, biases, activations, and layer dimensions define
     the forward graph; parameter counting follows directly from adjacent widths and bias vectors.'
-  - Work Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy, then the remaining 4, and record
-    every miss with the step it failed at.
+  - 'Work Blatt 5 Aufgabe 2(a),(d): Check the matrix shapes and derive the one-layer decision rule; use
+    the deck for multilayer composition. This sheet is a one-layer task.'
   exam_critical: true
   concepts:
   - concept-linear-algebra
@@ -626,26 +606,22 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 15-22
+    angle: The current lecture's focused reading for multilayer forward passes, shapes, and parameter
+      counts.
+    angle_detail: Read physical PDF pages 15-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
-    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
-    angle: 'The current by-hand neural-network task: matrix multiply, normalize outputs, calculate loss
-      and interpret the decision rule.'
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    label: Blatt 5 Aufgabe 2(a),(d)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(a),(d)
+    angle: Check the matrix shapes and derive the one-layer decision rule; use the deck for multilayer
+      composition. This sheet is a one-layer task.
+    angle_detail: Check the matrix shapes and derive the one-layer decision rule; use the deck for multilayer
+      composition. This sheet is a one-layer task.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -961,9 +937,8 @@ stages:
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
       p. 95; universal approximation p. 107)
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place
       through the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately
       by the hidden layer that solves it (p. 94). That is L15''s activation node argued rather than asserted.
@@ -1006,15 +981,11 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 24-31
+    angle: The current lecture's focused reading for loss gradients and backpropagation.
+    angle_detail: Read physical PDF pages 24-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -1254,9 +1225,8 @@ stages:
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
       p. 95; universal approximation p. 107)
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place
       through the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately
       by the hidden layer that solves it (p. 94). That is L15''s activation node argued rather than asserted.
@@ -1278,8 +1248,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Initialization, batches, learning rate, stopping, data volume, regularization,
     and validation interact; lower training loss alone is not evidence of a better model.'
-  - Work Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy, then the remaining 2, and record
-    every miss with the step it failed at.
+  - 'Work Blatt 5 Aufgabe 2(c): After the output/loss explanation, compute both cross-entropy losses from
+    the probabilities in (b). This is a loss check, not evidence of a training trajectory.'
   exam_critical: true
   concepts:
   - concept-bias-variance-tradeoff
@@ -1287,26 +1257,21 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 26,28,32
+    angle: The current lecture's focused reading for training, generalization, and practical choices.
+    angle_detail: Read physical PDF pages 26,28,32 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy
-    locator: exercise-slides/blatt-05.pdf, p. 3, Aufgabe 2(a)-(d)
-    angle: 'The current by-hand neural-network task: matrix multiply, normalize outputs, calculate loss
-      and interpret the decision rule.'
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    label: Blatt 5 Aufgabe 2(c)
+    locator: exercise-slides/blatt-05.pdf, PDF p. 3, Aufgabe 2(c)
+    angle: After the output/loss explanation, compute both cross-entropy losses from the probabilities
+      in (b). This is a loss check, not evidence of a training trajectory.
+    angle_detail: After the output/loss explanation, compute both cross-entropy losses from the probabilities
+      in (b). This is a loss check, not evidence of a training trajectory.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -1360,7 +1325,7 @@ stages:
     source_id: source-sad-2025-recordings
     route_id: route-37563c3b8ff1e0463522c15c
   - kind: read
-    label: Kelleher Chapter 7 — error-based learning and neural networks
+    label: Kelleher Chapter 7 — regression and optimization prerequisites
     locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
     angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
       — the same route L15's first slides take.
@@ -1515,15 +1480,11 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 34
+    angle: The current lecture's focused reading for expressiveness and universal approximation.
+    angle_detail: Read physical PDF pages 34 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
@@ -1586,9 +1547,8 @@ stages:
     label: Marsland Ch 3-4 - from the single neuron to backprop and universality
     locator: Chapter 3, pp. 60-91 and Chapter 4, pp. 92-131 (XOR p. 92; hidden layer p. 94; back-propagation
       p. 95; universal approximation p. 107)
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     angle_detail: 'Chapters 3 and 4 are the classical route into neural networks and they earn their place
       through the XOR example on p. 92: a problem a single layer provably cannot solve, followed immediately
       by the hidden layer that solves it (p. 94). That is L15''s activation node argued rather than asserted.
@@ -1619,15 +1579,12 @@ stages:
   resources:
   - kind: read
     label: Current L15 neural-networks deck
-    locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle: Builds from a single neuron to backpropagation and closes with the CNN/RNN/Transformer outlook
-      that connects SaD to AML.
-    angle_detail: 'The deck''s most useful move is starting from the observation that a single neuron
-      with no activation is a linear model — which ties L15 back to L03 rather than presenting neural
-      networks as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the
-      deck does not run a numeric example, which is the gap Karpathy''s micrograd and 3Blue1Brown''s episode
-      3 fill. The closing outlook slides are context, not exam material. Unresolved: specific page slice
-      not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/15_neural_networks.pdf, PDF pp. 35-38
+    angle: The current CNN/RNN/Transformer outlook, with exam inclusion unresolved.
+    angle_detail: Read physical PDF pages 35-38 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. No official exam exclusion was verified. The inherited exam_critical flag is preserved
+      pending an authoritative scope decision.
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures

@@ -30,15 +30,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 3-8
+    angle: The current lecture's focused reading for one dataset, several legitimate questions.
+    angle_detail: Read physical PDF pages 3-8 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -102,15 +98,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 4-6
+    angle: The current lecture's focused reading for mean, median, mode, and robustness.
+    angle_detail: Read physical PDF pages 4-6 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -222,15 +214,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 6,9-10
+    angle: The current lecture's focused reading for frequencies, histograms, and empirical distributions.
+    angle_detail: Read physical PDF pages 6,9-10 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -320,15 +308,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 7-10
+    angle: The current lecture's focused reading for samples, populations, and context.
+    angle_detail: Read physical PDF pages 7-10 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -424,15 +408,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 19-22
+    angle: The current lecture's focused reading for confusion matrices and classification metrics.
+    angle_detail: Read physical PDF pages 19-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -497,15 +477,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 12-18,23-24
+    angle: The current lecture's focused reading for base rates and bayes by counting.
+    angle_detail: Read physical PDF pages 12-18,23-24 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
@@ -555,15 +531,11 @@ stages:
   - kind: read
     label: Current L01 introduction deck
     source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle: The scope authority for L01 and the only place the course's own framing of the module appears.
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material. Unresolved: specific page slice not yet reviewed, keeping whole-deck
-      route for now.'
+    locator: lecture-slides/01_introduction.pdf, PDF pp. 2,26-34,37-40
+    angle: The current lecture's focused reading for from description to inference and prediction.
+    angle_detail: Read physical PDF pages 2,26-34,37-40 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33

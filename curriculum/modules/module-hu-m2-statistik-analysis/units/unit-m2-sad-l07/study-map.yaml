@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Number of trials, independence, replacement, changing versus fixed success
     probability, stopping rule, and count interval determine which discrete model is valid.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify four discrete distributions, then the remaining 7, and record
-    every miss with the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 2 — identify Poisson, Binomial and Hypergeometric models plus approximation,
+    then the remaining 7, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -29,24 +29,21 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 2-4,16,24
+    angle: The current lecture's focused reading for distribution choice from assumptions.
+    angle_detail: Read physical PDF pages 2-4,16,24 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
+      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
+      model has been introduced.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -54,8 +51,8 @@ stages:
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'
@@ -299,8 +296,8 @@ stages:
   done_when:
   - 'Reproduce without notes: A Bernoulli variable records one success/failure, while Binomial(n,p) counts
     successes in n independent trials with constant p; combinatorics explains its PMF.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify four discrete distributions, then the remaining 7, and record
-    every miss with the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 2 — identify Poisson, Binomial and Hypergeometric models plus approximation,
+    then the remaining 7, and record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -308,24 +305,21 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 4-14
+    angle: The current lecture's focused reading for bernoulli trials and the binomial distribution.
+    angle_detail: Read physical PDF pages 4-14 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
+      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
+      model has been introduced.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -333,8 +327,8 @@ stages:
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'
@@ -618,24 +612,21 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 16-22
+    angle: The current lecture's focused reading for hypergeometric sampling without replacement.
+    angle_detail: Read physical PDF pages 16-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
+    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
+      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
+      model has been introduced.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -643,8 +634,8 @@ stages:
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'
@@ -878,13 +869,13 @@ stages:
   number: 4
   title: Geometric waiting times
   status: pending
-  objective: The Geometric distribution models trials until first success with the memoryless property;
-    it complements the fixed-trial Binomial model.
+  objective: 'The Geometric model counts trials until first success and has the memoryless property. Geometric
+    waiting times are complementary preparation here: L07 has no dedicated section and Übungsblatt 3 Aufgabe
+    2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02) in Aufgabe 3(a)(4),
+    PDF p. 3; establish whether counts include the successful trial.'
   done_when:
-  - 'Reproduce without notes: The Geometric model counts trials until the first success, introducing a
-    stopping-time story and the memoryless property rather than a fixed number of trials.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
-    and their approximation in part (d), then record every miss with the step it failed at.
+  - Derive P(T=k)=(1-p)^(k-1)*p for T starting at 1; distinguish T from failures-before-success T-1.
+  - Explain why the fixed-sample questions in Übungsblatt 3 Aufgabe 2 are not Geometric waiting-time tasks.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -892,38 +883,36 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 14
+    angle: Related negative-binomial sketch; no dedicated Geometric lesson in this deck.
+    angle_detail: Read physical PDF pages 14 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu. PDF p. 14 is related context only. The Geometric model is supplied by complementary readings;
+      Übungsblatt 3 Aufgabe 2 and UE4 pp. 36-49 do not teach it. Blatt 4 Aufgabe 3(a)(4) later uses it
+      in a CLT simulation.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
+  - kind: reference
+    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
+    angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
+      and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
+      in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
-    scope_triage: required-now
+    scope_triage: reference-only
     source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: practise
+  - kind: reference
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
+    angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
+      and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
+      in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
-    scope_triage: required-now
+    scope_triage: reference-only
     source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
   - kind: read
@@ -1083,6 +1072,17 @@ stages:
     scope_triage: helpful-now
     source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
+  - kind: read
+    label: Blatt 4 Aufgabe 3(a)(4) — Geometric model used later in CLT simulation
+    source_id: source-sad-uebungen
+    route_id: route-sad-l07-geometric-blatt4-clt
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, PDF p. 3, Aufgabe 3(a)(4)
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    angle: An explicit Geometric(p=0.02) example in the registered course exercise material.
+    angle_detail: Use the model description as a bridge now; the full m=10000, n=50 simulation belongs
+      after CLT in L08. The sheet has a 2026 heading and a sds25 URL, so this establishes content, not
+      an official exam-priority decision.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
   attachments: []
   source_feedback: []
@@ -1104,24 +1104,21 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30
+    angle: The current lecture's focused reading for poisson event counts.
+    angle_detail: Read physical PDF pages 24-30 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
+    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
+      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
+      model has been introduced.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -1129,8 +1126,8 @@ stages:
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'
@@ -1406,22 +1403,19 @@ stages:
   resources:
   - kind: read
     label: Current L07 discrete-distributions deck
-    locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
-      specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30
+    angle: The current lecture's focused reading for limits, approximations, and moment signatures.
+    angle_detail: Read physical PDF pages 18,22,26,29-30 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
     label: UE4, slides 36-49 — distribution conditions and worked cases
     locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'

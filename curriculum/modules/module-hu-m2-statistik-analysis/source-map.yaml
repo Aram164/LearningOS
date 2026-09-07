@@ -533,12 +533,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/01_introduction.pdf, 42 slides
-    angle_detail: 'Everything in L01 is demonstrated on a single study-duration dataset, which is the
-      deck''s pedagogical device and also its limitation: each idea appears once, in one context, and
-      is not revisited. Treat it as the definition of what is in scope and the source of the notation,
-      and use the supporting routes on this stage for the second and third encounters the deck does not
-      provide. The classification-metrics and base-rate slides at the end preview L04 and L11 rather than
-      belonging to L01''s own material.'
+    angle_detail: L01 begins with a study-duration dataset (PDF pp. 3-10), then works a medical-test table,
+      classification measures and base-rate reasoning (pp. 12-24). These are L01's own topics and are
+      revisited in L04/L11. The biomedical example (pp. 26-34) illustrates applications; pp. 37-40 give
+      the course overview and bibliography.
   - id: route-0f03e63079982eab2c3f883b
     unit_id: unit-m2-sad-l02
     title: Current L02 basic-concepts deck
@@ -578,11 +576,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/03_correlation_regression.pdf, 48 slides
-    angle_detail: 'The deck covers an unusual amount of ground for one lecture: descriptive correlation,
-      simple least squares, the multivariate design matrix, the closed-form normal equation and an iterative
-      optimiser. The compression is real, and the two places it shows are the matrix notation (assumed)
-      and gradient descent (worked with numeric examples in PDF pp. 39-43). Géron Ch 4 and 3Blue1Brown''s
-      linear-algebra episodes are the routes that repair those two specifically. Everything here is examinable.'
+    angle_detail: The current deck connects scatterplots and Pearson correlation to simple and multivariate
+      regression. PDF pp. 24-27 develop the matrix solution; pp. 29-43 explain gradient descent and run
+      numeric weight updates, including feature scaling. Supplementary matrix and optimization resources
+      offer additional explanation and practice, rather than supplying an example absent from the deck.
   - id: route-1d4c3d5164052df9c540d079
     unit_id: unit-m2-sad-l04
     title: Current L04 probability and Naive Bayes deck
@@ -600,12 +597,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/04_probability.pdf, 59 slides
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it.'
+    angle_detail: The deck develops event spaces, axioms, conditioning, independence and categorical Naive
+      Bayes. PDF p. 43 (printed slide 46) explicitly defines the partition and states total probability
+      before Bayes; it omits the proof. Fahrmeir supplies a proof-oriented treatment. Distinguish this
+      omitted proof from an omitted theorem statement.
   - id: route-5b6e78353200f05843a1f9a0
     unit_id: unit-m2-sad-l05
     title: Current L05 combinatorics deck
@@ -659,16 +654,17 @@ sources:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-hypergeometric
-    - knowledge-sad-l07-geometric
     - knowledge-sad-l07-poisson
     - knowledge-sad-l07-relationships
     depth: course-aligned
     scope: current
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Scope
+      note: the current deck has no dedicated Geometric section; its PDF p. 14 sketches related negative-binomial/beta
+      models. The Geometric stage is a complementary bridge to the explicitly routed Blatt 4 CLT simulation.'
   - id: route-a82f4016ebbdab30e0351c91
     unit_id: unit-m2-sad-l08
     title: Current L08 Normal, CLT, and likelihood deck
@@ -796,11 +792,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement.'
+    angle_detail: The current deck teaches k-NN, aggregation, distance measures and scaling. PDF pp. 23-31
+      cover search cost, kd-trees, metric trees and metric axioms. LSH receives a brief sketch on p. 30;
+      Kelleher and scikit-learn complement exact search, while the sketch alone does not establish detailed
+      LSH complexity bounds.
   - id: route-004fedb8926613a0d638fd20
     unit_id: unit-m2-sad-l14
     title: Current L14 probability-based learning deck
@@ -818,10 +813,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/14_probability_based.pdf, 29 slides
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
-      Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
-      are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+    angle_detail: The deck extends Naive Bayes through smoothing, numerical features and count models,
+      then introduces Bayesian-network factorization and Markov blankets on PDF pp. 24-29. Kelleher §6.4.4
+      and Marsland Ch 16 provide complementary explanations. The deck alone does not establish whether
+      a topic will be examined computationally or conceptually.
   - id: route-5ee4a829346813cea44ac041
     unit_id: unit-m2-sad-l15
     title: Current L15 neural-networks deck
@@ -840,11 +835,10 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/15_neural_networks.pdf, 38 slides
-    angle_detail: The deck's most useful move is starting from the observation that a single neuron with
-      no activation is a linear model — which ties L15 back to L03 rather than presenting neural networks
-      as a new subject. Backpropagation is stated as the chain rule applied layer by layer; the deck does
-      not run a numeric example, which is the gap Karpathy's micrograd and 3Blue1Brown's episode 3 fill.
-      The closing outlook slides are context, not exam material.
+    angle_detail: The deck connects an affine neuron to L03, develops nonlinear multilayer forward passes,
+      and explains backpropagation via the chain rule (PDF pp. 28-31). It does not run a numeric backward
+      pass. 3Blue1Brown episode 3 provides intuition; episode 4 develops the calculus. The closing CNN/RNN/Transformer
+      outlook is present on pp. 35-38, but no official exam exclusion was verified.
   - id: route-56679bcd3c703dc9d18a9cd9
     unit_id: unit-m2-sad-clustering
     title: L11 supervised/unsupervised framing
@@ -908,6 +902,10 @@ sources:
       is, in the notation the exam uses. Two boundaries it does not cross — it says nothing about the
       Analysis half, which the script owns, and nothing about how the three hours are split between the
       halves, which no local source states.'
+  when: 'Bibliography disposition (L01 PDF p. 40): Kelleher, Goodfellow and Bishop are registered options;
+    Teschl remains an unavailable candidate. Sachs/Hedderich, Angewandte Statistik (mit R), 13th edition
+    (2009 as cited by the deck), is deferred: no registered or locally located copy was verified. Do not
+    fabricate a source ID, book locator or reading assignment for it.'
 - source_id: source-professor-leonard
   role: first-exposure
   why: Optional 20-minute intuition unlock before the script for a genuinely new topic; never substitutes
@@ -1111,7 +1109,12 @@ sources:
     locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+      working; it is not a replacement for the lecture derivation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
   - id: route-f7249a8bba66bc3ac7724629
     unit_id: unit-m2-sad-l03
@@ -1318,7 +1321,12 @@ sources:
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
       working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation.'
+      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
   - id: route-25ae05c5bd133243f7bf98aa
     unit_id: unit-m2-sad-l06
@@ -1361,33 +1369,31 @@ sources:
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
   - id: route-475a87b6ec22bf8e77f9de71
     unit_id: unit-m2-sad-l07
-    title: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    title: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
     format: exercise
     angle: Forces model selection from prose before any formula can be substituted.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-hypergeometric
-    - knowledge-sad-l07-geometric
     - knowledge-sad-l07-poisson
     depth: practice
     scope: current
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
+      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
+      model has been introduced.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
   - id: route-52083707f01a014c3e2c267b
     unit_id: unit-m2-sad-l07
     title: UE4, slides 36-49 — distribution conditions and worked cases
     format: exercise
-    angle: Puts the identifying conditions for Binomial, Hypergeometric, Geometric and Poisson side by
-      side.
+    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
+      times.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-hypergeometric
-    - knowledge-sad-l07-geometric
     - knowledge-sad-l07-poisson
     - knowledge-sad-l07-relationships
     depth: practice
@@ -1484,10 +1490,11 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/Statistics_And_Data_Science.pdf, p. 2, Aufgabe 2
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The generic filename is retained because
-      the PDF itself has no recoverable sheet number.'
+    angle_detail: 'The PDF is explicitly headed Übungsblatt 4. Aufgabe 2 on PDF p. 2 supplies the sample
+      4,5,6,7,8 and ten bootstrap resamples: (a) bootstrap standard error, (b) an 80% bootstrap interval,
+      (c) standard deviation versus standard error. This is not a direct z-interval exercise. The heading
+      is dated 2026 but the Moodle URL says sds25; retain the registered file and do not infer exam dates
+      from it.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
   - id: route-23f516ac8b071207600e7094
     unit_id: unit-m2-sad-l09
@@ -1727,12 +1734,11 @@ sources:
     - knowledge-sad-clustering-evaluation
     depth: course-aligned
     scope: current
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 32-75 (clustering); p. 87 (retrieval questions)
+    angle_detail: 'The registered UE7 file defines clustering and its families on PDF pp. 32-44, works
+      three k-means iterations on pp. 45-74, and discusses properties on p. 75. Page 87 contains clustering
+      questions. Page 77 has 2025 exam dates: those administrative details are historical and are not
+      current exam authority.'
   - id: route-427abe0fd724b6323bd2bf36
     unit_id: unit-m2-sad-exam-prep
     title: Current SaD exercises and clustering authority
@@ -1776,6 +1782,25 @@ sources:
       wording, immediately after getting it wrong — which is a different act from working the sheets in
       order, and it is why this route names one task rather than a set. If the matching task has already
       been spent, the external banks on the Statistics lane carry fresh equivalents.'
+  - id: route-sad-l07-geometric-blatt4-clt
+    unit_id: unit-m2-sad-l07
+    title: Blatt 4 Aufgabe 3(a)(4) — Geometric model used later in CLT simulation
+    format: exercise
+    angle: An explicit Geometric(p=0.02) example in the registered course exercise material.
+    angle_detail: Use the model description as a bridge now; the full m=10000, n=50 simulation belongs
+      after CLT in L08. The sheet has a 2026 heading and a sds25 URL, so this establishes content, not
+      an official exam-priority decision.
+    covers:
+    - knowledge-sad-l07-geometric
+    depth: practice
+    scope: complementary
+    locator: exercise-slides/Statistics_And_Data_Science.pdf, PDF p. 3, Aufgabe 3(a)(4)
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+  when: 'Unresolved local assets: Blatt 1 Aufgabe 3 names seattle_house_prices.csv and its aufgabe3.py;
+    Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv
+    and its template. No matching files were found in the registered materials inventory or bounded materials/workbench
+    filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+    substitute unrelated datasets. Paper-only parts remain usable.'
 - source_id: source-3b1b-essence-of-calculus
   role: intuition
   why: Short visual previews for limits, derivatives, Taylor, and integration when the cold diagnostic
@@ -2546,7 +2571,7 @@ sources:
     unit_id: unit-m2-sad-l13
     title: Kelleher Chapter 5 — similarity-based learning
     format: book
-    angle: Includes kd-tree exact indexing in §5.4.2; LSH is mentioned but not fully covered.
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     covers:
     - knowledge-sad-l13-neighbors
     - knowledge-sad-l13-aggregation
@@ -2558,17 +2583,15 @@ sources:
     scope: complementary
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
       feature-space and normalisation sections)
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-b3d516335f24f55b1d6ddc00
     unit_id: unit-m2-sad-l14
     title: Kelleher Chapter 6 — probability-based learning
     format: book
-    angle: Retains genuine connection between networks and Naive Bayes.
+    angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
     covers:
     - knowledge-sad-l14-nb-recap
     - knowledge-sad-l14-smoothing
@@ -2580,21 +2603,20 @@ sources:
     scope: complementary
     locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
-    angle_detail: L14 introduces Naive Bayes and then, separately, Bayesian networks, and the connection
-      between them is asserted late. Kelleher builds the network formalism first and derives Naive Bayes
-      as the network in which every feature depends only on the class — at which point the 'naive' assumption
-      is a graph statement rather than an algebraic convenience. That is the cleanest available account
-      of L14's structure. Smoothing and the continuous-feature handling are worked with numbers.
+    angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
+      (p. 324 onward). The Markov blanket is explained on p. 328. This connects the conditional-independence
+      classifier to graphical dependency models; the book does not teach networks before deriving Naive
+      Bayes.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-53e4963eac07776c8fbfef06
     unit_id: unit-m2-sad-l15
-    title: Kelleher Chapter 7 — error-based learning and neural networks
+    title: Kelleher Chapter 7 — regression and optimization prerequisites
     format: book
     angle: Provides regression and optimization prerequisite concepts without artificial neural networks.
     covers:
     - knowledge-sad-l15-training
     depth: course-aligned
-    scope: complementary
+    scope: prerequisite
     locator: Ch 7 Error-based Learning (regression and optimization, pdf pp. 351-416)
     angle_detail: Chapter 7 covers regression, gradient descent, logistic regression and SVMs. It does
       not cover multilayer networks or backpropagation.
@@ -2626,24 +2648,19 @@ sources:
       introduces.'
   - id: route-1cc15543ed952ee0f7f940d0
     unit_id: unit-m2-sad-l14
-    title: Kelleher Ch 6 exercises - Gaussian Naive Bayes worked on data
+    title: Kelleher §6.7 exercise 3 — Gaussian Naive Bayes task
     format: exercise
-    angle: L14 slides 14-18 introduce continuous features and density estimation but the current UE6 sheet
-      stops at the discrete classifier; exercise 3 asks for a naive Bayes model that uses probability
-      density functions with normally distributed features and then a prediction from it, which is the
-      only registered drill for the Gaussian variant.
+    angle: An unsolved Gaussian Naive Bayes exercise using normally distributed descriptive features.
     covers:
     - knowledge-sad-l14-gaussian
     depth: practice
     scope: complementary
     locator: 'Section 6.7 exercises, pp. 344-350 (exercise 3: naive Bayes with normally distributed descriptive
       features)'
-    angle_detail: 'The Gaussian Naive Bayes exercise on pp. 344-350 — exercise 3 in particular — is the
-      worked numeric-attribute case L14 needs and the chapter body only sketches: fit a Normal per class
-      per feature, evaluate the densities at the query point, multiply, compare. Having the full solution
-      means the arithmetic can be checked step by step, which matters because the density values are not
-      probabilities and the intermediate numbers look wrong the first time. Access to the full solution
-      is unresolved; the solutions manual was not found.'
+    angle_detail: Exercise 3 asks for a density-based Naive Bayes model and a prediction. Fit class-feature
+      means and variances, evaluate densities and compare class scores. The assigned PDF contains the
+      question, not a verified complete worked solution. Solution access remains unresolved; do not treat
+      this resource as a step-by-step answer key.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
@@ -4714,20 +4731,19 @@ sources:
     format: documentation
     depth: implementation
     scope: complementary
-    locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
-      'Choice of nearest neighbors algorithm'
+    locator: 'User guide §1.6.4 ''Nearest Neighbor Algorithms'': §1.6.4.2 K-D Tree; §1.6.4.3 Ball Tree;
+      algorithm-choice discussion in §1.6.4'
     covers:
     - knowledge-sad-l13-neighbors
     - knowledge-sad-l13-aggregation
     - knowledge-sad-l13-metrics
     - knowledge-sad-l13-exact-indexing
-    angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees
-      — which L13 teaches and almost no ML book covers.
-    angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks
-      treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees
-      prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality
-      at which brute force wins again. That is the practical form of the curse of dimensionality and directly
-      supports the deck''s argument for approximate search.'
+    angle: Explains exact search structures and the practical conditions favoring tree search or brute
+      force.
+    angle_detail: The official guide describes KD-tree and ball-tree pruning, then compares algorithm
+      choices by data size, dimension and query workload. Use this implementation perspective alongside
+      Kelleher's kd-tree explanation. Section numbering checked against the official guide on 2026-09-07.
+    url: https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbor-algorithms
   - id: route-d7cf7c94fb31a1141d0c7aab
     unit_id: unit-m2-sad-l14
     title: scikit-learn user guide §1.9 — naive Bayes variants
@@ -5017,13 +5033,11 @@ sources:
       189-202 (Chebyshev p. 191; LLN p. 193; consequences p. 196; exercises p. 199); Ch 14 the central
       limit theorem, pdf pp. 203-213 (standardizing averages p. 203; applications p. 207; exercises p.
       211); Ch 21 maximum likelihood, pdf pp. 317-331 (likelihood and loglikelihood p. 320; properties
-      p. 325; exercises p. 327)
-    angle_detail: 'L08 is really two lectures: Normal/CLT, and likelihood/MLE. Almost every other source
-      covers one or the other. Dekking has consecutive chapters for the first (13 and 14, deliberately
-      separated so the LLN and CLT are never conflated) and a dedicated chapter for the second, using
-      one notation throughout. Ch 21 also does what the deck skips — provides a slower, fuller explanation
-      of loglikelihood transformation and explains why maximising the log is legitimate, which is the
-      step where students lose the thread when they meet the Gaussian-error derivation.'
+      p. 325; exercises p. 327); §22.3, PDF pp. 338-339 (Gaussian likelihood and least squares)
+    angle_detail: Dekking separates LLN and CLT in Chapters 13 and 14. Chapter 21 develops likelihood,
+      and §22.3 (PDF pp. 338-339) derives the Gaussian-error likelihood-to-least-squares connection. L08
+      itself already takes logs and removes constants on PDF p. 35; the book provides a fuller argument
+      and explicit assumptions.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-4ad419aeb16ac96209d55e97
     unit_id: unit-m2-sad-l09
@@ -9262,22 +9276,21 @@ sources:
   unit_routes:
   - id: route-5a43ff2dd96c3c7e6aee61a4
     unit_id: unit-m2-sad-l12
-    title: Cornell CS4780 HW8 — trees and AdaBoost
+    title: Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization
     format: exercise
-    angle: Solution-backed problem sets that ask you to trace the algorithms by hand rather than to describe
-      them.
+    angle: Regression-tree construction and pruning, followed by an AdaBoost normalization proof.
     covers:
-    - knowledge-sad-l12-tree-model
-    - knowledge-sad-l12-entropy-id3
+    - knowledge-sad-l12-regression
+    - knowledge-sad-l12-pruning
     - knowledge-sad-l12-boosting
     depth: practice
     scope: complementary
-    locator: 2018Fall/HW8 and 2018Spring/HW8 (trees, bagging and AdaBoost), with the published solution
-      files
-    angle_detail: Cornell's homework problems require executing AdaBoost's reweighting for a few rounds
-      on a tiny dataset, which is the only way to find out whether the rule is actually understood. Solutions
-      are published, so the work is checkable. Harder than the SaD exam will be; use them as a confidence
-      test, not as the baseline.
+    locator: '2018Fall/HW8/hw8.pdf: Problem 1(a), PDF p. 1; Problem 1(b), pp. 1-3; Problem 2, p. 3'
+    angle_detail: Fall 2018 HW8 PDF Problem 1(a) builds a regression tree, 1(b) concerns pruning, and
+      Problem 2 proves normalization of AdaBoost weights; it is not a numerical multi-round AdaBoost trace.
+      Spring 2018 HW8 covers ridge regression, perceptrons and kernels and is excluded from this L12 assignment.
+      The Fall PDF and TeX differ in Problem 1(b), so solution correspondence for that part is unresolved.
+    vault_path: material://source-cs4780-homeworks/2018Fall/HW8/hw8.pdf
   - id: route-b4b753b2641048dcc267ddc9
     unit_id: unit-m2-sad-l13
     title: Cornell CS4780 HW1 — k-NN
@@ -9796,9 +9809,7 @@ sources:
     unit_id: unit-m2-sad-clustering
     title: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     format: book
-    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter
-      iterates assignment and update on a small data set and shows the hierarchical alternative on the
-      same points.
+    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
     covers:
     - knowledge-sad-clustering-unsupervised
     - knowledge-sad-clustering-families
@@ -9807,12 +9818,9 @@ sources:
     depth: implementation
     scope: complementary
     locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle_detail: 'The gap this fills is specific: UE7''s slides define the topic and state the algorithm,
-      but a definition of k-means does not show you that the assignment and update steps alternate until
-      nothing moves. Zacharski iterates both on a small worked table from p. 335 and prints the intermediate
-      state each round, which is what makes the convergence argument concrete and what an exam tracing
-      question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
-      the framing.'
+    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
+      provides another worked representation and a hierarchical alternative; it does not fill an absent
+      UE7 convergence trace.
 - source_id: source-3b1b-bayes-theorem
   role: intuition
   why: The L01 medical-test example is exactly the base-rate picture these videos animate; visual support
@@ -9891,9 +9899,7 @@ sources:
     unit_id: unit-m2-sad-l14
     title: Marsland Ch 16 - Bayesian networks and the Markov blanket
     format: book
-    angle: L14 slides 25-29 are the only place the module taught Bayesian networks, factorisation and
-      the Markov blanket, and no other registered source covered them; this chapter derives the factorisation
-      from the graph and defines the blanket as the locally sufficient set.
+    angle: A complementary chapter on conditional independence, Bayesian networks and Markov blankets.
     covers:
     - knowledge-sad-l14-bayes-net
     - knowledge-sad-l14-markov
@@ -9901,18 +9907,15 @@ sources:
     scope: complementary
     locator: Chapter 16, pp. 342-379 (conditional independence p. 342; Bayesian networks p. 343; Markov
       blanket p. 349)
-    angle_detail: The only route on this stage that treats L14's last third — Bayesian networks — at real
-      length. Conditional independence (p. 342) is developed as a graph property, networks (p. 343) as
-      factorisations of a joint distribution, and the Markov blanket (p. 349) as the set that renders
-      a node independent of everything else. The deck introduces all three in a handful of slides. Read
-      this if the network material is examined conceptually, which the exercises suggest.
+    angle_detail: The chapter's graph-based account complements L14's short network section. It is one
+      available treatment, alongside Kelleher §6.4.4 and other registered graphical-model sources; claims
+      that it is the only available explanation or that it determines exam format are unsupported.
   - id: route-0958e6d1b97b3d1d030ab6f8
     unit_id: unit-m2-sad-l15
     title: Marsland Ch 3-4 - from the single neuron to backprop and universality
     format: book
-    angle: Follows the exact L15 arc - perceptron, the XOR show-stopper, hidden layers, back-propagation
-      - and is the only registered source that states the universal-approximation result the deck asserts
-      on slide 36.
+    angle: Connects perceptrons, XOR, hidden layers, backpropagation and universal approximation without
+      claiming exclusive coverage.
     covers:
     - knowledge-sad-l15-neuron
     - knowledge-sad-l15-activation
@@ -10121,3 +10124,9 @@ sources:
   why: Too proof-dense for this exam plan and explicitly not selected; retained for future depth.
   priority: 99
   unit_routes: []
+- source_id: source-swanson-principles-probability
+  role: reference
+  why: Restore the registered reference already present in the pre-Gemini workspace; no new stage assignment
+    or source evaluation is inferred.
+  when: Reference-only workspace option carried forward from the reviewed pre-Gemini context.
+  priority: 3
