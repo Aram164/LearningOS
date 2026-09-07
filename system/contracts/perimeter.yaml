@@ -200,66 +200,29 @@ entries:
 # and none is performed on this file's say-so. Each entry states what must be
 # proved first.
 
-pending_disposition:
-
-  - path: LearningOS/python-polars-the-definitive-guide.pdf
-    disposition: delete
-    evidence: >-
-      sha256 8a8fdf9e…f318fe, byte-identical to
-      LearningOS/materials/software/python/polars-definitive-guide/
-      python-polars-the-definitive-guide.pdf (verified 2026-09-04).
-    precondition: re-verify both hashes at execution time, then back up before deleting.
-
-  - path: LearningOS/03_correlation_regression.pdf
-    disposition: delete
-    evidence: >-
-      sha256 d035cdfb…cc066, byte-identical to LearningOS/materials/mathematics/
-      probability-statistics/sad-ss26-lectures/lecture-slides/
-      03_correlation_regression.pdf (verified 2026-09-04).
-    precondition: re-verify both hashes at execution time, then back up before deleting.
-
-  - path: LearningOS/mml-book.pdf
-    disposition: ingest
-    evidence: >-
-      17.5 MB, sha256 3f87b70c…8911bc. NO managed copy exists — searched
-      LearningOS/materials for mml-book and mathematics-for-machine* on
-      2026-09-04 and found none. This is the only copy.
-    precondition: >-
-      MUST NOT be deleted. File it through the managed ingest, confirm it
-      appears in records/materials-manifest.yaml with a checksum, confirm it
-      resolves as material://, and only then remove the umbrella copy.
-
-  - path: LearningOS/JOB-COLLAPSE-OPUS-AUDIT.md
-    disposition: move
-    target: LearningOS/workbench/
-    precondition: none — a move at the umbrella level, reversible in practice.
-
-  - path: LearningOS/JOB-COLLAPSE-GEMINI-DATA-MAP.md
-    disposition: move
-    target: LearningOS/workbench/
-
-  - path: LearningOS/_tier1-patches
-    disposition: shelve
-    target: LearningOS/archive/retired-semester-root/
-    evidence: >-
-      push.log records the engineering-review-tier1 branch pushed and the
-      patches landed; run.log ends in a green build. Applied, not pending.
-    precondition: re-read state.txt before shelving; unapplied work is never shelved.
-
-  - path: Atlas.implementation.plam.md
-    disposition: move
-    target: LearningOS/workbench/Atlas.implementation.plan.md
-    precondition: fix the filename typo (plam → plan) in the same move.
-
-  - path: LearningOS-ARCHITECTURE-AND-ATLAS-EXECUTION-PLAN-2026-09-05.md
-    disposition: move
-    target: LearningOS/workbench/
-    precondition: preserve the user-facing execution-plan link until the execution closes.
-
-  - path: LEARNINGOS-CRITICAL-SYSTEM-AUDIT-FINDINGS-2026-08-29.md
-    disposition: move
-    target: LearningOS/workbench/
-
-  - path: LEARNINGOS-REMEDIATION-PLAN-2026-09-03.md
-    disposition: move
-    target: LearningOS/workbench/
+pending_disposition: []
+#
+# Emptied 2026-09-07. Every entry above was disposed of as it said:
+#
+#   moved to LearningOS/workbench/  — Atlas.implementation.plan.md (typo fixed in
+#     the move), LearningOS-ARCHITECTURE-AND-ATLAS-EXECUTION-PLAN-2026-09-05.md,
+#     LEARNINGOS-CRITICAL-SYSTEM-AUDIT-FINDINGS-2026-08-29.md,
+#     LEARNINGOS-REMEDIATION-PLAN-2026-09-03.md, JOB-COLLAPSE-OPUS-AUDIT.md,
+#     JOB-COLLAPSE-GEMINI-DATA-MAP.md
+#   shelved to LearningOS/archive/retired-semester-root/ — _tier1-patches, after
+#     proving both tier-1 commits (Core 8b275f1, UI b0eb1c7) are ancestors of
+#     their repository's current main. Applied work, not unapplied work.
+#   deleted — python-polars-the-definitive-guide.pdf and
+#     03_correlation_regression.pdf, after re-computing both sha256 pairs at
+#     execution time (8a8fdf9e…f318fe and d035cdfb…cc066, each still identical to
+#     its managed copy) and backing both files up first.
+#   ingested — mml-book.pdf, moved (never copied, it was the only copy) to
+#     materials/machine-learning/classical/mml/, its slug added to PLACEMENT, the
+#     .flat alias rebuilt, records/materials-manifest.yaml regenerated, and
+#     material://source-mml/mml-book.pdf proved to resolve to the same
+#     sha256 3f87b70c…8911bc. Only then was the umbrella level left without it.
+#
+# The list stays here, empty, because the mechanism outlives its first use: a
+# stray found at either level is declared here rather than silently tolerated,
+# and `tests/test_perimeter.py` keeps the list honest by failing when an entry
+# names a path that is no longer on disk.

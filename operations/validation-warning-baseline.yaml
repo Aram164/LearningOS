@@ -21,20 +21,12 @@
 #   python tools/warning_baseline.py --show                  # the delta
 #   python tools/warning_baseline.py --update --note "…"     # adopt current
 baseline_version: 1
-recorded: '2026-09-04'
-note: 'PERIMETER-* over the three umbrella-level books declared in perimeter.yaml
-  pending_disposition. Recorded 2026-09-04; the umbrella is in no git index, so disposing
-  of them is irreversible and operator-owned. The list is shrink-only: tests/test_perimeter.py
-  fails if a disposed path is still declared.'
-total: 3
-distinct_signatures: 3
-signatures:
-- code: PERIMETER-SHADOW
-  path: LearningOS/03_correlation_regression.pdf
-  count: 1
-- code: PERIMETER-SHADOW
-  path: LearningOS/python-polars-the-definitive-guide.pdf
-  count: 1
-- code: PERIMETER-UNMANAGED-MATERIAL
-  path: LearningOS/mml-book.pdf
-  count: 1
+recorded: '2026-09-07'
+note: 'Emptied 2026-09-07: all three PERIMETER-* signatures were repaired, not traded.
+  The two shadow PDFs were deleted after re-verifying their hashes against the managed
+  copies, and mml-book.pdf was ingested into materials/ and now resolves as material://source-mml/mml-book.pdf.
+  perimeter.yaml pending_disposition is empty for the same reason. Nothing is deferred
+  here now; a new stray must be declared before it can be tolerated.'
+total: 0
+distinct_signatures: 0
+signatures: []
