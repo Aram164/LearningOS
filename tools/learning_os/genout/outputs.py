@@ -37,8 +37,10 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     backlinks = build_backlinks(repo, generated_at)
     manifest = build_manifest(repo, generated_at, backlinks)
     outputs = {
-        "manifest.json": json.dumps(manifest, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
-        "backlinks.json": json.dumps(backlinks, indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+        # These are machine projections. Keep their complete data and stable
+        # key order without paying for indentation on every read/publication.
+        "manifest.json": json.dumps(manifest, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
+        "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
         "concept-index.md": build_concept_index(repo, backlinks, generated_at) + "\n",
         "source-index.md": build_source_index(repo, generated_at) + "\n",
         "library.md": build_library(repo, generated_at) + "\n",
@@ -53,7 +55,7 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "study-plans.md": build_study_plan_view(repo, generated_at) + "\n",
         "concept-canvas.canvas": json.dumps(
             build_concept_canvas(repo, generated_at),
-            indent=2, sort_keys=True, ensure_ascii=False) + "\n",
+            separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
     }
     for name in sorted(repo.collections):
         outputs[f"collections/{name}.md"] = build_collection_view(
@@ -81,25 +83,23 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
         raise TransactionFailure("generated output root escapes the repository") from exc
     _preflight_generated_tree(gen)
     _checked_output_path(gen, PurePosixPath("reports/.keep"), create_parent=True)
-    for rel, content in outputs.items():
+    # Keep one publication path, with the manifest last even if it was the
+    # first output constructed. An identical projection needs no replacement.
+    for rel in sorted(outputs, key=lambda name: name == "manifest.json"):
+        content = outputs[rel].encode("utf-8")
         relative = PurePosixPath(rel)
         target = _checked_output_path(gen, relative, create_parent=True)
         # Never expose a half-written projection to Obsidian. os.replace is an
         # atomic publication step on the same filesystem; manifest.json is
         # published last because it is the versioned interface contract.
-        if rel == "manifest.json":
-            continue
         tmp = target.with_name(f".{target.name}.tmp")
         _refuse_link(tmp, gen)
-        tmp.write_text(content, encoding="utf-8")
-        os.replace(tmp, target)
-    if "manifest.json" in outputs:
-        target = _checked_output_path(
-            gen, PurePosixPath("manifest.json"), create_parent=True
-        )
-        tmp = target.with_name(".manifest.json.tmp")
-        _refuse_link(tmp, gen)
-        tmp.write_text(outputs["manifest.json"], encoding="utf-8")
+        try:
+            if target.read_bytes() == content:
+                continue
+        except FileNotFoundError:
+            pass
+        tmp.write_bytes(content)
         os.replace(tmp, target)
     _remove_stale(gen, outputs)
 

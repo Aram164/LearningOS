@@ -34,10 +34,13 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
+  - material_ref:
+      route_id: route-84b3767dc900c066ef0a88e5
+      inherit:
+      - source_id
+      - locator
+    kind: read
     label: Current SaD lecture-scope checklist
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/01_introduction.pdf through 15_neural_networks.pdf
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: 'The scope checklist: the fifteen 2026 decks decide what is examinable before any repair is

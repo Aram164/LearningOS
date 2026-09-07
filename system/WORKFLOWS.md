@@ -498,10 +498,32 @@ that already exists and needs changing — a locator sharpened, an angle written
 a source routed to a stage it was missing from, a stage's material menu
 extended.
 
-**The revision path is the creation path.** There is no lighter-weight route
-and there is deliberately no "small edit" exemption, because the size of a
-change says nothing about its risk: an edited locator that no longer resolves
-breaks a stage exactly as thoroughly whether it arrived alone or in a batch.
+For one existing material's title, locator, angle, angle detail, URL or vault
+path, use the bounded `route.patch` capability. Read `plan-edit-context UNIT_ID
+--route-id ROUTE_ID`, then run `route-patch UNIT_ID ROUTE_ID --changes JSON
+--check`. The preflight returns the concrete field diff, affected files,
+snapshot, and exact expected revisions. Apply those same changes through a
+GatewayEnvelopeV2 for `route.patch`. Core retains full shadow validation,
+warning checks, conflict guards, publication and receipts. It synchronizes
+exact source-selection guards and identical legacy mirrors; explicit stage
+overrides remain local. Changing a route's identity, scope, coverage, source,
+or membership still requires the full plan path below.
+
+Stored resources may carry `material_ref` with a route ID and an explicit
+`inherit` field list. Core expands these for all learning views and preserves
+them during progress, note, feedback and shelving saves. Work from compact
+`plan-edit-context` output when revising a map; do not copy a full `inspect`
+result into the authored plan. An intentionally different stage explanation
+belongs in a local field, removed from the inheritance list.
+
+Existing maps can be compacted without editing content using
+`module-materials-compact MODULE_ID --check`. Review its affected paths and
+plan hash, then apply `module.materials.compact` through the gateway with
+that `plan_sha256`, snapshot and exact revision guards. Conversion must
+reconstruct every effective map exactly; ambiguous or independent materials
+remain inline. It does not replace the material-coverage audit for new plans.
+
+For structural plan revisions, use the creation/import path:
 
 1. **Draft.** Regenerate the affected maps with
    `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the

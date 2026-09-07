@@ -27,92 +27,71 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf — the course contract and the chapter map
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: The document that decides what counts as in scope, at what depth, and therefore what every
-      other route on every other session is for.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: read
-    label: kleine_beweise.pdf — the whole list, and its disclaimer
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: One page that answers the question the course contract leaves open — if proofs need not be
-      reproduced, which ones are still worth understanding.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskriptbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: reference
-    label: Maths220 — Proofs in Calculus
-    source_id: source-analysis-grundlagen-handouts
-    locator: Maths220_Proofs-in-Calculus.pdf (17 pp)
-    angle: Seventeen pages on how a limit or convergence proof is actually written — the shape, not the
-      content.
-    angle_detail: 'Short enough to read at calibration and specific enough to be worth it: it is about
-      the written form of the arguments this module keeps asking for, which is the gap between understanding
-      a proof and producing one under time. Routed here rather than to a chapter because it is about the
-      form of every chapter''s arguments at once.'
+  - material_ref:
+      route_id: route-an-exam-prep-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-analysis-grundlagen-handouts/Maths220_Proofs-in-Calculus.pdf
     scope_triage: helpful-now
-  - kind: read
-    label: Ableitinger Teil I and Teil III — the method behind a written solution
-    source_id: source-ableitinger-musterloesungen
-    locator: 'ableitinger.pdf Teil I: Kap. 3 ''Teilprozesse beim Aufgabenlösen'' p. 22 (P Problembewusstsein,
-      K Klärung der Handlungsoptionen, Z Zugriff herstellen, A Anpassen/Prüfen der Passung, H Handwerk,
-      T Tricks, B begleitende Kommentare) and §3.8 ''Die Teilprozesse in einer vollständigen Musterlösung''
-      p. 30; Teil II §4.2 ''Hinweise zum Verfassen komprimierter Musterlösungen'' p. 38; Teil III Kap.
-      10 ''Verfassen ausführlicher Musterlösungen'' p. 165 with the full write-ups in Kap. 12 p. 232'
-    angle: The one source here that treats writing a solution as a skill with named parts, rather than
-      as what happens after you know the answer.
-    angle_detail: Read Teil I once at calibration. Its claim is that solving a task decomposes into seven
-      sub-processes and that most teaching only ever shows the last one, which is why a student who follows
-      every step of a model solution still cannot produce one. That is a precise description of the failure
-      this plan's per-chapter Musterlösungen routes are meant to prevent, and §4.2 on writing *compressed*
-      solutions is directly relevant to a three-hour paper. The per-chapter sections (§§6.1-6.10, §§7.1-7.3)
-      are routed on the chapters themselves.
-    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-ableitingermusterloesung
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ohlbach/Eisinger — the catalogue of proof patterns
-    source_id: source-ohlbach-eisinger-beweise
-    locator: Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf Kap. 4 Einfache Beweismuster
-      p. 29, Kap. 5 Komplexe Beweismuster p. 50. Located by the 2026-08-03 coverage audit; no contextual
-      evaluation registered, so depth and scope stay unassessed (CLAUDE.md §4).
-    angle: The German naming of the patterns — useful once at calibration so a task's shape can be recognised
-      rather than rediscovered.
-    angle_detail: 'Same light touch as Velleman: two chapters skimmed once, not a book to work. Its value
-      at calibration is vocabulary — Kontraposition, Widerspruchsbeweis, Widerlegung durch Gegenbeispiel
-      — because a task that says ''beweisen oder widerlegen Sie'' is asking for a named pattern and the
-      naming makes the choice faster.'
-    vault_path: material://source-ohlbach-eisinger-beweise/Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Velleman — proof strategies and the summary of techniques
-    source_id: source-velleman-how-to-prove-it
-    locator: Velleman_How-To-Prove-It.pdf Ch 3 Proofs p. 118 (§3.1 Proof Strategies p. 118); 'Summary
-      of Proof Techniques' p. 555. Located by the 2026-08-03 coverage audit; no contextual evaluation
-      registered, so depth and scope stay unassessed (CLAUDE.md §4).
-    angle: A two-page summary of proof techniques at the back, which is the part worth having at calibration;
-      the rest is a course.
-    angle_detail: Routed lightly here on purpose. The induction chapters are on the Chapter 1 session
-      where they belong; what belongs at calibration is p. 555, a single table of which technique the
-      shape of a statement calls for. Reading the book is not part of this plan.
-    vault_path: material://source-velleman-how-to-prove-it/Velleman_How-To-Prove-It.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-calibrate/notes.md
   attachments: []
@@ -135,126 +114,90 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf — the course contract and the chapter map
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: The document that decides what counts as in scope, at what depth, and therefore what every
-      other route on every other session is for.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: practise
-    label: HU Aufgaben zur Wiederholung und Vertiefung — the exam-format set, held for timed sittings
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: The only current HU material that states its own exam conditions — the closest available simulation
-      of the Analysis half of the paper.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/ana_inf_serieWV.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
-  - kind: read
-    label: kleine_beweise.pdf — the whole list, and its disclaimer
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: One page that answers the question the course contract leaves open — if proofs need not be
-      reproduced, which ones are still worth understanding.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/kleine_beweise.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskriptbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: read
-    label: Unsolved German papers, held for timed sittings
-    source_id: source-analysis-klausuren-extern
-    locator: 'Ulm_Analysis-fuer-Informatiker_Klausur-SS10_nur-Aufgaben.pdf (2 pp, 120 min, 100 points,
-      8 tasks — tasks 2, 3, 4, 5, 6 and 8 are in scope; task 7 is multivariable and task 1 is partly number-system
-      material); Leipzig_Analysis-fuer-Informatiker_Probeklausur.pdf (2 pp, 4 tasks: Mengen/Abbildungen/Induktion/reelle
-      Zahlen, Folgen, Reihen, Stetigkeit — the closest single paper to Chapters 1-5)'
-    angle: The only Analysis papers in the collection that have not been read with their solutions — they
-      can be spent exactly once each, under exam conditions.
-    angle_detail: 'Their value is entirely in being unseen, which is why they are routed here and to no
-      chapter session: a paper opened during Chapter 3 revision is no longer a mock. Ulm is the better
-      full rehearsal — 120 minutes, 100 points, and six of its eight tasks map onto script Chapters 3
-      to 7 including two antiderivatives and an existence argument by IVT. Leipzig is the better coverage
-      check for the first half. Note both are ''für Informatiker'' papers, which is the same audience
-      as this module.'
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Stuttgart Probeklausur 1 — solved; only Aufgabe 3 is in scope
-    source_id: source-analysis-klausuren-extern
-    locator: '''Aufgabe 3 ist gut.pdf'' (3 pp, Universität Stuttgart, ''Lösungen zur Probeklausur 1''):
-      Aufgabe 1 Äquivalenzrelationen, Aufgabe 2 komplexe Zahlen (out of scope), Aufgabe 3 parts (a) define
-      a Cauchy sequence, (b) negate the definition, (c) two limit computations'
-    angle: One good task on Cauchy sequences and the negation of a definition — already solved, so it
-      cannot serve as a timed mock.
-    angle_detail: '⚠ Correction, 2026-08-29: the pre-existing route listed this file among the *unsolved*
-      papers held for timed sittings. It is not unsolved — the file is titled ''Lösungen zur Probeklausur
-      1'' and every task is worked. That matters for how the file is used, not for whether it is useful.
-      As a solved task it belongs with the diagnosed-gap material rather than with Ulm and Leipzig; the
-      negation half of Aufgabe 3 is the same skill Regensburg''s A2.2 tests and is worth working for that
-      reason. Aufgabe 2 is complex numbers and outside this script.'
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 18.100C exam set — English, proof-heavy, a different syllabus
-    source_id: source-analysis-klausuren-extern
-    locator: MIT18100C_Final.pdf (7 pp) with MIT18100C_Final-Solutions.pdf (6 pp), MIT18100C_Midterm2.pdf
-      (5 pp), MIT18100C_Practice-Final.pdf (2 pp), MIT18100C_Practice-Midterm1.pdf (3 pp), MIT18100C_Practice-Midterm2.pdf
-      (2 pp)
-    angle: 'A different course''s exam culture: everything is a proof, and the language is English. Use
-      for proof stamina, never as a scope signal.'
-    angle_detail: Kept at the bottom of the retrieval menu deliberately. 18.100C is a real-analysis course
-      with a metric-space and topology component this script does not have, so its questions routinely
-      fall outside scope, and its style — prove everything — contradicts this script's explicit contract
-      that proofs need not be reproduced. The one thing it is good for is practising sustained written
-      argument when that is the diagnosed weakness. It is not evidence about what the M2 Klausur will
-      ask.
+  - material_ref:
+      route_id: route-an-exam-prep-analysisklausurenextern-3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Maths220 — Proofs in Calculus
-    source_id: source-analysis-grundlagen-handouts
-    locator: Maths220_Proofs-in-Calculus.pdf (17 pp)
-    angle: Seventeen pages on how a limit or convergence proof is actually written — the shape, not the
-      content.
-    angle_detail: 'Short enough to read at calibration and specific enough to be worth it: it is about
-      the written form of the arguments this module keeps asking for, which is the gap between understanding
-      a proof and producing one under time. Routed here rather than to a chapter because it is about the
-      form of every chapter''s arguments at once.'
+  - material_ref:
+      route_id: route-an-exam-prep-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-analysis-grundlagen-handouts/Maths220_Proofs-in-Calculus.pdf
     scope_triage: helpful-now
-  - kind: read
-    label: Ableitinger Teil I and Teil III — the method behind a written solution
-    source_id: source-ableitinger-musterloesungen
-    locator: 'ableitinger.pdf Teil I: Kap. 3 ''Teilprozesse beim Aufgabenlösen'' p. 22 (P Problembewusstsein,
-      K Klärung der Handlungsoptionen, Z Zugriff herstellen, A Anpassen/Prüfen der Passung, H Handwerk,
-      T Tricks, B begleitende Kommentare) and §3.8 ''Die Teilprozesse in einer vollständigen Musterlösung''
-      p. 30; Teil II §4.2 ''Hinweise zum Verfassen komprimierter Musterlösungen'' p. 38; Teil III Kap.
-      10 ''Verfassen ausführlicher Musterlösungen'' p. 165 with the full write-ups in Kap. 12 p. 232'
-    angle: The one source here that treats writing a solution as a skill with named parts, rather than
-      as what happens after you know the answer.
-    angle_detail: Read Teil I once at calibration. Its claim is that solving a task decomposes into seven
-      sub-processes and that most teaching only ever shows the last one, which is why a student who follows
-      every step of a model solution still cannot produce one. That is a precise description of the failure
-      this plan's per-chapter Musterlösungen routes are meant to prevent, and §4.2 on writing *compressed*
-      solutions is directly relevant to a three-hour paper. The per-chapter sections (§§6.1-6.10, §§7.1-7.3)
-      are routed on the chapters themselves.
-    vault_path: material://source-ableitinger-musterloesungen/ableitinger.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-ableitingermusterloesung
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-anx/notes.md
   attachments: []
@@ -275,35 +218,27 @@ stages:
   - concept-asymptotic-analysis
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf — the course contract and the chapter map
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: The document that decides what counts as in scope, at what depth, and therefore what every
-      other route on every other session is for.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: read
-    label: The deferral ledger — Kapitel 8 and every Exkurs, named once and left
-    source_id: source-analysis-skript
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
-    angle: One list of everything the course contract puts outside the exam, so a deferred section is
-      never re-discovered as a gap.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-exam-prep-analysisskript-2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/stages/stage-m2-analysis-exkurse/notes.md
   attachments: []

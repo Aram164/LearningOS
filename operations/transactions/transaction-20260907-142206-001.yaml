@@ -1,0 +1,164 @@
+schema_version: 2
+id: transaction-20260907-142206-001
+type: transaction-receipt
+status: committed
+capability: module.materials.compact
+committed_at: '2026-09-07T14:22:06+02:00'
+snapshot_before: sha256:c15c123dcc1c9d5dcfe81ed3a0e26275f72959bd3f2e5d5e8ccc1701b70fc875
+snapshot_after: sha256:0ddad232f8a0e7fb8383d19261bdf152fdc8ac0b0c130c6df0bec975f2e5d4f2
+expected_revisions:
+  module-hu-aml: 11
+  study-map-aml-l01: 2
+  study-map-aml-l02: 2
+  study-map-aml-l03: 2
+  study-map-aml-l04: 2
+  study-map-aml-l05: 2
+  study-map-aml-l06: 2
+  study-map-aml-l07: 2
+  study-map-aml-l08: 2
+  study-map-aml-l09: 2
+  study-map-aml-l10: 4
+  study-map-aml-l11: 2
+  unit-aml-l01: 5
+  unit-aml-l02: 5
+  unit-aml-l03: 4
+  unit-aml-l04: 4
+  unit-aml-l05: 4
+  unit-aml-l06: 4
+  unit-aml-l07: 5
+  unit-aml-l08: 4
+  unit-aml-l09: 4
+  unit-aml-l10: 7
+  unit-aml-l11: 6
+artifact_revisions:
+  module-hu-aml:
+    before: 11
+    after: 12
+  study-map-aml-l01:
+    before: 2
+    after: 3
+  study-map-aml-l02:
+    before: 2
+    after: 3
+  study-map-aml-l03:
+    before: 2
+    after: 3
+  study-map-aml-l04:
+    before: 2
+    after: 3
+  study-map-aml-l05:
+    before: 2
+    after: 3
+  study-map-aml-l06:
+    before: 2
+    after: 3
+  study-map-aml-l07:
+    before: 2
+    after: 3
+  study-map-aml-l08:
+    before: 2
+    after: 3
+  study-map-aml-l09:
+    before: 2
+    after: 3
+  study-map-aml-l10:
+    before: 4
+    after: 5
+  study-map-aml-l11:
+    before: 2
+    after: 3
+  unit-aml-l01:
+    before: 5
+    after: 6
+  unit-aml-l02:
+    before: 5
+    after: 6
+  unit-aml-l03:
+    before: 4
+    after: 5
+  unit-aml-l04:
+    before: 4
+    after: 5
+  unit-aml-l05:
+    before: 4
+    after: 5
+  unit-aml-l06:
+    before: 4
+    after: 5
+  unit-aml-l07:
+    before: 5
+    after: 6
+  unit-aml-l08:
+    before: 4
+    after: 5
+  unit-aml-l09:
+    before: 4
+    after: 5
+  unit-aml-l10:
+    before: 7
+    after: 8
+  unit-aml-l11:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+  sha256_before: 715092d6ecd8cb2d5ba2d3a89b33ea99bf9cb445cb5dabc4cee8372ee3bad091
+  sha256_after: d23de692daba7a1f8c7d17dc20fe2a4a3cad8f33b9b95e1188b705360c8c6f0c
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l02/study-map.yaml
+  sha256_before: c17506330d8db679f1d43676372abc079b55ed0a61eeebcd766fbed1894e94b0
+  sha256_after: 72c49a77f16d4140fe3e7054d97853c0cab570287135ab96dd2ae8f3a4b5e848
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml
+  sha256_before: 5cd6491c56fe4f2f932f4f4643db512355a988c23874be10a3bef1ab031e328c
+  sha256_after: dc10e4d6a693704b91c9400d115ef5f39e1405e4b6a698a79e835498193fa83d
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l04/study-map.yaml
+  sha256_before: b9cd3ef7792d1170c00344a65915d7c744d06e325b41b2384d6480de8a599fe8
+  sha256_after: a642826855ef27890814d8884823a5274c76573739a443103ef8daae2b80524c
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l05/study-map.yaml
+  sha256_before: a7ed0621982943384aa904063bb4bc1b27547be60fc8a3d1cfa1757bcb5dba8d
+  sha256_after: 4cf02a3db4972bc5f84349c4cc89e65e0aa5893ba4a0fd734475bc3046648e2d
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l06/study-map.yaml
+  sha256_before: d747cd8d08bad017cad6cd6633e703e85d865d6bfa0586079cc2ae9112f21d1f
+  sha256_after: 3a47ec34544de12032dc6d2f287e4d8d7f1e2b73ef792eb65f6a2e63649a3157
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l07/study-map.yaml
+  sha256_before: 330e4bb039c286ae13b2a6ff216c0096745e35103a884250c0c0e6177a301586
+  sha256_after: 7fd8e3e4e7635a055ff051558fdfd4f7979b5d0e41a133776ada56e6f2bcef23
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l08/study-map.yaml
+  sha256_before: d924dce479d5272dc309b8dadbe71e1eaa7f2ee8321c4ac36ba64bd89cee97e9
+  sha256_after: 96ef29588fc6e6d1d68151e26d6508d83f2dd99817f9a54834497441ad98a46d
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml
+  sha256_before: 95b97ad75633d68aba3b49e6c06e96281d0f684d2871ca26bbf46a2a822d6689
+  sha256_after: 6d886a7c8fcf05349a497571f27fd436ee159d142946faa79c300f33d01f49d9
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l10/study-map.yaml
+  sha256_before: 1724a8c59ad81d57858593c931bf1958802141a2c91c2d2115b9b0027bac3a7e
+  sha256_after: 006fe07153213f724c92defd2fccaa27da466323fc52627bafc2cd89bd092ba2
+  created: false
+- path: curriculum/modules/module-hu-aml/units/unit-aml-l11/study-map.yaml
+  sha256_before: 5af8e3063c31d264868d94057b00982284b0a1ad31aa0252b8284e4d5b1a83cb
+  sha256_after: 8bab70aaa53177626a8fbab23187f4c3450c72e89c606e0e1d96c1de3b8abd8b
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.materials.compact
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-materials-compact-module-hu-aml-21b3c2603dbf4fdc8d214191d34563f9
+  idempotency_key: materials-compact-module-hu-aml-21b3c2603dbf4fdc8d214191d34563f9
+  intent_sha256: sha256:8406ea1d60dca820186426d0feed77df6b105c77650ce71277e977a3220432fb
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8406ea1d60dca820186426d0feed77df6b105c77650ce71277e977a3220432fb

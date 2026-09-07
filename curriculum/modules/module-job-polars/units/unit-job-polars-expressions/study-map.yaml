@@ -59,7 +59,12 @@ stages:
       a test rather than as advice.'
     scope_triage: required-now
     vault_path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/attachments/s2a-check.py
-  - id: resource-polars-book-expressions
+  - material_ref:
+      route_id: route-polars-definitive-guide-s02
+      inherit:
+      - vault_path
+      - source_id
+    id: resource-polars-book-expressions
     kind: read
     label: 'Python Polars: The Definitive Guide'
     locator: Ch 7 §The Definition of an Expression pp. 186-193 and §Properties of Expressions pp. 190-193;
@@ -72,8 +77,6 @@ stages:
       a tree is legal in a given context — pair them with Task 2''s width/height table. Early-release
       edition: verify callables against 1.36.0.'
     scope_triage: required-now
-    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
-    source_id: source-polars-definitive-guide
     route_id: route-polars-definitive-guide-s02
   - kind: reference
     label: Official reference — docs.pola.rs — expressions and contexts
@@ -259,7 +262,12 @@ stages:
       is short and easy to skim past — the sheet turns it into an executed result so it cannot be skimmed.'
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/expression-expansion/
-  - id: resource-polars-book-selectors
+  - material_ref:
+      route_id: route-polars-definitive-guide-s02
+      inherit:
+      - vault_path
+      - source_id
+    id: resource-polars-book-selectors
     kind: read
     label: 'Python Polars: The Definitive Guide'
     locator: Ch 10 §Introducing Selectors pp. 283-284, §Selecting Based on Data Type pp. 287-289, §Combining
@@ -270,8 +278,6 @@ stages:
       without mentioning that the same operators mean arithmetic against a scalar. Read it, then run the
       sheet''s Task 1 trap — the gap between the two is the finding.'
     scope_triage: required-now
-    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
-    source_id: source-polars-definitive-guide
     route_id: route-polars-definitive-guide-s02
   - id: resource-polars-selector-schema-drift
     kind: practise
@@ -389,7 +395,12 @@ stages:
       emits.'
     scope_triage: required-now
     url: https://docs.pola.rs/user-guide/expressions/folds/
-  - id: resource-polars-book-horizontal
+  - material_ref:
+      route_id: route-polars-definitive-guide-s02
+      inherit:
+      - vault_path
+      - source_id
+    id: resource-polars-book-horizontal
     kind: read
     label: 'Python Polars: The Definitive Guide'
     locator: Ch 9 §Boolean Algebra Operations pp. 264-265 and §When, Then, Otherwise pp. 274-275; Ch 13
@@ -400,8 +411,6 @@ stages:
       treat the sheet's Task 5 as the specification. Ch 13 pp. 387-389 covers the horizontal helpers as
       aggregations, which is the framing that makes the empty-subset error make sense.
     scope_triage: required-now
-    vault_path: material://source-polars-definitive-guide/python-polars-the-definitive-guide.pdf
-    source_id: source-polars-definitive-guide
     route_id: route-polars-definitive-guide-s02
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md
   attachments:

@@ -28,209 +28,147 @@ stages:
   - concept-gradient-descent
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 06 — gradient-descent bridge
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf, slides 12-14 (gradient descent) and 16-21 (sigmoid saturation
-      and overfitting)
-    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
-      portions for L06 and its model/loss portions for L05.
-    angle_detail: 'Contribution: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 06 — gradient-descent bridge''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
-    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 gradient-descent reference
-    source_id: source-csc411-notes
-    locator: csc411.pdf §9 Gradient Descent, pdf pp. 58-59; §9.1 Finite differences, pdf pp. 60-61
-    angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
-    angle_detail: 'Contribution: A compact algorithm/notation reference for regression gradients and iterative
-      optimization. Depth and prerequisites: It assumes no derivation beyond the current unit''s vocabulary
-      and is for framing the problem before calculation. Discriminator: choose ''CSC411 gradient-descent
-      reference'' over ''Übung 06 — gradient-descent bridge'' when you need this contribution; the neighboring
-      route instead contributes: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Course boundary: It
-      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-9a435fb743f7e6a7298b2ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: MML continuous optimization
-    source_id: source-mml
-    locator: 'Official PDF, Ch 7 ''Continuous Optimization'': §7.1 ''Optimization Using Gradient Descent''
-      PDF pp. 233-238 and §7.3 ''Convex Optimization'' PDF pp. 242-251'
-    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
-    angle_detail: 'Contribution: The rigorous mathematics of descent directions, step size, momentum,
-      conditioning, and convexity. Depth and prerequisites: It assumes comfort with the unit''s notation
-      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML continuous optimization'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 gradient-descent derivation
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm' batch and stochastic gradient updates, pdf pp. 10-13; 'Regularization',
-      pdf pp. 126-127; cross-validation heading, pdf pp. 130-132
-    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
-      extensions.
-    angle_detail: 'Contribution: The best-aligned short written source for batch GD and SGD from scratch,
-      with optimization/model-selection extensions. Depth and prerequisites: It assumes comfort with the
-      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''CS229 gradient-descent derivation'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 optimization exercises
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 6 'Gradient Descent' and its exercises
-    angle: Structured gradient-update and learning-rate practice rather than another long theoretical
-      explanation.
-    angle_detail: 'Contribution: Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''MIT 6.036 optimization exercises'' over ''Current L06 lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Optimization notes
-    source_id: source-cs231n-notes
-    locator: '''Optimization: Stochastic Gradient Descent'' → ''Computing the gradient'', ''Gradient Descent'',
-      and ''Mini-batch gradient descent'''
-    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization
-      diagnostics.
-    angle_detail: 'Contribution: The classic walking-downhill intuition plus SGD update mechanics and
-      practical optimization diagnostics. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''CS231n Optimization notes'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest gradient descent and SGD
-    source_id: source-statquest
-    locator: StatQuest episodes 'Gradient Descent, Step-by-Step' and 'Stochastic Gradient Descent, Clearly
-      Explained'
-    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
-    angle_detail: 'Contribution: Short visual explanations of the descent update, learning-rate behaviour,
-      and stochastic sampling. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest gradient descent and SGD'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — gradient geometry support
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Vectors, what even are they?', 'Linear transformations and matrices',
-      and 'Dot products and duality'
-    angle: Targeted vector/linear-map intuition for contours and multidimensional update directions; use
-      only if the gradient picture is unclear.
-    angle_detail: 'Contribution: Targeted vector/linear-map intuition for contours and multidimensional
-      update directions; use only if the gradient picture is unclear. Depth and prerequisites: It assumes
-      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
-      formal derivation. Discriminator: choose ''Essence of Linear Algebra — gradient geometry support''
-      over ''Übung 06 — gradient-descent bridge'' when you need this contribution; the neighboring route
-      instead contributes: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Course boundary: It
-      is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-ccf52017d2ae69a5358cd92c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — gradient descent
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions
-    angle: Local solution-backed update, convergence, and optimization questions spanning regression and
-      Ridge.
-    angle_detail: 'Contribution: Local solution-backed update, convergence, and optimization questions
-      spanning regression and Ridge. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW6 — gradient descent'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — GD, SGD, and feature scaling
-    source_id: source-berkeley-cs189
-    locator: Spring 2026 Midterm Solutions, 'On a Downward Spiral', Question (a)-(e), PDF pp. 20-24
-    angle: A fully worked small gradient step reveals both stochastic-gradient variance and the conditioning
-      damage from unscaled features.
-    angle_detail: Work every arithmetic step before reading the marking. The final scaling subproblem
-      is the rare exam item that connects preprocessing to loss conditioning; it is narrower and more
-      diagnostic than the MML convergence derivation.
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown calculus — derivative and chain-rule pictures
-    source_id: source-3b1b-essence-of-calculus
-    locator: 'Playlist chapters 2 and 5: ''The paradox of the derivative'' and ''Visualizing the chain
-      rule and product rule'''
-    angle: Repairs the geometric meaning of local change before gradients are treated as update vectors.
-    angle_detail: Watch only these chapters if the symbols in the gradient update feel procedural. They
-      supply scalar geometric intuition; the course deck and MML route are still required for multivariate
-      gradients, convergence, and examined algorithms.
+  - material_ref:
+      route_id: route-a76058ff6f618590fb01fb47
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — optimization and adjoint differentiation
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW full lecture notes, §6 'Nonlinear Root-Finding, Optimization, and Adjoint Differentiation',
-      PDF chapter pp. 39-46
-    angle: Connects nonlinear optimization, gradients, and reverse-mode differentiation in a single calculus
-      framework.
-    angle_detail: Read §6.1-§6.3 only after the course algorithms are stable. The adjoint material explains
-      the bridge to backprop, but its engineering examples and formalism are explicitly past the AML exam
-      depth.
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-gradient/notes.md
   attachments: []
@@ -251,251 +189,170 @@ stages:
   - concept-gradient-descent
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 06 — gradient-descent bridge
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf, slides 12-14 (gradient descent) and 16-21 (sigmoid saturation
-      and overfitting)
-    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
-      portions for L06 and its model/loss portions for L05.
-    angle_detail: 'Contribution: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 06 — gradient-descent bridge''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
-    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 03 — gradient descent
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf
-    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate
-      effects.
-    angle_detail: 'Contribution: Conceptual comparison of batch and stochastic descent, preprocessing/scaling,
-      and learning-rate effects. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Bonusblatt 03 — gradient descent'' over ''Current L06 lecture deck'' when you need this
-      contribution; the neighboring route instead contributes: The 2026 scope authority from local search
-      and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam,
-      and Newton/Hessian methods. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L06 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
-    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
-    angle_detail: 'Contribution: Prior-year alternate derivations and optimizer examples; current slides
-      decide scope. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Older L06 lecture variant'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: This is prior-year evidence: use it only for a second explanation, and
-      let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP neural-network optimization selection
-    source_id: source-islp
-    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438 (backpropagation §10.7.1 p. 435;
-      regularization and SGD §10.7.2 p. 436)
-    angle: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as a compact
-      training/SGD review after the lecture, not as the primary L06 explanation.
-    angle_detail: 'Contribution: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful
-      only as a compact training/SGD review after the lecture, not as the primary L06 explanation. Depth
-      and prerequisites: It assumes no derivation beyond the current unit''s vocabulary and is for framing
-      the problem before calculation. Discriminator: choose ''ISLP neural-network optimization selection''
-      over ''Bonusblatt 03 — gradient descent'' when you need this contribution; the neighboring route
-      instead contributes: Conceptual comparison of batch and stochastic descent, preprocessing/scaling,
-      and learning-rate effects. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-f0ccf205ed8c7df0ef0c8687
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 gradient-descent reference
-    source_id: source-csc411-notes
-    locator: csc411.pdf §9 Gradient Descent, pdf pp. 58-59; §9.1 Finite differences, pdf pp. 60-61
-    angle: A compact algorithm/notation reference for regression gradients and iterative optimization.
-    angle_detail: 'Contribution: A compact algorithm/notation reference for regression gradients and iterative
-      optimization. Depth and prerequisites: It assumes no derivation beyond the current unit''s vocabulary
-      and is for framing the problem before calculation. Discriminator: choose ''CSC411 gradient-descent
-      reference'' over ''Übung 06 — gradient-descent bridge'' when you need this contribution; the neighboring
-      route instead contributes: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Course boundary: It
-      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-9a435fb743f7e6a7298b2ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 gradient-descent derivation
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm' batch and stochastic gradient updates, pdf pp. 10-13; 'Regularization',
-      pdf pp. 126-127; cross-validation heading, pdf pp. 130-132
-    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
-      extensions.
-    angle_detail: 'Contribution: The best-aligned short written source for batch GD and SGD from scratch,
-      with optimization/model-selection extensions. Depth and prerequisites: It assumes comfort with the
-      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''CS229 gradient-descent derivation'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 optimization segments
-    source_id: source-cs229-2022-videos
-    locator: Spring 2022 playlist, Lecture 2 'Supervised Learning and Linear Regression' — gradient-descent
-      chapter
-    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
-    angle_detail: 'Contribution: Selected explanations of gradient methods and convergence at a deeper
-      pace than AML. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''CS229 optimization segments'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MIT 6.036 optimization exercises
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 6 'Gradient Descent' and its exercises
-    angle: Structured gradient-update and learning-rate practice rather than another long theoretical
-      explanation.
-    angle_detail: 'Contribution: Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''MIT 6.036 optimization exercises'' over ''Current L06 lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Optimization notes
-    source_id: source-cs231n-notes
-    locator: '''Optimization: Stochastic Gradient Descent'' → ''Computing the gradient'', ''Gradient Descent'',
-      and ''Mini-batch gradient descent'''
-    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization
-      diagnostics.
-    angle_detail: 'Contribution: The classic walking-downhill intuition plus SGD update mechanics and
-      practical optimization diagnostics. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''CS231n Optimization notes'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest gradient descent and SGD
-    source_id: source-statquest
-    locator: StatQuest episodes 'Gradient Descent, Step-by-Step' and 'Stochastic Gradient Descent, Clearly
-      Explained'
-    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
-    angle_detail: 'Contribution: Short visual explanations of the descent update, learning-rate behaviour,
-      and stochastic sampling. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest gradient descent and SGD'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron batch, stochastic, and mini-batch GD code
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Gradient Descent', pdf pp. 204-215 (batch p. 208; stochastic p. 211;
-      mini-batch p. 214)
-    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants
-      differ in practice.
-    angle_detail: 'Contribution: Concrete NumPy/scikit-learn optimizer implementations and exercises showing
-      how update variants differ in practice. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron batch, stochastic, and mini-batch GD code'' over ''Bonusblatt 03 —
-      gradient descent'' when you need this contribution; the neighboring route instead contributes: Conceptual
-      comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ng gradient descent in practice
-    source_id: source-ng-coursera
-    locator: Machine Learning Specialization, Course 1, Week 2 lessons 'Gradient descent in practice'
-      and 'Choosing the learning rate'
-    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely
-      mirror the AML slides.
-    angle_detail: 'Contribution: Feature scaling, learning-rate diagnosis, batch updates, and practical
-      convergence checks closely mirror the AML slides. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng gradient descent in practice'' over ''Bonusblatt 03 — gradient descent''
-      when you need this contribution; the neighboring route instead contributes: Conceptual comparison
-      of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-34e7a26df2c02e415319d40a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — gradient descent
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions
-    angle: Local solution-backed update, convergence, and optimization questions spanning regression and
-      Ridge.
-    angle_detail: 'Contribution: Local solution-backed update, convergence, and optimization questions
-      spanning regression and Ridge. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW6 — gradient descent'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — GD, SGD, and feature scaling
-    source_id: source-berkeley-cs189
-    locator: Spring 2026 Midterm Solutions, 'On a Downward Spiral', Question (a)-(e), PDF pp. 20-24
-    angle: A fully worked small gradient step reveals both stochastic-gradient variance and the conditioning
-      damage from unscaled features.
-    angle_detail: Work every arithmetic step before reading the marking. The final scaling subproblem
-      is the rare exam item that connects preprocessing to loss conditioning; it is narrower and more
-      diagnostic than the MML convergence derivation.
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-batch-gd/notes.md
   attachments: []
@@ -515,198 +372,139 @@ stages:
   - concept-feature-scaling
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 06 — gradient-descent bridge
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 06 .pdf, slides 12-14 (gradient descent) and 16-21 (sigmoid saturation
-      and overfitting)
-    angle: A numerical one-dimensional descent trace plus logistic-regression gradient code; use its optimizer
-      portions for L06 and its model/loss portions for L05.
-    angle_detail: 'Contribution: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 06 — gradient-descent bridge''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
-    vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 06 .pdf
+  - material_ref:
+      route_id: route-bef5d1b1bd52e5ddd842c0f7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 03 — gradient descent
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf
-    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate
-      effects.
-    angle_detail: 'Contribution: Conceptual comparison of batch and stochastic descent, preprocessing/scaling,
-      and learning-rate effects. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Bonusblatt 03 — gradient descent'' over ''Current L06 lecture deck'' when you need this
-      contribution; the neighboring route instead contributes: The 2026 scope authority from local search
-      and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam,
-      and Newton/Hessian methods. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MML continuous optimization
-    source_id: source-mml
-    locator: 'Official PDF, Ch 7 ''Continuous Optimization'': §7.1 ''Optimization Using Gradient Descent''
-      PDF pp. 233-238 and §7.3 ''Convex Optimization'' PDF pp. 242-251'
-    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
-    angle_detail: 'Contribution: The rigorous mathematics of descent directions, step size, momentum,
-      conditioning, and convexity. Depth and prerequisites: It assumes comfort with the unit''s notation
-      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML continuous optimization'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Optimization notes
-    source_id: source-cs231n-notes
-    locator: '''Optimization: Stochastic Gradient Descent'' → ''Computing the gradient'', ''Gradient Descent'',
-      and ''Mini-batch gradient descent'''
-    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization
-      diagnostics.
-    angle_detail: 'Contribution: The classic walking-downhill intuition plus SGD update mechanics and
-      practical optimization diagnostics. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''CS231n Optimization notes'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest gradient descent and SGD
-    source_id: source-statquest
-    locator: StatQuest episodes 'Gradient Descent, Step-by-Step' and 'Stochastic Gradient Descent, Clearly
-      Explained'
-    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
-    angle_detail: 'Contribution: Short visual explanations of the descent update, learning-rate behaviour,
-      and stochastic sampling. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest gradient descent and SGD'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — gradient geometry support
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Vectors, what even are they?', 'Linear transformations and matrices',
-      and 'Dot products and duality'
-    angle: Targeted vector/linear-map intuition for contours and multidimensional update directions; use
-      only if the gradient picture is unclear.
-    angle_detail: 'Contribution: Targeted vector/linear-map intuition for contours and multidimensional
-      update directions; use only if the gradient picture is unclear. Depth and prerequisites: It assumes
-      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
-      formal derivation. Discriminator: choose ''Essence of Linear Algebra — gradient geometry support''
-      over ''Übung 06 — gradient-descent bridge'' when you need this contribution; the neighboring route
-      instead contributes: A numerical one-dimensional descent trace plus logistic-regression gradient
-      code; use its optimizer portions for L06 and its model/loss portions for L05. Course boundary: It
-      is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-ccf52017d2ae69a5358cd92c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron batch, stochastic, and mini-batch GD code
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Gradient Descent', pdf pp. 204-215 (batch p. 208; stochastic p. 211;
-      mini-batch p. 214)
-    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants
-      differ in practice.
-    angle_detail: 'Contribution: Concrete NumPy/scikit-learn optimizer implementations and exercises showing
-      how update variants differ in practice. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron batch, stochastic, and mini-batch GD code'' over ''Bonusblatt 03 —
-      gradient descent'' when you need this contribution; the neighboring route instead contributes: Conceptual
-      comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ng gradient descent in practice
-    source_id: source-ng-coursera
-    locator: Machine Learning Specialization, Course 1, Week 2 lessons 'Gradient descent in practice'
-      and 'Choosing the learning rate'
-    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely
-      mirror the AML slides.
-    angle_detail: 'Contribution: Feature scaling, learning-rate diagnosis, batch updates, and practical
-      convergence checks closely mirror the AML slides. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng gradient descent in practice'' over ''Bonusblatt 03 — gradient descent''
-      when you need this contribution; the neighboring route instead contributes: Conceptual comparison
-      of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-34e7a26df2c02e415319d40a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — GD, SGD, and feature scaling
-    source_id: source-berkeley-cs189
-    locator: Spring 2026 Midterm Solutions, 'On a Downward Spiral', Question (a)-(e), PDF pp. 20-24
-    angle: A fully worked small gradient step reveals both stochastic-gradient variance and the conditioning
-      damage from unscaled features.
-    angle_detail: Work every arithmetic step before reading the marking. The final scaling subproblem
-      is the rare exam item that connects preprocessing to loss conditioning; it is narrower and more
-      diagnostic than the MML convergence derivation.
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown calculus — derivative and chain-rule pictures
-    source_id: source-3b1b-essence-of-calculus
-    locator: 'Playlist chapters 2 and 5: ''The paradox of the derivative'' and ''Visualizing the chain
-      rule and product rule'''
-    angle: Repairs the geometric meaning of local change before gradients are treated as update vectors.
-    angle_detail: Watch only these chapters if the symbols in the gradient update feel procedural. They
-      supply scalar geometric intuition; the course deck and MML route are still required for multivariate
-      gradients, convergence, and examined algorithms.
+  - material_ref:
+      route_id: route-a76058ff6f618590fb01fb47
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: reference
-    label: Distill — why momentum really works
-    source_id: source-distill-momentum
-    locator: 'Sections ''First Steps: Gradient Descent'', ''Choosing A Step-size'', and ''The Dynamics
-      of Momentum'''
-    angle: Diagonalizes a quadratic so step size, pathological curvature, oscillation, and momentum become
-      inspectable dynamics.
-    angle_detail: Manipulate step size and momentum before reading the closed-form analysis. This route
-      explains the optimizer outlook at greater depth than AML requires; do not turn its condition-number
-      derivation into a new exam commitment.
+  - material_ref:
+      route_id: route-c0cbb7729f0cd68049a83d24
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-rate-scaling/notes.md
   attachments: []
@@ -726,254 +524,170 @@ stages:
   - concept-gradient-descent
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 03 — gradient descent
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt03.pdf
-    angle: Conceptual comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate
-      effects.
-    angle_detail: 'Contribution: Conceptual comparison of batch and stochastic descent, preprocessing/scaling,
-      and learning-rate effects. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Bonusblatt 03 — gradient descent'' over ''Current L06 lecture deck'' when you need this
-      contribution; the neighboring route instead contributes: The 2026 scope authority from local search
-      and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam,
-      and Newton/Hessian methods. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5be9b7f03fc0793a0b8e1d96
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt03.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L06 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
-    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
-    angle_detail: 'Contribution: Prior-year alternate derivations and optimizer examples; current slides
-      decide scope. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Older L06 lecture variant'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: This is prior-year evidence: use it only for a second explanation, and
-      let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP neural-network optimization selection
-    source_id: source-islp
-    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438 (backpropagation §10.7.1 p. 435;
-      regularization and SGD §10.7.2 p. 436)
-    angle: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful only as a compact
-      training/SGD review after the lecture, not as the primary L06 explanation.
-    angle_detail: 'Contribution: ISLP has no standalone classical gradient-descent chapter; §10.7 is useful
-      only as a compact training/SGD review after the lecture, not as the primary L06 explanation. Depth
-      and prerequisites: It assumes no derivation beyond the current unit''s vocabulary and is for framing
-      the problem before calculation. Discriminator: choose ''ISLP neural-network optimization selection''
-      over ''Bonusblatt 03 — gradient descent'' when you need this contribution; the neighboring route
-      instead contributes: Conceptual comparison of batch and stochastic descent, preprocessing/scaling,
-      and learning-rate effects. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-f0ccf205ed8c7df0ef0c8687
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §8.4.6 — the adaptive optimizers derived in one place
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.4.6 Preconditioned SGD, pdf pp. 328-331 (AdaGrad p. 329, RMSProp and AdaDelta
-      pp. 329-330, Adam p. 330, issues with adaptive learning rates p. 331); momentum and Nesterov in
-      §8.2.4, pdf pp. 317-318
-    angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
-      bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
-    angle_detail: 'Contribution: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average
-      idea, so the deck''s bias-correction line stops being a formula to memorize; §8.4.6.4 states when
-      adaptive rates hurt. Depth and prerequisites: It assumes comfort with the unit''s notation and asks
-      the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''Murphy §8.4.6 — the adaptive optimizers derived in one place'' over ''Current L06 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity,
-      momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-c446c7532bc169a9759f14ce
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 gradient-descent derivation
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm' batch and stochastic gradient updates, pdf pp. 10-13; 'Regularization',
-      pdf pp. 126-127; cross-validation heading, pdf pp. 130-132
-    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
-      extensions.
-    angle_detail: 'Contribution: The best-aligned short written source for batch GD and SGD from scratch,
-      with optimization/model-selection extensions. Depth and prerequisites: It assumes comfort with the
-      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''CS229 gradient-descent derivation'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 optimization segments
-    source_id: source-cs229-2022-videos
-    locator: Spring 2022 playlist, Lecture 2 'Supervised Learning and Linear Regression' — gradient-descent
-      chapter
-    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
-    angle_detail: 'Contribution: Selected explanations of gradient methods and convergence at a deeper
-      pace than AML. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''CS229 optimization segments'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MIT 6.036 optimization exercises
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 6 'Gradient Descent' and its exercises
-    angle: Structured gradient-update and learning-rate practice rather than another long theoretical
-      explanation.
-    angle_detail: 'Contribution: Structured gradient-update and learning-rate practice rather than another
-      long theoretical explanation. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''MIT 6.036 optimization exercises'' over ''Current L06 lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-1b771d157b6b01a8e21d0a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: EECS 498 Lecture 4 — Optimization
-    source_id: source-eecs498
-    locator: Lecture 4 — Optimization
-    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
-      almost one-to-one with the L06 optimizer outlook.
-    angle_detail: 'Contribution: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam,
-      and second-order methods; almost one-to-one with the L06 optimizer outlook. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''EECS 498 Lecture 4 — Optimization''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It is
-      optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: CS231n Optimization notes
-    source_id: source-cs231n-notes
-    locator: '''Optimization: Stochastic Gradient Descent'' → ''Computing the gradient'', ''Gradient Descent'',
-      and ''Mini-batch gradient descent'''
-    angle: The classic walking-downhill intuition plus SGD update mechanics and practical optimization
-      diagnostics.
-    angle_detail: 'Contribution: The classic walking-downhill intuition plus SGD update mechanics and
-      practical optimization diagnostics. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''CS231n Optimization notes'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-434cdb8a816ea5b768419ba2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest gradient descent and SGD
-    source_id: source-statquest
-    locator: StatQuest episodes 'Gradient Descent, Step-by-Step' and 'Stochastic Gradient Descent, Clearly
-      Explained'
-    angle: Short visual explanations of the descent update, learning-rate behaviour, and stochastic sampling.
-    angle_detail: 'Contribution: Short visual explanations of the descent update, learning-rate behaviour,
-      and stochastic sampling. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest gradient descent and SGD'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-64dafa214bdf781fcec5ec79
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron batch, stochastic, and mini-batch GD code
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Gradient Descent', pdf pp. 204-215 (batch p. 208; stochastic p. 211;
-      mini-batch p. 214)
-    angle: Concrete NumPy/scikit-learn optimizer implementations and exercises showing how update variants
-      differ in practice.
-    angle_detail: 'Contribution: Concrete NumPy/scikit-learn optimizer implementations and exercises showing
-      how update variants differ in practice. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron batch, stochastic, and mini-batch GD code'' over ''Bonusblatt 03 —
-      gradient descent'' when you need this contribution; the neighboring route instead contributes: Conceptual
-      comparison of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-be37c217e550b50efbf0cfd3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ng gradient descent in practice
-    source_id: source-ng-coursera
-    locator: Machine Learning Specialization, Course 1, Week 2 lessons 'Gradient descent in practice'
-      and 'Choosing the learning rate'
-    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely
-      mirror the AML slides.
-    angle_detail: 'Contribution: Feature scaling, learning-rate diagnosis, batch updates, and practical
-      convergence checks closely mirror the AML slides. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng gradient descent in practice'' over ''Bonusblatt 03 — gradient descent''
-      when you need this contribution; the neighboring route instead contributes: Conceptual comparison
-      of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-34e7a26df2c02e415319d40a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — gradient descent
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 gradient-descent problems and solutions
-    angle: Local solution-backed update, convergence, and optimization questions spanning regression and
-      Ridge.
-    angle_detail: 'Contribution: Local solution-backed update, convergence, and optimization questions
-      spanning regression and Ridge. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW6 — gradient descent'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-44ca6584839ccdbd96c1bf16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — GD, SGD, and feature scaling
-    source_id: source-berkeley-cs189
-    locator: Spring 2026 Midterm Solutions, 'On a Downward Spiral', Question (a)-(e), PDF pp. 20-24
-    angle: A fully worked small gradient step reveals both stochastic-gradient variance and the conditioning
-      damage from unscaled features.
-    angle_detail: Work every arithmetic step before reading the marking. The final scaling subproblem
-      is the rare exam item that connects preprocessing to loss conditioning; it is narrower and more
-      diagnostic than the MML convergence derivation.
+  - material_ref:
+      route_id: route-14261115ded7f970e78de5bc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-stochastic/notes.md
   attachments: []
@@ -994,140 +708,98 @@ stages:
   - concept-convexity
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §8.1.3 — convex versus nonconvex, and the Hessian test
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310 (convex sets and functions
-      p. 307, the Hessian positive-definite test p. 310)
-    angle: States the convexity condition the lecture asserts, and gives the positive-(semi)definite Hessian
-      test that decides whether the regression objectives are well behaved.
-    angle_detail: 'Contribution: States the convexity condition the lecture asserts, and gives the positive-(semi)definite
-      Hessian test that decides whether the regression objectives are well behaved. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy §8.1.3 — convex versus nonconvex,
-      and the Hessian test'' over ''Current L06 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-09ae79cd78e352276370c8d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy solution manual §10.1 — gradient and Hessian worked out
-    source_id: source-murphy-pml1
-    locator: solutions-public.pdf 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
-      (exercise 10.1), pdf p. 25
-    angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic
-      log-likelihood: the one place on the shelf where the convexity claim and the Newton update are computed
-      rather than asserted.'
-    angle_detail: 'Contribution: A solution-backed derivation of both the gradient and the Hessian of
-      the multinomial logistic log-likelihood: the one place on the shelf where the convexity claim and
-      the Newton update are computed rather than asserted. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Murphy solution manual §10.1 — gradient and Hessian worked
-      out'' over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/solutions-public.pdf
+  - material_ref:
+      route_id: route-c16dd407fb2579c179f20a8a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MML continuous optimization
-    source_id: source-mml
-    locator: 'Official PDF, Ch 7 ''Continuous Optimization'': §7.1 ''Optimization Using Gradient Descent''
-      PDF pp. 233-238 and §7.3 ''Convex Optimization'' PDF pp. 242-251'
-    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
-    angle_detail: 'Contribution: The rigorous mathematics of descent directions, step size, momentum,
-      conditioning, and convexity. Depth and prerequisites: It assumes comfort with the unit''s notation
-      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML continuous optimization'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 gradient-descent derivation
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm' batch and stochastic gradient updates, pdf pp. 10-13; 'Regularization',
-      pdf pp. 126-127; cross-validation heading, pdf pp. 130-132
-    angle: The best-aligned short written source for batch GD and SGD from scratch, with optimization/model-selection
-      extensions.
-    angle_detail: 'Contribution: The best-aligned short written source for batch GD and SGD from scratch,
-      with optimization/model-selection extensions. Depth and prerequisites: It assumes comfort with the
-      unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''CS229 gradient-descent derivation'' over ''Current L06 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum,
-      RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f7a2035554358e7bdf8c0472
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 optimization segments
-    source_id: source-cs229-2022-videos
-    locator: Spring 2022 playlist, Lecture 2 'Supervised Learning and Linear Regression' — gradient-descent
-      chapter
-    angle: Selected explanations of gradient methods and convergence at a deeper pace than AML.
-    angle_detail: 'Contribution: Selected explanations of gradient methods and convergence at a deeper
-      pace than AML. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''CS229 optimization segments'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-a1b26277db28d65f7b5b73ad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: practise
-    label: CS229 practice midterm — one-step Newton proof
-    source_id: source-cs229-problem-sets
-    locator: Autumn 2010 Practice Midterm Solutions, Question 6(d), PDF p. 7
-    angle: Uses constant Hessian structure to prove why Newton reaches a quadratic optimum in one step.
-    angle_detail: This is a compact proof drill for the Newton bonus material. It tests the update algebra
-      under a quadratic assumption; it should not be generalized to arbitrary objectives or used to expand
-      the course scope.
+  - material_ref:
+      route_id: route-154131351c522c66e593975b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — optimization and adjoint differentiation
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW full lecture notes, §6 'Nonlinear Root-Finding, Optimization, and Adjoint Differentiation',
-      PDF chapter pp. 39-46
-    angle: Connects nonlinear optimization, gradients, and reverse-mode differentiation in a single calculus
-      framework.
-    angle_detail: Read §6.1-§6.3 only after the course algorithms are stable. The adjoint material explains
-      the bridge to backprop, but its engineering examples and formalism are explicitly past the AML exam
-      depth.
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-convexity/notes.md
   attachments: []
@@ -1146,130 +818,88 @@ stages:
   - concept-adam-optimizer
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L06 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
-    angle: Prior-year alternate derivations and optimizer examples; current slides decide scope.
-    angle_detail: 'Contribution: Prior-year alternate derivations and optimizer examples; current slides
-      decide scope. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Older L06 lecture variant'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: This is prior-year evidence: use it only for a second explanation, and
-      let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-fd41cca19058435a4944931c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/06-gradient_descent_6227e8af62bb4589eaca2d5303544563.pdf
     scope_triage: reference-only
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §8.4.6 — the adaptive optimizers derived in one place
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.4.6 Preconditioned SGD, pdf pp. 328-331 (AdaGrad p. 329, RMSProp and AdaDelta
-      pp. 329-330, Adam p. 330, issues with adaptive learning rates p. 331); momentum and Nesterov in
-      §8.2.4, pdf pp. 317-318
-    angle: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average idea, so the deck's
-      bias-correction line stops being a formula to memorize; §8.4.6.4 states when adaptive rates hurt.
-    angle_detail: 'Contribution: AdaGrad, RMSProp and Adam are built in sequence from the same moving-average
-      idea, so the deck''s bias-correction line stops being a formula to memorize; §8.4.6.4 states when
-      adaptive rates hurt. Depth and prerequisites: It assumes comfort with the unit''s notation and asks
-      the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''Murphy §8.4.6 — the adaptive optimizers derived in one place'' over ''Current L06 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority from local search and gradient direction through batch/SGD/mini-batch, scaling, convexity,
-      momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-c446c7532bc169a9759f14ce
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MML continuous optimization
-    source_id: source-mml
-    locator: 'Official PDF, Ch 7 ''Continuous Optimization'': §7.1 ''Optimization Using Gradient Descent''
-      PDF pp. 233-238 and §7.3 ''Convex Optimization'' PDF pp. 242-251'
-    angle: The rigorous mathematics of descent directions, step size, momentum, conditioning, and convexity.
-    angle_detail: 'Contribution: The rigorous mathematics of descent directions, step size, momentum,
-      conditioning, and convexity. Depth and prerequisites: It assumes comfort with the unit''s notation
-      and asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML continuous optimization'' over ''Current L06 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority from local search and gradient
-      direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian
-      methods. Course boundary: It is optional depth: open it for the named gap, then return to the current
-      deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-6a75b1b8d8b317dabe077fb2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: EECS 498 Lecture 4 — Optimization
-    source_id: source-eecs498
-    locator: Lecture 4 — Optimization
-    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
-      almost one-to-one with the L06 optimizer outlook.
-    angle_detail: 'Contribution: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam,
-      and second-order methods; almost one-to-one with the L06 optimizer outlook. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''EECS 498 Lecture 4 — Optimization''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It is
-      optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Géron 3rd ed. Ch 11 — the same optimizers, as code you can run
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 11 'Faster Optimizers' pdf pp. 485–494 (Momentum p. 486, Nesterov
-      p. 487, AdaGrad p. 489, RMSProp p. 490, Adam p. 491)
-    angle: Each optimizer the deck names appears as a two-line Keras call next to its update rule, so
-      the comparison becomes an experiment rather than a table.
-    angle_detail: 'Contribution: Each optimizer the deck names appears as a two-line Keras call next to
-      its update rule, so the comparison becomes an experiment rather than a table. Depth and prerequisites:
-      It assumes the mathematical object is already understood and shifts attention to executable behavior,
-      shapes, APIs, or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch 11 — the same optimizers,
-      as code you can run'' over ''Current L06 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-78d45203d54588d647811548
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Distill — why momentum really works
-    source_id: source-distill-momentum
-    locator: 'Sections ''First Steps: Gradient Descent'', ''Choosing A Step-size'', and ''The Dynamics
-      of Momentum'''
-    angle: Diagonalizes a quadratic so step size, pathological curvature, oscillation, and momentum become
-      inspectable dynamics.
-    angle_detail: Manipulate step size and momentum before reading the closed-form analysis. This route
-      explains the optimizer outlook at greater depth than AML requires; do not turn its condition-number
-      derivation into a new exam commitment.
+  - material_ref:
+      route_id: route-c0cbb7729f0cd68049a83d24
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-optimizers/notes.md
   attachments: []
@@ -1289,110 +919,78 @@ stages:
   - concept-newton-method
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L06 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 06-gradient_descent.pdf
-    angle: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods.
-    angle_detail: 'Contribution: The 2026 scope authority from local search and gradient direction through
-      batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Depth
-      and prerequisites: It assumes the prerequisites declared by the unit and stays at the notation and
-      derivation depth used by the HU course. Discriminator: choose ''Current L06 lecture deck'' over
-      ''Murphy optimization chapter'' when you need this contribution; the neighboring route instead contributes:
-      The most complete local book match for local/global optima, convexity, learning rates, SGD, momentum/adaptive
-      methods, and second-order ideas. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-446c1d8cfb60bd43f0315cdd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 06-gradient_descent.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy optimization chapter
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.1.3 Convex vs nonconvex optimization, pdf pp. 307-310; §8.2.4 Momentum, pdf pp.
-      317-318; §8.3 Second-order methods, pdf pp. 319-321; §8.4.6 Preconditioned SGD, pdf pp. 328-331
-    angle: The most complete local book match for local/global optima, convexity, learning rates, SGD,
-      momentum/adaptive methods, and second-order ideas.
-    angle_detail: 'Contribution: The most complete local book match for local/global optima, convexity,
-      learning rates, SGD, momentum/adaptive methods, and second-order ideas. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy optimization chapter'' over ''Current
-      L06 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority from local search and gradient direction through batch/SGD/mini-batch, scaling,
-      convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-2859463c0a0acd4759eb3acb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §8.3 — Newton and the quasi-Newton family
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §8.3 Second-order methods, pdf pp. 319-321 (Newton's method p. 319, BFGS and quasi-Newton
-      p. 320, trust region p. 321)
-    angle: 'Derives the curvature-aware update the deck compares against first-order methods, and prices
-      the Hessian: BFGS and trust regions are what you use when you cannot afford it.'
-    angle_detail: 'Contribution: Derives the curvature-aware update the deck compares against first-order
-      methods, and prices the Hessian: BFGS and trust regions are what you use when you cannot afford
-      it. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the reader to
-      follow or reproduce the mathematical steps, not merely recognize them. Discriminator: choose ''Murphy
-      §8.3 — Newton and the quasi-Newton family'' over ''Current L06 lecture deck'' when you need this
-      contribution; the neighboring route instead contributes: The 2026 scope authority from local search
-      and gradient direction through batch/SGD/mini-batch, scaling, convexity, momentum, RMSProp, Adam,
-      and Newton/Hessian methods. Course boundary: It complements the current deck but cannot override
-      the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-d2797d2723a780a4c3715a01
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy solution manual §10.1 — gradient and Hessian worked out
-    source_id: source-murphy-pml1
-    locator: solutions-public.pdf 'Gradient and Hessian of log-likelihood for multinomial logistic regression'
-      (exercise 10.1), pdf p. 25
-    angle: 'A solution-backed derivation of both the gradient and the Hessian of the multinomial logistic
-      log-likelihood: the one place on the shelf where the convexity claim and the Newton update are computed
-      rather than asserted.'
-    angle_detail: 'Contribution: A solution-backed derivation of both the gradient and the Hessian of
-      the multinomial logistic log-likelihood: the one place on the shelf where the convexity claim and
-      the Newton update are computed rather than asserted. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Murphy solution manual §10.1 — gradient and Hessian worked
-      out'' over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/solutions-public.pdf
+  - material_ref:
+      route_id: route-c16dd407fb2579c179f20a8a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: EECS 498 Lecture 4 — Optimization
-    source_id: source-eecs498
-    locator: Lecture 4 — Optimization
-    angle: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam, and second-order methods;
-      almost one-to-one with the L06 optimizer outlook.
-    angle_detail: 'Contribution: A strong visual/deeper lecture from SGD through momentum, AdaGrad, Adam,
-      and second-order methods; almost one-to-one with the L06 optimizer outlook. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''EECS 498 Lecture 4 — Optimization''
-      over ''Current L06 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority from local search and gradient direction through batch/SGD/mini-batch,
-      scaling, convexity, momentum, RMSProp, Adam, and Newton/Hessian methods. Course boundary: It is
-      optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-d8db60f004523f7d9c06ccd0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: practise
-    label: CS229 practice midterm — one-step Newton proof
-    source_id: source-cs229-problem-sets
-    locator: Autumn 2010 Practice Midterm Solutions, Question 6(d), PDF p. 7
-    angle: Uses constant Hessian structure to prove why Newton reaches a quadratic optimum in one step.
-    angle_detail: This is a compact proof drill for the Newton bonus material. It tests the update algebra
-      under a quadratic assumption; it should not be generalized to arbitrary objectives or used to expand
-      the course scope.
+  - material_ref:
+      route_id: route-154131351c522c66e593975b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — optimization and adjoint differentiation
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW full lecture notes, §6 'Nonlinear Root-Finding, Optimization, and Adjoint Differentiation',
-      PDF chapter pp. 39-46
-    angle: Connects nonlinear optimization, gradients, and reverse-mode differentiation in a single calculus
-      framework.
-    angle_detail: Read §6.1-§6.3 only after the course algorithms are stable. The adjoint material explains
-      the bridge to backprop, but its engineering examples and formalism are explicitly past the AML exam
-      depth.
+  - material_ref:
+      route_id: route-6eff5448583abded23c0402a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l06/stages/stage-aml-l06-newton/notes.md
   attachments: []

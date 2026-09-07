@@ -26,138 +26,97 @@ stages:
   - concept-linear-regression
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L03 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf
-    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix.
-    angle_detail: 'Contribution: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L03 lecture deck'' over ''Ng linear regression
-      with one and multiple variables'' when you need this contribution; the neighboring route instead
-      contributes: The gentlest video/course explanation of fitted lines, cost functions, vectorization,
-      and the normal-equation bridge. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 02 — linear-regression task
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf
-    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction
-      from fitted lines.
-    angle_detail: 'Contribution: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Bonusblatt 02 — linear-regression task'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP Chapter 3 — linear regression
-    source_id: source-islp
-    locator: islp.pdf §3.1 Simple Linear Regression, pdf pp. 79-88; §3.2 Multiple Linear Regression, pdf
-      pp. 89-99
-    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
-      and diagnostics beyond the deck's derivation-first treatment.
-    angle_detail: 'Contribution: A readable statistical account of simple/multiple regression and fit
-      assessment; it adds interpretation and diagnostics beyond the deck''s derivation-first treatment.
-      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
-      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP Chapter 3
-      — linear regression'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution;
-      the neighboring route instead contributes: Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 linear-regression notes
-    source_id: source-csc411-notes
-    locator: Chapter 2
-    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
-    angle_detail: 'Contribution: A concise second derivation of least squares with gradient descent foreshadowed
-      inline. Depth and prerequisites: It assumes no derivation beyond the current unit''s vocabulary
-      and is for framing the problem before calculation. Discriminator: choose ''CSC411 linear-regression
-      notes'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution; the neighboring
-      route instead contributes: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Course boundary: It complements the current deck but cannot override
-      the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest linear regression and least squares
-    source_id: source-statquest
-    locator: StatQuest episodes 'Linear Regression, Clearly Explained', 'Least Squares, Clearly Explained',
-      and 'R-squared, Clearly Explained'
-    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than
-      the lecture derivation.
-    angle_detail: 'Contribution: Surgical visual intuition for fitted lines, least squares, residuals,
-      and R²; lighter than the lecture derivation. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest linear regression and least squares'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: practise
-    label: Caltech HW2 — linear regression
-    source_id: source-caltech-lfd
-    locator: Homework table links 'Homework 2' and 'Solution to Homework 2' — linear-regression problems
-    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
-      mechanics.
-    angle_detail: 'Contribution: Solved exam-style least-squares and linear-regression questions for testing
-      the model and solution mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Caltech HW2 — linear regression'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Ng linear regression with one and multiple variables
-    source_id: source-ng-coursera
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Gradient descent in practice'''
-    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the
-      normal-equation bridge.
-    angle_detail: 'Contribution: The gentlest video/course explanation of fitted lines, cost functions,
-      vectorization, and the normal-equation bridge. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng linear regression with one and multiple variables'' over ''Current L03
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
-      vectorization, and the design matrix. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5cf858ae016d05f91d008978
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Domingos — objective-versus-generalization perspective
-    source_id: source-domingos-useful-things
-    locator: CACM PDF pp. 3-5, sections 'Generalization Counts' and 'Overfitting Has Many Faces'
-    angle: Places loss minimization inside the larger learning problem and warns that optimizing training
-      error is not the same as obtaining a useful model.
-    angle_detail: 'Contribution: Places loss minimization inside the larger learning problem and warns
-      that optimizing training error is not the same as obtaining a useful model. Depth and prerequisites:
-      It assumes no derivation beyond the current unit''s vocabulary and is for framing the problem before
-      calculation. Discriminator: choose ''Domingos — objective-versus-generalization perspective'' over
-      ''Bonusblatt 02 — linear-regression task'' when you need this contribution; the neighboring route
-      instead contributes: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-3fd95ab2e612f27020ad178f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Setosa — draggable ordinary least squares
-    source_id: source-setosa-ols
-    locator: Page 'Ordinary Least Squares Regression' → interactive residual-line panel and 'Where do
-      betas come from?' derivation
-    angle: Makes residuals and their squared sum change in real time as the fitted line moves.
-    angle_detail: Move the line before reading the derivation and predict which residuals dominate the
-      objective. This route earns its place through interaction; it does not cover vectorized normal equations
-      or probabilistic assumptions.
+  - material_ref:
+      route_id: route-43d3ea3a42b06a9f17c6a63c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-problem/notes.md
   attachments: []
@@ -178,313 +137,220 @@ stages:
   - concept-mean-squared-error
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L03 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf
-    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix.
-    angle_detail: 'Contribution: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L03 lecture deck'' over ''Ng linear regression
-      with one and multiple variables'' when you need this contribution; the neighboring route instead
-      contributes: The gentlest video/course explanation of fitted lines, cost functions, vectorization,
-      and the normal-equation bridge. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 03 — vectorization and linear regression
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf
-    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization,
-      and a one-predictor regression implementation.
-    angle_detail: 'Contribution: A computational bridge through dot products, multivariate differentiation,
-      NumPy vectorization, and a one-predictor regression implementation. Depth and prerequisites: It
-      assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 03 — vectorization and linear
-      regression'' over ''Current L03 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 02 — linear-regression task
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf
-    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction
-      from fitted lines.
-    angle_detail: 'Contribution: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Bonusblatt 02 — linear-regression task'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L03 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
-    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
-      is unclear.
-    angle_detail: 'Contribution: Prior-year alternate derivations and examples; consult only after the
-      current deck if one explanation is unclear. Depth and prerequisites: It assumes the lecture treatment
-      is already secure and deliberately goes beyond exam-first depth for a precise reference or second
-      derivation. Discriminator: choose ''Older L03 lecture variant'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is prior-year evidence: use it only for a second explanation,
-      and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP Chapter 3 — linear regression
-    source_id: source-islp
-    locator: islp.pdf §3.1 Simple Linear Regression, pdf pp. 79-88; §3.2 Multiple Linear Regression, pdf
-      pp. 89-99
-    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
-      and diagnostics beyond the deck's derivation-first treatment.
-    angle_detail: 'Contribution: A readable statistical account of simple/multiple regression and fit
-      assessment; it adds interpretation and diagnostics beyond the deck''s derivation-first treatment.
-      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
-      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP Chapter 3
-      — linear regression'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution;
-      the neighboring route instead contributes: Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: ESL least-squares statistical depth
-    source_id: source-esl
-    locator: esl.pdf §3.2 Linear Regression Models and Least Squares, pdf pp. 63-75
-    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after
-      the deck or ISLP.
-    angle_detail: 'Contribution: Adds projection, sampling, and statistical interpretation to linear regression;
-      use only after the deck or ISLP. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''ESL least-squares statistical depth'' over ''CS229 linear-regression lecture''
-      when you need this contribution; the neighboring route instead contributes: A derivation-first video
-      treatment of LMS, least squares, and the probabilistic interpretation. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy linear regression and Gaussian MLE
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410
-    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact
-      matrix notation.
-    angle_detail: 'Contribution: Connects least squares to probabilistic modelling and maximum likelihood
-      while retaining compact matrix notation. Depth and prerequisites: It assumes comfort with the unit''s
-      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''Murphy linear regression and Gaussian MLE'' over ''CS229 LMS and normal-equation
-      notes'' when you need this contribution; the neighboring route instead contributes: Derives gradient/LMS,
-      the normal equation by matrix calculus, and squared error as Gaussian MLE in lecture-compatible
-      notation. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 linear-regression notes
-    source_id: source-csc411-notes
-    locator: Chapter 2
-    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
-    angle_detail: 'Contribution: A concise second derivation of least squares with gradient descent foreshadowed
-      inline. Depth and prerequisites: It assumes no derivation beyond the current unit''s vocabulary
-      and is for framing the problem before calculation. Discriminator: choose ''CSC411 linear-regression
-      notes'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution; the neighboring
-      route instead contributes: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Course boundary: It complements the current deck but cannot override
-      the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese regression reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Regression, pdf pp. 185-232; Linear Regression, pdf pp. 187-205
-    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation
-      concepts.
-    angle_detail: 'Contribution: An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''Kroese regression reference'' over ''Murphy linear regression and Gaussian
-      MLE'' when you need this contribution; the neighboring route instead contributes: Connects least
-      squares to probabilistic modelling and maximum likelihood while retaining compact matrix notation.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: reference
-    label: CS229 LMS and normal-equation notes
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm', pdf pp. 10-13; 'The normal equations', pdf pp. 14-15; 'Probabilistic
-      interpretation', pdf pp. 16-17
-    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian
-      MLE in lecture-compatible notation.
-    angle_detail: 'Contribution: Derives gradient/LMS, the normal equation by matrix calculus, and squared
-      error as Gaussian MLE in lecture-compatible notation. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 LMS and normal-equation notes'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: watch
-    label: CS229 linear-regression lecture
-    source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent
-    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
-    angle_detail: 'Contribution: A derivation-first video treatment of LMS, least squares, and the probabilistic
-      interpretation. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
-      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''CS229 linear-regression lecture'' over ''ESL least-squares statistical depth'' when you
-      need this contribution; the neighboring route instead contributes: Adds projection, sampling, and
-      statistical interpretation to linear regression; use only after the deck or ISLP. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 regression unit
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 3 'Linear Regression' and its exercises
-    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution
-      reasoning.
-    angle_detail: 'Contribution: Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning. Depth and prerequisites: It assumes the relevant rule or algorithm has already
-      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''MIT 6.036 regression unit'' over ''Current L03 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest linear regression and least squares
-    source_id: source-statquest
-    locator: StatQuest episodes 'Linear Regression, Clearly Explained', 'Least Squares, Clearly Explained',
-      and 'R-squared, Clearly Explained'
-    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than
-      the lecture derivation.
-    angle_detail: 'Contribution: Surgical visual intuition for fitted lines, least squares, residuals,
-      and R²; lighter than the lecture derivation. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest linear regression and least squares'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron linear regression implementations
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Linear Regression', pdf pp. 197-203; 'Gradient Descent', pdf pp. 204-215;
-      Exercises, pdf pp. 243-244
-    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A
-      solutions.
-    angle_detail: 'Contribution: Runnable normal-equation and gradient-based regression examples plus
-      exercises with Appendix-A solutions. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron linear regression implementations'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Caltech HW2 — linear regression
-    source_id: source-caltech-lfd
-    locator: Homework table links 'Homework 2' and 'Solution to Homework 2' — linear-regression problems
-    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
-      mechanics.
-    angle_detail: 'Contribution: Solved exam-style least-squares and linear-regression questions for testing
-      the model and solution mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Caltech HW2 — linear regression'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Ng linear regression with one and multiple variables
-    source_id: source-ng-coursera
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Gradient descent in practice'''
-    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the
-      normal-equation bridge.
-    angle_detail: 'Contribution: The gentlest video/course explanation of fitted lines, cost functions,
-      vectorization, and the normal-equation bridge. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng linear regression with one and multiple variables'' over ''Current L03
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
-      vectorization, and the design matrix. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5cf858ae016d05f91d008978
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — regression selections
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions
-    angle: Local solved linear-regression and gradient questions for checking derivations and implementation
-      logic.
-    angle_detail: 'Contribution: Local solved linear-regression and gradient questions for checking derivations
-      and implementation logic. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Cornell CS4780 HW6 — regression selections'' over ''Current L03 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The 2026 scope authority for
-      one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization, and
-      the design matrix. Course boundary: It complements the current deck but cannot override the deck''s
-      notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Domingos — objective-versus-generalization perspective
-    source_id: source-domingos-useful-things
-    locator: CACM PDF pp. 3-5, sections 'Generalization Counts' and 'Overfitting Has Many Faces'
-    angle: Places loss minimization inside the larger learning problem and warns that optimizing training
-      error is not the same as obtaining a useful model.
-    angle_detail: 'Contribution: Places loss minimization inside the larger learning problem and warns
-      that optimizing training error is not the same as obtaining a useful model. Depth and prerequisites:
-      It assumes no derivation beyond the current unit''s vocabulary and is for framing the problem before
-      calculation. Discriminator: choose ''Domingos — objective-versus-generalization perspective'' over
-      ''Bonusblatt 02 — linear-regression task'' when you need this contribution; the neighboring route
-      instead contributes: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-3fd95ab2e612f27020ad178f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — least-squares derivation
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(m), PDF pp. 4-5
-    angle: Compresses the normal-equation and gradient calculations into official written-exam form.
-    angle_detail: Attempt the subproblem without notes, then use the official reasoning to check rank,
-      invertibility, and gradient statements. This is a calibration artifact; it does not teach the derivation
-      as gently as Bendersky or the lecture.
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Setosa — draggable ordinary least squares
-    source_id: source-setosa-ols
-    locator: Page 'Ordinary Least Squares Regression' → interactive residual-line panel and 'Where do
-      betas come from?' derivation
-    angle: Makes residuals and their squared sum change in real time as the fitted line moves.
-    angle_detail: Move the line before reading the derivation and predict which residuals dominate the
-      objective. This route earns its place through interaction; it does not cover vectorized normal equations
-      or probabilistic assumptions.
+  - material_ref:
+      route_id: route-43d3ea3a42b06a9f17c6a63c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Bendersky — normal equation from the squared loss
-    source_id: source-bendersky-normal-equation
-    locator: Article 'Derivation of the Normal Equation for linear regression', from 'Given the hypothesis
-      function' through equation θ=(XᵀX)⁻¹Xᵀy
-    angle: Carries the scalar least-squares objective into matrix form and differentiates it to the normal
-      equation in one short proof.
-    angle_detail: Use this as the shortest complete derivation after the lecture. It assumes invertibility
-      at the final step, so pair it with the CS189 rank questions rather than silently treating the inverse
-      formula as universal.
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-loss/notes.md
   attachments: []
@@ -505,308 +371,219 @@ stages:
   - concept-normal-equation
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L03 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf
-    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix.
-    angle_detail: 'Contribution: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L03 lecture deck'' over ''Ng linear regression
-      with one and multiple variables'' when you need this contribution; the neighboring route instead
-      contributes: The gentlest video/course explanation of fitted lines, cost functions, vectorization,
-      and the normal-equation bridge. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 02 — linear-regression task
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt02.pdf
-    angle: Model comparison, residual/loss reasoning, MSE versus MAE differentiability, and prediction
-      from fitted lines.
-    angle_detail: 'Contribution: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Bonusblatt 02 — linear-regression task'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-c930a81c9480f2f510dc6a3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt02.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L03 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
-    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
-      is unclear.
-    angle_detail: 'Contribution: Prior-year alternate derivations and examples; consult only after the
-      current deck if one explanation is unclear. Depth and prerequisites: It assumes the lecture treatment
-      is already secure and deliberately goes beyond exam-first depth for a precise reference or second
-      derivation. Discriminator: choose ''Older L03 lecture variant'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is prior-year evidence: use it only for a second explanation,
-      and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP Chapter 3 — linear regression
-    source_id: source-islp
-    locator: islp.pdf §3.1 Simple Linear Regression, pdf pp. 79-88; §3.2 Multiple Linear Regression, pdf
-      pp. 89-99
-    angle: A readable statistical account of simple/multiple regression and fit assessment; it adds interpretation
-      and diagnostics beyond the deck's derivation-first treatment.
-    angle_detail: 'Contribution: A readable statistical account of simple/multiple regression and fit
-      assessment; it adds interpretation and diagnostics beyond the deck''s derivation-first treatment.
-      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
-      make the mechanism explainable before formal derivation. Discriminator: choose ''ISLP Chapter 3
-      — linear regression'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution;
-      the neighboring route instead contributes: Model comparison, residual/loss reasoning, MSE versus
-      MAE differentiability, and prediction from fitted lines. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-d3bb781518afd9298b86e667
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: ESL least-squares statistical depth
-    source_id: source-esl
-    locator: esl.pdf §3.2 Linear Regression Models and Least Squares, pdf pp. 63-75
-    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after
-      the deck or ISLP.
-    angle_detail: 'Contribution: Adds projection, sampling, and statistical interpretation to linear regression;
-      use only after the deck or ISLP. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''ESL least-squares statistical depth'' over ''CS229 linear-regression lecture''
-      when you need this contribution; the neighboring route instead contributes: A derivation-first video
-      treatment of LMS, least squares, and the probabilistic interpretation. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy linear regression and Gaussian MLE
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410
-    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact
-      matrix notation.
-    angle_detail: 'Contribution: Connects least squares to probabilistic modelling and maximum likelihood
-      while retaining compact matrix notation. Depth and prerequisites: It assumes comfort with the unit''s
-      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''Murphy linear regression and Gaussian MLE'' over ''CS229 LMS and normal-equation
-      notes'' when you need this contribution; the neighboring route instead contributes: Derives gradient/LMS,
-      the normal equation by matrix calculus, and squared error as Gaussian MLE in lecture-compatible
-      notation. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 linear-regression notes
-    source_id: source-csc411-notes
-    locator: Chapter 2
-    angle: A concise second derivation of least squares with gradient descent foreshadowed inline.
-    angle_detail: 'Contribution: A concise second derivation of least squares with gradient descent foreshadowed
-      inline. Depth and prerequisites: It assumes no derivation beyond the current unit''s vocabulary
-      and is for framing the problem before calculation. Discriminator: choose ''CSC411 linear-regression
-      notes'' over ''Bonusblatt 02 — linear-regression task'' when you need this contribution; the neighboring
-      route instead contributes: Model comparison, residual/loss reasoning, MSE versus MAE differentiability,
-      and prediction from fitted lines. Course boundary: It complements the current deck but cannot override
-      the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-b7ac85a63282e28ca20f2a5d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: MML linear regression as MLE
-    source_id: source-mml
-    locator: 'Official PDF, Ch 9 ''Linear Regression'', PDF pp. 295-305: §9.1 ''Problem Formulation''
-      p. 297 and §9.2.1 ''Maximum Likelihood Estimation'' pp. 298-305'
-    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra
-      rather than the model intuition is the gap.
-    angle_detail: 'Contribution: The matrix-calculus and probabilistic foundation under the normal equation;
-      use when the algebra rather than the model intuition is the gap. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''MML linear regression as MLE'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 LMS and normal-equation notes
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm', pdf pp. 10-13; 'The normal equations', pdf pp. 14-15; 'Probabilistic
-      interpretation', pdf pp. 16-17
-    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian
-      MLE in lecture-compatible notation.
-    angle_detail: 'Contribution: Derives gradient/LMS, the normal equation by matrix calculus, and squared
-      error as Gaussian MLE in lecture-compatible notation. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 LMS and normal-equation notes'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: watch
-    label: CS229 linear-regression lecture
-    source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent
-    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
-    angle_detail: 'Contribution: A derivation-first video treatment of LMS, least squares, and the probabilistic
-      interpretation. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
-      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''CS229 linear-regression lecture'' over ''ESL least-squares statistical depth'' when you
-      need this contribution; the neighboring route instead contributes: Adds projection, sampling, and
-      statistical interpretation to linear regression; use only after the deck or ISLP. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 regression unit
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 3 'Linear Regression' and its exercises
-    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution
-      reasoning.
-    angle_detail: 'Contribution: Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning. Depth and prerequisites: It assumes the relevant rule or algorithm has already
-      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''MIT 6.036 regression unit'' over ''Current L03 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest linear regression and least squares
-    source_id: source-statquest
-    locator: StatQuest episodes 'Linear Regression, Clearly Explained', 'Least Squares, Clearly Explained',
-      and 'R-squared, Clearly Explained'
-    angle: Surgical visual intuition for fitted lines, least squares, residuals, and R²; lighter than
-      the lecture derivation.
-    angle_detail: 'Contribution: Surgical visual intuition for fitted lines, least squares, residuals,
-      and R²; lighter than the lecture derivation. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest linear regression and least squares'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-12d2f180bca2a8ae2659c549
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — projections and products
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Matrix multiplication as composition', 'Dot products and duality', and
-      'Projections onto subspaces'
-    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
-      and the normal equation.
-    angle_detail: 'Contribution: Visualizes dot products, matrix multiplication, and projection geometry
-      behind vectorized regression and the normal equation. Depth and prerequisites: It assumes the unit
-      vocabulary but not a completed proof and is meant to make the mechanism explainable before formal
-      derivation. Discriminator: choose ''Essence of Linear Algebra — projections and products'' over
-      ''Current L03 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix. Course boundary: It complements the current deck
-      but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron linear regression implementations
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Linear Regression', pdf pp. 197-203; 'Gradient Descent', pdf pp. 204-215;
-      Exercises, pdf pp. 243-244
-    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A
-      solutions.
-    angle_detail: 'Contribution: Runnable normal-equation and gradient-based regression examples plus
-      exercises with Appendix-A solutions. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron linear regression implementations'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Caltech HW2 — linear regression
-    source_id: source-caltech-lfd
-    locator: Homework table links 'Homework 2' and 'Solution to Homework 2' — linear-regression problems
-    angle: Solved exam-style least-squares and linear-regression questions for testing the model and solution
-      mechanics.
-    angle_detail: 'Contribution: Solved exam-style least-squares and linear-regression questions for testing
-      the model and solution mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Caltech HW2 — linear regression'' over ''Bonusblatt 02 — linear-regression
-      task'' when you need this contribution; the neighboring route instead contributes: Model comparison,
-      residual/loss reasoning, MSE versus MAE differentiability, and prediction from fitted lines. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-28bcd3a40801e86f5b2354f1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Ng linear regression with one and multiple variables
-    source_id: source-ng-coursera
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Gradient descent in practice'''
-    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the
-      normal-equation bridge.
-    angle_detail: 'Contribution: The gentlest video/course explanation of fitted lines, cost functions,
-      vectorization, and the normal-equation bridge. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng linear regression with one and multiple variables'' over ''Current L03
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
-      vectorization, and the design matrix. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5cf858ae016d05f91d008978
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — regression selections
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions
-    angle: Local solved linear-regression and gradient questions for checking derivations and implementation
-      logic.
-    angle_detail: 'Contribution: Local solved linear-regression and gradient questions for checking derivations
-      and implementation logic. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Cornell CS4780 HW6 — regression selections'' over ''Current L03 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The 2026 scope authority for
-      one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization, and
-      the design matrix. Course boundary: It complements the current deck but cannot override the deck''s
-      notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — least-squares derivation
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(m), PDF pp. 4-5
-    angle: Compresses the normal-equation and gradient calculations into official written-exam form.
-    angle_detail: Attempt the subproblem without notes, then use the official reasoning to check rank,
-      invertibility, and gradient statements. This is a calibration artifact; it does not teach the derivation
-      as gently as Bendersky or the lecture.
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS229 practice midterm — Bayesian linear regression
-    source_id: source-cs229-problem-sets
-    locator: Autumn 2010 Practice Midterm Solutions, Question 2 'Bayesian linear regression', PDF pp.
-      2-3
-    angle: Derives a normal-equation-shaped MAP estimate from a Gaussian prior and likelihood.
-    angle_detail: Use this to connect the L03 least-squares solution to probabilistic estimation. It deliberately
-      goes one step past the exam core by adding a prior, and the resulting ridge-shaped term prepares
-      L04 without replacing its route.
+  - material_ref:
+      route_id: route-2fc647972ce02f232134aedb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Bendersky — normal equation from the squared loss
-    source_id: source-bendersky-normal-equation
-    locator: Article 'Derivation of the Normal Equation for linear regression', from 'Given the hypothesis
-      function' through equation θ=(XᵀX)⁻¹Xᵀy
-    angle: Carries the scalar least-squares objective into matrix form and differentiates it to the normal
-      equation in one short proof.
-    angle_detail: Use this as the shortest complete derivation after the lecture. It assumes invertibility
-      at the final step, so pair it with the CS189 rank questions rather than silently treating the inverse
-      formula as universal.
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 18.06 Lecture 16 — projections and least squares
-    source_id: source-mit-1806
-    locator: Lecture 16 'Projection Matrices and Least Squares', session overview, lecture video/summary,
-      then problems and solutions
-    angle: Derives least squares as projection onto the column space, giving geometry to AᵀAβ=Aᵀy.
-    angle_detail: Use this if the normal equation is remembered but its geometry is not. The session supplies
-      projection and column-space meaning; Bendersky remains the shortest calculus derivation and the
-      AML deck fixes notation.
+  - material_ref:
+      route_id: route-5e9424e18b5dcd231637f8eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-solution/notes.md
   attachments: []
@@ -826,90 +603,68 @@ stages:
   - concept-linear-algebra
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L03 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf
-    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix.
-    angle_detail: 'Contribution: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L03 lecture deck'' over ''Ng linear regression
-      with one and multiple variables'' when you need this contribution; the neighboring route instead
-      contributes: The gentlest video/course explanation of fitted lines, cost functions, vectorization,
-      and the normal-equation bridge. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 03 — vectorization and linear regression
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf
-    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization,
-      and a one-predictor regression implementation.
-    angle_detail: 'Contribution: A computational bridge through dot products, multivariate differentiation,
-      NumPy vectorization, and a one-predictor regression implementation. Depth and prerequisites: It
-      assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 03 — vectorization and linear
-      regression'' over ''Current L03 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 01 — vectorization task
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf
-    angle: Dimension and vectorization checks that expose shape mistakes before the design-matrix material.
-    angle_detail: 'Contribution: Dimension and vectorization checks that expose shape mistakes before
-      the design-matrix material. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Bonusblatt 01 — vectorization task'' over ''Übung 03 — vectorization and linear regression''
-      when you need this contribution; the neighboring route instead contributes: A computational bridge
-      through dot products, multivariate differentiation, NumPy vectorization, and a one-predictor regression
-      implementation. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-d71822ce9022bf399076c135
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
-  - kind: watch
-    label: Essence of Linear Algebra — projections and products
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Matrix multiplication as composition', 'Dot products and duality', and
-      'Projections onto subspaces'
-    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
-      and the normal equation.
-    angle_detail: 'Contribution: Visualizes dot products, matrix multiplication, and projection geometry
-      behind vectorized regression and the normal equation. Depth and prerequisites: It assumes the unit
-      vocabulary but not a completed proof and is meant to make the mechanism explainable before formal
-      derivation. Discriminator: choose ''Essence of Linear Algebra — projections and products'' over
-      ''Current L03 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix. Course boundary: It complements the current deck
-      but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — derivatives as linear operators
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW Lecture 1 Part 2 'Derivatives as Linear Operators' and Lecture 2 Part 2 'Jacobians
-      of Matrix Functions'
-    angle: Reframes vector and matrix derivatives as linear maps, clarifying why matrix-calculus identities
-      are dimensionally valid.
-    angle_detail: 'Use this only if the normal-equation derivative feels like symbol manipulation. It
-      is enrichment beyond AML: extract the operator and Jacobian viewpoint, then return to Bendersky
-      and the lecture''s concrete regression derivation.'
+  - material_ref:
+      route_id: route-97cc2ca7b7f2eb7ae6158b39
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MIT 18.06 Lecture 16 — projections and least squares
-    source_id: source-mit-1806
-    locator: Lecture 16 'Projection Matrices and Least Squares', session overview, lecture video/summary,
-      then problems and solutions
-    angle: Derives least squares as projection onto the column space, giving geometry to AᵀAβ=Aᵀy.
-    angle_detail: Use this if the normal equation is remembered but its geometry is not. The session supplies
-      projection and column-space meaning; Bendersky remains the shortest calculus derivation and the
-      AML deck fixes notation.
+  - material_ref:
+      route_id: route-5e9424e18b5dcd231637f8eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-linear-algebra/notes.md
   attachments: []
@@ -931,241 +686,170 @@ stages:
   - concept-linear-regression
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L03 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 03-linear-regression.pdf
-    angle: The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix.
-    angle_detail: 'Contribution: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L03 lecture deck'' over ''Ng linear regression
-      with one and multiple variables'' when you need this contribution; the neighboring route instead
-      contributes: The gentlest video/course explanation of fitted lines, cost functions, vectorization,
-      and the normal-equation bridge. Course boundary: This is current course evidence and may calibrate
-      examined notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-416cc9388b788502702749a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 03-linear-regression.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 03 — vectorization and linear regression
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 03.pdf
-    angle: A computational bridge through dot products, multivariate differentiation, NumPy vectorization,
-      and a one-predictor regression implementation.
-    angle_detail: 'Contribution: A computational bridge through dot products, multivariate differentiation,
-      NumPy vectorization, and a one-predictor regression implementation. Depth and prerequisites: It
-      assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 03 — vectorization and linear
-      regression'' over ''Current L03 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority for one-predictor regression, MSE, the analytic
-      optimum, matrix/vector refreshers, vectorization, and the design matrix. Course boundary: This is
-      current course evidence and may calibrate examined notation, but the route''s stated locator—not
-      the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-6f7a1f9823223aa5100aee9a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 03.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Bonusblatt 01 — vectorization task
-    source_id: source-aml-ss26-lectures
-    locator: bonus-exercises/zusatz-blatt01.pdf
-    angle: Dimension and vectorization checks that expose shape mistakes before the design-matrix material.
-    angle_detail: 'Contribution: Dimension and vectorization checks that expose shape mistakes before
-      the design-matrix material. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Bonusblatt 01 — vectorization task'' over ''Übung 03 — vectorization and linear regression''
-      when you need this contribution; the neighboring route instead contributes: A computational bridge
-      through dot products, multivariate differentiation, NumPy vectorization, and a one-predictor regression
-      implementation. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-d71822ce9022bf399076c135
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/bonus-exercises/zusatz-blatt01.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L03 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
-    angle: Prior-year alternate derivations and examples; consult only after the current deck if one explanation
-      is unclear.
-    angle_detail: 'Contribution: Prior-year alternate derivations and examples; consult only after the
-      current deck if one explanation is unclear. Depth and prerequisites: It assumes the lecture treatment
-      is already secure and deliberately goes beyond exam-first depth for a precise reference or second
-      derivation. Discriminator: choose ''Older L03 lecture variant'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: This is prior-year evidence: use it only for a second explanation,
-      and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-b94816e116508743cb644e5c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/03-linear-regression_94066dc1a6a29c537352a1a5abf6601a.pdf
     scope_triage: reference-only
-  - kind: read
-    label: Murphy linear regression and Gaussian MLE
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410
-    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact
-      matrix notation.
-    angle_detail: 'Contribution: Connects least squares to probabilistic modelling and maximum likelihood
-      while retaining compact matrix notation. Depth and prerequisites: It assumes comfort with the unit''s
-      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''Murphy linear regression and Gaussian MLE'' over ''CS229 LMS and normal-equation
-      notes'' when you need this contribution; the neighboring route instead contributes: Derives gradient/LMS,
-      the normal equation by matrix calculus, and squared error as Gaussian MLE in lecture-compatible
-      notation. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese regression reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Regression, pdf pp. 185-232; Linear Regression, pdf pp. 187-205
-    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation
-      concepts.
-    angle_detail: 'Contribution: An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''Kroese regression reference'' over ''Murphy linear regression and Gaussian
-      MLE'' when you need this contribution; the neighboring route instead contributes: Connects least
-      squares to probabilistic modelling and maximum likelihood while retaining compact matrix notation.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MML linear regression as MLE
-    source_id: source-mml
-    locator: 'Official PDF, Ch 9 ''Linear Regression'', PDF pp. 295-305: §9.1 ''Problem Formulation''
-      p. 297 and §9.2.1 ''Maximum Likelihood Estimation'' pp. 298-305'
-    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra
-      rather than the model intuition is the gap.
-    angle_detail: 'Contribution: The matrix-calculus and probabilistic foundation under the normal equation;
-      use when the algebra rather than the model intuition is the gap. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''MML linear regression as MLE'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 LMS and normal-equation notes
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm', pdf pp. 10-13; 'The normal equations', pdf pp. 14-15; 'Probabilistic
-      interpretation', pdf pp. 16-17
-    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian
-      MLE in lecture-compatible notation.
-    angle_detail: 'Contribution: Derives gradient/LMS, the normal equation by matrix calculus, and squared
-      error as Gaussian MLE in lecture-compatible notation. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 LMS and normal-equation notes'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 regression unit
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 3 'Linear Regression' and its exercises
-    angle: Auto-graded practice for regression objectives, vectorization, and iterative/analytic solution
-      reasoning.
-    angle_detail: 'Contribution: Auto-graded practice for regression objectives, vectorization, and iterative/analytic
-      solution reasoning. Depth and prerequisites: It assumes the relevant rule or algorithm has already
-      been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''MIT 6.036 regression unit'' over ''Current L03 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for one-predictor regression,
-      MSE, the analytic optimum, matrix/vector refreshers, vectorization, and the design matrix. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-be06ccf23fc69e62cad217a4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — projections and products
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Matrix multiplication as composition', 'Dot products and duality', and
-      'Projections onto subspaces'
-    angle: Visualizes dot products, matrix multiplication, and projection geometry behind vectorized regression
-      and the normal equation.
-    angle_detail: 'Contribution: Visualizes dot products, matrix multiplication, and projection geometry
-      behind vectorized regression and the normal equation. Depth and prerequisites: It assumes the unit
-      vocabulary but not a completed proof and is meant to make the mechanism explainable before formal
-      derivation. Discriminator: choose ''Essence of Linear Algebra — projections and products'' over
-      ''Current L03 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector
-      refreshers, vectorization, and the design matrix. Course boundary: It complements the current deck
-      but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cd758dee71d7366f3f9f5e7a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron linear regression implementations
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 4 'Linear Regression', pdf pp. 197-203; 'Gradient Descent', pdf pp. 204-215;
-      Exercises, pdf pp. 243-244
-    angle: Runnable normal-equation and gradient-based regression examples plus exercises with Appendix-A
-      solutions.
-    angle_detail: 'Contribution: Runnable normal-equation and gradient-based regression examples plus
-      exercises with Appendix-A solutions. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron linear regression implementations'' over ''Current L03 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization,
-      and the design matrix. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-21d8ed20ec2a60ffd4fabe71
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ng linear regression with one and multiple variables
-    source_id: source-ng-coursera
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Gradient descent in practice'''
-    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the
-      normal-equation bridge.
-    angle_detail: 'Contribution: The gentlest video/course explanation of fitted lines, cost functions,
-      vectorization, and the normal-equation bridge. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng linear regression with one and multiple variables'' over ''Current L03
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
-      vectorization, and the design matrix. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5cf858ae016d05f91d008978
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW6 — regression selections
-    source_id: source-cs4780-homeworks
-    locator: 2017/2018 HW6 regression problems and solutions
-    angle: Local solved linear-regression and gradient questions for checking derivations and implementation
-      logic.
-    angle_detail: 'Contribution: Local solved linear-regression and gradient questions for checking derivations
-      and implementation logic. Depth and prerequisites: It assumes the relevant rule or algorithm has
-      already been introduced and is for an attempted solution, trace, or calculation with feedback. Discriminator:
-      choose ''Cornell CS4780 HW6 — regression selections'' over ''Current L03 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The 2026 scope authority for
-      one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers, vectorization, and
-      the design matrix. Course boundary: It complements the current deck but cannot override the deck''s
-      notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-de41680ef804c0fc37e8e06d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — least-squares derivation
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(m), PDF pp. 4-5
-    angle: Compresses the normal-equation and gradient calculations into official written-exam form.
-    angle_detail: Attempt the subproblem without notes, then use the official reasoning to check rank,
-      invertibility, and gradient statements. This is a calibration artifact; it does not teach the derivation
-      as gently as Bendersky or the lecture.
+  - material_ref:
+      route_id: route-b24cc445471d4132ad89aef4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Bendersky — normal equation from the squared loss
-    source_id: source-bendersky-normal-equation
-    locator: Article 'Derivation of the Normal Equation for linear regression', from 'Given the hypothesis
-      function' through equation θ=(XᵀX)⁻¹Xᵀy
-    angle: Carries the scalar least-squares objective into matrix form and differentiates it to the normal
-      equation in one short proof.
-    angle_detail: Use this as the shortest complete derivation after the lecture. It assumes invertibility
-      at the final step, so pair it with the CS189 rank questions rather than silently treating the inverse
-      formula as universal.
+  - material_ref:
+      route_id: route-fd81bb0d942db8d26cc6d3e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — derivatives as linear operators
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW Lecture 1 Part 2 'Derivatives as Linear Operators' and Lecture 2 Part 2 'Jacobians
-      of Matrix Functions'
-    angle: Reframes vector and matrix derivatives as linear maps, clarifying why matrix-calculus identities
-      are dimensionally valid.
-    angle_detail: 'Use this only if the normal-equation derivative feels like symbol manipulation. It
-      is enrichment beyond AML: extract the operator and Jacobian viewpoint, then return to Bendersky
-      and the lecture''s concrete regression derivation.'
+  - material_ref:
+      route_id: route-97cc2ca7b7f2eb7ae6158b39
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-vectorization/notes.md
   attachments: []
@@ -1186,125 +870,86 @@ stages:
   - concept-maximum-likelihood
   scope_triage: required-now
   resources:
-  - kind: reference
-    label: ESL least-squares statistical depth
-    source_id: source-esl
-    locator: esl.pdf §3.2 Linear Regression Models and Least Squares, pdf pp. 63-75
-    angle: Adds projection, sampling, and statistical interpretation to linear regression; use only after
-      the deck or ISLP.
-    angle_detail: 'Contribution: Adds projection, sampling, and statistical interpretation to linear regression;
-      use only after the deck or ISLP. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''ESL least-squares statistical depth'' over ''CS229 linear-regression lecture''
-      when you need this contribution; the neighboring route instead contributes: A derivation-first video
-      treatment of LMS, least squares, and the probabilistic interpretation. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0c5b2516f89b5265bb3c86e2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy linear regression and Gaussian MLE
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410
-    angle: Connects least squares to probabilistic modelling and maximum likelihood while retaining compact
-      matrix notation.
-    angle_detail: 'Contribution: Connects least squares to probabilistic modelling and maximum likelihood
-      while retaining compact matrix notation. Depth and prerequisites: It assumes comfort with the unit''s
-      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''Murphy linear regression and Gaussian MLE'' over ''CS229 LMS and normal-equation
-      notes'' when you need this contribution; the neighboring route instead contributes: Derives gradient/LMS,
-      the normal equation by matrix calculus, and squared error as Gaussian MLE in lecture-compatible
-      notation. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-773bc4e5073c9add77b9f2d8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §11.2.2 — least squares as a negative log-likelihood
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §11.2.2 Least squares estimation, pdf pp. 402-405; §11.2.4 Measuring goodness of
-      fit, pdf p. 410
-    angle: Introduces the regression objective as the negative log likelihood rather than as a chosen
-      loss, which is the bridge the deck marks optional; §11.2.4 then reads the same fit as goodness of
-      fit.
-    angle_detail: 'Contribution: Introduces the regression objective as the negative log likelihood rather
-      than as a chosen loss, which is the bridge the deck marks optional; §11.2.4 then reads the same
-      fit as goodness of fit. Depth and prerequisites: It assumes comfort with the unit''s notation and
-      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''Murphy §11.2.2 — least squares as a negative log-likelihood'' over ''CS229 practice midterm
-      — Bayesian linear regression'' when you need this contribution; the neighboring route instead contributes:
-      Derives a normal-equation-shaped MAP estimate from a Gaussian prior and likelihood. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-c67a99b0cdc7f85ce29bece8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese regression reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Regression, pdf pp. 185-232; Linear Regression, pdf pp. 187-205
-    angle: An independent matrix/statistical formulation of regression for checking notation and evaluation
-      concepts.
-    angle_detail: 'Contribution: An independent matrix/statistical formulation of regression for checking
-      notation and evaluation concepts. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''Kroese regression reference'' over ''Murphy linear regression and Gaussian
-      MLE'' when you need this contribution; the neighboring route instead contributes: Connects least
-      squares to probabilistic modelling and maximum likelihood while retaining compact matrix notation.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-350570d160a9c93e8e15c31b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MML linear regression as MLE
-    source_id: source-mml
-    locator: 'Official PDF, Ch 9 ''Linear Regression'', PDF pp. 295-305: §9.1 ''Problem Formulation''
-      p. 297 and §9.2.1 ''Maximum Likelihood Estimation'' pp. 298-305'
-    angle: The matrix-calculus and probabilistic foundation under the normal equation; use when the algebra
-      rather than the model intuition is the gap.
-    angle_detail: 'Contribution: The matrix-calculus and probabilistic foundation under the normal equation;
-      use when the algebra rather than the model intuition is the gap. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''MML linear regression as MLE'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-da3215e650cc6b3007807144
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 LMS and normal-equation notes
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'LMS algorithm', pdf pp. 10-13; 'The normal equations', pdf pp. 14-15; 'Probabilistic
-      interpretation', pdf pp. 16-17
-    angle: Derives gradient/LMS, the normal equation by matrix calculus, and squared error as Gaussian
-      MLE in lecture-compatible notation.
-    angle_detail: 'Contribution: Derives gradient/LMS, the normal equation by matrix calculus, and squared
-      error as Gaussian MLE in lecture-compatible notation. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 LMS and normal-equation notes'' over ''Murphy
-      linear regression and Gaussian MLE'' when you need this contribution; the neighboring route instead
-      contributes: Connects least squares to probabilistic modelling and maximum likelihood while retaining
-      compact matrix notation. Course boundary: It complements the current deck but cannot override the
-      deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-8ec3da0114ef9468d3f63a51
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: watch
-    label: CS229 linear-regression lecture
-    source_id: source-cs229-2022-videos
-    locator: Lecture 2 — Linear Regression and Gradient Descent
-    angle: A derivation-first video treatment of LMS, least squares, and the probabilistic interpretation.
-    angle_detail: 'Contribution: A derivation-first video treatment of LMS, least squares, and the probabilistic
-      interpretation. Depth and prerequisites: It assumes comfort with the unit''s notation and asks the
-      reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''CS229 linear-regression lecture'' over ''ESL least-squares statistical depth'' when you
-      need this contribution; the neighboring route instead contributes: Adds projection, sampling, and
-      statistical interpretation to linear regression; use only after the deck or ISLP. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-7edcc12957efdba0bd68dbb0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: practise
-    label: CS229 practice midterm — Bayesian linear regression
-    source_id: source-cs229-problem-sets
-    locator: Autumn 2010 Practice Midterm Solutions, Question 2 'Bayesian linear regression', PDF pp.
-      2-3
-    angle: Derives a normal-equation-shaped MAP estimate from a Gaussian prior and likelihood.
-    angle_detail: Use this to connect the L03 least-squares solution to probabilistic estimation. It deliberately
-      goes one step past the exam core by adding a prior, and the resulting ridge-shaped term prepares
-      L04 without replacing its route.
+  - material_ref:
+      route_id: route-2fc647972ce02f232134aedb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l03/stages/stage-aml-l03-probabilistic/notes.md
   attachments: []

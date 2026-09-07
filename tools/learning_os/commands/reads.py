@@ -9,7 +9,7 @@ import sys
 
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.loader import load_repo
+from learning_os.loading import Repo, load_notes
 
 from .support import (
     WriteRefused,
@@ -47,6 +47,40 @@ def _refusal(exc) -> int:
     return 3 if "snapshot" in str(exc) else 2
 
 
+def record_payload(manifest, record_id):
+    resolved_id = (manifest.get("project_aliases") or {}).get(record_id, record_id)
+    record = next((row for row in manifest["records"] if row.get("id") == resolved_id), None)
+    if record is None:
+        return None
+    payload = dict(record)
+    if resolved_id != record_id:
+        payload["resolved_from"] = record_id
+    return payload
+
+
+def inspect_batch(args) -> int:
+    """Resolve a requested batch once; never return a partial or mixed read."""
+    ids = [args.id, *args.more_ids]
+    if len(ids) > 20:
+        return _refusal("inspect accepts at most 20 IDs per batch")
+    root = _root(args)
+    try:
+        with _operator_lock(root):
+            snapshot = _snapshot(root)
+            manifest = _fresh_manifest(root)
+            records = []
+            for record_id in ids:
+                record = record_payload(manifest, record_id)
+                if record is None:
+                    raise WriteRefused(f"record not found: {record_id}")
+                records.append(record)
+            return _print_stable(root, snapshot, {
+                "contract": "record-batch", "requested_ids": ids, "records": records,
+            })
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+
+
 def compact_bootstrap(args) -> int:
     root = _root(args)
     try:
@@ -69,7 +103,7 @@ def compact_bootstrap(args) -> int:
                 "counts": manifest.get("counts", {}),
                 "detail": {"record": "inspect ID", "notes": "note-read NOTE_ID",
                            "content_search": "search QUERY --type note --content",
-                           "capabilities": "capabilities --json",
+                           "capabilities": "capabilities --compact --json",
                            "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT"},
             })
     except (WriteRefused, OSError) as exc:
@@ -88,13 +122,24 @@ def _note_bytes(root, note):
     return path.read_bytes()
 
 
+def _note_collection(root):
+    """Load only the note registry for note reads/search, not a complete Repo.
+
+    The partial model stays inside these note-only paths. Full canonical
+    fingerprints still guard the read before and after, including continuation.
+    """
+    repo = Repo(root=root)
+    load_notes(repo, root)
+    return repo
+
+
 def cmd_note_read(args) -> int:
     root = _root(args)
     try:
         offset, limit = _window(args, 16000)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            repo = load_repo(root)
+            repo = _note_collection(root)
             note = repo.notes.get(args.note_id)
             if note is None:
                 raise WriteRefused(f"note not found: {args.note_id}")
@@ -124,7 +169,7 @@ def content_search(args) -> int:
             raise WriteRefused("content search requires a nonempty query")
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            repo = load_repo(root)
+            repo = _note_collection(root)
             # A read refuses when the failures bear on the answer it is about to
             # give, and this search is over notes: an unreadable note may be a
             # hit that never appears, while an unreadable project cannot be.

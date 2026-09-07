@@ -38,242 +38,213 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
-    locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
-    angle: Makes the null/alternative, p-value decision and parametric/nonparametric comparison one coherent
-      task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
+  - material_ref:
+      route_id: route-73776780d8ed70192944e3bf
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-73776780d8ed70192944e3bf
-  - kind: practise
-    label: UE6, slides 23-38 — permutation and two-sample t tests
-    locator: exercise-slides/UE6.pdf, slides 23-38
-    angle: Presents both procedures on matched questions, exposing which assumptions change and which
-      decision logic does not.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+  - material_ref:
+      route_id: route-8c08056418ec7b86504f8e93
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-8c08056418ec7b86504f8e93
-  - kind: practise
-    label: UE7, slides 12-16 — official Blatt 5 testing solution
-    locator: exercise-slides/UE7.pdf, slides 12-16
-    angle: Shows the complete answer structure the current course accepts for a test decision.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+  - material_ref:
+      route_id: route-bb0d30a8ac2386c642c3679c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-bb0d30a8ac2386c642c3679c
-  - kind: reference
-    label: 2025 statistical-significance deck
-    locator: 10_statistical_significance.pdf
-    angle: Prior-year testing deck, titled around significance rather than testing.
-    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around
-      what significance means, 2026 around the testing procedure. Reading both gives two framings of the
-      same material, which is useful for a topic this conceptually slippery.'
+  - material_ref:
+      route_id: route-b51a9ce76538f13c02e94238
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-b51a9ce76538f13c02e94238
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: practise
-    label: Arbeitsbuch Chapters 10–11 — testing drills
-    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
-      Lösungen pdf pp. 227-242
-    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision,
-      sentence.'
-    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number
-      — stating H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence
-      that answers the question in context. These solutions are written in exactly that form, which makes
-      them a template as much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10
-      first and only reach Ch 11 if the exercises show those tests are in scope.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-a5f4d77def369d34f2f8fe23
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-a5f4d77def369d34f2f8fe23
-  - kind: read
-    label: OpenIntro Chapters 5–7 — tests by data type
-    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
-      of fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp.
-      240-248; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations,
-      pdf pp. 278-284
-    angle: Teaches the p-value through randomisation before any reference distribution appears, and has
-      the only real power section on the shelf.
-    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation
-      from Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed
-      result. Once that is concrete, the z and t reference distributions are recognisable as shortcuts
-      for the same quantity. §7.4 then does what almost nothing else here does: computes power and required
-      sample size explicitly, rather than defining power and moving on. §§6.3-6.4 cover both chi-square
-      variants that L10 names.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-335f1041911c33391d4a59b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-335f1041911c33391d4a59b8
-  - kind: practise
-    label: Dekking — hypothesis-testing exercises
-    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
-      p. 375; tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing
-      hypotheses: elaboration, pdf pp. 385-399 (significance level p. 385; critical region p. 388; type
-      II error p. 392; relation with confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
-    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not
-      all introduced at once.
-    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality
-      inside one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25
-      gets you to a decision with only three of those ideas, and Ch 26 revisits the same example to add
-      significance level, critical region, type II error and the confidence-interval duality one at a
-      time. §26.4 on duality is the clearest statement of that equivalence on the shelf, and duality is
-      a recurring exam question. Ch 27 works the t-test in a regression setting as well as the one-sample
-      case.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-ef9dc248b7aa19966667451e
-  - kind: watch
-    label: zedstatistics — hypothesis testing and p-values
-    locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
-    angle: Treats the p-value as a conditional probability and keeps naming what it is conditioned on,
-      which is where most confusion lives.
-    angle_detail: '''Probability of data this extreme GIVEN the null is true'' — the conditioning clause
-      is the whole content, and it is the clause that gets dropped when the definition is recited. The
-      videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
-      effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
+  - material_ref:
+      route_id: route-9bba0280753490bc6058ad4e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-zedstatistics
     route_id: route-9bba0280753490bc6058ad4e
-  - kind: read
-    label: MIT 18.05 — hypothesis-testing notes and solved exams
-    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
-      (I, II, III) and the chi-square reading; the Exams page for solved test questions'
-    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values
-      that the lecture only gestures at.
-    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
-      and replication problems including a frank discussion of what a p-value does not tell you. That
-      third part is the intellectual content behind L10's multiple-testing node, and it is what makes
-      the difference between reciting the false-discovery definition and understanding why the topic is
-      in the lecture at all. Solved timed questions on the Exams page.
+  - material_ref:
+      route_id: route-717bb9971de6075d51ba7e35
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-717bb9971de6075d51ba7e35
-  - kind: practise
-    label: FAU pp. 20/45 and 25/50 — one-sided correlation test
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
-      45; solutions pp. 25 and 50
-    angle: A real test of whether a population correlation exceeds 0.8, including hypotheses, statistic
-      and decision.
-    angle_detail: This item was previously misused as L03 support, but bivariate-normal assumptions and
-      a correlation hypothesis test make it L10 work. Use it to practise a complete one-sided decision;
-      the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-9a9796659ebc716709622867
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-9a9796659ebc716709622867
-  - kind: reference
-    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
-    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
-      tests); graduate-level, reference only
-    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no
-      SaD material mentions.
-    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the
-      question the catalogue provokes — where did these particular statistics come from, and in what sense
-      are they the best available — by showing that the likelihood ratio is the optimal test statistic
-      for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
+  - material_ref:
+      route_id: route-dde627c3d62ef1533c906370
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-mit-18650
     route_id: route-dde627c3d62ef1533c906370
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
-  - kind: read
-    label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
-    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
-    angle: Shows how inference is written around a fitted multivariate regression coefficient.
-    angle_detail: 'The same model routed to L03 becomes an L10 inference task here: formulate H0, calculate
-      a t statistic and construct a confidence interval. It is a good bridge between regression interpretation
-      and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
-    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+  - material_ref:
+      route_id: route-311488decc0768464dd8385e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-311488decc0768464dd8385e
-  - kind: watch
-    label: StatQuest — hypothesis tests and p-values
-    locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to
-      Calculate p-values''; ''One- or Two-Tailed p-values'''
-    angle: A four-video sequence that separates what a p-value is from how it is computed and from how
-      many tails to use.
-    angle_detail: 'Those three questions get conflated in a single lecture and each is a separate source
-      of lost marks. Splitting them across four short videos means each can be checked independently:
-      do I know what the number means, can I produce it, and did I choose the right tail count for this
-      alternative. The one-or-two-tailed video in particular addresses the decision the exam most often
-      penalises.'
+  - material_ref:
+      route_id: route-8b2188b37fd35d9a0cee57d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-statquest
     route_id: route-8b2188b37fd35d9a0cee57d3
-  - kind: watch
-    label: jbstatistics — hypothesis-testing calculations
-    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
-      error videos in the same playlist'
-    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme
-      habit.
-    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing
-      the hypotheses formally, in symbols, before touching the data. German exam marking awards points
-      for that step independently of the arithmetic, so the habit converts directly into marks.'
+  - material_ref:
+      route_id: route-1a6b3340ecdac05103e2a7a7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-1a6b3340ecdac05103e2a7a7
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Hypothesentests
-    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
-    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
-      exam item.
-    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked
-      in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
-      build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
+  - material_ref:
+      route_id: route-e6ea4c3f70f7709c51290280
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-e6ea4c3f70f7709c51290280
-  - kind: watch
-    label: Brandon Foltz — hypothesis-testing walkthroughs
-    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
-    angle: Walks a complete test end to end without cuts, including the parts other explanations skip
-      as obvious.
-    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats
-      as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
-      does not skip those. Long; use as a repair route rather than a first pass.
+  - material_ref:
+      route_id: route-95a74dc976d705b6c78350b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-brandon-foltz
     route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
   attachments: []
@@ -308,229 +279,202 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
-    locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
-    angle: Makes the null/alternative, p-value decision and parametric/nonparametric comparison one coherent
-      task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
+  - material_ref:
+      route_id: route-73776780d8ed70192944e3bf
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-73776780d8ed70192944e3bf
-  - kind: practise
-    label: UE6, slides 23-38 — permutation and two-sample t tests
-    locator: exercise-slides/UE6.pdf, slides 23-38
-    angle: Presents both procedures on matched questions, exposing which assumptions change and which
-      decision logic does not.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+  - material_ref:
+      route_id: route-8c08056418ec7b86504f8e93
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-8c08056418ec7b86504f8e93
-  - kind: practise
-    label: UE7, slides 12-16 — official Blatt 5 testing solution
-    locator: exercise-slides/UE7.pdf, slides 12-16
-    angle: Shows the complete answer structure the current course accepts for a test decision.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+  - material_ref:
+      route_id: route-bb0d30a8ac2386c642c3679c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-bb0d30a8ac2386c642c3679c
-  - kind: reference
-    label: 2025 statistical-significance deck
-    locator: 10_statistical_significance.pdf
-    angle: Prior-year testing deck, titled around significance rather than testing.
-    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around
-      what significance means, 2026 around the testing procedure. Reading both gives two framings of the
-      same material, which is useful for a topic this conceptually slippery.'
+  - material_ref:
+      route_id: route-b51a9ce76538f13c02e94238
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-b51a9ce76538f13c02e94238
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: practise
-    label: Arbeitsbuch Chapters 10–11 — testing drills
-    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
-      Lösungen pdf pp. 227-242
-    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision,
-      sentence.'
-    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number
-      — stating H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence
-      that answers the question in context. These solutions are written in exactly that form, which makes
-      them a template as much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10
-      first and only reach Ch 11 if the exercises show those tests are in scope.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-a5f4d77def369d34f2f8fe23
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-a5f4d77def369d34f2f8fe23
-  - kind: read
-    label: OpenIntro Chapters 5–7 — tests by data type
-    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
-      of fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp.
-      240-248; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations,
-      pdf pp. 278-284
-    angle: Teaches the p-value through randomisation before any reference distribution appears, and has
-      the only real power section on the shelf.
-    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation
-      from Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed
-      result. Once that is concrete, the z and t reference distributions are recognisable as shortcuts
-      for the same quantity. §7.4 then does what almost nothing else here does: computes power and required
-      sample size explicitly, rather than defining power and moving on. §§6.3-6.4 cover both chi-square
-      variants that L10 names.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-335f1041911c33391d4a59b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-335f1041911c33391d4a59b8
-  - kind: practise
-    label: Dekking — hypothesis-testing exercises
-    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
-      p. 375; tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing
-      hypotheses: elaboration, pdf pp. 385-399 (significance level p. 385; critical region p. 388; type
-      II error p. 392; relation with confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
-    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not
-      all introduced at once.
-    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality
-      inside one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25
-      gets you to a decision with only three of those ideas, and Ch 26 revisits the same example to add
-      significance level, critical region, type II error and the confidence-interval duality one at a
-      time. §26.4 on duality is the clearest statement of that equivalence on the shelf, and duality is
-      a recurring exam question. Ch 27 works the t-test in a regression setting as well as the one-sample
-      case.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-ef9dc248b7aa19966667451e
-  - kind: watch
-    label: zedstatistics — hypothesis testing and p-values
-    locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
-    angle: Treats the p-value as a conditional probability and keeps naming what it is conditioned on,
-      which is where most confusion lives.
-    angle_detail: '''Probability of data this extreme GIVEN the null is true'' — the conditioning clause
-      is the whole content, and it is the clause that gets dropped when the definition is recited. The
-      videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
-      effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
+  - material_ref:
+      route_id: route-9bba0280753490bc6058ad4e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-zedstatistics
     route_id: route-9bba0280753490bc6058ad4e
-  - kind: read
-    label: MIT 18.05 — hypothesis-testing notes and solved exams
-    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
-      (I, II, III) and the chi-square reading; the Exams page for solved test questions'
-    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values
-      that the lecture only gestures at.
-    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
-      and replication problems including a frank discussion of what a p-value does not tell you. That
-      third part is the intellectual content behind L10's multiple-testing node, and it is what makes
-      the difference between reciting the false-discovery definition and understanding why the topic is
-      in the lecture at all. Solved timed questions on the Exams page.
+  - material_ref:
+      route_id: route-717bb9971de6075d51ba7e35
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-717bb9971de6075d51ba7e35
-  - kind: practise
-    label: FAU pp. 20/45 and 25/50 — one-sided correlation test
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
-      45; solutions pp. 25 and 50
-    angle: A real test of whether a population correlation exceeds 0.8, including hypotheses, statistic
-      and decision.
-    angle_detail: This item was previously misused as L03 support, but bivariate-normal assumptions and
-      a correlation hypothesis test make it L10 work. Use it to practise a complete one-sided decision;
-      the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-9a9796659ebc716709622867
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-9a9796659ebc716709622867
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
-  - kind: read
-    label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
-    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
-    angle: Shows how inference is written around a fitted multivariate regression coefficient.
-    angle_detail: 'The same model routed to L03 becomes an L10 inference task here: formulate H0, calculate
-      a t statistic and construct a confidence interval. It is a good bridge between regression interpretation
-      and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
-    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+  - material_ref:
+      route_id: route-311488decc0768464dd8385e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-311488decc0768464dd8385e
-  - kind: watch
-    label: StatQuest — hypothesis tests and p-values
-    locator: '''Hypothesis Testing and the Null Hypothesis''; ''p-values, Clearly Explained''; ''How to
-      Calculate p-values''; ''One- or Two-Tailed p-values'''
-    angle: A four-video sequence that separates what a p-value is from how it is computed and from how
-      many tails to use.
-    angle_detail: 'Those three questions get conflated in a single lecture and each is a separate source
-      of lost marks. Splitting them across four short videos means each can be checked independently:
-      do I know what the number means, can I produce it, and did I choose the right tail count for this
-      alternative. The one-or-two-tailed video in particular addresses the decision the exam most often
-      penalises.'
+  - material_ref:
+      route_id: route-8b2188b37fd35d9a0cee57d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-statquest
     route_id: route-8b2188b37fd35d9a0cee57d3
-  - kind: watch
-    label: jbstatistics — hypothesis-testing calculations
-    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
-      error videos in the same playlist'
-    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme
-      habit.
-    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing
-      the hypotheses formally, in symbols, before touching the data. German exam marking awards points
-      for that step independently of the arithmetic, so the habit converts directly into marks.'
+  - material_ref:
+      route_id: route-1a6b3340ecdac05103e2a7a7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-1a6b3340ecdac05103e2a7a7
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Hypothesentests
-    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
-    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
-      exam item.
-    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked
-      in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
-      build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
+  - material_ref:
+      route_id: route-e6ea4c3f70f7709c51290280
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-e6ea4c3f70f7709c51290280
-  - kind: watch
-    label: Brandon Foltz — hypothesis-testing walkthroughs
-    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
-    angle: Walks a complete test end to end without cuts, including the parts other explanations skip
-      as obvious.
-    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats
-      as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
-      does not skip those. Long; use as a repair route rather than a first pass.
+  - material_ref:
+      route_id: route-95a74dc976d705b6c78350b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-brandon-foltz
     route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
   attachments: []
@@ -561,120 +505,109 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
-    locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
-    angle: Makes the null/alternative, p-value decision and parametric/nonparametric comparison one coherent
-      task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
+  - material_ref:
+      route_id: route-73776780d8ed70192944e3bf
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-73776780d8ed70192944e3bf
-  - kind: practise
-    label: UE6, slides 23-38 — permutation and two-sample t tests
-    locator: exercise-slides/UE6.pdf, slides 23-38
-    angle: Presents both procedures on matched questions, exposing which assumptions change and which
-      decision logic does not.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+  - material_ref:
+      route_id: route-8c08056418ec7b86504f8e93
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-8c08056418ec7b86504f8e93
-  - kind: reference
-    label: 2025 statistical-significance deck
-    locator: 10_statistical_significance.pdf
-    angle: Prior-year testing deck, titled around significance rather than testing.
-    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around
-      what significance means, 2026 around the testing procedure. Reading both gives two framings of the
-      same material, which is useful for a topic this conceptually slippery.'
+  - material_ref:
+      route_id: route-b51a9ce76538f13c02e94238
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-b51a9ce76538f13c02e94238
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: watch
-    label: zedstatistics — hypothesis testing and p-values
-    locator: zedstatistics video 'Hypothesis testing (ALL YOU NEED TO KNOW!)'
-    angle: Treats the p-value as a conditional probability and keeps naming what it is conditioned on,
-      which is where most confusion lives.
-    angle_detail: '''Probability of data this extreme GIVEN the null is true'' — the conditioning clause
-      is the whole content, and it is the clause that gets dropped when the definition is recited. The
-      videos repeat it every time the quantity is used, which is a small pedagogical choice with a large
-      effect. Pairs well with OpenIntro §5.3''s randomisation construction.'
+  - material_ref:
+      route_id: route-9bba0280753490bc6058ad4e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-zedstatistics
     route_id: route-9bba0280753490bc6058ad4e
-  - kind: read
-    label: MIT 18.05 — hypothesis-testing notes and solved exams
-    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
-      (I, II, III) and the chi-square reading; the Exams page for solved test questions'
-    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values
-      that the lecture only gestures at.
-    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
-      and replication problems including a frank discussion of what a p-value does not tell you. That
-      third part is the intellectual content behind L10's multiple-testing node, and it is what makes
-      the difference between reciting the false-discovery definition and understanding why the topic is
-      in the lecture at all. Solved timed questions on the Exams page.
+  - material_ref:
+      route_id: route-717bb9971de6075d51ba7e35
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-717bb9971de6075d51ba7e35
-  - kind: practise
-    label: FAU pp. 20/45 and 25/50 — one-sided correlation test
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
-      45; solutions pp. 25 and 50
-    angle: A real test of whether a population correlation exceeds 0.8, including hypotheses, statistic
-      and decision.
-    angle_detail: This item was previously misused as L03 support, but bivariate-normal assumptions and
-      a correlation hypothesis test make it L10 work. Use it to practise a complete one-sided decision;
-      the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-9a9796659ebc716709622867
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-9a9796659ebc716709622867
-  - kind: reference
-    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
-    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
-      tests); graduate-level, reference only
-    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no
-      SaD material mentions.
-    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the
-      question the catalogue provokes — where did these particular statistics come from, and in what sense
-      are they the best available — by showing that the likelihood ratio is the optimal test statistic
-      for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
+  - material_ref:
+      route_id: route-dde627c3d62ef1533c906370
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-mit-18650
     route_id: route-dde627c3d62ef1533c906370
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
   attachments: []
@@ -710,220 +643,192 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
-    locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
-    angle: Makes the null/alternative, p-value decision and parametric/nonparametric comparison one coherent
-      task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
+  - material_ref:
+      route_id: route-73776780d8ed70192944e3bf
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-73776780d8ed70192944e3bf
-  - kind: practise
-    label: UE6, slides 23-38 — permutation and two-sample t tests
-    locator: exercise-slides/UE6.pdf, slides 23-38
-    angle: Presents both procedures on matched questions, exposing which assumptions change and which
-      decision logic does not.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+  - material_ref:
+      route_id: route-8c08056418ec7b86504f8e93
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-8c08056418ec7b86504f8e93
-  - kind: practise
-    label: UE7, slides 12-16 — official Blatt 5 testing solution
-    locator: exercise-slides/UE7.pdf, slides 12-16
-    angle: Shows the complete answer structure the current course accepts for a test decision.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+  - material_ref:
+      route_id: route-bb0d30a8ac2386c642c3679c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-bb0d30a8ac2386c642c3679c
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: practise
-    label: Arbeitsbuch Chapters 10–11 — testing drills
-    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
-      Lösungen pdf pp. 227-242
-    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision,
-      sentence.'
-    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number
-      — stating H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence
-      that answers the question in context. These solutions are written in exactly that form, which makes
-      them a template as much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10
-      first and only reach Ch 11 if the exercises show those tests are in scope.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-a5f4d77def369d34f2f8fe23
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-a5f4d77def369d34f2f8fe23
-  - kind: read
-    label: Blitzstein §10.4 — where the t and chi-square distributions come from
-    locator: Ch 10 §10.4 Chi-Square and Student-t, pdf pp. 494-496
-    angle: Defines the t and chi-square distributions constructively out of Normals, instead of introducing
-      them as table lookups.
-    angle_detail: L10 uses both as reference distributions and never says what they are. Three pages here
-      define chi-square as a sum of squared standard Normals and t as a standard Normal divided by the
-      root of an independent chi-square over its degrees of freedom. That is what makes 'degrees of freedom'
-      a quantity rather than a column heading, and it explains why the t approaches the Normal as n grows.
-      Background, not exam-bearing — read it once.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-be1fde2be811fcad5b16c694
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-be1fde2be811fcad5b16c694
-  - kind: read
-    label: OpenIntro Chapters 5–7 — tests by data type
-    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
-      of fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp.
-      240-248; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations,
-      pdf pp. 278-284
-    angle: Teaches the p-value through randomisation before any reference distribution appears, and has
-      the only real power section on the shelf.
-    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation
-      from Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed
-      result. Once that is concrete, the z and t reference distributions are recognisable as shortcuts
-      for the same quantity. §7.4 then does what almost nothing else here does: computes power and required
-      sample size explicitly, rather than defining power and moving on. §§6.3-6.4 cover both chi-square
-      variants that L10 names.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-335f1041911c33391d4a59b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-335f1041911c33391d4a59b8
-  - kind: practise
-    label: Dekking — hypothesis-testing exercises
-    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
-      p. 375; tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing
-      hypotheses: elaboration, pdf pp. 385-399 (significance level p. 385; critical region p. 388; type
-      II error p. 392; relation with confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
-    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not
-      all introduced at once.
-    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality
-      inside one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25
-      gets you to a decision with only three of those ideas, and Ch 26 revisits the same example to add
-      significance level, critical region, type II error and the confidence-interval duality one at a
-      time. §26.4 on duality is the clearest statement of that equivalence on the shelf, and duality is
-      a recurring exam question. Ch 27 works the t-test in a regression setting as well as the one-sample
-      case.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-ef9dc248b7aa19966667451e
-  - kind: read
-    label: MIT 18.05 — hypothesis-testing notes and solved exams
-    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
-      (I, II, III) and the chi-square reading; the Exams page for solved test questions'
-    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values
-      that the lecture only gestures at.
-    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
-      and replication problems including a frank discussion of what a p-value does not tell you. That
-      third part is the intellectual content behind L10's multiple-testing node, and it is what makes
-      the difference between reciting the false-discovery definition and understanding why the topic is
-      in the lecture at all. Solved timed questions on the Exams page.
+  - material_ref:
+      route_id: route-717bb9971de6075d51ba7e35
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-717bb9971de6075d51ba7e35
-  - kind: practise
-    label: FAU pp. 20/45 and 25/50 — one-sided correlation test
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 20 Aufgabe 4(8), repeated p.
-      45; solutions pp. 25 and 50
-    angle: A real test of whether a population correlation exceeds 0.8, including hypotheses, statistic
-      and decision.
-    angle_detail: This item was previously misused as L03 support, but bivariate-normal assumptions and
-      a correlation hypothesis test make it L10 work. Use it to practise a complete one-sided decision;
-      the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-9a9796659ebc716709622867
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-9a9796659ebc716709622867
-  - kind: reference
-    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
-    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
-      tests); graduate-level, reference only
-    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no
-      SaD material mentions.
-    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the
-      question the catalogue provokes — where did these particular statistics come from, and in what sense
-      are they the best available — by showing that the likelihood ratio is the optimal test statistic
-      for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
+  - material_ref:
+      route_id: route-dde627c3d62ef1533c906370
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-mit-18650
     route_id: route-dde627c3d62ef1533c906370
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
-  - kind: read
-    label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
-    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
-    angle: Shows how inference is written around a fitted multivariate regression coefficient.
-    angle_detail: 'The same model routed to L03 becomes an L10 inference task here: formulate H0, calculate
-      a t statistic and construct a confidence interval. It is a good bridge between regression interpretation
-      and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
-    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+  - material_ref:
+      route_id: route-311488decc0768464dd8385e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-311488decc0768464dd8385e
-  - kind: watch
-    label: jbstatistics — hypothesis-testing calculations
-    locator: '''Introduction to Hypothesis Testing'', ''What is a p-value?'', and the Type I / Type II
-      error videos in the same playlist'
-    angle: Insists on stating H0 and H1 before anything else, every single time, which is the marking-scheme
-      habit.
-    angle_detail: 'The repetition is the pedagogy here: every example in the series begins by writing
-      the hypotheses formally, in symbols, before touching the data. German exam marking awards points
-      for that step independently of the arithmetic, so the habit converts directly into marks.'
+  - material_ref:
+      route_id: route-1a6b3340ecdac05103e2a7a7
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-1a6b3340ecdac05103e2a7a7
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Hypothesentests
-    locator: '''Hypothesentest''; ''p-Wert''; ''Fehler 1. und 2. Art'''
-    angle: States the Fehler 1./2. Art distinction in German with the standard table, which is a near-certain
-      exam item.
-    angle_detail: Type I and type II errors are asked in almost every German statistics exam and are asked
-      in German. The two-by-two table (Entscheidung × Wahrheit) is the answer format, and these videos
-      build it. Short; watch alongside the Fahrmeir Arbeitsbuch Ch 10 solutions for the written form.
+  - material_ref:
+      route_id: route-e6ea4c3f70f7709c51290280
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-e6ea4c3f70f7709c51290280
-  - kind: watch
-    label: Brandon Foltz — hypothesis-testing walkthroughs
-    locator: '''Hypothesis Testing'' parts 1-3 and the ''Statistical Power'' videos (≈25-30 min each)'
-    angle: Walks a complete test end to end without cuts, including the parts other explanations skip
-      as obvious.
-    angle_detail: Useful specifically when a worked solution loses you at a step everyone else treats
-      as trivial — choosing the critical value, deciding the direction, writing the conclusion. Foltz
-      does not skip those. Long; use as a repair route rather than a first pass.
+  - material_ref:
+      route_id: route-95a74dc976d705b6c78350b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-brandon-foltz
     route_id: route-95a74dc976d705b6c78350b8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
   attachments: []
@@ -954,27 +859,29 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
-  - kind: read
-    label: University of Cologne pp. 7-8 — coefficient t-test and confidence interval
-    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, pp. 7-8, Aufgabe 5(a)-(b)
-    angle: Shows how inference is written around a fitted multivariate regression coefficient.
-    angle_detail: 'The same model routed to L03 becomes an L10 inference task here: formulate H0, calculate
-      a t statistic and construct a confidence interval. It is a good bridge between regression interpretation
-      and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
-    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+  - material_ref:
+      route_id: route-311488decc0768464dd8385e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-311488decc0768464dd8385e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
   attachments: []
@@ -1006,127 +913,99 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: practise
-    label: Arbeitsbuch Chapters 10–11 — testing drills
-    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
-      Lösungen pdf pp. 227-242
-    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision,
-      sentence.'
-    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number
-      — stating H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence
-      that answers the question in context. These solutions are written in exactly that form, which makes
-      them a template as much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10
-      first and only reach Ch 11 if the exercises show those tests are in scope.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-a5f4d77def369d34f2f8fe23
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-a5f4d77def369d34f2f8fe23
-  - kind: read
-    label: Blitzstein §10.4 — where the t and chi-square distributions come from
-    locator: Ch 10 §10.4 Chi-Square and Student-t, pdf pp. 494-496
-    angle: Defines the t and chi-square distributions constructively out of Normals, instead of introducing
-      them as table lookups.
-    angle_detail: L10 uses both as reference distributions and never says what they are. Three pages here
-      define chi-square as a sum of squared standard Normals and t as a standard Normal divided by the
-      root of an independent chi-square over its degrees of freedom. That is what makes 'degrees of freedom'
-      a quantity rather than a column heading, and it explains why the t approaches the Normal as n grows.
-      Background, not exam-bearing — read it once.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-be1fde2be811fcad5b16c694
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-be1fde2be811fcad5b16c694
-  - kind: read
-    label: OpenIntro Chapters 5–7 — tests by data type
-    locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
-      of fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp.
-      240-248; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations,
-      pdf pp. 278-284
-    angle: Teaches the p-value through randomisation before any reference distribution appears, and has
-      the only real power section on the shelf.
-    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation
-      from Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed
-      result. Once that is concrete, the z and t reference distributions are recognisable as shortcuts
-      for the same quantity. §7.4 then does what almost nothing else here does: computes power and required
-      sample size explicitly, rather than defining power and moving on. §§6.3-6.4 cover both chi-square
-      variants that L10 names.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-335f1041911c33391d4a59b8
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-335f1041911c33391d4a59b8
-  - kind: practise
-    label: Dekking — hypothesis-testing exercises
-    locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
-      p. 375; tail probabilities p. 378; type I and II errors p. 379; exercises p. 382); Ch 26 testing
-      hypotheses: elaboration, pdf pp. 385-399 (significance level p. 385; critical region p. 388; type
-      II error p. 392; relation with confidence intervals p. 394); Ch 27 the t-test, pdf pp. 400-414'
-    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not
-      all introduced at once.
-    angle_detail: L10 introduces null model, statistic, tails, p-value, both error types, power, and duality
-      inside one lecture, and the vocabulary load is the real difficulty. Dekking's split means Ch 25
-      gets you to a decision with only three of those ideas, and Ch 26 revisits the same example to add
-      significance level, critical region, type II error and the confidence-interval duality one at a
-      time. §26.4 on duality is the clearest statement of that equivalence on the shelf, and duality is
-      a recurring exam question. Ch 27 works the t-test in a regression setting as well as the one-sample
-      case.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-ef9dc248b7aa19966667451e
-  - kind: read
-    label: MIT 18.05 — hypothesis-testing notes and solved exams
-    locator: 'Classes: Reading and In-class Materials: the ''Null Hypothesis Significance Testing'' readings
-      (I, II, III) and the chi-square reading; the Exams page for solved test questions'
-    angle: Splits NHST across three consecutive readings, and closes with an explicit critique of p-values
-      that the lecture only gestures at.
-    angle_detail: Reading I sets up the machinery, II adds the error types and power, III covers the multiple-test
-      and replication problems including a frank discussion of what a p-value does not tell you. That
-      third part is the intellectual content behind L10's multiple-testing node, and it is what makes
-      the difference between reciting the false-discovery definition and understanding why the topic is
-      in the lecture at all. Solved timed questions on the Exams page.
+  - material_ref:
+      route_id: route-717bb9971de6075d51ba7e35
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-717bb9971de6075d51ba7e35
-  - kind: reference
-    label: MIT 18.650 Lectures 7–12 — tests and goodness-of-fit
-    locator: Lectures 7-12 (hypothesis testing, the Neyman-Pearson framework, chi-square and goodness-of-fit
-      tests); graduate-level, reference only
-    angle: Derives why the standard tests take the form they do, via the Neyman-Pearson lemma that no
-      SaD material mentions.
-    angle_detail: SaD hands you a catalogue of tests and their statistics. Neyman-Pearson answers the
-      question the catalogue provokes — where did these particular statistics come from, and in what sense
-      are they the best available — by showing that the likelihood ratio is the optimal test statistic
-      for a simple hypothesis pair. Genuinely interesting and genuinely out of scope; six lectures.
+  - material_ref:
+      route_id: route-dde627c3d62ef1533c906370
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-mit-18650
     route_id: route-dde627c3d62ef1533c906370
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
   attachments: []
@@ -1158,84 +1037,77 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 5, Aufgabe 1 — permutation test and t-test comparison
-    locator: exercise-slides/blatt-05.pdf, pp. 1-2, Aufgabe 1(a)-(d)
-    angle: Makes the null/alternative, p-value decision and parametric/nonparametric comparison one coherent
-      task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-05.pdf
+  - material_ref:
+      route_id: route-73776780d8ed70192944e3bf
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-73776780d8ed70192944e3bf
-  - kind: practise
-    label: UE6, slides 23-38 — permutation and two-sample t tests
-    locator: exercise-slides/UE6.pdf, slides 23-38
-    angle: Presents both procedures on matched questions, exposing which assumptions change and which
-      decision logic does not.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+  - material_ref:
+      route_id: route-8c08056418ec7b86504f8e93
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-8c08056418ec7b86504f8e93
-  - kind: practise
-    label: UE7, slides 12-16 — official Blatt 5 testing solution
-    locator: exercise-slides/UE7.pdf, slides 12-16
-    angle: Shows the complete answer structure the current course accepts for a test decision.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE7.pdf
+  - material_ref:
+      route_id: route-bb0d30a8ac2386c642c3679c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-bb0d30a8ac2386c642c3679c
-  - kind: read
-    label: Fahrmeir Chapters 10–11 — hypothesis tests
-    locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
-      pdf pp. 430-444; §10.3 Multiple Testprobleme, pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall,
-      pdf pp. 452-469; §11.5 Zusammenhangsanalyse, pdf pp. 482-485
-    angle: Teaches one concrete test end to end first, then generalises the principle — the reverse of
-      the lecture's order, and the better order when the logic will not click.
-    angle_detail: 'L10 opens with the abstract null-model/statistic/reference-distribution machinery and
-      then instantiates it. Fahrmeir §10.1 does the opposite: it runs the Gauß-Test completely — hypotheses,
-      statistic, critical region, decision — and only then does §10.2 extract Fehler 1./2. Art, Güte and
-      the p-Wert as principles from the worked case. If the abstract version did not land in the lecture,
-      this inversion is the reason to come here rather than to OpenIntro. §11.5 supplies the χ²-Unabhängigkeitstest
-      and the correlation test; §10.3 is two pages on multiple testing, enough for the exam but thinner
-      than ISLP Ch 13.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - kind: practise
-    label: Arbeitsbuch Chapters 10–11 — testing drills
-    locator: Ch 10 Aufgaben pdf pp. 200-205, Lösungen pdf pp. 206-218; Ch 11 Aufgaben pdf pp. 219-226,
-      Lösungen pdf pp. 227-242
-    angle: 'Complete test write-ups in German exam form: hypotheses, statistic, critical value, decision,
-      sentence.'
-    angle_detail: A German statistics exam awards marks for the shape of the answer, not only the number
-      — stating H0 and H1 formally, naming the test, giving the critical value, and closing with a sentence
-      that answers the question in context. These solutions are written in exactly that form, which makes
-      them a template as much as an answer key. Ch 11 extends to the two-sample and χ² cases; do Ch 10
-      first and only reach Ch 11 if the exercises show those tests are in scope.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-a5f4d77def369d34f2f8fe23
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-a5f4d77def369d34f2f8fe23
-  - kind: practise
-    label: Leuphana-Merz pp. 28-40 — parametric, two-sample and goodness-of-fit tests
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 28-40, Aufgabenblätter 5-6
-    angle: Supplies full German test write-ups across several test families, with solutions.
-    angle_detail: 'This is the widest local testing bank: one- and two-sample tests plus goodness-of-fit/chi-square
-      work. Use the problems to practise test selection and complete written decisions; skip procedures
-      not named in the 2026 L10 deck.'
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-431abda7307c32a597e47e16
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
   attachments: []
@@ -1265,23 +1137,17 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - kind: read
-    label: ISLP Ch 13 - the multiple-testing slide worked out with labs and exercises
-    locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni
-      and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599)
-    angle: L10's closing slides name family-wise error and false discoveries and stop; this chapter separates
-      the two error-management questions, gives Bonferroni and Holm for FWER and Benjamini-Hochberg for
-      FDR, and ends with a lab and exercise set - the only registered practice for the node.
-    angle_detail: 'The most complete multiple-testing treatment on the shelf, and L10''s multiplicity
-      node is one slide. The page map matters: family-wise error rate (p. 571) and Bonferroni/Holm (p.
-      573) are the conservative classical corrections; false discovery rate (p. 564) and Benjamini-Hochberg
-      (p. 581) are the modern alternative that controls a different quantity entirely. Understanding that
-      FWER and FDR are different targets — not competing approximations of one target — is the conceptual
-      point, and it is the kind of distinction a written exam question can turn on. Lab at p. 589, exercises
-      at p. 599.'
-    vault_path: material://source-islp/islp.pdf
+  - material_ref:
+      route_id: route-da4850b15834791b4688a767
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-islp
     route_id: route-da4850b15834791b4688a767
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
   attachments: []

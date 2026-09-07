@@ -29,36 +29,38 @@ Claude is the primary mechanical operator and retrieval assistant for Learning O
 
 ## 2. Bootstrap order
 
-At the beginning of repository work, read:
+Start with `system/OPERATOR.md` and its compact discovery commands. Consult
+`system/contracts/normative-corpus.yaml` before treating a document as binding.
+`CLAUDE.md` at the repository root links to this file; do not read both copies.
+The complete catalogue and full bootstrap remain available for bulk work, but
+are not the default context for an agent task.
+For material maintenance, prefer `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+and the reviewed `route.patch` preflight/apply workflow in WORKFLOWS §25a.
+Use compact `plan-edit-context UNIT_ID` for map edits. Core expands shared
+material references for the app; the agent should not reproduce those copies.
 
-0. run `python tools/los.py bootstrap`; use its versioned projection for
-   application state and targeted `los inspect/search/related` calls thereafter
+Read the applicable contracts before acting, according to the task:
 
-0b. `system/contracts/normative-corpus.yaml` — the index of what binds. Every
-   document below appears in it with a class, a status and an authority. A
-   document not listed there is not a rule; a document listed as
-   `authority: historical` is a record of what was true, not a rule. Consult it
-   before treating anything under `system/` as binding, and before concluding
-   that an ADR you are reading is still in force.
+- **Lookup or study support:** use compact bootstrap, then `inspect`, `search`,
+  `related`, or `note-read` for the relevant records. Batch known record IDs in
+  one `inspect` call. Read the relevant workspace and coordination facts when
+  they bear on the question. For cross-domain discovery, consult the **At a
+  glance** block of the current `generated/domain-atlas.md` before narrowing.
+- **An authorized mutation:** fetch `capabilities NAME --json`, then read the
+  owning sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md`, the
+  relevant schema and its referenced definitions, and the relevant rules in
+  `system/VALIDATION.md`. Plan creation/revision also follows
+  `system/PLAN-CREATION-SOP.md`. This changes reading scope, never approval,
+  snapshot, receipt, validation, or source-completeness requirements.
+- **Architecture, validation, or a system-wide audit:** read the relevant
+  architectural and validation contracts broadly enough to cover every
+  affected owner. Check relevant open points in `system/CRITIQUE-POINTS.md`
+  before proposing changes; open points remain deferred judgments, not tasks.
 
-1. `system/PHILOSOPHY.md` — the user's intent; its principle "reduce organizational burden rather than create it" is the tiebreaker for every ambiguity not settled by this contract
-2. `system/WHY-REDESIGN.md`
-3. `system/ARCHITECTURE.md`
-4. `system/schema/*.schema.json` + `system/VALIDATION.md`
-5. `system/WORKFLOWS.md`
-6. `work/COORDINATION.md` and the relevant `curriculum/modules/*/module.yaml`
-7. the relevant active workspace, if one exists
-8. the **At a glance** block at the top of `generated/domain-atlas.md` (~15
-   lines; rebuild if stale) — the cross-domain map of every domain's notes,
-   shelves and deliberately excluded strata. Skimming it each session keeps
-   retrieval from collapsing to the active workspace's domain (ADR-005).
-9. `system/CRITIQUE-POINTS.md` — the standing log of what Aram already judges
-   wrong or not-yet-rigorous-enough about the system. Skim the open points so a
-   known defect is not re-raised as a discovery, and so one is not "fixed" as a
-   side effect of unrelated work. ⚠️ **An open point is not a work item.** It is
-   recorded precisely so it can be deferred; never act on one unless Aram says
-   so in that session.
-10. other generated indexes only as navigation aids
+Use `system/PHILOSOPHY.md` to resolve intent and `system/WHY-REDESIGN.md` for
+historical rationale when needed. Do not preload all schemas or unrelated
+workflows for every task. Follow referenced dependencies and expand the
+reading scope whenever the task crosses a boundary; all binding rules apply.
 
 Generated files are never authoritative over canonical artifacts.
 

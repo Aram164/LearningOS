@@ -10,6 +10,7 @@ import sys
 from .support import (
     WriteRefused,
     _allocate_attachment_path,
+    _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -118,7 +119,7 @@ def cmd_stage_progress(args) -> int:
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
             capability="stage.progress.update",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],
@@ -162,7 +163,7 @@ def cmd_stage_attach(args) -> int:
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({"path": rel, "label": args.label or source.stem})
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data), target: source_bytes},
+            root, {study_map.path: _dump_study_map(study_map, data), target: source_bytes},
             capability="stage.attachment.add",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],

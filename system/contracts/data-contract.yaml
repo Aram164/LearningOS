@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 17
-schema_fingerprint: sha256:cf5dad468aaa5be6e782b1bb839df4cbf1a888836f1ef6cf50efbfc17b116004
+contract_version: 18
+schema_fingerprint: sha256:518ed64a99601b5b79738c69c6e73302668e3af9b0f4404920ad2075adaefae3
 record_schemas: 31
 history:
 - version: 1
@@ -162,5 +162,12 @@ history:
   adopted: '2026-09-06'
   note: 'The fingerprint now covers only schemas declaring x-governs: record. Four
     artifact schemas left the set. No stored record changed, and no migration is required.'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 18
+  adopted: '2026-09-07'
+  note: Add explicit shared material references to study-map resources; loaded records
+    and manifest v9 remain fully expanded. Inline resources and older formats remain
+    valid. Governed module.materials.compact preserves every effective field.
   migration: null
   fixture: tests/fixtures/formats/v12/

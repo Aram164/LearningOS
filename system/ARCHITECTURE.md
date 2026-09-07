@@ -221,6 +221,16 @@ Where every artifact physically lands, and what it is named. The user should nev
 | Optional current study map | beside its unit as `study-map.yaml` | at most one current map per unit; absent until an ordered path is wanted |
 | Stage work | `<unit>/stages/<stage-id>/{notes.md,attachments/}` | stage-owned and Git-tracked |
 | Unit session note | `<unit>/notes.md` + `<unit>/attachments/unit-note-*` | append-only learner note created after one or more stages; stage files remain compatibility inputs until migration |
+
+Shared stage material descriptions are owned by the existing module source-map
+route. A stored study-map resource can name `material_ref: {route_id, inherit}`
+instead of repeating selected fields. The explicit field list preserves absent
+fields and stage-specific overrides; priority, action kind, resource identity,
+feedback and progress stay stage-owned. The loader expands references within
+the same module and unit, refusing missing or ambiguous routes and overlapping
+inherited/local fields. Runtime consumers and manifest v9 retain their complete
+expanded shape. Editing context exposes the compact shape with its route
+definitions once; ordinary state saves preserve that storage form.
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |

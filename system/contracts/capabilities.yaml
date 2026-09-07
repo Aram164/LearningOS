@@ -3,6 +3,12 @@ schema_version: 1
 contract_version: 2
 cli_protocol: 6
 queries:
+  plan.edit-context:
+    handler: plan_edit_context
+    result: plan-edit-context
+    invariants:
+    - one unit's compact authored plan or one exact route and its stage overrides
+    - snapshot-bound; shared descriptions occur once and expected revisions are explicit
   atlas.context:
     handler: atlas_context
     result: atlas-context
@@ -77,6 +83,29 @@ queries:
     - reads only the sanitized catalog and approved comparisons
     - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
 commands:
+  route.patch:
+    handler: route_patch
+    cli_command: route-patch
+    writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+    invariants:
+    - one exact route in one owning unit; only declared descriptive material fields
+    - source selections and identical legacy mirrors synchronize; stage overrides are preserved
+    - snapshot and all affected logical revisions are guarded, including maps changed by inheritance
+    - full shadow validation and warning policy precede the ordinary receipt-producing transaction
+  module.materials.compact:
+    handler: module_materials_compact
+    cli_command: module-materials-compact
+    writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+    invariants:
+    - one module; exact route identity or unambiguous source/title/locator guards only
+    - identical fields become explicit references; every expanded study map is unchanged
+    - persisted route identities and compact maps commit together under the reviewed plan hash
+    - ambiguous or independent resources remain inline; no ordering, progress or teaching judgment changes
   concept.relations.change:
     handler: concept_relations_change
     cli_command: concept-relations-change

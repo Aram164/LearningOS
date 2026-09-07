@@ -25,155 +25,97 @@ stages:
   - concept-convolutional-networks
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP convolutional-neural-network section
-    source_id: source-islp
-    locator: islp.pdf §10.3 Convolutional Neural Networks, pdf pp. 413-419 (§10.3.1 convolution layers
-      p. 414, §10.3.2 pooling p. 417, §10.3.3 architecture p. 417, §10.3.4 data augmentation p. 418)
-    angle: A gentle full CNN pass through convolutional layers, pooling, architecture, and data augmentation;
-      ideal before deeper shape and architecture references.
-    angle_detail: 'Contribution: A gentle full CNN pass through convolutional layers, pooling, architecture,
-      and data augmentation; ideal before deeper shape and architecture references. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP convolutional-neural-network section'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-islp/islp.pdf
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: ESL early weight-sharing example
-    source_id: source-esl
-    locator: 'esl.pdf §11.7 Example: A Convolutional Neural Network for Digit Classification, pdf pp.
-      423-425'
-    angle: LeCun ZIP-code networks show the historical origin of local connectivity and weight sharing,
-      but ESL has no modern full CNN treatment.
-    angle_detail: 'Contribution: LeCun ZIP-code networks show the historical origin of local connectivity
-      and weight sharing, but ESL has no modern full CNN treatment. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''ESL early weight-sharing example'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It is optional depth:
-      open it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-ff147162ccc891125fca6e2c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy convolution and classic CNN architectures
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
-      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
-    angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
-      and ResNet coverage.'
-    angle_detail: 'Contribution: The deepest aligned book source: exact output arithmetic plus one-to-one
-      LeNet, AlexNet, GoogLeNet, and ResNet coverage. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''Murphy convolution and classic CNN architectures'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: CS229 CNN segments
-    source_id: source-cs229-2022-videos
-    locator: Spring 2022 playlist, Lecture 9 'Neural Networks II' — convolutional-network chapter
-    angle: Broad deep-learning context only; use the course deck, EECS 498, or CS231n for detailed CNN
-      arithmetic.
-    angle_detail: 'Contribution: Broad deep-learning context only; use the course deck, EECS 498, or CS231n
-      for detailed CNN arithmetic. Depth and prerequisites: It assumes no derivation beyond the current
-      unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose ''CS229
-      CNN segments'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b41652c0f7a8186398699a0c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest convolutional-network intuition
-    source_id: source-statquest
-    locator: 'StatQuest episodes ''Convolutional Neural Networks: The Math Explained'' and ''ReLU, Clearly
-      Explained'''
-    angle: Short visual intuition for filters, feature maps, and CNN structure; not a substitute for hand
-      shape arithmetic.
-    angle_detail: 'Contribution: Short visual intuition for filters, feature maps, and CNN structure;
-      not a substitute for hand shape arithmetic. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest convolutional-network intuition'' over ''Current L10 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for cross-correlation, filters, padding/stride/channel arithmetic, pooling, complete CNNs, and the
-      LeNet-to-ResNet architecture lineage. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 14 — why not simply flatten the image
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
-      Layers' pdf p. 621
-    angle: Answers the deck's opening question from the visual-cortex analogy and then in parameter counts,
-      which is the argument the motivation slide compresses to one line.
-    angle_detail: 'Contribution: Answers the deck''s opening question from the visual-cortex analogy and
-      then in parameter counts, which is the argument the motivation slide compresses to one line. Depth
-      and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make
-      the mechanism explainable before formal derivation. Discriminator: choose ''Géron 3rd ed. Ch 14
-      — why not simply flatten the image'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-05e06c3d31f148c803e866f5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 14 exercises — the motivation asked back
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN,
-      Q2 three 3×3 stride-2 'same' convolutional layers)
-    angle: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is a three-layer 3×3 stride-2
-      'same' shape and parameter count; the only local drill that tests the motivation node rather than
-      the arithmetic alone.
-    angle_detail: 'Contribution: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is
-      a three-layer 3×3 stride-2 ''same'' shape and parameter count; the only local drill that tests the
-      motivation node rather than the arithmetic alone. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Géron 3rd ed. Ch 14 exercises — the motivation asked back''
-      over ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-a279edf1db6e1037b5fd6c16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 9 — convolutional networks
-    source_id: source-goodfellow-dl
-    locator: Ch 9 'Convolutional Networks', §9.1 'The Convolution Operation' through §9.5 'Variants of
-      the Basic Convolution Function'
-    angle: The canonical conceptual treatment of convolution, sparse interactions, parameter sharing,
-      equivariance, pooling, and CNN variants.
-    angle_detail: 'Contribution: The canonical conceptual treatment of convolution, sparse interactions,
-      parameter sharing, equivariance, pooling, and CNN variants. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''Deep Learning book Ch 9 — convolutional
-      networks'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-motivation/notes.md
   attachments: []
@@ -195,310 +137,210 @@ stages:
   - concept-correlation
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L10 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
-    angle: Prior-year alternate filter and architecture examples; no local L10 exercise sheet is present.
-    angle_detail: 'Contribution: Prior-year alternate filter and architecture examples; no local L10 exercise
-      sheet is present. Depth and prerequisites: It assumes the lecture treatment is already secure and
-      deliberately goes beyond exam-first depth for a precise reference or second derivation. Discriminator:
-      choose ''Older L10 lecture variant'' over ''Übung 11 — CNN calculations and fourth sheet'' when
-      you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: This is prior-year evidence: use it only
-      for a second explanation, and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
     scope_triage: reference-only
-  - kind: practise
-    label: Übung 11 — CNN calculations and fourth sheet
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 11.pdf
-    angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields,
-      network shapes, architecture examples and the fourth sheet/bonus discussion.'
-    angle_detail: 'Contribution: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
-      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
-      11 — CNN calculations and fourth sheet'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: This is current course evidence and may calibrate examined notation, but
-      the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP convolutional-neural-network section
-    source_id: source-islp
-    locator: islp.pdf §10.3 Convolutional Neural Networks, pdf pp. 413-419 (§10.3.1 convolution layers
-      p. 414, §10.3.2 pooling p. 417, §10.3.3 architecture p. 417, §10.3.4 data augmentation p. 418)
-    angle: A gentle full CNN pass through convolutional layers, pooling, architecture, and data augmentation;
-      ideal before deeper shape and architecture references.
-    angle_detail: 'Contribution: A gentle full CNN pass through convolutional layers, pooling, architecture,
-      and data augmentation; ideal before deeper shape and architecture references. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP convolutional-neural-network section'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-islp/islp.pdf
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy convolution and classic CNN architectures
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
-      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
-    angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
-      and ResNet coverage.'
-    angle_detail: 'Contribution: The deepest aligned book source: exact output arithmetic plus one-to-one
-      LeNet, AlexNet, GoogLeNet, and ResNet coverage. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''Murphy convolution and classic CNN architectures'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese CNN reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Deep Learning subsection 'convolution neural network', pdf pp. 348-349; §9.5.2
-      Image Classification, pdf pp. 363-366
-    angle: A dense independent account of convolutional networks and implementation-oriented examples.
-    angle_detail: 'Contribution: A dense independent account of convolutional networks and implementation-oriented
-      examples. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Kroese CNN reference'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: EECS 498 Lectures 7–8 — CNNs and architectures
-    source_id: source-eecs498
-    locator: Lectures 7–8
-    angle: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet design reasoning;
-      batch-normalization segments exceed AML scope.
-    angle_detail: 'Contribution: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and
-      ResNet design reasoning; batch-normalization segments exceed AML scope. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''EECS 498 Lectures 7–8 — CNNs and architectures''
-      over ''Übung 11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Course boundary: It complements the current deck but cannot override the deck''s notation, topic
-      boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Convolutional Networks notes
-    source_id: source-cs231n-notes
-    locator: '''Convolutional Networks'' → ''Overview'', ''ConvNet layers'', ''Convolutional Layer'',
-      ''Pooling Layer'', and ''Layer Patterns'''
-    angle: The standard written CNN reference for output shapes, channels, parameter counts, pooling,
-      receptive fields, and architecture patterns.
-    angle_detail: 'Contribution: The standard written CNN reference for output shapes, channels, parameter
-      counts, pooling, receptive fields, and architecture patterns. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''CS231n Convolutional Networks notes'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS231n 2017 convolution and architecture lectures
-    source_id: source-cs231n-2017-videos
-    locator: 2017 playlist, Lecture 5 'Convolutional Neural Networks' and Lecture 9 'CNN Architectures'
-    angle: The original full-lecture alternative for convolutional layers and classic architectures; use
-      selected CNN lectures rather than the entire playlist.
-    angle_detail: 'Contribution: The original full-lecture alternative for convolutional layers and classic
-      architectures; use selected CNN lectures rather than the entire playlist. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''CS231n 2017 convolution and
-      architecture lectures'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: StatQuest convolutional-network intuition
-    source_id: source-statquest
-    locator: 'StatQuest episodes ''Convolutional Neural Networks: The Math Explained'' and ''ReLU, Clearly
-      Explained'''
-    angle: Short visual intuition for filters, feature maps, and CNN structure; not a substitute for hand
-      shape arithmetic.
-    angle_detail: 'Contribution: Short visual intuition for filters, feature maps, and CNN structure;
-      not a substitute for hand shape arithmetic. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest convolutional-network intuition'' over ''Current L10 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for cross-correlation, filters, padding/stride/channel arithmetic, pooling, complete CNNs, and the
-      LeNet-to-ResNet architecture lineage. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Rohrer convolution and CNN chapters
-    source_id: source-rohrer-e2eml
-    locator: Chapters 14, 22–23, and 31
-    angle: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN structure and a CIFAR-10
-      case study.
-    angle_detail: 'Contribution: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN
-      structure and a CIFAR-10 case study. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Rohrer convolution and CNN chapters'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron convolutional-network implementation
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 14 Deep Computer Vision Using CNNs, pdf pp. 619-698 (visual cortex p.
-      620; convolution pp. 621-633; pooling pp. 634-639; architectures pp. 640-667; exercises p. 694)
-    angle: Runnable CNN construction and training that connects filter/shape formulas to framework layers.
-    angle_detail: 'Contribution: Runnable CNN construction and training that connects filter/shape formulas
-      to framework layers. Depth and prerequisites: It assumes the mathematical object is already understood
-      and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose
-      ''Géron convolutional-network implementation'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named
-      gap, then return to the current deck rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 14 — why not simply flatten the image
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 14 'The Architecture of the Visual Cortex' pdf p. 620, 'Convolutional
-      Layers' pdf p. 621
-    angle: Answers the deck's opening question from the visual-cortex analogy and then in parameter counts,
-      which is the argument the motivation slide compresses to one line.
-    angle_detail: 'Contribution: Answers the deck''s opening question from the visual-cortex analogy and
-      then in parameter counts, which is the argument the motivation slide compresses to one line. Depth
-      and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make
-      the mechanism explainable before formal derivation. Discriminator: choose ''Géron 3rd ed. Ch 14
-      — why not simply flatten the image'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-05e06c3d31f148c803e866f5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — CNN tasks
-    source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 CNN tasks and solutions
-    angle: Local solution-backed convolutional-network and shape questions; the only registered external
-      solved CNN bank in the AML shelf.
-    angle_detail: 'Contribution: Local solution-backed convolutional-network and shape questions; the
-      only registered external solved CNN bank in the AML shelf. Depth and prerequisites: It assumes the
-      relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''Cornell CS4780 HW9 — CNN tasks'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch CIFAR-10 CNN tutorial
-    source_id: source-pytorch-tutorials
-    locator: Tutorial 'Training a Classifier' — steps 1-5 from CIFAR-10 loading through network testing
-    angle: A small complete CNN that turns convolution/pooling/shape concepts into framework layers and
-      a training loop.
-    angle_detail: 'Contribution: A small complete CNN that turns convolution/pooling/shape concepts into
-      framework layers and a training loop. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Official PyTorch CIFAR-10 CNN tutorial'' over ''Übung 11 — CNN calculations
-      and fourth sheet'' when you need this contribution; the neighboring route instead contributes: The
-      current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 9 — convolutional networks
-    source_id: source-goodfellow-dl
-    locator: Ch 9 'Convolutional Networks', §9.1 'The Convolution Operation' through §9.5 'Variants of
-      the Basic Convolution Function'
-    angle: The canonical conceptual treatment of convolution, sparse interactions, parameter sharing,
-      equivariance, pooling, and CNN variants.
-    angle_detail: 'Contribution: The canonical conceptual treatment of convolution, sparse interactions,
-      parameter sharing, equivariance, pooling, and CNN variants. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''Deep Learning book Ch 9 — convolutional
-      networks'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L Chapters 7–8 — executable CNNs
-    source_id: source-d2l
-    locator: Chapters 7–8
-    angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best
-      for connecting tensor shapes to code.
-    angle_detail: 'Contribution: Runnable convolution/pooling arithmetic followed by LeNet and modern
-      CNN architectures; best for connecting tensor shapes to code. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L Chapters 7–8 — executable CNNs'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — convolution and pooling shapes
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(p), PDF p. 5
-    angle: Tests how filter size, filter count, pooling window, and batch size affect hidden-layer shape.
-    angle_detail: Calculate the output-shape effect of every option before checking the key. This is a
-      compact shape diagnostic; the course deck and PyTorch routes still carry architecture and implementation
-      context.
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — convolutional networks
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 10 'Convolutional networks'
-    angle: Gives a current architecture-level account of convolution, pooling, receptive fields, and image-network
-      design.
-    angle_detail: Use the chapter figures to connect the lecture's shape arithmetic to receptive fields
-      and architectural choices. It is a modern reference layer; the PyTorch routes are still where implementation
-      details are checked.
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: Loeber PyTorch CNN — CIFAR-10 implementation diff
-    source_id: source-patrick-loeber-pytorch-cnn
-    locator: Video 'PyTorch Tutorial 14 — Convolutional Neural Network (CNN)', complete video; repository
-      file '14_cnn.py'
-    angle: A minimal single-file CNN makes every tensor-shape and training-loop choice easy to compare
-      with the official tutorial.
-    angle_detail: 'Diff 14_cnn.py against the official CIFAR-10 tutorial: label each convolution, pooling,
-      flatten, linear, loss, and optimizer step. It is intentionally simpler than the AMLS project and
-      should be used as a traceable baseline, not as architecture advice.'
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-convolution/notes.md
   attachments: []
@@ -519,245 +361,169 @@ stages:
   - concept-convolutional-networks
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L10 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
-    angle: Prior-year alternate filter and architecture examples; no local L10 exercise sheet is present.
-    angle_detail: 'Contribution: Prior-year alternate filter and architecture examples; no local L10 exercise
-      sheet is present. Depth and prerequisites: It assumes the lecture treatment is already secure and
-      deliberately goes beyond exam-first depth for a precise reference or second derivation. Discriminator:
-      choose ''Older L10 lecture variant'' over ''Übung 11 — CNN calculations and fourth sheet'' when
-      you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: This is prior-year evidence: use it only
-      for a second explanation, and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
     scope_triage: reference-only
-  - kind: practise
-    label: Übung 11 — CNN calculations and fourth sheet
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 11.pdf
-    angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields,
-      network shapes, architecture examples and the fourth sheet/bonus discussion.'
-    angle_detail: 'Contribution: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
-      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
-      11 — CNN calculations and fourth sheet'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: This is current course evidence and may calibrate examined notation, but
-      the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy convolution and classic CNN architectures
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
-      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
-    angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
-      and ResNet coverage.'
-    angle_detail: 'Contribution: The deepest aligned book source: exact output arithmetic plus one-to-one
-      LeNet, AlexNet, GoogLeNet, and ResNet coverage. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''Murphy convolution and classic CNN architectures'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese CNN reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Deep Learning subsection 'convolution neural network', pdf pp. 348-349; §9.5.2
-      Image Classification, pdf pp. 363-366
-    angle: A dense independent account of convolutional networks and implementation-oriented examples.
-    angle_detail: 'Contribution: A dense independent account of convolutional networks and implementation-oriented
-      examples. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Kroese CNN reference'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: EECS 498 Lectures 7–8 — CNNs and architectures
-    source_id: source-eecs498
-    locator: Lectures 7–8
-    angle: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet design reasoning;
-      batch-normalization segments exceed AML scope.
-    angle_detail: 'Contribution: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and
-      ResNet design reasoning; batch-normalization segments exceed AML scope. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''EECS 498 Lectures 7–8 — CNNs and architectures''
-      over ''Übung 11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Course boundary: It complements the current deck but cannot override the deck''s notation, topic
-      boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Convolutional Networks notes
-    source_id: source-cs231n-notes
-    locator: '''Convolutional Networks'' → ''Overview'', ''ConvNet layers'', ''Convolutional Layer'',
-      ''Pooling Layer'', and ''Layer Patterns'''
-    angle: The standard written CNN reference for output shapes, channels, parameter counts, pooling,
-      receptive fields, and architecture patterns.
-    angle_detail: 'Contribution: The standard written CNN reference for output shapes, channels, parameter
-      counts, pooling, receptive fields, and architecture patterns. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''CS231n Convolutional Networks notes'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS231n 2017 convolution and architecture lectures
-    source_id: source-cs231n-2017-videos
-    locator: 2017 playlist, Lecture 5 'Convolutional Neural Networks' and Lecture 9 'CNN Architectures'
-    angle: The original full-lecture alternative for convolutional layers and classic architectures; use
-      selected CNN lectures rather than the entire playlist.
-    angle_detail: 'Contribution: The original full-lecture alternative for convolutional layers and classic
-      architectures; use selected CNN lectures rather than the entire playlist. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''CS231n 2017 convolution and
-      architecture lectures'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Rohrer convolution and CNN chapters
-    source_id: source-rohrer-e2eml
-    locator: Chapters 14, 22–23, and 31
-    angle: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN structure and a CIFAR-10
-      case study.
-    angle_detail: 'Contribution: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN
-      structure and a CIFAR-10 case study. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Rohrer convolution and CNN chapters'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron convolutional-network implementation
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 14 Deep Computer Vision Using CNNs, pdf pp. 619-698 (visual cortex p.
-      620; convolution pp. 621-633; pooling pp. 634-639; architectures pp. 640-667; exercises p. 694)
-    angle: Runnable CNN construction and training that connects filter/shape formulas to framework layers.
-    angle_detail: 'Contribution: Runnable CNN construction and training that connects filter/shape formulas
-      to framework layers. Depth and prerequisites: It assumes the mathematical object is already understood
-      and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose
-      ''Géron convolutional-network implementation'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named
-      gap, then return to the current deck rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 14 exercises — the motivation asked back
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 14 Exercises pdf p. 694 (Q1 CNN versus fully connected DNN,
-      Q2 three 3×3 stride-2 'same' convolutional layers)
-    angle: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is a three-layer 3×3 stride-2
-      'same' shape and parameter count; the only local drill that tests the motivation node rather than
-      the arithmetic alone.
-    angle_detail: 'Contribution: Q1 asks for the CNN-versus-dense argument in your own words and Q2 is
-      a three-layer 3×3 stride-2 ''same'' shape and parameter count; the only local drill that tests the
-      motivation node rather than the arithmetic alone. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Géron 3rd ed. Ch 14 exercises — the motivation asked back''
-      over ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-a279edf1db6e1037b5fd6c16
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — CNN tasks
-    source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 CNN tasks and solutions
-    angle: Local solution-backed convolutional-network and shape questions; the only registered external
-      solved CNN bank in the AML shelf.
-    angle_detail: 'Contribution: Local solution-backed convolutional-network and shape questions; the
-      only registered external solved CNN bank in the AML shelf. Depth and prerequisites: It assumes the
-      relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''Cornell CS4780 HW9 — CNN tasks'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: D2L Chapters 7–8 — executable CNNs
-    source_id: source-d2l
-    locator: Chapters 7–8
-    angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best
-      for connecting tensor shapes to code.
-    angle_detail: 'Contribution: Runnable convolution/pooling arithmetic followed by LeNet and modern
-      CNN architectures; best for connecting tensor shapes to code. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L Chapters 7–8 — executable CNNs'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — convolution and pooling shapes
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(p), PDF p. 5
-    angle: Tests how filter size, filter count, pooling window, and batch size affect hidden-layer shape.
-    angle_detail: Calculate the output-shape effect of every option before checking the key. This is a
-      compact shape diagnostic; the course deck and PyTorch routes still carry architecture and implementation
-      context.
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — convolutional networks
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 10 'Convolutional networks'
-    angle: Gives a current architecture-level account of convolution, pooling, receptive fields, and image-network
-      design.
-    angle_detail: Use the chapter figures to connect the lecture's shape arithmetic to receptive fields
-      and architectural choices. It is a modern reference layer; the PyTorch routes are still where implementation
-      details are checked.
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: Loeber PyTorch CNN — CIFAR-10 implementation diff
-    source_id: source-patrick-loeber-pytorch-cnn
-    locator: Video 'PyTorch Tutorial 14 — Convolutional Neural Network (CNN)', complete video; repository
-      file '14_cnn.py'
-    angle: A minimal single-file CNN makes every tensor-shape and training-loop choice easy to compare
-      with the official tutorial.
-    angle_detail: 'Diff 14_cnn.py against the official CIFAR-10 tutorial: label each convolution, pooling,
-      flatten, linear, loss, and optimizer step. It is intentionally simpler than the AMLS project and
-      should be used as a traceable baseline, not as architecture advice.'
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-shapes/notes.md
   attachments: []
@@ -777,168 +543,119 @@ stages:
   - concept-convolutional-networks
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 11 — CNN calculations and fourth sheet
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 11.pdf
-    angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields,
-      network shapes, architecture examples and the fourth sheet/bonus discussion.'
-    angle_detail: 'Contribution: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
-      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
-      11 — CNN calculations and fourth sheet'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: This is current course evidence and may calibrate examined notation, but
-      the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP convolutional-neural-network section
-    source_id: source-islp
-    locator: islp.pdf §10.3 Convolutional Neural Networks, pdf pp. 413-419 (§10.3.1 convolution layers
-      p. 414, §10.3.2 pooling p. 417, §10.3.3 architecture p. 417, §10.3.4 data augmentation p. 418)
-    angle: A gentle full CNN pass through convolutional layers, pooling, architecture, and data augmentation;
-      ideal before deeper shape and architecture references.
-    angle_detail: 'Contribution: A gentle full CNN pass through convolutional layers, pooling, architecture,
-      and data augmentation; ideal before deeper shape and architecture references. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP convolutional-neural-network section'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-islp/islp.pdf
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Convolutional Networks notes
-    source_id: source-cs231n-notes
-    locator: '''Convolutional Networks'' → ''Overview'', ''ConvNet layers'', ''Convolutional Layer'',
-      ''Pooling Layer'', and ''Layer Patterns'''
-    angle: The standard written CNN reference for output shapes, channels, parameter counts, pooling,
-      receptive fields, and architecture patterns.
-    angle_detail: 'Contribution: The standard written CNN reference for output shapes, channels, parameter
-      counts, pooling, receptive fields, and architecture patterns. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''CS231n Convolutional Networks notes'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron convolutional-network implementation
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 14 Deep Computer Vision Using CNNs, pdf pp. 619-698 (visual cortex p.
-      620; convolution pp. 621-633; pooling pp. 634-639; architectures pp. 640-667; exercises p. 694)
-    angle: Runnable CNN construction and training that connects filter/shape formulas to framework layers.
-    angle_detail: 'Contribution: Runnable CNN construction and training that connects filter/shape formulas
-      to framework layers. Depth and prerequisites: It assumes the mathematical object is already understood
-      and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose
-      ''Géron convolutional-network implementation'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named
-      gap, then return to the current deck rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch CIFAR-10 CNN tutorial
-    source_id: source-pytorch-tutorials
-    locator: Tutorial 'Training a Classifier' — steps 1-5 from CIFAR-10 loading through network testing
-    angle: A small complete CNN that turns convolution/pooling/shape concepts into framework layers and
-      a training loop.
-    angle_detail: 'Contribution: A small complete CNN that turns convolution/pooling/shape concepts into
-      framework layers and a training loop. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Official PyTorch CIFAR-10 CNN tutorial'' over ''Übung 11 — CNN calculations
-      and fourth sheet'' when you need this contribution; the neighboring route instead contributes: The
-      current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 9 — convolutional networks
-    source_id: source-goodfellow-dl
-    locator: Ch 9 'Convolutional Networks', §9.1 'The Convolution Operation' through §9.5 'Variants of
-      the Basic Convolution Function'
-    angle: The canonical conceptual treatment of convolution, sparse interactions, parameter sharing,
-      equivariance, pooling, and CNN variants.
-    angle_detail: 'Contribution: The canonical conceptual treatment of convolution, sparse interactions,
-      parameter sharing, equivariance, pooling, and CNN variants. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''Deep Learning book Ch 9 — convolutional
-      networks'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L Chapters 7–8 — executable CNNs
-    source_id: source-d2l
-    locator: Chapters 7–8
-    angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best
-      for connecting tensor shapes to code.
-    angle_detail: 'Contribution: Runnable convolution/pooling arithmetic followed by LeNet and modern
-      CNN architectures; best for connecting tensor shapes to code. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L Chapters 7–8 — executable CNNs'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — convolution and pooling shapes
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(p), PDF p. 5
-    angle: Tests how filter size, filter count, pooling window, and batch size affect hidden-layer shape.
-    angle_detail: Calculate the output-shape effect of every option before checking the key. This is a
-      compact shape diagnostic; the course deck and PyTorch routes still carry architecture and implementation
-      context.
+  - material_ref:
+      route_id: route-28d7586c0379c662fa6afa67
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — convolutional networks
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 10 'Convolutional networks'
-    angle: Gives a current architecture-level account of convolution, pooling, receptive fields, and image-network
-      design.
-    angle_detail: Use the chapter figures to connect the lecture's shape arithmetic to receptive fields
-      and architectural choices. It is a modern reference layer; the PyTorch routes are still where implementation
-      details are checked.
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: Loeber PyTorch CNN — CIFAR-10 implementation diff
-    source_id: source-patrick-loeber-pytorch-cnn
-    locator: Video 'PyTorch Tutorial 14 — Convolutional Neural Network (CNN)', complete video; repository
-      file '14_cnn.py'
-    angle: A minimal single-file CNN makes every tensor-shape and training-loop choice easy to compare
-      with the official tutorial.
-    angle_detail: 'Diff 14_cnn.py against the official CIFAR-10 tutorial: label each convolution, pooling,
-      flatten, linear, loss, and optimizer step. It is intentionally simpler than the AMLS project and
-      should be used as a traceable baseline, not as architecture advice.'
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-pooling/notes.md
   attachments: []
@@ -958,274 +675,179 @@ stages:
   - concept-convolutional-networks
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 11 — CNN calculations and fourth sheet
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 11.pdf
-    angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields,
-      network shapes, architecture examples and the fourth sheet/bonus discussion.'
-    angle_detail: 'Contribution: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
-      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
-      11 — CNN calculations and fourth sheet'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: This is current course evidence and may calibrate examined notation, but
-      the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP convolutional-neural-network section
-    source_id: source-islp
-    locator: islp.pdf §10.3 Convolutional Neural Networks, pdf pp. 413-419 (§10.3.1 convolution layers
-      p. 414, §10.3.2 pooling p. 417, §10.3.3 architecture p. 417, §10.3.4 data augmentation p. 418)
-    angle: A gentle full CNN pass through convolutional layers, pooling, architecture, and data augmentation;
-      ideal before deeper shape and architecture references.
-    angle_detail: 'Contribution: A gentle full CNN pass through convolutional layers, pooling, architecture,
-      and data augmentation; ideal before deeper shape and architecture references. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP convolutional-neural-network section'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-islp/islp.pdf
+  - material_ref:
+      route_id: route-96b3bc3586d74e35b541bcb5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy convolution and classic CNN architectures
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
-      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
-    angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
-      and ResNet coverage.'
-    angle_detail: 'Contribution: The deepest aligned book source: exact output arithmetic plus one-to-one
-      LeNet, AlexNet, GoogLeNet, and ResNet coverage. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''Murphy convolution and classic CNN architectures'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Kroese CNN reference
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Deep Learning subsection 'convolution neural network', pdf pp. 348-349; §9.5.2
-      Image Classification, pdf pp. 363-366
-    angle: A dense independent account of convolutional networks and implementation-oriented examples.
-    angle_detail: 'Contribution: A dense independent account of convolutional networks and implementation-oriented
-      examples. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''Kroese CNN reference'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-08a08216d5d79326650ef693
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: CS229 CNN segments
-    source_id: source-cs229-2022-videos
-    locator: Spring 2022 playlist, Lecture 9 'Neural Networks II' — convolutional-network chapter
-    angle: Broad deep-learning context only; use the course deck, EECS 498, or CS231n for detailed CNN
-      arithmetic.
-    angle_detail: 'Contribution: Broad deep-learning context only; use the course deck, EECS 498, or CS231n
-      for detailed CNN arithmetic. Depth and prerequisites: It assumes no derivation beyond the current
-      unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose ''CS229
-      CNN segments'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b41652c0f7a8186398699a0c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: EECS 498 Lectures 7–8 — CNNs and architectures
-    source_id: source-eecs498
-    locator: Lectures 7–8
-    angle: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet design reasoning;
-      batch-normalization segments exceed AML scope.
-    angle_detail: 'Contribution: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and
-      ResNet design reasoning; batch-normalization segments exceed AML scope. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''EECS 498 Lectures 7–8 — CNNs and architectures''
-      over ''Übung 11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Course boundary: It complements the current deck but cannot override the deck''s notation, topic
-      boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: CS231n Convolutional Networks notes
-    source_id: source-cs231n-notes
-    locator: '''Convolutional Networks'' → ''Overview'', ''ConvNet layers'', ''Convolutional Layer'',
-      ''Pooling Layer'', and ''Layer Patterns'''
-    angle: The standard written CNN reference for output shapes, channels, parameter counts, pooling,
-      receptive fields, and architecture patterns.
-    angle_detail: 'Contribution: The standard written CNN reference for output shapes, channels, parameter
-      counts, pooling, receptive fields, and architecture patterns. Depth and prerequisites: It assumes
-      comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical steps,
-      not merely recognize them. Discriminator: choose ''CS231n Convolutional Networks notes'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-f7d12088aeee3996f3def273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS231n 2017 convolution and architecture lectures
-    source_id: source-cs231n-2017-videos
-    locator: 2017 playlist, Lecture 5 'Convolutional Neural Networks' and Lecture 9 'CNN Architectures'
-    angle: The original full-lecture alternative for convolutional layers and classic architectures; use
-      selected CNN lectures rather than the entire playlist.
-    angle_detail: 'Contribution: The original full-lecture alternative for convolutional layers and classic
-      architectures; use selected CNN lectures rather than the entire playlist. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''CS231n 2017 convolution and
-      architecture lectures'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: watch
-    label: StatQuest convolutional-network intuition
-    source_id: source-statquest
-    locator: 'StatQuest episodes ''Convolutional Neural Networks: The Math Explained'' and ''ReLU, Clearly
-      Explained'''
-    angle: Short visual intuition for filters, feature maps, and CNN structure; not a substitute for hand
-      shape arithmetic.
-    angle_detail: 'Contribution: Short visual intuition for filters, feature maps, and CNN structure;
-      not a substitute for hand shape arithmetic. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''StatQuest convolutional-network intuition'' over ''Current L10 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for cross-correlation, filters, padding/stride/channel arithmetic, pooling, complete CNNs, and the
-      LeNet-to-ResNet architecture lineage. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4be316effca67167511790df
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Rohrer convolution and CNN chapters
-    source_id: source-rohrer-e2eml
-    locator: Chapters 14, 22–23, and 31
-    angle: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN structure and a CIFAR-10
-      case study.
-    angle_detail: 'Contribution: Starts with explicit 1D/2D convolution arithmetic, then moves to CNN
-      structure and a CIFAR-10 case study. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Rohrer convolution and CNN chapters'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-c9b88d5be42c401bed5c0335
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron convolutional-network implementation
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 14 Deep Computer Vision Using CNNs, pdf pp. 619-698 (visual cortex p.
-      620; convolution pp. 621-633; pooling pp. 634-639; architectures pp. 640-667; exercises p. 694)
-    angle: Runnable CNN construction and training that connects filter/shape formulas to framework layers.
-    angle_detail: 'Contribution: Runnable CNN construction and training that connects filter/shape formulas
-      to framework layers. Depth and prerequisites: It assumes the mathematical object is already understood
-      and shifts attention to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose
-      ''Géron convolutional-network implementation'' over ''Übung 11 — CNN calculations and fourth sheet''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named
-      gap, then return to the current deck rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-515ab334a05432e324931153
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — CNN tasks
-    source_id: source-cs4780-homeworks
-    locator: 2018 Spring/Fall HW9 CNN tasks and solutions
-    angle: Local solution-backed convolutional-network and shape questions; the only registered external
-      solved CNN bank in the AML shelf.
-    angle_detail: 'Contribution: Local solution-backed convolutional-network and shape questions; the
-      only registered external solved CNN bank in the AML shelf. Depth and prerequisites: It assumes the
-      relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''Cornell CS4780 HW9 — CNN tasks'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-a269546b5d7bdf957ea5fbba
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch CIFAR-10 CNN tutorial
-    source_id: source-pytorch-tutorials
-    locator: Tutorial 'Training a Classifier' — steps 1-5 from CIFAR-10 loading through network testing
-    angle: A small complete CNN that turns convolution/pooling/shape concepts into framework layers and
-      a training loop.
-    angle_detail: 'Contribution: A small complete CNN that turns convolution/pooling/shape concepts into
-      framework layers and a training loop. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Official PyTorch CIFAR-10 CNN tutorial'' over ''Übung 11 — CNN calculations
-      and fourth sheet'' when you need this contribution; the neighboring route instead contributes: The
-      current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0107f1202da263048d840951
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 9 — convolutional networks
-    source_id: source-goodfellow-dl
-    locator: Ch 9 'Convolutional Networks', §9.1 'The Convolution Operation' through §9.5 'Variants of
-      the Basic Convolution Function'
-    angle: The canonical conceptual treatment of convolution, sparse interactions, parameter sharing,
-      equivariance, pooling, and CNN variants.
-    angle_detail: 'Contribution: The canonical conceptual treatment of convolution, sparse interactions,
-      parameter sharing, equivariance, pooling, and CNN variants. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''Deep Learning book Ch 9 — convolutional
-      networks'' over ''Current L10 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-71e1e305a548c2b59df832e5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L Chapters 7–8 — executable CNNs
-    source_id: source-d2l
-    locator: Chapters 7–8
-    angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best
-      for connecting tensor shapes to code.
-    angle_detail: 'Contribution: Runnable convolution/pooling arithmetic followed by LeNet and modern
-      CNN architectures; best for connecting tensor shapes to code. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L Chapters 7–8 — executable CNNs'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: Loeber PyTorch CNN — CIFAR-10 implementation diff
-    source_id: source-patrick-loeber-pytorch-cnn
-    locator: Video 'PyTorch Tutorial 14 — Convolutional Neural Network (CNN)', complete video; repository
-      file '14_cnn.py'
-    angle: A minimal single-file CNN makes every tensor-shape and training-loop choice easy to compare
-      with the official tutorial.
-    angle_detail: 'Diff 14_cnn.py against the official CIFAR-10 tutorial: label each convolution, pooling,
-      flatten, linear, loss, and optimizer step. It is intentionally simpler than the AMLS project and
-      should be used as a traceable baseline, not as architecture advice.'
+  - material_ref:
+      route_id: route-0b76e5be4acfca0189ae03fb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-network/notes.md
   attachments: []
@@ -1246,145 +868,98 @@ stages:
   - concept-residual-connection
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L10 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 10-cnn.pdf
-    angle: The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic,
-      pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage.
-    angle_detail: 'Contribution: The 2026 scope authority for cross-correlation, filters, padding/stride/channel
-      arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture lineage. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Current L10 lecture deck'' over ''Übung 11 — CNN
-      calculations and fourth sheet'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields, network
-      shapes, architecture examples and the fourth sheet/bonus discussion. Course boundary: This is current
-      course evidence and may calibrate examined notation, but the route''s stated locator—not the rest
-      of the source—defines its scope.'
+  - material_ref:
+      route_id: route-31fd0969b1aa551394d33f29
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 10-cnn.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L10 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
-    angle: Prior-year alternate filter and architecture examples; no local L10 exercise sheet is present.
-    angle_detail: 'Contribution: Prior-year alternate filter and architecture examples; no local L10 exercise
-      sheet is present. Depth and prerequisites: It assumes the lecture treatment is already secure and
-      deliberately goes beyond exam-first depth for a precise reference or second derivation. Discriminator:
-      choose ''Older L10 lecture variant'' over ''Übung 11 — CNN calculations and fourth sheet'' when
-      you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      CNN session: convolution arithmetic, stride and receptive fields, network shapes, architecture examples
-      and the fourth sheet/bonus discussion. Course boundary: This is prior-year evidence: use it only
-      for a second explanation, and let the current deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-639b0d917507497f3b417d30
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/10-cnn_e88d2bb6a525f5e7dc6e15044f252d21.pdf
     scope_triage: reference-only
-  - kind: practise
-    label: Übung 11 — CNN calculations and fourth sheet
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 11.pdf
-    angle: 'The current lecturer-worked CNN session: convolution arithmetic, stride and receptive fields,
-      network shapes, architecture examples and the fourth sheet/bonus discussion.'
-    angle_detail: 'Contribution: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Depth and prerequisites: It assumes the relevant rule or algorithm has already been introduced and
-      is for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Übung
-      11 — CNN calculations and fourth sheet'' over ''Current L10 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for cross-correlation, filters,
-      padding/stride/channel arithmetic, pooling, complete CNNs, and the LeNet-to-ResNet architecture
-      lineage. Course boundary: This is current course evidence and may calibrate examined notation, but
-      the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-60ced8fb640e4960a9091dd2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     vault_path: material://source-aml-ss26-lectures/exercise-slides/Übung 11.pdf
     scope_triage: required-now
-  - kind: reference
-    label: ESL early weight-sharing example
-    source_id: source-esl
-    locator: 'esl.pdf §11.7 Example: A Convolutional Neural Network for Digit Classification, pdf pp.
-      423-425'
-    angle: LeCun ZIP-code networks show the historical origin of local connectivity and weight sharing,
-      but ESL has no modern full CNN treatment.
-    angle_detail: 'Contribution: LeCun ZIP-code networks show the historical origin of local connectivity
-      and weight sharing, but ESL has no modern full CNN treatment. Depth and prerequisites: It assumes
-      the lecture treatment is already secure and deliberately goes beyond exam-first depth for a precise
-      reference or second derivation. Discriminator: choose ''ESL early weight-sharing example'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It is optional depth:
-      open it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-ff147162ccc891125fca6e2c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy convolution and classic CNN architectures
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §14.1 Introduction, pdf p. 497; §14.2 Common layers, pdf pp. 498-508 (convolution
-      §14.2.1 p. 498; pooling §14.2.2 p. 505); §14.3 Common architectures, pdf pp. 509-515
-    angle: 'The deepest aligned book source: exact output arithmetic plus one-to-one LeNet, AlexNet, GoogLeNet,
-      and ResNet coverage.'
-    angle_detail: 'Contribution: The deepest aligned book source: exact output arithmetic plus one-to-one
-      LeNet, AlexNet, GoogLeNet, and ResNet coverage. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''Murphy convolution and classic CNN architectures'' over
-      ''Current L10 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for cross-correlation, filters, padding/stride/channel arithmetic, pooling,
-      complete CNNs, and the LeNet-to-ResNet architecture lineage. Course boundary: It complements the
-      current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4d9bdcdef94d579ed5bc99c8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: EECS 498 Lectures 7–8 — CNNs and architectures
-    source_id: source-eecs498
-    locator: Lectures 7–8
-    angle: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and ResNet design reasoning;
-      batch-normalization segments exceed AML scope.
-    angle_detail: 'Contribution: Detailed convolution/shape walkthrough followed by AlexNet, VGG, and
-      ResNet design reasoning; batch-normalization segments exceed AML scope. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''EECS 498 Lectures 7–8 — CNNs and architectures''
-      over ''Übung 11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride
-      and receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion.
-      Course boundary: It complements the current deck but cannot override the deck''s notation, topic
-      boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-632792353ef3f0edfb3e9f1c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: reference
-    label: CS231n 2017 convolution and architecture lectures
-    source_id: source-cs231n-2017-videos
-    locator: 2017 playlist, Lecture 5 'Convolutional Neural Networks' and Lecture 9 'CNN Architectures'
-    angle: The original full-lecture alternative for convolutional layers and classic architectures; use
-      selected CNN lectures rather than the entire playlist.
-    angle_detail: 'Contribution: The original full-lecture alternative for convolutional layers and classic
-      architectures; use selected CNN lectures rather than the entire playlist. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''CS231n 2017 convolution and
-      architecture lectures'' over ''Übung 11 — CNN calculations and fourth sheet'' when you need this
-      contribution; the neighboring route instead contributes: The current lecturer-worked CNN session:
-      convolution arithmetic, stride and receptive fields, network shapes, architecture examples and the
-      fourth sheet/bonus discussion. Course boundary: It is optional depth: open it for the named gap,
-      then return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-0cce31f9529637ad3c9a6ff1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L Chapters 7–8 — executable CNNs
-    source_id: source-d2l
-    locator: Chapters 7–8
-    angle: Runnable convolution/pooling arithmetic followed by LeNet and modern CNN architectures; best
-      for connecting tensor shapes to code.
-    angle_detail: 'Contribution: Runnable convolution/pooling arithmetic followed by LeNet and modern
-      CNN architectures; best for connecting tensor shapes to code. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L Chapters 7–8 — executable CNNs'' over ''Übung
-      11 — CNN calculations and fourth sheet'' when you need this contribution; the neighboring route
-      instead contributes: The current lecturer-worked CNN session: convolution arithmetic, stride and
-      receptive fields, network shapes, architecture examples and the fourth sheet/bonus discussion. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-011ec2157c87f3b3192b205c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — convolutional networks
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 10 'Convolutional networks'
-    angle: Gives a current architecture-level account of convolution, pooling, receptive fields, and image-network
-      design.
-    angle_detail: Use the chapter figures to connect the lecture's shape arithmetic to receptive fields
-      and architectural choices. It is a modern reference layer; the PyTorch routes are still where implementation
-      details are checked.
+  - material_ref:
+      route_id: route-b21ef88cc62edb59bcde2559
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l10/stages/stage-aml-l10-architectures/notes.md
   attachments: []

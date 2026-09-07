@@ -25,64 +25,47 @@ stages:
   - concept-language-modelling
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Murphy §15.7 — language modelling as the training objective
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.7 Language models and unsupervised representation learning, pdf pp. 567-576
-      (non-generative models p. 568, generative causal LLMs p. 572)
-    angle: Connects the block's outputs back to next-token prediction and the same cross-entropy introduced
-      in L05; read for the objective, not for the LLM survey.
-    angle_detail: 'Contribution: Connects the block''s outputs back to next-token prediction and the same
-      cross-entropy introduced in L05; read for the objective, not for the LLM survey. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Murphy §15.7 — language modelling
-      as the training objective'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-480b485364dfde6ba7eba3ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Jurafsky Chapter 3 — next-token probability before Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 3 'N-gram Language Models', August 19, 2026 draft, §3.1-§3.2, PDF pp. 1-8
-    angle: Builds the chain-rule and next-token-prediction framing that the L11 slides assume before attention
-      is introduced.
-    angle_detail: Read §3.1 for P(w|h), sequence probability, and the Markov approximation, then §3.2
-      for train/test evaluation. This supplies the probabilistic starting point missing from the Transformer-only
-      chapter; smoothing and later n-gram machinery are outside L11.
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — Transformers and LLMs
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 13 'Transformers and LLMs' → 'Transformers I' sections on
-      self-attention, position encoding, heads, blocks, encoders and decoders
-    angle: Adds a current diagrammatic Transformer account, including encoder/decoder variants and modern
-      position/attention extensions.
-    angle_detail: Use only to cross-check the deck's block diagram after Jurafsky Ch 8. Prince includes
-      many post-course variants, so stop after the named Transformers I sections unless a specific lecture
-      gap remains.
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-language-task/notes.md
   attachments: []
@@ -101,68 +84,46 @@ stages:
   - concept-tokenization
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — tokens and the vocabulary, in code
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 pdf pp. 750–762 (TextVectorization and the character vocabulary)
-    angle: 'Builds the token vocabulary the deck assumes: text to ids to sequences, with the length and
-      vocabulary choices made explicit. Character-level here; subword tokenizers are named in the footnotes,
-      not taught.'
-    angle_detail: 'Contribution: Builds the token vocabulary the deck assumes: text to ids to sequences,
-      with the length and vocabulary choices made explicit. Character-level here; subword tokenizers are
-      named in the footnotes, not taught. Depth and prerequisites: It assumes the mathematical object
-      is already understood and shifts attention to executable behavior, shapes, APIs, or numerical checks.
-      Discriminator: choose ''Géron 3rd ed. Ch 16 — tokens and the vocabulary, in code'' over ''Current
-      L11 Transformers lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified attention,
-      Q/K/V multi-head attention, positional information, Transformer blocks, language modelling, and
-      the bonus parallelization/masking section. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-4c72e8b44dc1933ab9c46826
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky Chapter 3 — next-token probability before Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 3 'N-gram Language Models', August 19, 2026 draft, §3.1-§3.2, PDF pp. 1-8
-    angle: Builds the chain-rule and next-token-prediction framing that the L11 slides assume before attention
-      is introduced.
-    angle_detail: Read §3.1 for P(w|h), sequence probability, and the Markov approximation, then §3.2
-      for train/test evaluation. This supplies the probabilistic starting point missing from the Transformer-only
-      chapter; smoothing and later n-gram machinery are outside L11.
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-tokenization/notes.md
   attachments: []
@@ -182,77 +143,47 @@ stages:
   - concept-embedding
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy §20.5 — where static embeddings come from
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §20.5 Word embeddings, pdf pp. 735-742 (latent semantic analysis p. 735, word2vec
-      p. 737, GloVe p. 740, word analogies p. 740)
-    angle: The deck states that embedding lookup maps tokens to vectors; this section is how those vectors
-      are learned, which is the contrast that makes 'contextual' mean something.
-    angle_detail: 'Contribution: The deck states that embedding lookup maps tokens to vectors; this section
-      is how those vectors are learned, which is the contrast that makes ''contextual'' mean something.
-      Depth and prerequisites: It assumes comfort with the unit''s notation and asks the reader to follow
-      or reproduce the mathematical steps, not merely recognize them. Discriminator: choose ''Murphy §20.5
-      — where static embeddings come from'' over ''Current L11 Transformers lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The 2026 scope authority: words and
-      tokens, embeddings, contextual representations, simplified attention, Q/K/V multi-head attention,
-      positional information, Transformer blocks, language modelling, and the bonus parallelization/masking
-      section. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-b4767511bb52dcb8e0cdd2d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — embeddings, static then contextual
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 'Reusing Pretrained Embeddings and Language Models' pdf pp.
-      763–769
-    angle: Shows the lookup table and then what changes when representations are produced by a pretrained
-      model instead — the deck's static-versus-contextual distinction made executable.
-    angle_detail: 'Contribution: Shows the lookup table and then what changes when representations are
-      produced by a pretrained model instead — the deck''s static-versus-contextual distinction made executable.
-      Depth and prerequisites: It assumes the mathematical object is already understood and shifts attention
-      to executable behavior, shapes, APIs, or numerical checks. Discriminator: choose ''Géron 3rd ed.
-      Ch 16 — embeddings, static then contextual'' over ''Current L11 Transformers lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority:
-      words and tokens, embeddings, contextual representations, simplified attention, Q/K/V multi-head
-      attention, positional information, Transformer blocks, language modelling, and the bonus parallelization/masking
-      section. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e0a9ab589c30dad9eb7dcbad
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-embeddings/notes.md
   attachments: []
@@ -271,151 +202,88 @@ stages:
   - concept-attention
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy §15.4 — attention as a soft dictionary lookup
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.4 Attention, pdf pp. 548-555 (attention as soft dictionary lookup p. 549, parametric
-      attention p. 551)
-    angle: 'Gives the interpretation the deck''s first worked example leaves implicit: attention weights
-      are a softmax over similarity scores, i.e. a differentiable dictionary lookup, before any learned
-      projection appears.'
-    angle_detail: 'Contribution: Gives the interpretation the deck''s first worked example leaves implicit:
-      attention weights are a softmax over similarity scores, i.e. a differentiable dictionary lookup,
-      before any learned projection appears. Depth and prerequisites: It assumes comfort with the unit''s
-      notation and asks the reader to follow or reproduce the mathematical steps, not merely recognize
-      them. Discriminator: choose ''Murphy §15.4 — attention as a soft dictionary lookup'' over ''Current
-      L11 Transformers lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified attention,
-      Q/K/V multi-head attention, positional information, Transformer blocks, language modelling, and
-      the bonus parallelization/masking section. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-3224d420145c8529499ae635
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Murphy §15.5 — the Transformer assembled step by step
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.5 Transformers, pdf pp. 556-562 (self-attention p. 556, multi-headed attention
-      p. 557, positional encoding p. 558, putting it all together p. 559, comparing transformers, CNNs
-      and RNNs p. 561)
-    angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional
-      encoding, then the assembled block — in equations, and closes with the comparison against CNNs and
-      RNNs that the lecture only gestures at.
-    angle_detail: 'Contribution: Follows the deck''s own order — self-attention, then Q/K/V and multiple
-      heads, then positional encoding, then the assembled block — in equations, and closes with the comparison
-      against CNNs and RNNs that the lecture only gestures at. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''Murphy §15.5 — the Transformer assembled step by
-      step'' over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — attention, then the original Transformer
-    source_id: source-geron-handson
-    locator: 'geron-copy2.pdf (3rd ed.) Ch 16 ''Attention Mechanisms'' pdf p. 772, ''Attention Is All
-      You Need: The Original Transformer Architecture'' pdf p. 776, ''Positional encodings'' pdf pp. 779–780
-      (Equation 16-2)'
-    angle: Walks the same path as the lecture and then writes a positional-encoding layer from scratch,
-      including the sine/cosine equation the deck shows without deriving.
-    angle_detail: 'Contribution: Walks the same path as the lecture and then writes a positional-encoding
-      layer from scratch, including the sine/cosine equation the deck shows without deriving. Depth and
-      prerequisites: It assumes the mathematical object is already understood and shifts attention to
-      executable behavior, shapes, APIs, or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch
-      16 — attention, then the original Transformer'' over ''Current L11 Transformers lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority:
-      words and tokens, embeddings, contextual representations, simplified attention, Q/K/V multi-head
-      attention, positional information, Transformer blocks, language modelling, and the bonus parallelization/masking
-      section. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 exercises 5 and 6
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 Exercises pdf pp. 794–795, questions 5 and 6
-    angle: 'Two closed-book retrieval items on scope: what an attention mechanism is and how it helps,
-      and which layer of the transformer matters most and why. Q8–Q9 are RNN coding tasks and are out
-      of the 2026 scope.'
-    angle_detail: 'Contribution: Two closed-book retrieval items on scope: what an attention mechanism
-      is and how it helps, and which layer of the transformer matters most and why. Q8–Q9 are RNN coding
-      tasks and are out of the 2026 scope. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Géron 3rd ed. Ch 16 exercises 5 and 6'' over ''Current L11 Transformers
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority: words and tokens, embeddings, contextual representations, simplified attention,
-      Q/K/V multi-head attention, positional information, Transformer blocks, language modelling, and
-      the bonus parallelization/masking section. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-61efa9f1147d5765ad520338
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: D2L Chapter 11 — attention and transformers, with exercises
-    source_id: source-d2l
-    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
-      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
-      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
-      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
-    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
-      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
-      each section ending in Exercises.'
-    angle_detail: 'Contribution: The only source on the menu that puts a worked exercise set behind every
-      L11 node: queries/keys/values, scoring functions, multi-head, self-attention with positional encoding,
-      and the assembled architecture, each section ending in Exercises. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''D2L Chapter 11 — attention and transformers,
-      with exercises'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — Transformers and LLMs
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 13 'Transformers and LLMs' → 'Transformers I' sections on
-      self-attention, position encoding, heads, blocks, encoders and decoders
-    angle: Adds a current diagrammatic Transformer account, including encoder/decoder variants and modern
-      position/attention extensions.
-    angle_detail: Use only to cross-check the deck's block diagram after Jurafsky Ch 8. Prince includes
-      many post-course variants, so stop after the named Transformers I sections unless a specific lecture
-      gap remains.
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-attention/notes.md
   attachments: []
@@ -434,100 +302,57 @@ stages:
   - concept-attention
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy §15.5 — the Transformer assembled step by step
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.5 Transformers, pdf pp. 556-562 (self-attention p. 556, multi-headed attention
-      p. 557, positional encoding p. 558, putting it all together p. 559, comparing transformers, CNNs
-      and RNNs p. 561)
-    angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional
-      encoding, then the assembled block — in equations, and closes with the comparison against CNNs and
-      RNNs that the lecture only gestures at.
-    angle_detail: 'Contribution: Follows the deck''s own order — self-attention, then Q/K/V and multiple
-      heads, then positional encoding, then the assembled block — in equations, and closes with the comparison
-      against CNNs and RNNs that the lecture only gestures at. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''Murphy §15.5 — the Transformer assembled step by
-      step'' over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — multi-head attention and masking
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 'Multi-head attention' pdf pp. 781–785 (masked attention
-      pdf p. 784)
-    angle: Q/K/V projections and heads as shapes in code, with the masked decoder attention that is the
-      deck's bonus causal-masking slide.
-    angle_detail: 'Contribution: Q/K/V projections and heads as shapes in code, with the masked decoder
-      attention that is the deck''s bonus causal-masking slide. Depth and prerequisites: It assumes the
-      mathematical object is already understood and shifts attention to executable behavior, shapes, APIs,
-      or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch 16 — multi-head attention and masking''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-075378562a94297205c269f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: D2L Chapter 11 — attention and transformers, with exercises
-    source_id: source-d2l
-    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
-      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
-      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
-      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
-    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
-      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
-      each section ending in Exercises.'
-    angle_detail: 'Contribution: The only source on the menu that puts a worked exercise set behind every
-      L11 node: queries/keys/values, scoring functions, multi-head, self-attention with positional encoding,
-      and the assembled architecture, each section ending in Exercises. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''D2L Chapter 11 — attention and transformers,
-      with exercises'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-qkv/notes.md
   attachments: []
@@ -547,113 +372,67 @@ stages:
   - concept-positional-encoding
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy §15.5 — the Transformer assembled step by step
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.5 Transformers, pdf pp. 556-562 (self-attention p. 556, multi-headed attention
-      p. 557, positional encoding p. 558, putting it all together p. 559, comparing transformers, CNNs
-      and RNNs p. 561)
-    angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional
-      encoding, then the assembled block — in equations, and closes with the comparison against CNNs and
-      RNNs that the lecture only gestures at.
-    angle_detail: 'Contribution: Follows the deck''s own order — self-attention, then Q/K/V and multiple
-      heads, then positional encoding, then the assembled block — in equations, and closes with the comparison
-      against CNNs and RNNs that the lecture only gestures at. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''Murphy §15.5 — the Transformer assembled step by
-      step'' over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — attention, then the original Transformer
-    source_id: source-geron-handson
-    locator: 'geron-copy2.pdf (3rd ed.) Ch 16 ''Attention Mechanisms'' pdf p. 772, ''Attention Is All
-      You Need: The Original Transformer Architecture'' pdf p. 776, ''Positional encodings'' pdf pp. 779–780
-      (Equation 16-2)'
-    angle: Walks the same path as the lecture and then writes a positional-encoding layer from scratch,
-      including the sine/cosine equation the deck shows without deriving.
-    angle_detail: 'Contribution: Walks the same path as the lecture and then writes a positional-encoding
-      layer from scratch, including the sine/cosine equation the deck shows without deriving. Depth and
-      prerequisites: It assumes the mathematical object is already understood and shifts attention to
-      executable behavior, shapes, APIs, or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch
-      16 — attention, then the original Transformer'' over ''Current L11 Transformers lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority:
-      words and tokens, embeddings, contextual representations, simplified attention, Q/K/V multi-head
-      attention, positional information, Transformer blocks, language modelling, and the bonus parallelization/masking
-      section. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: D2L Chapter 11 — attention and transformers, with exercises
-    source_id: source-d2l
-    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
-      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
-      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
-      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
-    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
-      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
-      each section ending in Exercises.'
-    angle_detail: 'Contribution: The only source on the menu that puts a worked exercise set behind every
-      L11 node: queries/keys/values, scoring functions, multi-head, self-attention with positional encoding,
-      and the assembled architecture, each section ending in Exercises. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''D2L Chapter 11 — attention and transformers,
-      with exercises'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — Transformers and LLMs
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 13 'Transformers and LLMs' → 'Transformers I' sections on
-      self-attention, position encoding, heads, blocks, encoders and decoders
-    angle: Adds a current diagrammatic Transformer account, including encoder/decoder variants and modern
-      position/attention extensions.
-    angle_detail: Use only to cross-check the deck's block diagram after Jurafsky Ch 8. Prince includes
-      many post-course variants, so stop after the named Transformers I sections unless a specific lecture
-      gap remains.
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-position/notes.md
   attachments: []
@@ -674,131 +453,77 @@ stages:
   - concept-transformer
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Murphy §15.5 — the Transformer assembled step by step
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.5 Transformers, pdf pp. 556-562 (self-attention p. 556, multi-headed attention
-      p. 557, positional encoding p. 558, putting it all together p. 559, comparing transformers, CNNs
-      and RNNs p. 561)
-    angle: Follows the deck's own order — self-attention, then Q/K/V and multiple heads, then positional
-      encoding, then the assembled block — in equations, and closes with the comparison against CNNs and
-      RNNs that the lecture only gestures at.
-    angle_detail: 'Contribution: Follows the deck''s own order — self-attention, then Q/K/V and multiple
-      heads, then positional encoding, then the assembled block — in equations, and closes with the comparison
-      against CNNs and RNNs that the lecture only gestures at. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''Murphy §15.5 — the Transformer assembled step by
-      step'' over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-2c65706e0f943446ed4f5f28
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — attention, then the original Transformer
-    source_id: source-geron-handson
-    locator: 'geron-copy2.pdf (3rd ed.) Ch 16 ''Attention Mechanisms'' pdf p. 772, ''Attention Is All
-      You Need: The Original Transformer Architecture'' pdf p. 776, ''Positional encodings'' pdf pp. 779–780
-      (Equation 16-2)'
-    angle: Walks the same path as the lecture and then writes a positional-encoding layer from scratch,
-      including the sine/cosine equation the deck shows without deriving.
-    angle_detail: 'Contribution: Walks the same path as the lecture and then writes a positional-encoding
-      layer from scratch, including the sine/cosine equation the deck shows without deriving. Depth and
-      prerequisites: It assumes the mathematical object is already understood and shifts attention to
-      executable behavior, shapes, APIs, or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch
-      16 — attention, then the original Transformer'' over ''Current L11 Transformers lecture deck'' when
-      you need this contribution; the neighboring route instead contributes: The 2026 scope authority:
-      words and tokens, embeddings, contextual representations, simplified attention, Q/K/V multi-head
-      attention, positional information, Transformer blocks, language modelling, and the bonus parallelization/masking
-      section. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-a464fd47324657962d1113e4
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 exercises 5 and 6
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 Exercises pdf pp. 794–795, questions 5 and 6
-    angle: 'Two closed-book retrieval items on scope: what an attention mechanism is and how it helps,
-      and which layer of the transformer matters most and why. Q8–Q9 are RNN coding tasks and are out
-      of the 2026 scope.'
-    angle_detail: 'Contribution: Two closed-book retrieval items on scope: what an attention mechanism
-      is and how it helps, and which layer of the transformer matters most and why. Q8–Q9 are RNN coding
-      tasks and are out of the 2026 scope. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Géron 3rd ed. Ch 16 exercises 5 and 6'' over ''Current L11 Transformers
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority: words and tokens, embeddings, contextual representations, simplified attention,
-      Q/K/V multi-head attention, positional information, Transformer blocks, language modelling, and
-      the bonus parallelization/masking section. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-61efa9f1147d5765ad520338
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: D2L Chapter 11 — attention and transformers, with exercises
-    source_id: source-d2l
-    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
-      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
-      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
-      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
-    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
-      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
-      each section ending in Exercises.'
-    angle_detail: 'Contribution: The only source on the menu that puts a worked exercise set behind every
-      L11 node: queries/keys/values, scoring functions, multi-head, self-attention with positional encoding,
-      and the assembled architecture, each section ending in Exercises. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''D2L Chapter 11 — attention and transformers,
-      with exercises'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — Transformers and LLMs
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 13 'Transformers and LLMs' → 'Transformers I' sections on
-      self-attention, position encoding, heads, blocks, encoders and decoders
-    angle: Adds a current diagrammatic Transformer account, including encoder/decoder variants and modern
-      position/attention extensions.
-    angle_detail: Use only to cross-check the deck's block diagram after Jurafsky Ch 8. Prince includes
-      many post-course variants, so stop after the named Transformers I sections unless a specific lecture
-      gap remains.
+  - material_ref:
+      route_id: route-897cd2cf70b2c4e0a6a33bfa
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-block/notes.md
   attachments: []
@@ -819,91 +544,57 @@ stages:
   - concept-softmax
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Murphy §15.7 — language modelling as the training objective
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §15.7 Language models and unsupervised representation learning, pdf pp. 567-576
-      (non-generative models p. 568, generative causal LLMs p. 572)
-    angle: Connects the block's outputs back to next-token prediction and the same cross-entropy introduced
-      in L05; read for the objective, not for the LLM survey.
-    angle_detail: 'Contribution: Connects the block''s outputs back to next-token prediction and the same
-      cross-entropy introduced in L05; read for the objective, not for the LLM survey. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Murphy §15.7 — language modelling
-      as the training objective'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
-    vault_path: material://source-murphy-pml1/pml1.pdf
+  - material_ref:
+      route_id: route-480b485364dfde6ba7eba3ca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L Chapter 11 — attention and transformers, with exercises
-    source_id: source-d2l
-    locator: Chapter 11, sections 11.1 'Queries, Keys, and Values'; 11.3 'Attention Scoring Functions';
-      11.5 'Multi-Head Attention'; 11.6 'Self-Attention and Positional Encoding'; 11.7 'The Transformer
-      Architecture' — each ending in an Exercises subsection. Section 11.4 (Bahdanau attention) is RNN-era
-      and 11.8-11.9 (vision, large-scale pretraining) are outside the 2026 scope. Verified 2026-08-22.
-    angle: 'The only source on the menu that puts a worked exercise set behind every L11 node: queries/keys/values,
-      scoring functions, multi-head, self-attention with positional encoding, and the assembled architecture,
-      each section ending in Exercises.'
-    angle_detail: 'Contribution: The only source on the menu that puts a worked exercise set behind every
-      L11 node: queries/keys/values, scoring functions, multi-head, self-attention with positional encoding,
-      and the assembled architecture, each section ending in Exercises. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''D2L Chapter 11 — attention and transformers,
-      with exercises'' over ''Current L11 Transformers lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority: words and tokens, embeddings,
-      contextual representations, simplified attention, Q/K/V multi-head attention, positional information,
-      Transformer blocks, language modelling, and the bonus parallelization/masking section. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-2457956085b5ea6e7a400110
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky & Martin Chapter 8 — Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 8 'Transformers', August 19, 2026 draft, PDF pp. 1-17
-    angle: Expands the lecture's token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation.
-    angle_detail: 'Contribution: Expands the lecture''s token, embedding, attention, multi-head, positional,
-      block and language-model equations without switching model family or notation. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Jurafsky & Martin Chapter 8 — Transformers''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-5e46d7fc659ff247d00c1bf3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Jurafsky Chapter 3 — next-token probability before Transformers
-    source_id: source-jurafsky-slp3
-    locator: Chapter 3 'N-gram Language Models', August 19, 2026 draft, §3.1-§3.2, PDF pp. 1-8
-    angle: Builds the chain-rule and next-token-prediction framing that the L11 slides assume before attention
-      is introduced.
-    angle_detail: Read §3.1 for P(w|h), sequence probability, and the Markov approximation, then §3.2
-      for train/test evaluation. This supplies the probabilistic starting point missing from the Transformer-only
-      chapter; smoothing and later n-gram machinery are outside L11.
+  - material_ref:
+      route_id: route-77971f9b8d8013a9d83ed860
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-training/notes.md
   attachments: []
@@ -924,41 +615,26 @@ stages:
   - concept-attention
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L11 Transformers lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 11-transformers.pdf (81 pages)
-    angle: 'The 2026 scope authority: words and tokens, embeddings, contextual representations, simplified
-      attention, Q/K/V multi-head attention, positional information, Transformer blocks, language modelling,
-      and the bonus parallelization/masking section.'
-    angle_detail: 'Contribution: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Depth and prerequisites: It assumes the
-      prerequisites declared by the unit and stays at the notation and derivation depth used by the HU
-      course. Discriminator: choose ''Current L11 Transformers lecture deck'' over ''Jurafsky & Martin
-      Chapter 8 — Transformers'' when you need this contribution; the neighboring route instead contributes:
-      Expands the lecture''s token, embedding, attention, multi-head, positional, block and language-model
-      equations without switching model family or notation. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-23db0f203fdcdc8b9ba51c41
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 11-transformers.pdf
     scope_triage: required-now
-  - kind: read
-    label: Géron 3rd ed. Ch 16 — multi-head attention and masking
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed.) Ch 16 'Multi-head attention' pdf pp. 781–785 (masked attention
-      pdf p. 784)
-    angle: Q/K/V projections and heads as shapes in code, with the masked decoder attention that is the
-      deck's bonus causal-masking slide.
-    angle_detail: 'Contribution: Q/K/V projections and heads as shapes in code, with the masked decoder
-      attention that is the deck''s bonus causal-masking slide. Depth and prerequisites: It assumes the
-      mathematical object is already understood and shifts attention to executable behavior, shapes, APIs,
-      or numerical checks. Discriminator: choose ''Géron 3rd ed. Ch 16 — multi-head attention and masking''
-      over ''Current L11 Transformers lecture deck'' when you need this contribution; the neighboring
-      route instead contributes: The 2026 scope authority: words and tokens, embeddings, contextual representations,
-      simplified attention, Q/K/V multi-head attention, positional information, Transformer blocks, language
-      modelling, and the bonus parallelization/masking section. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-075378562a94297205c269f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l11/stages/stage-aml-l11-parallelization/notes.md
   attachments: []

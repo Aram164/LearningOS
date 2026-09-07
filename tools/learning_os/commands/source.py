@@ -8,7 +8,7 @@ import json
 import sys
 
 from .support import (
-    _dump_yaml,
+    _dump_study_map,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
@@ -61,7 +61,7 @@ def cmd_source_feedback(args) -> int:
             entry["note"] = args.note
         stage.setdefault("source_feedback", []).append(entry)
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data)},
+            root, {study_map.path: _dump_study_map(study_map, data)},
             capability="source.feedback.record",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],

@@ -20,6 +20,7 @@ from learning_os.masters_planning import (
     MastersPlanningError,
     prepare_master_promotion,
 )
+from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.rules import validate
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
@@ -27,6 +28,7 @@ from learning_os.warning_baseline import delta, load_baseline, signatures_from_i
 from .support import (
     WriteRefused,
     _atomic_text,
+    _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -287,6 +289,12 @@ def _module_plan_routing_problems(repo, module_id: str, package: dict) -> list[s
 
     problems: list[str] = []
     for uid, (unit_data, map_data) in sorted(units.items()):
+        if isinstance(map_data, dict):
+            try:
+                map_data = expand_map(map_data, source_map, module_id, uid)
+            except MaterialReferenceError as exc:
+                problems.append(f"{uid}: {exc}")
+                continue
         for sid in sorted(_unit_source_refs(unit_data, map_data)):
             if sid not in routes:
                 problems.append(f"{uid} uses {sid}, but the module source map omits it")
@@ -644,7 +652,10 @@ def cmd_module_plan_import(args) -> int:
             if not isinstance(map_data, dict) or map_data.get("unit_id") != uid:
                 print(f"los: study map must belong to {uid}", file=sys.stderr)
                 return 2
-            writes[unit_dir / "study-map.yaml"] = _dump_yaml(map_data)
+            existing_map = next((sm for sm in repo.study_maps.values() if sm.unit_id == uid), None)
+            writes[unit_dir / "study-map.yaml"] = (
+                _dump_study_map(existing_map, map_data) if existing_map else _dump_yaml(map_data)
+            )
             prefix = f"curriculum/modules/{args.module_id}/units/{uid}/stages/"
             for stage in map_data.get("stages", []) or []:
                 note_ref = stage.get("working_note") if isinstance(stage, dict) else None

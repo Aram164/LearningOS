@@ -27,162 +27,116 @@ stages:
   - concept-chain-rule
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 10 — computation graphs and autodiff
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
-    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection.
-    angle_detail: 'Contribution: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 10 — computation graphs and autodiff''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: required-now
-  - kind: read
-    label: Murphy reverse-mode backprop and training
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
-      476-484; §13.5 Regularization, pdf pp. 485-489
-    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
-      products, gradient pathologies, and all three regularizers.'
-    angle_detail: 'Contribution: The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy reverse-mode backprop and training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: EECS 498 Lecture 6 — Backpropagation
-    source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation
-    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and
-      adding worked gradient traces.
-    angle_detail: 'Contribution: Teaches backprop as computation-graph reverse traversal, closely matching
-      the AML deck and adding worked gradient traces. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''EECS 498 Lecture 6 — Backpropagation'' over ''Übung 10 —
-      computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Karpathy — micrograd from scratch
-    source_id: source-karpathy-micrograd
-    locator: 'Video ''The spelled-out intro to neural networks and backpropagation: building micrograd'',
-      00:00-02:25:00'
-    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals
-      explicit after the analytical derivation.
-    angle_detail: 'Contribution: Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Karpathy — micrograd from scratch'' over ''Übung
-      10 — computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch autograd tutorial
-    source_id: source-pytorch-tutorials
-    locator: Sections 'Tensors, Functions and Computational graph' and 'Computing Gradients'
-    angle: The authoritative executable connection between computation graphs, requires_grad, backward,
-      gradient accumulation, zeroing, and no_grad.
-    angle_detail: 'Contribution: The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad. Depth and prerequisites: It assumes the mathematical
-      object is already understood and shifts attention to executable behavior, shapes, APIs, or numerical
-      checks. Discriminator: choose ''Official PyTorch autograd tutorial'' over ''Übung 10 — computation
-      graphs and autodiff'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: D2L — automatic differentiation and network training
-    source_id: source-d2l
-    locator: D2L pages 'Forward Propagation, Backward Propagation, and Computational Graphs', 'Automatic
-      Differentiation', 'Weight Decay', and 'Dropout'
-    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
-      updates, regularization, and dropout.
-    angle_detail: 'Contribution: Runnable explanations of computation graphs, automatic differentiation,
-      backpropagation, parameter updates, regularization, and dropout. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L — automatic differentiation and network training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — backprop quantities
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(g), PDF p. 3
-    angle: Distinguishes the intermediate derivatives backprop actually needs from irrelevant weight-to-weight
-      or input derivatives.
-    angle_detail: Use this as a 60-second graph audit after doing a full derivation. The official answer
-      focuses on which partials must exist, not on computing them, so it complements rather than duplicates
-      the lecture exercises.
+  - material_ref:
+      route_id: route-7ae7a07b786bdf4e75ca90d6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Nielsen Chapter 2 — backpropagation proof and intuition
-    source_id: source-nielsen-nndl
-    locator: Chapter 2 'How the backpropagation algorithm works' → 'The four fundamental equations behind
-      backpropagation', proof, algorithm, and 'The code for backpropagation'
-    angle: Derives the four backprop equations, converts them to an algorithm, and explains what each
-      term means.
-    angle_detail: Write the four equations from memory before reading the proof, then map every delta
-      to the course graph. Nielsen earns this route through the proof-to-code bridge; micrograd remains
-      the implementation stress test and the lecture fixes examined notation.
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — gradients, initialization, and backprop
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 7 'Gradients and initialization', including the backpropagation
-      and initialization sections
-    angle: Links the computational graph to initialization and gradient-health problems in modern networks.
-    angle_detail: Consult the gradient-flow figures after deriving backprop once. This adds modern initialization
-      and health diagnostics that Nielsen largely omits; keep the course deck's stopping and regularization
-      boundaries authoritative.
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: reference
-    label: MIT 18.S096 — forward and reverse-mode AD
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW Lecture 5 Part 3 'Forward and Reverse-Mode Automatic Differentiation' and full notes
-      §8, PDF chapter pp. 50 onward
-    angle: Explains backpropagation as an evaluation-order choice for products of Jacobians rather than
-      a neural-network-specific trick.
-    angle_detail: Use this to explain why reverse mode is efficient for many parameters and one scalar
-      loss. It complements PyTorch autograd and micrograd; do not import the course's broader matrix-function
-      material into the AML checklist.
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-graph/notes.md
   attachments: []
@@ -202,237 +156,157 @@ stages:
   - concept-chain-rule
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 10 — computation graphs and autodiff
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
-    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection.
-    angle_detail: 'Contribution: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 10 — computation graphs and autodiff''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: required-now
-  - kind: read
-    label: Murphy reverse-mode backprop and training
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
-      476-484; §13.5 Regularization, pdf pp. 485-489
-    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
-      products, gradient pathologies, and all three regularizers.'
-    angle_detail: 'Contribution: The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy reverse-mode backprop and training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kroese layer-wise backpropagation
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Back-Propagation, pdf pp. 349-351; Methods for Training, pdf pp. 352-358
-    angle: The four backward rules in rigorous matrix notation; particularly useful for verifying shapes.
-    angle_detail: 'Contribution: The four backward rules in rigorous matrix notation; particularly useful
-      for verifying shapes. Depth and prerequisites: It assumes comfort with the unit''s notation and
-      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''Kroese layer-wise backpropagation'' over ''Übung 10 — computation graphs and autodiff''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-207185556058e90371302703
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MML chain rule and matrix calculus
-    source_id: source-mml
-    locator: Official PDF, §5.6 'Backpropagation and Automatic Differentiation', PDF pp. 165-169
-    angle: A targeted mathematical safety net for understanding why layer-wise backpropagation rules are
-      correct.
-    angle_detail: 'Contribution: A targeted mathematical safety net for understanding why layer-wise backpropagation
-      rules are correct. Depth and prerequisites: It assumes comfort with the unit''s notation and asks
-      the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML chain rule and matrix calculus'' over ''Übung 10 — computation graphs and autodiff''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cb9b43283aec0fabd1a672fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 backprop, regularization, and double descent
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'Backpropagation', pdf pp. 93-100; 'The double descent phenomenon', pdf pp.
-      112-116; 'Regularization', pdf pp. 126-127
-    angle: A compact written derivation close to the four layer rules, plus weight decay and a second
-      strong double-descent treatment.
-    angle_detail: 'Contribution: A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 backprop, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 neural-network training exercises
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 8 'Backpropagation' and its exercises
-    angle: Practice for gradients and network training at an introductory level; use deeper sources for
-      the full computation-graph derivation.
-    angle_detail: 'Contribution: Practice for gradients and network training at an introductory level;
-      use deeper sources for the full computation-graph derivation. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''MIT 6.036 neural-network training exercises''
-      over ''Übung 10 — computation graphs and autodiff'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Course boundary: It
-      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-91b7ccb423a27aef9f08dbf5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: EECS 498 Lecture 6 — Backpropagation
-    source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation
-    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and
-      adding worked gradient traces.
-    angle_detail: 'Contribution: Teaches backprop as computation-graph reverse traversal, closely matching
-      the AML deck and adding worked gradient traces. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''EECS 498 Lecture 6 — Backpropagation'' over ''Übung 10 —
-      computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest Backpropagation Main Ideas
-    source_id: source-statquest
-    locator: 'Video ''Neural Networks Pt. 2: Backpropagation Main Ideas'', complete episode'
-    angle: A visual conceptual pass over backward credit assignment before or after the algebraic layer
-      rules.
-    angle_detail: 'Contribution: A visual conceptual pass over backward credit assignment before or after
-      the algebraic layer rules. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest Backpropagation Main Ideas'' over ''Übung 10 — computation graphs and autodiff'' when
-      you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-79d377a5f96542b988fde40e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown neural-networks videos 3–4
-    source_id: source-3b1b-neural-networks
-    locator: 'Playlist chapters 3-4: ''What is backpropagation really doing?'' and ''Backpropagation calculus'''
-    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing
-      the exact matrix rules.
-    angle_detail: 'Contribution: Visual backpropagation and calculus intuition that explains gradient
-      flow without replacing the exact matrix rules. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''3Blue1Brown neural-networks videos 3–4'' over ''Current L09 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for computation graphs, the four layer-wise backward rules, the shared numerical example, weight
-      decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Karpathy — micrograd from scratch
-    source_id: source-karpathy-micrograd
-    locator: 'Video ''The spelled-out intro to neural networks and backpropagation: building micrograd'',
-      00:00-02:25:00'
-    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals
-      explicit after the analytical derivation.
-    angle_detail: 'Contribution: Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Karpathy — micrograd from scratch'' over ''Übung
-      10 — computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — neural-network training
-    source_id: source-cs4780-homeworks
-    locator: '2018Fall/HW9/hw9.tex and hw9_sol.tex: Problem 3 ''RELU-network'', part (c) (cross-entropy
-      gradients for W and V)'
-    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward
-      mechanics.
-    angle_detail: 'Contribution: Local solution-backed network-gradient and ReLU training problems for
-      testing the backward mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW9 — neural-network training'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: SaD L15 — backpropagation preview
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf, slides 26 (gradient descent) and 30 (training a multilayer
-      perceptron/backpropagation overview)
-    angle: A compact same-degree-course preview of backward learning; read before AML L09 when the full
-      computation-graph derivation feels abrupt.
-    angle_detail: 'Contribution: A compact same-degree-course preview of backward learning; read before
-      AML L09 when the full computation-graph derivation feels abrupt. Depth and prerequisites: It assumes
-      no derivation beyond the current unit''s vocabulary and is for framing the problem before calculation.
-      Discriminator: choose ''SaD L15 — backpropagation preview'' over ''Übung 10 — computation graphs
-      and autodiff'' when you need this contribution; the neighboring route instead contributes: The current
-      lecturer-worked companion for forward values, local derivatives, reverse accumulation, backpropagation
-      and the framework/autodiff connection. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-sad-ss26-lectures/lecture-slides/15_neural_networks.pdf
+  - material_ref:
+      route_id: route-b907809826ba756aa1d65f9d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Nielsen Chapter 2 — backpropagation proof and intuition
-    source_id: source-nielsen-nndl
-    locator: Chapter 2 'How the backpropagation algorithm works' → 'The four fundamental equations behind
-      backpropagation', proof, algorithm, and 'The code for backpropagation'
-    angle: Derives the four backprop equations, converts them to an algorithm, and explains what each
-      term means.
-    angle_detail: Write the four equations from memory before reading the proof, then map every delta
-      to the course graph. Nielsen earns this route through the proof-to-code bridge; micrograd remains
-      the implementation stress test and the lecture fixes examined notation.
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — forward and reverse-mode AD
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW Lecture 5 Part 3 'Forward and Reverse-Mode Automatic Differentiation' and full notes
-      §8, PDF chapter pp. 50 onward
-    angle: Explains backpropagation as an evaluation-order choice for products of Jacobians rather than
-      a neural-network-specific trick.
-    angle_detail: Use this to explain why reverse mode is efficient for many parameters and one scalar
-      loss. It complements PyTorch autograd and micrograd; do not import the course's broader matrix-function
-      material into the AML checklist.
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-chain-rule/notes.md
   attachments: []
@@ -453,412 +327,269 @@ stages:
   - concept-backpropagation
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L09 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
-    angle: Prior-year second telling of backpropagation and training; current slides establish that batch
-      normalization is not in scope.
-    angle_detail: 'Contribution: Prior-year second telling of backpropagation and training; current slides
-      establish that batch normalization is not in scope. Depth and prerequisites: It assumes the lecture
-      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
-      or second derivation. Discriminator: choose ''Older L09 lecture variant'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: This is prior-year evidence: use it only for a second explanation, and let the current
-      deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
-  - kind: practise
-    label: Übung 10 — computation graphs and autodiff
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
-    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection.
-    angle_detail: 'Contribution: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 10 — computation graphs and autodiff''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: required-now
-  - kind: read
-    label: ISLP training, regularization, and double descent
-    source_id: source-islp
-    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438; §10.8 Interpolation and Double
-      Descent, pdf pp. 439-441
-    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout,
-      and the interpolation-threshold picture of double descent.
-    angle_detail: 'Contribution: Covers backprop/SGD at a gentle level and is unusually well aligned on
-      weight decay, dropout, and the interpolation-threshold picture of double descent. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP training, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: ESL neural-network training depth
-    source_id: source-esl
-    locator: esl.pdf §11.4 Fitting Neural Networks, pdf pp. 414-415; §11.5 Some Issues in Training Neural
-      Networks, pdf pp. 416-422
-    angle: Historical/statistical treatment of fitting and regularization; broader but less directly aligned
-      with the deck computation-graph notation.
-    angle_detail: 'Contribution: Historical/statistical treatment of fitting and regularization; broader
-      but less directly aligned with the deck computation-graph notation. Depth and prerequisites: It
-      assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth for
-      a precise reference or second derivation. Discriminator: choose ''ESL neural-network training depth''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-5537c790ee855af15adac484
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy reverse-mode backprop and training
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
-      476-484; §13.5 Regularization, pdf pp. 485-489
-    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
-      products, gradient pathologies, and all three regularizers.'
-    angle_detail: 'Contribution: The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy reverse-mode backprop and training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kroese layer-wise backpropagation
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Back-Propagation, pdf pp. 349-351; Methods for Training, pdf pp. 352-358
-    angle: The four backward rules in rigorous matrix notation; particularly useful for verifying shapes.
-    angle_detail: 'Contribution: The four backward rules in rigorous matrix notation; particularly useful
-      for verifying shapes. Depth and prerequisites: It assumes comfort with the unit''s notation and
-      asks the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''Kroese layer-wise backpropagation'' over ''Übung 10 — computation graphs and autodiff''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-207185556058e90371302703
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MML chain rule and matrix calculus
-    source_id: source-mml
-    locator: Official PDF, §5.6 'Backpropagation and Automatic Differentiation', PDF pp. 165-169
-    angle: A targeted mathematical safety net for understanding why layer-wise backpropagation rules are
-      correct.
-    angle_detail: 'Contribution: A targeted mathematical safety net for understanding why layer-wise backpropagation
-      rules are correct. Depth and prerequisites: It assumes comfort with the unit''s notation and asks
-      the reader to follow or reproduce the mathematical steps, not merely recognize them. Discriminator:
-      choose ''MML chain rule and matrix calculus'' over ''Übung 10 — computation graphs and autodiff''
-      when you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cb9b43283aec0fabd1a672fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 backprop, regularization, and double descent
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'Backpropagation', pdf pp. 93-100; 'The double descent phenomenon', pdf pp.
-      112-116; 'Regularization', pdf pp. 126-127
-    angle: A compact written derivation close to the four layer rules, plus weight decay and a second
-      strong double-descent treatment.
-    angle_detail: 'Contribution: A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 backprop, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 neural-networks lecture II
-    source_id: source-cs229-2022-videos
-    locator: Lecture 9 — Neural Networks
-    angle: A deeper alternative for backpropagation, regularization, and training mechanics.
-    angle_detail: 'Contribution: A deeper alternative for backpropagation, regularization, and training
-      mechanics. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''CS229 neural-networks lecture II'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-9cfd96836a0ad571e9f9235a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: MIT 6.036 neural-network training exercises
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 8 'Backpropagation' and its exercises
-    angle: Practice for gradients and network training at an introductory level; use deeper sources for
-      the full computation-graph derivation.
-    angle_detail: 'Contribution: Practice for gradients and network training at an introductory level;
-      use deeper sources for the full computation-graph derivation. Depth and prerequisites: It assumes
-      the relevant rule or algorithm has already been introduced and is for an attempted solution, trace,
-      or calculation with feedback. Discriminator: choose ''MIT 6.036 neural-network training exercises''
-      over ''Übung 10 — computation graphs and autodiff'' when you need this contribution; the neighboring
-      route instead contributes: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Course boundary: It
-      complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-91b7ccb423a27aef9f08dbf5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: EECS 498 Lecture 6 — Backpropagation
-    source_id: source-eecs498
-    locator: Lecture 6 — Backpropagation
-    angle: Teaches backprop as computation-graph reverse traversal, closely matching the AML deck and
-      adding worked gradient traces.
-    angle_detail: 'Contribution: Teaches backprop as computation-graph reverse traversal, closely matching
-      the AML deck and adding worked gradient traces. Depth and prerequisites: It assumes comfort with
-      the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not merely
-      recognize them. Discriminator: choose ''EECS 498 Lecture 6 — Backpropagation'' over ''Übung 10 —
-      computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-7cecca37fa48f1b4b700b438
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: StatQuest Backpropagation Main Ideas
-    source_id: source-statquest
-    locator: 'Video ''Neural Networks Pt. 2: Backpropagation Main Ideas'', complete episode'
-    angle: A visual conceptual pass over backward credit assignment before or after the algebraic layer
-      rules.
-    angle_detail: 'Contribution: A visual conceptual pass over backward credit assignment before or after
-      the algebraic layer rules. Depth and prerequisites: It assumes the unit vocabulary but not a completed
-      proof and is meant to make the mechanism explainable before formal derivation. Discriminator: choose
-      ''StatQuest Backpropagation Main Ideas'' over ''Übung 10 — computation graphs and autodiff'' when
-      you need this contribution; the neighboring route instead contributes: The current lecturer-worked
-      companion for forward values, local derivatives, reverse accumulation, backpropagation and the framework/autodiff
-      connection. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-79d377a5f96542b988fde40e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown neural-networks videos 3–4
-    source_id: source-3b1b-neural-networks
-    locator: 'Playlist chapters 3-4: ''What is backpropagation really doing?'' and ''Backpropagation calculus'''
-    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing
-      the exact matrix rules.
-    angle_detail: 'Contribution: Visual backpropagation and calculus intuition that explains gradient
-      flow without replacing the exact matrix rules. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''3Blue1Brown neural-networks videos 3–4'' over ''Current L09 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for computation graphs, the four layer-wise backward rules, the shared numerical example, weight
-      decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Karpathy — micrograd from scratch
-    source_id: source-karpathy-micrograd
-    locator: 'Video ''The spelled-out intro to neural networks and backpropagation: building micrograd'',
-      00:00-02:25:00'
-    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals
-      explicit after the analytical derivation.
-    angle_detail: 'Contribution: Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Karpathy — micrograd from scratch'' over ''Übung
-      10 — computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Rohrer backpropagation and regularization
-    source_id: source-rohrer-e2eml
-    locator: Chapters 10 and 18
-    angle: A calm visual second explanation for reverse learning signals and regularization, without the
-      density of a textbook derivation.
-    angle_detail: 'Contribution: A calm visual second explanation for reverse learning signals and regularization,
-      without the density of a textbook derivation. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Rohrer backpropagation and regularization'' over ''Current L09 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for computation graphs, the four layer-wise backward rules, the shared numerical example, weight
-      decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-820965b7a56304da199d10c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — neural-network training
-    source_id: source-cs4780-homeworks
-    locator: '2018Fall/HW9/hw9.tex and hw9_sol.tex: Problem 3 ''RELU-network'', part (c) (cross-entropy
-      gradients for W and V)'
-    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward
-      mechanics.
-    angle_detail: 'Contribution: Local solution-backed network-gradient and ReLU training problems for
-      testing the backward mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW9 — neural-network training'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: MIT 6.034 network learning questions
-    source_id: source-mit-6034-quizzes
-    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2, Parts B-C
-    angle: Selected solution-backed neural-network mechanics questions; use as a short trace gate rather
-      than a source of theory.
-    angle_detail: 'Contribution: Selected solution-backed neural-network mechanics questions; use as a
-      short trace gate rather than a source of theory. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''MIT 6.034 network learning questions'' over ''Übung 10 —
-      computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-69c5b6e2f97ec6539c186fca
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch autograd tutorial
-    source_id: source-pytorch-tutorials
-    locator: Sections 'Tensors, Functions and Computational graph' and 'Computing Gradients'
-    angle: The authoritative executable connection between computation graphs, requires_grad, backward,
-      gradient accumulation, zeroing, and no_grad.
-    angle_detail: 'Contribution: The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad. Depth and prerequisites: It assumes the mathematical
-      object is already understood and shifts attention to executable behavior, shapes, APIs, or numerical
-      checks. Discriminator: choose ''Official PyTorch autograd tutorial'' over ''Übung 10 — computation
-      graphs and autodiff'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: Kelleher et al. Ch 7 — learning rates and weight decay
-    source_id: source-kelleher-fmlpda
-    locator: kelleher.pdf Ch 7 Error-based Learning, pdf pp. 351-413 (§7.3.2 gradient descent p. 365;
-      §7.3.3 learning rates p. 371; §7.4.2 weight decay p. 379)
-    angle: An accessible explanation of error surfaces, gradient-based weight updates, and weight decay;
-      lighter than the lecture derivation.
-    angle_detail: 'Contribution: An accessible explanation of error surfaces, gradient-based weight updates,
-      and weight decay; lighter than the lecture derivation. Depth and prerequisites: It assumes the unit
-      vocabulary but not a completed proof and is meant to make the mechanism explainable before formal
-      derivation. Discriminator: choose ''Kelleher et al. Ch 7 — learning rates and weight decay'' over
-      ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - material_ref:
+      route_id: route-af0dec1a20a6184eaf0ca273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: SaD L15 — backpropagation preview
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/15_neural_networks.pdf, slides 26 (gradient descent) and 30 (training a multilayer
-      perceptron/backpropagation overview)
-    angle: A compact same-degree-course preview of backward learning; read before AML L09 when the full
-      computation-graph derivation feels abrupt.
-    angle_detail: 'Contribution: A compact same-degree-course preview of backward learning; read before
-      AML L09 when the full computation-graph derivation feels abrupt. Depth and prerequisites: It assumes
-      no derivation beyond the current unit''s vocabulary and is for framing the problem before calculation.
-      Discriminator: choose ''SaD L15 — backpropagation preview'' over ''Übung 10 — computation graphs
-      and autodiff'' when you need this contribution; the neighboring route instead contributes: The current
-      lecturer-worked companion for forward values, local derivatives, reverse accumulation, backpropagation
-      and the framework/autodiff connection. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
-    vault_path: material://source-sad-ss26-lectures/lecture-slides/15_neural_networks.pdf
+  - material_ref:
+      route_id: route-b907809826ba756aa1d65f9d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 7–8 — regularization and optimization
-    source_id: source-goodfellow-dl
-    locator: Ch 7 'Regularization for Deep Learning', §7.1-§7.8; Ch 8 'Optimization for Training Deep
-      Models', §8.1-§8.5
-    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
-      consult by concept rather than reading linearly.
-    angle_detail: 'Contribution: The depth reference for weight decay, dropout, early stopping, gradient
-      propagation, and optimization; consult by concept rather than reading linearly. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Deep Learning book Ch 7–8
-      — regularization and optimization'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L — automatic differentiation and network training
-    source_id: source-d2l
-    locator: D2L pages 'Forward Propagation, Backward Propagation, and Computational Graphs', 'Automatic
-      Differentiation', 'Weight Decay', and 'Dropout'
-    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
-      updates, regularization, and dropout.
-    angle_detail: 'Contribution: Runnable explanations of computation graphs, automatic differentiation,
-      backpropagation, parameter updates, regularization, and dropout. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L — automatic differentiation and network training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: CS189 solved calibration — backprop quantities
-    source_id: source-berkeley-cs189
-    locator: Spring 2024 Final Solutions, Question 1(g), PDF p. 3
-    angle: Distinguishes the intermediate derivatives backprop actually needs from irrelevant weight-to-weight
-      or input derivatives.
-    angle_detail: Use this as a 60-second graph audit after doing a full derivation. The official answer
-      focuses on which partials must exist, not on computing them, so it complements rather than duplicates
-      the lecture exercises.
+  - material_ref:
+      route_id: route-7ae7a07b786bdf4e75ca90d6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Nielsen Chapter 2 — backpropagation proof and intuition
-    source_id: source-nielsen-nndl
-    locator: Chapter 2 'How the backpropagation algorithm works' → 'The four fundamental equations behind
-      backpropagation', proof, algorithm, and 'The code for backpropagation'
-    angle: Derives the four backprop equations, converts them to an algorithm, and explains what each
-      term means.
-    angle_detail: Write the four equations from memory before reading the proof, then map every delta
-      to the course graph. Nielsen earns this route through the proof-to-code bridge; micrograd remains
-      the implementation stress test and the lecture fixes examined notation.
+  - material_ref:
+      route_id: route-f78d93013bf6dc20254072a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Prince UDL — gradients, initialization, and backprop
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 7 'Gradients and initialization', including the backpropagation
-      and initialization sections
-    angle: Links the computational graph to initialization and gradient-health problems in modern networks.
-    angle_detail: Consult the gradient-flow figures after deriving backprop once. This adds modern initialization
-      and health diagnostics that Nielsen largely omits; keep the course deck's stopping and regularization
-      boundaries authoritative.
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-backprop/notes.md
   attachments: []
@@ -878,237 +609,149 @@ stages:
   - concept-weight-decay
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L09 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
-    angle: Prior-year second telling of backpropagation and training; current slides establish that batch
-      normalization is not in scope.
-    angle_detail: 'Contribution: Prior-year second telling of backpropagation and training; current slides
-      establish that batch normalization is not in scope. Depth and prerequisites: It assumes the lecture
-      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
-      or second derivation. Discriminator: choose ''Older L09 lecture variant'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: This is prior-year evidence: use it only for a second explanation, and let the current
-      deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP training, regularization, and double descent
-    source_id: source-islp
-    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438; §10.8 Interpolation and Double
-      Descent, pdf pp. 439-441
-    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout,
-      and the interpolation-threshold picture of double descent.
-    angle_detail: 'Contribution: Covers backprop/SGD at a gentle level and is unusually well aligned on
-      weight decay, dropout, and the interpolation-threshold picture of double descent. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP training, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: ESL neural-network training depth
-    source_id: source-esl
-    locator: esl.pdf §11.4 Fitting Neural Networks, pdf pp. 414-415; §11.5 Some Issues in Training Neural
-      Networks, pdf pp. 416-422
-    angle: Historical/statistical treatment of fitting and regularization; broader but less directly aligned
-      with the deck computation-graph notation.
-    angle_detail: 'Contribution: Historical/statistical treatment of fitting and regularization; broader
-      but less directly aligned with the deck computation-graph notation. Depth and prerequisites: It
-      assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth for
-      a precise reference or second derivation. Discriminator: choose ''ESL neural-network training depth''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-5537c790ee855af15adac484
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Murphy reverse-mode backprop and training
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
-      476-484; §13.5 Regularization, pdf pp. 485-489
-    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
-      products, gradient pathologies, and all three regularizers.'
-    angle_detail: 'Contribution: The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy reverse-mode backprop and training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 backprop, regularization, and double descent
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'Backpropagation', pdf pp. 93-100; 'The double descent phenomenon', pdf pp.
-      112-116; 'Regularization', pdf pp. 126-127
-    angle: A compact written derivation close to the four layer rules, plus weight decay and a second
-      strong double-descent treatment.
-    angle_detail: 'Contribution: A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 backprop, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 neural-networks lecture II
-    source_id: source-cs229-2022-videos
-    locator: Lecture 9 — Neural Networks
-    angle: A deeper alternative for backpropagation, regularization, and training mechanics.
-    angle_detail: 'Contribution: A deeper alternative for backpropagation, regularization, and training
-      mechanics. Depth and prerequisites: It assumes the lecture treatment is already secure and deliberately
-      goes beyond exam-first depth for a precise reference or second derivation. Discriminator: choose
-      ''CS229 neural-networks lecture II'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-9cfd96836a0ad571e9f9235a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: Rohrer backpropagation and regularization
-    source_id: source-rohrer-e2eml
-    locator: Chapters 10 and 18
-    angle: A calm visual second explanation for reverse learning signals and regularization, without the
-      density of a textbook derivation.
-    angle_detail: 'Contribution: A calm visual second explanation for reverse learning signals and regularization,
-      without the density of a textbook derivation. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Rohrer backpropagation and regularization'' over ''Current L09 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for computation graphs, the four layer-wise backward rules, the shared numerical example, weight
-      decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-820965b7a56304da199d10c1
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron training deep neural networks
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 11 Training Deep Neural Networks, pdf pp. 456-518 (unstable gradients
-      pp. 457-475; optimizers pp. 485-495; regularization pp. 502-514)
-    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training
-      diagnostics; use after the hand derivation.
-    angle_detail: 'Contribution: Implementation-oriented regularization, dropout, early stopping, optimizer
-      use, and training diagnostics; use after the hand derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Géron training deep neural networks'' over ''Current
-      L09 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
-      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Cornell CS4780 HW9 — neural-network training
-    source_id: source-cs4780-homeworks
-    locator: '2018Fall/HW9/hw9.tex and hw9_sol.tex: Problem 3 ''RELU-network'', part (c) (cross-entropy
-      gradients for W and V)'
-    angle: Local solution-backed network-gradient and ReLU training problems for testing the backward
-      mechanics.
-    angle_detail: 'Contribution: Local solution-backed network-gradient and ReLU training problems for
-      testing the backward mechanics. Depth and prerequisites: It assumes the relevant rule or algorithm
-      has already been introduced and is for an attempted solution, trace, or calculation with feedback.
-      Discriminator: choose ''Cornell CS4780 HW9 — neural-network training'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-366bca385def5fe993e5ea6a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Kelleher et al. Ch 7 — learning rates and weight decay
-    source_id: source-kelleher-fmlpda
-    locator: kelleher.pdf Ch 7 Error-based Learning, pdf pp. 351-413 (§7.3.2 gradient descent p. 365;
-      §7.3.3 learning rates p. 371; §7.4.2 weight decay p. 379)
-    angle: An accessible explanation of error surfaces, gradient-based weight updates, and weight decay;
-      lighter than the lecture derivation.
-    angle_detail: 'Contribution: An accessible explanation of error surfaces, gradient-based weight updates,
-      and weight decay; lighter than the lecture derivation. Depth and prerequisites: It assumes the unit
-      vocabulary but not a completed proof and is meant to make the mechanism explainable before formal
-      derivation. Discriminator: choose ''Kelleher et al. Ch 7 — learning rates and weight decay'' over
-      ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - material_ref:
+      route_id: route-af0dec1a20a6184eaf0ca273
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 7–8 — regularization and optimization
-    source_id: source-goodfellow-dl
-    locator: Ch 7 'Regularization for Deep Learning', §7.1-§7.8; Ch 8 'Optimization for Training Deep
-      Models', §8.1-§8.5
-    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
-      consult by concept rather than reading linearly.
-    angle_detail: 'Contribution: The depth reference for weight decay, dropout, early stopping, gradient
-      propagation, and optimization; consult by concept rather than reading linearly. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Deep Learning book Ch 7–8
-      — regularization and optimization'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: read
-    label: D2L — automatic differentiation and network training
-    source_id: source-d2l
-    locator: D2L pages 'Forward Propagation, Backward Propagation, and Computational Graphs', 'Automatic
-      Differentiation', 'Weight Decay', and 'Dropout'
-    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
-      updates, regularization, and dropout.
-    angle_detail: 'Contribution: Runnable explanations of computation graphs, automatic differentiation,
-      backpropagation, parameter updates, regularization, and dropout. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L — automatic differentiation and network training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Belkin et al. — double descent primary paper
-    source_id: source-belkin-double-descent
-    locator: PNAS 116(32), journal pp. 15849-15854; Figures 1-3 and section 'The double-descent risk curve'
-    angle: Shows the empirical and conceptual risk curve that replaces the classical U-shape once capacity
-      passes interpolation.
-    angle_detail: Read the figures and the curve definition to ground the deck's modern correction in
-      its primary source. The experiments and broader theory exceed AML; the required takeaway is why
-      the interpolation threshold breaks the single-U mental model.
+  - material_ref:
+      route_id: route-3bec316547b7480cfdfd5d49
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-regularization/notes.md
   attachments: []
@@ -1127,103 +770,67 @@ stages:
   - concept-early-stopping
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP training, regularization, and double descent
-    source_id: source-islp
-    locator: islp.pdf §10.7 Fitting a Neural Network, pdf pp. 434-438; §10.8 Interpolation and Double
-      Descent, pdf pp. 439-441
-    angle: Covers backprop/SGD at a gentle level and is unusually well aligned on weight decay, dropout,
-      and the interpolation-threshold picture of double descent.
-    angle_detail: 'Contribution: Covers backprop/SGD at a gentle level and is unusually well aligned on
-      weight decay, dropout, and the interpolation-threshold picture of double descent. Depth and prerequisites:
-      It assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''ISLP training, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-9479853098e251427bc92b4a
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CS229 backprop, regularization, and double descent
-    source_id: source-cs229-notes
-    locator: cs229-notes.pdf 'Backpropagation', pdf pp. 93-100; 'The double descent phenomenon', pdf pp.
-      112-116; 'Regularization', pdf pp. 126-127
-    angle: A compact written derivation close to the four layer rules, plus weight decay and a second
-      strong double-descent treatment.
-    angle_detail: 'Contribution: A compact written derivation close to the four layer rules, plus weight
-      decay and a second strong double-descent treatment. Depth and prerequisites: It assumes comfort
-      with the unit''s notation and asks the reader to follow or reproduce the mathematical steps, not
-      merely recognize them. Discriminator: choose ''CS229 backprop, regularization, and double descent''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-034d7a304227e9ea24516e86
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: Géron training deep neural networks
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 11 Training Deep Neural Networks, pdf pp. 456-518 (unstable gradients
-      pp. 457-475; optimizers pp. 485-495; regularization pp. 502-514)
-    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training
-      diagnostics; use after the hand derivation.
-    angle_detail: 'Contribution: Implementation-oriented regularization, dropout, early stopping, optimizer
-      use, and training diagnostics; use after the hand derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Géron training deep neural networks'' over ''Current
-      L09 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
-      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 7–8 — regularization and optimization
-    source_id: source-goodfellow-dl
-    locator: Ch 7 'Regularization for Deep Learning', §7.1-§7.8; Ch 8 'Optimization for Training Deep
-      Models', §8.1-§8.5
-    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
-      consult by concept rather than reading linearly.
-    angle_detail: 'Contribution: The depth reference for weight decay, dropout, early stopping, gradient
-      propagation, and optimization; consult by concept rather than reading linearly. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Deep Learning book Ch 7–8
-      — regularization and optimization'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: reference
-    label: Belkin et al. — double descent primary paper
-    source_id: source-belkin-double-descent
-    locator: PNAS 116(32), journal pp. 15849-15854; Figures 1-3 and section 'The double-descent risk curve'
-    angle: Shows the empirical and conceptual risk curve that replaces the classical U-shape once capacity
-      passes interpolation.
-    angle_detail: Read the figures and the curve definition to ground the deck's modern correction in
-      its primary source. The experiments and broader theory exceed AML; the required takeaway is why
-      the interpolation threshold breaks the single-U mental model.
+  - material_ref:
+      route_id: route-3bec316547b7480cfdfd5d49
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-stopping/notes.md
   attachments: []
@@ -1243,135 +850,88 @@ stages:
   - concept-vanishing-gradients
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L09 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
-    angle: Prior-year second telling of backpropagation and training; current slides establish that batch
-      normalization is not in scope.
-    angle_detail: 'Contribution: Prior-year second telling of backpropagation and training; current slides
-      establish that batch normalization is not in scope. Depth and prerequisites: It assumes the lecture
-      treatment is already secure and deliberately goes beyond exam-first depth for a precise reference
-      or second derivation. Discriminator: choose ''Older L09 lecture variant'' over ''Current L09 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The 2026 scope
-      authority for computation graphs, the four layer-wise backward rules, the shared numerical example,
-      weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course
-      boundary: This is prior-year evidence: use it only for a second explanation, and let the current
-      deck win wherever examples, notation, or scope differ.'
+  - material_ref:
+      route_id: route-2c3ae492bdeebfeef14cb049
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/09-neural-networks_ee470e688da6f9ccb513b94db8c60280.pdf
     scope_triage: reference-only
-  - kind: read
-    label: Murphy reverse-mode backprop and training
-    source_id: source-murphy-pml1
-    locator: pml1.pdf §13.3 Backpropagation, pdf pp. 468-475; §13.4 Training neural networks, pdf pp.
-      476-484; §13.5 Regularization, pdf pp. 485-489
-    angle: 'The closest book match to the lecture: reverse-mode autodiff on computation graphs, vector-Jacobian
-      products, gradient pathologies, and all three regularizers.'
-    angle_detail: 'Contribution: The closest book match to the lecture: reverse-mode autodiff on computation
-      graphs, vector-Jacobian products, gradient pathologies, and all three regularizers. Depth and prerequisites:
-      It assumes comfort with the unit''s notation and asks the reader to follow or reproduce the mathematical
-      steps, not merely recognize them. Discriminator: choose ''Murphy reverse-mode backprop and training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-e25d9a6869ecc1aabd95b158
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: CSC411 finite-difference gradient check
-    source_id: source-csc411-notes
-    locator: csc411.pdf §9.1 Finite differences, pdf pp. 60-61 (backpropagation is identified as efficient
-      derivative computation, not developed)
-    angle: A compact numerical-gradient check and optimization note; it mentions backpropagation but does
-      not derive it.
-    angle_detail: 'Contribution: A compact numerical-gradient check and optimization note; it mentions
-      backpropagation but does not derive it. Depth and prerequisites: It assumes no derivation beyond
-      the current unit''s vocabulary and is for framing the problem before calculation. Discriminator:
-      choose ''CSC411 finite-difference gradient check'' over ''Current L09 lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The 2026 scope authority for computation
-      graphs, the four layer-wise backward rules, the shared numerical example, weight decay, dropout,
-      early stopping, double descent, gradient pathologies, and autograd. Course boundary: It complements
-      the current deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-cc1692a36cdffbe573dd3279
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown neural-networks videos 3–4
-    source_id: source-3b1b-neural-networks
-    locator: 'Playlist chapters 3-4: ''What is backpropagation really doing?'' and ''Backpropagation calculus'''
-    angle: Visual backpropagation and calculus intuition that explains gradient flow without replacing
-      the exact matrix rules.
-    angle_detail: 'Contribution: Visual backpropagation and calculus intuition that explains gradient
-      flow without replacing the exact matrix rules. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''3Blue1Brown neural-networks videos 3–4'' over ''Current L09 lecture deck''
-      when you need this contribution; the neighboring route instead contributes: The 2026 scope authority
-      for computation graphs, the four layer-wise backward rules, the shared numerical example, weight
-      decay, dropout, early stopping, double descent, gradient pathologies, and autograd. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
+  - material_ref:
+      route_id: route-2da5e23774ea12cc84cd887c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron training deep neural networks
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 11 Training Deep Neural Networks, pdf pp. 456-518 (unstable gradients
-      pp. 457-475; optimizers pp. 485-495; regularization pp. 502-514)
-    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training
-      diagnostics; use after the hand derivation.
-    angle_detail: 'Contribution: Implementation-oriented regularization, dropout, early stopping, optimizer
-      use, and training diagnostics; use after the hand derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Géron training deep neural networks'' over ''Current
-      L09 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
-      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Deep Learning book Ch 7–8 — regularization and optimization
-    source_id: source-goodfellow-dl
-    locator: Ch 7 'Regularization for Deep Learning', §7.1-§7.8; Ch 8 'Optimization for Training Deep
-      Models', §8.1-§8.5
-    angle: The depth reference for weight decay, dropout, early stopping, gradient propagation, and optimization;
-      consult by concept rather than reading linearly.
-    angle_detail: 'Contribution: The depth reference for weight decay, dropout, early stopping, gradient
-      propagation, and optimization; consult by concept rather than reading linearly. Depth and prerequisites:
-      It assumes the lecture treatment is already secure and deliberately goes beyond exam-first depth
-      for a precise reference or second derivation. Discriminator: choose ''Deep Learning book Ch 7–8
-      — regularization and optimization'' over ''Current L09 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The 2026 scope authority for computation graphs, the
-      four layer-wise backward rules, the shared numerical example, weight decay, dropout, early stopping,
-      double descent, gradient pathologies, and autograd. Course boundary: It is optional depth: open
-      it for the named gap, then return to the current deck rather than importing the source''s wider
-      syllabus.'
+  - material_ref:
+      route_id: route-718c7af06b865756c1ac24cc
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
-  - kind: reference
-    label: Prince UDL — gradients, initialization, and backprop
-    source_id: source-prince-udl
-    locator: Understanding Deep Learning, Ch 7 'Gradients and initialization', including the backpropagation
-      and initialization sections
-    angle: Links the computational graph to initialization and gradient-health problems in modern networks.
-    angle_detail: Consult the gradient-flow figures after deriving backprop once. This adds modern initialization
-      and health diagnostics that Nielsen largely omits; keep the course deck's stopping and regularization
-      boundaries authoritative.
+  - material_ref:
+      route_id: route-be930494e036304299d22b23
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-gradient-health/notes.md
   attachments: []
@@ -1391,117 +951,77 @@ stages:
   - concept-differentiation
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L09 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 09-neural-networks.pdf
-    angle: The 2026 scope authority for computation graphs, the four layer-wise backward rules, the shared
-      numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd.
-    angle_detail: 'Contribution: The 2026 scope authority for computation graphs, the four layer-wise
-      backward rules, the shared numerical example, weight decay, dropout, early stopping, double descent,
-      gradient pathologies, and autograd. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''Current L09 lecture deck'' over ''Murphy reverse-mode backprop and training'' when you
-      need this contribution; the neighboring route instead contributes: The closest book match to the
-      lecture: reverse-mode autodiff on computation graphs, vector-Jacobian products, gradient pathologies,
-      and all three regularizers. Course boundary: This is current course evidence and may calibrate examined
-      notation, but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-4af0fc22b73c45810f0f66cf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 09-neural-networks.pdf
     scope_triage: required-now
-  - kind: practise
-    label: Übung 10 — computation graphs and autodiff
-    source_id: source-aml-ss26-lectures
-    locator: exercise-slides/Übung 10.pdf, computation-graph and autodiff sections
-    angle: The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection.
-    angle_detail: 'Contribution: The current lecturer-worked companion for forward values, local derivatives,
-      reverse accumulation, backpropagation and the framework/autodiff connection. Depth and prerequisites:
-      It assumes the relevant rule or algorithm has already been introduced and is for an attempted solution,
-      trace, or calculation with feedback. Discriminator: choose ''Übung 10 — computation graphs and autodiff''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: This is current course evidence and may calibrate examined notation,
-      but the route''s stated locator—not the rest of the source—defines its scope.'
+  - material_ref:
+      route_id: route-5f1ea869f82b2d6e7d244ffb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: required-now
-  - kind: watch
-    label: Karpathy — micrograd from scratch
-    source_id: source-karpathy-micrograd
-    locator: 'Video ''The spelled-out intro to neural networks and backpropagation: building micrograd'',
-      00:00-02:25:00'
-    angle: Builds scalar computation graphs and backward propagation in code, making autograd internals
-      explicit after the analytical derivation.
-    angle_detail: 'Contribution: Builds scalar computation graphs and backward propagation in code, making
-      autograd internals explicit after the analytical derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Karpathy — micrograd from scratch'' over ''Übung
-      10 — computation graphs and autodiff'' when you need this contribution; the neighboring route instead
-      contributes: The current lecturer-worked companion for forward values, local derivatives, reverse
-      accumulation, backpropagation and the framework/autodiff connection. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-0fd69aee2d2fd8afef38ebf7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron training deep neural networks
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 11 Training Deep Neural Networks, pdf pp. 456-518 (unstable gradients
-      pp. 457-475; optimizers pp. 485-495; regularization pp. 502-514)
-    angle: Implementation-oriented regularization, dropout, early stopping, optimizer use, and training
-      diagnostics; use after the hand derivation.
-    angle_detail: 'Contribution: Implementation-oriented regularization, dropout, early stopping, optimizer
-      use, and training diagnostics; use after the hand derivation. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''Géron training deep neural networks'' over ''Current
-      L09 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      2026 scope authority for computation graphs, the four layer-wise backward rules, the shared numerical
-      example, weight decay, dropout, early stopping, double descent, gradient pathologies, and autograd.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-f94d721af516f6854fdf31e8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Official PyTorch autograd tutorial
-    source_id: source-pytorch-tutorials
-    locator: Sections 'Tensors, Functions and Computational graph' and 'Computing Gradients'
-    angle: The authoritative executable connection between computation graphs, requires_grad, backward,
-      gradient accumulation, zeroing, and no_grad.
-    angle_detail: 'Contribution: The authoritative executable connection between computation graphs, requires_grad,
-      backward, gradient accumulation, zeroing, and no_grad. Depth and prerequisites: It assumes the mathematical
-      object is already understood and shifts attention to executable behavior, shapes, APIs, or numerical
-      checks. Discriminator: choose ''Official PyTorch autograd tutorial'' over ''Übung 10 — computation
-      graphs and autodiff'' when you need this contribution; the neighboring route instead contributes:
-      The current lecturer-worked companion for forward values, local derivatives, reverse accumulation,
-      backpropagation and the framework/autodiff connection. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f38c4d009524b8129340e152
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: read
-    label: D2L — automatic differentiation and network training
-    source_id: source-d2l
-    locator: D2L pages 'Forward Propagation, Backward Propagation, and Computational Graphs', 'Automatic
-      Differentiation', 'Weight Decay', and 'Dropout'
-    angle: Runnable explanations of computation graphs, automatic differentiation, backpropagation, parameter
-      updates, regularization, and dropout.
-    angle_detail: 'Contribution: Runnable explanations of computation graphs, automatic differentiation,
-      backpropagation, parameter updates, regularization, and dropout. Depth and prerequisites: It assumes
-      the mathematical object is already understood and shifts attention to executable behavior, shapes,
-      APIs, or numerical checks. Discriminator: choose ''D2L — automatic differentiation and network training''
-      over ''Current L09 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The 2026 scope authority for computation graphs, the four layer-wise backward rules,
-      the shared numerical example, weight decay, dropout, early stopping, double descent, gradient pathologies,
-      and autograd. Course boundary: It is optional depth: open it for the named gap, then return to the
-      current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-b27753b202acaabb1fd5555f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: MIT 18.S096 — forward and reverse-mode AD
-    source_id: source-mit-18s096-matrix-calculus
-    locator: 2023 OCW Lecture 5 Part 3 'Forward and Reverse-Mode Automatic Differentiation' and full notes
-      §8, PDF chapter pp. 50 onward
-    angle: Explains backpropagation as an evaluation-order choice for products of Jacobians rather than
-      a neural-network-specific trick.
-    angle_detail: Use this to explain why reverse mode is efficient for many parameters and one scalar
-      loss. It complements PyTorch autograd and micrograd; do not import the course's broader matrix-function
-      material into the AML checklist.
+  - material_ref:
+      route_id: route-57c9aca63c33b4423749c361
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l09/stages/stage-aml-l09-autograd/notes.md
   attachments: []
