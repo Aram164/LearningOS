@@ -39,8 +39,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
     angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
       splits.
     angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
@@ -218,8 +218,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
     angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
       splits.
     angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
@@ -458,8 +458,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
     angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
       splits.
     angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
@@ -609,8 +609,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
     angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
       splits.
     angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
@@ -781,8 +781,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 4 — information-based learning
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
     angle: Runs one ID3 example completely, computing every entropy and every gain by hand across all
       splits.
     angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes

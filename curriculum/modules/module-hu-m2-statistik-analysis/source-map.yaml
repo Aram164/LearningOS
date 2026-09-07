@@ -905,7 +905,9 @@ sources:
   when: 'Bibliography disposition (L01 PDF p. 40): Kelleher, Goodfellow and Bishop are registered options;
     Teschl remains an unavailable candidate. Sachs/Hedderich, Angewandte Statistik (mit R), 13th edition
     (2009 as cited by the deck), is deferred: no registered or locally located copy was verified. Do not
-    fabricate a source ID, book locator or reading assignment for it.'
+    fabricate a source ID, book locator or reading assignment for it. A full-depth filesystem search of
+    ~/Desktop, ~/Downloads and ~/Documents on 2026-09-07 found no copy of Sachs/Hedderich either; it stays
+    deferred rather than routed.'
 - source_id: source-professor-leonard
   role: first-exposure
   why: Optional 20-minute intuition unlock before the script for a genuinely new topic; never substitutes
@@ -1800,7 +1802,9 @@ sources:
     Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv
     and its template. No matching files were found in the registered materials inventory or bounded materials/workbench
     filename search. Exact Moodle assets are required for those data-dependent implementations; do not
-    substitute unrelated datasets. Paper-only parts remain usable.'
+    substitute unrelated datasets. Paper-only parts remain usable. A full-depth filesystem search of ~/Desktop,
+    ~/Downloads and ~/Documents on 2026-09-07 found no copy of any of them; download the exact files from
+    the Moodle course at hu.berlin/sds25 before attempting the data-dependent parts.'
 - source_id: source-3b1b-essence-of-calculus
   role: intuition
   why: Short visual previews for limits, derivatives, Taylor, and integration when the cold diagnostic
@@ -2499,8 +2503,9 @@ sources:
     vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
 - source_id: source-kelleher-fmlpda
   role: spine
-  why: Course-named primary text; Chapters 4–7 map directly to trees, similarity, probability-based learning,
-    and neural nets.
+  why: Course-named primary text; Chapters 4–7 map directly to trees, similarity, probability-based learning
+    and error-based learning (regression, gradient descent, logistic regression, SVMs). §7.6 states the
+    book does not cover artificial neural networks; the network sources are separate.
   priority: 3
   unit_routes:
   - id: route-62f0ce97ea80883abf322143
@@ -2558,14 +2563,14 @@ sources:
     - knowledge-sad-l12-boosting
     depth: course-aligned
     scope: complementary
-    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 the ID3 algorithm; the entropy and
-      information-gain worked example)
-    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
-      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
-      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
-      on a small table, and doing it once with a fully worked reference is worth more than reading the
-      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
-      the deck mentions in passing.
+    locator: Ch 4 Information-based Learning, pdf pp. 156-214 (§4.2.3 information gain; §4.3 the ID3 algorithm;
+      §4.3.1 the worked entropy and information-gain example)
+    angle_detail: 'L12 states the information-gain formula and shows a resulting tree. Kelleher defines
+      entropy and information gain in §4.2.3, then §4.3 runs ID3 and §4.3.1 works one full example: the
+      entropy of the target, the remainder for each candidate feature, the gain, then the recursion —
+      with the arithmetic printed at every node. That is exactly the calculation an exam asks for on a
+      small table. §4.4.1 also covers the gain-ratio correction for many-valued features, which the deck
+      mentions in passing.'
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-64afd8476744172ae2a50ebd
     unit_id: unit-m2-sad-l13
@@ -2626,14 +2631,13 @@ sources:
     title: Kelleher — SaD machine-learning companion
     format: book
     angle: Provides course-named explanations for workflow, trees, similarity, probabilistic learning,
-      and neural networks at the SaD level.
+      and the regression/optimization prerequisites at the SaD level.
     covers:
     - knowledge-sad-exam-regression
     - knowledge-sad-exam-workflow
     - knowledge-sad-exam-trees
     - knowledge-sad-exam-similarity
     - knowledge-sad-exam-probabilistic-ml
-    - knowledge-sad-exam-neural
     depth: course-aligned
     scope: complementary
     locator: kelleher.pdf Ch 4 Information-based Learning p. 156 (trees, entropy, ID3 — L12), Ch 5 Similarity-based
@@ -2641,11 +2645,12 @@ sources:
       — L14), Ch 7 Error-based Learning p. 351 (regression and gradient descent — L03/L15), Ch 8 Evaluation
       p. 425 (L11); the workflow framing is Ch 1-2 p. 36-91
     angle_detail: 'Kelleher organises machine learning by what the algorithm learns *from* — information,
-      similarity, probability, error — which is exactly how SaD''s second half is split across L12, L13,
-      L14 and L15, one chapter per lecture. That correspondence is what makes it the companion for this
-      lane rather than a general reference: after a mock exposes a tree question, Ch 4 is the chapter,
-      and it is at the course''s level rather than above it. Ch 8 covers the evaluation vocabulary L11
-      introduces.'
+      similarity, probability, error — which is how SaD''s second half is split across L12, L13, L14 and
+      L15. That correspondence is what makes it the companion for this lane rather than a general reference:
+      after a mock exposes a tree question, Ch 4 is the chapter, and it is at the course''s level rather
+      than above it. Ch 8 covers the evaluation vocabulary L11 introduces. Ch 7 supplies regression and
+      gradient descent only — §7.6 (PDF p. 416) states the chapter does not cover artificial neural networks,
+      so L15''s network stages are served by the dedicated network routes instead.'
   - id: route-1cc15543ed952ee0f7f940d0
     unit_id: unit-m2-sad-l14
     title: Kelleher §6.7 exercise 3 — Gaussian Naive Bayes task
@@ -9333,12 +9338,14 @@ sources:
     - knowledge-sad-exam-similarity
     depth: practice
     scope: complementary
-    locator: Cornell CS4780 published homework sets with solutions — HW8 (decision trees and AdaBoost)
-      and HW1 (k-NN). No local copy; addressed by homework number on the course page.
+    locator: 2018Fall/HW8/hw8.pdf (regression trees, pruning, AdaBoost normalisation) and 2018Fall/HW1/hw1_2018.pdf
+      with hw1_2018_solution.pdf (k-NN); 2017Spring/hw1/hw1_written.html with writtenhw1_solutions.html
+      (distance and dimensionality). All four are registered local files.
     angle_detail: 'Named narrowly because the gap is narrow: L12''s trees and L13''s k-NN have decks and
-      no assessed exercise behind them. HW1''s k-NN questions and HW8''s tree/boosting questions each
-      supply one properly set problem with a published solution. AdaBoost goes past the current SaD scope
-      — take the tree half of HW8 and leave boosting unless the deck is revisited.'
+      no assessed exercise behind them. HW1''s k-NN questions and Fall 2018 HW8''s tree questions each
+      supply one properly set problem with a published solution. Spring 2018 HW8 is ridge regression,
+      perceptrons and kernels and is not interchangeable with the Fall sheet. The Fall PDF and TeX differ
+      on Problem 1(b), so the pruning solution is not certified.'
   - id: route-5635dfbf861c3f2486851c09
     unit_id: unit-m2-sad-l14
     title: Cornell CS4780 HW4 - solution-backed Naive Bayes problems
