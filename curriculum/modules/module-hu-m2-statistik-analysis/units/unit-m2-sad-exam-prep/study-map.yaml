@@ -39,13 +39,21 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/01_introduction.pdf through 15_neural_networks.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: 'The scope checklist: the fifteen 2026 decks decide what is examinable before any repair is
+      chosen.'
   - kind: practise
     label: Representative current exercise diagnostic
     source_id: source-sad-uebungen
-    locator: 'Blatt1, blatt-02, Übung-3, UE5, blatt-05/UE7: one representative item per cluster. No Blatt3
-      or Blatt4 exists in the material root; Statistics_And_Data_Science.pdf is the unnumbered sheet covering
-      that range and stands in for it.'
+    locator: 'exercise-slides/Blatt1.pdf, blatt-02.pdf, Übung-3.pdf, Statistics_And_Data_Science.pdf,
+      blatt-05.pdf, UE5.pdf and UE7.pdf: one representative item per cluster'
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: One representative current task per cluster, taken cold, to produce the error ledger.
+    angle_detail: 'Sheet identity, checked against the title pages: Übung-3.pdf is Blatt 3 and Statistics_And_Data_Science.pdf
+      is headed “Übungsblatt 4” (Berlin, 10.06.2026). The earlier claim that no Blatt 3 or Blatt 4 exists
+      was wrong. That sheet’s heading is dated 2026 while its Moodle link reads sds25; the provenance
+      ambiguity is recorded and no exam date is inferred from it.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md
   attachments: []
   source_feedback: []
@@ -77,20 +85,31 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/01_introduction.pdf and 02_basics.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The two decks that own the descriptive definitions this stage is checked against.
   - kind: practise
     label: Current descriptive practice
     source_id: source-sad-uebungen
     locator: exercise-slides/Blatt1.pdf and UE2.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed descriptive sheet and its worked tutorial, in the course’s own notation.
   - kind: reference
-    label: Existing L01-L02 references and exercise banks
+    label: 'Existing L01–L02 durable notes: note-sad-l01-introduction, note-sad-l01-exercise-bank, note-sad-l02-descriptive-basics,
+      note-sad-l02-exercise-bank'
     vault_path: knowledge/notes/mathematics/
     scope_triage: helpful-now
+    locator: knowledge/notes/mathematics/ (4 unit artifacts)
+    angle: Prior L01–L02 reference and exercise-bank work, reachable from this unit’s artifact list; reused
+      instead of re-derived.
   - kind: read
     label: Fahrmeir descriptive-statistics layer
     source_id: source-fahrmeir-statistik
-    locator: Chapter 2, only the sections matching recorded errors
+    locator: statistik.pdf Kap. 2 Univariate Deskription, from PDF p. 46
     scope_triage: helpful-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German derivation and vocabulary for a descriptive step the deck pass got wrong; only the error-matched
+      sections.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s01-descriptive/notes.md
   attachments: []
   source_feedback: []
@@ -119,20 +138,30 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/03_correlation_regression.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns the correlation, least-squares and gradient-descent definitions.
   - kind: practise
     label: Current L03 practice
     source_id: source-sad-uebungen
     locator: exercise-slides/UE2.pdf correlation/regression section and blatt-02.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed regression tasks and their worked tutorial.
   - kind: reference
-    label: SaD × AML × ISLP regression bridge
+    label: SaD × AML × ISLP regression bridge (note-regression-sad-aml-islp-bridge)
     vault_path: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md
     scope_triage: helpful-now
+    locator: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md
+    angle: The existing cross-course reconciliation of regression notation, reused rather than rebuilt.
   - kind: read
     label: Fahrmeir correlation/regression layer
     source_id: source-fahrmeir-statistik
-    locator: Chapter 3, error-matched sections
+    locator: statistik.pdf Kap. 3 Multivariate Deskription, from PDF p. 126; §3.5 Korrelation und Kausalität
+      PDF p. 164; §3.6 Regression PDF p. 168
     scope_triage: helpful-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German treatment of correlation, causation and the Ausgleichsgerade; only the sections a recorded
+      error points at.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s02-regression/notes.md
   attachments: []
   source_feedback: []
@@ -163,20 +192,32 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/04_probability.pdf and 05_combinatorics.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The decks that own the probability axioms, Bayes and the counting grid.
   - kind: practise
     label: Current probability and counting practice
     source_id: source-sad-uebungen
     locator: exercise-slides/blatt-02.pdf and UE3.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed probability and counting tasks with their worked tutorial.
   - kind: read
     label: Blitzstein conditioning and strategic counting
     source_id: source-blitzstein-hwang
-    locator: Chapters 1-2, only after a failed intuition gate
+    locator: blitzstein.pdf Ch 1 Probability and counting, from PDF p. 18; Ch 2 Conditional probability,
+      from PDF p. 62 (these two chapters only)
     scope_triage: helpful-now
+    route_id: route-d24a91f3c931a404ae77ff90
+    angle: Story-first repair for an order/repetition or Bayes-intuition failure, opened only after the
+      gate fails.
   - kind: reference
-    label: Existing L04-L05 references and exercise banks
+    label: 'Existing L04–L05 durable notes: note-sad-l04-probability-bayes, note-sad-l04-exercise-bank,
+      note-sad-l05-combinatorics, note-sad-l05-exercise-bank'
     vault_path: knowledge/notes/mathematics/
     scope_triage: helpful-now
+    locator: knowledge/notes/mathematics/ (4 unit artifacts)
+    angle: Prior L04–L05 reference and exercise-bank work, reachable from this unit’s artifact list; reused
+      instead of re-derived.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s03-probability-counting/notes.md
   attachments: []
   source_feedback: []
@@ -203,20 +244,31 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/06_random_variables.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns PMF/PDF/CDF, expectation and variance.
   - kind: practise
     label: Current L06 practice
     source_id: source-sad-uebungen
     locator: exercise-slides/Übung-3.pdf and UE4.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed random-variable tasks and their worked tutorial.
   - kind: read
     label: Fahrmeir random-variable layer
     source_id: source-fahrmeir-statistik
-    locator: Chapters 5-7 selections
+    locator: statistik.pdf Kap. 5 Diskrete Zufallsvariablen PDF p. 242, Kap. 6 Stetige Zufallsvariablen
+      PDF p. 288, Kap. 7 Mehr über Zufallsvariablen PDF p. 329
     scope_triage: required-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German derivation of the random-variable machinery in the exam’s register; only the error-matched
+      sections.
   - kind: reference
-    label: Legacy L06-L10 synthesis and cold checks
+    label: Legacy L06–L10 synthesis and cold checks (note-sad-probability-inference-deep-plan)
     vault_path: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md
     scope_triage: helpful-now
+    locator: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md
+    angle: The existing probability→inference chain, used for its cold checks rather than as a second
+      course.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s04-random-variables/notes.md
   attachments: []
   source_feedback: []
@@ -245,21 +297,30 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/07_discrete_distributions.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns the named discrete families and the model-choice grid.
   - kind: practise
     label: Current L07 practice
     source_id: source-sad-uebungen
     locator: exercise-slides/Übung-3.pdf and UE4.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed distribution tasks and their worked tutorial.
   - kind: read
     label: Fahrmeir named discrete distributions
     source_id: source-fahrmeir-statistik
-    locator: Chapter 5
+    locator: statistik.pdf Kap. 5 Diskrete Zufallsvariablen, from PDF p. 242 (§5.3 Spezielle diskrete
+      Verteilungsmodelle)
     scope_triage: required-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German definitions of the named discrete models, with their conditions stated explicitly.
   - kind: practise
     label: Fahrmeir Arbeitsbuch distribution drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapter 5 selections
+    locator: arbeitsbuch.pdf Kap. 5 Diskrete Zufallsvariablen, from PDF p. 96 (selected Aufgaben)
     scope_triage: helpful-now
+    route_id: route-eed7d55ff58f1e488e9c30c9
+    angle: Solution-backed German drills on the exact family a current task exposed.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s05-discrete-distributions/notes.md
   attachments: []
   source_feedback: []
@@ -290,22 +351,33 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/08_normal_distribution.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns standardisation, the CLT and the likelihood derivation.
   - kind: practise
     label: Current L08 practice
     source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf and UE5.pdf
+    locator: exercise-slides/Statistics_And_Data_Science.pdf (Übungsblatt 4) and UE5.pdf, the matching
+      worked tutorial
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed Normal/CLT tasks and their worked tutorial.
   - kind: read
     label: Fahrmeir Normal and limit-theorem layer
     source_id: source-fahrmeir-statistik
-    locator: Chapters 6-7
+    locator: statistik.pdf Kap. 6 Stetige Zufallsvariablen PDF p. 288 (§6.3 Spezielle stetige Verteilungsmodelle)
+      and Kap. 7 PDF p. 329 (§7.1 Gesetz der großen Zahlen und Grenzwertsätze, §7.2 Approximation von
+      Verteilungen)
     scope_triage: required-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German statement of the Normal family, the limit theorems and the approximation rules.
   - kind: read
     label: One CLT or MLE visual repair
     source_id: source-statquest
     locator: Central Limit Theorem; Probability is not Likelihood; Maximum Likelihood — choose only the
       failed concept
     scope_triage: helpful-now
+    route_id: route-adbac42d6f53614447d25d56
+    angle: One ten-minute visual repair, chosen by the diagnostic — not a course to work through.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s06-normal-clt-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -334,21 +406,30 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/09_estimating.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns estimators, standard error and interval construction.
   - kind: practise
     label: Current L09 practice
     source_id: source-sad-uebungen
-    locator: exercise-slides/Statistics_And_Data_Science.pdf and UE5.pdf
+    locator: exercise-slides/Statistics_And_Data_Science.pdf (Übungsblatt 4), PDF p. 2, Aufgabe 2, and
+      UE5.pdf
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The bootstrap/interval task and its worked tutorial — a bootstrap exercise, not a direct z-interval.
   - kind: read
     label: Fahrmeir parameter estimation
     source_id: source-fahrmeir-statistik
-    locator: Chapter 9
+    locator: statistik.pdf Kap. 9 Parameterschätzung, from PDF p. 382 (§9.1 Punktschätzung)
     scope_triage: required-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German vocabulary for Schätzer and Konfidenzintervall after an estimation error.
   - kind: practise
     label: Fahrmeir Arbeitsbuch estimation drills
     source_id: source-fahrmeir-arbeitsbuch
-    locator: Chapter 9
+    locator: arbeitsbuch.pdf Kap. 9 Parameterschätzung, from PDF p. 180 (selected Aufgaben)
     scope_triage: helpful-now
+    route_id: route-eed7d55ff58f1e488e9c30c9
+    angle: Solution-backed German estimation drills, opened only after a current task exposed the gap.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s07-estimation/notes.md
   attachments: []
   source_feedback: []
@@ -379,21 +460,32 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/10_testing.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns the test decisions — and carries the z-statistic erratum corrected in L10.
   - kind: practise
     label: Current L10 practice
     source_id: source-sad-uebungen
     locator: exercise-slides/UE6.pdf, blatt-05.pdf Aufgabe 1, and UE7.pdf slides 12-16
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed testing tasks and their worked tutorials.
   - kind: read
     label: Fahrmeir hypothesis tests
     source_id: source-fahrmeir-statistik
-    locator: Chapters 10-11
+    locator: statistik.pdf Kap. 10 Testen von Hypothesen PDF p. 416 (§10.2 Prinzipien des Testens PDF
+      p. 433) and Kap. 11 Spezielle Testprobleme PDF p. 450
     scope_triage: required-now
+    route_id: route-5ef907d26eefddbfc3abd22c
+    angle: German testing principles — Fehlentscheidungen, Gütefunktion, Überschreitungswahrscheinlichkeit.
   - kind: practise
     label: FAU solved testing transfer
     source_id: source-fau-klausur-ws1415
-    locator: t-test, p-value, correlation-test, and contingency-table items
+    locator: 'FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf (50 pp): the t-test, p-value, correlation-test
+      and contingency-table items only'
     scope_triage: helpful-now
+    route_id: route-6869536b1af99f612e9ffc59
+    angle: Solved German exam items on the exact test that failed; the paper as a whole stays reserved
+      for the timed half-mock in SaD.X.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s08-testing/notes.md
   attachments: []
   source_feedback: []
@@ -421,16 +513,24 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/11_datascience_intro.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns the workflow, leakage and evaluation vocabulary, including the ROC/PR distinction.
   - kind: practise
     label: Current L11 evaluation practice
     source_id: source-sad-uebungen
     locator: exercise-slides/blatt-05.pdf Aufgabe 3 and UE7.pdf slides 22-30
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed evaluation task and its worked tutorial.
   - kind: read
     label: Kelleher workflow framing
     source_id: source-kelleher-fmlpda
-    locator: Introductory and workflow chapters
+    locator: kelleher.pdf Ch 1 Machine Learning for Predictive Data Analytics PDF pp. 36-56; Ch 2 Data
+      to Insights to Decisions PDF pp. 57-91; Ch 8 Evaluation PDF pp. 425-490
     scope_triage: helpful-now
+    route_id: route-fabc07c65cb1dee886db114f
+    angle: The step before L11 starts — turning a stated goal into a target feature — plus evaluation
+      designs at length.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s09-workflow-evaluation/notes.md
   attachments: []
   source_feedback: []
@@ -458,21 +558,38 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/12_tree_based.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns entropy, information gain, pruning and the ensembles.
   - kind: read
     label: Kelleher information-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 4, especially section 4.2.3
+    locator: 'kelleher.pdf Ch 4 Information-based Learning, PDF pp. 156-214: §4.2.3 information gain,
+      §4.3 the ID3 algorithm, §4.3.1 the worked example'
     scope_triage: required-now
+    route_id: route-fabc07c65cb1dee886db114f
+    angle: One ID3 example worked with the arithmetic printed at every node — the calculation an exam
+      sets.
   - kind: practise
     label: Cornell solution-backed trees and AdaBoost
     source_id: source-cs4780-homeworks
-    locator: 2018Fall/HW8 or 2018Spring/HW8; choose one
+    locator: '2018Fall/HW8/hw8.pdf: Problem 1(a) regression-tree construction, PDF p. 1; 1(b) pruning,
+      PDF pp. 1-3; Problem 2 AdaBoost normalisation, PDF p. 3'
     scope_triage: required-now
+    route_id: route-451794696dc8ed8e32974e9e
+    angle: The solution-backed tree task the current SaD sheets never set.
+    angle_detail: 'Fall 2018 HW8 only. Spring 2018 HW8 covers ridge regression, perceptrons and kernels
+      — checked against both TeX sources — so the two sheets are not interchangeable and “choose one”
+      was wrong. Problem 2 is a normalisation proof, not a multi-round numeric AdaBoost trace. The Fall
+      PDF and TeX differ on Problem 1(b), so that pruning solution is not certified: do not treat the
+      neighbouring solution file as its answer key.'
   - kind: practise
     label: MIT ID3/tree tracing reserve
     source_id: source-mit-6034-quizzes
-    locator: Tree/ID3 quiz selections
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 1 Parts A–B, with the official solution.
+      OCW online source; no local copy is registered.
     scope_triage: helpful-now
+    route_id: route-0591d0ea916475d5ea97b91d
+    angle: A compact hand-traced tree under exam format, with official intermediate steps to check against.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s10-trees-ensembles/notes.md
   attachments: []
   source_feedback: []
@@ -502,20 +619,33 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/13_similarity_based.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns k-NN, the distance measures and the metric caveats.
   - kind: practise
     label: Current UE7 clustering/similarity bridge
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32-87
+    locator: exercise-slides/UE7.pdf, PDF pp. 32-75 (clustering and the worked k-means trace); p. 87 (retrieval
+      questions)
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The clustering authority — the one SaD topic with no lecture deck of its own.
   - kind: reference
-    label: Existing instance-based reference
+    label: Existing instance-based reference (note-sad-l11-instance-based)
     vault_path: knowledge/notes/mathematics/note-sad-l11-instance-based.md
     scope_triage: helpful-now
+    locator: knowledge/notes/mathematics/note-sad-l11-instance-based.md
+    angle: The existing instance-based reference, reused rather than rewritten.
   - kind: practise
     label: Cornell solution-backed k-NN task
     source_id: source-cs4780-homeworks
-    locator: 2017Spring/hw1 or 2018Fall/HW1; choose one
+    locator: 2018Fall/HW1/hw1_2018.pdf with hw1_2018_solution.pdf (k-NN); 2017Spring/hw1/hw1_written.html
+      with writtenhw1_solutions.html (distance measures and the curse of dimensionality)
     scope_triage: required-now
+    route_id: route-451794696dc8ed8e32974e9e
+    angle: The solution-backed k-NN task the current SaD sheets never set.
+    angle_detail: 'Take the Fall 2018 PDF first: it is the k-NN problem with a published solution PDF.
+      The 2017 Spring set is HTML and weights distance measures and dimensionality more heavily, so it
+      is the second pass rather than an equivalent alternative.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s11-similarity-clustering/notes.md
   attachments: []
   source_feedback: []
@@ -544,16 +674,24 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/14_probability_based.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns smoothing, continuous features and the Bayesian-network sketch.
   - kind: practise
     label: Current L14 probability-based practice
     source_id: source-sad-uebungen
     locator: exercise-slides/UE6.pdf probability-based learning section
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed probability-based learning tasks and their worked tutorial.
   - kind: read
     label: Kelleher probability-based learning
     source_id: source-kelleher-fmlpda
-    locator: Chapter 6, especially section 6.4.2
+    locator: 'kelleher.pdf Ch 6 Probability-based Learning, PDF pp. 282-350: §6.3 the Naive Bayes model
+      (from PDF p. 300), §6.4.1 smoothing, §6.4.2 continuous features, §6.4.4 Bayesian networks (from
+      PDF p. 324; the Markov blanket on p. 328)'
     scope_triage: helpful-now
+    route_id: route-fabc07c65cb1dee886db114f
+    angle: Naive Bayes first, then the graphical generalisation — the order the deck compresses.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s12-probabilistic-learning/notes.md
   attachments: []
   source_feedback: []
@@ -582,21 +720,34 @@ stages:
     source_id: source-sad-ss26-lectures
     locator: lecture-slides/15_neural_networks.pdf
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: The deck that owns the forward pass, backpropagation and the closing outlook.
   - kind: practise
     label: Current L15 forward task
     source_id: source-sad-uebungen
     locator: exercise-slides/blatt-05.pdf Aufgabe 2 and UE7.pdf slides 17-21
     scope_triage: required-now
+    route_id: route-427abe0fd724b6323bd2bf36
+    angle: The assessed by-hand forward task and its worked tutorial.
   - kind: practise
     label: One solution-backed neural-network trace
     source_id: source-mit-6034-quizzes
-    locator: Neural-network quiz selection
+    locator: MIT6_034F10_quiz3_2010.pdf, Fall 2010 Quiz 3, Problem 2 Parts A–C, with the official solution.
+      OCW online source; no local copy is registered.
     scope_triage: required-now
+    route_id: route-0591d0ea916475d5ea97b91d
+    angle: A two-layer network traced by hand under exam format, with official intermediate steps.
   - kind: read
-    label: Kelleher error-based learning
+    label: Kelleher error-based learning — the regression and optimization prerequisite
     source_id: source-kelleher-fmlpda
-    locator: Chapter 7, only the L15-aligned sections
+    locator: 'kelleher.pdf Ch 7 Error-based Learning, PDF pp. 351-416: regression, gradient descent, logistic
+      regression and SVMs'
     scope_triage: helpful-now
+    route_id: route-fabc07c65cb1dee886db114f
+    angle: The optimization groundwork L15 assumes — not a neural-network chapter.
+    angle_detail: §7.6 (PDF p. 416) states in the book’s own words that the chapter does not cover artificial
+      neural networks. Use it for the error surface, the descent step and the learning rate; the multilayer
+      and backpropagation material comes from the dedicated network routes on L15.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s13-neural-networks/notes.md
   attachments: []
   source_feedback: []
@@ -631,23 +782,35 @@ stages:
   - kind: practise
     label: FAU solved German Statistics exam
     source_id: source-fau-klausur-ws1415
-    locator: Spend once as a timed mixed source; do not read the solution first
+    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf (50 pp), worked whole
     scope_triage: required-now
+    route_id: route-6869536b1af99f612e9ffc59
+    angle: 'The one external paper long enough to be a real Statistics-only half-mock: taken once, timed,
+      before the solutions are opened.'
   - kind: practise
     label: Fresh external German Statistics tasks
     source_id: source-sad-klausuren-extern
-    locator: Choose topic-matched questions not used during stages
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf (7 pp), Koeln_Statistik-Klausur_Musterloesung.pdf
+      (8 pp), Regensburg-Loeh_WTheorie-Statistik_Klausur_mit-Loesungen.pdf (14 pp), Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+      (109 pp)
     scope_triage: required-now
+    route_id: route-e6b26b277916b868a8da65a5
+    angle: 'German exam wording from four other examiners: take topic-matched tasks not already spent,
+      filtered against the current decks.'
   - kind: practise
     label: MIT 18.05 solved-exam reserve
     source_id: source-mit-1805
-    locator: Use only to replace a missing fresh probability/inference task
+    locator: MIT 18.05 Spring 2022 'Final Exam' and 'Final Exam Solutions' (OCW; no local copy registered)
     scope_triage: helpful-now
+    route_id: route-1e172cc16490b20444290684
+    angle: One English reserve question, only when every German equivalent on that topic is spent.
   - kind: read
     label: Current SaD decks for correction authority
     source_id: source-sad-ss26-lectures
     locator: Correct definitions and scope against the exact matching 2026 deck
     scope_triage: required-now
+    route_id: route-84b3767dc900c066ef0a88e5
+    angle: 'The correction authority: the deck that owns a definition settles it, not the external paper.'
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md
   attachments: []
   source_feedback: []

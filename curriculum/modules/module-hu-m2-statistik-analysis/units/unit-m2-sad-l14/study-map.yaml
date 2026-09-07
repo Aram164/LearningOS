@@ -53,7 +53,7 @@ stages:
     route_id: route-bccca809087fa5eefd5f492c
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
-    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
     angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
     angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
@@ -287,7 +287,7 @@ stages:
     route_id: route-bccca809087fa5eefd5f492c
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
-    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
     angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
     angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
@@ -410,7 +410,7 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
-    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
     angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
     angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4
@@ -495,7 +495,7 @@ stages:
     source_id: source-sad-ss26-lectures
   - kind: read
     label: Kelleher Chapter 6 — probability-based learning
-    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.4.2 the Naive Bayes model; the smoothing
+    locator: Ch 6 Probability-based Learning, pdf pp. 282-350 (§6.3 the Naive Bayes model; the smoothing
       and continuous-feature sections)
     angle: Develops Naive Bayes first, then relates it to more general Bayesian networks.
     angle_detail: Naive Bayes appears in §6.3 (PDF p. 300 onward); Bayesian networks follow in §6.4.4

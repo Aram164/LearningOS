@@ -50,8 +50,8 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
       §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
@@ -203,8 +203,8 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
       §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
@@ -343,8 +343,8 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
       §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
@@ -447,8 +447,8 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
       §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
@@ -589,8 +589,8 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: read
     label: Kelleher Chapter 5 — similarity-based learning
-    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
-      the feature-space and normalisation sections)
+    locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.3 the nearest-neighbour algorithm; the
+      feature-space and normalisation sections)
     angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
     angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
       §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.

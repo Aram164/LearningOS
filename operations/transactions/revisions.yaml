@@ -26,7 +26,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 11
-  module-hu-m2-statistik-analysis: 13
+  module-hu-m2-statistik-analysis: 14
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 2
@@ -231,21 +231,21 @@ revisions:
   unit-m2-analysis-ch07: 4
   unit-m2-analysis-exam-prep: 9
   unit-m2-combined-exam-rehearsal: 4
-  unit-m2-sad-clustering: 9
-  unit-m2-sad-exam-prep: 7
-  unit-m2-sad-l01: 6
-  unit-m2-sad-l02: 8
-  unit-m2-sad-l03: 12
-  unit-m2-sad-l04: 12
-  unit-m2-sad-l05: 8
-  unit-m2-sad-l06: 12
-  unit-m2-sad-l07: 9
-  unit-m2-sad-l08: 8
-  unit-m2-sad-l09: 8
-  unit-m2-sad-l10: 8
-  unit-m2-sad-l11: 8
-  unit-m2-sad-l12: 8
-  unit-m2-sad-l13: 8
-  unit-m2-sad-l14: 12
-  unit-m2-sad-l15: 12
+  unit-m2-sad-clustering: 10
+  unit-m2-sad-exam-prep: 8
+  unit-m2-sad-l01: 7
+  unit-m2-sad-l02: 9
+  unit-m2-sad-l03: 13
+  unit-m2-sad-l04: 13
+  unit-m2-sad-l05: 9
+  unit-m2-sad-l06: 13
+  unit-m2-sad-l07: 10
+  unit-m2-sad-l08: 9
+  unit-m2-sad-l09: 9
+  unit-m2-sad-l10: 9
+  unit-m2-sad-l11: 9
+  unit-m2-sad-l12: 9
+  unit-m2-sad-l13: 9
+  unit-m2-sad-l14: 13
+  unit-m2-sad-l15: 13
   workspace-thesis-mle-medical: 1
