@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-08-27'
+captured: '2026-09-07'
 totals:
-  files: 1134
-  bytes: 2078905231
+  files: 1135
+  bytes: 2096471129
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -888,6 +888,9 @@ files:
     ed.) [Marsland 2014-10-08].pdf
   : size: 6967995
     sha256: 0f058795d8e8efb03173b589e270584e3a2a910a13a0514c0a0a8289274bfd05
+  machine-learning/classical/mml/mml-book.pdf:
+    size: 17565898
+    sha256: 3f87b70c64a35d30ec4e565b4d5cfd18fe913002d3b3bed44691c7d0838911bc
   machine-learning/classical/murphy-pml1/pml1.pdf:
     size: 92323940
     sha256: 89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf

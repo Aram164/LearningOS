@@ -96,6 +96,7 @@ PLACEMENT = {
     "islp":                              "machine-learning/classical",
     "kelleher-fmlpda":                   "machine-learning/classical",
     "kroese-dsml":                       "machine-learning/classical",
+    "mml":                               "machine-learning/classical",
     "murphy-pml1":                       "machine-learning/classical",
     "zacharski-data-mining":             "machine-learning/classical",
     # ----------------------------------------------- machine-learning/rl
