@@ -169,9 +169,12 @@ stages:
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+    angle_detail: 'E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
-      come from here if the exam wording has ever cost you time.
+      come from here if the exam wording has ever cost you time. Not verified on 2026-09-07: the channel
+      is only reachable through a YouTube consent gate that this session did not accept, so the episode
+      titles below are inherited from the earlier plan and have not been checked against the channel''s
+      own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-e802263b373da3ed751ef42c
@@ -410,8 +413,9 @@ stages:
     route_id: route-1eef53180bda2e4604a22a8b
   - kind: watch
     label: StatQuest — expected values and probability distributions
-    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
-      Ideas behind Probability Distributions'' (≈10-15 min each)'
+    locator: 'StatQuest video index: ''Expected Values Part 1, Main Ideas!!! (Expected Values for Discrete
+      Variables)''; ''Expected Values Part 2, Continuous Variables''; ''The Main Ideas behind Probability
+      Distributions'''
     angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density
       — which is where L06's PMF/PDF distinction is usually lost.
     angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as
@@ -890,8 +894,9 @@ stages:
     route_id: route-e5bf24802d93851f78b83c03
   - kind: watch
     label: StatQuest — expected values and probability distributions
-    locator: '''Expected Values, Main Ideas''; ''Expected Values for Continuous Variables''; ''The Main
-      Ideas behind Probability Distributions'' (≈10-15 min each)'
+    locator: 'StatQuest video index: ''Expected Values Part 1, Main Ideas!!! (Expected Values for Discrete
+      Variables)''; ''Expected Values Part 2, Continuous Variables''; ''The Main Ideas behind Probability
+      Distributions'''
     angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density
       — which is where L06's PMF/PDF distinction is usually lost.
     angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as
@@ -903,13 +908,15 @@ stages:
     route_id: route-37cd5e058977f4aa2f38ee19
   - kind: watch
     label: jbstatistics — expected value and variance calculations
-    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
-      video (≈10 min each)'
+    locator: jbstatistics §1.2 'The Expected Value and Variance of Discrete Random Variables' — one video
+      covering both moments
     angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer
       uses.
-    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is
+    angle_detail: 'The video builds the working column by column — x, P(x), x·P(x), x²·P(x) — which is
       exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
-      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
+      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly. Checked
+      against the jbstatistics index on 2026-09-07: this is one video covering expectation and variance
+      together, not a pair, so budget one sitting rather than two.'
     scope_triage: helpful-now
     source_id: source-jbstatistics
     route_id: route-765e4fe569b646edb22ebb28
@@ -917,9 +924,12 @@ stages:
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+    angle_detail: 'E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
-      come from here if the exam wording has ever cost you time.
+      come from here if the exam wording has ever cost you time. Not verified on 2026-09-07: the channel
+      is only reachable through a YouTube consent gate that this session did not accept, so the episode
+      titles below are inherited from the earlier plan and have not been checked against the channel''s
+      own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-e802263b373da3ed751ef42c
@@ -1225,13 +1235,15 @@ stages:
     route_id: route-e5bf24802d93851f78b83c03
   - kind: watch
     label: jbstatistics — expected value and variance calculations
-    locator: '''Expected Value and Variance of a Discrete Random Variable'' and the companion variance
-      video (≈10 min each)'
+    locator: jbstatistics §1.2 'The Expected Value and Variance of Discrete Random Variables' — one video
+      covering both moments
     angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer
       uses.
-    angle_detail: The videos build the working column by column — x, P(x), x·P(x), x²·P(x) — which is
+    angle_detail: 'The video builds the working column by column — x, P(x), x·P(x), x²·P(x) — which is
       exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
-      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly.
+      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly. Checked
+      against the jbstatistics index on 2026-09-07: this is one video covering expectation and variance
+      together, not a pair, so budget one sitting rather than two.'
     scope_triage: helpful-now
     source_id: source-jbstatistics
     route_id: route-765e4fe569b646edb22ebb28
@@ -1239,9 +1251,12 @@ stages:
     label: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
     angle: The German names and notation for L06's objects, with the symbols the Klausur prints.
-    angle_detail: E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
+    angle_detail: 'E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
       and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
-      come from here if the exam wording has ever cost you time.
+      come from here if the exam wording has ever cost you time. Not verified on 2026-09-07: the channel
+      is only reachable through a YouTube consent gate that this session did not accept, so the episode
+      titles below are inherited from the earlier plan and have not been checked against the channel''s
+      own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-e802263b373da3ed751ef42c

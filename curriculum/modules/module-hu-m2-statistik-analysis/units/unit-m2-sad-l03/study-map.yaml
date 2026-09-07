@@ -78,15 +78,17 @@ stages:
     route_id: route-8c971b3609d60d48474a7e65
   - kind: read
     label: Setosa — ordinary least squares, interactive
-    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
-      — the residual-square and leverage widgets'
+    locator: The single interactive page 'Ordinary Least Squares Regression explained visually' (setosa.io)
+      — the draggable-sample widget and the squared-error-area widget
     angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
       in seconds rather than in prose.
-    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
-      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
-      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
-      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
-      way no derivation does.
+    angle_detail: 'The page draws the squared residuals as actual squares and asks you to choose the betas
+      that minimise their total area, so ''least squares'' becomes a visible minimisation rather than
+      a name. Its points are draggable, so moving one and watching the fitted line swing is the fastest
+      demonstration of how a single observation moves the fit — the effect OpenIntro §8.3 describes in
+      text and that L03''s model-limits node states abstractly. Checked 2026-09-07: the page never uses
+      the words leverage, outlier or influence, so read it as a demonstration rather than as a treatment
+      of those terms. Ten minutes, no installation.'
     scope_triage: helpful-now
     source_id: source-setosa-ols
     route_id: route-bf71c1ee8aee769abb6dd6d0
@@ -262,15 +264,16 @@ stages:
     route_id: route-bce0d0f7e70cdad184b8cfe4
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
-      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    locator: 'StatQuest video index: ''Pearson''s Correlation, Clearly Explained''; ''Linear Models Part
+      0: Fitting a line to data, aka Least Squares, aka Linear Regression''; ''Gradient Descent'''
     angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
       screen.
     angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
-      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
-      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
-      too large does, which is the intuition behind every later discussion of step size. The correlation
-      video is the one to watch if the difference between covariance and correlation is what is unclear.
+      The gradient-descent video performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging, and it shows what too large a learning rate
+      does — the intuition behind every later discussion of step size. The correlation video is the one
+      to watch if the difference between covariance and correlation is what is unclear. Titles taken from
+      StatQuest's own index on 2026-09-07; the channel's uploads carry '!!!' suffixes on some of them.
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-13f3ebff8cc9534c96100502
@@ -356,15 +359,17 @@ stages:
     route_id: route-8c971b3609d60d48474a7e65
   - kind: read
     label: Setosa — ordinary least squares, interactive
-    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
-      — the residual-square and leverage widgets'
+    locator: The single interactive page 'Ordinary Least Squares Regression explained visually' (setosa.io)
+      — the draggable-sample widget and the squared-error-area widget
     angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
       in seconds rather than in prose.
-    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
-      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
-      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
-      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
-      way no derivation does.
+    angle_detail: 'The page draws the squared residuals as actual squares and asks you to choose the betas
+      that minimise their total area, so ''least squares'' becomes a visible minimisation rather than
+      a name. Its points are draggable, so moving one and watching the fitted line swing is the fastest
+      demonstration of how a single observation moves the fit — the effect OpenIntro §8.3 describes in
+      text and that L03''s model-limits node states abstractly. Checked 2026-09-07: the page never uses
+      the words leverage, outlier or influence, so read it as a demonstration rather than as a treatment
+      of those terms. Ten minutes, no installation.'
     scope_triage: helpful-now
     source_id: source-setosa-ols
     route_id: route-bf71c1ee8aee769abb6dd6d0
@@ -527,30 +532,32 @@ stages:
     route_id: route-340dd98b7e8f177fce11b9f5
   - kind: read
     label: Bendersky — derivation of the normal equation
-    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
-      both the calculus and the linear-algebra derivations
-    angle: Derives the same closed-form solution twice — once by calculus, once by projection — which
-      is the connection L03 leaves implicit.
-    angle_detail: 'L03 states the normal equation and moves to gradient descent. This article shows where
-      it comes from: set the gradient of the squared-error objective to zero and solve, then separately,
-      project the target vector onto the column space of the design matrix and get the identical result.
-      Seeing both is what turns the formula from something to memorise into something with two independent
-      justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
-      is shaky.'
+    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net,
+      2014); one calculus derivation, plus the author's follow-up post on the matrix derivatives it uses
+    angle: Shows where the closed form comes from — differentiate the squared-error objective, set it
+      to zero, solve — instead of stating it.
+    angle_detail: 'L03 states the normal equation and moves on to gradient descent. This article does
+      the derivation the deck skips: write the squared error in matrix form, take the derivative with
+      respect to the parameter vector, set it to zero and solve. Checked 2026-09-07: it is a calculus
+      derivation only. It does not give the projection/column-space argument, so it is one justification
+      rather than two, and the geometric reading of least squares has to come from elsewhere. Assumes
+      matrix notation, so watch 3Blue1Brown''s linear-algebra episodes 1-4 and 9 first if that is shaky.'
     scope_triage: helpful-now
     source_id: source-bendersky-normal-equation
     route_id: route-869eeded8dda6eb8ab78ff9a
   - kind: read
     label: Setosa — ordinary least squares, interactive
-    locator: 'The single interactive page ''Ordinary Least Squares Regression: explained visually'' (setosa.io)
-      — the residual-square and leverage widgets'
+    locator: The single interactive page 'Ordinary Least Squares Regression explained visually' (setosa.io)
+      — the draggable-sample widget and the squared-error-area widget
     angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
       in seconds rather than in prose.
-    angle_detail: The page draws the squared residuals as actual squares and totals their area, so 'least
-      squares' becomes a visible minimisation rather than a name. Dragging an outlier then shows the line
-      swinging — the leverage effect that OpenIntro §8.3 describes in text and that L03's model-limits
-      node states abstractly. Ten minutes, no installation, and it makes the criterion memorable in a
-      way no derivation does.
+    angle_detail: 'The page draws the squared residuals as actual squares and asks you to choose the betas
+      that minimise their total area, so ''least squares'' becomes a visible minimisation rather than
+      a name. Its points are draggable, so moving one and watching the fitted line swing is the fastest
+      demonstration of how a single observation moves the fit — the effect OpenIntro §8.3 describes in
+      text and that L03''s model-limits node states abstractly. Checked 2026-09-07: the page never uses
+      the words leverage, outlier or influence, so read it as a demonstration rather than as a treatment
+      of those terms. Ten minutes, no installation.'
     scope_triage: helpful-now
     source_id: source-setosa-ols
     route_id: route-bf71c1ee8aee769abb6dd6d0
@@ -633,15 +640,16 @@ stages:
     route_id: route-bc80e5a45b7923d64981001e
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
-      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    locator: 'StatQuest video index: ''Pearson''s Correlation, Clearly Explained''; ''Linear Models Part
+      0: Fitting a line to data, aka Least Squares, aka Linear Regression''; ''Gradient Descent'''
     angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
       screen.
     angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
-      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
-      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
-      too large does, which is the intuition behind every later discussion of step size. The correlation
-      video is the one to watch if the difference between covariance and correlation is what is unclear.
+      The gradient-descent video performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging, and it shows what too large a learning rate
+      does — the intuition behind every later discussion of step size. The correlation video is the one
+      to watch if the difference between covariance and correlation is what is unclear. Titles taken from
+      StatQuest's own index on 2026-09-07; the channel's uploads carry '!!!' suffixes on some of them.
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-13f3ebff8cc9534c96100502
@@ -734,16 +742,16 @@ stages:
     route_id: route-340dd98b7e8f177fce11b9f5
   - kind: read
     label: Bendersky — derivation of the normal equation
-    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net),
-      both the calculus and the linear-algebra derivations
-    angle: Derives the same closed-form solution twice — once by calculus, once by projection — which
-      is the connection L03 leaves implicit.
-    angle_detail: 'L03 states the normal equation and moves to gradient descent. This article shows where
-      it comes from: set the gradient of the squared-error objective to zero and solve, then separately,
-      project the target vector onto the column space of the design matrix and get the identical result.
-      Seeing both is what turns the formula from something to memorise into something with two independent
-      justifications. Assumes matrix notation, so read 3Blue1Brown''s episodes 1-4 and 9 first if that
-      is shaky.'
+    locator: The complete article 'Derivation of the Normal Equation for linear regression' (eli.thegreenplace.net,
+      2014); one calculus derivation, plus the author's follow-up post on the matrix derivatives it uses
+    angle: Shows where the closed form comes from — differentiate the squared-error objective, set it
+      to zero, solve — instead of stating it.
+    angle_detail: 'L03 states the normal equation and moves on to gradient descent. This article does
+      the derivation the deck skips: write the squared error in matrix form, take the derivative with
+      respect to the parameter vector, set it to zero and solve. Checked 2026-09-07: it is a calculus
+      derivation only. It does not give the projection/column-space argument, so it is one justification
+      rather than two, and the geometric reading of least squares has to come from elsewhere. Assumes
+      matrix notation, so watch 3Blue1Brown''s linear-algebra episodes 1-4 and 9 first if that is shaky.'
     scope_triage: helpful-now
     source_id: source-bendersky-normal-equation
     route_id: route-869eeded8dda6eb8ab78ff9a
@@ -918,15 +926,16 @@ stages:
     route_id: route-b2cb82ed2840a70e81bfbaa5
   - kind: watch
     label: StatQuest — Pearson correlation, least squares, and gradient descent
-    locator: '''Pearson''s Correlation, Clearly Explained''; ''Linear Regression, Clearly Explained''
-      (least squares); ''Gradient Descent, Step-by-Step'' (≈20 min)'
+    locator: 'StatQuest video index: ''Pearson''s Correlation, Clearly Explained''; ''Linear Models Part
+      0: Fitting a line to data, aka Least Squares, aka Linear Regression''; ''Gradient Descent'''
     angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
       screen.
     angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
-      The step-by-step video actually performs the iterations on a two-parameter regression, so the abstract
-      rule becomes a visible sequence of numbers converging. It also shows what a learning rate that is
-      too large does, which is the intuition behind every later discussion of step size. The correlation
-      video is the one to watch if the difference between covariance and correlation is what is unclear.
+      The gradient-descent video performs the iterations on a two-parameter regression, so the abstract
+      rule becomes a visible sequence of numbers converging, and it shows what too large a learning rate
+      does — the intuition behind every later discussion of step size. The correlation video is the one
+      to watch if the difference between covariance and correlation is what is unclear. Titles taken from
+      StatQuest's own index on 2026-09-07; the channel's uploads carry '!!!' suffixes on some of them.
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-13f3ebff8cc9534c96100502

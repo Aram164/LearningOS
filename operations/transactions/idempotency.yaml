@@ -1589,6 +1589,34 @@ entries:
       unit-m2-sad-l15: 10
     snapshot_before: sha256:7fb78603646240bc0028caa06b36ea22b615b4850665ab56d407e02412d225aa
     snapshot_after: sha256:f027a6bc13087e73e8061d27462c5f4ef5231795e31e2e3c4ccfb50fe2a83347
+  sad-video-routes-2026-09-07-apply-v2:
+    request_id: sad-video-routes-2026-09-07-apply-v2
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:dc94d610638938b4da7fe67d5a4640b3d59f60929390bfc2efd0a90a939324b7
+    transaction_id: transaction-20260907-075538-001
+    receipt_path: operations/transactions/transaction-20260907-075538-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 15
+      unit-m2-sad-clustering: 11
+      unit-m2-sad-exam-prep: 9
+      unit-m2-sad-l01: 8
+      unit-m2-sad-l02: 10
+      unit-m2-sad-l03: 14
+      unit-m2-sad-l04: 14
+      unit-m2-sad-l05: 10
+      unit-m2-sad-l06: 14
+      unit-m2-sad-l07: 11
+      unit-m2-sad-l08: 10
+      unit-m2-sad-l09: 10
+      unit-m2-sad-l10: 10
+      unit-m2-sad-l11: 10
+      unit-m2-sad-l12: 10
+      unit-m2-sad-l13: 10
+      unit-m2-sad-l14: 14
+      unit-m2-sad-l15: 14
+    snapshot_before: sha256:5fde04c6e1f9648214a00fad20d46cb6b5687767a4c11aeffb2b560f4e446a86
+    snapshot_after: sha256:400c0b0afc3529ffa57be2264b2004ec677d5ff0be479a83af303745d9a4cb2a
   source-navigation-l05-20260907:
     request_id: request-source-navigation-l05-20260907
     capability: unit.map.import

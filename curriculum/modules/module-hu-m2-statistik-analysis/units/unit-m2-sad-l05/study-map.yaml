@@ -205,15 +205,18 @@ stages:
     source_id: source-sad-klausuren-extern
     route_id: route-9f444ac53a8abc5d1bc9108a
   - kind: watch
-    label: jbstatistics — permutations and combinations
-    locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
-      both as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
-      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
-      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
-      the Schaum's drill.
-    scope_triage: helpful-now
+    label: jbstatistics — no permutations/combinations series; unresolved
+    locator: jbstatistics' published index has thirteen chapters, from discrete distributions through
+      regression; none covers counting, permutations or combinations
+    angle: 'Recorded as unavailable: the video series this route described does not exist on the channel.'
+    angle_detail: Checked against the full jbstatistics table of contents on 2026-09-07. The route previously
+      named a three-video 'Permutations and Combinations' series and credited it with deriving nCr from
+      nPr on screen. The site's index runs Discrete Probability Distributions, Continuous Random Variables,
+      Tables, Sampling Distributions, Confidence Intervals, Hypothesis Testing, Two Means, Proportions,
+      Chi-square, Variances, ANOVA, Regression, and the Jimmy and Mr. Snoothouse series — no counting
+      content anywhere. L05's counting nodes keep Blitzstein Ch 1, Ross, Pitman, Schaum's, Stat 110 and
+      MIT 18.05; nothing is stranded. Kept visible and unavailable rather than deleted.
+    scope_triage: reference-only
     source_id: source-jbstatistics
     route_id: route-d21223e3854f8c37ce2de2f4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md
@@ -303,15 +306,18 @@ stages:
     source_id: source-schaums-probability
     route_id: route-35b2bda446c6fc49b74e3535
   - kind: watch
-    label: jbstatistics — permutations and combinations
-    locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
-      both as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
-      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
-      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
-      the Schaum's drill.
-    scope_triage: helpful-now
+    label: jbstatistics — no permutations/combinations series; unresolved
+    locator: jbstatistics' published index has thirteen chapters, from discrete distributions through
+      regression; none covers counting, permutations or combinations
+    angle: 'Recorded as unavailable: the video series this route described does not exist on the channel.'
+    angle_detail: Checked against the full jbstatistics table of contents on 2026-09-07. The route previously
+      named a three-video 'Permutations and Combinations' series and credited it with deriving nCr from
+      nPr on screen. The site's index runs Discrete Probability Distributions, Continuous Random Variables,
+      Tables, Sampling Distributions, Confidence Intervals, Hypothesis Testing, Two Means, Proportions,
+      Chi-square, Variances, ANOVA, Regression, and the Jimmy and Mr. Snoothouse series — no counting
+      content anywhere. L05's counting nodes keep Blitzstein Ch 1, Ross, Pitman, Schaum's, Stat 110 and
+      MIT 18.05; nothing is stranded. Kept visible and unavailable rather than deleted.
+    scope_triage: reference-only
     source_id: source-jbstatistics
     route_id: route-d21223e3854f8c37ce2de2f4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md
@@ -426,15 +432,18 @@ stages:
     source_id: source-schaums-probability
     route_id: route-35b2bda446c6fc49b74e3535
   - kind: watch
-    label: jbstatistics — permutations and combinations
-    locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
-      both as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
-      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
-      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
-      the Schaum's drill.
-    scope_triage: helpful-now
+    label: jbstatistics — no permutations/combinations series; unresolved
+    locator: jbstatistics' published index has thirteen chapters, from discrete distributions through
+      regression; none covers counting, permutations or combinations
+    angle: 'Recorded as unavailable: the video series this route described does not exist on the channel.'
+    angle_detail: Checked against the full jbstatistics table of contents on 2026-09-07. The route previously
+      named a three-video 'Permutations and Combinations' series and credited it with deriving nCr from
+      nPr on screen. The site's index runs Discrete Probability Distributions, Continuous Random Variables,
+      Tables, Sampling Distributions, Confidence Intervals, Hypothesis Testing, Two Means, Proportions,
+      Chi-square, Variances, ANOVA, Regression, and the Jimmy and Mr. Snoothouse series — no counting
+      content anywhere. L05's counting nodes keep Blitzstein Ch 1, Ross, Pitman, Schaum's, Stat 110 and
+      MIT 18.05; nothing is stranded. Kept visible and unavailable rather than deleted.
+    scope_triage: reference-only
     source_id: source-jbstatistics
     route_id: route-d21223e3854f8c37ce2de2f4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md
@@ -663,15 +672,18 @@ stages:
     source_id: source-sad-klausuren-extern
     route_id: route-9f444ac53a8abc5d1bc9108a
   - kind: watch
-    label: jbstatistics — permutations and combinations
-    locator: The 'Permutations and Combinations' video series (3 videos, ≈10 min each)
-    angle: Derives the combination formula from the permutation formula on screen, rather than presenting
-      both as given.
-    angle_detail: nCr = nPr / r! is the relationship that makes the two halves of L05's grid one idea
-      rather than two formulas, and seeing the division performed — dividing out the orderings you decided
-      not to distinguish — is what makes it stick. Short series, appropriate as a first exposure before
-      the Schaum's drill.
-    scope_triage: helpful-now
+    label: jbstatistics — no permutations/combinations series; unresolved
+    locator: jbstatistics' published index has thirteen chapters, from discrete distributions through
+      regression; none covers counting, permutations or combinations
+    angle: 'Recorded as unavailable: the video series this route described does not exist on the channel.'
+    angle_detail: Checked against the full jbstatistics table of contents on 2026-09-07. The route previously
+      named a three-video 'Permutations and Combinations' series and credited it with deriving nCr from
+      nPr on screen. The site's index runs Discrete Probability Distributions, Continuous Random Variables,
+      Tables, Sampling Distributions, Confidence Intervals, Hypothesis Testing, Two Means, Proportions,
+      Chi-square, Variances, ANOVA, Regression, and the Jimmy and Mr. Snoothouse series — no counting
+      content anywhere. L05's counting nodes keep Blitzstein Ch 1, Ross, Pitman, Schaum's, Stat 110 and
+      MIT 18.05; nothing is stranded. Kept visible and unavailable rather than deleted.
+    scope_triage: reference-only
     source_id: source-jbstatistics
     route_id: route-d21223e3854f8c37ce2de2f4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md
@@ -986,16 +998,19 @@ stages:
     source_id: source-sad-klausuren-extern
     route_id: route-9f444ac53a8abc5d1bc9108a
   - kind: watch
-    label: StatQuest — Hypergeometric distribution
-    locator: '''The Hypergeometric Distribution, Clearly Explained'' (≈12 min)'
-    angle: The one video here that treats the counting problem behind sampling without replacement rather
-      than the formula.
-    angle_detail: Hypergeometric counting is where L05's grid meets L07's distributions, and it is the
-      cell students most often get wrong because the numerator and denominator involve different populations.
-      The video draws the urn, marks the two groups, and builds the ratio of combinations from the picture.
-      Short, and worth watching before attempting the L05 counting exercises that involve defective items
-      or committee selection.
-    scope_triage: helpful-now
+    label: StatQuest — no hypergeometric explainer; unresolved
+    locator: StatQuest's published video index lists one hypergeometric title, 'Enrichment Analysis using
+      Fisher's Exact Test and the Hypergeometric Distribution', which is an enrichment-analysis lesson
+      rather than a counting explainer
+    angle: 'Recorded as unavailable: the video this route described does not exist in the channel index.'
+    angle_detail: Checked against statquest.org's own video index on 2026-09-07. The route previously
+      named 'Unresolved StatQuest hypergeometric-distribution video reference' and described it drawing
+      the urn and building the ratio of combinations. No such video is listed; the only hypergeometric
+      entry is the Fisher's-exact enrichment-analysis lesson, which is a different task at a different
+      level. The route is kept visible and unavailable rather than deleted, so the gap stays recorded.
+      jbstatistics §1.8 'An Introduction to the Hypergeometric Distribution' exists and may serve this
+      role, but assigning it is a content decision for review, not a repair.
+    scope_triage: reference-only
     source_id: source-statquest
     route_id: route-cd51e8e2a06b4d82da11c18e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md
