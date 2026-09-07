@@ -130,6 +130,21 @@ explicit paths and never walk the repository. Readers:
 `tools/learning_os/semantics/dossiers.py`, proven by
 `tests/test_context_dossiers.py`.
 
+## Proof-carrying change (Phase 6)
+
+Every semantic mutation arrives with its proof: intent, scope, read set
+with revisions, claims plus resolvable evidence, the write set with its
+capability, the snapshot read, promised postconditions, and a validation
+plan. Deterministic admission runs before any gateway apply — Aram's
+approval, in-scope writes, fresh reads, matching snapshot, resolvable
+evidence, supported lineage, checkable postconditions — and anything else
+returns conflict, replan, or deny, never an overwrite. Conflicting writes
+cannot both succeed: the second read loses its snapshot race by
+construction. The gateway still applies; the envelope is preflight, and
+the snapshot guard stays the final word. Readers:
+`tools/learning_os/semantics/changes.py`, proven by
+`tests/test_proof_carrying_change.py`.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under

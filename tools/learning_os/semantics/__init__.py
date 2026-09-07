@@ -8,6 +8,19 @@ a canonical writer — see `system/SEMANTIC-CONTRACT.md`.
 
 from __future__ import annotations
 
+from .changes import (
+    APPROVER,
+    VERDICTS,
+    AdmissionDecision,
+    ChangeEnvelope,
+    ChangeError,
+    Postcondition,
+    PostconditionResult,
+    WriteOp,
+    admit,
+    build_envelope,
+    verify_postconditions,
+)
 from .dossiers import (
     DEPENDENCIES,
     DOSSIERS_RELATIVE,
@@ -88,6 +101,7 @@ from .tasks import (
 )
 
 __all__ = [
+    "APPROVER",
     "AUTHORIZER",
     "CONTRACT_VERSION",
     "COST_MODEL_VERSION",
@@ -101,7 +115,11 @@ __all__ = [
     "TELEMETRY_RELATIVE",
     "TERMINAL_STATES",
     "TRANSITIONS",
+    "VERDICTS",
+    "AdmissionDecision",
     "CandidateGoal",
+    "ChangeEnvelope",
+    "ChangeError",
     "ClaimLineage",
     "DEPENDENCIES",
     "DOSSIERS_RELATIVE",
@@ -112,14 +130,19 @@ __all__ = [
     "LineageError",
     "PlannedStep",
     "PolicyDecision",
+    "Postcondition",
+    "PostconditionResult",
     "Predicate",
     "RouterDecision",
     "TaskError",
     "TaskIR",
     "TaskStep",
     "TelemetryRecord",
+    "WriteOp",
+    "admit",
     "append_telemetry",
     "build_dossier",
+    "build_envelope",
     "cache_path",
     "compute_hashes",
     "contest",
@@ -158,4 +181,5 @@ __all__ = [
     "telemetry_to_dict",
     "transition",
     "validate_ir",
+    "verify_postconditions",
 ]
