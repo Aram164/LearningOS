@@ -100,6 +100,21 @@ one step at a time; only Aram authorizes. The queue lives under
 `tools/learning_os/semantics/goals.py`, proven by
 `tests/test_goal_proposals.py`.
 
+## Agent tasks (Phase 4)
+
+A Task IR states what a task needs — eight logical step kinds from
+knowledge reads to governed mutation — with no model bound to any step.
+The physical planner maps each step to deterministic tooling or model
+work; four rewrites (predicate pushdown, dossier dedup, cheapest evidence
+first, late materialization) cheapen plans without changing them. The
+static cost router picks the cheapest feasible executor under policy
+vetoes — unpublished material never leaves the repository, model-only
+steps refuse deterministic executors — and telemetry appends one JSON row
+per task (`operations/telemetry/log.jsonl`) so future weights can be
+fitted instead of guessed. Learning stays off until the statistics are
+significant. Readers: `tools/learning_os/semantics/tasks.py`, proven by
+`tests/test_agent_tasks.py`.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under

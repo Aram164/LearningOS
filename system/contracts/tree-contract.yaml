@@ -122,6 +122,8 @@ directories:
         purpose: AI action state; requests and deliveries are gitignored
       - path: operations/migrations
         purpose: applied-migration provenance
+      - path: operations/telemetry
+        purpose: append-only task telemetry future cost weights will fit
 
   - path: migration
     owner: migration
