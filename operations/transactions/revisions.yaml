@@ -26,7 +26,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 12
-  module-hu-m2-statistik-analysis: 16
+  module-hu-m2-statistik-analysis: 22
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -239,10 +239,10 @@ revisions:
   unit-m2-sad-exam-prep: 10
   unit-m2-sad-l01: 9
   unit-m2-sad-l02: 11
-  unit-m2-sad-l03: 15
-  unit-m2-sad-l04: 15
-  unit-m2-sad-l05: 11
-  unit-m2-sad-l06: 15
+  unit-m2-sad-l03: 16
+  unit-m2-sad-l04: 17
+  unit-m2-sad-l05: 12
+  unit-m2-sad-l06: 17
   unit-m2-sad-l07: 12
   unit-m2-sad-l08: 11
   unit-m2-sad-l09: 11

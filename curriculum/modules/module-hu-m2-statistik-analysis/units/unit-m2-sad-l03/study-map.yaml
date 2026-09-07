@@ -31,10 +31,9 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 3-4
-    angle: The current lecture's focused reading for paired data and scatterplots.
-    angle_detail: Read physical PDF pages 3-4 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Compares height with weight, income and shoe size on the same people.
+    angle_detail: Keep the row pairings intact and compare the three scatterplots before computing any
+      coefficient.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -56,61 +55,92 @@ stages:
       route_id: route-f7249a8bba66bc3ac7724629
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-f7249a8bba66bc3ac7724629
+    locator: exercise-slides/UE2.pdf, physical PDF pp. 22–23
+    angle: Provides five age–income pairs that can be plotted by hand.
+    angle_detail: Use the small table before revealing the covariance answer on p. 24.
   - material_ref:
       route_id: route-8c971b3609d60d48474a7e65
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8c971b3609d60d48474a7e65
+    locator: §3.4.1, PDF pp. 151–154
+    angle: Centers a scatterplot at the two means to explain contributions from its four quadrants.
+    angle_detail: 'Use the picture before calculating covariance: same-sign centered deviations contribute
+      positively and opposite signs negatively.'
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-bf71c1ee8aee769abb6dd6d0
+    angle: Lets you rearrange paired observations and inspect the resulting point pattern.
+    angle_detail: Explore the scatterplot first; the fitted line and squared-error display become useful
+      in the regression stage.
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-c36a55ce03e709469e710d7e
+    locator: §8.1.1–8.1.3, physical PDF pp. 305–310
+    angle: Uses possum measurements to distinguish a fitted prediction from its signed vertical residual.
+    angle_detail: Compare the possum scatterplot, the worked residual on p. 309 and the residual-pattern
+      plots on p. 310.
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-bc80e5a45b7923d64981001e
+    locator: 'HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, physical PDF p. 6, Aufgabenteil V: tenure–salary
+      table'
+    angle: Supplies ten paired observations with named units and a manageable hand-calculation size.
+    angle_detail: Plot tenure against salary before exposing the printed regression solution.
+  - material_ref:
+      route_id: route-62f0ce97ea80883abf322143
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-62f0ce97ea80883abf322143
+    kind: read
+    scope_triage: helpful-now
+    locator: §7.2.1, PDF pp. 354–355
+    angle: Uses office size and rental price to motivate a scatterplot and a predictive line.
+    angle_detail: Identify the unit of each axis and distinguish a plotted observation from the line’s
+      predicted rent.
+  - material_ref:
+      route_id: route-3d874eb98ed79f75cbf88ef7
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-3d874eb98ed79f75cbf88ef7
+    kind: practise
+    scope_triage: helpful-now
+    locator: Aufgabe 3.11, PDF pp. 63–64; solution pp. 78–79
+    angle: Uses Anscombe’s quartet to show what the scatterplot reveals beyond a correlation and fitted
+      line.
+    angle_detail: Draw or inspect all four plots before interpreting the shared numerical summaries.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md
   attachments: []
   source_feedback: []
@@ -133,10 +163,11 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 5-9
-    angle: The current lecture's focused reading for covariance and pearson correlation.
-    angle_detail: Read physical PDF pages 5-9 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Moves from a football covariance calculation to Pearson normalization and a Cauchy–Schwarz
+      bound.
+    angle_detail: Use the corrected divisor n−1 on p. 6 consistently. On p. 9, track the centered vectors
+      and their normalization; the essential bound is |a·b| ≤ ||a|| ||b||. Pearson r requires nonzero
+      standard deviations.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -144,7 +175,6 @@ stages:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
@@ -152,78 +182,89 @@ stages:
     locator: exercise-slides/Blatt1.pdf, PDF p. 3, Aufgabe 2(a)
     scope_triage: required-now
     route_id: route-e958371305abdd06a667a4e2
+    angle_detail: The current sheet’s Tabelle 2 starts at gold 1885 and silver 21.80. In (b), Y is silver
+      and X is gold, so the requested prediction is X=f(Y); reversing the regression is not the same as
+      inverting a fit of Y on X. UE3 uses different prices and is a method example, not an exact numerical
+      answer key.
   - material_ref:
       route_id: route-f7249a8bba66bc3ac7724629
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-f7249a8bba66bc3ac7724629
+    locator: exercise-slides/UE2.pdf, physical PDF pp. 22–26
+    angle: Works covariance first and then normalizes it into Pearson r on the same five pairs.
+    angle_detail: Attempt the prompts on pp. 23 and 25 before reading their following answer slides.
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
       - label
-      - locator
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-adde7a7fe7cf2ed16214142c
+    locator: exercise-slides/UE3.pdf, PDF pp. 7
+    angle_detail: UE3’s gold/silver table begins 1900/22.00, whereas the stored Blatt 1 begins 1885/21.80.
+      Follow the method on pp. 7–9 but do not use its numerical answers to mark the current sheet. Pages
+      10–11 illustrate the housing implementation and RMSE; reproducing its output still requires the
+      missing original dataset.
   - material_ref:
       route_id: route-8c971b3609d60d48474a7e65
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8c971b3609d60d48474a7e65
+    locator: §3.4.1, PDF pp. 151–158
+    angle: Builds covariance from signed products and normalizes by both marginal standard deviations.
+    angle_detail: The descriptive divisor here is n. Blatt 1 requests n−1; Pearson r is unchanged if the
+      normalization uses the same convention consistently.
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-3d874eb98ed79f75cbf88ef7
+    locator: Aufgabe 3.9(a)–(c), PDF p. 62; solution pp. 77–78
+    angle: Recalculates Pearson correlation after adding one extreme observation.
+    angle_detail: Compare the ten-point and eleven-point results. Spearman provides an optional rank-based
+      contrast, not a replacement for the requested Pearson calculation.
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-c36a55ce03e709469e710d7e
+    locator: §8.1.4, physical PDF pp. 310–311
+    angle: Explains Pearson correlation as strength and direction of a linear association.
+    angle_detail: Compare the eight scatterplots and their correlation coefficients on p. 311; this is
+      a visual interpretation of Pearson r, not a covariance derivation.
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
-    scope_triage: helpful-now
+    kind: read
+    scope_triage: reference-only
     route_id: route-1d5ebe1552e3c9bdb2923b53
+    locator: §10.2–10.3, physical PDF pp. 148–152
+    angle: Builds covariance from the cross term in the variance of a sum.
+    angle_detail: 'Return after L06: this uses expected values and random variables, not the finite-sample
+      covariance divisor in Blatt 1.'
   - material_ref:
       route_id: route-bce0d0f7e70cdad184b8cfe4
       inherit:
@@ -244,6 +285,7 @@ stages:
       - angle
       - angle_detail
       - source_id
+      - url
     kind: watch
     scope_triage: helpful-now
     route_id: route-13f3ebff8cc9534c96100502
@@ -269,10 +311,10 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 16,47-48
-    angle: The current lecture's focused reading for correlation is not causation.
-    angle_detail: Read physical PDF pages 16,47-48 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Contrasts misleading straight-line summaries with chance, confounding and population-mixture
+      examples.
+    angle_detail: Compare the four patterns on p. 16 with the explanations on pp. 47–48. A fitted coefficient
+      or excluded alternative explanation alone is not a causal proof.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -280,97 +322,123 @@ stages:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-e958371305abdd06a667a4e2
+    locator: 'exercise-slides/Blatt1.pdf, physical PDF p. 3, Aufgabe 2(a): interpretation'
+    angle: Asks what the computed gold–silver correlation means in context.
+    angle_detail: Describe an observed association across the listed dates; neither a strong r nor the
+      regression establishes which metal causes the other price to change.
   - material_ref:
       route_id: route-f7249a8bba66bc3ac7724629
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-f7249a8bba66bc3ac7724629
+    locator: exercise-slides/UE2.pdf, physical PDF pp. 20,27–28
+    angle: Asks for an age–income interpretation after the calculation and distinguishes correlation from
+      independence.
+    angle_detail: State what the observed association supports, then separate it from a causal claim.
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
       - label
-      - locator
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-adde7a7fe7cf2ed16214142c
+    locator: exercise-slides/UE3.pdf, PDF pp. 7–9
+    angle_detail: UE3’s gold/silver table begins 1900/22.00, whereas the stored Blatt 1 begins 1885/21.80.
+      Follow the method on pp. 7–9 but do not use its numerical answers to mark the current sheet. Pages
+      10–11 illustrate the housing implementation and RMSE; reproducing its output still requires the
+      missing original dataset.
   - material_ref:
       route_id: route-8c971b3609d60d48474a7e65
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8c971b3609d60d48474a7e65
+    locator: §3.5, PDF pp. 164–168
+    angle: Uses omitted third variables and grouped patients to explain spurious or hidden correlation.
+    angle_detail: Separate association strength, direction of influence and causal explanation. The word-vocabulary/height
+      example introduces age as a common cause.
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-bf71c1ee8aee769abb6dd6d0
+    angle: Lets you change one observation and see the fitted line respond.
+    angle_detail: Use this to question the stability of a summary. The interaction illustrates sensitivity;
+      it does not establish causation.
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-c36a55ce03e709469e710d7e
+    locator: §8.1.3–8.1.4, physical PDF pp. 308–311; §8.3, pp. 328–330
+    angle: Uses residual patterns and influential points to test whether a straight-line summary is appropriate.
+    angle_detail: A curved pattern can survive the fitted line. Compare the residual plots and the outlier
+      examples before interpreting correlation; this slice supplies diagnostics rather than a causal-identification
+      argument.
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
-    scope_triage: helpful-now
+    kind: read
+    scope_triage: reference-only
     route_id: route-1d5ebe1552e3c9bdb2923b53
+    locator: §10.2, physical PDF p. 149
+    angle: Separates independence from zero covariance.
+    angle_detail: Return after L06 for the expectation-based argument. Uncorrelated is weaker than independent
+      and is a different question from whether an association is causal.
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-bc80e5a45b7923d64981001e
+    locator: 'HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, physical PDF p. 7, Aufgabenteil V: R²
+      interpretation and scatterplot'
+    angle: Compares a modest explained-variation value with the visible tenure–salary pattern.
+    angle_detail: This is association and model-fit interpretation; Kendall’s comparison is optional and
+      no causal claim follows.
+  - material_ref:
+      route_id: route-3d874eb98ed79f75cbf88ef7
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-3d874eb98ed79f75cbf88ef7
+    kind: practise
+    scope_triage: helpful-now
+    locator: Aufgabe 3.6, PDF p. 59; solutions pp. 72–74
+    angle: Compares an aggregate relationship with separate subgroup relationships.
+    angle_detail: Plot the groups and describe the association within each. A difference between grouped
+      and pooled association does not by itself establish causation.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md
   attachments: []
   source_feedback: []
@@ -393,10 +461,9 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 11-15
-    angle: The current lecture's focused reading for simple linear regression and least squares.
-    angle_detail: Read physical PDF pages 11-15 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Derives slope and intercept by differentiating squared vertical residuals.
+    angle_detail: Follow pp. 13–14 rather than memorizing the result. SSE, MSE and RMSE have the same
+      minimizer; their numerical values and gradients differ.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -404,7 +471,6 @@ stages:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
@@ -412,77 +478,90 @@ stages:
     locator: exercise-slides/Blatt1.pdf, PDF p. 3, Aufgabe 2(b)-(c)
     scope_triage: required-now
     route_id: route-e958371305abdd06a667a4e2
+    angle_detail: The current sheet’s Tabelle 2 starts at gold 1885 and silver 21.80. In (b), Y is silver
+      and X is gold, so the requested prediction is X=f(Y); reversing the regression is not the same as
+      inverting a fit of Y on X. UE3 uses different prices and is a method example, not an exact numerical
+      answer key.
   - material_ref:
       route_id: route-3331bd0f1465151518d0d323
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-3331bd0f1465151518d0d323
+    locator: exercise-slides/UE2.pdf, physical PDF pp. 30–31
+    angle: Recaps the single-predictor slope and intercept before extending the model.
+    angle_detail: Use the short formula recap here; the complete two-feature income example on pp. 32–35
+      belongs in the multivariate stage.
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
       - label
-      - locator
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-adde7a7fe7cf2ed16214142c
+    locator: exercise-slides/UE3.pdf, PDF pp. 8–9
+    angle_detail: UE3’s gold/silver table begins 1900/22.00, whereas the stored Blatt 1 begins 1885/21.80.
+      Follow the method on pp. 7–9 but do not use its numerical answers to mark the current sheet. Pages
+      10–11 illustrate the housing implementation and RMSE; reproducing its output still requires the
+      missing original dataset.
   - material_ref:
       route_id: route-8c971b3609d60d48474a7e65
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8c971b3609d60d48474a7e65
+    locator: §3.6.1–3.6.2, PDF pp. 169–174
+    angle: Derives the fitted line by minimizing squared vertical deviations from the observed responses.
+    angle_detail: 'The response direction matters: fitting Y from X is a different optimization from fitting
+      X from Y. Track the intercept and slope in the rent example.'
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-3d874eb98ed79f75cbf88ef7
+    locator: Aufgabe 3.7, PDF p. 60; solution p. 75
+    angle: Fits a dose–reaction-time line and interprets a prediction, its slope and R².
+    angle_detail: Use the supplied sums for hand calculation, then compare the solution. Interpret the
+      coefficient within the fitted model rather than treating its numerical value alone as causal evidence.
   - material_ref:
       route_id: route-340dd98b7e8f177fce11b9f5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-340dd98b7e8f177fce11b9f5
+    locator: §3.1.1, PDF pp. 80–82
+    angle: Fits sales against one advertising budget by minimizing residual sum of squares.
+    angle_detail: Keep fitted coefficients, predictions and observed sales separate. Reserve the coefficient-inference
+      discussion for after estimation and testing.
   - material_ref:
       route_id: route-869eeded8dda6eb8ab78ff9a
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-869eeded8dda6eb8ab78ff9a
+    angle: Provides the matrix generalization of the scalar derivative argument.
+    angle_detail: Return in the multivariate stage when design matrices are familiar. The article differentiates
+      the squared-error norm and assumes an invertible Gram matrix.
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
@@ -491,6 +570,7 @@ stages:
       - angle
       - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-bf71c1ee8aee769abb6dd6d0
@@ -498,71 +578,144 @@ stages:
       route_id: route-43b3f03133fe9a8c6bc71a8a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-43b3f03133fe9a8c6bc71a8a
+    locator: §9.1–9.2.1, PDF pp. 297–300
+    angle: Connects squared-error fitting to a Gaussian observation model.
+    angle_detail: 'Probability bridge after L08: identify the noise assumptions before deriving the objective.'
+    url: https://mml-book.github.io/book/mml-book.pdf#page=297
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-c36a55ce03e709469e710d7e
+    locator: §8.2.1–8.2.5, physical PDF pp. 317–321; skip Example 8.11
+    angle: Turns a least-squares line into slope, intercept and residual interpretations.
+    angle_detail: 'Work from the aid–income summary statistics to slope, intercept and a prediction. Skip
+      Example 8.11: its standard error, t statistic and p-value belong after L09–L10.'
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-1d5ebe1552e3c9bdb2923b53
+    locator: §22.1, PDF pp. 332–334; quick exercise 22.2, solution p. 339
+    angle: Derives both scalar least-squares coefficients and checks that the fitted line passes through
+      the two sample means.
+    angle_detail: Reproduce the two derivative equations, then use quick exercise 22.2 to check the centre-of-gravity
+      property. The unbiasedness proof later on p. 334 and the Normal-likelihood bridge require probability.
   - material_ref:
       route_id: route-b2cb82ed2840a70e81bfbaa5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-b2cb82ed2840a70e81bfbaa5
+    locator: 'Week 1: Linear regression model parts 1–2; Cost function formula and Cost function intuition'
+    angle: Breaks the regression model and its cost into separate beginner lessons.
+    angle_detail: Open goes to the course syllabus, not an individual lesson. Access to videos or labs
+      may require enrollment. The current syllabus verifies the named segments; playback and full video
+      content were not re-audited under the requested video budget.
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-bc80e5a45b7923d64981001e
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, physical PDF pp. 6–7, Aufgabenteil V
+    angle: Builds a helper table for a tenure–salary slope and then calculates R².
+    angle_detail: Cover the immediately printed solution while calculating. Compare the line and scatterplot
+      after checking the arithmetic.
   - material_ref:
-      route_id: route-13f3ebff8cc9534c96100502
+      route_id: route-8535a338657698b9de4791a8
       inherit:
       - label
+      - source_id
+      - vault_path
+    route_id: route-8535a338657698b9de4791a8
+    kind: read
+    scope_triage: helpful-now
+    locator: PDF pp. 140–144, Linear Regression and The Normal Equation
+    angle: Turns the fitted-line formula into a NumPy prediction example.
+    angle_detail: Track the all-ones intercept column and the shape of the target vector before running
+      the normal-equation code.
+  - material_ref:
+      route_id: route-62f0ce97ea80883abf322143
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-62f0ce97ea80883abf322143
+    kind: read
+    scope_triage: helpful-now
+    locator: §7.2.1–7.2.3, PDF pp. 354–361
+    angle: Compares candidate slopes by their squared rental-price errors.
+    angle_detail: 'Follow the numerical error totals into the loss surface: a location in weight space
+      represents an entire fitted line.'
+  - material_ref:
+      route_id: route-sad-l03-cs229-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-cs229-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: Chapter 1, PDF pp. 9–10
+    angle: Defines the intercept feature and squared-error objective on housing data.
+    angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
+      and the number of features use different symbols; track their dimensions.
+  - material_ref:
+      route_id: route-sad-l03-csc411-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-csc411-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: §2.1, PDF pp. 10–11
+    angle: Solves for the intercept first and substitutes it back to derive the slope.
+    angle_detail: This gives a short calculus derivation of the centered least-squares formula.
+  - material_ref:
+      route_id: route-sad-l03-statquest-ols
+      inherit:
+      - label
+      - source_id
       - locator
       - angle
       - angle_detail
-      - source_id
+      - url
+    route_id: route-sad-l03-statquest-ols
     kind: watch
-    scope_triage: helpful-now
-    route_id: route-13f3ebff8cc9534c96100502
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-sad-l03-kroese-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-kroese-regression
+    kind: read
+    scope_triage: reference-only
+    locator: §5.2, physical PDF pp. 187–188
+    angle: Separates a response model with random errors from the observed points near a line.
+    angle_detail: A probability-oriented return reading after L06; compare a random response with its
+      observed realization.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-simple-regression/notes.md
   attachments: []
   source_feedback: []
@@ -587,10 +740,9 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 18-27
-    angle: The current lecture's focused reading for multivariate linear regression and the design matrix.
-    angle_detail: Read physical PDF pages 18-27 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Assembles the intercept column and error vector, then obtains the normal equations.
+    angle_detail: For n observations and m features, the design matrix has m+1 columns. The inverse requires
+      full column rank; merely removing duplicate observations does not ensure this.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -610,38 +762,44 @@ stages:
       route_id: route-3331bd0f1465151518d0d323
       inherit:
       - label
-      - locator
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-3331bd0f1465151518d0d323
+    locator: exercise-slides/UE2.pdf, PDF pp. 32–35
+    angle_detail: Use the five-row task on p. 32, matrix and weights on p. 33, and error calculation on
+      p. 35. It is a complete small worked example that can be reproduced without the missing Seattle
+      dataset.
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
       - label
-      - locator
       - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-adde7a7fe7cf2ed16214142c
+    locator: exercise-slides/UE3.pdf, PDF pp. 10–11
+    angle_detail: UE3’s gold/silver table begins 1900/22.00, whereas the stored Blatt 1 begins 1885/21.80.
+      Follow the method on pp. 7–9 but do not use its numerical answers to mark the current sheet. Pages
+      10–11 illustrate the housing implementation and RMSE; reproducing its output still requires the
+      missing original dataset.
   - material_ref:
       route_id: route-340dd98b7e8f177fce11b9f5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-340dd98b7e8f177fce11b9f5
+    locator: §3.2–3.2.1, PDF pp. 89–92
+    angle: Explains a partial slope as association while the other predictors are held fixed.
+    angle_detail: Compare separate newspaper/radio fits with the joint model and its predictor-correlation
+      table.
   - material_ref:
       route_id: route-869eeded8dda6eb8ab78ff9a
       inherit:
@@ -650,6 +808,7 @@ stages:
       - angle
       - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-869eeded8dda6eb8ab78ff9a
@@ -657,37 +816,41 @@ stages:
       route_id: route-43b3f03133fe9a8c6bc71a8a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-43b3f03133fe9a8c6bc71a8a
+    locator: §9.2.1, PDF pp. 300–303
+    angle: Writes the design matrix explicitly and extends it to nonlinear input features.
+    angle_detail: Check the matrix dimensions and full-column-rank condition. Linear refers to the fitted
+      parameters.
+    url: https://mml-book.github.io/book/mml-book.pdf#page=300
   - material_ref:
       route_id: route-31ee3e63a209ca409054dda3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: reference
     scope_triage: reference-only
     route_id: route-31ee3e63a209ca409054dda3
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF pp. 7–8, Aufgabe 5(c)
+    angle: Substitutes a concrete house into a model with numeric and dummy predictors.
+    angle_detail: Compare the predicted price with and without a garage while holding the remaining inputs
+      fixed; outputs are in thousands of euros. Skip the preceding significance tests.
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8535a338657698b9de4791a8
+    locator: PDF pp. 140–145, model vector notation and normal equation
+    angle: Expresses the prediction and least-squares solution as array operations.
+    angle_detail: Check how feature count changes the weight-vector and matrix dimensions. The computational
+      comparison explains why an iterative method can be useful.
   - material_ref:
       route_id: route-a4e1a4e84bb805c906d73d1f
       inherit:
@@ -696,9 +859,90 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-a4e1a4e84bb805c906d73d1f
+  - material_ref:
+      route_id: route-62f0ce97ea80883abf322143
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-62f0ce97ea80883abf322143
+    kind: read
+    scope_triage: helpful-now
+    locator: §7.3.1, PDF pp. 363–365
+    angle: Extends the office-rental predictor to several features with a constant dummy feature for the
+      intercept.
+    angle_detail: Expand the dot product and match each weight with one feature. This explains the parameterization;
+      it does not derive an inverse-matrix solution.
+  - material_ref:
+      route_id: route-sad-l03-cs229-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-cs229-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: §1.2, PDF pp. 14–16
+    angle: Expands the residual vector and differentiates the matrix objective to derive the normal equations.
+    angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
+      and the number of features use different symbols; track their dimensions.
+  - material_ref:
+      route_id: route-sad-l03-csc411-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-csc411-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: §2.2, PDF pp. 11–12
+    angle: Shows the augmented input, weight vector and full design matrix side by side.
+    angle_detail: The constant intercept feature is last here; it is often first in the course. The ordering
+      is a convention, but must match the weights.
+  - material_ref:
+      route_id: route-sad-l03-esl-projection
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-esl-projection
+    kind: read
+    scope_triage: reference-only
+    locator: §3.2, physical PDF pp. 63–65
+    angle: Moves from the residual objective to projection onto the columns of the design matrix.
+    angle_detail: Compare feature space with the N-dimensional observation-space picture; the residual
+      is orthogonal to every fitted column.
+  - material_ref:
+      route_id: route-sad-l03-kroese-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-kroese-regression
+    kind: read
+    scope_triage: reference-only
+    locator: §5.2–5.3.1, physical PDF pp. 188–190
+    angle: Accounts explicitly for the extra intercept column and distinguishes model, learner and fitted
+      training loss.
+    angle_detail: Track the switch from d features to p=d+1 parameters. Stop before the model-selection
+      discussion in §5.3.2.
+  - material_ref:
+      route_id: route-sad-l03-murphy-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-murphy-regression
+    kind: read
+    scope_triage: reference-only
+    locator: §11.2.2.1–11.2.2.2, physical PDF pp. 403–405
+    angle: Connects a positive-definite least-squares Hessian with uniqueness and gives a projection proof.
+    angle_detail: Start at the residual objective in (11.6); the Gaussian likelihood that introduces it
+      is a later bridge. The geometric proof works directly with the observed matrix and vector.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-multivariate/notes.md
   attachments: []
   source_feedback: []
@@ -721,10 +965,10 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 29-43
-    angle: The current lecture's focused reading for gradient descent as an alternative optimizer.
-    angle_detail: Read physical PDF pages 29-43 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Derives the error-times-feature gradient and carries out numerical rental-weight updates.
+    angle_detail: Compare the learning-rate examples and reproduce an update using one consistent old
+      parameter vector. The course already includes numerical iterations; supplementary sources give other
+      explanations.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -744,14 +988,15 @@ stages:
       route_id: route-9858d63c791d015034a2641f
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-9858d63c791d015034a2641f
+    locator: exercise-slides/UE3.pdf, PDF pp. 40–43
+    angle: Works the two-point gradient numerically and tracks its MSE over successive updates.
+    angle_detail: Distinguish the old predictions and MSE from the updated weights displayed in each row.
+      Compare the learning-rate examples on p. 43.
   - material_ref:
       route_id: route-ced0625bb9bbca4add20f4f3
       inherit:
@@ -760,77 +1005,103 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-ced0625bb9bbca4add20f4f3
   - material_ref:
       route_id: route-62f0ce97ea80883abf322143
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-62f0ce97ea80883abf322143
+    locator: §7.3.2–7.3.4, PDF pp. 365–375
+    angle: Derives a weight update and traces the first two iterations on the rental data.
+    angle_detail: Follow prediction → error → feature-weighted error → new weight. Keep the old and new
+      parameter vectors distinct when reproducing the update.
   - material_ref:
       route_id: route-43b3f03133fe9a8c6bc71a8a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-43b3f03133fe9a8c6bc71a8a
+    locator: §7.1–7.1.1, physical PDF pp. 233–236 (printed pp. 227–230)
+    url: https://mml-book.github.io/book/mml-book.pdf#page=233
+    angle: Uses contour lines and a quadratic example to explain descent direction, step size and zigzagging.
+    angle_detail: Reproduce Example 7.1’s vector update, then read the step-size discussion and the least-squares
+      example. Unlike the Gaussian regression chapter, this slice needs vector calculus but no likelihood
+      theory.
   - material_ref:
       route_id: route-b2cb82ed2840a70e81bfbaa5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-b2cb82ed2840a70e81bfbaa5
-  - material_ref:
-      route_id: route-13f3ebff8cc9534c96100502
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-13f3ebff8cc9534c96100502
+    locator: 'Week 1: Gradient descent, Implementing gradient descent, Learning rate, Running gradient
+      descent'
+    angle: Offers separate explanations of the update, step size and a running example.
+    angle_detail: Open goes to the course syllabus, not an individual lesson. Access to videos or labs
+      may require enrollment. The current syllabus verifies the named segments; playback and full video
+      content were not re-audited under the requested video budget.
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-8535a338657698b9de4791a8
+    locator: PDF pp. 146–151, Gradient Descent and Batch Gradient Descent
+    angle: Pairs the contour picture with a short vectorized gradient-descent loop.
+    angle_detail: Compare the gradient formula with the code, then vary the learning rate. Distinguish
+      the number of training observations from the number of parameters.
   - material_ref:
-      route_id: route-a4e1a4e84bb805c906d73d1f
+      route_id: route-sad-l03-cs229-regression
       inherit:
       - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-cs229-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: §1.1, PDF pp. 10–14
+    angle: Derives the error-times-feature update and compares batch with per-example updates.
+    angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
+      and the number of features use different symbols; track their dimensions.
+  - material_ref:
+      route_id: route-sad-l03-csc411-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-csc411-regression
+    kind: read
+    scope_triage: helpful-now
+    locator: Chapter 9, PDF pp. 58–60
+    angle: Adds line search and a finite-difference check to the basic gradient-descent loop.
+    angle_detail: Use p. 60 to check an implemented derivative before trusting its optimization trajectory;
+      the line search is an optional extension.
+  - material_ref:
+      route_id: route-sad-l03-statquest-gd
+      inherit:
+      - label
+      - source_id
       - locator
       - angle
       - angle_detail
-      - source_id
+      - url
+    route_id: route-sad-l03-statquest-gd
     kind: watch
-    scope_triage: helpful-now
-    route_id: route-a4e1a4e84bb805c906d73d1f
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-gradient-descent/notes.md
   attachments: []
   source_feedback: []
@@ -854,10 +1125,11 @@ stages:
   - kind: read
     label: Current L03 correlation and regression deck
     locator: lecture-slides/03_correlation_regression.pdf, PDF pp. 27,43,45-48
-    angle: The current lecture's focused reading for scaling, coefficient interpretation, and model limits.
-    angle_detail: Read physical PDF pages 27,43,45-48 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Uses rental-feature scale imbalance to explain slow updates and cautions against comparing
+      raw weight magnitudes.
+    angle_detail: Standardization changes units and optimization geometry. A coefficient sign describes
+      the fitted response direction, not whether the feature improves model quality. Correlated inputs
+      and omitted causes still constrain interpretation.
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
@@ -865,97 +1137,175 @@ stages:
       route_id: route-6b78db21b974a13178ff0860
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-6b78db21b974a13178ff0860
+    locator: exercise-slides/Blatt1.pdf, physical PDF p. 4, Aufgabe 3(b)
+    angle: Requests the housing model’s RMSE in euros.
+    angle_detail: Interpret RMSE on the response scale. Training RMSE is not a validation estimate. Execution
+      needs the missing Seattle CSV and matching template; use the complete UE2 RMSE example for immediate
+      practice.
   - material_ref:
       route_id: route-3331bd0f1465151518d0d323
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-3331bd0f1465151518d0d323
-  - material_ref:
-      route_id: route-aa8a395d2936e94fd38796e0
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-aa8a395d2936e94fd38796e0
+    locator: exercise-slides/UE2.pdf, physical PDF pp. 34–35
+    angle: Calculates RMSE from actual and predicted income values.
+    angle_detail: Square residuals, average them and take the root. This checks prediction-error units;
+      it does not evaluate causal importance or out-of-sample performance.
   - material_ref:
       route_id: route-9858d63c791d015034a2641f
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-9858d63c791d015034a2641f
+    locator: exercise-slides/UE3.pdf, PDF pp. 44–45
+    angle: Contrasts house-size and bedroom-count scales before standardizing each feature.
+    angle_detail: The purpose is to reduce scale imbalance in optimization. Standardizing does not make
+      all features equally informative or all gradient components equal.
   - material_ref:
       route_id: route-62f0ce97ea80883abf322143
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-62f0ce97ea80883abf322143
+    locator: §7.3.4, PDF pp. 373–375
+    angle: Explains the very small learning rate used in the unnormalized rental example.
+    angle_detail: Read the large error-delta values together with the feature and target units, then compare
+      the normalization discussion. Weight size alone is not feature importance.
   - material_ref:
       route_id: route-340dd98b7e8f177fce11b9f5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-340dd98b7e8f177fce11b9f5
+    locator: §3.2, PDF pp. 90–92; §3.3.3, pp. 109–117
+    angle: Shows why units, correlated predictors and residual patterns affect coefficient interpretation.
+    angle_detail: Inspect the advertising comparison and the diagnostic plots. A fitted association is
+      not a causal effect; uncertainty calculations require the later inference assumptions.
   - material_ref:
       route_id: route-b2cb82ed2840a70e81bfbaa5
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-b2cb82ed2840a70e81bfbaa5
+    locator: 'Week 2: Feature scaling parts 1–2; Checking gradient descent for convergence; Choosing the
+      learning rate'
+    angle: Groups the practical lessons for rescaling inputs and diagnosing convergence.
+    angle_detail: Open goes to the course syllabus, not an individual lesson. Access to videos or labs
+      may require enrollment. The current syllabus verifies the named segments; playback and full video
+      content were not re-audited under the requested video budget.
   - material_ref:
       route_id: route-31ee3e63a209ca409054dda3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: reference
     scope_triage: reference-only
     route_id: route-31ee3e63a209ca409054dda3
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF pp. 7–8, Aufgabe 5(c)–(d)
+    angle: Uses a garage dummy and a location-by-plot-area interaction to refine coefficient interpretation.
+    angle_detail: Explain the dummy’s conditional difference, then the interaction’s change in the plot-area
+      slope. This is a model-specification extension rather than a scaling calculation.
+  - material_ref:
+      route_id: route-8535a338657698b9de4791a8
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-8535a338657698b9de4791a8
+    kind: read
+    scope_triage: helpful-now
+    locator: PDF pp. 148–149, Figure 4-7
+    angle: Explains slow, zigzagging descent through elongated contours caused by unequal feature scales.
+    angle_detail: Compare the axes and descent paths before and after scaling. Scaling changes the optimization
+      geometry; it does not make every feature equally informative.
+  - material_ref:
+      route_id: route-3d874eb98ed79f75cbf88ef7
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-3d874eb98ed79f75cbf88ef7
+    kind: practise
+    scope_triage: helpful-now
+    locator: Aufgabe 3.11(b), PDF p. 64; solution p. 79
+    angle: Challenges identical regression summaries by comparing four very different point patterns.
+    angle_detail: Explain why a line and r should be reported with the scatterplot. This is a model-diagnostics
+      exercise rather than a feature-scaling calculation.
+  - material_ref:
+      route_id: route-c36a55ce03e709469e710d7e
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-c36a55ce03e709469e710d7e
+    kind: read
+    scope_triage: helpful-now
+    locator: §8.2.6, physical PDF p. 322; §8.3, pp. 328–330; exercise 8.17, p. 325
+    angle: Separates extrapolation, influential points and the units of a slope from the size of a correlation.
+    angle_detail: Read the extrapolation example, inspect the leverage/influence plots, then answer exercise
+      8.17 on correlation, intercept and slope units. The exercises on p. 330 practise outlier classification.
+  - material_ref:
+      route_id: route-bf71c1ee8aee769abb6dd6d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - url
+    route_id: route-bf71c1ee8aee769abb6dd6d0
+    kind: read
+    scope_triage: helpful-now
+    angle: Tests how moving an extreme observation changes the fitted line.
+    angle_detail: Compare the interaction with OpenIntro’s leverage and influence explanation. This addresses
+      model sensitivity rather than a feature-scaling algorithm.
+  - material_ref:
+      route_id: route-sad-l03-esl-projection
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-esl-projection
+    kind: read
+    scope_triage: reference-only
+    locator: §3.2.3, physical PDF pp. 73–74
+    angle: Uses orthogonalized predictors to explain a partial slope and unstable coefficients.
+    angle_detail: The residualized predictor becomes short when other predictors nearly explain it. Follow
+      this geometric argument; variance and Z-score interpretations require later inference.
+  - material_ref:
+      route_id: route-sad-l03-murphy-regression
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l03-murphy-regression
+    kind: read
+    scope_triage: reference-only
+    locator: §11.2.2.3, physical PDF pp. 405–406
+    angle: Explains why an inverse formula is different from a numerically sound way to calculate the
+      fit.
+    angle_detail: Compare SVD, QR and iterative solvers as optional numerical extensions; stop before
+      weighted least squares. This gives substance to the course’s numerical-stability warning.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md
   attachments: []
   source_feedback: []
