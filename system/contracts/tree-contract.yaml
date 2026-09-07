@@ -188,6 +188,8 @@ hidden:
       purpose: ignores generated/*, bases/, and the local environment
 
   ephemeral:
+    - path: .jules
+      purpose: AI agent critical learnings directory
     - path: .git
       purpose: the git directory itself
       must_be_ignored: false
