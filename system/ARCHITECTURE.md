@@ -182,7 +182,8 @@ repository/
 │   ├── transactions/      one receipt per applied transaction
 │   ├── gateway-requests/  request envelopes
 │   ├── ai-actions/        AI action state; requests and deliveries are gitignored
-│   └── migrations/        applied-migration provenance
+│   ├── migrations/        applied-migration provenance
+│   └── telemetry/         append-only task telemetry future cost weights will fit
 ├── migration/             migration state, preserved originals and reports
 │   ├── backups/           pre-migration copies, retained
 │   ├── reports/           what each migration did
