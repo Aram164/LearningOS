@@ -12,6 +12,7 @@ from ...routes import (
     iter_route_references,
     route_with_identity,
 )
+from ...semantics import predicates as semantic_predicates
 from ...unit_notes import unit_note_sections as parse_unit_note_sections
 from ..common import _first_para, _git_last_commit
 from ..materials import _project_material_resource
@@ -84,17 +85,13 @@ def project_modules(repo: Repo, revision: Revision) -> list[dict]:
     return records
 
 
-# A module whose units are still being studied. A dropped or archived module
-# keeps its records as history and is never asked for new plans.
-_STUDIED_MODULE_STATUSES = frozenset({"active", "enrolled"})
-
-# A unit that is finished, paused/inactive, or explicitly set aside is not owed
-# a plan either.  `ready-to-shelve` is operationally inactive: asking it to
-# acquire a new study map while it is leaving active study would reverse the
-# user's lifecycle decision.
-_UNIT_STATUSES_WITHOUT_OBLIGATION = frozenset({
-    "complete", "archived", "paused", "ready-to-shelve",
-})
+# The study-map obligation sets below are owned by the semantic contract
+# (`tools/learning_os/semantics/`); these aliases keep the producer's local
+# names stable while the meaning lives in exactly one place.
+_STUDIED_MODULE_STATUSES = semantic_predicates.STUDIED_MODULE_STATUSES
+_UNIT_STATUSES_WITHOUT_OBLIGATION = (
+    semantic_predicates.UNIT_STATUSES_WITHOUT_OBLIGATION
+)
 
 
 def _needs_study_map(unit_data: dict, module_status: str | None,
@@ -107,12 +104,16 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
     so every count and badge downstream read zero while the Review queue —
     which had always filtered on the map itself — listed all of them. One
     derivation ends that disagreement.
+
+    The truth table lives in the semantic contract as `NeedsStudyMap`; this
+    wrapper keeps the producer's call signature while the evaluator owns the
+    meaning (Intelligence Plane Phase 0 spike).
     """
-    if has_study_map:
-        return False
-    if module_status not in _STUDIED_MODULE_STATUSES:
-        return False
-    return unit_data.get("status") not in _UNIT_STATUSES_WITHOUT_OBLIGATION
+    return semantic_predicates.needs_study_map(
+        unit_status=unit_data.get("status"),
+        module_status=module_status,
+        has_study_map=has_study_map,
+    )
 
 
 def project_units(repo: Repo, revision: Revision,
