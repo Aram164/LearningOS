@@ -27,16 +27,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 2-5
+    angle: The current lecture's focused reading for human probability judgments and framing.
+    angle_detail: Read physical PDF pages 2-5 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -61,16 +56,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 16-21,24-25
+    angle: The current lecture's focused reading for random experiments, outcomes, and event spaces.
+    angle_detail: Read physical PDF pages 16-21,24-25 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -201,16 +191,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 22-23,26-30
+    angle: The current lecture's focused reading for probability axioms and derived rules.
+    angle_detail: Read physical PDF pages 22-23,26-30 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -405,16 +390,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 32-39,43
+    angle: Conditioning plus the explicitly stated total-probability partition.
+    angle_detail: Read physical PDF pages 32-39,43 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. PDF p. 43 states the partition and theorem; the proof is omitted.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -738,16 +718,13 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 43-47
+    angle: Bayes reasoning with the medical-example prevalence corrected.
+    angle_detail: 'Read physical PDF pages 43-47 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. Source correction: PDF p. 44 (printed 47) states prevalence 0.1% but substitutes
+      0.0001. Use 0.001 for the stated prevalence: with sensitivity and specificity both 0.99, P(healthy
+      | positive)=0.01*0.999/(0.99*0.001+0.01*0.999)=0.909836, not approximately 0.99.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -1071,16 +1048,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 40-42,49-50
+    angle: The current lecture's focused reading for independence and conditional independence.
+    angle_detail: Read physical PDF pages 40-42,49-50 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures
@@ -1364,16 +1336,11 @@ stages:
   resources:
   - kind: read
     label: Current L04 probability and Naive Bayes deck
-    locator: lecture-slides/04_probability.pdf, 59 slides
-    angle: Controls the probability notation for the whole module, and builds the categorical Naive Bayes
-      classifier that L14 later extends.
-    angle_detail: 'The largest deck in the statistics half and the one with the widest span: framing puzzles,
-      axioms, conditioning, Bayes, independence, then a full classifier. Its one known gap is slide 46,
-      which states Bayes with the total-probability expansion already substituted into the denominator,
-      so the partition step is explicitly stated; the proof is omitted — Fahrmeir §4.6 supplies it and
-      a repository note records the proof. The Naive Bayes construction at the end has no exact equivalent
-      in any book here; the deck is authoritative for it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/04_probability.pdf, PDF pp. 49-59
+    angle: The current lecture's focused reading for categorical naive bayes classifier.
+    angle_detail: Read physical PDF pages 49-59 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
     source_id: source-sad-ss26-lectures

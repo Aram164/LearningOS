@@ -29,15 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 5-8,18
+    angle: The current lecture's focused reading for random variables and realizations.
+    angle_detail: Read physical PDF pages 5-8,18 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -200,15 +196,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 9-23
+    angle: The current lecture's focused reading for pmf, density, and cdf.
+    angle_detail: Read physical PDF pages 9-23 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -450,15 +442,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 28-30,39
+    angle: The current lecture's focused reading for functions and transformations of random variables.
+    angle_detail: Read physical PDF pages 28-30,39 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -622,15 +610,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 26-32
+    angle: The current lecture's focused reading for expected value and linearity.
+    angle_detail: Read physical PDF pages 26-32 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -653,7 +637,12 @@ stages:
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
       working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation.'
+      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -956,15 +945,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 34-42
+    angle: The current lecture's focused reading for variance, standard deviation, and covariance.
+    angle_detail: Read physical PDF pages 34-42 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -987,7 +972,12 @@ stages:
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
       working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation.'
+      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -1278,15 +1268,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 52-56
+    angle: The current lecture's focused reading for iid samples and the random sample mean.
+    angle_detail: Read physical PDF pages 52-56 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -1298,7 +1284,12 @@ stages:
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
       working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation.'
+      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen
@@ -1349,15 +1340,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
-    angle_detail: 'Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 44-50,57-60
+    angle: The current lecture's focused reading for chebyshev bounds and the law of large numbers.
+    angle_detail: Read physical PDF pages 44-50,57-60 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -1369,7 +1356,12 @@ stages:
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
       working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation.'
+      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
+      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
+      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
+      No matching files were found in the registered materials inventory or bounded materials/workbench
+      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
+      substitute unrelated datasets. Paper-only parts remain usable.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: required-now
     source_id: source-sad-uebungen

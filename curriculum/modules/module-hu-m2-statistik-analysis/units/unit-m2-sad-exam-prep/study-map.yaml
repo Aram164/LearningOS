@@ -408,6 +408,8 @@ stages:
   - Diagnose imbalance, overfitting, and distribution shift from a short case.
   - Explain why lower training error is not sufficient evidence of better generalization.
   - Pass one current multiclass-metrics task without consulting an AML note.
+  - Distinguish ROC (TPR versus FPR) from precision-recall curves and identify which AUC is reported;
+    correct the conflation on L11 PDF pp. 37-38.
   estimate_minutes: 120
   exam_critical: true
   concepts:

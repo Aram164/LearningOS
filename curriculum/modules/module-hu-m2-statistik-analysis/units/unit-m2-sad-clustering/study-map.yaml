@@ -20,8 +20,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Clustering seeks useful groups without labels; the result depends on representation,
     similarity, objective, and chosen algorithm rather than revealing a unique ground truth automatically.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Describe two plausible groupings of the UE7 example and explain why labels and a unique correct cluster
+    count are absent.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -45,14 +45,11 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle: The current authority for this auxiliary topic, including method families, a full assignment/
-      centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 32-40
+    angle: Describe two plausible groupings of the UE7 example and explain why labels and a unique correct
+      cluster count are absent.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
@@ -72,15 +69,10 @@ stages:
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
     locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter
-      iterates assignment and update on a small data set and shows the hierarchical alternative on the
-      same points.
-    angle_detail: 'The gap this fills is specific: UE7''s slides define the topic and state the algorithm,
-      but a definition of k-means does not show you that the assignment and update steps alternate until
-      nothing moves. Zacharski iterates both on a small worked table from p. 335 and prints the intermediate
-      state each round, which is what makes the convergence argument concrete and what an exam tracing
-      question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
-      the framing.'
+    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
+    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
+      provides another worked representation and a hierarchical alternative; it does not fill an absent
+      UE7 convergence trace.
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
@@ -95,8 +87,7 @@ stages:
   done_when:
   - 'Reproduce without notes: The main families express different assumptions about cluster nesting, number,
     compactness, shape, density, noise, and outliers.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Compare hierarchical, partitioning and density-based assumptions using the three UE7 descriptions.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -106,14 +97,10 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle: The current authority for this auxiliary topic, including method families, a full assignment/
-      centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 41-43
+    angle: Compare hierarchical, partitioning and density-based assumptions using the three UE7 descriptions.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
@@ -180,15 +167,10 @@ stages:
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
     locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter
-      iterates assignment and update on a small data set and shows the hierarchical alternative on the
-      same points.
-    angle_detail: 'The gap this fills is specific: UE7''s slides define the topic and state the algorithm,
-      but a definition of k-means does not show you that the assignment and update steps alternate until
-      nothing moves. Zacharski iterates both on a small worked table from p. 335 and prints the intermediate
-      state each round, which is what makes the convergence argument concrete and what an exam tracing
-      question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
-      the framing.'
+    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
+    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
+      provides another worked representation and a hierarchical alternative; it does not fill an absent
+      UE7 convergence trace.
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
   - kind: reference
@@ -216,8 +198,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Alternating nearest-centroid assignment and centroid recomputation decreases
     within-cluster squared distance until assignments stabilize.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Recompute the UE7 assignment/update trace before revealing each next iteration; check centroids and
+    termination.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -227,14 +209,11 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle: The current authority for this auxiliary topic, including method families, a full assignment/
-      centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 44-74
+    angle: Recompute the UE7 assignment/update trace before revealing each next iteration; check centroids
+      and termination.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
@@ -301,15 +280,10 @@ stages:
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
     locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter
-      iterates assignment and update on a small data set and shows the hierarchical alternative on the
-      same points.
-    angle_detail: 'The gap this fills is specific: UE7''s slides define the topic and state the algorithm,
-      but a definition of k-means does not show you that the assignment and update steps alternate until
-      nothing moves. Zacharski iterates both on a small worked table from p. 335 and prints the intermediate
-      state each round, which is what makes the convergence argument concrete and what an exam tracing
-      question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
-      the framing.'
+    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
+    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
+      provides another worked representation and a hierarchical alternative; it does not fill an absent
+      UE7 convergence trace.
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
   - kind: read
@@ -339,8 +313,8 @@ stages:
   done_when:
   - 'Reproduce without notes: k, starting centroids, scale, and outliers can change the result; convergence
     guarantees a stable local solution, not the global optimum or the right number of clusters.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Explain how initialization, k and outliers affect k-means; use the completed UE7 trace as the reference
+    example.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -350,14 +324,11 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle: The current authority for this auxiliary topic, including method families, a full assignment/
-      centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 75
+    angle: Explain how initialization, k and outliers affect k-means; use the completed UE7 trace as the
+      reference example.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
   - kind: reference
@@ -409,15 +380,10 @@ stages:
     label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
     source_id: source-zacharski-data-mining
     locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: The UE7 slides define the clustering topic but supply no worked convergence trace; this chapter
-      iterates assignment and update on a small data set and shows the hierarchical alternative on the
-      same points.
-    angle_detail: 'The gap this fills is specific: UE7''s slides define the topic and state the algorithm,
-      but a definition of k-means does not show you that the assignment and update steps alternate until
-      nothing moves. Zacharski iterates both on a small worked table from p. 335 and prints the intermediate
-      state each round, which is what makes the convergence argument concrete and what an exam tracing
-      question would expect you to reproduce. Informal in tone and light on theory — take the trace, not
-      the framing.'
+    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
+    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
+      provides another worked representation and a hierarchical alternative; it does not fill an absent
+      UE7 convergence trace.
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
   - kind: read
@@ -447,8 +413,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Within-cluster compactness, separation, stability, and domain usefulness
     offer partial validation, but every criterion imports assumptions and can favor different partitions.'
-  - Work UE7 — clustering families and complete k-means trace, and record every miss with the step it
-    failed at.
+  - Answer the UE7 clustering retrieval questions and distinguish compactness from evidence of useful
+    grouping.
   exam_critical: true
   concepts:
   - concept-clustering
@@ -458,14 +424,11 @@ stages:
   - kind: practise
     label: UE7 — clustering families and complete k-means trace
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE7.pdf slides 32–87
-    angle: The current authority for this auxiliary topic, including method families, a full assignment/
-      centroid-update walkthrough, local-optimum caveats, and final exam questions.
-    angle_detail: 'UE7 is the whole current scope for this topic: 88 slides, of which 32-87 are the clustering
-      block, and there is no lecture deck behind it. That makes it the scope authority and the only course-aligned
-      trace available — the assignment step and the centroid-update step are walked through in full, including
-      a local optimum reached from a bad initialisation. Everything else on this stage deepens or re-explains
-      what is on these slides; none of it extends the examinable boundary.'
+    locator: exercise-slides/UE7.pdf, PDF pp. 39-40,75,87
+    angle: Answer the UE7 clustering retrieval questions and distinguish compactness from evidence of
+      useful grouping.
+    angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
+      once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
   - kind: reference

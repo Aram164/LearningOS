@@ -29,14 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 4-6,26
+    angle: The current lecture's focused reading for the combinatorics decision grid.
+    angle_detail: Read physical PDF pages 4-6,26 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -239,14 +236,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 7-12
+    angle: The current lecture's focused reading for permutations and indistinguishable objects.
+    angle_detail: Read physical PDF pages 7-12 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -341,14 +335,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 14-18
+    angle: The current lecture's focused reading for ordered selections (variations).
+    angle_detail: Read physical PDF pages 14-18 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -467,14 +458,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 20-22
+    angle: The current lecture's focused reading for unordered selections and binomial coefficients.
+    angle_detail: Read physical PDF pages 20-22 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -705,14 +693,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 23-25
+    angle: The current lecture's focused reading for combinations with repetition and stars and bars.
+    angle_detail: Read physical PDF pages 23-25 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -755,14 +740,12 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 28-31
+    angle: The current lecture's focused reading for laplace probability, complements, and hypergeometric
+      counting.
+    angle_detail: Read physical PDF pages 28-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -1034,14 +1017,11 @@ stages:
   resources:
   - kind: read
     label: Current L05 combinatorics deck
-    locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
-      page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/05_combinatorics.pdf, PDF pp. 33-34
+    angle: The current lecture's focused reading for binomial identities and stirling approximation.
+    angle_detail: Read physical PDF pages 33-34 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -1062,9 +1042,10 @@ stages:
     kind: read
     label: Blitzstein §1.5 story proofs
     source_id: source-blitzstein-hwang
-    locator: Ch 1 §1.5 pdf p. 37
-    angle: Explains the identities node without algebra.
-    angle_detail: 'Story proofs: counting identities argued by describing two ways to count the same set.'
+    locator: §1.5, PDF pp. 37-38
+    angle: Story proofs for counting identities.
+    angle_detail: Count the same set in two ways to explain symmetry and Vandermonde; this slice does
+      not supply Stirling approximation.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []

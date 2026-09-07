@@ -31,8 +31,10 @@ knowledge_map:
     - knowledge-sad-l07-model-selection
   - id: knowledge-sad-l07-geometric
     title: Geometric waiting times
-    summary: The Geometric model counts trials until the first success, introducing a stopping-time story
-      and the memoryless property rather than a fixed number of trials.
+    summary: 'The Geometric model counts trials until first success and has the memoryless property. Geometric
+      waiting times are complementary preparation here: L07 has no dedicated section and Übungsblatt 3
+      Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02) in Aufgabe
+      3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
     builds_on:
     - knowledge-sad-l07-bernoulli-binomial
   - id: knowledge-sad-l07-poisson

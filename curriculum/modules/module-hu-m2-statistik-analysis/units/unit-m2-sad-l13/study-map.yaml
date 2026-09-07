@@ -29,15 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 4-11
+    angle: The current lecture's focused reading for 1-nn and k-nn as lazy learners.
+    angle_detail: Read physical PDF pages 4-11 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -56,13 +52,10 @@ stages:
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
       the feature-space and normalisation sections)
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -82,18 +75,17 @@ stages:
     route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
-    locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
-      'Choice of nearest neighbors algorithm'
-    angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees
-      — which L13 teaches and almost no ML book covers.
-    angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks
-      treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees
-      prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality
-      at which brute force wins again. That is the practical form of the curse of dimensionality and directly
-      supports the deck''s argument for approximate search.'
+    locator: 'User guide §1.6.4 ''Nearest Neighbor Algorithms'': §1.6.4.2 K-D Tree; §1.6.4.3 Ball Tree;
+      algorithm-choice discussion in §1.6.4'
+    angle: Explains exact search structures and the practical conditions favoring tree search or brute
+      force.
+    angle_detail: The official guide describes KD-tree and ball-tree pruning, then compares algorithm
+      choices by data size, dimension and query workload. Use this implementation perspective alongside
+      Kelleher's kd-tree explanation. Section numbering checked against the official guide on 2026-09-07.
     scope_triage: helpful-now
     source_id: source-sklearn-user-guide
     route_id: route-147346e35bd5be019bdccd69
+    url: https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbor-algorithms
   - kind: read
     label: MIT 6.036 — nearest-neighbour and feature-representation units
     locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
@@ -190,15 +182,11 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 12-13
+    angle: The current lecture's focused reading for classification, regression, voting, and weighting.
+    angle_detail: Read physical PDF pages 12-13 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -217,13 +205,10 @@ stages:
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
       the feature-space and normalisation sections)
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -243,18 +228,17 @@ stages:
     route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
-    locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
-      'Choice of nearest neighbors algorithm'
-    angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees
-      — which L13 teaches and almost no ML book covers.
-    angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks
-      treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees
-      prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality
-      at which brute force wins again. That is the practical form of the curse of dimensionality and directly
-      supports the deck''s argument for approximate search.'
+    locator: 'User guide §1.6.4 ''Nearest Neighbor Algorithms'': §1.6.4.2 K-D Tree; §1.6.4.3 Ball Tree;
+      algorithm-choice discussion in §1.6.4'
+    angle: Explains exact search structures and the practical conditions favoring tree search or brute
+      force.
+    angle_detail: The official guide describes KD-tree and ball-tree pruning, then compares algorithm
+      choices by data size, dimension and query workload. Use this implementation perspective alongside
+      Kelleher's kd-tree explanation. Section numbering checked against the official guide on 2026-09-07.
     scope_triage: helpful-now
     source_id: source-sklearn-user-guide
     route_id: route-147346e35bd5be019bdccd69
+    url: https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbor-algorithms
   - kind: reference
     label: AML L02 — k-NN deepening
     locator: lecture-slides/VL 02-nearest-neighbor.pdf (the AML deck on nearest-neighbour methods)
@@ -323,15 +307,13 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 15-18,31
+    angle: Check metric axioms rather than assuming every similarity is a metric.
+    angle_detail: 'Read physical PDF pages 15-18,31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. Source correction: the blanket claim on PDF p. 31 that all discussed distances are
+      metrics is too broad. Cosine similarity is not a distance; even 1-cosine violates the triangle inequality
+      for unit vectors at angles 0, 60 and 120 degrees (1.5 > 0.5+0.5).'
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -363,13 +345,10 @@ stages:
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
       the feature-space and normalisation sections)
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -389,18 +368,17 @@ stages:
     route_id: route-96611a9728939c38b2bfef1f
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
-    locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
-      'Choice of nearest neighbors algorithm'
-    angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees
-      — which L13 teaches and almost no ML book covers.
-    angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks
-      treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees
-      prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality
-      at which brute force wins again. That is the practical form of the curse of dimensionality and directly
-      supports the deck''s argument for approximate search.'
+    locator: 'User guide §1.6.4 ''Nearest Neighbor Algorithms'': §1.6.4.2 K-D Tree; §1.6.4.3 Ball Tree;
+      algorithm-choice discussion in §1.6.4'
+    angle: Explains exact search structures and the practical conditions favoring tree search or brute
+      force.
+    angle_detail: The official guide describes KD-tree and ball-tree pruning, then compares algorithm
+      choices by data size, dimension and query workload. Use this implementation perspective alongside
+      Kelleher's kd-tree explanation. Section numbering checked against the official guide on 2026-09-07.
     scope_triage: helpful-now
     source_id: source-sklearn-user-guide
     route_id: route-147346e35bd5be019bdccd69
+    url: https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbor-algorithms
   - kind: read
     label: MIT 6.036 — nearest-neighbour and feature-representation units
     locator: MIT 6.036 Fall 2020 OCW, Unit 2 'Nearest Neighbors' and its exercises; Notes Ch 14 'Non-parametric
@@ -435,15 +413,11 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 15,19
+    angle: The current lecture's focused reading for minkowski distances and feature scaling.
+    angle_detail: Read physical PDF pages 15,19 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -475,13 +449,10 @@ stages:
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
       the feature-space and normalisation sections)
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -584,15 +555,11 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 16-18,20-21
+    angle: The current lecture's focused reading for cosine, jaccard, and mahalanobis measures.
+    angle_detail: Read physical PDF pages 16-18,20-21 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -624,13 +591,10 @@ stages:
     label: Kelleher Chapter 5 — similarity-based learning
     locator: Ch 5 Similarity-based Learning, pdf pp. 215-281 (§5.2.2 the nearest-neighbour algorithm;
       the feature-space and normalisation sections)
-    angle: Shows the decision boundary of a nearest-neighbour classifier as a Voronoi tessellation, which
-      explains k's role geometrically.
-    angle_detail: 'The Voronoi picture makes two L13 facts visible at once: why 1-NN produces jagged boundaries
-      that follow noise, and why increasing k smooths them. Kelleher also treats feature normalisation
-      as part of the algorithm rather than as preprocessing, which matches L13''s insistence that distance
-      is meaningless across unscaled features. Does not cover indexing or LSH — for that half of L13 the
-      deck is effectively alone.'
+    angle: Explains k-NN geometrically and develops kd-tree construction, search and pruning.
+    angle_detail: Chapter 5 connects nearest-neighbor predictions, feature scaling and geometric neighborhoods.
+      §5.3 presents the prediction model; §5.4.2 (PDF pp. 234-241) develops kd-tree indexing and search.
+      LSH is mentioned in further reading at PDF p. 272, not taught as a complete algorithm.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     scope_triage: helpful-now
     source_id: source-kelleher-fmlpda
@@ -672,15 +636,11 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 23-31
+    angle: The current lecture's focused reading for exact similarity-search indexes.
+    angle_detail: Read physical PDF pages 23-31 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
@@ -697,18 +657,17 @@ stages:
     source_id: source-sad-2025-recordings
   - kind: reference
     label: scikit-learn user guide §1.6 — nearest neighbours and search structures
-    locator: User guide §1.6 'Nearest Neighbors', especially §1.6.4 K-D Tree, §1.6.5 Ball Tree and §1.6.6
-      'Choice of nearest neighbors algorithm'
-    angle: One of the very few accessible treatments of exact search structures — K-D trees and ball trees
-      — which L13 teaches and almost no ML book covers.
-    angle_detail: 'L13''s exact-indexing node is genuinely underserved by this shelf: the ML textbooks
-      treat k-NN as a brute-force scan and move on. §1.6.4-1.6.6 describe how K-D trees and ball trees
-      prune the search, and — more valuably — §1.6.6 states when each stops helping, including the dimensionality
-      at which brute force wins again. That is the practical form of the curse of dimensionality and directly
-      supports the deck''s argument for approximate search.'
+    locator: 'User guide §1.6.4 ''Nearest Neighbor Algorithms'': §1.6.4.2 K-D Tree; §1.6.4.3 Ball Tree;
+      algorithm-choice discussion in §1.6.4'
+    angle: Explains exact search structures and the practical conditions favoring tree search or brute
+      force.
+    angle_detail: The official guide describes KD-tree and ball-tree pruning, then compares algorithm
+      choices by data size, dimension and query workload. Use this implementation perspective alongside
+      Kelleher's kd-tree explanation. Section numbering checked against the official guide on 2026-09-07.
     scope_triage: helpful-now
     source_id: source-sklearn-user-guide
     route_id: route-147346e35bd5be019bdccd69
+    url: https://scikit-learn.org/stable/modules/neighbors.html#nearest-neighbor-algorithms
   - kind: reference
     label: ESL Ch 13 - nearest neighbours and the cost of searching them
     locator: Section 13.3 k-nearest-neighbor classifiers, p. 482; section 13.5 computational considerations,
@@ -730,9 +689,10 @@ stages:
     kind: read
     label: Kelleher §5.4.2
     source_id: source-kelleher-fmlpda
-    locator: §5.4.2 pdf pp. 234-241
-    angle: Constructing and searching a kd-tree.
-    angle_detail: Includes indexing.
+    locator: §5.4.2, PDF pp. 234-241
+    angle: Construct and search a kd-tree.
+    angle_detail: Follow splitting, descent, backtracking and pruning; compare the search with brute-force
+      distances.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
   attachments: []
@@ -753,15 +713,12 @@ stages:
   resources:
   - kind: read
     label: Current L13 similarity-based learning deck
-    locator: lecture-slides/13_similarity_based.pdf, 32 slides
-    angle: Scope authority for k-NN and, unusually for an introductory course, for exact and approximate
-      similarity indexes.
-    angle_detail: 'The distance-measure and k-NN half is standard and well covered elsewhere. The indexing
-      half — exact search structures and locality-sensitive hashing — is not: it is a database-systems
-      topic that appears here because the chair teaches it, and almost no ML textbook on this shelf covers
-      LSH at all. For that part the deck is effectively the only source, which makes it unusually important
-      to read closely rather than supplement. Unresolved: specific page slice not yet reviewed, keeping
-      whole-deck route for now.'
+    locator: lecture-slides/13_similarity_based.pdf, PDF pp. 24,30
+    angle: A short course sketch of LSH, not a full hashing construction.
+    angle_detail: Read physical PDF pages 24,30 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. PDF p. 30 motivates collisions for similar points and multiple hash functions. It
+      does not derive a sublinear complexity bound.
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures

@@ -24,94 +24,94 @@ notes:
 - note-sad-hypothesis-testing-handwritten
 - note-regression-sad-aml-islp-bridge
 sources:
-- source-analysis-skript
-- source-sad-ss26-lectures
-- source-professor-leonard
-- source-sad-uebungen
+- source-3b1b-bayes-theorem
 - source-3b1b-essence-of-calculus
-- source-sad-2025-recordings
-- source-fahrmeir-statistik
-- source-fritzsche-trainingsbuch
-- source-kelleher-fmlpda
+- source-3b1b-linear-algebra
+- source-3b1b-neural-networks
+- source-abbott-understanding-analysis
+- source-ableitinger-musterloesungen
+- source-aml-ss26-lectures
 - source-analysis-drill-blaetter-extern
+- source-analysis-grundlagen-handouts
+- source-analysis-klausuren-extern
+- source-analysis-skript
+- source-bendersky-normal-equation
+- source-berkeley-cs189
+- source-bishop-prml
+- source-blitzstein-hwang
+- source-brandon-foltz
+- source-caltech-lfd
+- source-cs229-2022-videos
+- source-cs229-notes
+- source-cs229-problem-sets
+- source-cs4780
+- source-cs4780-homeworks
+- source-csc411-notes
+- source-d2l
+- source-deitmar-uebungsbuch
+- source-dekking-mips
+- source-domingos-useful-things
+- source-eecs498
+- source-esl
 - source-fahrmeir-arbeitsbuch
+- source-fahrmeir-statistik
+- source-fau-klausur-ws1415
+- source-forster-wessoly
+- source-fortmann-roe-bias-variance
+- source-fritzsche-trainingsbuch
+- source-geron-handson
+- source-goodfellow-dl
+- source-google-ml-crash-course
+- source-grieser-analysis1
 - source-grinstead-snell
 - source-islp
-- source-analysis-klausuren-extern
-- source-bendersky-normal-equation
-- source-blitzstein-hwang
-- source-fortmann-roe-bias-variance
+- source-islp-community-solutions
+- source-jbstatistics
 - source-jurafsky-slp3
 - source-karpathy-micrograd
-- source-nielsen-nndl
-- source-setosa-ols
-- source-berkeley-cs189
-- source-caltech-lfd
-- source-cs4780
-- source-d2l
+- source-kelleher-fmlpda
+- source-kroese-dsml
+- source-kurzes-tutorium-statistik
+- source-labs-schreyer-mathe-informatiker
+- source-lebl-basic-analysis
+- source-marsland-ml-algorithmic
+- source-mfnf-analysis1
+- source-mit-1805
+- source-mit-18100a
+- source-mit-18650
+- source-mit-6034-quizzes
+- source-mit-6036
 - source-mit-6041sc
 - source-mml
-- source-openintro-statistics
-- source-sklearn-user-guide
-- source-strang-calculus
-- source-cs229-problem-sets
-- source-dekking-mips
-- source-google-ml-crash-course
-- source-mit-6036
-- source-ng-coursera
-- source-prince-udl
-- source-zedstatistics
-- source-bishop-prml
-- source-goodfellow-dl
-- source-islp-community-solutions
-- source-mit-1805
-- source-fau-klausur-ws1415
-- source-mit-18100a
-- source-teschl-mathe-informatiker
-- source-analysis-grundlagen-handouts
-- source-pitman-probability
-- source-forster-wessoly
-- source-tijms-understanding-probability
-- source-deitmar-uebungsbuch
-- source-ross-first-course
-- source-ableitinger-musterloesungen
-- source-schaums-probability
-- source-abbott-understanding-analysis
-- source-stat110
-- source-grieser-analysis1
-- source-mit-18650
-- source-lebl-basic-analysis
-- source-sad-klausuren-extern
-- source-labs-schreyer-mathe-informatiker
-- source-statquest
-- source-jbstatistics
-- source-mfnf-analysis1
-- source-kurzes-tutorium-statistik
-- source-ohlbach-eisinger-beweise
-- source-brandon-foltz
-- source-velleman-how-to-prove-it
-- source-kroese-dsml
-- source-ross-elementary-analysis
-- source-cs229-notes
-- source-thomas-calculus
-- source-cs229-2022-videos
-- source-stewart-calculus
 - source-murphy-pml1
-- source-csc411-notes
-- source-aml-ss26-lectures
-- source-cs4780-homeworks
-- source-mit-6034-quizzes
-- source-3b1b-neural-networks
-- source-geron-handson
-- source-eecs498
-- source-zacharski-data-mining
-- source-3b1b-bayes-theorem
-- source-marsland-ml-algorithmic
+- source-ng-coursera
+- source-nielsen-nndl
+- source-ohlbach-eisinger-beweise
+- source-openintro-statistics
+- source-pitman-probability
+- source-prince-udl
+- source-professor-leonard
 - source-rohrer-e2eml
-- source-domingos-useful-things
-- source-esl
-- source-3b1b-linear-algebra
-- source-rudin-principles
+- source-ross-elementary-analysis
+- source-ross-first-course
+- source-sad-2025-recordings
+- source-sad-klausuren-extern
+- source-sad-ss26-lectures
+- source-sad-uebungen
+- source-schaums-probability
+- source-setosa-ols
+- source-sklearn-user-guide
+- source-stat110
+- source-statquest
+- source-stewart-calculus
+- source-strang-calculus
+- source-swanson-principles-probability
+- source-teschl-mathe-informatiker
+- source-thomas-calculus
+- source-tijms-understanding-probability
+- source-velleman-how-to-prove-it
+- source-zacharski-data-mining
+- source-zedstatistics
 program_ids:
 - program-bachelors
 module_ids:
@@ -134,13 +134,6 @@ unit_ids:
 - unit-m2-sad-l15
 - unit-m2-sad-clustering
 - unit-m2-sad-exam-prep
-- unit-m2-analysis-ch01
-- unit-m2-analysis-ch02
-- unit-m2-analysis-ch03
-- unit-m2-analysis-ch04
-- unit-m2-analysis-ch05
-- unit-m2-analysis-ch06
-- unit-m2-analysis-ch07
 - unit-m2-analysis-exam-prep
 - unit-m2-combined-exam-rehearsal
 ---
@@ -153,7 +146,11 @@ Prepare Statistik und Datenanalyse and Analysis as two independent learning modu
 
 ## Current Scope
 
-One individual current unit per ordinary lecture.
+**Two independent subject lanes, one joint exam bridge (Aram, 2026-08-19).** Statistics and Analysis no longer form one merged study sequence. `unit-m2-sad-exam-prep` owns SaD.0→SaD.X; `unit-m2-analysis-exam-prep` owns calibrate→AN.X. Both may progress in parallel, but neither stage contains first-pass work from the other subject. Only after both subject-only transfer gates are met does `unit-m2-combined-exam-rehearsal` run the coverage blueprint, two full three-hour mocks, evidence-routed repair, and final taper.
+
+Every subject stage starts from a cold gate or uses the module-wide diagnostic. A clean gate permits a recorded skip; a failed gate chooses the smallest repair source. Current course material remains authority, exercises come before external banks, and optional books/videos are capped gap tools rather than second courses.
+
+**Administration remains shared:** registration, sitting, withdrawal, and grade facts are read only from `curriculum/modules/module-hu-m2-statistik-analysis/module.yaml`.
 
 ## Open Questions
 
@@ -169,7 +166,7 @@ One individual current unit per ordinary lecture.
 
 ## Next Action
 
-Open unit, compare material angles, and choose what to study.
+Run two separate calibration sessions: (1) `stage-m2-sad-calibrate` for 90 minutes across the five SaD clusters, producing the SaD error ledger and full-pass/repair-only/cold-skip decisions; (2) `stage-m2-analysis-calibrate` for 60 minutes using the script contract and one cold WV sample. Do not start the joint unit yet. After calibration, advance the weakest SaD cluster and AN.0 as independent sessions.
 
 ## Durable Notes
 

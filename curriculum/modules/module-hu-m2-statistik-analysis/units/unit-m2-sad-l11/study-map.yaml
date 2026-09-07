@@ -28,15 +28,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 3-9
+    angle: The current lecture's focused reading for the data-science pipeline.
+    angle_detail: Read physical PDF pages 3-9 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -110,15 +106,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 12-20
+    angle: The current lecture's focused reading for supervised and unsupervised tasks.
+    angle_detail: Read physical PDF pages 12-20 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -220,15 +212,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 10-11,27
+    angle: The current lecture's focused reading for data types, features, and representation.
+    angle_detail: Read physical PDF pages 10-11,27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -316,15 +304,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 24-26,44-46
+    angle: The current lecture's focused reading for train, validation, test, cross-validation, and bootstrap.
+    angle_detail: Read physical PDF pages 24-26,44-46 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -511,15 +495,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 28-32,40-41
+    angle: The current lecture's focused reading for loss functions, hypotheses, and inductive bias.
+    angle_detail: Read physical PDF pages 28-32,40-41 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -606,12 +586,17 @@ stages:
   title: Evaluation metrics and class imbalance
   status: pending
   objective: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses
-    answer different questions; metric choice follows costs, prevalence, and deployment context.
+    answer different questions; metric choice follows costs, prevalence, and deployment context. Compare
+    threshold curves and distinguish ROC-AUC from precision-recall AUC.
   done_when:
   - 'Reproduce without notes: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression
     losses answer different questions; metric choice follows costs, prevalence, and deployment context.'
   - Work Blatt 5, Aufgabe 3 — multiclass evaluation metrics, then the remaining 2, and record every miss
     with the step it failed at.
+  - 'From the scored examples in L11 PDF p. 37, calculate TPR, FPR, precision and recall at two thresholds;
+    label ROC and PR axes correctly and explain what each AUC summarizes. Source correction: L11 PDF p.
+    38 (printed 39) calls a precision-recall plot ROC. ROC plots TPR against FPR; a precision-recall curve
+    plots precision against recall. Specify which curve an AUC measures.'
   exam_critical: true
   concepts:
   - concept-classification-metrics
@@ -619,15 +604,13 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 29-30,33-38
+    angle: Classification metrics, threshold curves and a ROC/PR terminology correction.
+    angle_detail: 'Read physical PDF pages 29-30,33-38 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu. Source correction: L11 PDF p. 38 (printed 39) calls a precision-recall plot
+      ROC. ROC plots TPR against FPR; a precision-recall curve plots precision against recall. Specify
+      which curve an AUC measures.'
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
@@ -806,15 +789,11 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, 49 slides
-    angle: Defines the pipeline vocabulary — task, resampling, objective, metric, generalization — that
-      L12 to L15 all assume.
-    angle_detail: 'This deck is the hinge of the module: everything before it is statistics, everything
-      after is learning algorithms, and it supplies the shared frame. Its concepts are individually simple
-      and collectively easy to hold vaguely, which is why the exercise-level routes on this stage (Géron
-      Ch 2-3, ESL §7.10) matter more here than usual. Note that the deck''s evaluation metrics extend
-      L01''s confusion matrix rather than re-deriving it. Unresolved: specific page slice not yet reviewed,
-      keeping whole-deck route for now.'
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 40-46
+    angle: The current lecture's focused reading for underfitting, overfitting, and bias-variance.
+    angle_detail: Read physical PDF pages 40-46 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures

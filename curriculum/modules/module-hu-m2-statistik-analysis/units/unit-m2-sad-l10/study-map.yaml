@@ -29,15 +29,12 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 5-9,18-24,29-35
+    angle: The current lecture's focused reading for null model, alternative, statistic, and reference
+      distribution.
+    angle_detail: Read physical PDF pages 5-9,18-24,29-35 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -301,15 +298,13 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 25-27
+    angle: Read the testing example with its corrected standard error.
+    angle_detail: 'Read physical PDF pages 25-27 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. Source correction: L10 PDF p. 27 (printed 28) omits sqrt(n). With n=10, sigma=2,
+      xbar=98.9 and mu0=100, z=(98.9-100)/(2/sqrt(10))=-1.73925; the lower-tail p-value is 0.040995, not
+      about 0.29.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -558,15 +553,11 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 10-16,24
+    angle: The current lecture's focused reading for type i error, type ii error, and power.
+    angle_detail: Read physical PDF pages 10-16,24 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -709,15 +700,13 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 27,42-46
+    angle: Read the testing example with its corrected standard error.
+    angle_detail: 'Read physical PDF pages 27,42-46 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu. Source correction: L10 PDF p. 27 (printed 28) omits sqrt(n). With n=10, sigma=2,
+      xbar=98.9 and mu0=100, z=(98.9-100)/(2/sqrt(10))=-1.73925; the lower-tail p-value is 0.040995, not
+      about 0.29.'
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -957,15 +946,11 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 36-39
+    angle: The current lecture's focused reading for confidence intervals and test duality.
+    angle_detail: Read physical PDF pages 36-39 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1013,15 +998,11 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 48-51
+    angle: The current lecture's focused reading for chi-square tests for categorical data.
+    angle_detail: Read physical PDF pages 48-51 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1169,15 +1150,11 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 52-58
+    angle: The current lecture's focused reading for rank and permutation tests.
+    angle_detail: Read physical PDF pages 52-58 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1280,15 +1257,11 @@ stages:
   resources:
   - kind: read
     label: Current L10 hypothesis-testing deck
-    locator: lecture-slides/10_testing.pdf, 65 slides
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Unresolved: specific page slice not yet reviewed, keeping whole-deck route for now.'
+    locator: lecture-slides/10_testing.pdf, PDF pp. 60-65
+    angle: The current lecture's focused reading for multiple testing and false discoveries.
+    angle_detail: Read physical PDF pages 60-65 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
