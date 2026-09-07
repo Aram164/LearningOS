@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/semantic-lineage-ledger.schema.json",
+  "title": "Semantic lineage ledger",
+  "description": "Shape of operations/transactions/lineage.yaml: why each high-value derived claim is believed. Enforced by learning_os.semantics.lineage.load_ledger, not by the validator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "type", "records"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "type": {
+      "type": "string",
+      "const": "semantic-lineage-ledger"
+    },
+    "records": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "claim_kind", "statement", "derived_from", "judged_by", "status"],
+        "properties": {
+          "claim_id": {"type": "string", "minLength": 1},
+          "claim_kind": {"enum": ["route-covers", "scope-authority", "dossier-freshness"]},
+          "statement": {"type": "string", "minLength": 1},
+          "derived_from": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["contract_version", "revisions", "source_hashes", "evidence"],
+            "properties": {
+              "contract_version": {"type": "integer", "minimum": 1},
+              "revisions": {
+                "type": "object",
+                "additionalProperties": {"type": "integer", "minimum": 0}
+              },
+              "source_hashes": {
+                "type": "object",
+                "additionalProperties": {"type": "string", "minLength": 1}
+              },
+              "evidence": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          "judged_by": {"type": "string", "minLength": 1},
+          "reviewed_by": {"type": "string"},
+          "status": {"enum": ["supported", "stale", "contested"]},
+          "contest": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["by", "reason"],
+            "properties": {
+              "by": {"type": "string", "minLength": 1},
+              "reason": {"type": "string", "minLength": 1}
+            }
+          }
+        }
+      }
+    }
+  }
+}

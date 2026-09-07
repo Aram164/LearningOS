@@ -8,6 +8,21 @@ a canonical writer — see `system/SEMANTIC-CONTRACT.md`.
 
 from __future__ import annotations
 
+from .lineage import (
+    ClaimLineage,
+    DerivedFrom,
+    LineageError,
+    contest,
+    dump_ledger,
+    emit_dossier_freshness,
+    emit_route_covers,
+    emit_scope_authority,
+    endorse,
+    impacted,
+    load_ledger,
+    record_claim,
+    refresh,
+)
 from .policy import POLICY_RULES, PolicyDecision, query
 from .predicates import (
     CONTRACT_VERSION,
@@ -21,9 +36,22 @@ __all__ = [
     "CONTRACT_VERSION",
     "POLICY_RULES",
     "PREDICATES",
+    "ClaimLineage",
+    "DerivedFrom",
+    "LineageError",
     "PolicyDecision",
     "Predicate",
+    "contest",
+    "dump_ledger",
+    "emit_dossier_freshness",
+    "emit_route_covers",
+    "emit_scope_authority",
+    "endorse",
     "evaluate",
+    "impacted",
+    "load_ledger",
     "needs_study_map",
     "query",
+    "record_claim",
+    "refresh",
 ]

@@ -187,3 +187,9 @@ exempt:
       This file. It declares the register rather than being registered by it;
       tests/test_contract_register.py is what proves it complete, and a row
       pointing at itself would only look like coverage.
+
+  - path: system/contracts/semantic-lineage-ledger.schema.json
+    reason: >-
+      The shape of operations/transactions/lineage.yaml, which is a
+      receipt-adjacent evidence sidecar rather than a declaration. Enforced
+      by learning_os.semantics.lineage.load_ledger on read.
