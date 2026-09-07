@@ -86,6 +86,20 @@ created when a claim is judged, never bulk-migrated. Readers:
 `tools/learning_os/semantics/lineage.py`, proven by
 `tests/test_semantic_lineage.py`.
 
+## Candidate goals (Phase 3)
+
+The engine surfaces what is worth investigating and never mutates meaning
+itself. Five read-only detectors — covering routes gone stale, sources
+changed under claims, repeated question classes with no VOQ, inspections
+with no dossier, systematic reviewer corrections — emit goals with
+rationale and evidence, thresholded and deduplicated. Each goal then walks
+`detected → formulated → eligible → proposed → authorized → planned →
+executing → verified → closed` (plus `deferred/rejected/stale/superseded`),
+one step at a time; only Aram authorizes. The queue lives under
+`work/proposals/goals/`, one file per goal. Readers:
+`tools/learning_os/semantics/goals.py`, proven by
+`tests/test_goal_proposals.py`.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under
