@@ -115,6 +115,21 @@ fitted instead of guessed. Learning stays off until the statistics are
 significant. Readers: `tools/learning_os/semantics/tasks.py`, proven by
 `tests/test_agent_tasks.py`.
 
+## Context dossiers (Phase 5)
+
+Agents rebuild the same context per task; dossiers materialize it once.
+The builder hashes every dependency separately — knowledge map, source
+map, routes, evidence, both contract versions — and addresses the bundle
+as `context://<unit-id>/semantic-dossier@<digest>`: same inputs always
+hit the same key, any move changes exactly its hash plus the digest, and
+a cache file whose content fails its hashes is refused, never served.
+Freshness delegates to `DossierFresh`. Dossiers live under
+`generated/dossiers/`, covered by the existing no-hand-edit path — no
+canonical file may reference them, and the builder plus the store take
+explicit paths and never walk the repository. Readers:
+`tools/learning_os/semantics/dossiers.py`, proven by
+`tests/test_context_dossiers.py`.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under
