@@ -35,7 +35,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -244,7 +245,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -345,7 +347,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -470,7 +473,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -707,7 +711,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -756,7 +761,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -1034,7 +1040,8 @@ stages:
     angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
       are standard. Read it as a classification procedure: identify the cell, then apply the formula that
       cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+      §1.5''s story proofs are where they become memorable rather than memorised. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
@@ -1050,6 +1057,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-grinstead-snell
     route_id: route-fa2f72cfc8de281124afb34d
+  - id: resource-blitzstein-l05-identities
+    route_id: route-b3ad0cc1e399ea8846c4e397
+    kind: read
+    label: Blitzstein §1.5 story proofs
+    source_id: source-blitzstein-hwang
+    locator: Ch 1 §1.5 pdf p. 37
+    angle: Explains the identities node without algebra.
+    angle_detail: 'Story proofs: counting identities argued by describing two ways to count the same set.'
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []
   source_feedback: []

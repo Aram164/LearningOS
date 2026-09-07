@@ -33,10 +33,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -271,10 +272,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -411,10 +413,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -500,10 +503,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -650,10 +654,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -789,10 +794,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -825,6 +831,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-marsland-ml-algorithmic
     route_id: route-6d3e6411e2da6cfaf960676c
+  - id: resource-kelleher-stage-sad-l14-bayes-net
+    route_id: route-b3d516335f24f55b1d6ddc00
+    kind: read
+    label: Kelleher §6.4.4
+    source_id: source-kelleher-fmlpda
+    locator: §6.4.4 pdf pp. 324-328
+    angle: Markov blanket explicitly explained.
+    angle_detail: Networks and blanket.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
   attachments: []
   source_feedback: []
@@ -848,10 +863,11 @@ stages:
     locator: lecture-slides/14_probability_based.pdf, 29 slides
     angle: Extends L04's categorical classifier to smoothing, numeric attributes and Gaussian/multinomial
       variants, then opens Bayesian networks.
-    angle_detail: The shortest deck in the second half, and its last third — Bayesian networks, factorization,
+    angle_detail: 'The shortest deck in the second half, and its last third — Bayesian networks, factorization,
       Markov blankets — is genuinely different material introduced quickly. The Naive Bayes extensions
       are examinable computations; the network material is more likely to be examined conceptually. Marsland
-      Ch 16 is the only route here that treats the network half at comparable length.
+      Ch 16 is the only route here that treats the network half at comparable length. Unresolved: specific
+      page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
@@ -884,6 +900,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-marsland-ml-algorithmic
     route_id: route-6d3e6411e2da6cfaf960676c
+  - id: resource-kelleher-stage-sad-l14-markov
+    route_id: route-b3d516335f24f55b1d6ddc00
+    kind: read
+    label: Kelleher §6.4.4
+    source_id: source-kelleher-fmlpda
+    locator: §6.4.4 pdf pp. 324-328
+    angle: Markov blanket explicitly explained.
+    angle_detail: Networks and blanket.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
   attachments: []
   source_feedback: []

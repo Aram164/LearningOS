@@ -32,10 +32,11 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -310,10 +311,11 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -603,13 +605,12 @@ stages:
   number: 3
   title: Hypergeometric sampling without replacement
   status: pending
-  objective: Drawing from a finite population without replacement makes trials dependent and adds the
-    finite population correction absent from the Binomial model.
+  objective: Drawing from a finite population without replacement makes trials dependent.
   done_when:
   - 'Reproduce without notes: Drawing from a finite population without replacement makes trials dependent
     and adds the finite population correction absent from the Binomial model.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify four discrete distributions, then the remaining 6, and record
-    every miss with the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
+    and their approximation in part (d), then record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -620,15 +621,16 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
@@ -876,13 +878,13 @@ stages:
   number: 4
   title: Geometric waiting times
   status: pending
-  objective: The Geometric model counts trials until the first success, introducing a stopping-time story
-    and the memoryless property rather than a fixed number of trials.
+  objective: The Geometric distribution models trials until first success with the memoryless property;
+    it complements the fixed-trial Binomial model.
   done_when:
   - 'Reproduce without notes: The Geometric model counts trials until the first success, introducing a
     stopping-time story and the memoryless property rather than a fixed number of trials.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify four discrete distributions, then the remaining 3, and record
-    every miss with the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
+    and their approximation in part (d), then record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -893,15 +895,16 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
@@ -1092,8 +1095,8 @@ stages:
   done_when:
   - 'Reproduce without notes: Poisson(lambda) models independent events occurring at a stable rate in
     an interval, with equal expectation and variance.'
-  - Work Übungsblatt 3, Aufgabe 2 — identify four discrete distributions, then the remaining 6, and record
-    every miss with the step it failed at.
+  - Work Übungsblatt 3, Aufgabe 2 — identify three discrete distributions (Poisson, Binomial, Hypergeometric)
+    and their approximation in part (d), then record every miss with the step it failed at.
   exam_critical: true
   concepts:
   - concept-discrete-distributions
@@ -1104,15 +1107,16 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
   - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — identify four discrete distributions
+    label: Übungsblatt 3, Aufgabe 2 — identify three discrete distributions plus approximation
     locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
     angle: Forces model selection from prose before any formula can be substituted.
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
@@ -1405,10 +1409,11 @@ stages:
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
     angle: Defines the identification conditions for the four discrete families, which is what the exam
       tests rather than the formulas.
-    angle_detail: Short deck, high exam density. Each distribution gets its conditions, PMF, moments and
-      a worked example, and the final slides state the limit relationships between them. The relationships
+    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
+      and a worked example, and the final slides state the limit relationships between them. The relationships
       are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not.
+      slides are the ones to know cold — the formulas are recoverable, the identification is not. Unresolved:
+      specific page slice not yet reviewed, keeping whole-deck route for now.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures

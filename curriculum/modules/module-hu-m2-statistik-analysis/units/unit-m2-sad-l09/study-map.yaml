@@ -31,11 +31,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -153,11 +154,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -293,11 +295,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -534,11 +537,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -762,11 +766,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -953,11 +958,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -1026,6 +1032,15 @@ stages:
     scope_triage: helpful-now
     source_id: source-statquest
     route_id: route-5abe09f7b3d60cd13d51460c
+  - id: resource-dekking-l09-bootstrap
+    route_id: route-4ad419aeb16ac96209d55e97
+    kind: read
+    label: Dekking Ch 18
+    source_id: source-dekking-mips
+    locator: Ch 18 pdf pp. 275-290
+    angle: Bootstrap principle and empirical variants.
+    angle_detail: Bootstrap principle first.
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []
@@ -1048,11 +1063,12 @@ stages:
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, 45 slides
     angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
+    angle_detail: 'The deck presents properties and intervals together, so the interval formulas can be
       learned without the sampling-distribution reasoning that justifies them — which works until a question
       varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
       uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+      appears as a short written question. Unresolved: specific page slice not yet reviewed, keeping whole-deck
+      route for now.'
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures

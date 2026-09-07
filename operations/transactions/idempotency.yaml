@@ -1,6 +1,43 @@
 schema_version: 1
 type: transaction-idempotency-ledger
 entries:
+  917373b7-ad9f-477d-b648-a643fc68ce5f:
+    request_id: b3cc9ed9-1170-4870-b4dc-2191f7a8097d
+    capability: module.plan.import
+    channel: codex
+    intent_sha256: sha256:cb4deed10741cf9867bd60546e4cd235c3c924608994b14db4a29c9e822b7365
+    transaction_id: transaction-20260907-045422-001
+    receipt_path: operations/transactions/transaction-20260907-045422-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 12
+      unit-m2-analysis-ch01: 3
+      unit-m2-analysis-ch02: 6
+      unit-m2-analysis-ch03: 4
+      unit-m2-analysis-ch04: 4
+      unit-m2-analysis-ch05: 4
+      unit-m2-analysis-ch06: 4
+      unit-m2-analysis-ch07: 4
+      unit-m2-analysis-exam-prep: 9
+      unit-m2-combined-exam-rehearsal: 4
+      unit-m2-sad-clustering: 8
+      unit-m2-sad-exam-prep: 6
+      unit-m2-sad-l01: 5
+      unit-m2-sad-l02: 7
+      unit-m2-sad-l03: 11
+      unit-m2-sad-l04: 11
+      unit-m2-sad-l05: 7
+      unit-m2-sad-l06: 11
+      unit-m2-sad-l07: 8
+      unit-m2-sad-l08: 7
+      unit-m2-sad-l09: 7
+      unit-m2-sad-l10: 7
+      unit-m2-sad-l11: 7
+      unit-m2-sad-l12: 7
+      unit-m2-sad-l13: 7
+      unit-m2-sad-l14: 11
+      unit-m2-sad-l15: 11
+    snapshot_before: sha256:37f9a037cd31ebf428c755a71968fe98c8d219b8904eb885b4c8895872bcab71
+    snapshot_after: sha256:307acc03538ed9bbb843419d267522863045f18e34254741eddf31e7c0397871
   algo2-safe-shelve-20260831-001:
     request_id: request-algo2-safe-shelve-20260831-001
     capability: module.plan.import
